@@ -1,6 +1,6 @@
 import XCTest
+import MetalKit
 @_spi(Experimental) @testable import MapboxMaps
-@_implementationOnly import MapboxCoreMaps_Private
 
 final class MapboxMapTests: XCTestCase {
 
@@ -31,7 +31,7 @@ final class MapboxMapTests: XCTestCase {
         mapClient.getMetalViewStub.defaultReturnValue = MTKView(frame: CGRect(origin: .zero, size: size))
         mapInitOptions = MapInitOptions(mapOptions: MapOptions(size: size))
 
-        let map = Map(client: mapClient, mapOptions: mapInitOptions.mapOptions)
+        let map = CoreMap(client: mapClient, mapOptions: mapInitOptions.mapOptions)
         mapboxMap = MapboxMap(map: map, events: events, styleSourceManager: MockStyleSourceManager())
     }
 

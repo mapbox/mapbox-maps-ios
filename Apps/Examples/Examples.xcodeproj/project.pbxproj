@@ -100,7 +100,7 @@
 		95A693AE2A8BC756008BE566 /* AnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A693AD2A8BC756008BE566 /* AnnotationsExample.swift */; };
 		95A7E4F12A6ECBC700C2E81D /* CombineLocationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */; };
 		95A8C6A32A1A60E900D0FB48 /* CombineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */; };
-		95AFCFC12A4AF30E00395A86 /* MapViewportExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AFCFC02A4AF30E00395A86 /* MapViewportExample.swift */; };
+		95AFCFC12A4AF30E00395A86 /* ViewportPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AFCFC02A4AF30E00395A86 /* ViewportPlayground.swift */; };
 		95B589B62982BFE800BF4F31 /* SimpleMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */; };
 		95B589B82982BFE800BF4F31 /* SwiftUIRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B22982BFE800BF4F31 /* SwiftUIRoot.swift */; };
 		95B589B92982BFE800BF4F31 /* FeaturesQueryExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B32982BFE800BF4F31 /* FeaturesQueryExample.swift */; };
@@ -120,7 +120,6 @@
 		B58E470927BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58E470827BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift */; };
 		C608C107267BC5B1003C86C3 /* LocalizationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608C106267BC5B1003C86C3 /* LocalizationExample.swift */; };
 		CA03F10F26268DF700673961 /* OfflineManagerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA03F10E26268DF700673961 /* OfflineManagerExample.swift */; };
-		CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */; };
 		CA628414262DFD5C00651488 /* OfflineManagerExample.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA628413262DFD5C00651488 /* OfflineManagerExample.storyboard */; };
 		CA86E81825BE7C2300E5A1D9 /* BuildingExtrusionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */; };
 		CAC195B725AC098A00F69FEA /* CameraAnimatorsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */; };
@@ -202,7 +201,6 @@
 		077C4F11252F7E89007636F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalVectorSourceExample.swift; sourceTree = "<group>"; };
 		077E3B8F2581966300564A3E /* FitCameraToGeometryExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitCameraToGeometryExample.swift; sourceTree = "<group>"; };
-		07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIExample.swift; sourceTree = "<group>"; };
 		07A8D86825422C190068D50D /* PolygonAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonAnnotationExample.swift; sourceTree = "<group>"; };
 		07B0715F254789D6007F2865 /* FeaturesAtPointExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesAtPointExample.swift; sourceTree = "<group>"; };
 		07B071CD2547CF2B007F2865 /* MultipleGeometriesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleGeometriesExample.swift; sourceTree = "<group>"; };
@@ -294,7 +292,7 @@
 		95A693AD2A8BC756008BE566 /* AnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsExample.swift; sourceTree = "<group>"; };
 		95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineLocationExample.swift; sourceTree = "<group>"; };
 		95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineExample.swift; sourceTree = "<group>"; };
-		95AFCFC02A4AF30E00395A86 /* MapViewportExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewportExample.swift; sourceTree = "<group>"; };
+		95AFCFC02A4AF30E00395A86 /* ViewportPlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportPlayground.swift; sourceTree = "<group>"; };
 		95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleMapExample.swift; sourceTree = "<group>"; };
 		95B589B22982BFE800BF4F31 /* SwiftUIRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUIRoot.swift; sourceTree = "<group>"; };
 		95B589B32982BFE800BF4F31 /* FeaturesQueryExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturesQueryExample.swift; sourceTree = "<group>"; };
@@ -590,7 +588,6 @@
 				C64ED3C82541CA3A00ADADFB /* LineAnnotationExample.swift */,
 				07B071CD2547CF2B007F2865 /* MultipleGeometriesExample.swift */,
 				07A8D86825422C190068D50D /* PolygonAnnotationExample.swift */,
-				07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */,
 				17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */,
 				30517C69274BD4D300B706E5 /* ViewAnnotationBasicExample.swift */,
 				3A44669D28F6EA1600664AF5 /* FrameViewAnnotationsExample.swift */,
@@ -620,7 +617,7 @@
 				95B589B22982BFE800BF4F31 /* SwiftUIRoot.swift */,
 				957A4C452A85249700B101D7 /* StandardStyleLocationsExample.swift */,
 				954425272A86BDFB00DC6CBB /* StandardStyleImportExample.swift */,
-				95AFCFC02A4AF30E00395A86 /* MapViewportExample.swift */,
+				95AFCFC02A4AF30E00395A86 /* ViewportPlayground.swift */,
 				95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */,
 				95B589B42982BFE800BF4F31 /* MapSettingsExample.swift */,
 				95B589B32982BFE800BF4F31 /* FeaturesQueryExample.swift */,
@@ -896,7 +893,7 @@
 				58A28B5E2869F69C006F7D93 /* GlobeExample.swift in Sources */,
 				3A347BAE2A9F676300EF9B39 /* WeatherAnnotationExample.swift in Sources */,
 				950889882ADDABB700D099C4 /* DynamicViewAnnotationExample.swift in Sources */,
-				95AFCFC12A4AF30E00395A86 /* MapViewportExample.swift in Sources */,
+				95AFCFC12A4AF30E00395A86 /* ViewportPlayground.swift in Sources */,
 				58A28B5C2869F69C006F7D93 /* GlobeFlyToExample.swift in Sources */,
 				95B9CBDF2A813BDA007E44F1 /* URLOpenExamples.swift in Sources */,
 				177C9D47269CA61100D13A2D /* ShowHideLayerExample.swift in Sources */,
@@ -936,7 +933,6 @@
 				D308F1F32A4F5F6200220E9C /* InsetMapExample.swift in Sources */,
 				FEA410F62A26314A002F1816 /* CarPlayMapViewController.swift in Sources */,
 				304AB3B527439287005B6D09 /* ViewAnnotationMarkerExample.swift in Sources */,
-				CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */,
 				9501A5A62A38830B00F2AF92 /* ButtonStyle.swift in Sources */,
 				CAC195B725AC098A00F69FEA /* CameraAnimatorsExample.swift in Sources */,
 				3ADF96022992787A00819649 /* ViewAnnotationsExample.swift in Sources */,

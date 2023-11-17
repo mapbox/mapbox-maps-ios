@@ -78,81 +78,17 @@ final class ViewportTests: XCTestCase {
         XCTAssertEqual(viewport.overview, nil)
     }
 
-    func testPaddingResolution() {
+    func testPadding() {
         let viewport = Viewport.styleDefault
-            .inset(by: SwiftUI.EdgeInsets(top: 1, leading: 2, bottom: 3, trailing: 4))
+            .padding(.top, 1)
+            .padding(.leading, 2)
+            .padding(.bottom, 3)
+            .padding(.trailing, 4)
 
-        let safeArea = UIEdgeInsets(top: 10, left: 20, bottom: 30, right: 40)
-        let ltrPadding = viewport.padding(with: .leftToRight, safeAreaInsets: safeArea)
-        XCTAssertEqual(ltrPadding.top, 11)
-        XCTAssertEqual(ltrPadding.left, 22)
-        XCTAssertEqual(ltrPadding.bottom, 33)
-        XCTAssertEqual(ltrPadding.right, 44)
+        let padding = EdgeInsets(top: 1, leading: 2, bottom: 3, trailing: 4)
+        XCTAssertEqual(viewport.padding, padding)
 
-        let rtlPadding = viewport.padding(with: .rightToLeft, safeAreaInsets: safeArea)
-        XCTAssertEqual(rtlPadding.top, 11)
-        XCTAssertEqual(rtlPadding.left, 24)
-        XCTAssertEqual(rtlPadding.bottom, 33)
-        XCTAssertEqual(rtlPadding.right, 42)
-    }
-
-    func testPaddingResolutionIgnoreSafeArea() {
-        let viewport = Viewport.styleDefault
-            .inset(by: SwiftUI.EdgeInsets(top: 1, leading: 2, bottom: 3, trailing: 4), ignoringSafeArea: .all)
-
-        let safeArea = UIEdgeInsets(top: 10, left: 20, bottom: 30, right: 40)
-        let ltrPadding = viewport.padding(with: .leftToRight, safeAreaInsets: safeArea)
-        XCTAssertEqual(ltrPadding.top, 1)
-        XCTAssertEqual(ltrPadding.left, 2)
-        XCTAssertEqual(ltrPadding.bottom, 3)
-        XCTAssertEqual(ltrPadding.right, 4)
-
-        let rtlPadding = viewport.padding(with: .rightToLeft, safeAreaInsets: safeArea)
-        XCTAssertEqual(rtlPadding.top, 1)
-        XCTAssertEqual(rtlPadding.left, 4)
-        XCTAssertEqual(rtlPadding.bottom, 3)
-        XCTAssertEqual(rtlPadding.right, 2)
-    }
-
-    func testPaddingResolutionIndividualEdge() {
-        let viewport = Viewport.styleDefault
-            .inset(edges: .top, length: 1)
-            .inset(edges: .leading, length: 2)
-            .inset(edges: .bottom, length: 3)
-            .inset(edges: .trailing, length: 4)
-
-        let safeArea = UIEdgeInsets(top: 10, left: 20, bottom: 30, right: 40)
-        let ltrPadding = viewport.padding(with: .leftToRight, safeAreaInsets: safeArea)
-        XCTAssertEqual(ltrPadding.top, 11)
-        XCTAssertEqual(ltrPadding.left, 22)
-        XCTAssertEqual(ltrPadding.bottom, 33)
-        XCTAssertEqual(ltrPadding.right, 44)
-
-        let rtlPadding = viewport.padding(with: .rightToLeft, safeAreaInsets: safeArea)
-        XCTAssertEqual(rtlPadding.top, 11)
-        XCTAssertEqual(rtlPadding.left, 24)
-        XCTAssertEqual(rtlPadding.bottom, 33)
-        XCTAssertEqual(rtlPadding.right, 42)
-    }
-
-    func testPaddingResolutionIndividualEdgeIgnoreSafeArea() {
-        let viewport = Viewport.styleDefault
-            .inset(edges: .top, length: 1, ignoringSafeArea: true)
-            .inset(edges: .leading, length: 2, ignoringSafeArea: true)
-            .inset(edges: .bottom, length: 3, ignoringSafeArea: true)
-            .inset(edges: .trailing, length: 4, ignoringSafeArea: true)
-
-        let safeArea = UIEdgeInsets(top: 10, left: 20, bottom: 30, right: 40)
-        let ltrPadding = viewport.padding(with: .leftToRight, safeAreaInsets: safeArea)
-        XCTAssertEqual(ltrPadding.top, 1)
-        XCTAssertEqual(ltrPadding.left, 2)
-        XCTAssertEqual(ltrPadding.bottom, 3)
-        XCTAssertEqual(ltrPadding.right, 4)
-
-        let rtlPadding = viewport.padding(with: .rightToLeft, safeAreaInsets: safeArea)
-        XCTAssertEqual(rtlPadding.top, 1)
-        XCTAssertEqual(rtlPadding.left, 4)
-        XCTAssertEqual(rtlPadding.bottom, 3)
-        XCTAssertEqual(rtlPadding.right, 2)
+        let viewport2 = Viewport.styleDefault.padding(padding)
+        XCTAssertEqual(viewport2.padding, padding)
     }
 }

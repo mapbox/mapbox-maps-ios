@@ -13,7 +13,7 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
     private var cancelables = Set<AnyCancelable>()
     private var annotation: ViewAnnotation?
 
-    private let image = UIImage(named: "blue_marker_view")!
+    private let image = UIImage(named: "intermediate-pin")!
     private lazy var markerHeight: CGFloat = image.size.height
 
     override func viewDidLoad() {
@@ -58,6 +58,7 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
         var pointAnnotation = PointAnnotation(id: Constants.markerId, coordinate: coordinate)
         pointAnnotation.iconImage = Constants.blueIconId
         pointAnnotation.iconAnchor = .bottom
+        pointAnnotation.iconOffset = [0, 12]
 
         pointAnnotationManager.annotations.append(pointAnnotation)
     }
@@ -69,7 +70,7 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
         let annotation = ViewAnnotation(
             annotatedFeature: .layerFeature(layerId: pointAnnotationManager.layerId, featureId: Constants.markerId),
             view: annotationView)
-        annotation.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .bottom, offsetY: markerHeight)]
+        annotation.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .bottom, offsetY: markerHeight - 12)]
         annotationView.onClose = { [weak self, weak annotation] in
             annotation?.remove()
             self?.annotation = nil

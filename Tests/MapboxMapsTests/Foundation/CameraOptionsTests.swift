@@ -67,7 +67,7 @@ final class CameraOptionsTests: XCTestCase {
     }
 
     func testInitWithObjCValue() {
-        let objcCameraOptions = MapboxCoreMaps.CameraOptions(
+        let objcCameraOptions = CoreCameraOptions(
             __center: Coordinate2D(value: center),
             padding: padding.toMBXEdgeInsetsValue(),
             anchor: anchor.screenCoordinate,
@@ -87,7 +87,7 @@ final class CameraOptionsTests: XCTestCase {
     }
 
     func testInitWithObjCValueWithNils() {
-        let objcCameraOptions = MapboxCoreMaps.CameraOptions(
+        let objcCameraOptions = CoreCameraOptions(
             __center: nil,
             padding: nil,
             anchor: nil,
@@ -195,7 +195,7 @@ final class CameraOptionsTests: XCTestCase {
             bearing: bearing,
             pitch: pitch)
 
-        let objcCameraOptions = MapboxCoreMaps.CameraOptions(cameraOptions)
+        let objcCameraOptions = CoreCameraOptions(cameraOptions)
 
         XCTAssertEqual(objcCameraOptions.__center?.value.latitude, center.latitude)
         XCTAssertEqual(objcCameraOptions.__center?.value.longitude, center.longitude)
@@ -209,7 +209,7 @@ final class CameraOptionsTests: XCTestCase {
     func testConversionToMapboxCoreMapsCameraOptionsWithNils() {
         let cameraOptions = CameraOptions()
 
-        let objcCameraOptions = MapboxCoreMaps.CameraOptions(cameraOptions)
+        let objcCameraOptions = CoreCameraOptions(cameraOptions)
 
         XCTAssertNil(objcCameraOptions.__center)
         XCTAssertNil(objcCameraOptions.__center)

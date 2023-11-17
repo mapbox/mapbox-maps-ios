@@ -5,7 +5,7 @@ final class FollowPuckViewportStateOptionsTests: XCTestCase {
     func testInitializerDefaultParameters() {
         let options = FollowPuckViewportStateOptions()
 
-        XCTAssertEqual(options.padding, .zero)
+        XCTAssertEqual(options.padding, nil)
         XCTAssertEqual(options.zoom, 16.35)
         XCTAssertEqual(options.bearing, .heading)
         XCTAssertEqual(options.pitch, 45)

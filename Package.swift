@@ -3,10 +3,9 @@
 
 import PackageDescription
 
-let commonVersion: Version = "24.0.0-rc.2"
-let coreVersion: Version = "11.0.0-rc.1"
+let coreMaps = MapsDependency.coreMaps(version: "11.0.0-rc.2")
 
-func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
+let common = MapsDependency.common(version: "24.0.0-rc.3")
 
 let mapboxMapsPath: String? = nil
 
@@ -20,16 +19,14 @@ let package = Package(
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: commonVersion),
-        .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git", exact: coreVersion),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.7.0"),
-    ],
+    ] + coreMaps.packageDependencies + common.packageDependencies,
     targets: [
         .target(
             name: "MapboxMaps",
             dependencies: [
-                .product(name: "MapboxCoreMaps", package: "mapbox-core-maps-ios"),
-                .product(name: "MapboxCommon", package: "mapbox-common-ios"),
+                coreMaps.mapsTargetDependencies,
+                common.mapsTargetDependencies,
                 .product(name: "Turf", package: "turf-swift")
             ],
             path: mapboxMapsPath,
@@ -45,9 +42,6 @@ let package = Package(
             name: "MapboxMapsTests",
             dependencies: [
                 "MapboxMaps",
-            ],
-            exclude: [
-                "Info.plist",
             ],
             resources: [
                 .copy("MigrationGuide/Fixtures/polygon.geojson"),
@@ -68,5 +62,73 @@ let package = Package(
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
         )
-    ]
+    ] + coreMaps.packageTargets + common.packageTargets
 )
+
+struct MapsDependency {
+    init(name: String, version: String, checksum: String? = nil, isSnapshot: Bool?, repositoryName: String, registryProjectName: String, registryFileName: String) {
+        self.name = name
+        self.version = version
+        self.checksum = checksum
+        self.isSnapshot = isSnapshot ?? version.contains("SNAPSHOT")
+
+        self.repositoryName = repositoryName
+        self.registryProjectName = registryProjectName
+        self.registryFileName = registryFileName
+    }
+    
+    let name: String
+    let version: String
+    let checksum: String?
+    let isSnapshot: Bool
+
+    let repositoryName: String
+    let registryProjectName: String
+    let registryFileName: String
+
+    static func coreMaps(version: String, checksum: String? = nil, isSnapshot: Bool? = nil) -> MapsDependency {
+        return MapsDependency(name: "MapboxCoreMaps", version: version, checksum: checksum, isSnapshot: isSnapshot,
+                              repositoryName: "mapbox-core-maps-ios",
+                              registryProjectName: "mobile-maps-core",
+                              registryFileName: "MapboxCoreMaps.xcframework-dynamic.zip")
+    }
+
+    static func common(version: String, checksum: String? = nil, isSnapshot: Bool? = nil) -> MapsDependency {
+        return MapsDependency(name: "MapboxCommon", version: version, checksum: checksum, isSnapshot: isSnapshot,
+                              repositoryName: "mapbox-common-ios",
+                              registryProjectName: "mapbox-common",
+                              registryFileName: "MapboxCommon.zip")
+    }
+
+    var packageDependencies: [Package.Dependency] {
+        guard !isSnapshot else { return [] }
+
+        return [
+            .package(url: repositoryURL, exact: Version(stringLiteral: version))
+        ]
+    }
+
+    var packageTargets: [Target] {
+        guard isSnapshot else { return [] }
+
+        return [
+            .binaryTarget(name: name, url: registryURL, checksum: checksum ?? "")
+        ]
+    }
+
+    var mapsTargetDependencies: Target.Dependency {
+        if isSnapshot {
+            return .byName(name: name)
+        } else {
+            return .product(name: name, package: repositoryName)
+        }
+    }
+
+    var repositoryURL: String { return "https://github.com/mapbox/\(repositoryName).git" }
+    
+    var registryReleaseFolder: String { isSnapshot ? "snapshots" : "releases" }
+
+    var registryURL: String {
+        return "https://api.mapbox.com/downloads/v2/\(registryProjectName)/\(registryReleaseFolder)/ios/packages/\(version)/\(registryFileName)"
+    }
+}

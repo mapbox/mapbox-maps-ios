@@ -1,7 +1,6 @@
 // swiftlint:disable file_length
 import UIKit
 @_implementationOnly import MapboxCommon_Private
-@_implementationOnly import MapboxCoreMaps_Private
 import Turf
 
 protocol MapboxMapProtocol: AnyObject {
@@ -67,9 +66,10 @@ protocol MapboxMapProtocol: AnyObject {
 ///
 /// If you have a ``MapView`` you can access the `MapboxMap` instance via ``MapView/mapboxMap`` property.
 ///
-/// Use ``style`` property to access runtime styling API, for example:
+/// ``MapboxMap`` inherits ``StyleManager-46yjd``, you can use it's methods to access runtime styling API:
+///
 ///   ```swift
-///   mapboxMap.style.uri = .satelliteStreets
+///   mapboxMap.styleURI = .satelliteStreets
 ///   ```
 ///
 /// Use `on`-prefixed properties to subscribe to map events, for example:
@@ -161,7 +161,7 @@ protocol MapboxMapProtocol: AnyObject {
 /// - Important: MapboxMap should only be used from the main thread.
 public final class MapboxMap: StyleManager {
     /// The underlying renderer object responsible for rendering the map.
-    private let __map: MapboxCoreMaps.Map
+    private let __map: CoreMap
 
     /// The `style` object supports run time styling.
     @available(*, deprecated, message: "Access style APIs directly from MapboxMap instance instead")
@@ -170,21 +170,27 @@ public final class MapboxMap: StyleManager {
     /// Provides access to events triggered during Map lifecycle.
     private let events: MapEvents
 
+    private let _isDefaultCameraInitialized = CurrentValueSignalProxy<Bool>()
+
+    /// Triggered when map is loaded for the first time, and camera is initialized with default style camera options.
+    var isDefaultCameraInitialized: Signal<Bool> { _isDefaultCameraInitialized.signal.skipRepeats() }
+
     deinit {
         __map.destroyRenderer()
     }
 
-    internal init(map: MapboxCoreMaps.Map, events: MapEvents, styleSourceManager: StyleSourceManagerProtocol) {
+    internal init(map: CoreMap, events: MapEvents, styleSourceManager: StyleSourceManagerProtocol) {
         self.__map = map
         self.events = events
 
         super.init(with: map, sourceManager: styleSourceManager)
 
         __map.createRenderer()
+        _isDefaultCameraInitialized.proxied = onCameraChanged.map { _ in true }
     }
 
-    internal convenience init(mapClient: MapClient, mapInitOptions: MapInitOptions, styleSourceManager: StyleSourceManagerProtocol? = nil) {
-        let map = MapboxCoreMaps.Map(
+    internal convenience init(mapClient: CoreMapClient, mapInitOptions: MapInitOptions, styleSourceManager: StyleSourceManagerProtocol? = nil) {
+        let map = CoreMap(
             client: mapClient,
             mapOptions: mapInitOptions.mapOptions)
         self.init(
@@ -494,8 +500,8 @@ public final class MapboxMap: StyleManager {
         return CameraOptions(
             __map.cameraForCoordinates(
                 for: coordinates.map { Coordinate2D(value: $0) },
-                camera: MapboxCoreMaps.CameraOptions(camera),
-                box: ScreenBox(rect)))
+                camera: CoreCameraOptions(camera),
+                box: CoreScreenBox(rect)))
     }
 
     /// Convenience method that returns the `camera options` object for given parameters.
@@ -516,7 +522,7 @@ public final class MapboxMap: StyleManager {
                        offset: CGPoint?) throws -> CameraOptions {
         let expected = __map.cameraForCoordinates(
             for: coordinates.map { Coordinate2D(value: $0) },
-            camera: MapboxCoreMaps.CameraOptions(camera),
+            camera: CoreCameraOptions(camera),
             coordinatesPadding: coordinatesPadding?.toMBXEdgeInsetsValue(),
             maxZoom: maxZoom as? NSNumber,
             offset: offset?.screenCoordinate
@@ -563,7 +569,7 @@ public final class MapboxMap: StyleManager {
     /// - Returns: `CoordinateBounds` for the given `CameraOptions`
     public func coordinateBounds(for camera: CameraOptions) -> CoordinateBounds {
         return __map.coordinateBoundsForCamera(
-            forCamera: MapboxCoreMaps.CameraOptions(camera))
+            forCamera: CoreCameraOptions(camera))
     }
 
     /// Returns the unwrapped coordinate bounds to a given ``CameraOptions-swift.struct``.
@@ -575,7 +581,7 @@ public final class MapboxMap: StyleManager {
     /// - Parameter camera: The camera for which the coordinate bounds will be returned.
     /// - Returns: `CoordinateBounds` for the given ``CameraOptions-swift.struct``.
     public func coordinateBoundsUnwrapped(for camera: CameraOptions) -> CoordinateBounds {
-        return __map.coordinateBoundsForCameraUnwrapped(forCamera: MapboxCoreMaps.CameraOptions(camera))
+        return __map.coordinateBoundsForCameraUnwrapped(forCamera: CoreCameraOptions(camera))
     }
 
     /// Returns the coordinate bounds and zoom for a given `CameraOptions`.
@@ -585,7 +591,7 @@ public final class MapboxMap: StyleManager {
     /// - Parameter camera: The camera for which the `CoordinateBoundsZoom` will be returned.
     /// - Returns: `CoordinateBoundsZoom` for the given `CameraOptions`
     public func coordinateBoundsZoom(for camera: CameraOptions) -> CoordinateBoundsZoom {
-        return __map.coordinateBoundsZoomForCamera(forCamera: MapboxCoreMaps.CameraOptions(camera))
+        return __map.coordinateBoundsZoomForCamera(forCamera: CoreCameraOptions(camera))
     }
 
     /// Returns the unwrapped coordinate bounds and zoom for a given `CameraOptions`.
@@ -598,7 +604,7 @@ public final class MapboxMap: StyleManager {
     ///     be returned.
     /// - Returns: `CoordinateBoundsZoom` for the given `CameraOptions`
     public func coordinateBoundsZoomUnwrapped(for camera: CameraOptions) -> CoordinateBoundsZoom {
-        return __map.coordinateBoundsZoomForCameraUnwrapped(forCamera: MapboxCoreMaps.CameraOptions(camera))
+        return __map.coordinateBoundsZoomForCameraUnwrapped(forCamera: CoreCameraOptions(camera))
     }
 
     // MARK: - Screen coordinate conversion
@@ -698,7 +704,7 @@ public final class MapboxMap: StyleManager {
     ///
     /// - Parameter cameraOptions: New camera options
     public func setCamera(to cameraOptions: CameraOptions) {
-        __map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
+        __map.setCameraFor(CoreCameraOptions(cameraOptions))
     }
 
     /// Returns the current camera state
@@ -741,7 +747,7 @@ public final class MapboxMap: StyleManager {
     /// - Parameter options: New camera bounds. Nil values will not take effect.
     /// - Throws: `MapError`
     public func setCameraBounds(with options: CameraBoundsOptions) throws {
-        let expected = __map.setBoundsFor(MapboxCoreMaps.CameraBoundsOptions(options))
+        let expected = __map.setBoundsFor(CoreCameraBoundsOptions(options))
 
         if expected.isError() {
             throw MapError(coreError: expected.error)
@@ -1227,14 +1233,14 @@ extension MapboxMap {
     }
 
     func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
-        let expected = __map.addViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
+        let expected = __map.addViewAnnotation(forIdentifier: id, options: CoreViewAnnotationOptions(options))
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
         }
     }
 
     func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
-        let expected = __map.updateViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
+        let expected = __map.updateViewAnnotation(forIdentifier: id, options: CoreViewAnnotationOptions(options))
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
         }
@@ -1274,7 +1280,7 @@ extension MapboxMap {
     @_spi(Experimental)
     public func tileCover(for options: TileCoverOptions) -> [CanonicalTileID] {
         __map.__tileCover(
-            for: MapboxCoreMaps.TileCoverOptions(options),
+            for: CoreTileCoverOptions(options),
             cameraOptions: nil)
     }
 }
@@ -1292,7 +1298,7 @@ extension MapboxMap {
 // MARK: - Testing only!
 
 extension MapboxMap {
-    internal var __testingMap: MapboxCoreMaps.Map {
+    internal var __testingMap: CoreMap {
         return __map
     }
 }

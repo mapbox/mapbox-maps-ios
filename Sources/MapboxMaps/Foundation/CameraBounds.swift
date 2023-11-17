@@ -37,7 +37,7 @@ public struct CameraBounds: Hashable {
         self.minPitch = minPitch
     }
 
-    internal init(_ objcValue: MapboxCoreMaps.CameraBounds) {
+    internal init(_ objcValue: CoreCameraBounds) {
         self.bounds = objcValue.bounds
         self.maxZoom = CGFloat(objcValue.maxZoom)
         self.minZoom = CGFloat(objcValue.minZoom)

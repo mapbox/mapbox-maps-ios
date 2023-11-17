@@ -4,8 +4,11 @@ import MapboxCoreMaps
 public struct AnnotatedFeature: Equatable {
     /// Represents a specific feature rendered on the layer.
     public struct LayerFeature: Equatable {
-        var layerId: String
-        var featureId: String?
+        /// Identifier of the layer, that renders the feature.
+        public var layerId: String
+
+        /// Feature identifier. If not specified, the annotation will appear on any feature from that layer.
+        public var featureId: String?
     }
 
     /// GeoJSON geometry.
@@ -15,9 +18,9 @@ public struct AnnotatedFeature: Equatable {
     public var layerFeature: LayerFeature?
 
     /// Creates Annotated feature from layer feature.
-    /// 
+    ///
     /// - Parameters:
-    ///   - layerId: Layer identifier which renders the feature.
+    ///   - layerId: Identifier of the layer, that renders the feature.
     ///   - featureId: Feature identifier. If not specified, the annotation will appear on any feature from that layer.
     public static func layerFeature(layerId: String, featureId: String? = nil) -> AnnotatedFeature {
         return .init(layerFeature: .init(layerId: layerId, featureId: featureId))
@@ -31,7 +34,7 @@ public struct AnnotatedFeature: Equatable {
         return .init(geometry: geometry.geometry)
     }
 
-    static func from(core: MapboxCoreMaps.AnnotatedFeature) -> AnnotatedFeature? {
+    static func from(core: CoreAnnotatedFeature) -> AnnotatedFeature? {
         if core.isAnnotatedLayerFeature() {
             let f = core.getAnnotatedLayerFeature()
             return .layerFeature(layerId: f.layerId, featureId: f.featureId)
@@ -44,11 +47,11 @@ public struct AnnotatedFeature: Equatable {
         return nil
     }
 
-    var asCoreFeature: MapboxCoreMaps.AnnotatedFeature? {
+    var asCoreFeature: CoreAnnotatedFeature? {
         if let geometry {
             return .fromGeometry(MapboxCommon.Geometry(geometry))
         } else if let layerFeature {
-            return .fromAnnotatedLayerFeature(AnnotatedLayerFeature(layerId: layerFeature.layerId, featureId: layerFeature.featureId))
+            return .fromAnnotatedLayerFeature(CoreAnnotatedLayerFeature(layerId: layerFeature.layerId, featureId: layerFeature.featureId))
         }
         return nil
     }

@@ -82,14 +82,14 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     }
 
     private enum PuckImage: CaseIterable {
-        case star
+        case dash
         case jpegSquare
         case blueDot
 
         var image: UIImage? {
             switch self {
-            case .star:
-                return UIImage(named: "star")
+            case .dash:
+                return UIImage(named: "dash-puck")
             case .jpegSquare:
                 return UIImage(named: "jpeg-image")
             case .blueDot:

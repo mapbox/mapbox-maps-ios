@@ -1,6 +1,5 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private
-@_implementationOnly import MapboxCoreMaps_Private
 
 struct RuntimeStylingCallbacks {
     typealias Action = () -> Void
@@ -23,7 +22,7 @@ internal protocol StyleManagerProtocol {
     func setStyleURI(_ uri: String, callbacks: RuntimeStylingCallbacks)
     func setStyleJSON(_ json: String, callbacks: RuntimeStylingCallbacks)
 
-    func getStyleDefaultCamera() -> MapboxCoreMaps.CameraOptions
+    func getStyleDefaultCamera() -> CoreCameraOptions
 
     func getStyleTransition() -> MapboxCoreMaps.TransitionOptions
     func setStyleTransitionFor(_ transitionOptions: MapboxCoreMaps.TransitionOptions)
@@ -51,34 +50,34 @@ internal protocol StyleManagerProtocol {
     func getStyleTerrainProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
     func getStyleProjectionProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
 
-    func getStyleImage(forImageId imageId: String) -> MapboxCoreMaps.Image?
+    func getStyleImage(forImageId imageId: String) -> CoreMapsImage?
     func hasStyleImage(forImageId imageId: String) -> Bool
 
     func isStyleLoaded() -> Bool
 
     func addStyleLayer(
         forProperties properties: Any,
-        layerPosition: MapboxCoreMaps.LayerPosition?) -> Expected<NSNull, NSString>
+        layerPosition: CoreLayerPosition?) -> Expected<NSNull, NSString>
 
     func addStyleCustomLayer(
         forLayerId layerId: String,
-        layerHost: CustomLayerHost, layerPosition: MapboxCoreMaps.LayerPosition?) -> Expected<NSNull, NSString>
+        layerHost: CustomLayerHost, layerPosition: CoreLayerPosition?) -> Expected<NSNull, NSString>
 
     func addPersistentStyleLayer(
         forProperties properties: Any,
-        layerPosition: MapboxCoreMaps.LayerPosition?) -> Expected<NSNull, NSString>
+        layerPosition: CoreLayerPosition?) -> Expected<NSNull, NSString>
 
     func addPersistentStyleCustomLayer(
         forLayerId layerId: String,
         layerHost: CustomLayerHost,
-        layerPosition: MapboxCoreMaps.LayerPosition?) -> Expected<NSNull, NSString>
+        layerPosition: CoreLayerPosition?) -> Expected<NSNull, NSString>
 
     func isStyleLayerPersistent(forLayerId layerId: String) -> Expected<NSNumber, NSString>
 
     func removeStyleLayer(forLayerId layerId: String) -> Expected<NSNull, NSString>
     func moveStyleLayer(
         forLayerId layerId: String,
-        layerPosition: MapboxCoreMaps.LayerPosition?
+        layerPosition: CoreLayerPosition?
     ) -> Expected<NSNull, NSString>
 
     func setStyleLayerPropertyForLayerId(
@@ -109,7 +108,7 @@ internal protocol StyleManagerProtocol {
 
     func updateStyleImageSourceImage(
         forSourceId sourceId: String,
-        image: Image) -> Expected<NSNull, NSString>
+        image: CoreMapsImage) -> Expected<NSNull, NSString>
 
     func removeStyleSource(forSourceId sourceId: String) -> Expected<NSNull, NSString>
 
@@ -141,7 +140,7 @@ internal protocol StyleManagerProtocol {
     func addStyleImage(
         forImageId imageId: String,
         scale: Float,
-        image: Image,
+        image: CoreMapsImage,
         sdf: Bool,
         stretchX: [ImageStretches],
         stretchY: [ImageStretches],
@@ -173,7 +172,7 @@ internal protocol StyleManagerProtocol {
     func setStyleCustomRasterSourceTileDataForSourceId(
         _ sourceId: String,
         tileId: CanonicalTileID,
-        image: MapboxCoreMaps.Image?) -> Expected<NSNull, NSString>
+        image: CoreMapsImage?) -> Expected<NSNull, NSString>
 
     func invalidateStyleCustomRasterSourceTile(
         forSourceId: String,
@@ -186,7 +185,7 @@ internal protocol StyleManagerProtocol {
     func __setStyleGeoJSONSourceDataForSourceId(
         _ sourceId: String,
         dataId: String,
-        data: MapboxCoreMaps.GeoJSONSourceData
+        data: CoreGeoJSONSourceData
     ) -> Expected<NSNull, NSString>
 
     func setStyleAtmosphereForProperties(_ properties: Any) -> Expected<NSNull, NSString>
@@ -207,7 +206,7 @@ internal protocol StyleManagerProtocol {
 
 // MARK: Conformance
 
-extension MapboxCoreMaps.StyleManager: StyleManagerProtocol {
+extension CoreStyleManager: StyleManagerProtocol {
     func setStyleURI(_ uri: String, callbacks: RuntimeStylingCallbacks) {
         load(style: uri, isJson: false, callbacks: callbacks)
     }
@@ -225,7 +224,7 @@ extension MapboxCoreMaps.StyleManager: StyleManagerProtocol {
                 callbacks.error?(StyleError(message: error.message))
             }
         })
-        let options =  RuntimeStylingOptions(
+        let options = CoreRuntimeStylingOptions(
             sourcesCallback: { _ in callbacks.sources?() },
             layersCallback: { _ in callbacks.layers?() },
             imagesCallback: { _ in callbacks.images?() },

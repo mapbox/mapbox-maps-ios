@@ -1,6 +1,5 @@
 import XCTest
 @testable import MapboxMaps
-@_implementationOnly import MapboxCoreMaps_Private
 
 final class ViewAnnotationOptionsTests: XCTestCase {
 
@@ -9,6 +8,8 @@ final class ViewAnnotationOptionsTests: XCTestCase {
     let width: CGFloat = 25.0
     let height: CGFloat = 50.0
     let allowOverlap: Bool = true
+    let allowOverlapWithPuck = true
+    let ignoreCameraPadding = true
     let visible: Bool = true
     let anchor: ViewAnnotationAnchor = .right
     let offsetX: CGFloat = 100.0
@@ -45,24 +46,28 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             width: width,
             height: height,
             allowOverlap: allowOverlap,
+            allowOverlapWithPuck: allowOverlapWithPuck,
             visible: visible,
             selected: selected,
-            variableAnchors: [ViewAnnotationAnchorConfig(anchor: anchor, offsetX: offsetX, offsetY: offsetY)])
+            variableAnchors: [ViewAnnotationAnchorConfig(anchor: anchor, offsetX: offsetX, offsetY: offsetY)],
+            ignoreCameraPadding: ignoreCameraPadding)
 
-        let objcValue = MapboxCoreMaps.ViewAnnotationOptions(
+        let objcValue = CoreViewAnnotationOptions(
             __annotatedFeature: .fromGeometry(MapboxCommon.Geometry(point)),
             width: width as NSNumber?,
             height: height as NSNumber?,
             allowOverlap: allowOverlap as NSNumber?,
+            allowOverlapWithPuck: allowOverlap as NSNumber?,
             visible: visible as NSNumber?,
             variableAnchors: variableAnchors,
-            selected: selected as NSNumber?
+            selected: selected as NSNumber?,
+            ignoreCameraPadding: ignoreCameraPadding as NSNumber?
         )
 
         let convertedOptions = ViewAnnotationOptions(objcValue)
         XCTAssertEqual(convertedOptions, swiftValue)
 
-        let convertedObjcValue = MapboxCoreMaps.ViewAnnotationOptions(swiftValue)
+        let convertedObjcValue = CoreViewAnnotationOptions(swiftValue)
         let convertedBack = ViewAnnotationOptions(convertedObjcValue)
 
         XCTAssertEqual(convertedBack, swiftValue)
@@ -86,8 +91,6 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             width: width,
             height: height
         )
-
-        let frame = sut.frame(with: nil)
 
         // center
         sut.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .center, offsetX: offsetX, offsetY: offsetY)]

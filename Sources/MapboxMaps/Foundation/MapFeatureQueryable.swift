@@ -1,5 +1,3 @@
-@_implementationOnly import MapboxCoreMaps_Private
-
 internal protocol MapFeatureQueryable: AnyObject {
     @discardableResult
     func queryRenderedFeatures(with shape: [CGPoint],

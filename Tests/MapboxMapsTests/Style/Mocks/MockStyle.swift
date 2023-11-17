@@ -2,6 +2,9 @@ import UIKit
 @testable @_spi(Experimental) import MapboxMaps
 
 final class MockStyle: StyleProtocol {
+    @TestPublished var styleRootLoaded = false
+    var isStyleRootLoaded: Signal<Bool> { $styleRootLoaded }
+
     var mapStyle: MapStyle?
 
     @Stubbed var isStyleLoaded: Bool = false

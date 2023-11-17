@@ -1,10 +1,10 @@
 // swiftlint:disable file_length
 @_implementationOnly import MapboxCommon_Private
-@_implementationOnly import MapboxCoreMaps_Private
 import UIKit
 
 protocol StyleProtocol: AnyObject {
     var isStyleLoaded: Bool { get }
+    var isStyleRootLoaded: Signal<Bool> { get }
     var styleDefaultCamera: CameraOptions { get }
     var uri: StyleURI? { get set }
     var mapStyle: MapStyle? { get set }
@@ -53,11 +53,15 @@ internal extension StyleProtocol {
 
 // swiftlint:disable type_body_length
 
-/// Style provides access to the APIs used to dynamically modify the map's style. Use it
-/// to read and write layers, sources, and images. Obtain the Style instance for a MapView
-/// via MapView.mapboxMap.style.
+/// Style manager is a base class for ``MapboxMap`` and ``Snapshotter`` that provides provides methods to manipulate Map Style at runtime.
 ///
-/// - Important: Style should only be used from the main thread.
+/// Use style manager to dynamically modify the map style. You can manage layers, sources, lights, terrain, and many more.
+/// Typically, you don’t create the style manager instances yourself. Instead you receive instance of this class from ``MapView`` as the ``MapView/mapboxMap`` property, or create an instance of ``Snapshotter``.
+///
+/// To load the style use ``styleURI`` or ``styleJSON`` or new experimental ``mapStyle`` property. The latter
+/// allows not only load the style, but also modify the style configuration, for more information, see ``MapStyle``.
+///
+/// - Important: `StyleManager` should only be used from the main thread.
 public class StyleManager {
     private let sourceManager: StyleSourceManagerProtocol
     private let styleManager: StyleManagerProtocol
@@ -401,6 +405,8 @@ public class StyleManager {
     public var isStyleLoaded: Bool {
         return styleManager.isStyleLoaded()
     }
+
+    var isStyleRootLoaded: Signal<Bool> { styleReconciler.isStyleRootLoaded }
 
     /// MapStyle represents style configuration to load the style.
     ///
@@ -763,7 +769,7 @@ public class StyleManager {
     /// - Returns:
     ///     The default value of the property for the layers with type layerType.
     public static func layerPropertyDefaultValue(for layerType: LayerType, property: String) -> StylePropertyValue {
-        return MapboxCoreMaps.StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType.rawValue, property: property)
+        return CoreStyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType.rawValue, property: property)
     }
 
     /// Gets the properties for a style layer.
@@ -925,7 +931,7 @@ public class StyleManager {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     public func updateImageSource(withId id: String, image: UIImage) throws {
-        guard let mbmImage = Image(uiImage: image) else {
+        guard let mbmImage = CoreMapsImage(uiImage: image) else {
             throw TypeConversionError.unexpectedType
         }
 
@@ -975,7 +981,7 @@ public class StyleManager {
                          stretchX: [ImageStretches],
                          stretchY: [ImageStretches],
                          content: ImageContent? = nil) throws {
-        guard let mbmImage = Image(uiImage: image) else {
+        guard let mbmImage = CoreMapsImage(uiImage: image) else {
             throw TypeConversionError.unexpectedType
         }
 
@@ -1389,7 +1395,7 @@ public class StyleManager {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     @_spi(Experimental) public func setCustomRasterSourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, image: UIImage) throws {
-        guard let mbmImage = Image(uiImage: image) else {
+        guard let mbmImage = CoreMapsImage(uiImage: image) else {
             throw TypeConversionError.unexpectedType
         }
         try handleExpected {

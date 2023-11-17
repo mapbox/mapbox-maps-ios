@@ -3,7 +3,7 @@ import MapboxCoreMaps
 extension ViewAnnotationAnchorConfig {
     /// Creates an annotation anchor config.
     ///
-    /// Parameters:
+    /// - Parameters:
     ///   - anchor: Anchor direction.
     ///   - offsetX: Horizontal offset. Positive value moves view annotation to the right while negative moves it to the left.
     ///   - offsetY: Vertical offset. Positive value moves view annotation to the top while negative moves it to the bottom.

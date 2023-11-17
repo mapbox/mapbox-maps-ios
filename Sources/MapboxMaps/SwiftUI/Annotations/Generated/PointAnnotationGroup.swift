@@ -87,7 +87,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
             layerId: layerId,
             layerPosition: layerPosition,
             store: store,
-            make: { $0.makePointAnnotationManager(id: $1, layerPosition: $2)},
+            make: { $0.makePointAnnotationManager(id: $1, layerPosition: $2, clusterOptions: clusterOptions) },
             updateProperties: { self.updateProperties(manager: $0) })
         visitor.add(annotationGroup: group)
     }

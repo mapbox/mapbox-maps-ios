@@ -4,7 +4,7 @@ import MapboxMaps
 final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!
-    private let customImage = UIImage(named: "star")!
+    private let customImage = UIImage(named: "dest-pin")!
     private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
@@ -46,15 +46,13 @@ final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         var customPointAnnotation = PointAnnotation(coordinate: centerCoordinate)
         customPointAnnotation.image = .init(image: customImage, name: "my-custom-image-name")
         customPointAnnotation.isDraggable = true
+        customPointAnnotation.iconOffset = [0, 12]
+        customPointAnnotation.tapHandler = { [id = customPointAnnotation.id] _ in
+            print("tapped annotation: \(id)")
+            return true
+        }
 
-        pointAnnotationManager.delegate = self
         // Add the annotation to the manager in order to render it on the map.
         pointAnnotationManager.annotations = [customPointAnnotation]
-    }
-}
-
-extension CustomPointAnnotationExample: AnnotationInteractionDelegate {
-    func annotationManager(_ manager: MapboxMaps.AnnotationManager, didDetectTappedAnnotations annotations: [MapboxMaps.Annotation]) {
-        print("AnnotationManager did detect tapped annotations: \(annotations)")
     }
 }

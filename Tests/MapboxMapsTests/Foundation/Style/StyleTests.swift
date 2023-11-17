@@ -98,7 +98,7 @@ final class StyleManagerTests: XCTestCase {
 
     func testDefaultCamera() {
         let stubCamera = MapboxMaps.CameraOptions.random()
-        styleManager.getStyleDefaultCameraStub.defaultReturnValue = MapboxCoreMaps.CameraOptions(stubCamera)
+        styleManager.getStyleDefaultCameraStub.defaultReturnValue = CoreCameraOptions(stubCamera)
 
         XCTAssertEqual(style.styleDefaultCamera, stubCamera)
     }

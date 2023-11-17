@@ -94,6 +94,8 @@ private struct DisplayedViewAnnotation {
     func update(with viewAnnotation: MapViewAnnotation) {
         annotation.annotatedFeature = viewAnnotation.annotatedFeature
         annotation.allowOverlap = viewAnnotation.allowOverlap
+        annotation.allowOverlapWithPuck = viewAnnotation.allowOverlapWithPuck
+        annotation.ignoreCameraPadding = viewAnnotation.ignoreCameraPadding
         annotation.visible = viewAnnotation.visible
         annotation.selected = viewAnnotation.selected
         annotation.variableAnchors = viewAnnotation.variableAnchors

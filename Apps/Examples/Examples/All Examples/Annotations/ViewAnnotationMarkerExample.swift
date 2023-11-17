@@ -18,7 +18,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
     private var markerId = 0
     private var annotations = [String: ViewAnnotation]()
 
-    private let image = UIImage(named: "blue_marker_view")!
+    private let image = UIImage(named: "intermediate-pin")!
     private lazy var markerHeight: CGFloat = image.size.height
     private var cancelables = Set<AnyCancelable>()
 
@@ -108,6 +108,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         var layer = SymbolLayer(id: Constants.LAYER_ID, source: Constants.SOURCE_ID)
         layer.iconImage = .constant(.name(Constants.BLUE_ICON_ID))
         layer.iconAnchor = .constant(.bottom)
+        layer.iconOffset = .constant([0, 12])
         layer.iconAllowOverlap = .constant(true)
         try? mapView.mapboxMap.addLayer(layer)
     }
@@ -143,7 +144,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         let annotation = ViewAnnotation(
             annotatedFeature: .layerFeature(layerId: Constants.LAYER_ID, featureId: id),
             view: annotationView)
-        annotation.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .bottom, offsetY: markerHeight)]
+        annotation.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .bottom, offsetY: markerHeight - 12)]
         mapView.viewAnnotations.add(annotation)
 
         annotationView.onClose = { [weak annotation, weak self] in

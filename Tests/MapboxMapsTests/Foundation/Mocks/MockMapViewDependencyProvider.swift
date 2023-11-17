@@ -83,14 +83,20 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     struct MakeViewportManagerImplParams {
         var mapboxMap: MapboxMapProtocol
         var cameraAnimationsManager: CameraAnimationsManagerProtocol
+        var safeAreaInsets: Signal<UIEdgeInsets>
+        var isDefaultCameraInitialized: Signal<Bool>
         var anyTouchGestureRecognizer: UIGestureRecognizer
         var doubleTapGestureRecognizer: UIGestureRecognizer
         var doubleTouchGestureRecognizer: UIGestureRecognizer
     }
     let makeViewportManagerImplStub = Stub<MakeViewportManagerImplParams, ViewportManagerImplProtocol>(defaultReturnValue: MockViewportManagerImpl())
+
+    // swiftlint:disable:next function_parameter_count
     func makeViewportManagerImpl(
         mapboxMap: MapboxMapProtocol,
         cameraAnimationsManager: CameraAnimationsManagerProtocol,
+        safeAreaInsets: Signal<UIEdgeInsets>,
+        isDefaultCameraInitialized: Signal<Bool>,
         anyTouchGestureRecognizer: UIGestureRecognizer,
         doubleTapGestureRecognizer: UIGestureRecognizer,
         doubleTouchGestureRecognizer: UIGestureRecognizer
@@ -98,6 +104,8 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         makeViewportManagerImplStub.call(with: .init(
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager,
+            safeAreaInsets: safeAreaInsets,
+            isDefaultCameraInitialized: isDefaultCameraInitialized,
             anyTouchGestureRecognizer: anyTouchGestureRecognizer,
             doubleTapGestureRecognizer: doubleTapGestureRecognizer,
             doubleTouchGestureRecognizer: doubleTouchGestureRecognizer))

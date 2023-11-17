@@ -25,6 +25,15 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
             // The following line is just for testing purposes.
             self.finish()
         }.store(in: &cancelables)
+
+        // Set up the tap gesture
+        mapView.gestures.onLayerTap("US-states") { [weak self] queriedFeature, context in
+            if let firstFeature = queriedFeature.feature.properties,
+               case let .string(stateName) = firstFeature["STATE_NAME"] {
+                    self?.showAlert(with: "You selected \(stateName)")
+            }
+            return true
+        }.store(in: &cancelables)
     }
 
     public func setupExample() {
@@ -44,36 +53,5 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         // Add the data source and style layer to the map.
         try! mapView.mapboxMap.addSource(geoJSONSource)
         try! mapView.mapboxMap.addLayer(fillLayer, layerPosition: nil)
-
-        // Set up the tap gesture
-        addTapGesture(to: mapView)
-    }
-
-    // Add a tap gesture to the map view.
-    public func addTapGesture(to mapView: MapView) {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(findFeatures))
-        mapView.addGestureRecognizer(tapGesture)
-    }
-
-    /**
-     Use the tap point received from the gesture recognizer to query
-     the map for rendered features at the given point within the layer specified.
-     */
-    @objc public func findFeatures(_ sender: UITapGestureRecognizer) {
-        let tapPoint = sender.location(in: mapView)
-
-        mapView.mapboxMap.queryRenderedFeatures(
-            with: tapPoint,
-            options: RenderedQueryOptions(layerIds: ["US-states"], filter: nil)) { [weak self] result in
-            switch result {
-            case .success(let queriedfeatures):
-                if let firstFeature = queriedfeatures.first?.queriedFeature.feature.properties,
-                   case let .string(stateName) = firstFeature["STATE_NAME"] {
-                    self?.showAlert(with: "You selected \(stateName)")
-                }
-            case .failure(let error):
-                self?.showAlert(with: "An error occurred: \(error.localizedDescription)")
-            }
-        }
     }
 }

@@ -1,7 +1,6 @@
 import MapboxCoreMaps
 import Foundation
 import MapboxCommon
-@_implementationOnly import MapboxCoreMaps_Private
 
 /// Converts events API  from `MapboxMapsCore.Observable` to `Signal`s.
 internal final class MapEvents {
@@ -26,7 +25,7 @@ internal final class MapEvents {
     private var genericSubjects = [String: SignalSubject<GenericEvent>]()
     var cancelables = Set<AnyCancelable>()
 
-    init(observable: Observable) {
+    init(observable: CoreObservable) {
         onMapLoaded = .from(method: observable.subscribe(forMapLoaded:))
         onMapLoadingError = .from(method: observable.subscribe(forMapLoadingError:))
         onStyleLoaded = .from(method: observable.subscribe(forStyleLoaded:))

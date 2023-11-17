@@ -43,18 +43,17 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         descriptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2.0).isActive = true
 
         mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
-            guard let self = self else { return }
-
-            self.setupSourceAndLayer()
-
-            // Set up tap gesture
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.findFeatures))
-            self.mapView.addGestureRecognizer(tapGesture)
+            self?.setupSourceAndLayer()
 
             // The below lines are used for internal testing purposes only.
-            DispatchQueue.main.asyncAfter(deadline: .now()+3.0) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                 self?.finish()
             }
+        }.store(in: &cancelables)
+
+        mapView.gestures.onLayerTap("earthquake-viz") { [weak self] queriedFeature, _ in
+            self?.handleTappedFeature(queriedFeature)
+            return true
         }.store(in: &cancelables)
     }
 
@@ -173,50 +172,30 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         }
     }
 
-    /**
-     Use the tap point received from the gesture recognizer to query
-     the map for rendered features at the given point within the layer specified.
-     */
-    @objc public func findFeatures(_ sender: UITapGestureRecognizer) {
-        let tapPoint = sender.location(in: mapView)
+    private func handleTappedFeature(_ queriedFeature: QueriedFeature) {
+        let earthquakeFeature = queriedFeature.feature
+        if case .number(let earthquakeIdDouble) = earthquakeFeature.identifier,
+           case .point(let point) = earthquakeFeature.geometry,
+           case let .number(magnitude) = earthquakeFeature.properties?["mag"],
+           case let .string(place) = earthquakeFeature.properties?["place"],
+           case let .number(timestamp) = earthquakeFeature.properties?["time"] {
 
-        mapView.mapboxMap.queryRenderedFeatures(
-            with: tapPoint,
-            options: RenderedQueryOptions(layerIds: ["earthquake-viz"], filter: nil)) { [weak self] result in
+            let earthquakeId = Int(earthquakeIdDouble).description
 
-            guard let self = self else { return }
+            // Set the description of the earthquake from the `properties` object
+            self.setDescription(magnitude: magnitude, timeStamp: timestamp, location: place)
 
-            switch result {
-            case .success(let queriedfeatures):
+            // Set the earthquake to be "selected"
+            self.setSelectedState(earthquakeId: earthquakeId)
 
-                // Extract the earthquake feature from the queried features
-                if let earthquakeFeature = queriedfeatures.first?.queriedFeature.feature,
-                   case .number(let earthquakeIdDouble) = earthquakeFeature.identifier,
-                   case .point(let point) = earthquakeFeature.geometry,
-                   case let .number(magnitude) = earthquakeFeature.properties?["mag"],
-                   case let .string(place) = earthquakeFeature.properties?["place"],
-                   case let .number(timestamp) = earthquakeFeature.properties?["time"] {
+            // Reset a previously tapped earthquake to be "unselected".
+            self.resetPreviouslySelectedStateIfNeeded(currentTappedEarthquakeId: earthquakeId)
 
-                    let earthquakeId = Int(earthquakeIdDouble).description
+            // Store the currently tapped earthquake so it can be reset when another earthquake is tapped.
+            self.previouslyTappedEarthquakeId = earthquakeId
 
-                    // Set the description of the earthquake from the `properties` object
-                    self.setDescription(magnitude: magnitude, timeStamp: timestamp, location: place)
-
-                    // Set the earthquake to be "selected"
-                    self.setSelectedState(earthquakeId: earthquakeId)
-
-                    // Reset a previously tapped earthquake to be "unselected".
-                    self.resetPreviouslySelectedStateIfNeeded(currentTappedEarthquakeId: earthquakeId)
-
-                    // Store the currently tapped earthquake so it can be reset when another earthquake is tapped.
-                    self.previouslyTappedEarthquakeId = earthquakeId
-
-                    // Center the selected earthquake on the screen
-                    self.mapView.camera.fly(to: CameraOptions(center: point.coordinates, zoom: 10))
-                }
-            case .failure(let error):
-                self.showAlert(with: "An error occurred: \(error.localizedDescription)")
-            }
+            // Center the selected earthquake on the screen
+            self.mapView.camera.fly(to: CameraOptions(center: point.coordinates, zoom: 10))
         }
     }
 

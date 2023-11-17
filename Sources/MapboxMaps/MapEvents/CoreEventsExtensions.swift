@@ -13,7 +13,7 @@ extension CameraChanged {
     /// Creates `CameraChanged` event.
     public convenience init(cameraState: CameraState, timestamp: Date) {
         self.init(
-            __cameraState: MapboxCoreMaps.CameraState(cameraState),
+            __cameraState: CoreCameraState(cameraState),
             timestamp: timestamp
         )
     }

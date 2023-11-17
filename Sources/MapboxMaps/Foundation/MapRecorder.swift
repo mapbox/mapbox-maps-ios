@@ -1,5 +1,4 @@
 import Foundation
-@_implementationOnly import MapboxCoreMaps_Private
 
 /// MapboxRecorder provides functions to record and replay API calls of a ``MapboxMap`` instance.
 /// These recordings can be used to debug issues which require multiple steps to reproduce.
@@ -10,7 +9,7 @@ import Foundation
 @_spi(Experimental) public final class MapRecorder {
     let recorder: MapboxCoreMaps.MapRecorder
 
-    internal init(mapView: MapboxCoreMaps.Map) throws {
+    internal init(mapView: CoreMap) throws {
         recorder = try handleExpected {
             MapboxCoreMaps.MapRecorder.createInstance(for: mapView)
         }
@@ -23,7 +22,7 @@ import Foundation
     /// - Parameters:
     ///   - options: `MapRecorderOptions` to control recording. Optional.
     public func start(options: MapRecorderOptions = MapRecorderOptions(timeWindow: nil, loggingEnabled: false, compressed: false)) {
-        let mapRecorderOptions = MapboxCoreMaps.MapRecorderOptions(timeWindow: options.timeWindow as NSNumber?, loggingEnabled: options.loggingEnabled, compressed: options.compressed)
+        let mapRecorderOptions = CoreMapRecorderOptions(timeWindow: options.timeWindow as NSNumber?, loggingEnabled: options.loggingEnabled, compressed: options.compressed)
         recorder.startRecording(for: mapRecorderOptions)
     }
 
@@ -48,7 +47,7 @@ import Foundation
         options: MapPlayerOptions = MapPlayerOptions(playbackCount: 1, playbackSpeedMultiplier: 1.0, avoidPlaybackPauses: false),
         completion: @escaping () -> Void
     ) {
-        let mapPlayerOptions = MapboxCoreMaps.MapPlayerOptions(
+        let mapPlayerOptions = CoreMapPlayerOptions(
             playbackCount: Int32(options.playbackCount),
             playbackSpeedMultiplier: options.playbackSpeedMultiplier,
             avoidPlaybackPauses: options.avoidPlaybackPauses)

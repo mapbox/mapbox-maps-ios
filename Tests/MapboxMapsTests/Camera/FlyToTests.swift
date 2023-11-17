@@ -21,7 +21,7 @@ internal class FlyToTests: XCTestCase {
     fileprivate func privateTestFlyTo(s0: CLLocationCoordinate2D, s2: CLLocationCoordinate2D) {
 
         let source = CameraState(
-            MapboxCoreMaps.CameraState(
+            CoreCameraState(
                 center: s0,
                 padding: .init(
                     top: 0,
@@ -80,7 +80,7 @@ internal class FlyToTests: XCTestCase {
             )
 
             let source = CameraState(
-                MapboxCoreMaps.CameraState(
+                CoreCameraState(
                     center: sourceCoord,
                     padding: .init(
                         top: 0,

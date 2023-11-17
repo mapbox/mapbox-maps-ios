@@ -10,7 +10,7 @@ let cameraOptionsTestValue = CameraOptions(
     pitch: 10)
 
 let cameraStateTestValue = CameraState(
-    MapboxCoreMaps.CameraState(
+    CoreCameraState(
         center: .init(
             latitude: 10,
             longitude: 10),

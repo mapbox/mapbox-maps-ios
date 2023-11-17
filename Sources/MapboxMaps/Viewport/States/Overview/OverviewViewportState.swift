@@ -1,4 +1,5 @@
 import Turf
+import UIKit
 
 /// A ``ViewportState`` implementation that shows an overview of the geometry specified by its
 /// ``OverviewViewportStateOptions/geometry``.
@@ -14,62 +15,54 @@ public final class OverviewViewportState {
     /// animation with a linear timing curve and duration specified by the new value's
     /// ``OverviewViewportStateOptions/animationDuration``.
     public var options: OverviewViewportStateOptions {
-        didSet {
-            recalculateCameraOptions()
-        }
+        set { optionsSubject.value = newValue }
+        get { optionsSubject.value }
     }
 
-    // MARK: - Injected Dependencies
-
     private let mapboxMap: MapboxMapProtocol
-
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
+    private let optionsSubject: CurrentValueSignalSubject<OverviewViewportStateOptions>
+    private let cameraOptions: Signal<CameraOptions>
 
-    private let observableCameraOptions: ObservableCameraOptionsProtocol
-
-    // MARK: - Private State
-
-    private var updatingCameraCancelable: Cancelable?
-
+    private var updatingCameraCancelable: AnyCancelable?
     private var cameraAnimationCancelable: Cancelable?
-
-    // MARK: - Initialization
 
     internal init(options: OverviewViewportStateOptions,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                  observableCameraOptions: ObservableCameraOptionsProtocol) {
-        self.options = options
+                  safeAreaPadding: Signal<UIEdgeInsets?>) {
+        self.optionsSubject = .init(options)
         self.mapboxMap = mapboxMap
         self.cameraAnimationsManager = cameraAnimationsManager
-        self.observableCameraOptions = observableCameraOptions
-        recalculateCameraOptions()
-    }
-
-    // MARK: - Private Utilities
-
-    private func recalculateCameraOptions() {
-        do {
-            let camera = try mapboxMap.camera(
-                for: options.geometry.coordinates,
-                camera: .init(
-                    padding: options.padding,
-                    bearing: options.bearing,
-                    pitch: options.pitch),
-                coordinatesPadding: options.geometryPadding,
-                maxZoom: options.maxZoom,
-                offset: options.offset)
-            observableCameraOptions.notify(with: camera)
-        } catch let error {
-            Log.error(forMessage: "Failed to calculate camera options: \(error)", category: "Viewport")
-        }
+        self.cameraOptions = Signal.combineLatest(safeAreaPadding, optionsSubject.signal.skipRepeats())
+            .map { safeAreaPadding, options in
+                let padding = safeAreaPadding + options.padding
+                let cam = try? mapboxMap.camera(
+                    for: options.geometry.coordinates,
+                    camera: .init(
+                        padding: padding,
+                        bearing: options.bearing,
+                        pitch: options.pitch),
+                    coordinatesPadding: options.geometryPadding,
+                    maxZoom: options.maxZoom,
+                    offset: options.offset)
+                return cam
+            }
+            .skipNil()
+            .skipRepeats()
     }
 
     private func animate(to cameraOptions: CameraOptions) {
         cameraAnimationCancelable?.cancel()
+        let duration = max(0, options.animationDuration)
+        if duration == 0 {
+            mapboxMap.setCamera(to: cameraOptions)
+            return
+        }
+
         cameraAnimationCancelable = cameraAnimationsManager.ease(
             to: cameraOptions,
-            duration: max(0, options.animationDuration),
+            duration: duration,
             curve: .linear,
             completion: nil)
     }
@@ -79,7 +72,7 @@ extension OverviewViewportState: ViewportState {
     /// :nodoc:
     /// See ``ViewportState/observeDataSource(with:)``.
     public func observeDataSource(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {
-        return observableCameraOptions.observe(with: handler)
+        cameraOptions.observeWithCancellingHandler(handler)
     }
 
     /// :nodoc:
@@ -88,9 +81,8 @@ extension OverviewViewportState: ViewportState {
         guard updatingCameraCancelable == nil else {
             return
         }
-        updatingCameraCancelable = observableCameraOptions.observe { [weak self] cameraOptions in
+        updatingCameraCancelable = cameraOptions.observe { [weak self] cameraOptions in
             self?.animate(to: cameraOptions)
-            return true
         }
     }
 

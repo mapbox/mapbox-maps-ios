@@ -3,110 +3,91 @@ import XCTest
 
 final class FollowPuckViewportStateTest: XCTestCase {
 
-    var dataSource: MockFollowPuckViewportStateDataSource!
     var mapboxMap: MockMapboxMap!
     var state: FollowPuckViewportState!
 
+    @TestSignal var onPuckRender: Signal<PuckRenderingData>
+    @TestPublished var safeAreaPadding: UIEdgeInsets?
+
     override func setUp() {
         super.setUp()
-        dataSource = MockFollowPuckViewportStateDataSource()
         mapboxMap = MockMapboxMap()
         state = FollowPuckViewportState(
-            dataSource: dataSource,
-            mapboxMap: mapboxMap)
+            options: options,
+            mapboxMap: mapboxMap,
+            onPuckRender: onPuckRender,
+            safeAreaPadding: $safeAreaPadding)
     }
 
     override func tearDown() {
         state = nil
         mapboxMap = nil
-        dataSource = nil
         super.tearDown()
     }
 
-    func testGetOptions() {
-        let options = state.options
-
-        XCTAssertEqual(dataSource.$options.getStub.invocations.map(\.returnValue), [options])
+    var options = FollowPuckViewportStateOptions() {
+        didSet {
+            state?.options = options
+        }
     }
 
-    func testSetOptions() {
-        let newOptions = FollowPuckViewportStateOptions.random()
-
-        state.options = newOptions
-
-        XCTAssertEqual(dataSource.$options.setStub.invocations.map(\.parameters), [newOptions])
+    func testGetSetOptions() {
+        XCTAssertEqual(state.options, options)
+        state.options = .init(zoom: 5)
+        XCTAssertEqual(state.options, .init(zoom: 5))
     }
 
     func testObserveDataSource() throws {
-        let handlerStub = Stub<CameraOptions, Bool>(defaultReturnValue: .random())
+        let stub = Stub<CameraOptions, Bool>(defaultReturnValue: true)
+        _ = state.observeDataSource(with: stub.call(with:))
 
-        let cancelable = state.observeDataSource(with: handlerStub.call(with:))
+        XCTAssertEqual(stub.invocations.count, 0, "no data without puck render event")
 
-        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
-        let dataSourceInvocation = try XCTUnwrap(dataSource.observeStub.invocations.first)
+        var puck = PuckRenderingData(
+            location: Location(coordinate: .init(latitude: 1, longitude: 2)),
+            heading: Heading(direction: 3, accuracy: 4))
+        $onPuckRender.send(puck)
 
-        // verify that when the handler passed to the internal data source is invoked
-        // the one passed in externally is as well.
-        let handler = dataSourceInvocation.parameters
-        let cameraOptions = CameraOptions.random()
+        XCTAssertEqual(stub.invocations.count, 1)
+        var params = try XCTUnwrap(stub.invocations.last?.parameters)
+        XCTAssertEqual(params.center, puck.location.coordinate)
+        XCTAssertEqual(params.padding, nil,
+                       "doesn't reset padding if it is not specified nor in options or safe area")
 
-        let result = handler(cameraOptions)
+        options = apply(options) {
+            $0.bearing = .course
+            $0.pitch = 20
+            $0.padding = UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4)
+        }
+        safeAreaPadding = UIEdgeInsets(top: 10, left: 20, bottom: 30, right: 40)
+        puck.location = Location(
+            coordinate: .init(latitude: 3, longitude: 4),
+            bearing: 42)
+        $onPuckRender.send(puck)
 
-        XCTAssertEqual(handlerStub.invocations.map(\.parameters), [cameraOptions])
-        XCTAssertEqual(handlerStub.invocations.map(\.returnValue), [result])
-
-        // verify that canceling the returned cancelable also cancels
-        // the one returned by the call to the internal data source. They could
-        // be the same cancelable, but writing the test to avoid that
-        // assumption should make refactoring easier.
-        let observeCancelable = try XCTUnwrap(dataSourceInvocation.returnValue as? MockCancelable)
-
-        cancelable.cancel()
-
-        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
+        XCTAssertEqual(stub.invocations.count, 4)
+        params = try XCTUnwrap(stub.invocations.last?.parameters)
+        XCTAssertEqual(params.center, puck.location.coordinate)
+        XCTAssertEqual(params.padding, safeAreaPadding + options.padding)
+        XCTAssertEqual(params.bearing, puck.location.bearing)
+        XCTAssertEqual(params.pitch, options.pitch)
     }
 
     func testStartAndStopUpdatingCamera() throws {
-        let cameraOptions = CameraOptions.random()
         state.startUpdatingCamera()
 
-        // verify that an observation was created
-        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
-        let dataSourceInvocation = try XCTUnwrap(dataSource.observeStub.invocations.first)
-        let observeHandler = dataSourceInvocation.parameters
-        let observeCancelable = try XCTUnwrap(dataSourceInvocation.returnValue as? MockCancelable)
+        var puck = PuckRenderingData(
+            location: Location(coordinate: .init(latitude: 1, longitude: 2)),
+            heading: Heading(direction: 3, accuracy: 4))
+        $onPuckRender.send(puck)
 
-        // exercise the observation handler and
-        // verify that it returns true (to continue receiving updates)
-        XCTAssertTrue(observeHandler(cameraOptions))
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
+        var params = try XCTUnwrap(mapboxMap.setCameraStub.invocations.last?.parameters)
+        XCTAssertEqual(params.center, puck.location.coordinate)
 
-        // verify that the camera was set
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.map(\.parameters), [cameraOptions])
-
-        // stop updates
         state.stopUpdatingCamera()
-
-        // verify that the observe cancelable was canceled
-        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
-    }
-
-    func testStartUpdatingMultipleTimesDoesNothing() {
-        state.startUpdatingCamera()
-        state.startUpdatingCamera()
-
-        // only one observation is created
-        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
-    }
-
-    func testRestartingUpdates() {
-        state.startUpdatingCamera()
-        state.stopUpdatingCamera()
-        dataSource.observeStub.reset()
-
-        // restart
-        state.startUpdatingCamera()
-
-        // a new observation is created
-        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
+        puck.location = Location(coordinate: .init(latitude: 3, longitude: 4))
+        $onPuckRender.send(puck)
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
     }
 }

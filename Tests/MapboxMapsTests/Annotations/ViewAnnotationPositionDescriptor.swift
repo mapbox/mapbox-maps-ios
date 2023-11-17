@@ -1,4 +1,4 @@
-@_implementationOnly import MapboxCoreMaps_Private
+@testable import MapboxMaps
 
 extension MapboxCoreMaps.ViewAnnotationPositionDescriptor {
     convenience init(
@@ -10,7 +10,7 @@ extension MapboxCoreMaps.ViewAnnotationPositionDescriptor {
         self.init(__identifier: identifier,
                   width: frame.width,
                   height: frame.height,
-                  leftTopCoordinate: ScreenCoordinate(x: frame.minX, y: frame.minY),
+                  leftTopCoordinate: CoreScreenCoordinate(x: frame.minX, y: frame.minY),
                   anchorCoordinate: anchorCoordinate,
                   anchorConfig: anchorConfig)
     }

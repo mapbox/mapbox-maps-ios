@@ -23,8 +23,12 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
             self.addSymbolClusteringLayers()
         }.store(in: &cancelables)
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
-        mapView.addGestureRecognizer(tapGestureRecognizer)
+        // Add tap handers to and clustered and unclustered layers.
+        for layer in ["unclustered-point-layer", "clustered-circle-layer"] {
+            mapView.gestures.onLayerTap(layer) { [weak self] queriedFeature, _ in
+                return self?.handleTap(queriedFeature: queriedFeature) ?? false
+            }.store(in: &cancelables)
+        }
     }
 
     func addSymbolClusteringLayers() {
@@ -159,38 +163,28 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         return numberLayer
     }
 
-    @objc func handleTap(gestureRecognizer: UITapGestureRecognizer) {
-        let point = gestureRecognizer.location(in: mapView)
-
-        // Look for features at the tap location within the clustered and
-        // unclustered layers.
-        mapView.mapboxMap.queryRenderedFeatures(with: point,
-                                                options: RenderedQueryOptions(layerIds: ["unclustered-point-layer", "clustered-circle-layer"],
-                                                filter: nil)) { [weak self] result in
-            switch result {
-            case .success(let queriedFeatures):
-                // Return the first feature at that location, then pass attributes to the alert controller.
-                // Check whether the feature has values for `ASSETNUM` and `LOCATIONDETAIL`. These properties
-                // come from the fire hydrant dataset and indicate that the selected feature is not clustered.
-                if let selectedFeatureProperties = queriedFeatures.first?.queriedFeature.feature.properties,
-                   case let .string(featureInformation) = selectedFeatureProperties["ASSETNUM"],
-                   case let .string(location) = selectedFeatureProperties["LOCATIONDETAIL"] {
-                    self?.showAlert(withTitle: "Hydrant \(featureInformation)", and: "\(location)")
-                // If the feature is a cluster, it will have `point_count` and `cluster_id` properties. These are assigned
-                // when the cluster is created.
-                } else if let selectedFeatureProperties = queriedFeatures.first?.queriedFeature.feature.properties,
-                  case let .number(pointCount) = selectedFeatureProperties["point_count"],
-                  case let .number(clusterId) = selectedFeatureProperties["cluster_id"],
-                  case let .number(maxFlow) = selectedFeatureProperties["max"],
-                  case let .number(sum) = selectedFeatureProperties["sum"],
-                  case let .boolean(in_e9) = selectedFeatureProperties["in_e9"] {
-                // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
-                    let inEngineNine = in_e9 ? "Some hydrants belong to Engine 9." : "No hydrants belong to Engine 9."
-                    self?.showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) hydrants in this cluster. The highest water flow is \(Int(maxFlow)) and the collective flow is \(Int(sum)). \(inEngineNine)")
-                }
-            case .failure(let error):
-                self?.showAlert(withTitle: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")
-            }
+    // Shows cluster or hydrant info. Returns false if couldn't parse data.
+    private func handleTap(queriedFeature: QueriedFeature) -> Bool {
+        if let selectedFeatureProperties = queriedFeature.feature.properties,
+           case let .string(featureInformation) = selectedFeatureProperties["ASSETNUM"],
+           case let .string(location) = selectedFeatureProperties["LOCATIONDETAIL"] {
+            showAlert(withTitle: "Hydrant \(featureInformation)", and: "\(location)")
+            // If the feature is a cluster, it will have `point_count` and `cluster_id` properties.
+            // These are assigned when the cluster is created.
+            return true
         }
+
+        if let selectedFeatureProperties = queriedFeature.feature.properties,
+           case let .number(pointCount) = selectedFeatureProperties["point_count"],
+           case let .number(clusterId) = selectedFeatureProperties["cluster_id"],
+           case let .number(maxFlow) = selectedFeatureProperties["max"],
+           case let .number(sum) = selectedFeatureProperties["sum"],
+           case let .boolean(in_e9) = selectedFeatureProperties["in_e9"] {
+            // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
+            let inEngineNine = in_e9 ? "Some hydrants belong to Engine 9." : "No hydrants belong to Engine 9."
+            showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) hydrants in this cluster. The highest water flow is \(Int(maxFlow)) and the collective flow is \(Int(sum)). \(inEngineNine)")
+            return true
+        }
+        return false
     }
 }

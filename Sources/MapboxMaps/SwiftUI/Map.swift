@@ -1,28 +1,33 @@
 import SwiftUI
 
-/// A SwiftUI view that displays Mapbox Map.
+/// A SwiftUI view that displays a Mapbox Map.
 ///
-/// Use `Map` do display Mapbox Map in SwiftUI application.
+/// The `Map` is an entry point to display Mapbox Map in a SwiftUI Application. Typically, you create a ``Map`` in the `body` variable of your view. Then you can use
+/// - ``Viewport`` and ``ViewportAnimation`` to manage map camera state and animations.
+/// - `Map`'s modifier functions such as ``Map/mapStyle(_:)``,  ``Map/onTapGesture(count:perform:)``, ``Map/onLayerTapGesture(_:perform:)`` and many others to configure the map appearance and behavior.
+/// - Map Content objects, such as ``Puck2D``, ``Puck3D``, ``PointAnnotation``, ``PolylineAnnotation``, ``PolygonAnnotation``, ``MapViewAnnotation`` and others, to display your content on the map.
+///
+/// In the example below the `ContentView` displays a map with [Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) style in the dusk light preset, shows the user location indicator (Puck), displays a view annotation with a SwiftUI View inside, draws a polygon, and focuses camera on that polygon.
 ///
 /// ```swift
 /// struct ContentView: View {
 ///     static let polygon = Polygon(...)
 ///
-///     // Configures map camera to overview the given polygon.
+///     // Configures the map camera to overview the given polygon.
 ///     @State var viewport = Viewport.overview(geometry: Self.polygon)
 ///
 ///     var body: some View {
 ///         Map(viewport: $viewport) {
-///             // Displays user location.
+///             // Displays the user location.
 ///             Puck2D(heading: bearing)
 ///
-///             // Displays view annotation.
+///             // Displays a view annotation.
 ///             MapViewAnnotation(CLLocationCoordinate(...))
 ///                 Text("🚀")
 ///                     .background(Circle().fill(.red))
 ///             }
 ///
-///             // Displays polygon annotation.
+///             // Displays a polygon annotation.
 ///             PolygonAnnotation(polygon: Self.polygon)
 ///                 .fillColor(StyleColor(.systemBlue))
 ///                 .fillOpacity(0.5)
@@ -31,11 +36,13 @@ import SwiftUI
 ///                     print("Polygon is tapped")
 ///                 }
 ///          }
-///          // Configures Mapbox Standard style to use "Dusk" preset.
+///          // Uses Mapbox Standard style in the dusk light preset.
 ///          .mapStyle(.standard(lightPreset: .dusk))
 ///     }
 /// }
 /// ```
+///
+/// Check out the <doc:SwiftUI-User-Guide> for more information about ``Map`` capabilities, and the <doc:Map-Content-Gestures-User-Guide> for more information about gesture handling.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -136,6 +143,7 @@ public struct Map: UIViewControllerRepresentable {
     }
 
     public func updateUIViewController(_ mapController: UIViewController, context: Context) {
+        mapController.additionalSafeAreaInsets = UIEdgeInsets(insets: mapDependencies.additionalSafeArea, layoutDirection: layoutDirection)
         context.coordinator.basic.update(
             viewport: viewport,
             deps: mapDependencies,
@@ -147,10 +155,13 @@ public struct Map: UIViewControllerRepresentable {
     }
 }
 
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @available(iOS 13.0, *)
 extension Map {
 
-    /// Creates a map.
+    /// Creates a map with a viewport binding.
     ///
     /// - Parameters:
     ///     - viewport: The camera viewport to display.
@@ -167,7 +178,7 @@ extension Map {
             content: nil)
     }
 
-    /// Creates a map.
+    /// Creates a map an initial viewport.
     ///
     /// - Parameters:
     ///     - initialViewport: Initial camera viewport.
@@ -184,7 +195,7 @@ extension Map {
             content: nil)
     }
 
-    /// Creates a map.
+    /// Creates a map with a viewport binding.
     ///
     /// Use this method to create a map in application extension context, or to override default url opening mechanism on iOS < 15.
     ///
@@ -209,7 +220,7 @@ extension Map {
             content: content)
     }
 
-    /// Creates a map.
+    /// Creates a map an initial viewport.
     ///
     /// Use this method to create a map in application extension context, or to override default url opening mechanism on iOS < 15.
     ///
@@ -325,7 +336,56 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func transitionsToIdleUponUserInteraction(_ value: Bool) -> Self {
-        copyAssigned(self, \.mapDependencies.transitionsToIdleUponUserInteraction, value)
+        copyAssigned(self, \.mapDependencies.viewportOptions.transitionsToIdleUponUserInteraction, value)
+    }
+
+    /// When `true`, all viewport states increase the camera padding by the amount of the safe area insets.
+    ///
+    /// The following formula is used to calculate the camera padding:
+    /// ```
+    /// safe area insets = view safe area insets + additional safe area insets
+    /// camera padding = viewport padding + safe area insets
+    /// ```
+    ///
+    /// If your view has some UI elements on top of the map and you want them to be padded,
+    /// use ``Map/additionalSafeAreaInsets(_:)`` to specify an additional amount of safe area insets.
+    ///
+    /// - Note: ``MapViewAnnotation`` will respect the padding area and will be placed outside of it.
+    ///
+    /// Defaults to `true`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    func usesSafeAreaInsetsAsPadding(_ value: Bool) -> Self {
+        copyAssigned(self, \.mapDependencies.viewportOptions.usesSafeAreaInsetsAsPadding, value)
+    }
+
+    /// Amount of additional safe area insets.
+    ///
+    /// If called multiple times, the last call wins. This property behaves identically to the
+    /// `UIViewController.additionalSafeAreaInsets`.
+    ///
+    /// - Note: This property cannot be animated.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    func additionalSafeAreaInsets(_ insets: SwiftUI.EdgeInsets) -> Self {
+        copyAssigned(self, \.mapDependencies.additionalSafeArea, insets)
+    }
+
+    /// Sets the amount of additional safe area insets for the given edges.
+    ///
+    /// If called multiple times, the last call wins. This property behaves identically to the
+    /// `UIViewController.additionalSafeAreaInsets`.
+    ///
+    /// - Note: This property cannot be animated.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    func additionalSafeAreaInsets(_ edges: Edge.Set = .all, _ length: CGFloat) -> Self {
+        var copy = self
+        copy.mapDependencies.additionalSafeArea.updateEdges(edges, length)
+        return copy
     }
 }
 
@@ -372,17 +432,7 @@ extension Map {
 
         override func viewDidLoad() {
             super.viewDidLoad()
-
-            view.addSubview(mapView)
-
-            mapView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                mapView.topAnchor.constraint(equalTo: view.topAnchor),
-                mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            ])
-
+            view.addConstrained(child: mapView)
             mapView.mapboxMap.size = view.bounds.size
         }
     }

@@ -66,7 +66,7 @@ public struct CameraOptions: Codable, Hashable {
         self.anchor     = anchor
     }
 
-    internal init(_ objcValue: MapboxCoreMaps.CameraOptions) {
+    internal init(_ objcValue: CoreCameraOptions) {
         self.init(
             center: objcValue.__center?.value,
             padding: objcValue.__padding?.toUIEdgeInsetsValue(),
@@ -77,7 +77,7 @@ public struct CameraOptions: Codable, Hashable {
     }
 }
 
-extension MapboxCoreMaps.CameraOptions {
+extension CoreCameraOptions {
     internal convenience init(_ swiftValue: CameraOptions) {
         self.init(
             __center: swiftValue.center.flatMap { Coordinate2D(value: $0) },

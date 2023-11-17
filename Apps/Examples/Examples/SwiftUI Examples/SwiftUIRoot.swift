@@ -11,21 +11,10 @@ struct SwiftUIRoot: View {
             List {
                 Section {
                     ExampleLink("Show me the map!", note: "Just a Map().", destination: Map().ignoresSafeArea())
-                    ExampleLink("Simple map", note: "Camera observing, automatic dark mode support.", destination: SimpleMapExample())
-                    ExampleLink("Map settings", note: "Showcase of the most possible map configurations.", destination: MapSettingsExample())
-                    ExampleLink("Viewport", note: "Showcase of the possible viewport states", destination: MapViewportExample())
-                    ExampleLink("Locate Me", note: "Example of how to create user location control", destination: LocateMeExample())
-                } header: { Text("Getting started") }
-
-                Section {
+                    ExampleLink("Locate Me", note: "Use Viewport to create user location control", destination: LocateMeExample())
                     ExampleLink("Locations", note: "New look of locations, configure standard style parameters", destination: StandardStyleLocationsExample())
                     ExampleLink("Standard Style Import", note: "Import Mapbox Standard style into your custom style.", destination: StandardStyleImportExample())
-                } header: { Text("Standard Style") }
-
-                Section {
-                    ExampleLink("Query Rendered Features on tap", note: "Use MapReader and MapboxMap to query rendered features.", destination: FeaturesQueryExample())
-                    ExampleLink("Clustering data", note: "Display GeoJSON data with clustering using custom layers and handle interactions with them.", destination: ClusteringExample())
-                } header: { Text("Use cases") }
+                } header: { Text("Getting started") }
 
                 Section {
                     ExampleLink("View Annotations", note: "Add/remove view annotation on tap.", destination: ViewAnnotationsExample())
@@ -34,12 +23,21 @@ struct SwiftUIRoot: View {
                 } header: { Text("Annotations") }
 
                 Section {
+                    ExampleLink("Query Rendered Features on tap", note: "Use MapReader and MapboxMap to query rendered features.", destination: FeaturesQueryExample())
+                    ExampleLink("Clustering data", note: "Display GeoJSON data with clustering using custom layers and handle interactions with them.", destination: ClusteringExample())
+                } header: { Text("Use cases") }
+
+                Section {
+                    ExampleLink("Map settings", note: "Showcase of the most possible map configurations.", destination: MapSettingsExample())
+                    ExampleLink("Viewport Playground", note: "Showcase of the possible viewport states", destination: ViewportPlayground())
                     ExampleLink("Puck playground", note: "Display user location using puck", destination: PuckPlayground())
                     ExampleLink("Annotation Order", destination: AnnotationsOrderTestExample())
+                    ExampleLink("Simple Map", note: "Camera observing, automatic dark mode support.", destination: SimpleMapExample())
                     ExampleLink("AttributionURL open (iOS 13+)", note: "Override attribution url opener.", destination: URLOpenIOS13())
                     if #available(iOS 15.0, *) {
                         ExampleLink("AttributionURL open (iOS 15+)", note: "Override attribution url opener.", destination: URLOpenIOS15())
                     }
+
                 } header: { Text("Testing Examples") }
             }
             .listStyle(.plain)

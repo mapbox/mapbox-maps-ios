@@ -1,5 +1,5 @@
 import UIKit
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 import CoreLocation
 import MapboxCoreMaps
 
@@ -36,10 +36,7 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
         button.layer.shadowRadius = 8
         button.layer.shadowOffset = CGSize(width: 0, height: 2)
         button.addTarget(self, action: #selector(changeMode), for: .touchUpInside)
-        view.addSubview(button)
         NSLayoutConstraint.activate([
-            button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
-            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             button.widthAnchor.constraint(equalToConstant: 200),
             button.heightAnchor.constraint(equalToConstant: 40)
         ])
@@ -65,13 +62,21 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
                     bearing: 168.8)
             ]),
             headingProvider: Signal(just: Heading(direction: 180, accuracy: 0)))
-        mapView.location.options = LocationOptions(puckType: .puck2D(.init(topImage: UIImage(named: "user_puck_icon"))))
+        mapView.location.options = LocationOptions(puckType: .puck2D(.init(topImage: UIImage(named: "dash-puck"))), puckBearing: .heading, puckBearingEnabled: true)
+
+        mapView.viewport.options.usesSafeAreaInsetsAsPadding = true
 
         mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             loadRoutes()
             self.finish()
         }.store(in: &cancelables)
+
+        self.toolbarItems = [
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            UIBarButtonItem(customView: modeButton),
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        ]
 
         addParkingAnnotation(
             coordinate: CLLocationCoordinate2D(latitude: 37.445, longitude: -122.1704),
@@ -137,13 +142,12 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
 
     private func updateViewport(animated: Bool, completion: (() -> Void)? = nil) {
         var viewportState: ViewportState?
-        let padding = self.view.safeAreaInsets
         if driveMode {
-            viewportState = mapView.viewport.makeFollowPuckViewportState(options: .init(padding: padding, zoom: 17, bearing: .course, pitch: 49))
+            viewportState = mapView.viewport.makeFollowPuckViewportState(options: .init(zoom: 17, bearing: .course, pitch: 49))
         } else {
             if let route = routes.first(where: \.selected), let geometry = route.feature.geometry {
                 let coordPadding = UIEdgeInsets(allEdges: 20)
-                let options = OverviewViewportStateOptions(geometry: geometry, geometryPadding: coordPadding, padding: padding)
+                let options = OverviewViewportStateOptions(geometry: geometry, geometryPadding: coordPadding)
                 viewportState = mapView.viewport.makeOverviewViewportState(options: options)
             }
         }
@@ -170,6 +174,11 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
             view.selected = annotation.selected
             annotation.setNeedsUpdateSize()
         }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setToolbarHidden(false, animated: false)
     }
 }
 
@@ -534,7 +543,7 @@ extension UIEdgeInsets {
 
 extension NSAttributedString {
     static func labelText(_ string: String, size: CGFloat, color: UIColor, bold: Bool = false) -> NSAttributedString {
-        var paragraphStyle = NSMutableParagraphStyle()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.11
         paragraphStyle.lineSpacing = 4
         paragraphStyle.alignment = .left

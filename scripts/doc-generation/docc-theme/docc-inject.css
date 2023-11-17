@@ -1,0 +1,32 @@
+/* Mapbox Docs Style Overrides */
+@font-face {
+  font-family: 'Cera';
+  font-weight: 300;
+  src: url('https://assets.website-files.com/5f291534dceb6cd8f0e7a02f/5fa51ad2d78d7e853909ea49_Cera%20Pro%20Light.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Cera';
+  font-weight: 400;
+  src: url('https://assets.website-files.com/5f291534dceb6cd8f0e7a02f/5f2a9eb37e663459fc064f54_CeraPRO-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Cera';
+  font-weight: 500;
+  src: url('https://assets.website-files.com/6050a76fa6a633d5d54ae714/6050ab4346858de0e05420ae_Cera%20Pro%20Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Cera';
+  font-weight: 700;
+  src: url('https://api.mapbox.com/mapbox-assembly/fonts/CeraPRO-Bold.v1.woff2') format('woff2'),
+    url('https://api.mapbox.com/mapbox-assembly/fonts/CeraPRO-Bold.v1.woff') format('woff');
+}
+
+h1>*,
+.navigator-card-inner h2,
+.navigator-card-inner h3 p {
+  font-family: 'Cera' !important;
+  font-weight: 700 !important;
+}

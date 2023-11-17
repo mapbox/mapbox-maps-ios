@@ -271,13 +271,6 @@ custom_categories:
       - TileStore
       - TileStoreObserver
 
-  - name: Custom Networking Stack
-    children:
-      - DownloadError
-      - DownloadStatus
-      - HttpRequestError
-      - HttpResponse
-
   - name: GeoJSON
     children:
       - Feature

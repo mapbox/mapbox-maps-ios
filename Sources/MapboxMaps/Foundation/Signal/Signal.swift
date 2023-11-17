@@ -68,7 +68,7 @@ extension Signal {
 // for the most common use cases.
 extension Signal {
     /// Creates a signal that triggers once, then cancels itself.
-    internal func takeFirst() -> Signal {
+    func takeFirst() -> Signal {
         return Signal { handler in
             weak var weakToken: AnyCancelable?
             let token = self.observe { payload in
@@ -95,9 +95,7 @@ extension Signal {
     func conditional(_ isEnabled: Ref<Bool>) -> Signal {
         filter { _ in isEnabled.value }
     }
-}
 
-extension Signal {
     func map<U>(_ transform: @escaping (Payload) -> U) -> Signal<U> {
         Signal<U> { handler in
             return self.observe { payload in
@@ -126,6 +124,72 @@ extension Signal {
             withExtendedLifetime(object) { payload }
         }
     }
+
+    /// Removes values that equal to the previous value from the stream.
+    func skipRepeats(by isEqual: @escaping (Payload, Payload) -> Bool) -> Signal {
+        Signal { handler in
+            var value: Payload?
+            return self.observe { newValue in
+                if value == nil || !isEqual(newValue, value!) {
+                    value = newValue
+                    handler(newValue)
+                }
+            }
+        }
+    }
+
+    func skipRepeats() -> Signal where Payload: Equatable {
+        skipRepeats(by: ==)
+    }
+
+    /// Used to implement ViewportState's observing pattern which handler closure can return `false` value to unsubscribe.
+    /// See `ViewportState.observeDataSource`.
+    func observeWithCancellingHandler(_ handler: @escaping (Payload) -> Bool) -> Cancelable {
+        var capturedToken: AnyCancelable?
+        var cancelled = false
+        let token = self.observe { payload in
+            cancelled = !handler(payload)
+            if cancelled {
+                capturedToken?.cancel()
+            }
+        }
+
+        capturedToken = token
+
+        // In case of immediate (synchronous) cancellation in `handler` closure
+        // the token won't be cancelled. The following code handles it.
+        if cancelled {
+            token.cancel()
+        }
+
+        // The token is retained by the `observe` closure until `handler` cancels it.
+        // The subscription will be alive even if call-site ignores cancellable.
+        return token
+    }
+}
+
+extension Signal {
+    static func combineLatest<P1, P2>(_ s1: Signal<P1>, _ s2: Signal<P2>) -> Signal where Payload == (P1, P2) {
+        Signal { handler in
+            var last1: P1?
+            var last2: P2?
+            let handle = {
+                if let last1, let last2 {
+                    handler((last1, last2))
+                }
+            }
+            return AnyCancelable([
+                s1.observe { value in
+                    last1 = value
+                    handle()
+                },
+                s2.observe { value in
+                    last2 = value
+                    handle()
+                }
+            ])
+        }
+    }
 }
 
 extension Signal {
@@ -141,11 +205,19 @@ extension Signal {
 }
 
 extension Signal {
+    /// Calls method with every new value.
     func handle<Root: AnyObject>(in method: @escaping (Root) -> (Payload) -> Void, ofWeak root: Root) -> AnyCancelable {
         observe { [weak root] payload in
             guard let root else { return }
             let handler = method(root)
             handler(payload)
+        }
+    }
+
+    /// Assigns every value to a property.
+    func assign<Root: AnyObject>(to: ReferenceWritableKeyPath<Root, Payload>, ofWeak root: Root) -> AnyCancelable {
+        observe { [weak root] payload in
+            root?[keyPath: to] = payload
         }
     }
 }

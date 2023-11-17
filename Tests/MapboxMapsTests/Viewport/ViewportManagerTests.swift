@@ -6,6 +6,7 @@ final class ViewportManagerTests: XCTestCase {
     var puckRenderDataSubject = SignalSubject<PuckRenderingData>()
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var mapboxMap: MockMapboxMap!
+    var styleManager: MockStyle!
     var viewport: ViewportManager!
 
     override func setUp() {
@@ -13,14 +14,17 @@ final class ViewportManagerTests: XCTestCase {
         impl = MockViewportManagerImpl()
         cameraAnimationsManager = MockCameraAnimationsManager()
         mapboxMap = MockMapboxMap()
+        styleManager = MockStyle()
         viewport = ViewportManager(
             impl: impl,
             onPuckRender: puckRenderDataSubject.signal,
             cameraAnimationsManager: cameraAnimationsManager,
-            mapboxMap: mapboxMap)
+            mapboxMap: mapboxMap,
+            styleManager: styleManager)
     }
 
     override func tearDown() {
+        styleManager = nil
         viewport = nil
         mapboxMap = nil
         cameraAnimationsManager = nil

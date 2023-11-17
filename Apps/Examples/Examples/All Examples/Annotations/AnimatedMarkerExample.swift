@@ -57,12 +57,14 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.loadStyle(.satelliteStreets)
 
-        // add a tap gesture recognizer that will allow the marker to be animated
-        mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(updatePosition(_:))))
+        // add a tap gesture handler that will allow the marker to be animated
+        mapView.gestures.onMapTap.observe {[weak self] context in
+            self?.updatePosition(newCoordinate: context.coordinate)
+        }.store(in: &cancelables)
     }
 
     private func setupExample() {
-        try? mapView.mapboxMap.addImage(UIImage(named: "red_marker")!, id: Constants.markerIconId)
+        try? mapView.mapboxMap.addImage(UIImage(named: "dest-pin")!, id: Constants.markerIconId)
 
         // Create a GeoJSON data source.
         var source = GeoJSONSource(id: Constants.sourceId)
@@ -75,6 +77,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         symbolLayer.iconImage = .constant(.name(Constants.markerIconId))
         symbolLayer.iconIgnorePlacement = .constant(true)
         symbolLayer.iconAllowOverlap = .constant(true)
+        symbolLayer.iconOffset = .constant([0, 12])
 
         try? mapView.mapboxMap.addLayer(symbolLayer)
     }
@@ -112,9 +115,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
 
     }
 
-    @objc private func updatePosition(_ sender: UITapGestureRecognizer) {
-        let newCoordinate = mapView.mapboxMap.coordinate(for: sender.location(in: mapView))
-
+    private func updatePosition(newCoordinate: CLLocationCoordinate2D) {
         // save marker's origin and destination to interpolate between them during the animation
         destination = newCoordinate
         origin = currentPosition

@@ -25,7 +25,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private typealias SourceId = String
 
     internal static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
-        return MapboxCoreMaps.StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
+        return CoreStyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
 
     private let styleManager: StyleManagerProtocol
@@ -212,7 +212,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         }
     }
 
-    private func setStyleGeoJSONSourceDataForSourceId(_ id: String, dataId: String? = nil, data: MapboxCoreMaps.GeoJSONSourceData) throws {
+    private func setStyleGeoJSONSourceDataForSourceId(_ id: String, dataId: String? = nil, data: CoreGeoJSONSourceData) throws {
         try handleExpected { () -> Expected<NSNull, NSString> in
             return styleManager.__setStyleGeoJSONSourceDataForSourceId(id,
                                                                        dataId: dataId ?? "",

@@ -207,6 +207,7 @@ final class SignalTests: XCTestCase {
 
     func testRetaining() {
         let subj = SignalSubject<Int>()
+        var token: AnyCancelable?
 
         weak var weakObject: ObjectWrapper<Int>?
         do {
@@ -214,18 +215,18 @@ final class SignalTests: XCTestCase {
             weakObject = object
 
             var received = [Int]()
-            let token = subj.signal
+            token = subj.signal
                 .retaining(object)
                 .map { $0 * 2 }
                 .observe { received.append($0) }
 
             subj.send(2)
             XCTAssertEqual(received, [4])
-
-            XCTAssertNotNil(weakObject)
-            token.cancel()
         }
 
+        XCTAssertNotNil(weakObject)
+
+        token?.cancel()
         XCTAssertNil(weakObject)
     }
 
@@ -304,6 +305,96 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(observedValues, [true, false, true, false])
     }
 
+    func testCombineLatest() {
+        let subject1 = SignalSubject<Int>()
+        let subject2 = SignalSubject<Int>()
+
+        typealias P = Pair<Int, Int>
+
+        var received = [P]()
+        let token = Signal.combineLatest(subject1.signal, subject2.signal)
+            .observe { received.append(Pair($0)) }
+
+        subject1.send(1)
+        XCTAssertEqual(received, [])
+
+        subject2.send(2)
+        XCTAssertEqual(received, [P(1, 2)])
+
+        subject1.send(3)
+        XCTAssertEqual(received, [P(1, 2), P(3, 2)])
+
+        subject2.send(4)
+        XCTAssertEqual(received, [P(1, 2), P(3, 2), P(3, 4)])
+
+        subject2.send(5)
+        XCTAssertEqual(received, [P(1, 2), P(3, 2), P(3, 4), P(3, 5)])
+
+        token.cancel()
+
+        subject1.send(6)
+        subject1.send(7)
+        XCTAssertEqual(received, [Pair(1, 2), Pair(3, 2), Pair(3, 4), Pair(3, 5)])
+    }
+
+    func testObserveWithCancellingHandler() {
+        let subj = SignalSubject<Int>()
+
+        var received = [Int]()
+        let token = subj.signal.observeWithCancellingHandler { value in
+            received.append(value)
+            return value < 3
+        }
+
+        subj.send(1)
+        subj.send(2)
+        subj.send(3)
+        subj.send(4)
+
+        XCTAssertEqual(received, [1, 2, 3])
+        token.cancel()
+    }
+
+    func testObserveWithCancellingHandlerSynchronous() {
+        let subj = CurrentValueSignalSubject<Int>(1)
+        var received = [Int]()
+
+        weak var weakObject: ObjectWrapper<Int>?
+        do {
+            var object = ObjectWrapper(subject: 1)
+            weakObject = object
+
+            let token = subj.signal.observeWithCancellingHandler { value in
+                XCTAssertEqual(object.subject, 1)
+                received.append(value)
+                return value != 1
+            }
+        }
+
+        subj.value = 2
+        XCTAssertEqual(received, [1])
+        XCTAssertNil(weakObject)
+    }
+
+    func testSkipRepeats() {
+        let subj = SignalSubject<Int>()
+
+        var received = [Int]()
+        subj.signal
+            .skipRepeats()
+            .observe { received.append($0) }
+            .store(in: &cancellables)
+
+        subj.send(1)
+        XCTAssertEqual(received, [1])
+
+        subj.send(1)
+        XCTAssertEqual(received, [1])
+
+        subj.send(2)
+        XCTAssertEqual(received, [1, 2])
+    }
+
     @available(iOS 13.0, *)
     func testCombineSupportWithOperators() {
         var tokens = Set<AnyCancellable>()
@@ -354,5 +445,41 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(observed, ["1", "1", "42", "5"])
 
         XCTAssertEqual(try XCTUnwrap(signal.latestValue), "5")
+    }
+
+    func testAssign() {
+        class TestClass {
+            var value: Int = 0
+        }
+
+        let testObject = TestClass()
+        let subj = SignalSubject<Int>()
+
+        let token = subj.signal.assign(to: \.value, ofWeak: testObject)
+
+        subj.send(1)
+        XCTAssertEqual(testObject.value, 1)
+
+        subj.send(2)
+        XCTAssertEqual(testObject.value, 2)
+
+        token.cancel()
+
+        subj.send(3)
+        XCTAssertEqual(testObject.value, 2)
+    }
+}
+
+private struct Pair<T: Equatable, U: Equatable>: Equatable {
+    let first: T
+    let second: U
+
+    init(_ first: T, _ second: U) {
+        self.first = first
+        self.second = second
+    }
+
+    init(_ pair: (T, U)) {
+        self.init(pair.0, pair.1)
     }
 }

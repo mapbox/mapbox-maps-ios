@@ -1,6 +1,5 @@
 import XCTest
 @_spi(Experimental) @testable import MapboxMaps
-@_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 import CoreLocation
 
@@ -115,14 +114,14 @@ final class SnapshotterTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 44.9753911881, longitude: -124.3348229758)
         ]
         let center = CLLocationCoordinate2D(latitude: 38, longitude: -76)
-        let padding = EdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+        let padding = CoreEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
         let anchor = CGPoint.zero
         let zoom = 15.0
         let bearing = 45.0
         let pitch = 90.0
 
         let cameraOptions = CameraOptions(center: center, padding: padding.toUIEdgeInsetsValue(), anchor: anchor, zoom: zoom, bearing: CLLocationDirection(bearing), pitch: CGFloat(pitch))
-        mockMapSnapshotter.cameraForCoordinatesStub.defaultReturnValue = MapboxCoreMaps.CameraOptions(cameraOptions)
+        mockMapSnapshotter.cameraForCoordinatesStub.defaultReturnValue = CoreCameraOptions(cameraOptions)
 
         let returnedOptions = snapshotter.camera(for: coordinates, padding: padding.toUIEdgeInsetsValue(), bearing: bearing, pitch: pitch)
 

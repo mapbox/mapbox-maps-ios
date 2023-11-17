@@ -29,11 +29,13 @@ final class PointAnnotationGroupTests: XCTestCase {
         let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         let layerId = "layer-id"
         let slot = "bottom"
+        let clusteringOptions = ClusterOptions(circleRadius: .constant(10))
         let group = PointAnnotationGroup {
             PointAnnotation(coordinate: coordinate)
         }
         .layerId(layerId)
         .slot(slot)
+        .clusterOptions(clusteringOptions)
 
         var annotationIds: [AnyHashable: String] = [:]
 
@@ -47,6 +49,7 @@ final class PointAnnotationGroupTests: XCTestCase {
         // Then
         let stubbed = orchestratorImpl.makePointAnnotationManagerStub.invocations[0]
         let manager = try XCTUnwrap(stubbed.returnValue as? PointAnnotationManager)
+        XCTAssertEqual(stubbed.parameters.clusterOptions, clusteringOptions)
         XCTAssertEqual(stubbed.parameters.id, layerId)
         XCTAssertEqual(manager.annotations.count, 1)
         XCTAssertEqual(manager.slot, slot)

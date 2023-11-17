@@ -1,42 +1,56 @@
 import SwiftUI
 import Turf
 
-/// The viewport represents the ways to position camera.
+/// Viewport represents the ways to position camera.
 ///
-/// The viewport may be set to the map as initial viewport:
+/// Currently, several types of viewport are supported:
+/// - Default Style viewport sets the camera to the camera parameters defined in the Style root property. This type is used by default.
+/// - Camera viewport allows to directly set camera using center coordinate, zoom, bearing, pitch, and anchor.
+/// - Overview viewport helps to focus the map camera on a specified Geometry with the minimum zoom level. For example, focus user attention on a route line.
+/// - Follow Puck viewport automatically tracks the user's position on the map.
+/// - Idle viewport is activated when the user interacts with the map. You can also set it to interrupt the ongoing viewport transition animation.
 ///
+/// Typically, you set viewport via two methods: by setting the constant initial viewport, or passing the viewport `Binding`.
+/// The former method is handy to set viewport only once, at map initialization time:
 /// ```swift
-///  Map(initialViewport: .styleDefault)
+/// struct StaticViewport: View {
+///     var body: some View {
+///         // Focus camera on Disneyland at zoom 10.
+///         Map(initialViewport: .camera(center: disneyland, zoom: 10))
+///     }
+/// }
+///
+/// private let disneyland = CLLocationCoordinate(latitude: 33.812092, longitude: -117.918976)
 /// ```
 ///
-/// or as binding:
+/// The latter method allows you to programmatically update the viewport at any time, with or without animations:
 ///
 /// ```swift
 /// struct UserLocationMap: View {
-///   @State var viewport: Viewport = .followPuck(zoom: 16, bearing: .heading)
-///   var body: some View {
-///     Map(viewport: $viewport)
-///   }
+///     // Initially, focus camera on US Disneyland.
+///     @State var viewport: Viewport = .camera(center: disneyland, zoom: 10)
+///
+///     var body: some View {
+///         VStack {
+///             Map(viewport: $viewport)
+///             Button("Jump to Paris Disneyland") {
+///                 // Later, update viewport with the different settings.
+///                 viewport = .camera(center: CLLocationCoordinate2D(latitude: 48.868, longitude: 2.782), zoom: 12)
+///             }
+///             Button("Animate to User") {
+///                 // Or, update viewport with animation.
+///                 withViewportAnimation {
+///                     viewport = .followPuck(zoom: 16, bearing: .heading, pitch: 60)
+///                 }
+///             }
+///         }
+///     }
 /// }
 /// ```
 ///
-/// Viewport change can be animated via the ``withViewportAnimation(_:body:completion:)``.
+/// See ``withViewportAnimation(_:body:completion:)`` and ``ViewportAnimation`` for more details about viewport animation.
 ///
-/// ```swift
-///   struct AnimatedMap: View {
-///       @State var viewport: Viewport = .styleDefault
-///       var body: some View {
-///           Map(viewport: $viewport)
-///               .overlay {
-///                   Button("Locate the user") {
-///                       withViewportAnimation {
-///                           viewport = .followPuck(zoom: 16, bearing: .heading, pitch: 60)
-///                       }
-///                   }
-///               }
-///       }
-///   }
-/// ```
+/// The ``Viewport`` allows you to read only the values that you set. If you need to read the actual camera state values, subscribe to ``Map/onCameraChanged(action:)`` event.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -75,7 +89,7 @@ public struct Viewport: Equatable {
 
         /// Extra padding that is added for the geometry during bounding box calculation.
         ///
-        /// Note: This different to inset ``Viewport/insetOptions-swift.property``.
+        /// - Note: Geometry padding is different to camera padding ``Viewport/padding-swift.property``.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -118,33 +132,13 @@ public struct Viewport: Equatable {
         public var pitch: CGFloat
     }
 
-    /// Represent insets configuration.
-    ///
-    /// Inset configuration is applicable to every kind of viewport configuration except ``Viewport/idle``.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    public struct InsetOptions: Equatable {
-        /// Insets of viewport.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-        var insets: SwiftUI.EdgeInsets = .init()
-
-        /// Set of edges that which safe area contribution to padding will be ignored.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-        var ignoredSafeAreaEdges: Edge.Set = []
-    }
-
     let storage: Storage
 
-    /// Configures insets of viewport.
+    /// Denotes camera padding of the viewport.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-    public var insetOptions = InsetOptions()
+    public var padding = SwiftUI.EdgeInsets()
 
     /// Idle viewport represents the state when user freely drags the map.
     ///
@@ -245,56 +239,44 @@ public struct Viewport: Equatable {
         return Viewport(storage: .followPuck(options))
     }
 
-    /// Creates a new MapViewport with modified inset options.
+    /// :nodoc:
+    @available(*, deprecated, renamed: "padding")
+    public func inset(by insets: SwiftUI.EdgeInsets, ignoringSafeArea: Edge.Set = []) -> Viewport { self }
+
+    /// :nodoc:
+    @available(*, unavailable, renamed: "padding")
+    public func inset(edges: Edge.Set, length: CGFloat, ignoringSafeArea: Bool = false) -> Viewport { self }
+
+    /// Adds padding to viewport.
     ///
-    /// Insets are ignored for `idle` viewport.
-    ///
-    /// By default, insets are equal to the safe area. This method allows you to set additional insets, or ignore safe area part on the specified edges.
+    /// Safe area insets will be added to that value to form actual padding. If this method called twice, only the last call will take effect.
     ///
     /// - Parameters:
-    ///   - insets: Additional insets, that will be summarized with existing safe area insets.
-    ///   - ignoringSafeArea: A set of edges where safe area's contribution to the resulting inset should be ignored.
+    ///   - padding: Camera
     /// - Returns: A viewport with modified inset options.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-    public func inset(by insets: SwiftUI.EdgeInsets, ignoringSafeArea: Edge.Set = []) -> Viewport {
-        var copy = self
-        copy.insetOptions = .init(insets: insets, ignoredSafeAreaEdges: ignoringSafeArea)
-        return copy
+    public func padding(_ padding: SwiftUI.EdgeInsets) -> Viewport {
+        copyAssigned(self, \.padding, padding)
     }
 
-    /// Creates a new MapViewport with modified inset options.
-    ///
-    /// Insets are ignored for `idle` viewport.
-    ///
-    /// By default, insets are equal to the safe area. This method allows you to set additional inset for the specified edges.
-    /// This method can be called multiple times to configure different edges.
+    /// Adds padding to viewport at specific edges.
     ///
     /// - Parameters:
-    ///   - edges: Edges for which to set the additional inset.
-    ///   - length: The length of inset.
-    ///   - ignoringSafeArea: If safe area's contribution should be ignored for the specified edges.
+    ///   - edges: The set of edges to pad. Default is a `all`.
+    ///   - length: Amount of padding in points.
     /// - Returns: A viewport with modified inset options.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-    public func inset(edges: Edge.Set, length: CGFloat, ignoringSafeArea: Bool = false) -> Viewport {
+    public func padding(_ edges: Edge.Set = .all, _ length: CGFloat) -> Viewport {
         var copy = self
-
-        for (edge, keyPath) in edgeToInsetMapping where edges.contains(edge) {
-            copy.insetOptions.insets[keyPath: keyPath] = length
-            if ignoringSafeArea {
-                copy.insetOptions.ignoredSafeAreaEdges.insert(edge)
-            } else {
-                copy.insetOptions.ignoredSafeAreaEdges.remove(edge)
-            }
-        }
-
+        copy.padding.updateEdges(edges, length)
         return copy
     }
 
-    /// Is `true` when viewport is idle.
+    /// `true` when viewport is idle.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -302,7 +284,7 @@ public struct Viewport: Equatable {
         return storage == .idle
     }
 
-    /// Is `true` when camera is configured from the default style camera properties.
+    /// `true` when camera is configured from the default style camera properties.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -312,7 +294,7 @@ public struct Viewport: Equatable {
 
     /// Returns the camera options if viewport is configured with camera options.
     ///
-    /// - Note: The ``CameraOptions-swift.struct/padding`` is ignored, it is replaced with ``Viewport/insetOptions-swift.property``, see ``inset(by:ignoringSafeArea:)``.
+    /// - Note: The ``CameraOptions-swift.struct/padding`` is ignored, it is replaced with ``Viewport/padding``, see ``Viewport/padding(_:)``.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -355,38 +337,22 @@ public struct Viewport: Equatable {
 @available(iOS 13.0, *)
 extension Viewport {
     func makeState(with mapView: MapView, layoutDirection: LayoutDirection) -> ViewportState? {
-        // TODO: mapView's safeAreaInsets don't reflect the real safe area added by SwiftUI views (such as toolbars).
-        let insets = padding(with: layoutDirection, safeAreaInsets: mapView.safeAreaInsets)
+        let padding = UIEdgeInsets(insets: padding, layoutDirection: layoutDirection)
         switch storage {
         case .idle:
             return nil
         case .camera(var cameraOptions):
-            cameraOptions.padding = insets
-            return CameraViewportState(cameraOptions: cameraOptions)
+            cameraOptions.padding = padding
+            return mapView.viewport.makeCameraViewportState(camera: cameraOptions)
         case .overview(let options):
-            let options = options.resolve(layoutDirection: layoutDirection, padding: insets)
+            let options = options.resolve(layoutDirection: layoutDirection, padding: padding)
             return mapView.viewport.makeOverviewViewportState(options: options)
         case .styleDefault:
-            return DefaultStyleViewportState(
-                mapboxMap: mapView.mapboxMap,
-                styleManager: mapView.mapboxMap,
-                padding: insets)
+            return mapView.viewport.makeDefaultStyleViewportState(padding: padding)
         case .followPuck(let options):
-            let options = options.resolve(padding: insets)
+            let options = options.resolve(padding: padding)
             return mapView.viewport.makeFollowPuckViewportState(options: options)
         }
-    }
-
-    func padding(with layoutDirection: LayoutDirection, safeAreaInsets: UIEdgeInsets) -> UIEdgeInsets {
-        var result = SwiftUI.EdgeInsets(uiInsets: safeAreaInsets, layoutDirection: layoutDirection)
-
-        for (edge, keyPath) in edgeToInsetMapping where insetOptions.ignoredSafeAreaEdges.contains(edge) {
-            result[keyPath: keyPath] = 0
-        }
-
-        result += insetOptions.insets
-
-        return UIEdgeInsets(insets: result, layoutDirection: layoutDirection)
     }
 }
 

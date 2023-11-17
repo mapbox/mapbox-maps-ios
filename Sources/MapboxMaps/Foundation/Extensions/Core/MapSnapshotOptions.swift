@@ -43,14 +43,14 @@ public struct MapSnapshotOptions {
 }
 
 extension MapSnapshotOptions {
-    internal init(_ objcValue: MapboxCoreMaps.MapSnapshotOptions) {
+    internal init(_ objcValue: CoreMapSnapshotOptions) {
         self.init(size: CGSize(objcValue.__size),
                   pixelRatio: CGFloat(objcValue.pixelRatio),
                   glyphsRasterizationOptions: objcValue.glyphsRasterizationOptions ?? GlyphsRasterizationOptions())
     }
 }
 
-extension MapboxCoreMaps.MapSnapshotOptions {
+extension CoreMapSnapshotOptions {
     internal convenience init(_ swiftValue: MapSnapshotOptions) {
         let size = swiftValue.size
 

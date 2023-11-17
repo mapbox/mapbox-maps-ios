@@ -52,8 +52,6 @@ targets:
       Release: "Configurations/base.xcconfig"
     sources:
       - path: "Sources/MapboxMaps/"
-        includes:
-          - "*.swift"
         excludes:
           - "**/*.plist"
           - "**/*.h"

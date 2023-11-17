@@ -14,11 +14,14 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                             mapFeatureQueryable: MapFeatureQueryable,
                             annotations: AnnotationOrchestratorImplProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
-     func makeViewportManagerImpl(mapboxMap: MapboxMapProtocol,
-                                  cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                                  anyTouchGestureRecognizer: UIGestureRecognizer,
-                                  doubleTapGestureRecognizer: UIGestureRecognizer,
-                                  doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportManagerImplProtocol
+    // swiftlint:disable:next function_parameter_count
+    func makeViewportManagerImpl(mapboxMap: MapboxMapProtocol,
+                                 cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                                 safeAreaInsets: Signal<UIEdgeInsets>,
+                                 isDefaultCameraInitialized: Signal<Bool>,
+                                 anyTouchGestureRecognizer: UIGestureRecognizer,
+                                 doubleTapGestureRecognizer: UIGestureRecognizer,
+                                 doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportManagerImplProtocol
     func makeAnnotationOrchestratorImpl(in view: UIView,
                                         mapboxMap: MapboxMapProtocol,
                                         mapFeatureQueryable: MapFeatureQueryable,
@@ -243,9 +246,12 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             factory: factory)
     }
 
+    // swiftlint:disable:next function_parameter_count
     internal func makeViewportManagerImpl(
         mapboxMap: MapboxMapProtocol,
         cameraAnimationsManager: CameraAnimationsManagerProtocol,
+        safeAreaInsets: Signal<UIEdgeInsets>,
+        isDefaultCameraInitialized: Signal<Bool>,
         anyTouchGestureRecognizer: UIGestureRecognizer,
         doubleTapGestureRecognizer: UIGestureRecognizer,
         doubleTouchGestureRecognizer: UIGestureRecognizer
@@ -269,6 +275,9 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             animationHelper: animationHelper)
         return ViewportManagerImpl(
             options: .init(),
+            mapboxMap: mapboxMap,
+            safeAreaInsets: safeAreaInsets,
+            isDefaultCameraInitialized: isDefaultCameraInitialized,
             mainQueue: mainQueue,
             defaultTransition: defaultViewportTransition,
             anyTouchGestureRecognizer: anyTouchGestureRecognizer,

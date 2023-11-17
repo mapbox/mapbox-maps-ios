@@ -49,7 +49,7 @@ final class ImageTests: XCTestCase {
             height: 1,
             scale: .random(in: 1...4))
 
-        let mbmImage = try XCTUnwrap(Image(uiImage: image))
+        let mbmImage = try XCTUnwrap(CoreMapsImage(uiImage: image))
 
         XCTAssertEqual(CGFloat(mbmImage.width), image.scale)
         XCTAssertEqual(mbmImage.data.data[0], 128)
@@ -64,7 +64,7 @@ final class ImageTests: XCTestCase {
             height: 1,
             scale: .random(in: 1...4))
 
-        let mbmImage = try XCTUnwrap(Image(uiImage: image))
+        let mbmImage = try XCTUnwrap(CoreMapsImage(uiImage: image))
 
         XCTAssertEqual(CGFloat(mbmImage.width), image.scale)
         XCTAssertEqual(mbmImage.data.data[0], 0)
@@ -80,7 +80,7 @@ final class ImageTests: XCTestCase {
             scale: .random(in: 1...4),
             alphaInfo: .noneSkipLast)
 
-        let mbmImage = try XCTUnwrap(Image(uiImage: image))
+        let mbmImage = try XCTUnwrap(CoreMapsImage(uiImage: image))
 
         XCTAssertEqual(CGFloat(mbmImage.width), image.scale)
         XCTAssertEqual(mbmImage.data.data[0], 0)
@@ -96,7 +96,7 @@ final class ImageTests: XCTestCase {
             scale: .random(in: 1...4),
             alphaInfo: .noneSkipFirst)
 
-        let mbmImage = try XCTUnwrap(Image(uiImage: image))
+        let mbmImage = try XCTUnwrap(CoreMapsImage(uiImage: image))
 
         XCTAssertEqual(CGFloat(mbmImage.width), image.scale)
         XCTAssertEqual(mbmImage.data.data[0], 0)
@@ -128,7 +128,7 @@ final class ImageTests: XCTestCase {
             scale: 1,
             orientation: .up)
 
-        let mbmImage = try XCTUnwrap(Image(uiImage: image))
+        let mbmImage = try XCTUnwrap(CoreMapsImage(uiImage: image))
 
         XCTAssertEqual(Int(mbmImage.width), width)
         XCTAssertEqual(mbmImage.data.data[0], 0)

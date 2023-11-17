@@ -1,5 +1,4 @@
 // swiftlint:disable file_length
-@_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 import UIKit
 import os
@@ -79,7 +78,7 @@ open class MapView: UIView {
     private let cameraViewContainerView = UIView()
 
     /// Holds ViewAnnotation views
-    private let viewAnnotationContainerView = SubviewInteractionOnlyView()
+    private let viewAnnotationContainerView = ViewAnnotationsContainer()
 
     private var needsDisplayRefresh: Bool = false
     private var displayLink: DisplayLinkProtocol?
@@ -102,6 +101,7 @@ open class MapView: UIView {
     private let dependencyProvider: MapViewDependencyProviderProtocol
 
     private let displayLinkSignalSubject = SignalSubject<Void>()
+    private let safeAreaSignalSubject = CurrentValueSignalSubject(UIEdgeInsets())
 
     private let notificationCenter: NotificationCenterProtocol
     private let bundle: BundleProtocol
@@ -183,6 +183,7 @@ open class MapView: UIView {
             mapboxMap._debugOptions = debugOptions.nativeDebugOptions
             ornaments.showCameraDebug = debugOptions.contains(.camera)
             ornaments.showPaddingDebug = debugOptions.contains(.padding)
+            viewAnnotationContainerView.subviewDebugFrames = debugOptions.contains(.collision)
         }
     }
 
@@ -288,7 +289,6 @@ open class MapView: UIView {
         fatalError("This initializer should not be called.")
     }
 
-    // swiftlint:disable:next function_body_length
     private func commonInit(mapInitOptions: MapInitOptions, overridingStyleURI: URL?) {
         checkForMetalSupport()
 
@@ -346,13 +346,7 @@ open class MapView: UIView {
             insertSubview(viewAnnotationContainerView, aboveSubview: metalView)
         }
 
-        viewAnnotationContainerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            viewAnnotationContainerView.topAnchor.constraint(equalTo: topAnchor),
-            viewAnnotationContainerView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            viewAnnotationContainerView.leftAnchor.constraint(equalTo: leftAnchor),
-            viewAnnotationContainerView.rightAnchor.constraint(equalTo: rightAnchor)
-        ])
+        addConstrained(child: viewAnnotationContainerView, add: false)
 
         cameraViewContainerView.isHidden = true
         addSubview(cameraViewContainerView)
@@ -430,16 +424,21 @@ open class MapView: UIView {
             mapboxMap: mapboxMap,
             displayLink: displayLinkSignalSubject.signal)
 
+        let safeAreaSignal = safeAreaSignalSubject.signal.skipRepeats()
+
         viewport = ViewportManager(
             impl: dependencyProvider.makeViewportManagerImpl(
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: internalCamera,
+                safeAreaInsets: safeAreaSignal,
+                isDefaultCameraInitialized: mapboxMap.isDefaultCameraInitialized,
                 anyTouchGestureRecognizer: gestures.anyTouchGestureRecognizer,
                 doubleTapGestureRecognizer: gestures.doubleTapToZoomInGestureRecognizer,
                 doubleTouchGestureRecognizer: gestures.doubleTouchToZoomOutGestureRecognizer),
             onPuckRender: location.onPuckRender,
             cameraAnimationsManager: internalCamera,
-            mapboxMap: mapboxMap)
+            mapboxMap: mapboxMap,
+            styleManager: mapboxMap)
     }
 
     deinit {
@@ -569,6 +568,7 @@ open class MapView: UIView {
         if let metalView = metalView {
             mapboxMap.size = metalView.bounds.size
         }
+        safeAreaSignalSubject.value = self.safeAreaInsets
     }
 
     @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?

@@ -1261,3 +1261,12 @@ TypeAlias LocationUpdateAction has been removed
 
 // Expose model-emissive-strength for Puck3D
 Constructor Puck3DConfiguration.init(model:modelScale:modelRotation:modelOpacity:modelCastShadows:modelReceiveShadows:modelScaleMode:) has been removed
+
+// Rethink Viewport Padding in SwiftUI
+Constructor ViewportOptions.init(transitionsToIdleUponUserInteraction:) has been removed
+Struct Viewport.InsetOptions has been removed
+Var Viewport.insetOptions has been removed
+Func Viewport.inset(edges:length:ignoringSafeArea:) has been removed
+
+// New View Annotation properties
+Constructor ViewAnnotationOptions.init(annotatedFeature:width:height:allowOverlap:visible:selected:variableAnchors:) has been removed

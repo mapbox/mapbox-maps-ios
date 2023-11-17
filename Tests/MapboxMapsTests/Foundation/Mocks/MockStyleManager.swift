@@ -41,10 +41,10 @@ class MockStyleManager: StyleManagerProtocol {
         setStyleJSONForJsonStub.call(with: json)
     }
 
-    let getStyleDefaultCameraStub = Stub<Void, MapboxCoreMaps.CameraOptions>(
+    let getStyleDefaultCameraStub = Stub<Void, CoreCameraOptions>(
         defaultReturnValue: .init(MapboxMaps.CameraOptions())
     )
-    func getStyleDefaultCamera() -> MapboxCoreMaps.CameraOptions {
+    func getStyleDefaultCamera() -> CoreCameraOptions {
         getStyleDefaultCameraStub.call()
     }
 
@@ -164,8 +164,8 @@ class MockStyleManager: StyleManagerProtocol {
         getStyleProjectionPropertyStub.call(with: property)
     }
 
-    let getStyleImageStub = Stub<String, MapboxCoreMaps.Image?>(defaultReturnValue: nil)
-    func getStyleImage(forImageId imageId: String) -> MapboxCoreMaps.Image? {
+    let getStyleImageStub = Stub<String, CoreMapsImage?>(defaultReturnValue: nil)
+    func getStyleImage(forImageId imageId: String) -> CoreMapsImage? {
         getStyleImageStub.call(with: imageId)
     }
 
@@ -242,14 +242,14 @@ class MockStyleManager: StyleManagerProtocol {
 
     struct AddStyleLayerParameters {
         let properties: Any
-        let layerPosition: MapboxCoreMaps.LayerPosition?
+        let layerPosition: CoreLayerPosition?
     }
     let addStyleLayerStub = Stub<AddStyleLayerParameters, Expected<NSNull, NSString>>(
         defaultReturnValue: .init(value: NSNull())
     )
     func addStyleLayer(
         forProperties properties: Any,
-        layerPosition: MapboxCoreMaps.LayerPosition?
+        layerPosition: CoreLayerPosition?
     ) -> Expected<NSNull, NSString> {
 
         addStyleLayerStub.call(with: AddStyleLayerParameters(properties: properties, layerPosition: layerPosition))
@@ -258,7 +258,7 @@ class MockStyleManager: StyleManagerProtocol {
     struct AddStyleCustomLayerParameters {
         let layerId: String
         let layerHost: CustomLayerHost
-        let layerPosition: MapboxCoreMaps.LayerPosition?
+        let layerPosition: CoreLayerPosition?
     }
     let addStyleCustomLayerStub = Stub<AddStyleCustomLayerParameters, Expected<NSNull, NSString>>(
         defaultReturnValue: .init(value: NSNull())
@@ -266,7 +266,7 @@ class MockStyleManager: StyleManagerProtocol {
     func addStyleCustomLayer(
         forLayerId layerId: String,
         layerHost: CustomLayerHost,
-        layerPosition: MapboxCoreMaps.LayerPosition?
+        layerPosition: CoreLayerPosition?
     ) -> Expected<NSNull, NSString> {
 
         addStyleCustomLayerStub.call(
@@ -279,7 +279,7 @@ class MockStyleManager: StyleManagerProtocol {
     )
     func addPersistentStyleLayer(
         forProperties properties: Any,
-        layerPosition: MapboxCoreMaps.LayerPosition?
+        layerPosition: CoreLayerPosition?
     ) -> Expected<NSNull, NSString> {
 
         addPersistentStyleLayerStub.call(with: AddStyleLayerParameters(properties: properties, layerPosition: layerPosition))
@@ -291,7 +291,7 @@ class MockStyleManager: StyleManagerProtocol {
     func addPersistentStyleCustomLayer(
         forLayerId layerId: String,
         layerHost: CustomLayerHost,
-        layerPosition: MapboxCoreMaps.LayerPosition?
+        layerPosition: CoreLayerPosition?
     ) -> Expected<NSNull, NSString> {
 
         addPersistentStyleCustomLayerStub.call(
@@ -311,12 +311,12 @@ class MockStyleManager: StyleManagerProtocol {
 
     struct MoveStyleLayerParameters {
         let layerId: String
-        let layerPosition: MapboxCoreMaps.LayerPosition?
+        let layerPosition: CoreLayerPosition?
     }
     let moveStyleLayerStub = Stub<MoveStyleLayerParameters, Expected<NSNull, NSString>>(
         defaultReturnValue: .init(value: NSNull())
     )
-    func moveStyleLayer(forLayerId layerId: String, layerPosition: MapboxCoreMaps.LayerPosition?) -> Expected<NSNull, NSString> {
+    func moveStyleLayer(forLayerId layerId: String, layerPosition: CoreLayerPosition?) -> Expected<NSNull, NSString> {
         moveStyleLayerStub.call(with: MoveStyleLayerParameters(layerId: layerId, layerPosition: layerPosition))
     }
 
@@ -395,12 +395,12 @@ class MockStyleManager: StyleManagerProtocol {
 
     struct UpdateStyleImageSourceParameters {
         let sourceId: String
-        let image: MapboxCoreMaps.Image
+        let image: CoreMapsImage
     }
     let updateStyleImageSourceStub = Stub<UpdateStyleImageSourceParameters, Expected<NSNull, NSString>>(
         defaultReturnValue: .init(value: NSNull())
     )
-    func updateStyleImageSourceImage(forSourceId sourceId: String, image: Image) -> Expected<NSNull, NSString> {
+    func updateStyleImageSourceImage(forSourceId sourceId: String, image: CoreMapsImage) -> Expected<NSNull, NSString> {
         updateStyleImageSourceStub.call(with: UpdateStyleImageSourceParameters(sourceId: sourceId, image: image))
     }
 
@@ -449,7 +449,7 @@ class MockStyleManager: StyleManagerProtocol {
     struct AddStyleImageParameters {
         let imageId: String
         let scale: Float
-        let image: MapboxCoreMaps.Image
+        let image: CoreMapsImage
         let sdf: Bool
         let stretchX: [ImageStretches]
         let stretchY: [ImageStretches]
@@ -462,7 +462,7 @@ class MockStyleManager: StyleManagerProtocol {
     func addStyleImage(
         forImageId imageId: String,
         scale: Float,
-        image: Image,
+        image: CoreMapsImage,
         sdf: Bool,
         stretchX: [ImageStretches],
         stretchY: [ImageStretches],
@@ -568,13 +568,13 @@ class MockStyleManager: StyleManagerProtocol {
     struct SetStyleCustomRasterSourceTileDataParameters {
         let sourceID: String
         let tileId: CanonicalTileID
-        let image: Image?
+        let image: CoreMapsImage?
     }
     let setStyleCustomRasterSourceTileDataStub = Stub<SetStyleCustomRasterSourceTileDataParameters, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
     func setStyleCustomRasterSourceTileDataForSourceId(
         _ sourceId: String,
         tileId: CanonicalTileID,
-        image: Image?
+        image: CoreMapsImage?
     ) -> Expected<NSNull, NSString> {
         setStyleCustomRasterSourceTileDataStub.call(with: .init(sourceID: sourceId, tileId: tileId, image: image))
     }
@@ -606,12 +606,12 @@ class MockStyleManager: StyleManagerProtocol {
     struct SetStyleGeoJSONSourceDataForSourceIdDataIDParams {
         let sourceId: String
         let dataId: String?
-        let data: MapboxCoreMaps.GeoJSONSourceData
+        let data: CoreGeoJSONSourceData
     }
     let setStyleGeoJSONSourceDataForSourceIdDataIDStub = Stub<SetStyleGeoJSONSourceDataForSourceIdDataIDParams, Expected<NSNull, NSString>>(
         defaultReturnValue: .init(value: .init())
     )
-    func __setStyleGeoJSONSourceDataForSourceId(_ sourceId: String, dataId: String, data: MapboxCoreMaps.GeoJSONSourceData) -> Expected<NSNull, NSString> {
+    func __setStyleGeoJSONSourceDataForSourceId(_ sourceId: String, dataId: String, data: CoreGeoJSONSourceData) -> Expected<NSNull, NSString> {
         setStyleGeoJSONSourceDataForSourceIdDataIDStub.call(with: .init(sourceId: sourceId, dataId: dataId, data: data))
     }
 

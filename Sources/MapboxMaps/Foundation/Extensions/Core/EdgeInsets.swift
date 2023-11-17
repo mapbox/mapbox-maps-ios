@@ -1,6 +1,6 @@
 import UIKit
 
-internal extension EdgeInsets {
+internal extension CoreEdgeInsets {
     func toUIEdgeInsetsValue() -> UIEdgeInsets {
         return UIEdgeInsets(top: CGFloat(self.top),
                             left: CGFloat(self.left),
@@ -10,8 +10,8 @@ internal extension EdgeInsets {
 }
 
 extension UIEdgeInsets {
-    func toMBXEdgeInsetsValue() -> EdgeInsets {
-        return EdgeInsets(top: Double(self.top),
+    func toMBXEdgeInsetsValue() -> CoreEdgeInsets {
+        return CoreEdgeInsets(top: Double(self.top),
                           left: Double(self.left),
                           bottom: Double(self.bottom),
                           right: Double(self.right))

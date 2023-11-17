@@ -34,6 +34,8 @@ public struct MapViewAnnotation: MapContent {
     var allowOverlap: Bool = false
     var visible: Bool = true
     var selected: Bool = false
+    var allowOverlapWithPuck: Bool = false
+    var ignoreCameraPadding: Bool = false
     var variableAnchors: [ViewAnnotationAnchorConfig] = .center
     var actions = Actions()
     var content: AnyView
@@ -99,6 +101,26 @@ public struct MapViewAnnotation: MapContent {
 #endif
     public func allowOverlap(_ allowOverlap: Bool) -> MapViewAnnotation {
         with(self, setter(\.allowOverlap, allowOverlap))
+    }
+
+    /// When `false`, the annotation won't be shown on top of Puck.
+    ///
+    /// Default value is `false`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func allowOverlapWithPuck(_ allowOverlapWithPuck: Bool) -> MapViewAnnotation {
+        with(self, setter(\.allowOverlapWithPuck, allowOverlapWithPuck))
+    }
+
+    /// When `false`, the annotation will be displayed even if it go beyond camera padding.
+    ///
+    /// Default value is `false`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func ignoreCameraPadding(_ ignoreCameraPadding: Bool) -> MapViewAnnotation {
+        with(self, setter(\.ignoreCameraPadding, ignoreCameraPadding))
     }
 
     /// Specifies if this view annotation is visible or not. Defaults to `true`.

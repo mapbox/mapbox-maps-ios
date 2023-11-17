@@ -68,6 +68,24 @@ public final class ViewAnnotation {
         set { setProperty(\.allowOverlap, value: newValue, oldValue: allowOverlap) }
     }
 
+    /// When `false`, the annotation won't be shown on top of Puck.
+    ///
+    /// Default value is `false`.
+    public var allowOverlapWithPuck: Bool {
+        get { property(\.allowOverlapWithPuck, default: false) }
+        set { setProperty(\.allowOverlapWithPuck, value: newValue, oldValue: allowOverlapWithPuck) }
+    }
+
+    /// When `false`, the annotation will be displayed even if it go beyond camera padding.
+    ///
+    /// The camera padding is set via ``MapboxMap/setCamera(to:)``.
+    ///
+    /// Default value is `false`.
+    public var ignoreCameraPadding: Bool {
+        get { property(\.ignoreCameraPadding, default: false) }
+        set { setProperty(\.ignoreCameraPadding, value: newValue, oldValue: ignoreCameraPadding) }
+    }
+
     /// Specifies if this view annotation is visible or not.
     ///
     /// The property is `true` by default.

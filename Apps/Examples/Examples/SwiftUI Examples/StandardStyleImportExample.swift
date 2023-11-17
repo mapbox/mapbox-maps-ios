@@ -6,6 +6,7 @@ struct StandardStyleImportExample: View {
     @State private var lightPreset: StandardLightPreset = .night
     @State private var showLabels = true
     @State private var priceAlertMessage: String?
+    @State private var panelHeight: CGFloat = 0
 
     var style: MapStyle {
         let styleURI = StyleURI(url: styleURL)!
@@ -36,9 +37,10 @@ struct StandardStyleImportExample: View {
                 priceAlertMessage = "Price: $\(String(format: "%.2f", priceNum))"
                 return true
             }
+            .additionalSafeAreaInsets(.bottom, panelHeight)
             .ignoresSafeArea()
             .safeOverlay(alignment: .bottom) {
-                settingsPanel
+                settingsPanel.onChangeOfSize { panelHeight = $0.height }
             }
             .simpleAlert(message: $priceAlertMessage)
     }
@@ -59,7 +61,6 @@ struct StandardStyleImportExample: View {
         }
         .padding(10)
         .floating(RoundedRectangle(cornerRadius: 10))
-        .padding(.bottom, 35)
     }
 }
 

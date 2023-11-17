@@ -2,9 +2,13 @@ import Foundation
 
 final class Stub<ParametersType, ReturnType> {
 
-    struct Invocation: CustomStringConvertible {
+    class Invocation: CustomStringConvertible {
         var parameters: ParametersType
         var returnValue: ReturnType
+        init(parameters: ParametersType, returnValue: ReturnType) {
+            self.parameters = parameters
+            self.returnValue = returnValue
+        }
 
         var description: String {
             "Invocation<\(ParametersType.self), \(ReturnType.self)>"

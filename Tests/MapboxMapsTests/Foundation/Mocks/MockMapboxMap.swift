@@ -1,6 +1,6 @@
 @testable import MapboxMaps
-@_implementationOnly import MapboxCoreMaps_Private
 import CoreLocation
+import UIKit
 
 final class MockMapboxMap: MapboxMapProtocol {
     var options: MapOptions = MapOptions()

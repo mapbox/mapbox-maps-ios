@@ -1,3 +1,5 @@
+import UIKit
+
 /// A ``ViewportState`` implementation that tracks the location puck (to show a puck, use
 /// ``LocationOptions/puckType``)
 ///
@@ -7,30 +9,32 @@ public final class FollowPuckViewportState {
 
     /// Configuration options for this state.
     public var options: FollowPuckViewportStateOptions {
-        get {
-            dataSource.options
-        }
-        set {
-            dataSource.options = newValue
-        }
+        get { optionsSubject.value }
+        set { optionsSubject.value = newValue }
     }
 
-    // MARK: - Injected Dependencies
+    private let impl: CameraViewportState
+    private let optionsSubject: CurrentValueSignalSubject<FollowPuckViewportStateOptions>
 
-    private let dataSource: FollowPuckViewportStateDataSourceProtocol
+    internal init(options: FollowPuckViewportStateOptions,
+                  mapboxMap: MapboxMapProtocol,
+                  onPuckRender: Signal<PuckRenderingData>,
+                  safeAreaPadding: Signal<UIEdgeInsets?>) {
+        let optionsSubject = CurrentValueSignalSubject(options)
+        self.optionsSubject = optionsSubject
 
-    private let mapboxMap: MapboxMapProtocol
+        let resultCamera = Signal
+            .combineLatest(optionsSubject.signal.skipRepeats(), onPuckRender)
+            .map { (options, puckData) in
+                CameraOptions(
+                    center: puckData.location.coordinate,
+                    padding: options.padding,
+                    zoom: options.zoom,
+                    bearing: options.bearing?.evaluate(with: puckData),
+                    pitch: options.pitch)
+            }
 
-    // MARK: - Private State
-
-    private var updatingCameraCancelable: Cancelable?
-
-    // MARK: - Initialization
-
-    internal init(dataSource: FollowPuckViewportStateDataSourceProtocol,
-                  mapboxMap: MapboxMapProtocol) {
-        self.dataSource = dataSource
-        self.mapboxMap = mapboxMap
+        self.impl = CameraViewportState(cameraOptions: resultCamera, mapboxMap: mapboxMap, safeAreaPadding: safeAreaPadding)
     }
 }
 
@@ -38,26 +42,18 @@ extension FollowPuckViewportState: ViewportState {
     /// :nodoc:
     /// See ``ViewportState/observeDataSource(with:)``.
     public func observeDataSource(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {
-        return dataSource.observe(with: handler)
+        impl.observeDataSource(with: handler)
     }
 
     /// :nodoc:
     /// See ``ViewportState/startUpdatingCamera()``.
     public func startUpdatingCamera() {
-        guard updatingCameraCancelable == nil else {
-            return
-        }
-
-        updatingCameraCancelable = dataSource.observe { [mapboxMap] cameraOptions in
-            mapboxMap.setCamera(to: cameraOptions)
-            return true
-        }
+        impl.startUpdatingCamera()
     }
 
     /// :nodoc:
     /// See ``ViewportState/stopUpdatingCamera()``.
     public func stopUpdatingCamera() {
-        updatingCameraCancelable?.cancel()
-        updatingCameraCancelable = nil
+        impl.stopUpdatingCamera()
     }
 }

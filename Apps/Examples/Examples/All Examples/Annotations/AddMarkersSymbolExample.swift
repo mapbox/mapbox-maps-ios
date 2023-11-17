@@ -39,8 +39,8 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
     // MARK: - Style management
 
     private func prepareStyle() {
-        try? mapView.mapboxMap.addImage(UIImage(named: "blue_marker_view")!, id: Constants.BLUE_ICON_ID)
-        try? mapView.mapboxMap.addImage(UIImage(named: "red_marker")!, id: Constants.RED_ICON_ID)
+        try? mapView.mapboxMap.addImage(UIImage(named: "intermediate-pin")!, id: Constants.BLUE_ICON_ID)
+        try? mapView.mapboxMap.addImage(UIImage(named: "dest-pin")!, id: Constants.RED_ICON_ID)
 
         var features = [Feature]()
         var feature = Feature(geometry: Point(LocationCoordinate2D(latitude: 55.608166, longitude: 12.65147)))
@@ -74,6 +74,8 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
         layer.iconAnchor = .constant(.bottom)
         layer.iconAllowOverlap = .constant(false)
         layer.iconRotate = .expression(rotateExpression)
+        // Add Y-offset so icon will point to exact location.
+        layer.iconOffset = .constant([0, 12])
         try? mapView.mapboxMap.addLayer(layer)
     }
 }

@@ -4,7 +4,7 @@ import XCTest
 final class FlyToCameraAnimatorTests: XCTestCase {
 
     internal let initialCameraState = CameraState(
-        MapboxCoreMaps.CameraState(
+        CoreCameraState(
             center: .init(
                 latitude: 42.3601,
                 longitude: -71.0589),

@@ -85,7 +85,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
             layerId: layerId,
             layerPosition: layerPosition,
             store: store,
-            make: { $0.makePolygonAnnotationManager(id: $1, layerPosition: $2)},
+            make: { $0.makePolygonAnnotationManager(id: $1, layerPosition: $2) },
             updateProperties: { self.updateProperties(manager: $0) })
         visitor.add(annotationGroup: group)
     }

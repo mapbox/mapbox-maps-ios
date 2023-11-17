@@ -20,7 +20,7 @@ public struct ViewAnnotationOptions: Equatable {
 
     /// Optional style symbol id connected to given view annotation.
     ///
-    /// View annotation's visibility behaviour becomes tied to feature visibility where feature could represent an icon or a text label.
+    /// View annotation's visibility behavior becomes tied to feature visibility where feature could represent an icon or a text label.
     /// E.g. if the bounded symbol is not visible view annotation also becomes not visible.
     ///
     /// Note: Invalid associatedFeatureId (meaning no actual symbol has such feature id) will lead to the cooresponding annotation to be invisible.
@@ -31,6 +31,9 @@ public struct ViewAnnotationOptions: Equatable {
     /// If allowOverlap is null, default value `false` will be applied.
     /// Note: When the value is true, the ordering of the views are determined by the order of their addition.
     public var allowOverlap: Bool?
+
+    /// When `false`, the annotation won't be shown on top of the Puck.
+    public var allowOverlapWithPuck: Bool?
 
     /// Specifies if this view annotation is visible or not.
     ///
@@ -62,23 +65,30 @@ public struct ViewAnnotationOptions: Equatable {
     /// If selected in null, default value `false` will be applied.
     public var selected: Bool?
 
+    /// When `false`, the annotation will be displayed even if it go beyond camera padding.
+    public var ignoreCameraPadding: Bool?
+
     /// Initializes a `ViewAnnotationOptions`
     public init(
         annotatedFeature: AnnotatedFeature? = nil,
         width: CGFloat? = nil,
         height: CGFloat? = nil,
         allowOverlap: Bool? = nil,
+        allowOverlapWithPuck: Bool? = nil,
         visible: Bool? = nil,
         selected: Bool? = nil,
-        variableAnchors: [ViewAnnotationAnchorConfig]? = nil
+        variableAnchors: [ViewAnnotationAnchorConfig]? = nil,
+        ignoreCameraPadding: Bool? = nil
     ) {
         self.annotatedFeature = annotatedFeature
         self.width = width
         self.height = height
         self.variableAnchors = variableAnchors
         self.allowOverlap = allowOverlap
+        self.allowOverlapWithPuck = allowOverlapWithPuck
         self.visible = visible
         self.selected = selected
+        self.ignoreCameraPadding = ignoreCameraPadding
     }
 
     /// Initializes a `ViewAnnotationOptions` with geometry.
@@ -111,16 +121,18 @@ public struct ViewAnnotationOptions: Equatable {
             variableAnchors: anchorConfig.map { [$0] })
     }
 
-    internal init(_ objcValue: MapboxCoreMaps.ViewAnnotationOptions) {
+    internal init(_ objcValue: CoreViewAnnotationOptions) {
         let annotatedFeature = objcValue.annotatedFeature.flatMap(AnnotatedFeature.from(core:))
         self.init(
             annotatedFeature: annotatedFeature,
             width: objcValue.__width?.CGFloat,
             height: objcValue.__height?.CGFloat,
             allowOverlap: objcValue.__allowOverlap?.boolValue,
+            allowOverlapWithPuck: objcValue.__allowOverlapWithPuck?.boolValue,
             visible: objcValue.__visible?.boolValue,
             selected: objcValue.__selected?.boolValue,
-            variableAnchors: objcValue.variableAnchors
+            variableAnchors: objcValue.variableAnchors,
+            ignoreCameraPadding: objcValue.__ignoreCameraPadding?.boolValue
         )
     }
 
@@ -159,14 +171,16 @@ public struct ViewAnnotationOptions: Equatable {
     }
 }
 
-extension MapboxCoreMaps.ViewAnnotationOptions {
+extension CoreViewAnnotationOptions {
     internal convenience init(_ swiftValue: ViewAnnotationOptions) {
         self.init(__annotatedFeature: swiftValue.annotatedFeature?.asCoreFeature,
                   width: swiftValue.width as NSNumber?,
                   height: swiftValue.height as NSNumber?,
                   allowOverlap: swiftValue.allowOverlap as NSNumber?,
+                  allowOverlapWithPuck: swiftValue.allowOverlapWithPuck as NSNumber?,
                   visible: swiftValue.visible as NSNumber?,
                   variableAnchors: swiftValue.variableAnchors,
-                  selected: swiftValue.selected as NSNumber?)
+                  selected: swiftValue.selected as NSNumber?,
+                  ignoreCameraPadding: swiftValue.ignoreCameraPadding as NSNumber?)
     }
 }

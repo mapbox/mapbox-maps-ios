@@ -266,7 +266,7 @@ class MapboxMapsFoundationTests: XCTestCase {
             return
         }
 
-        guard let mbmImage = Image(uiImage: original) else {
+        guard let mbmImage = CoreMapsImage(uiImage: original) else {
             XCTFail("Couldn't generate Image (\"MBMImage\") from UIImage")
             return
         }
@@ -292,7 +292,7 @@ class MapboxMapsFoundationTests: XCTestCase {
             return
         }
 
-        guard let mbmImage =  Image(uiImage: original) else {
+        guard let mbmImage = CoreMapsImage(uiImage: original) else {
             XCTFail("Couldn't generate Image (\"MBMImage\") from UIImage")
             return
         }

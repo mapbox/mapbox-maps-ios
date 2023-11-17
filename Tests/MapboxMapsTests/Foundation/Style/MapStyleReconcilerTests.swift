@@ -264,4 +264,41 @@ final class MapStyleReconcilerTests: XCTestCase {
         XCTAssertEqual(inv.last?.parameters.config, "qux")
         XCTAssertEqual(inv.last?.parameters.value as? String, "quux")
     }
+
+    func testIsStyleRootLoaded() {
+        var observed = [Bool]()
+        let token = me.isStyleRootLoaded.observe {
+            observed.append($0)
+        }
+        XCTAssertEqual(observed, [false], "default")
+
+        func simulate(result: LoadResult, style: MapStyle) {
+            styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+                self.simulateLoad(callbacks: invoc.parameters.callbacks, result: result)
+            }
+            me.mapStyle = style
+        }
+
+        // success
+        simulate(result: .success, style: .light)
+        XCTAssertEqual(observed, [false, true])
+
+        // no load
+        simulate(result: .success, style: .light)
+        XCTAssertEqual(observed, [false, true])
+
+        // error
+        simulate(result: .error, style: .streets)
+        XCTAssertEqual(observed, [false, true, false])
+
+        // reset to success
+        simulate(result: .success, style: .light)
+        XCTAssertEqual(observed, [false, true, false, true])
+
+        // cancel
+        simulate(result: .cancel, style: .dark)
+        XCTAssertEqual(observed, [false, true, false, true, false])
+
+        token.cancel()
+    }
 }

@@ -17,7 +17,7 @@ final class CustomLocationProviderExample: UIViewController, ExampleProtocol {
         // initialize the custom location provider with the location of your choice
         let location = Location(coordinate: centerCoordinate)
         mapView.location.override(locationProvider: Signal(just: [location]))
-        mapView.location.options.puckType = .puck2D()
+        mapView.location.options.puckType = .puck2D(.makeDefault())
         // The following line is just for testing purposes.
         finish()
     }

@@ -9,9 +9,9 @@ final class ScreenBoxTests: XCTestCase {
             width: CGFloat.random(in: 0...100),
             height: CGFloat.random(in: 0...100))
 
-        let screenBox = ScreenBox(rect)
+        let screenBox = CoreScreenBox(rect)
 
-        XCTAssertEqual(screenBox.min, ScreenCoordinate(x: rect.minX, y: rect.minY))
-        XCTAssertEqual(screenBox.max, ScreenCoordinate(x: rect.maxX, y: rect.maxY))
+        XCTAssertEqual(screenBox.min, CoreScreenCoordinate(x: rect.minX, y: rect.minY))
+        XCTAssertEqual(screenBox.max, CoreScreenCoordinate(x: rect.maxX, y: rect.maxY))
     }
 }

@@ -25,7 +25,7 @@ final class CameraDebugViewTests: XCTestCase {
     func testCameraState() throws {
         // Should start nil
         XCTAssertNil(cameraDebugView.cameraState)
-        XCTAssertEqual(cameraDebugView.subviews.count, 1)
+        XCTAssertEqual(cameraDebugView.subviews.count, 2)
 
         cameraDebugView.cameraState = cameraState
         XCTAssertEqual(cameraState, cameraDebugView.cameraState)
@@ -37,13 +37,13 @@ final class CameraDebugViewTests: XCTestCase {
 
     func testLogAndFormatString() {
         cameraDebugView.cameraState = cameraState
-        let cameraStateLabel = cameraDebugView.subviews.first as? UILabel
+        let cameraStateLabel = cameraDebugView.subviews.compactMap { $0 as? UILabel }.first
 
-        XCTAssertTrue(cameraStateLabel!.text!.contains("lat: -90"))
-        XCTAssertTrue(cameraStateLabel!.text!.contains("lon: 90"))
-        XCTAssertTrue(cameraStateLabel!.text!.contains("zoom: 14"))
-        XCTAssertTrue(cameraStateLabel!.text!.contains("bearing: 39"))
-        XCTAssertTrue(cameraStateLabel!.text!.contains("pitch: 23"))
+        XCTAssertEqual(cameraStateLabel?.text?.contains("lat: -90"), true)
+        XCTAssertEqual(cameraStateLabel?.text?.contains("lon: 90"), true)
+        XCTAssertEqual(cameraStateLabel?.text?.contains("zoom: 14"), true)
+        XCTAssertEqual(cameraStateLabel?.text?.contains("bearing: 39"), true)
+        XCTAssertEqual(cameraStateLabel?.text?.contains("pitch: 23"), true)
     }
 
 }

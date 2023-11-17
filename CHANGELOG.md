@@ -4,28 +4,25 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-### Bug fixes 🐞
+## 11.0.0-rc.2 - 17 November, 2023
 
-* [SwiftUI] Fix map basic coordinator clinging to first subscriptions.
-* [SwiftUI] Fixed point annotations clustering.
 ### Breaking changes ⚠️
 
-- Note: SwiftUI support is an experimental feature, it's API may be changed until it stabilizes.
+- Note: SwiftUI support is an experimental feature, its API may be changed until it stabilizes.
 
-* [SwiftUI] Viewport inset system is refactored:
-  - The `Viewport.inset(...)` function is removed in favor of the `Viewport.padding(...)`
-  - The `Viewport.inset(...)` had `ignoringSafeArea` which supposed to specify if a specific edge safe area inset should be accounted in padding calculation. Instead of this parameter there is a `Map.usesSafeAreaInsetsAsPadding(_:)` modifier that enables or disables this for all edges.
+* [SwiftUI] Fixed point annotations clustering.
+* [SwiftUI] Viewport inset system was refactored:
+  - The `Viewport.inset(...)` function was removed in favor of the `Viewport.padding(...)`
+  - The `Viewport.inset(...)` previously had an `ignoringSafeArea` parameter which allowed developers to specify if an edge safe area inset should be accounted for in padding calculation. Starting with this version, instead of this parameter there is a `Map.usesSafeAreaInsetsAsPadding(_:)` modifier that enables or disables this for all edges.
 
 ### Features ✨ and improvements 🏁
- - [SwiftUI] New `Map.additionalSafeAreaInsets(...)` modifier that adds additional global safe area insets for the map. Use them to display any UI elements on top of the map. The additional safe area will automatically be accounted in camera padding calculation in every Viewport.
+ * [SwiftUI] New `Map.additionalSafeAreaInsets(...)` modifier that adds additional global safe area insets for the map. Use them to display any UI elements on top of the map. The additional safe area will automatically be accounted for in camera padding calculation in every Viewport.
+ * Added `allowOverlapWithPuck` and `ignoreCameraPadding` options to `ViewAnnotation` and `MapViewAnnotation`.
 
 ### Bug fixes 🐞
 
 * [SwiftUI] Fix bug when `Viewport.inset(...)` didn't use safe area insets on the first load.
-
-### Features ✨ and improvements 🏁
-
-* Added `allowOverlapWithPuck` and `ignoreCameraPadding` options to `ViewAnnotation` and `MapViewAnnotation`.
+* [SwiftUI] Fix map basic coordinator clinging to the first subscriptions.
 
 ## 11.0.0-rc.1 - 3 November, 2023
 

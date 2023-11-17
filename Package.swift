@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let coreMaps = MapsDependency.coreMaps(version: "11.0.0-SNAPSHOT.1114T0537Z.0fe0dfa", checksum: "3f4d1e4b0fce42fbcb8562ebabe3a3b7c10fd366674522e3cd91d00825999456")
+let coreMaps = MapsDependency.coreMaps(version: "11.0.0-rc.2")
 
 let common = MapsDependency.common(version: "24.0.0-rc.3")
 
@@ -42,9 +42,6 @@ let package = Package(
             name: "MapboxMapsTests",
             dependencies: [
                 "MapboxMaps",
-            ],
-            exclude: [
-                "Info.plist",
             ],
             resources: [
                 .copy("MigrationGuide/Fixtures/polygon.geojson"),

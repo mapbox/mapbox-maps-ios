@@ -15,7 +15,7 @@ public protocol Layer: Codable, StyleEncodable, StyleDecodable {
     var maxZoom: Double? { get set }
 
     /// The slot this layer is assigned to. If specified, and a slot with that name exists, it will be placed at that position in the layer order.
-    var slot: String? { get set }
+    var slot: Slot? { get set }
 }
 
 extension Layer {

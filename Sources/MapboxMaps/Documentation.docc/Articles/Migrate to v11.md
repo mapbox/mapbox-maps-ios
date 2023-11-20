@@ -62,7 +62,7 @@ not specified | Above all existing layers in the style
 
 ```swift
 var layer = LineLayer(id: "line-layer", source: "line-source")
-layer.slot = "middle"
+layer.slot = .middle
 mapView.mapboxMap.addLayer(layer)
 ```
 
@@ -117,7 +117,7 @@ In addition to modifying the configuration properties of the imported styles, yo
 
 ```swift
 var layer = LineLayer(id: "line-layer", source: "line-source")
-layer.slot = "middle"
+layer.slot = .middle
 mapView.mapboxMap.addLayer(layer)
 ```
 

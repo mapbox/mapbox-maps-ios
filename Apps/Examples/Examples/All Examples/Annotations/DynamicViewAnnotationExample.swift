@@ -250,7 +250,7 @@ private final class Route {
         routeLayer.lineColor = .expression(colorExpression(normal: "#999999", selected: "#57A9FB"))
         routeLayer.lineBorderWidth = .constant(2)
         routeLayer.lineBorderColor = .expression(colorExpression(normal: "#666666", selected: "#327AC2"))
-        routeLayer.slot = "middle"
+        routeLayer.slot = .middle
         try! mapView.mapboxMap.addLayer(routeLayer)
 
         // Annotation

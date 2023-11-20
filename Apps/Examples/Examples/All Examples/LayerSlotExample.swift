@@ -48,8 +48,10 @@ public class LayerSlotExample: UIViewController, ExampleProtocol {
     }
 
     @objc private func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        guard let slotName = sender.titleForSegment(at: sender.selectedSegmentIndex)?.lowercased() else { return }
+
         try! mapView.mapboxMap.updateLayer(withId: self.layer.id, type: FillLayer.self, update: { layer in
-            layer.slot = sender.titleForSegment(at: sender.selectedSegmentIndex)?.lowercased()
+            layer.slot = Slot(rawValue: slotName)
         })
     }
 
@@ -60,7 +62,7 @@ public class LayerSlotExample: UIViewController, ExampleProtocol {
         layer.fillOutlineColor = .constant(StyleColor(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)))
 
         // If a slot is not supplied, the layer is added above all other layers by default.
-        layer.slot = "bottom"
+        layer.slot = .bottom
 
         // Create a new GeoJSON data source which gets its data from a polygon.
         source.data = .geometry(.polygon(.init([[

@@ -47,7 +47,7 @@ internal class StandardStyleExample: UIViewController, ExampleProtocol {
             layer.lineColor = .constant(StyleColor.init(UIColor.orange))
             layer.lineWidth = .constant(8)
             // The borders renders in the same "bottom" slot with water, but added later, so it renders above.
-            layer.slot = "bottom"
+            layer.slot = .bottom
 
             // Create a new GeoJSON data source of the line's coordinates
             var source = GeoJSONSource(id: "line-layer")

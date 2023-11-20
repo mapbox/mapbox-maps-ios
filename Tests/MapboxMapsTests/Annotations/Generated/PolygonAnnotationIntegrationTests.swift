@@ -183,8 +183,8 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-            let actualValue = layer.slot
-            XCTAssertEqual(actualValue, value)
+        let actualValue = layer.slot?.rawValue
+        XCTAssertEqual(actualValue, value)
 
         // Test that the property can be reset to nil
         manager.slot = nil

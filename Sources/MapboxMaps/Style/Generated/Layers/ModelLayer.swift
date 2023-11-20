@@ -47,7 +47,7 @@ import Foundation
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-    public var slot: String?
+    public var slot: Slot?
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
 #if swift(>=5.8)
@@ -283,7 +283,7 @@ import Foundation
         filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
-        slot = try container.decodeIfPresent(String.self, forKey: .slot)
+        slot = try container.decodeIfPresent(Slot.self, forKey: .slot)
         minZoom = try container.decodeIfPresent(Double.self, forKey: .minZoom)
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 

@@ -14,7 +14,7 @@ public struct LocationIndicatorLayer: Layer {
     public let type: LayerType
 
     /// The slot this layer is assigned to. If specified, and a slot with that name exists, it will be placed at that position in the layer order.
-    public var slot: String?
+    public var slot: Slot?
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
@@ -157,7 +157,7 @@ public struct LocationIndicatorLayer: Layer {
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
-        slot = try container.decodeIfPresent(String.self, forKey: .slot)
+        slot = try container.decodeIfPresent(Slot.self, forKey: .slot)
         minZoom = try container.decodeIfPresent(Double.self, forKey: .minZoom)
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 

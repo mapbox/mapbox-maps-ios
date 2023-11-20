@@ -1270,3 +1270,48 @@ Func Viewport.inset(edges:length:ignoringSafeArea:) has been removed
 
 // New View Annotation properties
 Constructor ViewAnnotationOptions.init(annotatedFeature:width:height:allowOverlap:visible:selected:variableAnchors:) has been removed
+
+// Typed Slot API
+Accessor BackgroundLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor BackgroundLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor CircleLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor CircleLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor CustomLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor CustomLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor FillExtrusionLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor FillExtrusionLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor FillLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor FillLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor HeatmapLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor HeatmapLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor HillshadeLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor HillshadeLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor Layer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor Layer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor LineLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor LineLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor LocationIndicatorLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor LocationIndicatorLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor ModelLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor ModelLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor RasterLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor RasterLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor SkyLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor SkyLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Accessor SymbolLayer.slot.Get() has return type change from Swift.String? to MapboxMaps.Slot?
+Accessor SymbolLayer.slot.Set() has parameter 0 type change from Swift.String? to MapboxMaps.Slot?
+Constructor CustomLayer.init(id:renderer:slot:minZoom:maxZoom:visibility:) has parameter 2 type change from Swift.String? to MapboxMaps.Slot?
+Var BackgroundLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var CircleLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var CustomLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var FillExtrusionLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var FillLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var HeatmapLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var HillshadeLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var Layer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var LineLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var LocationIndicatorLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var ModelLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var RasterLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var SkyLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+Var SymbolLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?

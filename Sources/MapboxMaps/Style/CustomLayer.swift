@@ -13,7 +13,7 @@ public struct CustomLayer: Layer {
 
     public let type: LayerType = .custom
 
-    public var slot: String?
+    public var slot: Slot?
 
     public var minZoom: Double?
 
@@ -27,7 +27,7 @@ public struct CustomLayer: Layer {
     public init(
         id: String,
         renderer: CustomLayerHost,
-        slot: String? = nil,
+        slot: Slot? = nil,
         minZoom: Double? = nil,
         maxZoom: Double? = nil,
         visibility: Value<Visibility> = .constant(.visible)
@@ -63,7 +63,7 @@ extension CustomLayer {
         self.id = try container.decode(String.self, forKey: .id)
         self.minZoom = try container.decodeIfPresent(Double.self, forKey: .minZoom)
         self.maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
-        self.slot = try container.decodeIfPresent(String.self, forKey: .slot)
+        self.slot = try container.decodeIfPresent(Slot.self, forKey: .slot)
 
         if let layoutContainer = try? container.nestedContainer(keyedBy: CodingKeys.Layout.self, forKey: .layout),
            let visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility) {

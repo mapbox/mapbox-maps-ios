@@ -156,7 +156,7 @@ struct AnnotationsOrderTestExample: View {
         var layer = FillLayer(id: "purple-layer", source: "pl")
         layer.fillColor = .constant(StyleColor(.purple))
         layer.fillOpacity = .constant(0.3)
-        layer.slot = "middle"
+        layer.slot = .middle
 
         var source = GeoJSONSource(id: "pl")
         let circlePolygon = Polygon(center: .init(latitude: 17, longitude: 12), radius: 3000000, vertices: 60)

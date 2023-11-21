@@ -9,7 +9,9 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 43.2630, longitude: -2.99350), zoom: 11)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
+        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

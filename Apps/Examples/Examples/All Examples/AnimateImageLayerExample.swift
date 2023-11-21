@@ -50,8 +50,8 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
         ]
 
         // Get the file path for the first radar image, then set the `url` for the `ImageSource` to that path.
-        let path = Bundle.main.path(forResource: "radar0", ofType: "gif")!
-        imageSource.url = path
+        let path = Bundle.main.url(forResource: "radar0", withExtension: "gif")
+        imageSource.url = path?.absoluteString
 
         // Create a `RasterLayer` that will display the images from the `ImageSource`
         var imageLayer = RasterLayer(id: "radar-layer", source: sourceId)
@@ -88,8 +88,8 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
                     self.imageNumber = 0
                 }
                 // Create a `UIImage` from the file at the specified path.
-                let path = Bundle.main.path(forResource: "radar\(self.imageNumber)", ofType: "gif")
-                let image = UIImage(contentsOfFile: path!)
+                let path = Bundle.main.url(forResource: "radar\(self.imageNumber)", withExtension: "gif")
+                let image = UIImage(contentsOfFile: path!.relativePath)
 
                 do {
                     // Update the image used by the `ImageSource`.

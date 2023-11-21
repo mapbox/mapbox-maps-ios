@@ -11,14 +11,14 @@ struct SwiftUIRoot: View {
             List {
                 Section {
                     ExampleLink("Show me the map!", note: "Just a Map().", destination: Map().ignoresSafeArea())
-                    ExampleLink("Locate Me", note: "Use Viewport to create user location control", destination: LocateMeExample())
-                    ExampleLink("Locations", note: "New look of locations, configure standard style parameters", destination: StandardStyleLocationsExample())
+                    ExampleLink("Locate Me", note: "Use Viewport to create user location control.", destination: LocateMeExample())
+                    ExampleLink("Locations", note: "New look of locations, configure standard style parameters.", destination: StandardStyleLocationsExample())
                     ExampleLink("Standard Style Import", note: "Import Mapbox Standard style into your custom style.", destination: StandardStyleImportExample())
                 } header: { Text("Getting started") }
 
                 Section {
                     ExampleLink("View Annotations", note: "Add/remove view annotation on tap.", destination: ViewAnnotationsExample())
-                    ExampleLink("Weather annotations", note: "Show view annotations with contents changed on selection", destination: WeatherAnnotationExample())
+                    ExampleLink("Weather annotations", note: "Show view annotations with contents changed on selection.", destination: WeatherAnnotationExample())
                     ExampleLink("Layer Annotations", note: "Add/remove layer annotation on tap.", destination: AnnotationsExample())
                 } header: { Text("Annotations") }
 
@@ -29,8 +29,8 @@ struct SwiftUIRoot: View {
 
                 Section {
                     ExampleLink("Map settings", note: "Showcase of the most possible map configurations.", destination: MapSettingsExample())
-                    ExampleLink("Viewport Playground", note: "Showcase of the possible viewport states", destination: ViewportPlayground())
-                    ExampleLink("Puck playground", note: "Display user location using puck", destination: PuckPlayground())
+                    ExampleLink("Viewport Playground", note: "Showcase of the possible viewport states.", destination: ViewportPlayground())
+                    ExampleLink("Puck playground", note: "Display user location using puck.", destination: PuckPlayground())
                     ExampleLink("Annotation Order", destination: AnnotationsOrderTestExample())
                     ExampleLink("Simple Map", note: "Camera observing, automatic dark mode support.", destination: SimpleMapExample())
                     ExampleLink("AttributionURL open (iOS 13+)", note: "Override attribution url opener.", destination: URLOpenIOS13())

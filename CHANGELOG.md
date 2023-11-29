@@ -4,7 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-* Introduce [`Slot`](https://docs.mapbox.com/ios/maps/api/11.0.0-rc.2 -docc/documentation/mapboxmaps/slot) for assining a layer to a slot.
+## 11.0.0 - 29 November, 2023
+
+* Introduce [`Slot`](https://docs.mapbox.com/ios/maps/api/11.0.0-rc.2/documentation/mapboxmaps/slot/) for assining a layer to a slot.
+* Update MapboxCoreMaps to v11.0.0 and MapboxCommon to v24.0.0
 
 ## 11.0.0-rc.2 - 17 November, 2023
 

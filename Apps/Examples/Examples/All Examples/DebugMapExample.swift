@@ -33,7 +33,8 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
         ])
 
         let debugOptionsBarItem = UIBarButtonItem(
-            barButtonSystemItem: .edit,
+            title: "Debug",
+            style: .plain,
             target: self,
             action: #selector(openDebugOptionsMenu(_:)))
         let tileCover = UIBarButtonItem(

@@ -1,7 +1,7 @@
 # Maps SDK Examples
 
 Welcome! This sample application is intended to showcase different ways you can
-use Mapbox Maps SDK v10 for iOS, which now runs on
+use Mapbox Maps SDK v11 for iOS, which runs on
 [Metal](https://developer.apple.com/metal/).
 
 ![screenshots](readme-screenshots.png)
@@ -10,7 +10,7 @@ use Mapbox Maps SDK v10 for iOS, which now runs on
 
 ### Requirements
 
-* Xcode 12
+* Xcode 14.1+
 * A Mapbox account
 
 ### Project Setup
@@ -19,7 +19,7 @@ The Examples project needs to be able to access Mapbox services to install
 dependencies and load maps. Follow the instructions in the docs to
 [Configure credentials](https://docs.mapbox.com/ios/maps/guides/install/).
 
-The `main` branch includes the latest changes to the SDK before they are released. If you want to run the examples app with the code of a specific release switch to that release before building the app. For example: `git checkout v10.16.0`.
+The `main` branch includes the latest changes to the SDK before they are released. If you want to run the examples app with the code of a specific release switch to that release before building the app. For example: `git checkout v11.0.0`.
 
 **Important**
 
@@ -47,7 +47,7 @@ Before you begin creating a new example, first make sure there isn't an already
 similar one. We value quality over quantity, we welcome alterations to existing
 examples if that makes more sense than adding a new one.
 
-If you don't see a desired use case well explained by an example, you can
+If you don't see a desired use case well-explained by an example, you can
 contribute to a new one. New examples should strive to be:
 
 * **Concise.** An example that is hundreds of lines long can be hard to quickly

@@ -3,9 +3,9 @@
 
 import PackageDescription
 
-let coreMaps = MapsDependency.coreMaps(version: "11.0.0-rc.2")
+let coreMaps = MapsDependency.coreMaps(version: "11.0.0")
 
-let common = MapsDependency.common(version: "24.0.0-rc.3")
+let common = MapsDependency.common(version: "24.0.0")
 
 let mapboxMapsPath: String? = nil
 

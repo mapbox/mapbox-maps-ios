@@ -202,7 +202,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        let actualValue = layer.slot?.rawValue
+        let actualValue = layer.slot?.rawValue ?? ""
         XCTAssertEqual(actualValue, value)
 
         // Test that the property can be reset to nil

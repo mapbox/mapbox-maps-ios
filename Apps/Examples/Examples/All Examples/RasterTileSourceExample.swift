@@ -15,7 +15,7 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         // Initialize a `MapView` that is centered over the southeastern United States.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40, longitude: -74.5)
         let cameraOptions = CameraOptions(center: centerCoordinate, zoom: 2)
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .satellite)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -46,8 +46,8 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
 
     func addRasterSource() {
 
-        // This URL points to raster tiles designed by Stamen Design.
-        let sourceUrl = "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
+        // This URL points to raster tiles from OpenStreetMap
+        let sourceUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 
         // Create a `RasterSource` and set the source's `tiles` to the Stamen watercolor raster tiles.
         var rasterSource = RasterSource(id: sourceId)

@@ -211,7 +211,7 @@ final class SignalTests: XCTestCase {
 
         weak var weakObject: ObjectWrapper<Int>?
         do {
-            var object = ObjectWrapper(subject: 1)
+            let object = ObjectWrapper(subject: 1)
             weakObject = object
 
             var received = [Int]()
@@ -361,10 +361,10 @@ final class SignalTests: XCTestCase {
 
         weak var weakObject: ObjectWrapper<Int>?
         do {
-            var object = ObjectWrapper(subject: 1)
+            let object = ObjectWrapper(subject: 1)
             weakObject = object
 
-            let token = subj.signal.observeWithCancellingHandler { value in
+          _ = subj.signal.observeWithCancellingHandler { value in
                 XCTAssertEqual(object.subject, 1)
                 received.append(value)
                 return value != 1

@@ -82,7 +82,7 @@ final class FollowPuckViewportStateTest: XCTestCase {
         $onPuckRender.send(puck)
 
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
-        var params = try XCTUnwrap(mapboxMap.setCameraStub.invocations.last?.parameters)
+        let params = try XCTUnwrap(mapboxMap.setCameraStub.invocations.last?.parameters)
         XCTAssertEqual(params.center, puck.location.coordinate)
 
         state.stopUpdatingCamera()

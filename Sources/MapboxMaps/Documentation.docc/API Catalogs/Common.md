@@ -32,7 +32,6 @@ Mapbox SDK to share objects and utilities across SDKs.
 - ``MBXPermissionStatusToString(_:)``
 - ``MBXTileDataDomainToString(_:)``
 - ``MBXTileRegionErrorTypeToString(_:)``
-- ``MBXTransferErrorCodeToString(_:)``
 
 <!-- global variables -->
 - ``GeometryType_Empty``

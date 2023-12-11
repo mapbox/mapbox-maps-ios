@@ -1,69 +1,8 @@
 # Map events
 
 The simplified diagram of the events emitted by the map is displayed below.
-```
-┌─────────────┐               ┌─────────┐                   ┌──────────────┐
-│ Application │               │   Map   │                   │ResourceLoader│
-└──────┬──────┘               └────┬────┘                   └───────┬──────┘
-       │                           │                                │
-       ├───────setStyleURI────────▶│                                │
-       │                           ├───────────get style───────────▶│
-       │                           │                                │
-       │                           │◀─────────style data────────────┤
-       │                           │                                │
-       │                           ├─parse style─┐                  │
-       │                           │             │                  │
-       │      StyleDataLoaded      ◀─────────────┘                  │
-       │◀───────type: Style────────┤                                │
-       │                           ├─────────get sprite────────────▶│
-       │                           │                                │
-       │                           │◀────────sprite data────────────┤
-       │                           │                                │
-       │                           ├──────parse sprite───────┐      │
-       │                           │                         │      │
-       │      StyleDataLoaded      ◀─────────────────────────┘      │
-       │◀──────type: Sprite────────┤                                │
-       │                           ├─────get source TileJSON(s)────▶│
-       │                           │                                │
-       │     SourceDataLoaded      │◀─────parse TileJSON data───────┤
-       │◀─────type: Metadata───────┤                                │
-       │                           │                                │
-       │                           │                                │
-       │      StyleDataLoaded      │                                │
-       │◀──────type: Sources───────┤                                │
-       │                           ├──────────get tiles────────────▶│
-       │                           │                                │
-       │◀───────StyleLoaded────────┤                                │
-       │                           │                                │
-       │     SourceDataLoaded      │◀─────────tile data─────────────┤
-       │◀───────type: Tile─────────┤                                │
-       │                           │                                │
-       │                           │                                │
-       │◀────RenderFrameStarted────┤                                │
-       │                           ├─────render─────┐               │
-       │                           │                │               │
-       │                           ◀────────────────┘               │
-       │◀───RenderFrameFinished────┤                                │
-       │                           ├──render, all tiles loaded──┐   │
-       │                           │                            │   │
-       │                           ◀────────────────────────────┘   │
-       │◀────────MapLoaded─────────┤                                │
-       │                           │                                │
-       │                           │                                │
-       │◀─────────MapIdle──────────┤                                │
-       │                    ┌ ─── ─┴─ ─── ┐                         │
-       │                    │   offline   │                         │
-       │                    └ ─── ─┬─ ─── ┘                         │
-       │                           │                                │
-       ├─────────setCamera────────▶│                                │
-       │                           ├───────────get tiles───────────▶│
-       │                           │                                │
-       │                           │┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │
-       │◀─────────MapIdle──────────┤   waiting for connectivity  │  │
-       │                           ││  Map renders cached data      │
-       │                           │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘  │
-       │                           │                                │
-```
+
+![Map events sequence diagram](https://static-assets.mapbox.com/maps/ios/documentation/events.1c28dc5dac4025636a96175e2522d249c15c7441.svg)
 
 
 ## Topics

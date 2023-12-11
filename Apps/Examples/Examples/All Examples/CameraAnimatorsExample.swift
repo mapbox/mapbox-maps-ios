@@ -1,15 +1,14 @@
 import UIKit
 import MapboxMaps
 
-class CameraAnimatorsExample: UIViewController, ExampleProtocol {
-
-    internal var mapView: MapView!
+final class CameraAnimatorsExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
     // Coordinate in New York City
     let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds)

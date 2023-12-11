@@ -1,13 +1,12 @@
 import MapboxMaps
 import UIKit
 
-class RasterTileSourceExample: UIViewController, ExampleProtocol {
+final class RasterTileSourceExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
-    var mapView: MapView!
-    var isTileRequestDelayEnabled = false
-
-    let button = UIButton(type: .system)
-    let sourceId = "raster-source"
+    private var mapView: MapView!
+    private var isTileRequestDelayEnabled = false
+    private let button = UIButton(type: .system)
+    private let sourceId = "raster-source"
 
     override func viewDidLoad() {
         super.viewDidLoad()

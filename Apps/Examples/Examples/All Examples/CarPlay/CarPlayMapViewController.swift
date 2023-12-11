@@ -1,7 +1,7 @@
 import UIKit
 import MapboxMaps
 
-class CarPlayRootVC: UIViewController {
+final class CarPlayRootVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -16,8 +16,8 @@ class CarPlayRootVC: UIViewController {
     }
 }
 
-class CarPlayViewController: UIViewController {
-    internal lazy var mapView: MapView = {
+final class CarPlayViewController: UIViewController {
+    lazy var mapView: MapView = {
         let mapOptions = MapOptions(pixelRatio: UIScreen.screens[1].nativeScale)
 
         let mapInitOptions = MapInitOptions(mapOptions: mapOptions, cameraOptions:  CameraOptions(
@@ -82,7 +82,7 @@ class CarPlayViewController: UIViewController {
         animateToBerlin(position: .start)
     }
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         mapView.ornaments.options.scaleBar.visibility = .hidden

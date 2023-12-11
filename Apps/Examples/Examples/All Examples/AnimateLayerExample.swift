@@ -1,12 +1,11 @@
 import UIKit
 import MapboxMaps
 
-public class AnimateLayerExample: UIViewController, ExampleProtocol {
+final class AnimateLayerExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
-    internal var mapView: MapView!
-
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Set the map's center coordinate and zoom level
@@ -26,7 +25,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
     }
 
-    public func setupExample() {
+    func setupExample() {
 
         // San Francisco, California
         let origin = CLLocationCoordinate2DMake(37.776, -122.414)
@@ -42,7 +41,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         startAnimation(routeLine: arcLine)
     }
 
-    public func arc(start: CLLocationCoordinate2D, end: CLLocationCoordinate2D) -> LineString {
+    func arc(start: CLLocationCoordinate2D, end: CLLocationCoordinate2D) -> LineString {
         let line = LineString([start, end])
         let distance = Int(start.distance(to: end))
 
@@ -59,7 +58,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         return LineString(coordinates.compactMap({ $0 }))
     }
 
-    public func addLayers(for routeLine: LineString) {
+    func addLayers(for routeLine: LineString) {
         // Define the source data and style layer for the airplane's route line.
         var airplaneRoute = GeoJSONSource(id: "airplane-route")
         airplaneRoute.data = .feature(Feature(geometry: routeLine))
@@ -94,7 +93,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         try! mapView.mapboxMap.addLayer(airplaneSymbolLayer, layerPosition: nil)
     }
 
-    public func startAnimation(routeLine: LineString) {
+    func startAnimation(routeLine: LineString) {
         var runCount = 0
 
         _ = Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { [weak self] timer in

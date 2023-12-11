@@ -1,12 +1,11 @@
 import UIKit
 import MapboxMaps
 
-class SymbolClusteringExample: UIViewController, ExampleProtocol {
-
-    internal var mapView: MapView!
+final class SymbolClusteringExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Create a `MapView` centered over Washington, DC.

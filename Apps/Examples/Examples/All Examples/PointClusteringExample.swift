@@ -1,12 +1,11 @@
 import UIKit
 import MapboxMaps
 
-public class PointClusteringExample: UIViewController, ExampleProtocol {
-
-    internal var mapView: MapView!
+final class PointClusteringExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Initialize a map view centered over the United States and using the Mapbox Dark style.
@@ -111,7 +110,7 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
         return numberLayer
     }
 
-    override public func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
          // The below line is used for internal testing purposes only.
         finish()

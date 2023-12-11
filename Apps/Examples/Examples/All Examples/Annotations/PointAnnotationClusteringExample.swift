@@ -1,13 +1,12 @@
 import UIKit
 import MapboxMaps
 
-class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
-
-    internal var mapView: MapView!
-    let clusterLayerID = "fireHydrantClusters"
+final class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
+    private let clusterLayerID = "fireHydrantClusters"
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Center the map over Washington, D.C.

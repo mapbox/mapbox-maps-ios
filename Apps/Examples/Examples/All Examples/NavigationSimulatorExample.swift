@@ -2,12 +2,6 @@ import UIKit
 import MapboxMaps
 
 final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
-    private enum ID {
-        static let routeSource = "route-line-source-id"
-        static let routeLineLayer = "route-line-layer-id"
-        static let casingLineLayer = "route-casing-layer-id"
-    }
-
     private var mapView: MapView!
     private var navigationSimulator: NavigationSimulator!
     private var cancelables = Set<AnyCancelable>()
@@ -206,5 +200,13 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
 
         try? mapView.mapboxMap.setLayerProperty(for: ID.routeLineLayer, property: "line-trim-offset", value: [0, progress])
         try? mapView.mapboxMap.setLayerProperty(for: ID.casingLineLayer, property: "line-trim-offset", value: [0, progress])
+    }
+}
+
+extension NavigationSimulatorExample {
+    private enum ID {
+        static let routeSource = "route-line-source-id"
+        static let routeLineLayer = "route-line-layer-id"
+        static let casingLineLayer = "route-casing-layer-id"
     }
 }

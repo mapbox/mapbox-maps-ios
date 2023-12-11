@@ -3,16 +3,6 @@ import MapboxMaps
 import CoreLocation
 
 final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
-
-    private enum Constants {
-        static let BLUE_ICON_ID = "blue"
-        static let SOURCE_ID = "source_id"
-        static let LAYER_ID = "layer_id"
-        static let TERRAIN_URL_TILE_RESOURCE = "mapbox://mapbox.mapbox-terrain-dem-v1"
-        static let MARKER_ID_PREFIX = "view_annotation_"
-        static let SELECTED_ADD_COEF_PX: CGFloat = 50
-    }
-
     private var mapView: MapView!
     private var pointList: [Feature] = []
     private var markerId = 0
@@ -158,5 +148,16 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
         annotations[id] = annotation
         return true
+    }
+}
+
+extension ViewAnnotationMarkerExample {
+    private enum Constants {
+        static let BLUE_ICON_ID = "blue"
+        static let SOURCE_ID = "source_id"
+        static let LAYER_ID = "layer_id"
+        static let TERRAIN_URL_TILE_RESOURCE = "mapbox://mapbox.mapbox-terrain-dem-v1"
+        static let MARKER_ID_PREFIX = "view_annotation_"
+        static let SELECTED_ADD_COEF_PX: CGFloat = 50
     }
 }

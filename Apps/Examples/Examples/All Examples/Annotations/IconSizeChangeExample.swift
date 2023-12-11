@@ -2,13 +2,6 @@ import UIKit
 import MapboxMaps
 
 final class IconSizeChangeExample: UIViewController, ExampleProtocol {
-    enum Constants {
-        static let blueMarkerImageId = "blue-marker"
-        static let markerLayerId = "marker-layer"
-        static let markerSourceId = "marker-source"
-        static let selectedMarkerLayerId = "selected-marker-layer"
-        static let selectedMarkerSourceId = "selected-marker"
-    }
     private var mapView: MapView!
     private var markerSelected = false
     private var cancelables = Set<AnyCancelable>()
@@ -132,5 +125,15 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
                 layer.iconSize = .constant(selected ? 2 : 1)
             })
         markerSelected = selected
+    }
+}
+
+extension IconSizeChangeExample {
+    private enum Constants {
+        static let blueMarkerImageId = "blue-marker"
+        static let markerLayerId = "marker-layer"
+        static let markerSourceId = "marker-source"
+        static let selectedMarkerLayerId = "selected-marker-layer"
+        static let selectedMarkerSourceId = "selected-marker"
     }
 }

@@ -2,16 +2,6 @@ import UIKit
 import MapboxMaps
 
 final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
-    private enum Constants {
-        static let ICON_KEY = "icon_key"
-        static let BLUE_MARKER_PROPERTY = "icon_blue_property"
-        static let RED_MARKER_PROPERTY = "icon_red_property"
-        static let BLUE_ICON_ID = "blue"
-        static let RED_ICON_ID = "red"
-        static let SOURCE_ID = "source_id"
-        static let LAYER_ID = "layer_id"
-    }
-
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
@@ -77,5 +67,17 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
         // Add Y-offset so icon will point to exact location.
         layer.iconOffset = .constant([0, 12])
         try? mapView.mapboxMap.addLayer(layer)
+    }
+}
+
+extension AddMarkersSymbolExample {
+    private enum Constants {
+        static let ICON_KEY = "icon_key"
+        static let BLUE_MARKER_PROPERTY = "icon_blue_property"
+        static let RED_MARKER_PROPERTY = "icon_red_property"
+        static let BLUE_ICON_ID = "blue"
+        static let RED_ICON_ID = "red"
+        static let SOURCE_ID = "source_id"
+        static let LAYER_ID = "layer_id"
     }
 }

@@ -2,17 +2,15 @@ import UIKit
 import MapboxMaps
 
 final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
-    private var cancelables = Set<AnyCancelable>()
-
     private enum Animator {
         case flyTo, easeTo, viewport
     }
-
+    
+    private var cancelables = Set<AnyCancelable>()
     private var flyToButton: UIButton!
     private var easeToButton: UIButton!
     private var viewportButton: UIButton!
     private var resetButton: UIButton!
-
     private var annotations = [ViewAnnotation]()
 
     private var mapView: MapView!

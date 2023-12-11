@@ -1,11 +1,11 @@
 import UIKit
 import MapboxMaps
 
-public class Custom2DPuckExample: UIViewController, ExampleProtocol {
+final class Custom2DPuckExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
-
     private var mapView: MapView!
-    internal var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
+    private var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
+    
     private var showsPuck: PuckVisibility = .isVisible {
         didSet {
             updatePuckUI()
@@ -164,7 +164,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         }
     }
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.26301831966747, longitude: -121.97647612483807), zoom: 6)
@@ -191,7 +191,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
     }
 
-    override public func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // The below line is used for internal testing purposes only.
         finish()
@@ -217,7 +217,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         ])
     }
 
-    @objc public func changePuckOptions(sender: UIButton) {
+    @objc func changePuckOptions(sender: UIButton) {
         let alert = UIAlertController(title: "Toggle Puck Options",
                                       message: "Select an options to toggle.",
                                       preferredStyle: .actionSheet)

@@ -1,11 +1,11 @@
 import MapboxMaps
 import UIKit
 
-class AnimateImageLayerExample: UIViewController, ExampleProtocol {
-    var mapView: MapView!
-    var sourceId = "radar-source"
-    var timer: Timer?
-    var imageNumber = 0
+final class AnimateImageLayerExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
+    private let sourceId = "radar-source"
+    private var timer: Timer?
+    private var imageNumber = 0
     private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {

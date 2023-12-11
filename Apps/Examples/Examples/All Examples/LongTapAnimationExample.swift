@@ -1,17 +1,13 @@
 import MapboxMaps
 import UIKit
 
-private extension String {
-    static let blueMarker = "blue-marker"
-}
-
 // This examples shows how to animate camera to a long-tapped coordinate.
-public class LongTapAnimationExample: UIViewController, ExampleProtocol {
-    internal var mapView: MapView!
+final class LongTapAnimationExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
     private var pointAnnotationManager: PointAnnotationManager!
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Center the map over the United States.
@@ -54,4 +50,8 @@ public class LongTapAnimationExample: UIViewController, ExampleProtocol {
         let impactFeedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
         impactFeedbackGenerator.impactOccurred()
     }
+}
+
+private extension String {
+    static let blueMarker = "blue-marker"
 }

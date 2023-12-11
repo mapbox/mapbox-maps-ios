@@ -1,13 +1,13 @@
 import UIKit
 @_spi(Experimental) import MapboxMaps
 
-public class LayerSlotExample: UIViewController, ExampleProtocol {
+final class LayerSlotExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private lazy var source = GeoJSONSource(id: "ploygon-geojson-source")
     private lazy var layer = FillLayer(id: "polygon-layer", source: source.id)
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Center the map over the United States.
@@ -56,7 +56,7 @@ public class LayerSlotExample: UIViewController, ExampleProtocol {
     }
 
     // Wait for the style to load before adding data to it.
-    public func setupExample() {
+    func setupExample() {
         // Apply basic styling to the fill layer.
         layer.fillColor = .constant(StyleColor(#colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)))
         layer.fillOutlineColor = .constant(StyleColor(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)))

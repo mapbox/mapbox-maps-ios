@@ -2,7 +2,6 @@ import UIKit
 import MapboxMaps
 
 final class BasicMapExample: UIViewController, ExampleProtocol {
-
     private var mapView: MapView!
 
     override func viewDidLoad() {

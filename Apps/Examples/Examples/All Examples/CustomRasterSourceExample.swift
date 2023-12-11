@@ -2,7 +2,6 @@ import UIKit
 @_spi(Experimental) import MapboxMaps
 
 final class CustomRasterSourceExample: UIViewController, ExampleProtocol {
-
     private var mapView: MapView!
     private var cancelables: Set<AnyCancelable> = []
     private var timer: Timer?

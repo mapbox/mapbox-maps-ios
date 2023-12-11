@@ -2,13 +2,6 @@ import UIKit
 import MapboxMaps
 
 final class AddOneMarkerSymbolExample: UIViewController, ExampleProtocol {
-    private enum Constants {
-        static let RED_ICON_ID = "red"
-        static let SOURCE_ID = "source_id"
-        static let LAYER_ID = "layer_id"
-        static let coordinate = CLLocationCoordinate2D(latitude: 55.665957, longitude: 12.550343)
-    }
-
     private lazy var mapView: MapView = {
         let options = MapInitOptions(cameraOptions: CameraOptions(center: Constants.coordinate, zoom: 8))
 
@@ -42,5 +35,14 @@ final class AddOneMarkerSymbolExample: UIViewController, ExampleProtocol {
         layer.iconAnchor = .constant(.bottom)
         layer.iconOffset = .constant([0, 12])
         try? mapView.mapboxMap.addLayer(layer)
+    }
+}
+
+extension AddOneMarkerSymbolExample {
+    private enum Constants {
+        static let RED_ICON_ID = "red"
+        static let SOURCE_ID = "source_id"
+        static let LAYER_ID = "layer_id"
+        static let coordinate = CLLocationCoordinate2D(latitude: 55.665957, longitude: 12.550343)
     }
 }

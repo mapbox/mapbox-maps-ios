@@ -1,14 +1,13 @@
 import UIKit
 import MapboxMaps
 
-public class SkyLayerExample: UIViewController, ExampleProtocol {
-
-    internal var mapView: MapView!
-    internal var skyLayer: SkyLayer!
-    internal var segmentedControl = UISegmentedControl()
+final class SkyLayerExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
+    private var skyLayer: SkyLayer!
+    private var segmentedControl = UISegmentedControl()
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Set the initial camera and style URI by creating a `MapInitOptions` object.

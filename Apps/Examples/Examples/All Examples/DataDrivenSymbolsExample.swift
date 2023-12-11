@@ -1,12 +1,11 @@
 import UIKit
 import MapboxMaps
 
-public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
+final class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
-    internal var mapView: MapView!
-
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.761, longitude: -119.624)
@@ -23,7 +22,7 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
     }
 
-    public func setupExample() {
+    func setupExample() {
         // Constant used to identify the source layer
         let sourceLayerIdentifier = "yosemite-pois"
 

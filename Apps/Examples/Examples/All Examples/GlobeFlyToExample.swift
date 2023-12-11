@@ -3,10 +3,10 @@ import UIKit
 import MapboxMaps
 import CoreLocation
 
-class GlobeFlyToExample: UIViewController, ExampleProtocol {
-    internal var mapView: MapView!
-    internal var isAtStart = true
-    var instuctionLabel = UILabel(frame: CGRect.zero)
+final class GlobeFlyToExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
+    private var isAtStart = true
+    private var instuctionLabel = UILabel(frame: CGRect.zero)
     private var cancelables = Set<AnyCancelable>()
 
     private var cameraStart = CameraOptions(
@@ -21,7 +21,7 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
         bearing: 130.0,
         pitch: 75.0)
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .satelliteStreets))

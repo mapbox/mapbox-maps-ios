@@ -8,7 +8,7 @@ public struct Example {
     public var testTimeout: TimeInterval = 20.0
     public var type: ExampleProtocol.Type
 
-    public func makeViewController() -> UIViewController {
+    func makeViewController() -> UIViewController {
         guard let exampleClass = type as? UIViewController.Type else {
             fatalError("Unable to get class name from example named \(type)")
         }

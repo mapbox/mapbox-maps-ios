@@ -3,7 +3,6 @@ import MapboxMaps
 
 final class Custom3DPuckExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
-
     private var mapView: MapView!
 
     override func viewDidLoad() {

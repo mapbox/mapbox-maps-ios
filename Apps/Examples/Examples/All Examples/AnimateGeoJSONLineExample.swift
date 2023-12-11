@@ -1,15 +1,14 @@
 import UIKit
 import MapboxMaps
 
-public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
-
-    internal var mapView: MapView!
-    internal let sourceIdentifier = "route-source-identifier"
-    internal var routeLineSource: GeoJSONSource!
-    var currentIndex = 0
+final class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
+    private let sourceIdentifier = "route-source-identifier"
+    private var mapView: MapView!
+    private var routeLineSource: GeoJSONSource!
+    private var currentIndex = 0
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 45.5076, longitude: -122.6736)

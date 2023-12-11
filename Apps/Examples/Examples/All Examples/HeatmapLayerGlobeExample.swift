@@ -1,24 +1,17 @@
 import UIKit
 import MapboxMaps
 
-public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
-
-    internal var mapView: MapView!
-    internal let earthquakeSourceId: String = "earthquakes"
-    internal let earthquakeLayerId: String = "earthquake-viz"
-    internal let heatmapLayerId = "earthquakes-heat"
-    internal let heatmapLayerSource = "earthquakes"
-    internal let circleLayerId = "earthquakes-circle"
-    internal let earthquakeURL = URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson")!
+final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Center the map over the United States.
-        let centerCoordinate = CLLocationCoordinate2D(latitude: 50,
-                                                      longitude: -120)
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 50, longitude: -120)
         let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 1.0), styleURI: .dark)
+        
         // Set up map view
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.ornaments.options.scaleBar.visibility = .hidden
@@ -131,7 +124,7 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         }
     }
 
-    public func createCircleLayer() {
+    func createCircleLayer() {
 
         var circleLayerSource = GeoJSONSource(id: self.earthquakeSourceId)
         circleLayerSource.data = .url(self.earthquakeURL)
@@ -221,4 +214,13 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         }
     }
 
+}
+
+private extension HeatmapLayerGlobeExample {
+    var earthquakeSourceId: String { "earthquakes" }
+    var earthquakeLayerId: String { "earthquake-viz" }
+    var heatmapLayerId: String { "earthquakes-heat" }
+    var heatmapLayerSource: String { "earthquakes" }
+    var circleLayerId: String { "earthquakes-circle" }
+    var earthquakeURL: URL { URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson")! }
 }

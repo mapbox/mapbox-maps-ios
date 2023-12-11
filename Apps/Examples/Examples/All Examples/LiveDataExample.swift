@@ -3,9 +3,9 @@ import UIKit
 
 final class LiveDataExample: UIViewController, ExampleProtocol {
     // Display the current location of the International Space Station (ISS)
-    let url = URL(string: "https://api.wheretheiss.at/v1/satellites/25544")!
-    var mapView: MapView!
-    var issTimer: Timer?
+    private let url = URL(string: "https://api.wheretheiss.at/v1/satellites/25544")!
+    private var mapView: MapView!
+    private var issTimer: Timer?
     private var cancelables = Set<AnyCancelable>()
 
     struct Coordinates: Codable {

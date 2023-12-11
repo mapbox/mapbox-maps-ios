@@ -2,7 +2,6 @@ import UIKit
 import MapboxMaps
 
 final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
-
     private var mapView: MapView!
     private let customImage = UIImage(named: "dest-pin")!
     private var cancelables = Set<AnyCancelable>()

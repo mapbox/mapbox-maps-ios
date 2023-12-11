@@ -1,11 +1,9 @@
 import UIKit
 @_spi(Experimental) import MapboxMaps
 
-internal class StandardStyleExample: UIViewController, ExampleProtocol {
-
+final class StandardStyleExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
-
     private var lightPreset = StandardLightPreset.night
     private var labelsSetting = true
 

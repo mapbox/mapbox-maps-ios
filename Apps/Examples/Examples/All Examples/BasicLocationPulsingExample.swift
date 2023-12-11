@@ -4,7 +4,7 @@ import MapboxMaps
 
 /// This example shows a basic usage of sonar-like pulsing circle animation around the 2D puck.
 final class BasicLocationPulsingExample: UIViewController, ExampleProtocol {
-    var cancelables = Set<AnyCancelable>()
+    private var cancelables = Set<AnyCancelable>()
 
     private lazy var mapView: MapView = {
         let view = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .streets))

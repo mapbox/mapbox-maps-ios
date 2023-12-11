@@ -3,7 +3,6 @@ import MapboxMaps
 import CoreLocation
 
 final class ViewAnnotationBasicExample: UIViewController, ExampleProtocol {
-
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 

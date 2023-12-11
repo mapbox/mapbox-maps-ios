@@ -3,11 +3,6 @@ import MapboxMaps
 import CoreLocation
 
 final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleProtocol {
-    private enum Constants {
-        static let blueIconId = "blue"
-        static let markerId = UUID().uuidString
-    }
-
     private var mapView: MapView!
     private var pointAnnotationManager: PointAnnotationManager!
     private var cancelables = Set<AnyCancelable>()
@@ -82,5 +77,12 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
         self.annotation = annotation
 
         mapView.viewAnnotations.add(annotation)
+    }
+}
+
+extension ViewAnnotationWithPointAnnotationExample {
+    private enum Constants {
+        static let blueIconId = "blue"
+        static let markerId = UUID().uuidString
     }
 }

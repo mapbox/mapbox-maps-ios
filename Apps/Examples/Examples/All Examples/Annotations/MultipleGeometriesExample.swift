@@ -1,14 +1,11 @@
 import UIKit
 import MapboxMaps
 
-public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
-    enum Constants {
-        static let geoJSONDataSourceIdentifier = "geoJSON-data-source"
-    }
-    internal var mapView: MapView!
+final class MultipleGeometriesExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Set the center coordinate and zoom level.
@@ -33,7 +30,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
     }
 
     // Load GeoJSON file from local bundle and decode into a `FeatureCollection`.
-    internal func decodeGeoJSON(from fileName: String) throws -> FeatureCollection? {
+    private func decodeGeoJSON(from fileName: String) throws -> FeatureCollection? {
         guard let path = Bundle.main.path(forResource: fileName, ofType: "geojson") else {
             preconditionFailure("File '\(fileName)' not found.")
         }
@@ -86,7 +83,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         try! mapView.mapboxMap.addLayer(lineLayer)
     }
 
-    public func addPointLayer() {
+    private func addPointLayer() {
         // Create a circle layer associated with the GeoJSON data source,
         // filter it so that only the point data is shown,
         // and apply basic styling to it.
@@ -100,5 +97,11 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         circleLayer.circleStrokeWidth = .constant(2.0)
         circleLayer.circleStrokeColor = .constant(StyleColor(.black))
         try! mapView.mapboxMap.addLayer(circleLayer)
+    }
+}
+
+extension MultipleGeometriesExample {
+    private enum Constants {
+        static let geoJSONDataSourceIdentifier = "geoJSON-data-source"
     }
 }

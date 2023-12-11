@@ -1,12 +1,9 @@
 import UIKit
 import MapboxMaps
 
-public class FeatureStateExample: UIViewController, ExampleProtocol {
-
+final class FeatureStateExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
-    fileprivate var descriptionView: EarthquakeDescriptionView!
-    static let earthquakeSourceId: String = "earthquakes"
-    static let earthquakeLayerId: String = "earthquake-viz"
+    private var descriptionView: EarthquakeDescriptionView!
     private var previouslyTappedEarthquakeId: String = ""
     private var cancelables = Set<AnyCancelable>()
 
@@ -19,7 +16,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         return dateFormatter
     }()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Center the map over the United States.
@@ -57,7 +54,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
     }
 
-    public func setupSourceAndLayer() {
+    func setupSourceAndLayer() {
 
         // Create a new GeoJSON data source which gets its data from an external URL.
         guard let sevenDaysAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) else {
@@ -242,7 +239,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
     }
 
     // Present an alert with a given title.
-    public func showAlert(with title: String) {
+    func showAlert(with title: String) {
         let alertController = UIAlertController(title: title,
                                                 message: nil,
                                                 preferredStyle: .alert)
@@ -310,4 +307,9 @@ private class EarthquakeDescriptionView: UIView {
         stackview.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
 
     }
+}
+
+private extension FeatureStateExample {
+    static let earthquakeSourceId: String = "earthquakes"
+    static let earthquakeLayerId: String = "earthquake-viz"
 }

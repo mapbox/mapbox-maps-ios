@@ -1,9 +1,9 @@
 import MapboxMaps
 import UIKit
 
-class DistanceExpressionExample: UIViewController, ExampleProtocol {
-    var mapView: MapView!
-    var point: Turf.Feature!
+final class DistanceExpressionExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
+    private var point: Turf.Feature!
     private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {

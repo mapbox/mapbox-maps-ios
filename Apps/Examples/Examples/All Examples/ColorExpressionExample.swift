@@ -1,12 +1,11 @@
 import UIKit
 import MapboxMaps
 
-public class ColorExpressionExample: UIViewController, ExampleProtocol {
-
-    internal var mapView: MapView!
+final class ColorExpressionExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Center the map over the United States.
@@ -26,7 +25,7 @@ public class ColorExpressionExample: UIViewController, ExampleProtocol {
     }
 
     // Wait for the style to load before adding data to it.
-    public func setupExample() {
+    func setupExample() {
         /**
          This JSON expression is transformed to swift below:
          [

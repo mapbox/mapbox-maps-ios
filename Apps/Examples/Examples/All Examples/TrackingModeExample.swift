@@ -1,7 +1,7 @@
 import UIKit
 import MapboxMaps
 
-public class TrackingModeExample: UIViewController, ExampleProtocol {
+final class TrackingModeExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
     private var locationTrackingCancellation: AnyCancelable?
 
@@ -18,40 +18,6 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         didSet {
             syncPuckAndButton()
         }
-    }
-
-    private enum Style: Int, CaseIterable {
-        var name: String {
-            switch self {
-            case .standard:
-                return "Standard"
-            case .light:
-                return "Light"
-            case .satelliteStreets:
-                return "Satellite"
-            case .customUri:
-                return "Custom"
-            }
-        }
-
-        var uri: StyleURI {
-            switch self {
-            case .standard:
-                return .standard
-            case .light:
-                return .light
-            case .satelliteStreets:
-                return .satelliteStreets
-            case .customUri:
-                let localStyleURL = Bundle.main.url(forResource: "blueprint_style", withExtension: "json")!
-                return .init(url: localStyleURL)!
-            }
-        }
-
-        case standard
-        case light
-        case satelliteStreets
-        case customUri
     }
 
     override public func viewDidLoad() {
@@ -204,4 +170,40 @@ extension TrackingModeExample: GestureManagerDelegate {
     public func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didEnd gestureType: MapboxMaps.GestureType, willAnimate: Bool) {}
 
     public func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didEndAnimatingFor gestureType: MapboxMaps.GestureType) {}
+}
+
+extension TrackingModeExample {
+    private enum Style: Int, CaseIterable {
+        var name: String {
+            switch self {
+            case .standard:
+                return "Standard"
+            case .light:
+                return "Light"
+            case .satelliteStreets:
+                return "Satellite"
+            case .customUri:
+                return "Custom"
+            }
+        }
+
+        var uri: StyleURI {
+            switch self {
+            case .standard:
+                return .standard
+            case .light:
+                return .light
+            case .satelliteStreets:
+                return .satelliteStreets
+            case .customUri:
+                let localStyleURL = Bundle.main.url(forResource: "blueprint_style", withExtension: "json")!
+                return .init(url: localStyleURL)!
+            }
+        }
+
+        case standard
+        case light
+        case satelliteStreets
+        case customUri
+    }
 }

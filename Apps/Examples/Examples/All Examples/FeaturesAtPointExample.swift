@@ -1,12 +1,11 @@
 import UIKit
 import MapboxMaps
 
-public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
+final class FeaturesAtPointExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
+    private var mapView: MapView!
 
-    internal var mapView: MapView!
-
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Center the map over the United States.
@@ -36,7 +35,7 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
     }
 
-    public func setupExample() {
+    func setupExample() {
         // Create a new GeoJSON data source which gets its data from an external URL.
         var geoJSONSource = GeoJSONSource(id: "US-states-vector-source")
         geoJSONSource.data = .string("https://docs.mapbox.com/mapbox-gl-js/assets/us_states.geojson")

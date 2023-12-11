@@ -3,9 +3,8 @@ import SceneKit
 import MapboxMaps
 
 final class SceneKitExample: UIViewController, ExampleProtocol {
-
-    var mapView: MapView!
-    let modelOrigin = CLLocationCoordinate2D(latitude: -35.39847, longitude: 148.9819)
+    private var mapView: MapView!
+    private let modelOrigin = CLLocationCoordinate2D(latitude: -35.39847, longitude: 148.9819)
     private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {

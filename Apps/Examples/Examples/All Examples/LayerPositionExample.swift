@@ -1,15 +1,14 @@
 import UIKit
 import MapboxMaps
 
-public class LayerPositionExample: UIViewController, ExampleProtocol {
-
-    internal var mapView: MapView!
+final class LayerPositionExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
     private var sourceIdentifier = "ploygon-geojson-source"
     private var source: GeoJSONSource!
     private var layer: FillLayer!
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Center the map over the United States.
@@ -20,6 +19,8 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
+        
+        try! mapView.mapboxMap.setProjection(StyleProjection(name: .mercator))
 
         // Allows the view controller to receive information about map events.
         mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
@@ -90,7 +91,7 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
     }
 
     // Wait for the style to load before adding data to it.
-    public func setupExample() {
+    func setupExample() {
         layer = FillLayer(id: "polygon-layer", source: sourceIdentifier)
         // Apply basic styling to the fill layer.
         layer.fillColor = .constant(StyleColor(#colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)))

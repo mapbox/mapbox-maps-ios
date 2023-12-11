@@ -1,11 +1,11 @@
 import UIKit
 import MapboxMaps
 
-public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
-    internal var mapView: MapView!
+final class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 41.878781, longitude: -87.622088)
@@ -24,7 +24,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
     }
 
-    public func drawLineLayer() {
+    func drawLineLayer() {
         var vectorSource = VectorSource(id: "mapillary")
 
         // For sources using the {z}/{x}/{y} URL scheme, use the `tiles`

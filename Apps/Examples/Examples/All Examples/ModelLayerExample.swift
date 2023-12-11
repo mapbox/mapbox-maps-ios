@@ -3,16 +3,6 @@ import UIKit
 
 @objc(ModelLayerExample)
 final class ModelLayerExample: UIViewController, ExampleProtocol {
-    private enum Constants {
-        static let mapboxHelsinki = Point(CLLocationCoordinate2D(latitude: 60.17195694011002, longitude: 24.945389069265598))
-        static let duckCoordinates = Point(CLLocationCoordinate2D(latitude: mapboxHelsinki.coordinates.latitude + 0.002, longitude: mapboxHelsinki.coordinates.longitude - 0.002))
-        static let modelIdKey = "model-id-key"
-        static let sourceId = "source-id"
-        static let duckModelId = "model-id-duck"
-        static let carModelId = "model-id-car"
-        static let duck = "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Embedded/Duck.gltf"
-        static let car = Bundle.main.url(forResource: "sportcar", withExtension: "glb")!.absoluteString
-    }
     private var mapView: MapView!
 
     override func viewDidLoad() {
@@ -68,5 +58,18 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
         super.viewDidAppear(animated)
         // The below line is used for internal testing purposes only.
         finish()
+    }
+}
+
+extension ModelLayerExample {
+    private enum Constants {
+        static let mapboxHelsinki = Point(CLLocationCoordinate2D(latitude: 60.17195694011002, longitude: 24.945389069265598))
+        static let duckCoordinates = Point(CLLocationCoordinate2D(latitude: mapboxHelsinki.coordinates.latitude + 0.002, longitude: mapboxHelsinki.coordinates.longitude - 0.002))
+        static let modelIdKey = "model-id-key"
+        static let sourceId = "source-id"
+        static let duckModelId = "model-id-duck"
+        static let carModelId = "model-id-car"
+        static let duck = "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Embedded/Duck.gltf"
+        static let car = Bundle.main.url(forResource: "sportcar", withExtension: "glb")!.absoluteString
     }
 }

@@ -2,19 +2,7 @@ import Foundation
 import CoreLocation
 import MapboxMaps
 
-final class NavigationSimulator: LocationProvider {
-    func addLocationObserver(for observer: LocationObserver) {
-        locationObservers.add(observer)
-    }
-
-    func removeLocationObserver(for observer: LocationObserver) {
-        locationObservers.remove(observer)
-    }
-
-    func getLastObservedLocation() -> Location? {
-        Location(coordinate: currentLocation)
-    }
-
+final class NavigationSimulator {
     private let viewport: ViewportManager
     private let route: LineString
 
@@ -85,5 +73,19 @@ final class NavigationSimulator: LocationProvider {
         for consumer in locationObservers.allObjects {
             (consumer as? LocationObserver)?.onLocationUpdateReceived(for: [location])
         }
+    }
+}
+
+extension NavigationSimulator: LocationProvider {
+    func addLocationObserver(for observer: LocationObserver) {
+        locationObservers.add(observer)
+    }
+
+    func removeLocationObserver(for observer: LocationObserver) {
+        locationObservers.remove(observer)
+    }
+
+    func getLastObservedLocation() -> Location? {
+        Location(coordinate: currentLocation)
     }
 }

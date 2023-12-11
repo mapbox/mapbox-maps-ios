@@ -1,12 +1,12 @@
 import UIKit
 import MapboxMaps
 
-public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExampleProtocol {
-    public var snapshotter: Snapshotter!
-    public var snapshotView: UIImageView!
+final class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExampleProtocol {
+    private var snapshotter: Snapshotter!
+    private var snapshotView: UIImageView!
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Add the `UIImageView` that will eventually render the snapshot.
@@ -34,7 +34,7 @@ public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExample
         }.store(in: &cancelables)
     }
 
-    public func startSnapshot() {
+    private func startSnapshot() {
         // Begin the snapshot after the style is loaded into the `Snapshotter`.
         // The `SnapshotOverlay` object contains references to the current
         // graphics context being used by the Snapshotter and provides closures to

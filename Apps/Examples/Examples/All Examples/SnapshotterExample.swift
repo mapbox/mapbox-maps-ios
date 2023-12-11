@@ -1,12 +1,11 @@
 import UIKit
 @_spi(Experimental) import MapboxMaps
 
-public class SnapshotterExample: UIViewController, ExampleProtocol {
+final class SnapshotterExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
-
-    internal var mapView: MapView!
-    public var snapshotter: Snapshotter!
-    public var snapshotView: UIImageView!
+    private var mapView: MapView!
+    private var snapshotter: Snapshotter!
+    private var snapshotView: UIImageView!
     private var snapshotting = false
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(frame: view.safeAreaLayoutGuide.layoutFrame)

@@ -3,15 +3,8 @@ import MapboxMaps
 import UIKit
 
 final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
-    enum Constants {
-        static let markerIconId = "marker_icon"
-        static let sourceId = "source-id"
-        static let animationDuration: CFTimeInterval = 2
-    }
     private var mapView: MapView!
-
     private var currentPosition = CLLocationCoordinate2D(latitude: 64.900932, longitude: -18.167040)
-
     private var animationStartTimestamp: CFTimeInterval = 0
     private var origin: CLLocationCoordinate2D!
     private var destination: CLLocationCoordinate2D!
@@ -124,5 +117,13 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         // add display link
         displayLink = CADisplayLink(target: self, selector: #selector(updateFromDisplayLink(displayLink:)))
         displayLink?.add(to: .current, forMode: .common)
+    }
+}
+
+extension AnimatedMarkerExample {
+    enum Constants {
+        static let markerIconId = "marker_icon"
+        static let sourceId = "source-id"
+        static let animationDuration: CFTimeInterval = 2
     }
 }

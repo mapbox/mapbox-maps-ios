@@ -3,7 +3,7 @@ import UIKit
 import MetalKit
 
 final class CustomLayerExample: UIViewController, ExampleProtocol {
-    var mapView: MapView!
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {

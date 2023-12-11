@@ -1,7 +1,7 @@
 import UIKit
 @_spi(Experimental) import MapboxMaps
 
-public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
+final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
 
     private lazy var lightPositionButton: UIButton = {
@@ -37,12 +37,14 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         button.addTarget(self, action: #selector(lightColorButtonTapped(_:)), for: .touchUpInside)
         return button
     }()
+    
     private var ambientLight: AmbientLight = {
         var light = AmbientLight()
         light.color = .constant(StyleColor(.blue))
         light.intensity = .constant(0.9)
         return light
     }()
+    
     private var directionalLight: DirectionalLight = {
         var light = DirectionalLight()
         light.color = .constant(StyleColor(.white))
@@ -52,9 +54,9 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         return light
     }()
 
-    internal var mapView: MapView!
+    private var mapView: MapView!
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         let options = MapInitOptions(styleURI: .light)

@@ -4,12 +4,11 @@ import UIKit
 import CoreLocation
 
 final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, ExampleProtocol {
-
-    var userInteracting = false
-    var mapView: MapView!
+    private var userInteracting = false
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .satellite))

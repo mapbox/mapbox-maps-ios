@@ -4,6 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Delete several examples as redundant from Examples app
 * Expose `MapboxMap.coordinate(s)Info(for:)` publicly.
 
 ## 11.0.0 - 29 November, 2023

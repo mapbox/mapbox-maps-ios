@@ -672,7 +672,7 @@ public final class MapboxMap: StyleManager {
     ///     of the `MapView`.
     ///
     /// - Returns: A `CoordinateInfo` record containing information about the geographical coordinate corresponding to the given point, including whether it is on the map surface.
-    func coordinateInfo(for point: CGPoint) -> CoordinateInfo {
+    public func coordinateInfo(for point: CGPoint) -> CoordinateInfo {
         return __map.coordinateInfoForPixel(forPixel: point.screenCoordinate)
     }
 
@@ -686,7 +686,7 @@ public final class MapboxMap: StyleManager {
     ///     of the `MapView`.
     ///
     /// - Returns: An array of `CoordinateInfo` records containing information about the geographical coordinates corresponding to the given points, including whether they are on the map surface.
-    func coordinatesInfo(for points: [CGPoint]) -> [CoordinateInfo] {
+    public func coordinatesInfo(for points: [CGPoint]) -> [CoordinateInfo] {
         return __map.coordinatesInfoForPixels(forPixels: points.map(\.screenCoordinate))
     }
 

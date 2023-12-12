@@ -18,7 +18,7 @@ struct StandardStyleLocationsExample: View {
                 lightPreset: lightPreset,
                 showPointOfInterestLabels: poi,
                 showTransitLabels: transitLabels,
-                showPlaceLabels: transitLabels,
+                showPlaceLabels: placeLabels,
                 showRoadLabels: roadLabels))
             // Center of the map will be translated in order to accommodate settings panel
             .additionalSafeAreaInsets(.bottom, settingsHeight)

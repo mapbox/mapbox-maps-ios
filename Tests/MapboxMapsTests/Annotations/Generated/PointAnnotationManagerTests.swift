@@ -3327,6 +3327,13 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             XCTFail("GeoJSONObject should be a feature collection")
         }
     }
+
+    func testDoesNotUpdateDragSourceWhenNoDragged() {
+        let annotation = PointAnnotation(id: "point1", coordinate: .random(), isSelected: false, isDraggable: true)
+        manager.annotations = [annotation]
+        $displayLink.send()
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
 }
 
 private extension PointAnnotation {

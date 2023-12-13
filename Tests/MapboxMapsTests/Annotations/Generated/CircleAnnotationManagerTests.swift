@@ -735,6 +735,13 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             XCTFail("GeoJSONObject should be a feature collection")
         }
     }
+
+    func testDoesNotUpdateDragSourceWhenNoDragged() {
+        let annotation = CircleAnnotation(id: "circle1", centerCoordinate: .random(), isSelected: false, isDraggable: true)
+        manager.annotations = [annotation]
+        $displayLink.send()
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
 }
 
 // End of generated file

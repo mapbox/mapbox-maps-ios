@@ -742,6 +742,19 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             XCTFail("GeoJSONObject should be a feature collection")
         }
     }
+
+    func testDoesNotUpdateDragSourceWhenNoDragged() {
+        let annotation = PolygonAnnotation(id: "polygon1", polygon: .init([[
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+            ]]), isSelected: false, isDraggable: true)
+        manager.annotations = [annotation]
+        $displayLink.send()
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
 }
 
 // End of generated file

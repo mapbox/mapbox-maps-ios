@@ -1061,6 +1061,13 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             XCTFail("GeoJSONObject should be a feature collection")
         }
     }
+
+    func testDoesNotUpdateDragSourceWhenNoDragged() {
+        let annotation = PolylineAnnotation(id: "polyline1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)], isSelected: false, isDraggable: true)
+        manager.annotations = [annotation]
+        $displayLink.send()
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
 }
 
 // End of generated file

@@ -48,7 +48,12 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     /// When annotation is moved for the first time, it migrates to this array from mainAnnotations.
     private var draggedAnnotations = [PointAnnotation]() {
-        didSet { syncDragSourceOnce.reset() }
+        didSet {
+            if insertDraggedLayerAndSourceOnce.happened {
+                // Update dragged annotation only when the drag layer is created.
+                syncDragSourceOnce.reset()
+            }
+        }
     }
 
     /// Storage for common layer properties

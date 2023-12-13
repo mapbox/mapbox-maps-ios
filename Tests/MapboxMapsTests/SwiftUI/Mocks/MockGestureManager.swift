@@ -1,8 +1,9 @@
 import UIKit
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 
 final class MockGestureManager: GestureManagerProtocol {
     let contentManager = MockMapContentGestureManager()
+    var gestureHandlers = MapGestureHandlers()
 
     var onMapTap: MapboxMaps.Signal<MapboxMaps.MapContentGestureContext> { contentManager.onMapTap }
     var onMapLongPress: MapboxMaps.Signal<MapboxMaps.MapContentGestureContext> { contentManager.onMapLongPress }

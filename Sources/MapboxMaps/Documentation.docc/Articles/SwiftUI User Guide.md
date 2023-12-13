@@ -27,7 +27,7 @@ Puck 2D/3D | ✅
 Map Events | ✅
 Gesture Configuration | ✅
 Ornaments Configuration | ✅
-Style API | 🚧
+Style API | 🚧 | Use ``MapReader`` to access Style API via ``MapProxy/map``. 
 Custom Camera Animations | 🚧
 
 ### Getting started
@@ -81,9 +81,12 @@ struct ContentView: View {
 Also, you always can use your custom Mapbox Styles built with [Mapbox Studio](https://studio.mapbox.com/).
 
 ```swift
-let customStyle = StyleURI(rawValue: "mapbox://...")
 Map()
-    .mapStyle(MapStyle(uri: customStyle))
+    .mapStyle(.myCustomStyle)
+
+extension MapStyle {
+  static let myCustomStyle = MapStyle(uri: StyleURI(rawValue: "mapbox://...")!)
+}
 ```
 
 Please consult the ``MapStyle`` documentation to find more information about style loading.

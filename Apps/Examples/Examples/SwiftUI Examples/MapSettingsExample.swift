@@ -26,6 +26,7 @@ struct MapSettingsExample : View {
             .cameraBounds(settings.cameraBounds)
             .mapStyle(settings.mapStyle)
             .gestureOptions(settings.gestureOptions)
+            .gestureHandlers(gestureHandlers)
             .northOrientation(settings.orientation)
             .constrainMode(settings.constrainMode)
             .ornamentOptions(OrnamentOptions(
@@ -46,6 +47,13 @@ struct MapSettingsExample : View {
                     settingsOpened.toggle()
                 }
             }
+    }
+
+    var gestureHandlers: MapGestureHandlers {
+        MapGestureHandlers(
+            onBegin: { type in print("Gesture begin: \(type)") },
+            onEnd: { type, willAnimate in print("Gesture end: \(type), will animate: \(willAnimate)") },
+            onEndAnimation: { type in print("Gesture end animation: \(type)") })
     }
 }
 

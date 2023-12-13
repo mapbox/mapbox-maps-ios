@@ -6,6 +6,7 @@ struct MapDependencies {
     var cameraBounds = CameraBoundsOptions()
     var mapStyle: MapStyle = .standard
     var gestureOptions = GestureOptions()
+    var gestureHandlers = MapGestureHandlers()
     var constrainMode = ConstrainMode.heightOnly
     var viewportMode = ViewportMode.default
     var orientation = NorthOrientation.upwards

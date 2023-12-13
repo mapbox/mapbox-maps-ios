@@ -270,14 +270,6 @@ public extension Map {
         copyAssigned(self, \.mapDependencies.mapStyle, mapStyle)
     }
 
-    /// Configures gesture options.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    func gestureOptions(_ options: GestureOptions) -> Self {
-        copyAssigned(self, \.mapDependencies.gestureOptions, options)
-    }
-
     /// Sets constraint mode to the map. If not set, `heightOnly` will be in use.
 #if swift(>=5.8)
     @_documentation(visibility: public)

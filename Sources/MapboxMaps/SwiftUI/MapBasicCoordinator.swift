@@ -93,6 +93,7 @@ final class MapBasicCoordinator {
         assign(&mapView, \.viewportManager.options, value: deps.viewportOptions)
 
         cameraChangeHandlers = deps.cameraChangeHandlers
+        mapView.gestureManager.gestureHandlers = deps.gestureHandlers
 
         shortLivedSubscriptions.removeAll()
 

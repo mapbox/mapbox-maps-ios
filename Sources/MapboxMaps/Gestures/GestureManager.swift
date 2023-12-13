@@ -14,14 +14,6 @@ public protocol GestureManagerDelegate: AnyObject {
     func gestureManager(_ gestureManager: GestureManager, didEndAnimatingFor gestureType: GestureType)
 }
 
-protocol GestureManagerProtocol: AnyObject {
-    var options: GestureOptions { get set }
-    var onMapTap: Signal<MapContentGestureContext> { get }
-    var onMapLongPress: Signal<MapContentGestureContext> { get }
-    func onLayerTap(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable
-    func onLayerLongPress(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable
-}
-
 public final class GestureManager: GestureHandlerDelegate {
 
     /// Configuration options for the built-in gestures
@@ -139,6 +131,9 @@ public final class GestureManager: GestureHandlerDelegate {
     /// Set this delegate to be called back if a gesture begins
     public weak var delegate: GestureManagerDelegate?
 
+    // Gesture handlers for SwiftUI
+    var gestureHandlers = MapGestureHandlers()
+
     private let panGestureHandler: PanGestureHandlerProtocol
     private let pinchGestureHandler: PinchGestureHandlerProtocol
     private let rotateGestureHandler: RotateGestureHandlerProtocol
@@ -194,30 +189,42 @@ public final class GestureManager: GestureHandlerDelegate {
         self.options = GestureOptions()
     }
 
-    internal func gestureBegan(for gestureType: GestureType) {
+    func gestureBegan(for gestureType: GestureType) {
         OSLog.poi.signpostEvent("Gesture began", message: "type: \(gestureType)")
 
         if gestureType.isContinuous {
             mapboxMap.beginGesture()
         }
         delegate?.gestureManager(self, didBegin: gestureType)
+        gestureHandlers.onBegin?(gestureType)
     }
 
-    internal func gestureEnded(for gestureType: GestureType, willAnimate: Bool) {
+    func gestureEnded(for gestureType: GestureType, willAnimate: Bool) {
         OSLog.poi.signpostEvent("Gesture ended", message: "type: \(gestureType)")
 
-        if gestureType.isContinuous, false == willAnimate {
+        if gestureType.isContinuous, !willAnimate {
             mapboxMap.endGesture()
         }
         delegate?.gestureManager(self, didEnd: gestureType, willAnimate: willAnimate)
+        gestureHandlers.onEnd?(gestureType, willAnimate)
     }
 
-    internal func animationEnded(for gestureType: GestureType) {
+    func animationEnded(for gestureType: GestureType) {
         if gestureType.isContinuous {
             mapboxMap.endGesture()
         }
         delegate?.gestureManager(self, didEndAnimatingFor: gestureType)
+        gestureHandlers.onAnimationEnd?(gestureType)
     }
+}
+
+protocol GestureManagerProtocol: AnyObject {
+    var gestureHandlers: MapGestureHandlers { get set }
+    var options: GestureOptions { get set }
+    var onMapTap: Signal<MapContentGestureContext> { get }
+    var onMapLongPress: Signal<MapContentGestureContext> { get }
+    func onLayerTap(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable
+    func onLayerLongPress(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable
 }
 
 extension GestureManager: GestureManagerProtocol {}

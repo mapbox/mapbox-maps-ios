@@ -142,6 +142,26 @@ final class MapBasicCoordinatorTests: XCTestCase {
         XCTAssertEqual(onLayerLongPressGesture.invocations.first?.parameters.1.coordinate, coordinate)
     }
 
+    func testGestureHandlers() {
+        let onBegin = Stub<GestureType, Void>()
+        let onEnd = Stub<(GestureType, Bool), Void>()
+        let onAnimationEnd = Stub<GestureType, Void>()
+
+        let handlers = MapGestureHandlers(onBegin: onBegin.call(with:), onEnd: { onEnd.call(with: ($0, $1)) }, onEndAnimation: onAnimationEnd.call(with:))
+        update(with: MapDependencies(gestureHandlers: handlers))
+
+        mapView.gestures.gestureHandlers.onBegin?(.pan)
+        mapView.gestures.gestureHandlers.onEnd?(.pan, true)
+        mapView.gestures.gestureHandlers.onAnimationEnd?(.pan)
+        XCTAssertEqual(onBegin.invocations.count, 1)
+        XCTAssertEqual(onEnd.invocations.count, 1)
+        XCTAssertEqual(onAnimationEnd.invocations.count, 1)
+        XCTAssertEqual(onBegin.invocations.first?.parameters, .pan)
+        XCTAssertEqual(onEnd.invocations.first?.parameters.0, .pan)
+        XCTAssertEqual(onEnd.invocations.first?.parameters.1, true)
+        XCTAssertEqual(onAnimationEnd.invocations.first?.parameters, .pan)
+    }
+
     func testNotifyMapEventsToObservers() {
         var observedMapLoaded: MapLoaded?
         let subscription = AnyEventSubscription(keyPath: \.onMapLoaded) { event in

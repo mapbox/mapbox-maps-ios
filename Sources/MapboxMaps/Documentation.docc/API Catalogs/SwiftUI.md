@@ -25,6 +25,7 @@
 - ``MapContentBuilder``
 - ``Viewport/FollowPuckOptions``
 - ``Viewport/OverviewOptions``
+- ``MapGestureHandlers``
 - ``MapURLOpener``
 - ``ForEvery``
 - ``ArrayBuilder``

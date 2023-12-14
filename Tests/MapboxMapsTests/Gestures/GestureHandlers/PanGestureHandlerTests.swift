@@ -10,6 +10,7 @@ final class PanGestureHandlerTests: XCTestCase {
     var panGestureHandler: PanGestureHandler!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
+    let interruptingRecognizers = Set([UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UITapGestureRecognizer()])
 
     override func setUp() {
         super.setUp()
@@ -38,6 +39,7 @@ final class PanGestureHandlerTests: XCTestCase {
         mapboxMap = nil
         gestureRecognizer = nil
         view = nil
+        interruptingRecognizers.forEach { $0.view?.removeGestureRecognizer($0) }
         super.tearDown()
     }
 
@@ -476,28 +478,19 @@ final class PanGestureHandlerTests: XCTestCase {
     }
 
     func testPanRecognizesSimultaneouslyWithRotationAndPinch() {
-        let recognizers = [UIRotationGestureRecognizer(), UIPinchGestureRecognizer()]
+        let recognizers = Set([UIRotationGestureRecognizer(), UIPinchGestureRecognizer()])
+        recognizers.forEach(view.addGestureRecognizer)
 
-        for recognizer in recognizers {
-            let shouldRecognizeSimultaneously = panGestureHandler.gestureRecognizer(
-                gestureRecognizer,
-                shouldRecognizeSimultaneouslyWith: recognizer
-            )
-
-            XCTAssertTrue(shouldRecognizeSimultaneously)
-        }
+        panGestureHandler.assertRecognizedSimultaneously(gestureRecognizer, with: recognizers)
     }
 
     func testPinchShouldNotRecognizeSimultaneouslyWithNonRotationAndPinch() {
-        let recognizers = [UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UITapGestureRecognizer()]
+        interruptingRecognizers.forEach(view.addGestureRecognizer)
 
-        for recognizer in recognizers {
-            let shouldRecognizeSimultaneously = panGestureHandler.gestureRecognizer(
-                gestureRecognizer,
-                shouldRecognizeSimultaneouslyWith: recognizer
-            )
+        panGestureHandler.assertNotRecognizedSimultaneously(gestureRecognizer, with: interruptingRecognizers)
+    }
 
-            XCTAssertFalse(shouldRecognizeSimultaneously)
-        }
+    func testPinchShouldRecognizeSimultaneouslyWithAnyRecognizerAttachedToDifferentView() {
+        panGestureHandler.assertRecognizedSimultaneously(gestureRecognizer, with: interruptingRecognizers)
     }
 }

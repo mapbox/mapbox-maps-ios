@@ -1,6 +1,6 @@
 import UIKit
 
-internal protocol GestureHandlerDelegate: AnyObject {
+protocol GestureHandlerDelegate: AnyObject {
     func gestureBegan(for gestureType: GestureType)
 
     func gestureEnded(for gestureType: GestureType, willAnimate: Bool)
@@ -8,10 +8,10 @@ internal protocol GestureHandlerDelegate: AnyObject {
     func animationEnded(for gestureType: GestureType)
 }
 
-internal class GestureHandler: NSObject {
-    internal let gestureRecognizer: UIGestureRecognizer
+class GestureHandler: NSObject {
+    let gestureRecognizer: UIGestureRecognizer
 
-    internal weak var delegate: GestureHandlerDelegate?
+    weak var delegate: GestureHandlerDelegate?
 
     init(gestureRecognizer: UIGestureRecognizer) {
         self.gestureRecognizer = gestureRecognizer

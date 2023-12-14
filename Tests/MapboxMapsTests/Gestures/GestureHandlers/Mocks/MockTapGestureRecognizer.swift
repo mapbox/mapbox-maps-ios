@@ -1,6 +1,11 @@
 import UIKit
 
 final class MockTapGestureRecognizer: UITapGestureRecognizer {
+    struct AddTargetParams {
+        var target: Any
+        var action: Selector
+    }
+
     let getStateStub = Stub<Void, UIGestureRecognizer.State>(defaultReturnValue: .possible)
     override var state: UIGestureRecognizer.State {
         get {
@@ -12,13 +17,15 @@ final class MockTapGestureRecognizer: UITapGestureRecognizer {
         }
     }
 
-    struct AddTargetParams {
-        var target: Any
-        var action: Selector
+    @Stubbed var viewStub = UIView()
+    override var view: UIView {
+        get { $viewStub.wrappedValue }
+        set { $viewStub.wrappedValue  = newValue }
     }
+
     let addTargetStub = Stub<AddTargetParams, Void>()
     override func addTarget(_ target: Any, action: Selector) {
-        addTargetStub.call(with: AddTargetParams(target: target, action: action))
+        addTargetStub(with: AddTargetParams(target: target, action: action))
     }
 
     func sendActions() {
@@ -29,6 +36,6 @@ final class MockTapGestureRecognizer: UITapGestureRecognizer {
 
     let locationStub = Stub<UIView?, CGPoint>(defaultReturnValue: .random())
     override func location(in view: UIView?) -> CGPoint {
-        locationStub.call(with: view)
+        locationStub(with: view)
     }
 }

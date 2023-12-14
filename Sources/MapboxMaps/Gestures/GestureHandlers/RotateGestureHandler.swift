@@ -85,10 +85,19 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
  }
 
 extension RotateGestureHandler: UIGestureRecognizerDelegate {
-    internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                                    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return self.gestureRecognizer === gestureRecognizer &&
-        otherGestureRecognizer is UIPinchGestureRecognizer &&
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        guard self.gestureRecognizer === gestureRecognizer else {
+            return false
+        }
+
+        guard gestureRecognizer.attachedToSameView(as: otherGestureRecognizer) else {
+            return true
+        }
+
+        return otherGestureRecognizer is UIPinchGestureRecognizer &&
         simultaneousRotateAndPinchZoomEnabled
     }
 }

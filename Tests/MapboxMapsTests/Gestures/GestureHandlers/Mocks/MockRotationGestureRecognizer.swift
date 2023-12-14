@@ -12,10 +12,16 @@ final class MockRotationGestureRecognizer: UIRotationGestureRecognizer {
         }
     }
 
+    @Stubbed var viewStub = UIView()
+    override var view: UIView {
+        get { $viewStub.wrappedValue }
+        set { $viewStub.wrappedValue  = newValue }
+    }
+
     let getVelocityStub = Stub<Void, CGFloat>(defaultReturnValue: 0)
     override var velocity: CGFloat {
         get {
-            getVelocityStub.call()
+            getVelocityStub()
         }
         // swiftlint:disable:next unused_setter_value
         set {
@@ -26,12 +32,8 @@ final class MockRotationGestureRecognizer: UIRotationGestureRecognizer {
     let getRotationStub = Stub<Void, CGFloat>(defaultReturnValue: 0)
     let setRotationStub = Stub<CGFloat, Void>()
     override var rotation: CGFloat {
-        get {
-            getRotationStub.call()
-        }
-        set {
-            setRotationStub.call(with: newValue)
-        }
+        get { getRotationStub() }
+        set { setRotationStub(with: newValue) }
     }
 
     let locationInViewStub = Stub<UIView?, CGPoint>(defaultReturnValue: .zero)

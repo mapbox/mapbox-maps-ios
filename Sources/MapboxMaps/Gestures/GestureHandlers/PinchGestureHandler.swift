@@ -92,9 +92,14 @@ extension PinchGestureHandler: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return self.gestureRecognizer === gestureRecognizer && zoomEnabled
     }
-    internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                                    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
         guard gestureRecognizer === self.gestureRecognizer else { return true }
+
+        guard gestureRecognizer.attachedToSameView(as: otherGestureRecognizer) else { return true }
 
         switch otherGestureRecognizer {
         case is UIRotationGestureRecognizer:

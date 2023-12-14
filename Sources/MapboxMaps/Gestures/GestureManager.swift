@@ -147,18 +147,20 @@ public final class GestureManager: GestureHandlerDelegate {
     private let mapboxMap: MapboxMapProtocol
     private let mapContentGestureManager: MapContentGestureManagerProtocol
 
-    internal init(panGestureHandler: PanGestureHandlerProtocol,
-                  pinchGestureHandler: PinchGestureHandlerProtocol,
-                  rotateGestureHandler: RotateGestureHandlerProtocol,
-                  pitchGestureHandler: GestureHandler,
-                  doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol,
-                  doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol,
-                  quickZoomGestureHandler: FocusableGestureHandlerProtocol,
-                  singleTapGestureHandler: GestureHandler,
-                  anyTouchGestureHandler: GestureHandler,
-                  interruptDecelerationGestureHandler: GestureHandler,
-                  mapboxMap: MapboxMapProtocol,
-                  mapContentGestureManager: MapContentGestureManagerProtocol) {
+    init(
+        panGestureHandler: PanGestureHandlerProtocol,
+        pinchGestureHandler: PinchGestureHandlerProtocol,
+        rotateGestureHandler: RotateGestureHandlerProtocol,
+        pitchGestureHandler: GestureHandler,
+        doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol,
+        doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol,
+        quickZoomGestureHandler: FocusableGestureHandlerProtocol,
+        singleTapGestureHandler: GestureHandler,
+        anyTouchGestureHandler: GestureHandler,
+        interruptDecelerationGestureHandler: GestureHandler,
+        mapboxMap: MapboxMapProtocol,
+        mapContentGestureManager: MapContentGestureManagerProtocol
+    ) {
         self.panGestureHandler = panGestureHandler
         self.pinchGestureHandler = pinchGestureHandler
         self.pitchGestureHandler = pitchGestureHandler

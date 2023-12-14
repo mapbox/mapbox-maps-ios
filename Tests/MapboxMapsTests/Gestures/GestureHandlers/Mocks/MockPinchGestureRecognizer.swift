@@ -12,6 +12,12 @@ final class MockPinchGestureRecognizer: UIPinchGestureRecognizer {
         }
     }
 
+    @Stubbed var viewStub = UIView()
+    override var view: UIView {
+        get { $viewStub.wrappedValue }
+        set { $viewStub.wrappedValue  = newValue }
+    }
+
     let getScaleStub = Stub<Void, CGFloat>(defaultReturnValue: 1)
     let setScaleStub = Stub<CGFloat, Void>()
     override var scale: CGFloat {

@@ -15,7 +15,9 @@ final class LongPressGestureHandler: NSObject, UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         assert(gestureRecognizer == recognizer)
-        // Allow simultaneous handling of user user gestures.
+
+        guard gestureRecognizer.attachedToSameView(as: otherGestureRecognizer) else { return true }
+
         return otherGestureRecognizer is UILongPressGestureRecognizer
     }
 }

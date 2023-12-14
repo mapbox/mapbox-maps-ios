@@ -61,6 +61,16 @@ extension Stub where ParametersType == Void {
     func call() -> ReturnType {
         call(with: ())
     }
+
+    func callAsFunction() -> ReturnType {
+        call()
+    }
+}
+
+extension Stub {
+    func callAsFunction(with parameters: ParametersType) -> ReturnType {
+        call(with: parameters)
+    }
 }
 
 extension Stub where ParametersType == Void, ReturnType == Void {

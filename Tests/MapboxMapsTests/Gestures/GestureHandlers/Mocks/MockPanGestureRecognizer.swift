@@ -3,13 +3,15 @@ import UIKit
 final class MockPanGestureRecognizer: UIPanGestureRecognizer {
     let getStateStub = Stub<Void, UIGestureRecognizer.State>(defaultReturnValue: .possible)
     override var state: UIGestureRecognizer.State {
-        get {
-            getStateStub.call()
-        }
+        get { getStateStub() }
         // swiftlint:disable:next unused_setter_value
-        set {
-            fatalError("unimplemented")
-        }
+        set { fatalError("unimplemented") }
+    }
+
+    @Stubbed var viewStub = UIView()
+    override var view: UIView {
+        get { $viewStub.wrappedValue }
+        set { $viewStub.wrappedValue  = newValue }
     }
 
     let locationStub = Stub<UIView?, CGPoint>(defaultReturnValue: .zero)

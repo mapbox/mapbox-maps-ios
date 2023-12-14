@@ -167,10 +167,21 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
 }
 
 extension PanGestureHandler: UIGestureRecognizerDelegate {
-    internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                                    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return self.gestureRecognizer === gestureRecognizer &&
-        (otherGestureRecognizer is UIRotationGestureRecognizer || otherGestureRecognizer is UIPinchGestureRecognizer)
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        guard gestureRecognizer === self.gestureRecognizer else { return false }
+        guard gestureRecognizer.attachedToSameView(as: otherGestureRecognizer) else { return true }
+
+        switch otherGestureRecognizer {
+        case is UIRotationGestureRecognizer:
+            return true
+        case is UIPinchGestureRecognizer:
+            return true
+        default:
+            return false
+        }
     }
 }
 

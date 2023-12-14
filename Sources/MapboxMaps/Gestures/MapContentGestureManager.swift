@@ -37,7 +37,8 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
         mapboxMap: MapboxMapProtocol,
         mapFeatureQueryable: MapFeatureQueryable,
         onTap: Signal<CGPoint>,
-        onLongPress: Signal<(CGPoint, UIGestureRecognizer.State)>) {
+        onLongPress: Signal<(CGPoint, UIGestureRecognizer.State)>
+    ) {
             self.annotations = annotations
             self.mapFeatureQueryable = mapFeatureQueryable
             self.mapboxMap = mapboxMap

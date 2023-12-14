@@ -14,9 +14,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         gestureRecognizer = MockLongPressGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         mapboxMap = MockMapboxMap()
-        quickZoomHandler = QuickZoomGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap)
+        quickZoomHandler = QuickZoomGestureHandler(gestureRecognizer: gestureRecognizer, mapboxMap: mapboxMap)
         delegate = MockGestureHandlerDelegate()
         quickZoomHandler.delegate = delegate
     }

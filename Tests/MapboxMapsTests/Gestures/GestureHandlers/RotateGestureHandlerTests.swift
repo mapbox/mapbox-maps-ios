@@ -6,9 +6,9 @@ final class RotateGestureHandlerTests: XCTestCase {
     var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var rotateGestureHandler: RotateGestureHandler!
-    // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
     var view: UIView!
+    let interruptingRecognizers = Set([UIPanGestureRecognizer(), UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UITapGestureRecognizer()])
 
     override func setUp() {
         super.setUp()
@@ -17,9 +17,7 @@ final class RotateGestureHandlerTests: XCTestCase {
         view.addGestureRecognizer(gestureRecognizer)
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
-        rotateGestureHandler = RotateGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap)
+        rotateGestureHandler = RotateGestureHandler(gestureRecognizer: gestureRecognizer, mapboxMap: mapboxMap)
         delegate = MockGestureHandlerDelegate()
         rotateGestureHandler.delegate = delegate
     }
@@ -31,6 +29,7 @@ final class RotateGestureHandlerTests: XCTestCase {
         cameraAnimationsManager = nil
         mapboxMap = nil
         gestureRecognizer = nil
+        interruptingRecognizers.forEach { $0.view?.removeGestureRecognizer($0) }
         super.setUp()
     }
 
@@ -186,39 +185,36 @@ final class RotateGestureHandlerTests: XCTestCase {
     }
 
     func testRotationRecognizesSimultaneouslyWithPinch() {
-        let shouldRecognizeSimultaneously = rotateGestureHandler.gestureRecognizer(
-            gestureRecognizer,
-            shouldRecognizeSimultaneouslyWith: UIPinchGestureRecognizer()
-        )
+        let pinchRecognizer = UIPinchGestureRecognizer()
+        view.addGestureRecognizer(pinchRecognizer)
 
-        XCTAssertTrue(shouldRecognizeSimultaneously)
+        rotateGestureHandler.assertRecognizedSimultaneously(gestureRecognizer, with: [pinchRecognizer])
     }
 
     func testRotationShouldNotRecognizeSimultaneouslyWithNonPinch() {
-        let recognizers = [UIPanGestureRecognizer(), UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UITapGestureRecognizer()]
+        interruptingRecognizers.forEach(view.addGestureRecognizer)
 
-        for recognizer in recognizers {
-            let shouldRecognizeSimultaneously = rotateGestureHandler.gestureRecognizer(
-                gestureRecognizer,
-                shouldRecognizeSimultaneouslyWith: recognizer
-            )
+        rotateGestureHandler.assertNotRecognizedSimultaneously(gestureRecognizer, with: interruptingRecognizers)
+    }
 
-            XCTAssertFalse(shouldRecognizeSimultaneously)
-        }
+    func testRotationShouldRecognizeSimultaneouslyWithAnyAttachedToDifferentView() {
+        rotateGestureHandler.assertRecognizedSimultaneously(gestureRecognizer, with: interruptingRecognizers)
     }
 
     func testRotationShouldNotRecognizeSimultaneouslyWhenRotateAndPinchDisabled() {
+        let pinchRecognizer = UIPinchGestureRecognizer()
+        view.addGestureRecognizer(pinchRecognizer)
         rotateGestureHandler.simultaneousRotateAndPinchZoomEnabled = false
 
         let shouldRecognizeSimultaneously = rotateGestureHandler.gestureRecognizer(
             gestureRecognizer,
-            shouldRecognizeSimultaneouslyWith: UIPinchGestureRecognizer()
+            shouldRecognizeSimultaneouslyWith: pinchRecognizer
         )
 
         XCTAssertFalse(shouldRecognizeSimultaneously)
     }
 }
 
-fileprivate extension Double {
+private extension Double {
     var radiansPerSecond: CGFloat { self * 17.4532925 }
 }

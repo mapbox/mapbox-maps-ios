@@ -24,3 +24,4 @@
 - ``CustomLayerRenderParameters``
 - ``CustomLayerHost``
 - ``ElevationData``
+- ``Slot``

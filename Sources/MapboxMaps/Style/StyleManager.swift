@@ -1089,6 +1089,14 @@ public class StyleManager {
         styleManager.getStyleLightProperty(forId: lightId, property: property).value
     }
 
+    /// Gets the value of a style light property.
+    ///
+    /// - Parameter light: The unique identifier of the style light in lights list.
+    /// - Parameter property: The style light property name.
+    public func lightPropertyValue(for lightId: String, property: String) -> StylePropertyValue {
+        styleManager.getStyleLightProperty(forId: lightId, property: property)
+    }
+
     /// Set global directional lightning.
     /// - Parameter flatLight: The flat light source.
     public func setLights(_ flatLight: FlatLight) throws {

@@ -111,7 +111,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     }
 
     private var fillEmissiveStrength: Double?
-    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Controls the intensity of light emitted on the source features.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

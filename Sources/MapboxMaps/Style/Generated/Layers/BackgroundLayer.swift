@@ -31,7 +31,7 @@ public struct BackgroundLayer: Layer {
     /// Transition options for `backgroundColor`.
     public var backgroundColorTransition: StyleTransition?
 
-    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Controls the intensity of light emitted on the source features.
     public var backgroundEmissiveStrength: Value<Double>?
 
     /// Transition options for `backgroundEmissiveStrength`.

@@ -1,5 +1,5 @@
 import Foundation
-import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 internal extension Double {
     static func testSourceValue() -> Double {
@@ -81,5 +81,11 @@ internal extension Bool {
 internal extension PromoteId {
     static func testSourceValue() -> PromoteId {
         return .string("test-promote-id")
+    }
+}
+
+internal extension Array where Element == RasterArraySource.RasterDataLayer {
+    static func testSourceValue() -> [RasterArraySource.RasterDataLayer] {
+        return [.init(layerId: "test-layer-id", bands: ["band_0", "band_1"])]
     }
 }

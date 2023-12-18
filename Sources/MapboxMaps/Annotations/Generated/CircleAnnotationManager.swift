@@ -211,7 +211,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     // MARK: - Common layer properties
 
 
-    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Controls the intensity of light emitted on the source features.
     public var circleEmissiveStrength: Double? {
         get {
             return layerProperties["circle-emissive-strength"] as? Double

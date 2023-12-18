@@ -39,6 +39,12 @@ public struct RasterLayer: Layer {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>
 
+    /// Displayed band of raster array source layer
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var rasterArrayBand: Value<String>?
+
     /// Increase or reduce the brightness of the image. The value is the maximum brightness.
     public var rasterBrightnessMax: Value<Double>?
 
@@ -51,7 +57,7 @@ public struct RasterLayer: Layer {
     /// Transition options for `rasterBrightnessMin`.
     public var rasterBrightnessMinTransition: StyleTransition?
 
-    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 1024 uniformly spaced steps over the range specified by `raster-color-range`.
+    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
     public var rasterColor: Value<StyleColor>?
 
     /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r * src.r + mix.g * src.g + mix.b * src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is *not* multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
@@ -71,6 +77,12 @@ public struct RasterLayer: Layer {
 
     /// Transition options for `rasterContrast`.
     public var rasterContrastTransition: StyleTransition?
+
+    /// Controls the intensity of light emitted on the source features.
+    public var rasterEmissiveStrength: Value<Double>?
+
+    /// Transition options for `rasterEmissiveStrength`.
+    public var rasterEmissiveStrengthTransition: StyleTransition?
 
     /// Fade duration when a new tile is added.
     public var rasterFadeDuration: Value<Double>?
@@ -115,6 +127,7 @@ public struct RasterLayer: Layer {
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
+        try paintContainer.encodeIfPresent(rasterArrayBand, forKey: .rasterArrayBand)
         try paintContainer.encodeIfPresent(rasterBrightnessMax, forKey: .rasterBrightnessMax)
         try paintContainer.encodeIfPresent(rasterBrightnessMaxTransition, forKey: .rasterBrightnessMaxTransition)
         try paintContainer.encodeIfPresent(rasterBrightnessMin, forKey: .rasterBrightnessMin)
@@ -126,6 +139,8 @@ public struct RasterLayer: Layer {
         try paintContainer.encodeIfPresent(rasterColorRangeTransition, forKey: .rasterColorRangeTransition)
         try paintContainer.encodeIfPresent(rasterContrast, forKey: .rasterContrast)
         try paintContainer.encodeIfPresent(rasterContrastTransition, forKey: .rasterContrastTransition)
+        try paintContainer.encodeIfPresent(rasterEmissiveStrength, forKey: .rasterEmissiveStrength)
+        try paintContainer.encodeIfPresent(rasterEmissiveStrengthTransition, forKey: .rasterEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(rasterFadeDuration, forKey: .rasterFadeDuration)
         try paintContainer.encodeIfPresent(rasterHueRotate, forKey: .rasterHueRotate)
         try paintContainer.encodeIfPresent(rasterHueRotateTransition, forKey: .rasterHueRotateTransition)
@@ -151,6 +166,7 @@ public struct RasterLayer: Layer {
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
+            rasterArrayBand = try paintContainer.decodeIfPresent(Value<String>.self, forKey: .rasterArrayBand)
             rasterBrightnessMax = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterBrightnessMax)
             rasterBrightnessMaxTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterBrightnessMaxTransition)
             rasterBrightnessMin = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterBrightnessMin)
@@ -162,6 +178,8 @@ public struct RasterLayer: Layer {
             rasterColorRangeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterColorRangeTransition)
             rasterContrast = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterContrast)
             rasterContrastTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterContrastTransition)
+            rasterEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterEmissiveStrength)
+            rasterEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterEmissiveStrengthTransition)
             rasterFadeDuration = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterFadeDuration)
             rasterHueRotate = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterHueRotate)
             rasterHueRotateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterHueRotateTransition)
@@ -197,6 +215,7 @@ public struct RasterLayer: Layer {
     }
 
     enum PaintCodingKeys: String, CodingKey {
+        case rasterArrayBand = "raster-array-band"
         case rasterBrightnessMax = "raster-brightness-max"
         case rasterBrightnessMaxTransition = "raster-brightness-max-transition"
         case rasterBrightnessMin = "raster-brightness-min"
@@ -208,6 +227,8 @@ public struct RasterLayer: Layer {
         case rasterColorRangeTransition = "raster-color-range-transition"
         case rasterContrast = "raster-contrast"
         case rasterContrastTransition = "raster-contrast-transition"
+        case rasterEmissiveStrength = "raster-emissive-strength"
+        case rasterEmissiveStrengthTransition = "raster-emissive-strength-transition"
         case rasterFadeDuration = "raster-fade-duration"
         case rasterHueRotate = "raster-hue-rotate"
         case rasterHueRotateTransition = "raster-hue-rotate-transition"

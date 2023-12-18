@@ -221,7 +221,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Controls the intensity of light emitted on the source features.
     public var fillEmissiveStrength: Double? {
         get {
             return layerProperties["fill-emissive-strength"] as? Double

@@ -40,6 +40,8 @@ final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.fillExtrusionColor = Value<StyleColor>.testConstantValue()
             layer.fillExtrusionColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionCutoffFadeRange = Value<Double>.testConstantValue()
+            layer.fillExtrusionEmissiveStrength = Value<Double>.testConstantValue()
+            layer.fillExtrusionEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionFloodLightColor = Value<StyleColor>.testConstantValue()
             layer.fillExtrusionFloodLightColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionFloodLightGroundAttenuation = Value<Double>.testConstantValue()

@@ -1,7 +1,7 @@
 // This file is generated.
 import Foundation
 
-/// A light that has a direction and is located at infinite, so its rays are parallel. Simulates the sun light and it can cast shadows
+/// A light that has a direction and is located at infinite distance, so its rays are parallel. It simulates the sun light and can cast shadows.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#light)
 public struct DirectionalLight: Codable, StyleEncodable {

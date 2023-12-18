@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -24,6 +24,7 @@ final class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
 
+            layer.rasterArrayBand = Value<String>.testConstantValue()
             layer.rasterBrightnessMax = Value<Double>.testConstantValue()
             layer.rasterBrightnessMaxTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.rasterBrightnessMin = Value<Double>.testConstantValue()
@@ -33,6 +34,8 @@ final class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.rasterColorRangeTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.rasterContrast = Value<Double>.testConstantValue()
             layer.rasterContrastTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.rasterEmissiveStrength = Value<Double>.testConstantValue()
+            layer.rasterEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.rasterFadeDuration = Value<Double>.testConstantValue()
             layer.rasterHueRotate = Value<Double>.testConstantValue()
             layer.rasterHueRotateTransition = StyleTransition(duration: 10.0, delay: 10.0)

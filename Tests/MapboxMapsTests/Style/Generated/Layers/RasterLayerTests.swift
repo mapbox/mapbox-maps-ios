@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class RasterLayerTests: XCTestCase {
 
@@ -71,6 +71,7 @@ final class RasterLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
        var layer = RasterLayer(id: "test-id", source: "source")
+       layer.rasterArrayBand = Value<String>.testConstantValue()
        layer.rasterBrightnessMax = Value<Double>.testConstantValue()
        layer.rasterBrightnessMaxTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.rasterBrightnessMin = Value<Double>.testConstantValue()
@@ -82,6 +83,8 @@ final class RasterLayerTests: XCTestCase {
        layer.rasterColorRangeTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.rasterContrast = Value<Double>.testConstantValue()
        layer.rasterContrastTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.rasterEmissiveStrength = Value<Double>.testConstantValue()
+       layer.rasterEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.rasterFadeDuration = Value<Double>.testConstantValue()
        layer.rasterHueRotate = Value<Double>.testConstantValue()
        layer.rasterHueRotateTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -106,12 +109,14 @@ final class RasterLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(RasterLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
+           XCTAssertEqual(layer.rasterArrayBand, Value<String>.testConstantValue())
            XCTAssertEqual(layer.rasterBrightnessMax, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.rasterBrightnessMin, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.rasterColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.rasterColorMix, Value<[Double]>.testConstantValue())
            XCTAssertEqual(layer.rasterColorRange, Value<[Double]>.testConstantValue())
            XCTAssertEqual(layer.rasterContrast, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.rasterEmissiveStrength, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.rasterFadeDuration, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.rasterHueRotate, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.rasterOpacity, Value<Double>.testConstantValue())

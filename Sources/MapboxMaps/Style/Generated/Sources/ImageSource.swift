@@ -9,7 +9,7 @@ public struct ImageSource: Source {
     public let type: SourceType
     public let id: String
 
-    /// URL that points to an image.
+    /// URL that points to an image. If the URL is not specified, the image is expected to be loaded directly during runtime.
     public var url: String?
 
     /// Corners of image specified in longitude, latitude pairs. Note: When using globe projection, the image will be centered at the North or South Pole in the respective hemisphere if the average latitude value exceeds 85 degrees or falls below -85 degrees.

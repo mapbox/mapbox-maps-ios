@@ -26,6 +26,8 @@ final class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
 
             layer.hillshadeAccentColor = Value<StyleColor>.testConstantValue()
             layer.hillshadeAccentColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.hillshadeEmissiveStrength = Value<Double>.testConstantValue()
+            layer.hillshadeEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.hillshadeExaggeration = Value<Double>.testConstantValue()
             layer.hillshadeExaggerationTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.hillshadeHighlightColor = Value<StyleColor>.testConstantValue()

@@ -45,7 +45,7 @@ public struct FillExtrusionLayer: Layer {
 #endif
     @_spi(Experimental) public var fillExtrusionEdgeRadius: Value<Double>?
 
-    /// Provides a control to futher fine-tune the look of the ambient occlusion on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Provides a control to futher fine-tune the look of the ambient occlusion on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -57,7 +57,7 @@ public struct FillExtrusionLayer: Layer {
 #endif
     @_spi(Experimental) public var fillExtrusionAmbientOcclusionGroundAttenuationTransition: StyleTransition?
 
-    /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings in meters.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -75,13 +75,13 @@ public struct FillExtrusionLayer: Layer {
     /// Transition options for `fillExtrusionAmbientOcclusionIntensity`.
     public var fillExtrusionAmbientOcclusionIntensityTransition: StyleTransition?
 
-    /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with legacy light. When 3D light is enabled `fill-extrusion-ambient-occlusion-wall-radius` and `fill-extrusion-ambient-occlusion-ground-radius` are used instead.
+    /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with legacy light. When 3D lights are enabled `fill-extrusion-ambient-occlusion-wall-radius` and `fill-extrusion-ambient-occlusion-ground-radius` are used instead.
     public var fillExtrusionAmbientOcclusionRadius: Value<Double>?
 
     /// Transition options for `fillExtrusionAmbientOcclusionRadius`.
     public var fillExtrusionAmbientOcclusionRadiusTransition: StyleTransition?
 
-    /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -108,7 +108,13 @@ public struct FillExtrusionLayer: Layer {
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff on pitched map views. The automatic cutoff range is calculated according to the minimum required zoom level of the source and layer. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
     public var fillExtrusionCutoffFadeRange: Value<Double>?
 
-    /// The color of the flood light effect on the walls of the extruded buildings. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Controls the intensity of light emitted on the source features.
+    public var fillExtrusionEmissiveStrength: Value<Double>?
+
+    /// Transition options for `fillExtrusionEmissiveStrength`.
+    public var fillExtrusionEmissiveStrengthTransition: StyleTransition?
+
+    /// The color of the flood light effect on the walls of the extruded buildings.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -120,7 +126,7 @@ public struct FillExtrusionLayer: Layer {
 #endif
     @_spi(Experimental) public var fillExtrusionFloodLightColorTransition: StyleTransition?
 
-    /// Provides a control to futher fine-tune the look of the flood light on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Provides a control to futher fine-tune the look of the flood light on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -132,7 +138,7 @@ public struct FillExtrusionLayer: Layer {
 #endif
     @_spi(Experimental) public var fillExtrusionFloodLightGroundAttenuationTransition: StyleTransition?
 
-    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -144,7 +150,7 @@ public struct FillExtrusionLayer: Layer {
 #endif
     @_spi(Experimental) public var fillExtrusionFloodLightGroundRadiusTransition: StyleTransition?
 
-    /// The intensity of the flood light color. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// The intensity of the flood light color.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -156,7 +162,7 @@ public struct FillExtrusionLayer: Layer {
 #endif
     @_spi(Experimental) public var fillExtrusionFloodLightIntensityTransition: StyleTransition?
 
-    /// The extent of the flood light effect on the walls of the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// The extent of the flood light effect on the walls of the extruded buildings in meters.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -247,6 +253,8 @@ public struct FillExtrusionLayer: Layer {
         try paintContainer.encodeIfPresent(fillExtrusionColor, forKey: .fillExtrusionColor)
         try paintContainer.encodeIfPresent(fillExtrusionColorTransition, forKey: .fillExtrusionColorTransition)
         try paintContainer.encodeIfPresent(fillExtrusionCutoffFadeRange, forKey: .fillExtrusionCutoffFadeRange)
+        try paintContainer.encodeIfPresent(fillExtrusionEmissiveStrength, forKey: .fillExtrusionEmissiveStrength)
+        try paintContainer.encodeIfPresent(fillExtrusionEmissiveStrengthTransition, forKey: .fillExtrusionEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightColor, forKey: .fillExtrusionFloodLightColor)
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightColorTransition, forKey: .fillExtrusionFloodLightColorTransition)
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightGroundAttenuation, forKey: .fillExtrusionFloodLightGroundAttenuation)
@@ -302,6 +310,8 @@ public struct FillExtrusionLayer: Layer {
             fillExtrusionColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillExtrusionColor)
             fillExtrusionColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionColorTransition)
             fillExtrusionCutoffFadeRange = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionCutoffFadeRange)
+            fillExtrusionEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionEmissiveStrength)
+            fillExtrusionEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionEmissiveStrengthTransition)
             fillExtrusionFloodLightColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillExtrusionFloodLightColor)
             fillExtrusionFloodLightColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionFloodLightColorTransition)
             fillExtrusionFloodLightGroundAttenuation = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionFloodLightGroundAttenuation)
@@ -368,6 +378,8 @@ public struct FillExtrusionLayer: Layer {
         case fillExtrusionColor = "fill-extrusion-color"
         case fillExtrusionColorTransition = "fill-extrusion-color-transition"
         case fillExtrusionCutoffFadeRange = "fill-extrusion-cutoff-fade-range"
+        case fillExtrusionEmissiveStrength = "fill-extrusion-emissive-strength"
+        case fillExtrusionEmissiveStrengthTransition = "fill-extrusion-emissive-strength-transition"
         case fillExtrusionFloodLightColor = "fill-extrusion-flood-light-color"
         case fillExtrusionFloodLightColorTransition = "fill-extrusion-flood-light-color-transition"
         case fillExtrusionFloodLightGroundAttenuation = "fill-extrusion-flood-light-ground-attenuation"

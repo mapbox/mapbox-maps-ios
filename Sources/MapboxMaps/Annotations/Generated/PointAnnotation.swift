@@ -178,7 +178,7 @@ public struct PointAnnotation: Annotation, Equatable {
     /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     public var iconColor: StyleColor?
 
-    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Controls the intensity of light emitted on the source features.
     public var iconEmissiveStrength: Double?
 
     /// Fade out the halo towards the outside.
@@ -199,7 +199,7 @@ public struct PointAnnotation: Annotation, Equatable {
     /// The color with which the text will be drawn.
     public var textColor: StyleColor?
 
-    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Controls the intensity of light emitted on the source features.
     public var textEmissiveStrength: Double?
 
     /// The halo's fadeout distance towards the outside.
@@ -388,7 +388,7 @@ public struct PointAnnotation: Annotation, Equatable {
         with(self, setter(\.iconColor, newValue))
     }
 
-    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Controls the intensity of light emitted on the source features.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -444,7 +444,7 @@ public struct PointAnnotation: Annotation, Equatable {
         with(self, setter(\.textColor, newValue))
     }
 
-    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Controls the intensity of light emitted on the source features.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

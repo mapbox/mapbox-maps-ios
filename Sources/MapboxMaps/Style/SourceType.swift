@@ -25,6 +25,10 @@ public struct SourceType: ExpressibleByStringLiteral, RawRepresentable, Codable,
     /// A model source.
     public static let model: SourceType = "model"
 
+    /// A raster array tile source.
+    @_spi(Experimental)
+    public static let rasterArray: SourceType = "raster-array"
+
     public init(stringLiteral type: String) {
         self.rawValue = type
     }

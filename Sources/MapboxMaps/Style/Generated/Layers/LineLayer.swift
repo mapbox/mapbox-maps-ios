@@ -87,7 +87,7 @@ public struct LineLayer: Layer {
     /// Transition options for `lineDepthOcclusionFactor`.
     public var lineDepthOcclusionFactorTransition: StyleTransition?
 
-    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Controls the intensity of light emitted on the source features.
     public var lineEmissiveStrength: Value<Double>?
 
     /// Transition options for `lineEmissiveStrength`.

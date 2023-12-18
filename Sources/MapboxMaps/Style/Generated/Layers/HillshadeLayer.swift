@@ -45,6 +45,12 @@ public struct HillshadeLayer: Layer {
     /// Transition options for `hillshadeAccentColor`.
     public var hillshadeAccentColorTransition: StyleTransition?
 
+    /// Controls the intensity of light emitted on the source features.
+    public var hillshadeEmissiveStrength: Value<Double>?
+
+    /// Transition options for `hillshadeEmissiveStrength`.
+    public var hillshadeEmissiveStrengthTransition: StyleTransition?
+
     /// Intensity of the hillshade
     public var hillshadeExaggeration: Value<Double>?
 
@@ -60,7 +66,7 @@ public struct HillshadeLayer: Layer {
     /// Direction of light source when map is rotated.
     public var hillshadeIlluminationAnchor: Value<HillshadeIlluminationAnchor>?
 
-    /// The direction of the light source used to generate the hillshading with 0 as the top of the viewport if `hillshade-illumination-anchor` is set to `viewport` and due north if `hillshade-illumination-anchor` is set to `map`.
+    /// The direction of the light source used to generate the hillshading with 0 as the top of the viewport if `hillshade-illumination-anchor` is set to `viewport` and due north if `hillshade-illumination-anchor` is set to `map` and no 3d lights enabled. If `hillshade-illumination-anchor` is set to `map` and 3d lights enabled, the direction from 3d lights is used instead.
     public var hillshadeIlluminationDirection: Value<Double>?
 
     /// The shading color of areas that face away from the light source.
@@ -90,6 +96,8 @@ public struct HillshadeLayer: Layer {
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         try paintContainer.encodeIfPresent(hillshadeAccentColor, forKey: .hillshadeAccentColor)
         try paintContainer.encodeIfPresent(hillshadeAccentColorTransition, forKey: .hillshadeAccentColorTransition)
+        try paintContainer.encodeIfPresent(hillshadeEmissiveStrength, forKey: .hillshadeEmissiveStrength)
+        try paintContainer.encodeIfPresent(hillshadeEmissiveStrengthTransition, forKey: .hillshadeEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(hillshadeExaggeration, forKey: .hillshadeExaggeration)
         try paintContainer.encodeIfPresent(hillshadeExaggerationTransition, forKey: .hillshadeExaggerationTransition)
         try paintContainer.encodeIfPresent(hillshadeHighlightColor, forKey: .hillshadeHighlightColor)
@@ -117,6 +125,8 @@ public struct HillshadeLayer: Layer {
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             hillshadeAccentColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .hillshadeAccentColor)
             hillshadeAccentColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeAccentColorTransition)
+            hillshadeEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .hillshadeEmissiveStrength)
+            hillshadeEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeEmissiveStrengthTransition)
             hillshadeExaggeration = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .hillshadeExaggeration)
             hillshadeExaggerationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeExaggerationTransition)
             hillshadeHighlightColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .hillshadeHighlightColor)
@@ -154,6 +164,8 @@ public struct HillshadeLayer: Layer {
     enum PaintCodingKeys: String, CodingKey {
         case hillshadeAccentColor = "hillshade-accent-color"
         case hillshadeAccentColorTransition = "hillshade-accent-color-transition"
+        case hillshadeEmissiveStrength = "hillshade-emissive-strength"
+        case hillshadeEmissiveStrengthTransition = "hillshade-emissive-strength-transition"
         case hillshadeExaggeration = "hillshade-exaggeration"
         case hillshadeExaggerationTransition = "hillshade-exaggeration-transition"
         case hillshadeHighlightColor = "hillshade-highlight-color"

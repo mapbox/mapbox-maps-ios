@@ -12,6 +12,7 @@
 - ``ImageSource``
 - ``RasterDemSource``
 - ``RasterSource``
+- ``RasterArraySource``
 - ``VectorSource``
 - ``PromoteId``
 - ``Scheme``

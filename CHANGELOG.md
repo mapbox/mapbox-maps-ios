@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Delete several examples as redundant from Examples app
 * Expose `MapboxMap.coordinate(s)Info(for:)` publicly.
 * [SwiftUI] Expose `Map.gestureHandlers()` for handling Map gesture events.
+* Update MapboxCoreMaps to v11.1.0-beta.1 and MapboxCommon to v24.1.0-beta.2
 
 ## 11.0.0 - 29 November, 2023
 

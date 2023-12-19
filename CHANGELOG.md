@@ -4,17 +4,18 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.1.0-beta.1 - 19 December, 2023
+
 ⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️
 
 * `RasterArraySource.rasterLayers` is always `nil` for any source.
 Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value of `RasterArraySource.rasterLayers`.
 
-* Delete several examples as redundant from Examples app
-* Expose `MapboxMap.coordinate(s)Info(for:)` publicly.
+* Expose method to get coordinate info for point(s): `MapboxMap.coordinateInfo(for:)` and `MapboxMap.coordinatesInfo(for:)`.
 * [SwiftUI] Expose `Map.gestureHandlers()` for handling Map gesture events.
-* Update MapboxCoreMaps to v11.1.0-beta.1 and MapboxCommon to v24.1.0-beta.2
 * Introduce experimental `RasterArraySource`, along with `RasterLayer.rasterArrayBand`.
 * Introduce `-emissiveStrength` attribute for `FillExtrusionLayer`, `HillShadeLayer` and `RasterLayer`.
+* Update MapboxCoreMaps to v11.1.0-beta.1 and MapboxCommon to v24.1.0-beta.2
 
 ## 11.0.0 - 29 November, 2023
 

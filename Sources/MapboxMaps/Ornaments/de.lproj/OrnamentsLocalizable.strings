@@ -1,0 +1,41 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Dreht die Karte nach Norden";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "Kompass";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Zeigt Danksagungen, ein Kontakformular und mehr";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "Über diese Karte";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "Durch anonymisierte Nutzungsdaten können Sie helfen, OpenStreetMap- und Mapbox-Karten zu verbessern.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "Nicht teilnehmen";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Teilnehmen";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "Durch anonymisierte Nutzungsdaten helfen Sie, OpenStreetMap- und Mapbox-Karten zu verbessern.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Teilnahme beenden";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Weiterhin teilnehmen";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Mehr Informationen";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox-Telemetrie";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Mapbox-Karten verbessern";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Mapbox Datenschutzrichtlinie";

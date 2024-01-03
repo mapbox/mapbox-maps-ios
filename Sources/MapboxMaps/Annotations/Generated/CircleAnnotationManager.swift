@@ -315,10 +315,6 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         }
 
         if let idx = mainAnnotations.lastIndex(where: predicate) {
-            let annotation = mainAnnotations.remove(at: idx)
-            draggedAnnotations.append(annotation)
-            draggedAnnotationIndex = draggedAnnotations.endIndex - 1
-
             insertDraggedLayerAndSourceOnce {
                 let source = GeoJSONSource(id: dragId)
                 let layer = CircleLayer(id: dragId, source: dragId)
@@ -329,6 +325,10 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
                     Log.error(forMessage: "Add drag source/layer \(error)", category: "Annotations")
                 }
             }
+
+            let annotation = mainAnnotations.remove(at: idx)
+            draggedAnnotations.append(annotation)
+            draggedAnnotationIndex = draggedAnnotations.endIndex - 1
             return true
         }
         return false

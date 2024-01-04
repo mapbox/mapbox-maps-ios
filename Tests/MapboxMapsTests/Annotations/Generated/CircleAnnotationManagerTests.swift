@@ -714,6 +714,11 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(addLayerParameters.layerPosition, .above(manager.id))
         XCTAssertEqual(addedLayer.id, manager.id + "_drag")
 
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+        $displayLink.send()
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.id, "\(manager.id)_drag")
+
         _ = manager.handleDragBegin(with: "circle1", context: .zero)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)

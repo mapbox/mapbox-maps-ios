@@ -20,8 +20,8 @@ sed -i '' -E "s/(m.dependency.*MapboxCoreMaps.*, ).*/\1'$CORE_MAPS_VERSION'/" Ma
 sed -i '' -E "s/(m.dependency.*MapboxCommon.*, ).*/\1'$COMMON_VERSION'/" MapboxMaps.podspec
 
 info "Update dependencies in Package.swift"
-sed -i '' -E "s/(.*MapboxCoreMaps.*exact).*/\1\(\"$CORE_MAPS_VERSION\"\)\),/"  Package.swift
-sed -i '' -E "s/(.*MapboxCommon.*exact).*/\1\(\"$COMMON_VERSION\"\)\),/"  Package.swift
+sed -i '' -E "s/(.*MapsDependency.coreMaps.*):.*/\1: \"$CORE_MAPS_VERSION\"\)/"  Package.swift
+sed -i '' -E "s/(.*MapsDependency.common.*):.*/\1: \"$COMMON_VERSION\"\)/"  Package.swift
 
 info "Resolve SPM dependencies"
 swift package update

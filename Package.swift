@@ -3,9 +3,9 @@
 
 import PackageDescription
 
-let coreMaps = MapsDependency.coreMaps(version: "11.1.0-beta.1")
+let coreMaps = MapsDependency.coreMaps(version: "11.1.0-rc.1")
 
-let common = MapsDependency.common(version: "24.1.0-beta.2")
+let common = MapsDependency.common(version: "24.1.0-rc.1")
 
 let mapboxMapsPath: String? = nil
 
@@ -76,7 +76,7 @@ struct MapsDependency {
         self.registryProjectName = registryProjectName
         self.registryFileName = registryFileName
     }
-    
+
     let name: String
     let version: String
     let checksum: String?
@@ -125,7 +125,7 @@ struct MapsDependency {
     }
 
     var repositoryURL: String { return "https://github.com/mapbox/\(repositoryName).git" }
-    
+
     var registryReleaseFolder: String { isSnapshot ? "snapshots" : "releases" }
 
     var registryURL: String {

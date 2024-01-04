@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.1.0-rc.1 - 04 January, 2024
+
+### Bug fixes 🐞
+
+* Fix the bug where the annotation could disappear when it is dragged.
+
 ## 11.1.0-beta.1 - 19 December, 2023
 
 ⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️

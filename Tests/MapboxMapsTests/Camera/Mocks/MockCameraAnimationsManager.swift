@@ -18,13 +18,20 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
     struct FlyToParams {
         var to: CameraOptions
         var duration: TimeInterval?
+        var curve: TimingCurve
         var completion: AnimationCompletion?
     }
     let flyToStub = Stub<FlyToParams, Cancelable>(defaultReturnValue: MockCancelable())
     func fly(to: CameraOptions,
              duration: TimeInterval?,
+             curve: TimingCurve,
              completion: AnimationCompletion?) -> Cancelable {
-        flyToStub.call(with: .init(to: to, duration: duration, completion: completion))
+        flyToStub.call(
+            with: FlyToParams(
+                to: to,
+                duration: duration,
+                curve: curve,
+                completion: completion))
     }
 
    struct EaseToParams {

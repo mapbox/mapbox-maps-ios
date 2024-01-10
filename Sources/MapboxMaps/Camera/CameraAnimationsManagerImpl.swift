@@ -11,6 +11,7 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
     @discardableResult
     func fly(to: CameraOptions,
              duration: TimeInterval?,
+             curve: TimingCurve,
              completion: AnimationCompletion?) -> Cancelable
 
     @discardableResult
@@ -84,12 +85,14 @@ internal final class CameraAnimationsManagerImpl: CameraAnimationsManagerProtoco
     @discardableResult
     internal func fly(to: CameraOptions,
                       duration: TimeInterval?,
+                      curve: TimingCurve,
                       completion: AnimationCompletion?) -> Cancelable {
         runner.cancelAnimations(withOwners: [.cameraAnimationsManager])
         let animator = factory.makeFlyToAnimator(
             toCamera: to,
-            animationOwner: .cameraAnimationsManager,
-            duration: duration)
+            duration: duration,
+            curve: curve,
+            animationOwner: .cameraAnimationsManager)
         if let completion = completion {
             animator.addCompletion(completion)
         }

@@ -2,8 +2,7 @@ import XCTest
 @testable import MapboxMaps
 
 final class FlyToCameraAnimatorTests: XCTestCase {
-
-    internal let initialCameraState = CameraState(
+    let initialCameraState = CameraState(
         CoreCameraState(
             center: .init(
                 latitude: 42.3601,
@@ -27,6 +26,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         pitch: 10)
 
     let duration: TimeInterval = 10
+    let curve = TimingCurve.easeInOut
     var owner: AnimationOwner!
     var mapboxMap: MockMapboxMap!
     var mainQueue: MockMainQueue!
@@ -46,8 +46,9 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         dateProvider = MockDateProvider()
         flyToCameraAnimator = FlyToCameraAnimator(
             toCamera: finalCameraOptions,
-            owner: owner,
             duration: duration,
+            curve: curve,
+            owner: owner,
             mapboxMap: mapboxMap,
             mainQueue: mainQueue,
             dateProvider: dateProvider)

@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Add easing curve parameter to `CameraAnimationsManager.fly(to:duration:curve:completion)`, make `TimingCurve` public with few more options.
+
 ## 11.1.0-rc.1 - 04 January, 2024
 
 ### Bug fixes 🐞

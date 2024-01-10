@@ -57,6 +57,7 @@ final class CameraAnimationsManagerImplTests: XCTestCase {
         let cancelable = impl.fly(
             to: camera,
             duration: duration,
+            curve: .easeInOut,
             completion: completion.call(with:))
 
         // cancels any existing high-level animator (identified based on the owner)
@@ -89,7 +90,7 @@ final class CameraAnimationsManagerImplTests: XCTestCase {
     }
 
     func testFlyToWithNilCompletion() throws {
-        impl.fly(to: .random(), duration: nil, completion: nil)
+        impl.fly(to: .random(), duration: nil, curve: .easeInOut, completion: nil)
 
         // creates the new animator
         XCTAssertEqual(factory.makeFlyToAnimatorStub.invocations.count, 1)

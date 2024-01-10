@@ -2,8 +2,9 @@ import UIKit
 
 internal protocol CameraAnimatorsFactoryProtocol: AnyObject {
     func makeFlyToAnimator(toCamera: CameraOptions,
-                           animationOwner: AnimationOwner,
-                           duration: TimeInterval?) -> CameraAnimatorProtocol
+                           duration: TimeInterval?,
+                           curve: TimingCurve,
+                           animationOwner: AnimationOwner) -> CameraAnimatorProtocol
     func makeBasicCameraAnimator(duration: TimeInterval,
                                  timingParameters: UITimingCurveProvider,
                                  animationOwner: AnimationOwner,
@@ -54,12 +55,14 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
     }
 
     internal func makeFlyToAnimator(toCamera: CameraOptions,
-                                    animationOwner: AnimationOwner,
-                                    duration: TimeInterval?) -> CameraAnimatorProtocol {
+                                    duration: TimeInterval?,
+                                    curve: TimingCurve,
+                                    animationOwner: AnimationOwner) -> CameraAnimatorProtocol {
         return FlyToCameraAnimator(
             toCamera: toCamera,
-            owner: animationOwner,
             duration: duration,
+            curve: curve,
+            owner: animationOwner,
             mapboxMap: mapboxMap,
             mainQueue: mainQueue,
             dateProvider: dateProvider)

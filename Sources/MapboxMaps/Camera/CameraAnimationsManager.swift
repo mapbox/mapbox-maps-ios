@@ -34,15 +34,17 @@ public final class CameraAnimationsManager {
     ///         not be animated.
     ///   - duration: Duration of the animation, measured in seconds. If nil, a suitable calculated
     ///               duration is used.
+    ///   - curve: The easing curve for the animation
     ///   - completion: Completion handler called when the animation stops
     /// - Returns: An instance of `Cancelable` which can be canceled if necessary
     @discardableResult
     public func fly(
         to: CameraOptions,
         duration: TimeInterval? = nil,
+        curve: TimingCurve = .easeOut,
         completion: AnimationCompletion? = nil
     ) -> Cancelable {
-        return impl.fly(to: to, duration: duration, completion: completion)
+        return impl.fly(to: to, duration: duration, curve: curve, completion: completion)
     }
 
     /// Ease the camera to a destination

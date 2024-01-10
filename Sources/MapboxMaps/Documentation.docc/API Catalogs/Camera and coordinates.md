@@ -20,6 +20,7 @@
 - ``FlyToCameraAnimator``
 - ``AnimationCompletion``
 - ``AnimationOwner``
+- ``TimingCurve``
 
 ### Viewport
 

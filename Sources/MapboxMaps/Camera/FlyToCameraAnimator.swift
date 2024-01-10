@@ -4,7 +4,7 @@ import UIKit
 /// It seamlessly incorporates zooming and panning to help the user find their bearings even after
 /// traversing a great distance.
 ///
-/// - SeeAlso: ``CameraAnimationsManager/fly(to:duration:completion:)``
+/// - SeeAlso: ``CameraAnimationsManager/fly(to:duration:curve:completion:)``
 public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
     private enum InternalState: Equatable {
         case initial
@@ -12,15 +12,8 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
         case final(UIViewAnimatingPosition)
     }
 
-    private let mapboxMap: MapboxMapProtocol
-
-    private let mainQueue: MainQueueProtocol
-
     /// The animator's owner
     public let owner: AnimationOwner
-
-    /// Type of the embeded animation
-    internal let animationType: AnimationType
 
     /// The animator's duration
     public let duration: TimeInterval
@@ -35,14 +28,15 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
         }
     }
 
-    internal weak var delegate: CameraAnimatorDelegate?
+    let animationType: AnimationType
+    weak var delegate: CameraAnimatorDelegate?
 
+    private let mapboxMap: MapboxMapProtocol
+    private let mainQueue: MainQueueProtocol
     private let interpolator: FlyToInterpolator
-
     private let finalCameraOptions: CameraOptions
-
     private let dateProvider: DateProvider
-
+    private let unitBezier: UnitBezier
     private var completionBlocks = [AnimationCompletion]()
 
     private var internalState = InternalState.initial {
@@ -64,13 +58,16 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
         }
     }
 
-    internal init(toCamera: CameraOptions,
-                  owner: AnimationOwner,
-                  type: AnimationType = .unspecified,
-                  duration: TimeInterval? = nil,
-                  mapboxMap: MapboxMapProtocol,
-                  mainQueue: MainQueueProtocol,
-                  dateProvider: DateProvider) {
+    init(
+        toCamera: CameraOptions,
+        duration: TimeInterval? = nil,
+        curve: TimingCurve,
+        owner: AnimationOwner,
+        type: AnimationType = .unspecified,
+        mapboxMap: MapboxMapProtocol,
+        mainQueue: MainQueueProtocol,
+        dateProvider: DateProvider
+    ) {
         let flyToInterpolator = FlyToInterpolator(
             from: mapboxMap.cameraState,
             to: toCamera,
@@ -84,14 +81,15 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
         self.interpolator = flyToInterpolator
         self.mapboxMap = mapboxMap
         self.mainQueue = mainQueue
+        self.duration = duration
+        self.unitBezier = UnitBezier(p1: curve.p1, p2: curve.p2)
         self.owner = owner
         self.animationType = type
         self.finalCameraOptions = toCamera
-        self.duration = duration
         self.dateProvider = dateProvider
     }
 
-    internal func startAnimation() {
+    func startAnimation() {
         switch internalState {
         case .initial:
             internalState = .running(startDate: dateProvider.now)
@@ -119,7 +117,7 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
         stopAnimation()
     }
 
-    internal func addCompletion(_ completion: @escaping AnimationCompletion) {
+    func addCompletion(_ completion: @escaping AnimationCompletion) {
         switch internalState {
         case .initial, .running:
             completionBlocks.append(completion)
@@ -138,11 +136,18 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
         completionBlocks.removeAll()
     }
 
-    internal func update() {
+    func update() {
         guard case .running(let startDate) = internalState else {
             return
         }
-        let fractionComplete = min(dateProvider.now.timeIntervalSince(startDate) / duration, 1)
+
+        let elapsedTime = dateProvider.now.timeIntervalSince(startDate)
+
+        guard elapsedTime >= 0 else {
+            return
+        }
+
+        let fractionComplete = unitBezier.solve(min(elapsedTime / duration, 1), 1e-6)
         guard fractionComplete < 1 else {
             internalState = .final(.end)
             mapboxMap.setCamera(to: finalCameraOptions)

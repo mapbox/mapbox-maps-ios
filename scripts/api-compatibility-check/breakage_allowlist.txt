@@ -1315,3 +1315,7 @@ Var ModelLayer.slot has declared type change from Swift.String? to MapboxMaps.Sl
 Var RasterLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
 Var SkyLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
 Var SymbolLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+
+// Add TimingCurve to fly(to:)
+Func CameraAnimationsManager.fly(to:duration:completion:) has been renamed to Func fly(to:duration:curve:completion:)
+Func CameraAnimationsManager.fly(to:duration:completion:) has parameter 2 type change from MapboxMaps.AnimationCompletion? to MapboxMaps.TimingCurve

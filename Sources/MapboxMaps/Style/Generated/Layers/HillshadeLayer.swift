@@ -4,7 +4,7 @@ import Foundation
 /// Client-side hillshading visualization based on DEM data. Currently, the implementation only supports Mapbox Terrain RGB and Mapzen Terrarium tiles.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-hillshade)
-public struct HillshadeLayer: Layer {
+public struct HillshadeLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
@@ -175,6 +175,114 @@ public struct HillshadeLayer: Layer {
         case hillshadeShadowColor = "hillshade-shadow-color"
         case hillshadeShadowColorTransition = "hillshade-shadow-color-transition"
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension HillshadeLayer {
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func filter(_ newValue: Expression) -> Self {
+        with(self, setter(\.filter, newValue))
+    }
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func source(_ newValue: String) -> Self {
+        with(self, setter(\.source, newValue))
+    }
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func sourceLayer(_ newValue: String) -> Self {
+        with(self, setter(\.sourceLayer, newValue))
+    }   
+    
+    /// The slot this layer is assigned to. 
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: Slot) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func minZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minZoom, newValue))
+    }
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func maxZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// The shading color used to accentuate rugged terrain like sharp cliffs and gorges.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func hillshadeAccentColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.hillshadeAccentColor, newValue))
+    }    
+
+    /// Intensity of the hillshade
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func hillshadeExaggeration(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.hillshadeExaggeration, newValue))
+    }    
+
+    /// The shading color of areas that faces towards the light source.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func hillshadeHighlightColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.hillshadeHighlightColor, newValue))
+    }    
+
+    /// Direction of light source when map is rotated.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func hillshadeIlluminationAnchor(_ newValue: Value<HillshadeIlluminationAnchor>) -> Self {
+        with(self, setter(\.hillshadeIlluminationAnchor, newValue))
+    }    
+
+    /// The direction of the light source used to generate the hillshading with 0 as the top of the viewport if `hillshade-illumination-anchor` is set to `viewport` and due north if `hillshade-illumination-anchor` is set to `map`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func hillshadeIlluminationDirection(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.hillshadeIlluminationDirection, newValue))
+    }    
+
+    /// The shading color of areas that face away from the light source.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func hillshadeShadowColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.hillshadeShadowColor, newValue))
+    }    
 }
 
 // End of generated file.

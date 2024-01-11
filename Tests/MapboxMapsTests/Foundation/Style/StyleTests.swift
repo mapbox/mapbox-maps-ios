@@ -360,8 +360,16 @@ final class StyleManagerTests: XCTestCase {
         styleManager.setStyleTerrainForPropertiesStub.defaultReturnValue = Expected(value: NSNull())
         XCTAssertNoThrow(try style.setTerrain(properties: ["foo": "bar"]))
 
-        styleManager.setStyleTerrainForPropertiesStub.defaultReturnValue = Expected(error: "Cannot set light source properties")
+        styleManager.setStyleTerrainForPropertiesStub.defaultReturnValue = Expected(error: "Cannot set terrain source properties")
         XCTAssertThrowsError(try style.setTerrain(properties: ["foo": "bar"]))
+    }
+
+    func testStyleCanSetTerrainSourceProperty() {
+        styleManager.setStyleTerrainPropertyStub.defaultReturnValue = Expected(value: NSNull())
+        XCTAssertNoThrow(try style.setTerrainProperty("foo", value: "bar"))
+
+        styleManager.setStyleTerrainPropertyStub.defaultReturnValue = Expected(error: "Cannot set terrain source property")
+        XCTAssertThrowsError(try style.setTerrainProperty("foo", value: "bar"))
     }
 
     // MARK: Custom Geometry

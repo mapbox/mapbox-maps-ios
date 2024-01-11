@@ -4,7 +4,7 @@ import Foundation
 /// A stroked line.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-line)
-public struct LineLayer: Layer {
+public struct LineLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
@@ -295,6 +295,234 @@ public struct LineLayer: Layer {
         case lineWidth = "line-width"
         case lineWidthTransition = "line-width-transition"
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension LineLayer {
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func filter(_ newValue: Expression) -> Self {
+        with(self, setter(\.filter, newValue))
+    }
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func source(_ newValue: String) -> Self {
+        with(self, setter(\.source, newValue))
+    }
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func sourceLayer(_ newValue: String) -> Self {
+        with(self, setter(\.sourceLayer, newValue))
+    }   
+    
+    /// The slot this layer is assigned to. 
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: Slot) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func minZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minZoom, newValue))
+    }
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func maxZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// The display of line endings.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineCap(_ newValue: Value<LineCap>) -> Self {
+        with(self, setter(\.lineCap, newValue))
+    }    
+
+    /// The display of lines when joining.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineJoin(_ newValue: Value<LineJoin>) -> Self {
+        with(self, setter(\.lineJoin, newValue))
+    }    
+
+    /// Used to automatically convert miter joins to bevel joins for sharp angles.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineMiterLimit(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.lineMiterLimit, newValue))
+    }    
+
+    /// Used to automatically convert round joins to miter joins for shallow angles.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineRoundLimit(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.lineRoundLimit, newValue))
+    }    
+
+    /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineSortKey(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.lineSortKey, newValue))
+    }    
+
+    /// Blur applied to the line, in pixels.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineBlur(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.lineBlur, newValue))
+    }    
+
+    /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineBorderColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.lineBorderColor, newValue))
+    }    
+
+    /// The width of the line border. A value of zero means no border.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineBorderWidth(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.lineBorderWidth, newValue))
+    }    
+
+    /// The color with which the line will be drawn.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.lineColor, newValue))
+    }    
+
+    /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineDasharray(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.lineDasharray, newValue))
+    }    
+
+    /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineDepthOcclusionFactor(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.lineDepthOcclusionFactor, newValue))
+    }    
+
+    /// Controls the intensity of light emitted on the source features.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineEmissiveStrength(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.lineEmissiveStrength, newValue))
+    }    
+
+    /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineGapWidth(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.lineGapWidth, newValue))
+    }    
+
+    /// A gradient used to color a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineGradient(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.lineGradient, newValue))
+    }    
+
+    /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineOffset(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.lineOffset, newValue))
+    }    
+
+    /// The opacity at which the line will be drawn.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.lineOpacity, newValue))
+    }    
+
+    /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func linePattern(_ newValue: Value<ResolvedImage>) -> Self {
+        with(self, setter(\.linePattern, newValue))
+    }    
+
+    /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineTranslate(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.lineTranslate, newValue))
+    }    
+
+    /// Controls the frame of reference for `line-translate`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineTranslateAnchor(_ newValue: Value<LineTranslateAnchor>) -> Self {
+        with(self, setter(\.lineTranslateAnchor, newValue))
+    }    
+
+    /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineTrimOffset(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.lineTrimOffset, newValue))
+    }    
+
+    /// Stroke thickness.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func lineWidth(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.lineWidth, newValue))
+    }    
 }
 
 // End of generated file.

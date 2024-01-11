@@ -8,12 +8,12 @@ final class Puck3DTests: XCTestCase {
         let model = Model()
 
         let puck = Puck3D(model: model, bearing: nil)
-            .modelCastShadows(.testConstantValue())
-            .modelOpacity(.testConstantValue())
-            .modelReceiveShadows(.testConstantValue())
-            .modelRotation(.testConstantValue())
-            .modelScale(.testConstantValue())
-            .modelScaleMode(.testConstantValue())
+            .modelCastShadows(Bool.testConstantValue())
+            .modelOpacity(Double.testConstantValue())
+            .modelReceiveShadows(Bool.testConstantValue())
+            .modelRotation([Double].testConstantValue())
+            .modelScale([Double].testConstantValue())
+            .modelScaleMode(ModelScaleMode.testConstantValue())
             .modelEmissiveStrength(5)
 
         let visitor = DefaultMapContentVisitor()

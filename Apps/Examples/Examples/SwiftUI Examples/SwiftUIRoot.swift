@@ -11,6 +11,7 @@ struct SwiftUIRoot: View {
                     ExampleLink("Locate Me", note: "Use Viewport to create user location control.", destination: LocateMeExample())
                     ExampleLink("Locations", note: "New look of locations, configure standard style parameters.", destination: StandardStyleLocationsExample())
                     ExampleLink("Standard Style Import", note: "Import Mapbox Standard style into your custom style.", destination: StandardStyleImportExample())
+                    ExampleLink("Dynamic Styling Example", note: "Use dynamic styling at runtime", destination: DynamicStylingExample())
                 } header: { Text("Getting started") }
 
                 Section {

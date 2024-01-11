@@ -129,6 +129,45 @@ final class RasterLayerTests: XCTestCase {
            XCTFail("Failed to decode RasterLayer")
        }
     }
+
+    func testSetPropertyValueWithFunction() {
+        let layer = RasterLayer(id: "test-id", source: "source")
+            .filter(Expression.testConstantValue())
+            .source(String.testConstantValue())
+            .sourceLayer(String.testConstantValue())
+            .slot(Slot.testConstantValue())
+            .minZoom(Double.testConstantValue())
+            .maxZoom(Double.testConstantValue())
+            .rasterBrightnessMax(Value<Double>.testConstantValue())
+            .rasterBrightnessMin(Value<Double>.testConstantValue())
+            .rasterColor(Value<StyleColor>.testConstantValue())
+            .rasterColorMix(Value<[Double]>.testConstantValue())
+            .rasterColorRange(Value<[Double]>.testConstantValue())
+            .rasterContrast(Value<Double>.testConstantValue())
+            .rasterFadeDuration(Value<Double>.testConstantValue())
+            .rasterHueRotate(Value<Double>.testConstantValue())
+            .rasterOpacity(Value<Double>.testConstantValue())
+            .rasterResampling(Value<RasterResampling>.testConstantValue())
+            .rasterSaturation(Value<Double>.testConstantValue())
+
+        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.source, String.testConstantValue())
+        XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
+        XCTAssertEqual(layer.slot, Slot.testConstantValue())
+        XCTAssertEqual(layer.minZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.rasterBrightnessMax, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.rasterBrightnessMin, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.rasterColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.rasterColorMix, Value<[Double]>.testConstantValue())
+        XCTAssertEqual(layer.rasterColorRange, Value<[Double]>.testConstantValue())
+        XCTAssertEqual(layer.rasterContrast, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.rasterFadeDuration, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.rasterHueRotate, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.rasterOpacity, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.rasterResampling, Value<RasterResampling>.testConstantValue())
+        XCTAssertEqual(layer.rasterSaturation, Value<Double>.testConstantValue())
+    }
 }
 
 // End of generated file

@@ -40,9 +40,9 @@ final class MapStyleReconcilerTests: XCTestCase {
     }
 
     func testNil() {
-        XCTAssertEqual(me.mapStyle, nil)
+        XCTAssertNil(me.mapStyle)
         me.mapStyle = nil
-        XCTAssertEqual(me.mapStyle, nil)
+        XCTAssertNil(me.mapStyle)
     }
 
     func testLoadsJSONStyle() throws {
@@ -219,6 +219,241 @@ final class MapStyleReconcilerTests: XCTestCase {
         XCTAssertEqual(inv.last?.parameters.importId, "foo-1")
         XCTAssertEqual(inv.last?.parameters.config, "k-2")
         XCTAssertEqual(inv.last?.parameters.value as? String, "v-2")
+    }
+
+    func testReconcileMapContentOnLoad() {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+        }
+        var lineLayer = LineLayer(id: "testLine", source: "testLineSource")
+        me.mapStyle = .standard {
+            lineLayer
+        }
+
+        lineLayer.lineColor = .constant(StyleColor.init(.brown))
+
+        var count = 0
+        me.loadStyle(.standard {
+            lineLayer
+        }) { error in
+            XCTAssertNil(error)
+            count += 1
+        }
+        XCTAssertEqual(count, 1)
+
+        let addLayerInv = styleManager.addStyleLayerStub.invocations
+        XCTAssertEqual(addLayerInv.count, 1)
+        guard let layerProperties = addLayerInv.last?.parameters.properties as? [String: Any] else {
+            XCTFail("Failed to get layerProperties")
+            return
+        }
+        XCTAssertEqual(layerProperties["type"] as? String, "line")
+        XCTAssertEqual(layerProperties["id"] as? String, "testLine")
+        XCTAssertEqual(layerProperties["source"] as? String, "testLineSource")
+
+        let updateLayerInv = styleManager.setStyleLayerPropertiesStub.invocations
+        XCTAssertEqual(updateLayerInv.count, 1)
+        guard let layer2Properties = updateLayerInv.last?.parameters.properties as? [String: Any] else {
+            XCTFail("Failed to get layer properties")
+            return
+        }
+        XCTAssertEqual(layer2Properties["type"] as? String, "line")
+        XCTAssertEqual(layer2Properties["id"] as? String, "testLine")
+        XCTAssertEqual(layer2Properties["source"] as? String, "testLineSource")
+        guard let layer2Print = layer2Properties["paint"] as? [String: Any],
+            let layer2Color = layer2Print["line-color"] as? String else {
+            XCTFail("Failed to get layer color")
+            return
+        }
+        XCTAssertEqual(layer2Color, "rgba(153.00, 102.00, 51.00, 1.00)")
+    }
+
+    func testReconcileMapContentOnLoadWithNewBaseStyle() {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+        }
+        var lineLayer = LineLayer(id: "testLine", source: "testLineSource")
+        me.mapStyle = .standard {
+            lineLayer
+        }
+
+        lineLayer.lineColor = .constant(StyleColor.init(.brown))
+
+        var count = 0
+        me.loadStyle(.streets {
+            lineLayer
+        }) { error in
+            XCTAssertNil(error)
+            count += 1
+        }
+        XCTAssertEqual(count, 1)
+
+        // because Standard was changed to Streets a new layer should be added rather than updated
+        let addLayerInv = styleManager.addStyleLayerStub.invocations
+        XCTAssertEqual(addLayerInv.count, 2)
+        guard let layerProperties = addLayerInv.first?.parameters.properties as? [String: Any] else {
+            XCTFail("Failed to get layerProperties")
+            return
+        }
+        XCTAssertEqual(layerProperties["type"] as? String, "line")
+        XCTAssertEqual(layerProperties["id"] as? String, "testLine")
+        XCTAssertEqual(layerProperties["source"] as? String, "testLineSource")
+
+        let updateLayerInv = styleManager.setStyleLayerPropertiesStub.invocations
+        XCTAssertEqual(updateLayerInv.count, 0)
+
+        guard let layer2Properties = addLayerInv.last?.parameters.properties as? [String: Any] else {
+            XCTFail("Failed to get layer properties")
+            return
+        }
+        XCTAssertEqual(layer2Properties["type"] as? String, "line")
+        XCTAssertEqual(layer2Properties["id"] as? String, "testLine")
+        XCTAssertEqual(layer2Properties["source"] as? String, "testLineSource")
+        guard let layer2Print = layer2Properties["paint"] as? [String: Any],
+              let layer2Color = layer2Print["line-color"] as? String else {
+            XCTFail("Failed to get layer color")
+            return
+        }
+        XCTAssertEqual(layer2Color, "rgba(153.00, 102.00, 51.00, 1.00)")
+    }
+
+    func testReconcileAddRemoveContent() {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+        }
+
+        let terrain = Terrain(sourceId: "testTerrain")
+        let atmosphere = Atmosphere()
+        let symbolLayer = SymbolLayer(id: "testSymbol", source: "testSymbolSource")
+        let styleImage = StyleImage(id: "testStyleImage", image: UIImage.empty)
+        let projection = StyleProjection(name: .globe)
+
+        let testMapStyle = MapStyle.streets {
+            terrain
+            atmosphere
+            symbolLayer
+            styleImage
+            projection
+        }
+
+        me.mapStyle = testMapStyle
+
+        // test remove elements when base style kept the same, but map content removed
+        me.mapStyle = .streets
+
+        // terrain
+        let setTerrainInv = styleManager.setStyleTerrainForPropertiesStub.invocations
+        XCTAssertEqual(setTerrainInv.count, 2) // one for add and one for remove
+        guard let terrainParameters = setTerrainInv.first?.parameters as? [String: Any] else {
+            XCTFail("Failed to get terrainParameters")
+            return
+        }
+        XCTAssertEqual(terrainParameters["source"] as? String, "testTerrain")
+        guard setTerrainInv.last?.parameters is NSNull else {
+            XCTFail("terrain should be null")
+            return
+        }
+
+        // atmosphere
+        let addAtmosphereInv = styleManager.setStyleAtmosphereForPropertiesStub.invocations
+        XCTAssertEqual(addAtmosphereInv.count, 2)
+        guard let atmosphereParameters = addAtmosphereInv.first?.parameters as? [String: Any] else {
+            XCTFail("Failed to get atmosphereParameters")
+            return
+        }
+        XCTAssertEqual(atmosphereParameters.count, 0)
+        guard addAtmosphereInv.last?.parameters is NSNull else {
+            XCTFail("atmosphere should be null")
+            return
+        }
+
+        // layers
+        let addLayerInv = styleManager.addStyleLayerStub.invocations
+        XCTAssertEqual(addLayerInv.count, 1)
+        let removeLayerInv = styleManager.removeStyleLayerStub.invocations
+        XCTAssertEqual(removeLayerInv.count, 1)
+        guard let removeLayerParameters = removeLayerInv.first?.parameters as? String else {
+            XCTFail("Failed to get removeLayerParameters")
+            return
+        }
+        XCTAssertEqual(removeLayerParameters, "testSymbol")
+
+        // style image
+        let addStyleImageInv = styleManager.addStyleImageStub.invocations
+        XCTAssertEqual(addStyleImageInv.count, 1)
+        guard let imageParameters = addStyleImageInv.first?.parameters else {
+            XCTFail("Failed to get imageProperties")
+            return
+        }
+        XCTAssertEqual(imageParameters.imageId, "testStyleImage")
+        let removeStyleImageInv = styleManager.removeStyleImageStub.invocations
+        XCTAssertEqual(removeStyleImageInv.count, 1)
+        guard let removeImageParameters = removeStyleImageInv.first?.parameters as? String else {
+            XCTFail("Failed to get removeImageParameters")
+            return
+        }
+        XCTAssertEqual(removeImageParameters, "testStyleImage")
+
+        // projection
+        let addGlobeProjectionInv = styleManager.setStyleProjectionPropertiesStub.invocations
+        XCTAssertEqual(addGlobeProjectionInv.count, 2)
+        guard let projectionParameters = addGlobeProjectionInv.first?.parameters as? [String: Any] else {
+            XCTFail("Failed to get projection")
+            return
+        }
+        XCTAssertEqual(projectionParameters["name"] as? String, "globe")
+        guard addGlobeProjectionInv.last?.parameters is NSNull else {
+            XCTFail("Projection should be null")
+            return
+        }
+    }
+
+    func testAddSources() {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+        }
+
+        me.mapStyle = .standard {
+            VectorSource(id: "vectorSource")
+            RasterSource(id: "rasterSource")
+            RasterDemSource(id: "rasterDemSource")
+            ImageSource(id: "imageSource")
+            GeoJSONSource(id: "geoJSONSource")
+        }
+
+        XCTAssertEqual(styleManager.addStyleSourceStub.invocations.count, 5)
+
+        var sourceIDs = [String]()
+        for invocation in styleManager.addStyleSourceStub.invocations {
+            sourceIDs.append(invocation.parameters.sourceId)
+        }
+
+        XCTAssertTrue(sourceIDs.contains("vectorSource"))
+        XCTAssertTrue(sourceIDs.contains("rasterSource"))
+        XCTAssertTrue(sourceIDs.contains("rasterDemSource"))
+        XCTAssertTrue(sourceIDs.contains("imageSource"))
+        XCTAssertTrue(sourceIDs.contains("geoJSONSource"))
+    }
+
+    func testRemoveSource() {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+        }
+
+        me.mapStyle = .standard {
+            VectorSource(id: "vectorSource")
+        }
+
+        XCTAssertEqual(styleManager.addStyleSourceStub.invocations.count, 1)
+
+        me.mapStyle = .standard
+
+        XCTAssertEqual(styleManager.removeStyleSourceStub.invocations.count, 1)
+        guard let removeSourceParameters = styleManager.removeStyleSourceStub.invocations.first?.parameters as? String else {
+            XCTFail("Failed to get removeSourceParameters")
+            return
+        }
+        XCTAssertEqual(removeSourceParameters, "vectorSource")
     }
 
     func testStyleImportsReconcileFromNil() {

@@ -1,6 +1,6 @@
 // This file is generated.
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class VectorSourceTests: XCTestCase {
 
@@ -55,6 +55,39 @@ final class VectorSourceTests: XCTestCase {
         } catch {
             XCTFail("Failed to decode VectorSource.")
         }
+    }
+
+    func testSetPropertyValueWithFunction() {
+        let source = VectorSource(id: "test-source")
+            .url(String.testSourceValue())
+            .tiles([String].testSourceValue())
+            .bounds([Double].testSourceValue())
+            .scheme(Scheme.testSourceValue())
+            .minzoom(Double.testSourceValue())
+            .maxzoom(Double.testSourceValue())
+            .attribution(String.testSourceValue())
+            .promoteId(PromoteId.testSourceValue())
+            .volatile(Bool.testSourceValue())
+            .prefetchZoomDelta(Double.testSourceValue())
+            .minimumTileUpdateInterval(Double.testSourceValue())
+            .maxOverscaleFactorForParentTiles(Double.testSourceValue())
+            .tileRequestsDelay(Double.testSourceValue())
+            .tileNetworkRequestsDelay(Double.testSourceValue())
+
+        XCTAssertEqual(source.url, String.testSourceValue())
+        XCTAssertEqual(source.tiles, [String].testSourceValue())
+        XCTAssertEqual(source.bounds, [Double].testSourceValue())
+        XCTAssertEqual(source.scheme, Scheme.testSourceValue())
+        XCTAssertEqual(source.minzoom, Double.testSourceValue())
+        XCTAssertEqual(source.maxzoom, Double.testSourceValue())
+        XCTAssertEqual(source.attribution, String.testSourceValue())
+        XCTAssertEqual(source.promoteId, PromoteId.testSourceValue())
+        XCTAssertEqual(source.volatile, Bool.testSourceValue())
+        XCTAssertEqual(source.prefetchZoomDelta, Double.testSourceValue())
+        XCTAssertEqual(source.minimumTileUpdateInterval, Double.testSourceValue())
+        XCTAssertEqual(source.maxOverscaleFactorForParentTiles, Double.testSourceValue())
+        XCTAssertEqual(source.tileRequestsDelay, Double.testSourceValue())
+        XCTAssertEqual(source.tileNetworkRequestsDelay, Double.testSourceValue())
     }
 }
 

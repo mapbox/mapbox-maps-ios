@@ -43,6 +43,12 @@ Use them to configure respective map options after creating a map view.
 * Make padding optional in `MapboxMap.camera(for:padding:bearing:pitch:maxZoom:offset:)` and `MapboxMap.camera(for:padding:bearing:pitch:)`.
 * Update CoreMaps to 11.1.0 and Common to 24.1.0
 
+### Breaking changes ⚠️
+* `MapStyle` no longer conforms to Equatable.
+
+### Features ✨ and improvements 🏁
+* Introduce an experimental Style DSL, enabling developers to add map style content like Sources, Layers, Style Images, Terrain, and Atmosphere to their map style at runtime in a declarative pattern. See the documentation [here](https://docs.mapbox.com/ios/maps/api/11.2.0-beta.1/documentation/mapboxmaps/style-dsl) for more information. For SwiftUI users, this Style DSL provides a more natural approach to manipulating content. 
+
 ## 11.1.0-rc.1 - 04 January, 2024
 
 ### Bug fixes 🐞

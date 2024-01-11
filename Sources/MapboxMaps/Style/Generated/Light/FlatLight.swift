@@ -4,7 +4,7 @@ import Foundation
 /// A global directional light source which is only applied on 3D and hillshade layers. Using this type disables other light sources.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#light)
-public struct FlatLight: Codable, StyleEncodable {
+public struct FlatLight: Codable, StyleEncodable, Equatable {
 
     /// Unique light name
     public let id: String

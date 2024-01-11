@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class BackgroundLayerTests: XCTestCase {
 
@@ -100,6 +100,25 @@ final class BackgroundLayerTests: XCTestCase {
        } catch {
            XCTFail("Failed to decode BackgroundLayer")
        }
+    }
+
+    func testSetPropertyValueWithFunction() {
+        let layer = BackgroundLayer(id: "test-id")
+            .slot(Slot.testConstantValue())
+            .minZoom(Double.testConstantValue())
+            .maxZoom(Double.testConstantValue())
+            .backgroundColor(Value<StyleColor>.testConstantValue())
+            .backgroundEmissiveStrength(Value<Double>.testConstantValue())
+            .backgroundOpacity(Value<Double>.testConstantValue())
+            .backgroundPattern(Value<ResolvedImage>.testConstantValue())
+
+        XCTAssertEqual(layer.slot, Slot.testConstantValue())
+        XCTAssertEqual(layer.minZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.backgroundColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.backgroundEmissiveStrength, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.backgroundOpacity, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.backgroundPattern, Value<ResolvedImage>.testConstantValue())
     }
 }
 

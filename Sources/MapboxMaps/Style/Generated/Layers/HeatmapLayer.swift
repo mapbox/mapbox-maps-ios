@@ -4,7 +4,7 @@ import Foundation
 /// A heatmap.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-heatmap)
-public struct HeatmapLayer: Layer {
+public struct HeatmapLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
@@ -151,6 +151,106 @@ public struct HeatmapLayer: Layer {
         case heatmapRadiusTransition = "heatmap-radius-transition"
         case heatmapWeight = "heatmap-weight"
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension HeatmapLayer {
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func filter(_ newValue: Expression) -> Self {
+        with(self, setter(\.filter, newValue))
+    }
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func source(_ newValue: String) -> Self {
+        with(self, setter(\.source, newValue))
+    }
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func sourceLayer(_ newValue: String) -> Self {
+        with(self, setter(\.sourceLayer, newValue))
+    }   
+    
+    /// The slot this layer is assigned to. 
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: Slot) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func minZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minZoom, newValue))
+    }
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func maxZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// Defines the color of each pixel based on its density value in a heatmap. Should be an expression that uses `["heatmap-density"]` as input.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func heatmapColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.heatmapColor, newValue))
+    }    
+
+    /// Similar to `heatmap-weight` but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func heatmapIntensity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.heatmapIntensity, newValue))
+    }    
+
+    /// The global opacity at which the heatmap layer will be drawn.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func heatmapOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.heatmapOpacity, newValue))
+    }    
+
+    /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func heatmapRadius(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.heatmapRadius, newValue))
+    }    
+
+    /// A measure of how much an individual point contributes to the heatmap. A value of 10 would be equivalent to having 10 points of weight 1 in the same spot. Especially useful when combined with clustering.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func heatmapWeight(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.heatmapWeight, newValue))
+    }    
 }
 
 // End of generated file.

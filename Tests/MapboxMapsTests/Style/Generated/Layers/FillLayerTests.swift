@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class FillLayerTests: XCTestCase {
 
@@ -113,6 +113,41 @@ final class FillLayerTests: XCTestCase {
        } catch {
            XCTFail("Failed to decode FillLayer")
        }
+    }
+
+    func testSetPropertyValueWithFunction() {
+        let layer = FillLayer(id: "test-id", source: "source")
+            .filter(Expression.testConstantValue())
+            .source(String.testConstantValue())
+            .sourceLayer(String.testConstantValue())
+            .slot(Slot.testConstantValue())
+            .minZoom(Double.testConstantValue())
+            .maxZoom(Double.testConstantValue())
+            .fillSortKey(Value<Double>.testConstantValue())
+            .fillAntialias(Value<Bool>.testConstantValue())
+            .fillColor(Value<StyleColor>.testConstantValue())
+            .fillEmissiveStrength(Value<Double>.testConstantValue())
+            .fillOpacity(Value<Double>.testConstantValue())
+            .fillOutlineColor(Value<StyleColor>.testConstantValue())
+            .fillPattern(Value<ResolvedImage>.testConstantValue())
+            .fillTranslate(Value<[Double]>.testConstantValue())
+            .fillTranslateAnchor(Value<FillTranslateAnchor>.testConstantValue())
+
+        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.source, String.testConstantValue())
+        XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
+        XCTAssertEqual(layer.slot, Slot.testConstantValue())
+        XCTAssertEqual(layer.minZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.fillSortKey, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.fillAntialias, Value<Bool>.testConstantValue())
+        XCTAssertEqual(layer.fillColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.fillEmissiveStrength, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.fillOpacity, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.fillOutlineColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.fillPattern, Value<ResolvedImage>.testConstantValue())
+        XCTAssertEqual(layer.fillTranslate, Value<[Double]>.testConstantValue())
+        XCTAssertEqual(layer.fillTranslateAnchor, Value<FillTranslateAnchor>.testConstantValue())
     }
 }
 

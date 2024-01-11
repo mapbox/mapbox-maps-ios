@@ -4,7 +4,7 @@ import Foundation
 /// A filled circle.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-circle)
-public struct CircleLayer: Layer {
+public struct CircleLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
@@ -235,6 +235,170 @@ public struct CircleLayer: Layer {
         case circleTranslateTransition = "circle-translate-transition"
         case circleTranslateAnchor = "circle-translate-anchor"
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension CircleLayer {
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func filter(_ newValue: Expression) -> Self {
+        with(self, setter(\.filter, newValue))
+    }
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func source(_ newValue: String) -> Self {
+        with(self, setter(\.source, newValue))
+    }
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func sourceLayer(_ newValue: String) -> Self {
+        with(self, setter(\.sourceLayer, newValue))
+    }   
+    
+    /// The slot this layer is assigned to. 
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: Slot) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func minZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minZoom, newValue))
+    }
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func maxZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circleSortKey(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.circleSortKey, newValue))
+    }    
+
+    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circleBlur(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.circleBlur, newValue))
+    }    
+
+    /// The fill color of the circle.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circleColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.circleColor, newValue))
+    }    
+
+    /// Controls the intensity of light emitted on the source features.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circleEmissiveStrength(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.circleEmissiveStrength, newValue))
+    }    
+
+    /// The opacity at which the circle will be drawn.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circleOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.circleOpacity, newValue))
+    }    
+
+    /// Orientation of circle when map is pitched.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circlePitchAlignment(_ newValue: Value<CirclePitchAlignment>) -> Self {
+        with(self, setter(\.circlePitchAlignment, newValue))
+    }    
+
+    /// Controls the scaling behavior of the circle when the map is pitched.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circlePitchScale(_ newValue: Value<CirclePitchScale>) -> Self {
+        with(self, setter(\.circlePitchScale, newValue))
+    }    
+
+    /// Circle radius.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circleRadius(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.circleRadius, newValue))
+    }    
+
+    /// The stroke color of the circle.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circleStrokeColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.circleStrokeColor, newValue))
+    }    
+
+    /// The opacity of the circle's stroke.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circleStrokeOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.circleStrokeOpacity, newValue))
+    }    
+
+    /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circleStrokeWidth(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.circleStrokeWidth, newValue))
+    }    
+
+    /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circleTranslate(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.circleTranslate, newValue))
+    }    
+
+    /// Controls the frame of reference for `circle-translate`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func circleTranslateAnchor(_ newValue: Value<CircleTranslateAnchor>) -> Self {
+        with(self, setter(\.circleTranslateAnchor, newValue))
+    }    
 }
 
 // End of generated file.

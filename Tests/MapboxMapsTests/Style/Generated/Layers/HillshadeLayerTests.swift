@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class HillshadeLayerTests: XCTestCase {
 
@@ -109,6 +109,35 @@ final class HillshadeLayerTests: XCTestCase {
        } catch {
            XCTFail("Failed to decode HillshadeLayer")
        }
+    }
+
+    func testSetPropertyValueWithFunction() {
+        let layer = HillshadeLayer(id: "test-id", source: "source")
+            .filter(Expression.testConstantValue())
+            .source(String.testConstantValue())
+            .sourceLayer(String.testConstantValue())
+            .slot(Slot.testConstantValue())
+            .minZoom(Double.testConstantValue())
+            .maxZoom(Double.testConstantValue())
+            .hillshadeAccentColor(Value<StyleColor>.testConstantValue())
+            .hillshadeExaggeration(Value<Double>.testConstantValue())
+            .hillshadeHighlightColor(Value<StyleColor>.testConstantValue())
+            .hillshadeIlluminationAnchor(Value<HillshadeIlluminationAnchor>.testConstantValue())
+            .hillshadeIlluminationDirection(Value<Double>.testConstantValue())
+            .hillshadeShadowColor(Value<StyleColor>.testConstantValue())
+
+        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.source, String.testConstantValue())
+        XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
+        XCTAssertEqual(layer.slot, Slot.testConstantValue())
+        XCTAssertEqual(layer.minZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.hillshadeAccentColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.hillshadeExaggeration, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.hillshadeHighlightColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.hillshadeIlluminationAnchor, Value<HillshadeIlluminationAnchor>.testConstantValue())
+        XCTAssertEqual(layer.hillshadeIlluminationDirection, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.hillshadeShadowColor, Value<StyleColor>.testConstantValue())
     }
 }
 

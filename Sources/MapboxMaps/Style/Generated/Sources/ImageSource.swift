@@ -4,7 +4,7 @@ import Foundation
 /// An image data source.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#image)
-public struct ImageSource: Source {
+public struct ImageSource: Source, Equatable {
 
     public let type: SourceType
     public let id: String
@@ -56,5 +56,35 @@ extension ImageSource {
         try container.encodeIfPresent(url, forKey: .url)
         try container.encodeIfPresent(coordinates, forKey: .coordinates)
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension ImageSource {
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// URL that points to an image. If the URL is not specified, the image is expected to be loaded directly during runtime.
+    public func url(_ newValue: String) -> Self {
+        with(self, setter(\.url, newValue))
+    }    
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// Corners of image specified in longitude, latitude pairs. Note: When using globe projection, the image will be centered at the North or South Pole in the respective hemisphere if the average latitude value exceeds 85 degrees or falls below -85 degrees.
+    public func coordinates(_ newValue: [[Double]]) -> Self {
+        with(self, setter(\.coordinates, newValue))
+    }    
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom. The default delta is 4.
+    public func prefetchZoomDelta(_ newValue: Double) -> Self {
+        with(self, setter(\.prefetchZoomDelta, newValue))
+    }    
 }
 // End of generated file.

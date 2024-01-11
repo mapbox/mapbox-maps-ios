@@ -4,7 +4,7 @@ import Foundation
 /// Location Indicator layer.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-location-indicator)
-public struct LocationIndicatorLayer: Layer {
+public struct LocationIndicatorLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
@@ -241,6 +241,166 @@ public struct LocationIndicatorLayer: Layer {
         case topImageSize = "top-image-size"
         case topImageSizeTransition = "top-image-size-transition"
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension LocationIndicatorLayer {
+
+
+    /// The slot this layer is assigned to. 
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: Slot) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func minZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minZoom, newValue))
+    }
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func maxZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// Name of image in sprite to use as the middle of the location indicator.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func bearingImage(_ newValue: Value<ResolvedImage>) -> Self {
+        with(self, setter(\.bearingImage, newValue))
+    }    
+
+    /// Name of image in sprite to use as the background of the location indicator.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func shadowImage(_ newValue: Value<ResolvedImage>) -> Self {
+        with(self, setter(\.shadowImage, newValue))
+    }    
+
+    /// Name of image in sprite to use as the top of the location indicator.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func topImage(_ newValue: Value<ResolvedImage>) -> Self {
+        with(self, setter(\.topImage, newValue))
+    }    
+
+    /// The accuracy, in meters, of the position source used to retrieve the position of the location indicator.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func accuracyRadius(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.accuracyRadius, newValue))
+    }    
+
+    /// The color for drawing the accuracy radius border. To adjust transparency, set the alpha component of the color accordingly.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func accuracyRadiusBorderColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.accuracyRadiusBorderColor, newValue))
+    }    
+
+    /// The color for drawing the accuracy radius, as a circle. To adjust transparency, set the alpha component of the color accordingly.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func accuracyRadiusColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.accuracyRadiusColor, newValue))
+    }    
+
+    /// The bearing of the location indicator.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func bearing(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.bearing, newValue))
+    }    
+
+    /// The size of the bearing image, as a scale factor applied to the size of the specified image.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func bearingImageSize(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.bearingImageSize, newValue))
+    }    
+
+    /// The color of the circle emphasizing the indicator. To adjust transparency, set the alpha component of the color accordingly.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func emphasisCircleColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.emphasisCircleColor, newValue))
+    }    
+
+    /// The radius, in pixel, of the circle emphasizing the indicator, drawn between the accuracy radius and the indicator shadow.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func emphasisCircleRadius(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.emphasisCircleRadius, newValue))
+    }    
+
+    /// The displacement off the center of the top image and the shadow image when the pitch of the map is greater than 0. This helps producing a three-dimensional appearence.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func imagePitchDisplacement(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.imagePitchDisplacement, newValue))
+    }    
+
+    /// An array of [latitude, longitude, altitude] position of the location indicator.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func location(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.location, newValue))
+    }    
+
+    /// The opacity of the entire location indicator layer.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func locationIndicatorOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.locationIndicatorOpacity, newValue))
+    }    
+
+    /// The amount of the perspective compensation, between 0 and 1. A value of 1 produces a location indicator of constant width across the screen. A value of 0 makes it scale naturally according to the viewing projection.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func perspectiveCompensation(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.perspectiveCompensation, newValue))
+    }    
+
+    /// The size of the shadow image, as a scale factor applied to the size of the specified image.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func shadowImageSize(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.shadowImageSize, newValue))
+    }    
+
+    /// The size of the top image, as a scale factor applied to the size of the specified image.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func topImageSize(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.topImageSize, newValue))
+    }    
 }
 
 // End of generated file.

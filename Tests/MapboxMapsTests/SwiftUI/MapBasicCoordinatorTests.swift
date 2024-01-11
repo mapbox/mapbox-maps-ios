@@ -31,10 +31,21 @@ final class MapBasicCoordinatorTests: XCTestCase {
 
     func testStyleURI() {
         update(with: MapDependencies(mapStyle: .light))
-        XCTAssertEqual(mapView.style.mapStyle, .light)
+
+        var loadMethod = mapView.style.mapStyle?.loadMethod
+        if case let .uri(styleURI) = loadMethod {
+            XCTAssertEqual(styleURI.rawValue, "mapbox://styles/mapbox/light-v11")
+        } else {
+            XCTFail("Failed to update mapStyle")
+        }
 
         update(with: MapDependencies(mapStyle: .dark))
-        XCTAssertEqual(mapView.style.mapStyle, .dark)
+        loadMethod = mapView.style.mapStyle?.loadMethod
+        if case let .uri(styleURI) = loadMethod {
+            XCTAssertEqual(styleURI.rawValue, "mapbox://styles/mapbox/dark-v11")
+        } else {
+            XCTFail("Failed to update mapStyle")
+        }
     }
 
     func testMapOptions() {

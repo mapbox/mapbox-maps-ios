@@ -23,6 +23,7 @@ final class MapStyleReconciler {
     private var pendingCompletions = [(Error?) -> Void]()
     private var _mapStyle: MapStyle?
     private let _isStyleRootLoaded: CurrentValueSignalSubject<Bool>
+    private var styleModel = MapStyleModel()
 
     init(styleManager: StyleManagerProtocol) {
         self.styleManager = styleManager
@@ -34,18 +35,27 @@ final class MapStyleReconciler {
         transition: TransitionOptions? = nil,
         completion: ((Error?) -> Void)? = nil
     ) {
+        var oldModel = styleModel
+        styleModel = style.buildModel(transition: transition)
+
         if _mapStyle?.loadMethod != style.loadMethod {
             _mapStyle = style
+            oldModel = MapStyleModel() // New load, so update from an empty model
+
             let callbacks = RuntimeStylingCallbacks(
+                sources: { [weak self] in
+                    self?.reconcile(stages: [.sources], from: oldModel)
+                },
                 layers: { [weak self] in
-                    // This callback means the style description is loaded.
-                    guard let self else { return }
                     if let transition {
-                        self.styleManager.setStyleTransitionFor(transition)
+                        self?.styleManager.setStyleTransitionFor(transition)
                     }
-                    // When new style is loaded, no need in incremental change of import configuration.
-                    self.reconcileStyleImports(from: nil)
-                    self._isStyleRootLoaded.value = true
+                    // This callback means the style description is loaded.
+                    self?.reconcile(stages: [.layers], from: oldModel)
+                    self?._isStyleRootLoaded.value = true
+                },
+                images: { [weak self] in
+                    self?.reconcile(stages: [.images], from: oldModel)
                 },
                 completed: { [weak self] in
                     completion?(nil)
@@ -60,7 +70,6 @@ final class MapStyleReconciler {
                     completion?(error)
                     self?.completeLoad(error)
                 })
-
             switch style.loadMethod {
             case let .json(json):
                 styleManager.setStyleJSON(json, callbacks: callbacks)
@@ -70,11 +79,10 @@ final class MapStyleReconciler {
             updateStyleRootLoaded()
             return
         }
-        let old = _mapStyle
         _mapStyle = style
 
         if styleManager.isStyleLoaded() {
-            reconcileStyleImports(from: old?.importConfigurations)
+            self.reconcile(stages: StyleLoadingStage.all, from: oldModel)
             completion?(nil)
         } else {
             // The style with the same uri is already loading, save completion for future execution.
@@ -95,12 +103,47 @@ final class MapStyleReconciler {
         _isStyleRootLoaded.value = styleManager.isStyleLoaded()
     }
 
+    private enum StyleLoadingStage {
+        case layers
+        case sources
+        case images
+        static var all = [StyleLoadingStage.layers, .sources, .images]
+    }
+
+    private func reconcile(stages: [StyleLoadingStage], from old: MapStyleModel) {
+        for stage in stages {
+            switch stage {
+            case .layers:
+                reconcileStyleImports(from: old.importConfigurations)
+                applyDiff(old: old.layers, new: styleModel.layers, accessor: styleManager.accessors.layers)
+                updateProperty(old: old.projection, new: styleModel.projection, accessor: styleManager.accessors.projection)
+                updateProperty(old: old.atmosphere, new: styleModel.atmosphere, accessor: styleManager.accessors.atmosphere)
+                updateProperty(old: old.terrain, new: styleModel.terrain, accessor: styleManager.accessors.terrain)
+            case .sources:
+                applyDiff(old: old.sources, new: styleModel.sources, accessor: styleManager.accessors.sources)
+            case .images:
+                applyDiff(old: old.images, new: styleModel.images, accessor: styleManager.accessors.images)
+            }
+        }
+    }
+
     private func reconcileStyleImports(from old: [StyleImportConfiguration]?) {
         guard let mapStyle else { return }
         Self.reconcileStyleImports(
             from: old,
             to: mapStyle.importConfigurations,
             styleManager: styleManager)
+    }
+}
+
+extension MapStyle {
+    func buildModel(transition: TransitionOptions?) -> MapStyleModel {
+        let visitor = MapStyleContentVisitor()
+        let mapStyleContent = (content?()) ?? EmptyMapStyleContent()
+        mapStyleContent.visit(visitor)
+        visitor.model.transition = transition
+        visitor.model.importConfigurations = importConfigurations
+        return visitor.model
     }
 }
 
@@ -125,5 +168,46 @@ extension MapStyleReconciler {
                 Log.error(forMessage: "Failed updating import config properties, \(error)")
             }
         }
+    }
+}
+
+private func updateProperty<T: Equatable>(old: T?, new: T?, accessor: Accessor<T>) {
+    guard old != new else { return }
+
+    if let new {
+        wrapStyleDSLError { try accessor.insert(new) }
+    } else if let old {
+        wrapStyleDSLError { try accessor.remove(old) }
+    }
+}
+
+private func applyDiff<T>(old: [String: T], new: [String: T], accessor: Accessor<T>) {
+    let oldKeys = Set(old.keys)
+    let newKeys = Set(new.keys)
+    let insertionKeys = newKeys.subtracting(oldKeys)
+    let removalKeys = oldKeys.subtracting(newKeys)
+    let updateKeys = oldKeys.intersection(newKeys).filter {
+        !accessor.isEqual(old[$0]!, new[$0]!)
+    }
+
+    removalKeys.forEach { key in
+        wrapStyleDSLError { try old[key].map(accessor.remove) }
+    }
+    insertionKeys.forEach { key in
+        wrapStyleDSLError { try new[key].map(accessor.insert) }
+    }
+    updateKeys.forEach {
+        guard let new = new[$0], let old = old[$0] else {
+            return
+        }
+        wrapStyleDSLError {  try accessor.update(old, new) }
+    }
+}
+
+func wrapStyleDSLError(_ body: () throws -> Void) {
+    do {
+        try body()
+    } catch {
+        Log.error(forMessage: "Failed to update Map Style Content, error: \(error)", category: "styleDSL")
     }
 }

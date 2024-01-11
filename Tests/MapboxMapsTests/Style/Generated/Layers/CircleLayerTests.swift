@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class CircleLayerTests: XCTestCase {
 
@@ -125,6 +125,49 @@ final class CircleLayerTests: XCTestCase {
        } catch {
            XCTFail("Failed to decode CircleLayer")
        }
+    }
+
+    func testSetPropertyValueWithFunction() {
+        let layer = CircleLayer(id: "test-id", source: "source")
+            .filter(Expression.testConstantValue())
+            .source(String.testConstantValue())
+            .sourceLayer(String.testConstantValue())
+            .slot(Slot.testConstantValue())
+            .minZoom(Double.testConstantValue())
+            .maxZoom(Double.testConstantValue())
+            .circleSortKey(Value<Double>.testConstantValue())
+            .circleBlur(Value<Double>.testConstantValue())
+            .circleColor(Value<StyleColor>.testConstantValue())
+            .circleEmissiveStrength(Value<Double>.testConstantValue())
+            .circleOpacity(Value<Double>.testConstantValue())
+            .circlePitchAlignment(Value<CirclePitchAlignment>.testConstantValue())
+            .circlePitchScale(Value<CirclePitchScale>.testConstantValue())
+            .circleRadius(Value<Double>.testConstantValue())
+            .circleStrokeColor(Value<StyleColor>.testConstantValue())
+            .circleStrokeOpacity(Value<Double>.testConstantValue())
+            .circleStrokeWidth(Value<Double>.testConstantValue())
+            .circleTranslate(Value<[Double]>.testConstantValue())
+            .circleTranslateAnchor(Value<CircleTranslateAnchor>.testConstantValue())
+
+        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.source, String.testConstantValue())
+        XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
+        XCTAssertEqual(layer.slot, Slot.testConstantValue())
+        XCTAssertEqual(layer.minZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.circleSortKey, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.circleBlur, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.circleColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.circleEmissiveStrength, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.circleOpacity, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.circlePitchAlignment, Value<CirclePitchAlignment>.testConstantValue())
+        XCTAssertEqual(layer.circlePitchScale, Value<CirclePitchScale>.testConstantValue())
+        XCTAssertEqual(layer.circleRadius, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.circleStrokeColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.circleStrokeOpacity, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.circleStrokeWidth, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.circleTranslate, Value<[Double]>.testConstantValue())
+        XCTAssertEqual(layer.circleTranslateAnchor, Value<CircleTranslateAnchor>.testConstantValue())
     }
 }
 

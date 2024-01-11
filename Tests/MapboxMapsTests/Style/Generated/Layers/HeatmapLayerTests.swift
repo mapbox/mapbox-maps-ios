@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class HeatmapLayerTests: XCTestCase {
 
@@ -103,6 +103,33 @@ final class HeatmapLayerTests: XCTestCase {
        } catch {
            XCTFail("Failed to decode HeatmapLayer")
        }
+    }
+
+    func testSetPropertyValueWithFunction() {
+        let layer = HeatmapLayer(id: "test-id", source: "source")
+            .filter(Expression.testConstantValue())
+            .source(String.testConstantValue())
+            .sourceLayer(String.testConstantValue())
+            .slot(Slot.testConstantValue())
+            .minZoom(Double.testConstantValue())
+            .maxZoom(Double.testConstantValue())
+            .heatmapColor(Value<StyleColor>.testConstantValue())
+            .heatmapIntensity(Value<Double>.testConstantValue())
+            .heatmapOpacity(Value<Double>.testConstantValue())
+            .heatmapRadius(Value<Double>.testConstantValue())
+            .heatmapWeight(Value<Double>.testConstantValue())
+
+        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.source, String.testConstantValue())
+        XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
+        XCTAssertEqual(layer.slot, Slot.testConstantValue())
+        XCTAssertEqual(layer.minZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.heatmapColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.heatmapIntensity, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.heatmapOpacity, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.heatmapRadius, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.heatmapWeight, Value<Double>.testConstantValue())
     }
 }
 

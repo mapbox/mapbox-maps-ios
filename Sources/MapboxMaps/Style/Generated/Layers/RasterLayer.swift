@@ -4,7 +4,7 @@ import Foundation
 /// Raster map textures such as satellite imagery.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-raster)
-public struct RasterLayer: Layer {
+public struct RasterLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
@@ -256,6 +256,154 @@ public struct RasterLayer: Layer {
         case rasterSaturation = "raster-saturation"
         case rasterSaturationTransition = "raster-saturation-transition"
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension RasterLayer {
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func filter(_ newValue: Expression) -> Self {
+        with(self, setter(\.filter, newValue))
+    }
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func source(_ newValue: String) -> Self {
+        with(self, setter(\.source, newValue))
+    }
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func sourceLayer(_ newValue: String) -> Self {
+        with(self, setter(\.sourceLayer, newValue))
+    }   
+    
+    /// The slot this layer is assigned to. 
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: Slot) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func minZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minZoom, newValue))
+    }
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func maxZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// Increase or reduce the brightness of the image. The value is the maximum brightness.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterBrightnessMax(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.rasterBrightnessMax, newValue))
+    }    
+
+    /// Increase or reduce the brightness of the image. The value is the minimum brightness.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterBrightnessMin(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.rasterBrightnessMin, newValue))
+    }    
+
+    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 1024 uniformly spaced steps over the range specified by `raster-color-range`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.rasterColor, newValue))
+    }    
+
+    /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r * src.r + mix.g * src.g + mix.b * src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is *not* multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterColorMix(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.rasterColorMix, newValue))
+    }    
+
+    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterColorRange(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.rasterColorRange, newValue))
+    }    
+
+    /// Increase or reduce the contrast of the image.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterContrast(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.rasterContrast, newValue))
+    }    
+
+    /// Fade duration when a new tile is added.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterFadeDuration(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.rasterFadeDuration, newValue))
+    }    
+
+    /// Rotates hues around the color wheel.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterHueRotate(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.rasterHueRotate, newValue))
+    }    
+
+    /// The opacity at which the image will be drawn.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.rasterOpacity, newValue))
+    }    
+
+    /// The resampling/interpolation method to use for overscaling, also known as texture magnification filter
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterResampling(_ newValue: Value<RasterResampling>) -> Self {
+        with(self, setter(\.rasterResampling, newValue))
+    }    
+
+    /// Increase or reduce the saturation of the image.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterSaturation(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.rasterSaturation, newValue))
+    }    
 }
 
 // End of generated file.

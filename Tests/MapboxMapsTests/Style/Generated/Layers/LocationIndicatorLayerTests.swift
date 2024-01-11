@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class LocationIndicatorLayerTests: XCTestCase {
 
@@ -132,6 +132,49 @@ final class LocationIndicatorLayerTests: XCTestCase {
        } catch {
            XCTFail("Failed to decode LocationIndicatorLayer")
        }
+    }
+
+    func testSetPropertyValueWithFunction() {
+        let layer = LocationIndicatorLayer(id: "test-id")
+            .slot(Slot.testConstantValue())
+            .minZoom(Double.testConstantValue())
+            .maxZoom(Double.testConstantValue())
+            .bearingImage(Value<ResolvedImage>.testConstantValue())
+            .shadowImage(Value<ResolvedImage>.testConstantValue())
+            .topImage(Value<ResolvedImage>.testConstantValue())
+            .accuracyRadius(Value<Double>.testConstantValue())
+            .accuracyRadiusBorderColor(Value<StyleColor>.testConstantValue())
+            .accuracyRadiusColor(Value<StyleColor>.testConstantValue())
+            .bearing(Value<Double>.testConstantValue())
+            .bearingImageSize(Value<Double>.testConstantValue())
+            .emphasisCircleColor(Value<StyleColor>.testConstantValue())
+            .emphasisCircleRadius(Value<Double>.testConstantValue())
+            .imagePitchDisplacement(Value<Double>.testConstantValue())
+            .location(Value<[Double]>.testConstantValue())
+            .locationIndicatorOpacity(Value<Double>.testConstantValue())
+            .perspectiveCompensation(Value<Double>.testConstantValue())
+            .shadowImageSize(Value<Double>.testConstantValue())
+            .topImageSize(Value<Double>.testConstantValue())
+
+        XCTAssertEqual(layer.slot, Slot.testConstantValue())
+        XCTAssertEqual(layer.minZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.bearingImage, Value<ResolvedImage>.testConstantValue())
+        XCTAssertEqual(layer.shadowImage, Value<ResolvedImage>.testConstantValue())
+        XCTAssertEqual(layer.topImage, Value<ResolvedImage>.testConstantValue())
+        XCTAssertEqual(layer.accuracyRadius, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.accuracyRadiusBorderColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.accuracyRadiusColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.bearing, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.bearingImageSize, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.emphasisCircleColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.emphasisCircleRadius, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.imagePitchDisplacement, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.location, Value<[Double]>.testConstantValue())
+        XCTAssertEqual(layer.locationIndicatorOpacity, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.perspectiveCompensation, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.shadowImageSize, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.topImageSize, Value<Double>.testConstantValue())
     }
 }
 

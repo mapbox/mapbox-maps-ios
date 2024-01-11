@@ -4,7 +4,7 @@ import Foundation
 /// An extruded (3D) polygon.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-fill-extrusion)
-public struct FillExtrusionLayer: Layer {
+public struct FillExtrusionLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
@@ -403,6 +403,242 @@ public struct FillExtrusionLayer: Layer {
         case fillExtrusionVerticalScale = "fill-extrusion-vertical-scale"
         case fillExtrusionVerticalScaleTransition = "fill-extrusion-vertical-scale-transition"
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension FillExtrusionLayer {
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func filter(_ newValue: Expression) -> Self {
+        with(self, setter(\.filter, newValue))
+    }
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func source(_ newValue: String) -> Self {
+        with(self, setter(\.source, newValue))
+    }
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func sourceLayer(_ newValue: String) -> Self {
+        with(self, setter(\.sourceLayer, newValue))
+    }   
+    
+    /// The slot this layer is assigned to. 
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: Slot) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func minZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minZoom, newValue))
+    }
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func maxZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// Radius of a fill extrusion edge in meters. If not zero, rounds extrusion edges for a smoother appearance.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionEdgeRadius(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionEdgeRadius, newValue))
+    }    
+
+    /// Provides a control to futher fine-tune the look of the ambient occlusion on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionAmbientOcclusionGroundAttenuation(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionAmbientOcclusionGroundAttenuation, newValue))
+    }    
+
+    /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionAmbientOcclusionGroundRadius(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionAmbientOcclusionGroundRadius, newValue))
+    }    
+
+    /// Controls the intensity of shading near ground and concave angles between walls. Default value 0.0 disables ambient occlusion and values around 0.3 provide the most plausible results for buildings.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionAmbientOcclusionIntensity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionAmbientOcclusionIntensity, newValue))
+    }    
+
+    /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with legacy light. When 3D light is enabled `fill-extrusion-ambient-occlusion-wall-radius` and `fill-extrusion-ambient-occlusion-ground-radius` are used instead.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionAmbientOcclusionRadius(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionAmbientOcclusionRadius, newValue))
+    }    
+
+    /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionAmbientOcclusionWallRadius(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionAmbientOcclusionWallRadius, newValue))
+    }    
+
+    /// The height with which to extrude the base of this layer. Must be less than or equal to `fill-extrusion-height`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionBase(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionBase, newValue))
+    }    
+
+    /// The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root `light` settings. If this color is specified as `rgba` with an alpha component, the alpha component will be ignored; use `fill-extrusion-opacity` to set layer opacity.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.fillExtrusionColor, newValue))
+    }    
+
+    /// This parameter defines the range for the fade-out effect before an automatic content cutoff on pitched map views. The automatic cutoff range is calculated according to the minimum required zoom level of the source and layer. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionCutoffFadeRange(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionCutoffFadeRange, newValue))
+    }    
+
+    /// The color of the flood light effect on the walls of the extruded buildings. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionFloodLightColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.fillExtrusionFloodLightColor, newValue))
+    }    
+
+    /// Provides a control to futher fine-tune the look of the flood light on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionFloodLightGroundAttenuation(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionFloodLightGroundAttenuation, newValue))
+    }    
+
+    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionFloodLightGroundRadius(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionFloodLightGroundRadius, newValue))
+    }    
+
+    /// The intensity of the flood light color. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionFloodLightIntensity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionFloodLightIntensity, newValue))
+    }    
+
+    /// The extent of the flood light effect on the walls of the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionFloodLightWallRadius(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionFloodLightWallRadius, newValue))
+    }    
+
+    /// The height with which to extrude this layer.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionHeight(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionHeight, newValue))
+    }    
+
+    /// The opacity of the entire fill extrusion layer. This is rendered on a per-layer, not per-feature, basis, and data-driven styling is not available.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionOpacity, newValue))
+    }    
+
+    /// Name of image in sprite to use for drawing images on extruded fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionPattern(_ newValue: Value<ResolvedImage>) -> Self {
+        with(self, setter(\.fillExtrusionPattern, newValue))
+    }    
+
+    /// Indicates whether top edges should be rounded when fill-extrusion-edge-radius has a value greater than 0. If false, rounded edges are only applied to the sides. Default is true.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionRoundedRoof(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.fillExtrusionRoundedRoof, newValue))
+    }    
+
+    /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionTranslate(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.fillExtrusionTranslate, newValue))
+    }    
+
+    /// Controls the frame of reference for `fill-extrusion-translate`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionTranslateAnchor(_ newValue: Value<FillExtrusionTranslateAnchor>) -> Self {
+        with(self, setter(\.fillExtrusionTranslateAnchor, newValue))
+    }    
+
+    /// Whether to apply a vertical gradient to the sides of a fill-extrusion layer. If true, sides will be shaded slightly darker farther down.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionVerticalGradient(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.fillExtrusionVerticalGradient, newValue))
+    }    
+
+    /// A global multiplier that can be used to scale base, height, AO, and flood light of the fill extrusions.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionVerticalScale(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionVerticalScale, newValue))
+    }    
 }
 
 // End of generated file.

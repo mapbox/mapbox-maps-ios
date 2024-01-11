@@ -4,7 +4,7 @@ import Foundation
 /// An indirect light affecting all objects in the map adding a constant amount of light on them. It has no explicit direction and cannot cast shadows.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#light)
-public struct AmbientLight: Codable, StyleEncodable {
+public struct AmbientLight: Codable, StyleEncodable, Equatable {
 
     /// Unique light name
     public let id: String

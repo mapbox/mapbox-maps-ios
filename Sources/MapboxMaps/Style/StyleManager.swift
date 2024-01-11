@@ -1014,27 +1014,14 @@ public class StyleManager {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     public func addImage(_ image: UIImage, id: String, sdf: Bool = false, contentInsets: UIEdgeInsets = .zero) throws {
-        let scale = Float(image.scale)
-        let stretchXFirst = Float(image.capInsets.left) * scale
-        let stretchXSecond = Float(image.size.width - image.capInsets.right) * scale
-        let stretchYFirst = Float(image.capInsets.top) * scale
-        let stretchYSecond = Float(image.size.height - image.capInsets.bottom) * scale
+        let imageProperties = ImageProperties(uiImage: image, contentInsets: contentInsets)
 
-        let contentBoxLeft = Float(contentInsets.left) * scale
-        let contentBoxRight = Float(image.size.width - contentInsets.right) * scale
-        let contentBoxTop = Float(contentInsets.top) * scale
-        let contentBoxBottom = Float(image.size.height - contentInsets.bottom) * scale
-
-        let contentBox = ImageContent(left: contentBoxLeft,
-                                      top: contentBoxTop,
-                                      right: contentBoxRight,
-                                      bottom: contentBoxBottom)
         try addImage(image,
                      id: id,
                      sdf: sdf,
-                     stretchX: [ImageStretches(first: stretchXFirst, second: stretchXSecond)],
-                     stretchY: [ImageStretches(first: stretchYFirst, second: stretchYSecond)],
-                     content: contentBox)
+                     stretchX: [ImageStretches(first: imageProperties.stretchXFirst, second: imageProperties.stretchXSecond)],
+                     stretchY: [ImageStretches(first: imageProperties.stretchYFirst, second: imageProperties.stretchYSecond)],
+                     content: imageProperties.contentBox)
     }
 
     /// Removes an image from the style.
@@ -1509,7 +1496,7 @@ extension StyleManager {
  A transition property controls timing for the interpolation between a
  transitionable style property's previous value and new value.
  */
-public struct StyleTransition: Codable {
+public struct StyleTransition: Codable, Equatable {
 
     internal enum CodingKeys: String, CodingKey {
         case duration

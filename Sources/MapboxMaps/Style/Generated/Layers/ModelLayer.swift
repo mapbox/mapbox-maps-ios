@@ -5,7 +5,7 @@ import Foundation
 #if swift(>=5.8)
 @_documentation(visibility: public)
 #endif
-@_spi(Experimental) public struct ModelLayer: Layer {
+@_spi(Experimental) public struct ModelLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
@@ -368,6 +368,194 @@ import Foundation
         case modelTranslationTransition = "model-translation-transition"
         case modelType = "model-type"
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension ModelLayer {
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func filter(_ newValue: Expression) -> Self {
+        with(self, setter(\.filter, newValue))
+    }
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func source(_ newValue: String) -> Self {
+        with(self, setter(\.source, newValue))
+    }
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func sourceLayer(_ newValue: String) -> Self {
+        with(self, setter(\.sourceLayer, newValue))
+    }   
+    
+    /// The slot this layer is assigned to. 
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: Slot) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func minZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minZoom, newValue))
+    }
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func maxZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// Model to render.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelId(_ newValue: Value<String>) -> Self {
+        with(self, setter(\.modelId, newValue))
+    }    
+
+    /// Intensity of the ambient occlusion if present in the 3D model.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelAmbientOcclusionIntensity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.modelAmbientOcclusionIntensity, newValue))
+    }    
+
+    /// Enable/Disable shadow casting for this layer
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelCastShadows(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.modelCastShadows, newValue))
+    }    
+
+    /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.modelColor, newValue))
+    }    
+
+    /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelColorMixIntensity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.modelColorMixIntensity, newValue))
+    }    
+
+    /// This parameter defines the range for the fade-out effect before an automatic content cutoff  on pitched map views. The automatic cutoff range is calculated according to the minimum required zoom level of the source and layer. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelCutoffFadeRange(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.modelCutoffFadeRange, newValue))
+    }    
+
+    /// Strength of the emission. There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. doors). Expressions that depend on measure-light are not supported when using GeoJSON or vector tile as the model layer source.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelEmissiveStrength(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.modelEmissiveStrength, newValue))
+    }    
+
+    /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelHeightBasedEmissiveStrengthMultiplier(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.modelHeightBasedEmissiveStrengthMultiplier, newValue))
+    }    
+
+    /// The opacity of the model layer.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.modelOpacity, newValue))
+    }    
+
+    /// Enable/Disable shadow receiving for this layer
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelReceiveShadows(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.modelReceiveShadows, newValue))
+    }    
+
+    /// The rotation of the model in euler angles [lon, lat, z].
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelRotation(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.modelRotation, newValue))
+    }    
+
+    /// Material roughness. Material is fully smooth for value 0, and fully rough for value 1. Affects only layers using batched-model source.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelRoughness(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.modelRoughness, newValue))
+    }    
+
+    /// The scale of the model.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelScale(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.modelScale, newValue))
+    }    
+
+    /// Defines scaling mode. Only applies to location-indicator type layers.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelScaleMode(_ newValue: Value<ModelScaleMode>) -> Self {
+        with(self, setter(\.modelScaleMode, newValue))
+    }    
+
+    /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelTranslation(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.modelTranslation, newValue))
+    }    
+
+    /// Defines rendering behavior of model in respect to other 3D scene objects.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelType(_ newValue: Value<ModelType>) -> Self {
+        with(self, setter(\.modelType, newValue))
+    }    
 }
 
 // End of generated file.

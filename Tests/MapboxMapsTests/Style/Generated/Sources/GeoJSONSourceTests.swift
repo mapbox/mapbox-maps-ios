@@ -1,6 +1,6 @@
 // This file is generated.
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class GeoJSONSourceTests: XCTestCase {
 
@@ -53,6 +53,37 @@ final class GeoJSONSourceTests: XCTestCase {
         } catch {
             XCTFail("Failed to decode GeoJSONSource.")
         }
+    }
+
+    func testSetPropertyValueWithFunction() {
+        let source = GeoJSONSource(id: "test-source")
+            .data(GeoJSONSourceData.testSourceValue())
+            .maxzoom(Double.testSourceValue())
+            .attribution(String.testSourceValue())
+            .buffer(Double.testSourceValue())
+            .tolerance(Double.testSourceValue())
+            .cluster(Bool.testSourceValue())
+            .clusterRadius(Double.testSourceValue())
+            .clusterMaxZoom(Double.testSourceValue())
+            .clusterProperties([String: Expression].testSourceValue())
+            .lineMetrics(Bool.testSourceValue())
+            .generateId(Bool.testSourceValue())
+            .promoteId(PromoteId.testSourceValue())
+            .prefetchZoomDelta(Double.testSourceValue())
+
+        XCTAssertEqual(source.data, GeoJSONSourceData.testSourceValue())
+        XCTAssertEqual(source.maxzoom, Double.testSourceValue())
+        XCTAssertEqual(source.attribution, String.testSourceValue())
+        XCTAssertEqual(source.buffer, Double.testSourceValue())
+        XCTAssertEqual(source.tolerance, Double.testSourceValue())
+        XCTAssertEqual(source.cluster, Bool.testSourceValue())
+        XCTAssertEqual(source.clusterRadius, Double.testSourceValue())
+        XCTAssertEqual(source.clusterMaxZoom, Double.testSourceValue())
+        XCTAssertEqual(source.clusterProperties, [String: Expression].testSourceValue())
+        XCTAssertEqual(source.lineMetrics, Bool.testSourceValue())
+        XCTAssertEqual(source.generateId, Bool.testSourceValue())
+        XCTAssertEqual(source.promoteId, PromoteId.testSourceValue())
+        XCTAssertEqual(source.prefetchZoomDelta, Double.testSourceValue())
     }
 }
 

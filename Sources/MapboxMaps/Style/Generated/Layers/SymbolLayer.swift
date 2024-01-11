@@ -4,7 +4,7 @@ import Foundation
 /// An icon or a text label.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-symbol)
-public struct SymbolLayer: Layer {
+public struct SymbolLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
@@ -559,6 +559,538 @@ public struct SymbolLayer: Layer {
         case textTranslateTransition = "text-translate-transition"
         case textTranslateAnchor = "text-translate-anchor"
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension SymbolLayer {
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func filter(_ newValue: Expression) -> Self {
+        with(self, setter(\.filter, newValue))
+    }
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func source(_ newValue: String) -> Self {
+        with(self, setter(\.source, newValue))
+    }
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func sourceLayer(_ newValue: String) -> Self {
+        with(self, setter(\.sourceLayer, newValue))
+    }   
+    
+    /// The slot this layer is assigned to. 
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: Slot) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func minZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minZoom, newValue))
+    }
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func maxZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// If true, the icon will be visible even if it collides with other previously drawn symbols.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconAllowOverlap(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.iconAllowOverlap, newValue))
+    }    
+
+    /// Part of the icon placed closest to the anchor.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconAnchor(_ newValue: Value<IconAnchor>) -> Self {
+        with(self, setter(\.iconAnchor, newValue))
+    }    
+
+    /// If true, other symbols can be visible even if they collide with the icon.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconIgnorePlacement(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.iconIgnorePlacement, newValue))
+    }    
+
+    /// Name of image in sprite to use for drawing an image background.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconImage(_ newValue: Value<ResolvedImage>) -> Self {
+        with(self, setter(\.iconImage, newValue))
+    }    
+
+    /// If true, the icon may be flipped to prevent it from being rendered upside-down.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconKeepUpright(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.iconKeepUpright, newValue))
+    }    
+
+    /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconOffset(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.iconOffset, newValue))
+    }    
+
+    /// If true, text will display without their corresponding icons when the icon collides with other symbols and the text does not.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconOptional(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.iconOptional, newValue))
+    }    
+
+    /// Size of the additional area around the icon bounding box used for detecting symbol collisions.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconPadding(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.iconPadding, newValue))
+    }    
+
+    /// Orientation of icon when map is pitched.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconPitchAlignment(_ newValue: Value<IconPitchAlignment>) -> Self {
+        with(self, setter(\.iconPitchAlignment, newValue))
+    }    
+
+    /// Rotates the icon clockwise.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconRotate(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.iconRotate, newValue))
+    }    
+
+    /// In combination with `symbol-placement`, determines the rotation behavior of icons.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconRotationAlignment(_ newValue: Value<IconRotationAlignment>) -> Self {
+        with(self, setter(\.iconRotationAlignment, newValue))
+    }    
+
+    /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconSize(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.iconSize, newValue))
+    }    
+
+    /// Scales the icon to fit around the associated text.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconTextFit(_ newValue: Value<IconTextFit>) -> Self {
+        with(self, setter(\.iconTextFit, newValue))
+    }    
+
+    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconTextFitPadding(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.iconTextFitPadding, newValue))
+    }    
+
+    /// If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Mapbox GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func symbolAvoidEdges(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.symbolAvoidEdges, newValue))
+    }    
+
+    /// Label placement relative to its geometry.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func symbolPlacement(_ newValue: Value<SymbolPlacement>) -> Self {
+        with(self, setter(\.symbolPlacement, newValue))
+    }    
+
+    /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first. When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func symbolSortKey(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.symbolSortKey, newValue))
+    }    
+
+    /// Distance between two symbol anchors.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func symbolSpacing(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.symbolSpacing, newValue))
+    }    
+
+    /// Position symbol on buildings (both fill extrusions and models) rooftops. In order to have minimal impact on performance, this is supported only when `fill-extrusion-height` is not zoom-dependent and remains unchanged. For fading in buildings when zooming in, fill-extrusion-vertical-scale should be used and symbols would raise with building rooftops. Symbols are sorted by elevation, except in cases when `viewport-y` sorting or `symbol-sort-key` are applied.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func symbolZElevate(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.symbolZElevate, newValue))
+    }    
+
+    /// Determines whether overlapping symbols in the same layer are rendered in the order that they appear in the data source or by their y-position relative to the viewport. To control the order and prioritization of symbols otherwise, use `symbol-sort-key`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func symbolZOrder(_ newValue: Value<SymbolZOrder>) -> Self {
+        with(self, setter(\.symbolZOrder, newValue))
+    }    
+
+    /// If true, the text will be visible even if it collides with other previously drawn symbols.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textAllowOverlap(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.textAllowOverlap, newValue))
+    }    
+
+    /// Part of the text placed closest to the anchor.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textAnchor(_ newValue: Value<TextAnchor>) -> Self {
+        with(self, setter(\.textAnchor, newValue))
+    }    
+
+    /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options. SDF images are not supported in formatted text and will be ignored.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textField(_ newValue: Value<String>) -> Self {
+        with(self, setter(\.textField, newValue))
+    }    
+
+    /// Font stack to use for displaying text.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textFont(_ newValue: Value<[String]>) -> Self {
+        with(self, setter(\.textFont, newValue))
+    }    
+
+    /// If true, other symbols can be visible even if they collide with the text.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textIgnorePlacement(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.textIgnorePlacement, newValue))
+    }    
+
+    /// Text justification options.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textJustify(_ newValue: Value<TextJustify>) -> Self {
+        with(self, setter(\.textJustify, newValue))
+    }    
+
+    /// If true, the text may be flipped vertically to prevent it from being rendered upside-down.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textKeepUpright(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.textKeepUpright, newValue))
+    }    
+
+    /// Text tracking amount.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textLetterSpacing(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textLetterSpacing, newValue))
+    }    
+
+    /// Text leading value for multi-line text.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textLineHeight(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textLineHeight, newValue))
+    }    
+
+    /// Maximum angle change between adjacent characters.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textMaxAngle(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textMaxAngle, newValue))
+    }    
+
+    /// The maximum line width for text wrapping.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textMaxWidth(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textMaxWidth, newValue))
+    }    
+
+    /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textOffset(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.textOffset, newValue))
+    }    
+
+    /// If true, icons will display without their corresponding text when the text collides with other symbols and the icon does not.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textOptional(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.textOptional, newValue))
+    }    
+
+    /// Size of the additional area around the text bounding box used for detecting symbol collisions.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textPadding(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textPadding, newValue))
+    }    
+
+    /// Orientation of text when map is pitched.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textPitchAlignment(_ newValue: Value<TextPitchAlignment>) -> Self {
+        with(self, setter(\.textPitchAlignment, newValue))
+    }    
+
+    /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textRadialOffset(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textRadialOffset, newValue))
+    }    
+
+    /// Rotates the text clockwise.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textRotate(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textRotate, newValue))
+    }    
+
+    /// In combination with `symbol-placement`, determines the rotation behavior of the individual glyphs forming the text.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textRotationAlignment(_ newValue: Value<TextRotationAlignment>) -> Self {
+        with(self, setter(\.textRotationAlignment, newValue))
+    }    
+
+    /// Font size.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textSize(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textSize, newValue))
+    }    
+
+    /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textTransform(_ newValue: Value<TextTransform>) -> Self {
+        with(self, setter(\.textTransform, newValue))
+    }    
+
+    /// To increase the chance of placing high-priority labels on the map, you can provide an array of `text-anchor` locations: the renderer will attempt to place the label at each location, in order, before moving onto the next label. Use `text-justify: auto` to choose justification based on anchor position. To apply an offset, use the `text-radial-offset` or the two-dimensional `text-offset`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textVariableAnchor(_ newValue: Value<[TextAnchor]>) -> Self {
+        with(self, setter(\.textVariableAnchor, newValue))
+    }    
+
+    /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. For symbol with point placement, the order of elements in an array define priority order for the placement of an orientation variant. For symbol with line placement, the default text writing mode is either ['horizontal', 'vertical'] or ['vertical', 'horizontal'], the order doesn't affect the placement.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textWritingMode(_ newValue: Value<[TextWritingMode]>) -> Self {
+        with(self, setter(\.textWritingMode, newValue))
+    }    
+
+    /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.iconColor, newValue))
+    }    
+
+    /// Controls the intensity of light emitted on the source features.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconEmissiveStrength(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.iconEmissiveStrength, newValue))
+    }    
+
+    /// Fade out the halo towards the outside.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconHaloBlur(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.iconHaloBlur, newValue))
+    }    
+
+    /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconHaloColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.iconHaloColor, newValue))
+    }    
+
+    /// Distance of halo to the icon outline.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconHaloWidth(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.iconHaloWidth, newValue))
+    }    
+
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconImageCrossFade(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.iconImageCrossFade, newValue))
+    }    
+
+    /// The opacity at which the icon will be drawn.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.iconOpacity, newValue))
+    }    
+
+    /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconTranslate(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.iconTranslate, newValue))
+    }    
+
+    /// Controls the frame of reference for `icon-translate`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconTranslateAnchor(_ newValue: Value<IconTranslateAnchor>) -> Self {
+        with(self, setter(\.iconTranslateAnchor, newValue))
+    }    
+
+    /// The color with which the text will be drawn.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.textColor, newValue))
+    }    
+
+    /// Controls the intensity of light emitted on the source features.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textEmissiveStrength(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textEmissiveStrength, newValue))
+    }    
+
+    /// The halo's fadeout distance towards the outside.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textHaloBlur(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textHaloBlur, newValue))
+    }    
+
+    /// The color of the text's halo, which helps it stand out from backgrounds.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textHaloColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.textHaloColor, newValue))
+    }    
+
+    /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textHaloWidth(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textHaloWidth, newValue))
+    }    
+
+    /// The opacity at which the text will be drawn.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.textOpacity, newValue))
+    }    
+
+    /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textTranslate(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.textTranslate, newValue))
+    }    
+
+    /// Controls the frame of reference for `text-translate`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func textTranslateAnchor(_ newValue: Value<TextTranslateAnchor>) -> Self {
+        with(self, setter(\.textTranslateAnchor, newValue))
+    }    
 }
 
 // End of generated file.

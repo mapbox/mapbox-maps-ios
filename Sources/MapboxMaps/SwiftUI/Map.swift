@@ -139,6 +139,7 @@ public struct Map: UIViewControllerRepresentable {
     public func makeUIViewController(context: Context) -> UIViewController {
         context.coordinator.urlOpener.openURL = urlOpenerProvider.resolve(in: context.environment)
         context.environment.mapViewProvider?.mapView = context.coordinator.mapView
+
         return context.coordinator.viewController
     }
 

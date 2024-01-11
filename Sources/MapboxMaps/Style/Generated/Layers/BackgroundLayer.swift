@@ -4,7 +4,7 @@ import Foundation
 /// The background color or pattern of the map.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-background)
-public struct BackgroundLayer: Layer {
+public struct BackgroundLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
@@ -121,6 +121,70 @@ public struct BackgroundLayer: Layer {
         case backgroundOpacityTransition = "background-opacity-transition"
         case backgroundPattern = "background-pattern"
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension BackgroundLayer {
+
+
+    /// The slot this layer is assigned to. 
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: Slot) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func minZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minZoom, newValue))
+    }
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func maxZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// The color with which the background will be drawn.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func backgroundColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.backgroundColor, newValue))
+    }    
+
+    /// Controls the intensity of light emitted on the source features.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func backgroundEmissiveStrength(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.backgroundEmissiveStrength, newValue))
+    }    
+
+    /// The opacity at which the background will be drawn.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func backgroundOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.backgroundOpacity, newValue))
+    }    
+
+    /// Name of image in sprite to use for drawing an image background. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func backgroundPattern(_ newValue: Value<ResolvedImage>) -> Self {
+        with(self, setter(\.backgroundPattern, newValue))
+    }    
 }
 
 // End of generated file.

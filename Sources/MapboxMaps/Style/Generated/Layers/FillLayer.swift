@@ -4,7 +4,7 @@ import Foundation
 /// A filled polygon with an optional stroked border.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-fill)
-public struct FillLayer: Layer {
+public struct FillLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
@@ -187,6 +187,138 @@ public struct FillLayer: Layer {
         case fillTranslateTransition = "fill-translate-transition"
         case fillTranslateAnchor = "fill-translate-anchor"
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension FillLayer {
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func filter(_ newValue: Expression) -> Self {
+        with(self, setter(\.filter, newValue))
+    }
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func source(_ newValue: String) -> Self {
+        with(self, setter(\.source, newValue))
+    }
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func sourceLayer(_ newValue: String) -> Self {
+        with(self, setter(\.sourceLayer, newValue))
+    }   
+    
+    /// The slot this layer is assigned to. 
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: Slot) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func minZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minZoom, newValue))
+    }
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func maxZoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillSortKey(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillSortKey, newValue))
+    }    
+
+    /// Whether or not the fill should be antialiased.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillAntialias(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.fillAntialias, newValue))
+    }    
+
+    /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.fillColor, newValue))
+    }    
+
+    /// Controls the intensity of light emitted on the source features.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillEmissiveStrength(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillEmissiveStrength, newValue))
+    }    
+
+    /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillOpacity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillOpacity, newValue))
+    }    
+
+    /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillOutlineColor(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.fillOutlineColor, newValue))
+    }    
+
+    /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillPattern(_ newValue: Value<ResolvedImage>) -> Self {
+        with(self, setter(\.fillPattern, newValue))
+    }    
+
+    /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillTranslate(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.fillTranslate, newValue))
+    }    
+
+    /// Controls the frame of reference for `fill-translate`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillTranslateAnchor(_ newValue: Value<FillTranslateAnchor>) -> Self {
+        with(self, setter(\.fillTranslateAnchor, newValue))
+    }    
 }
 
 // End of generated file.

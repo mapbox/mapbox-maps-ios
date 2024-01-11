@@ -180,7 +180,10 @@ struct Examples {
                 type: MapEventsExample.self),
         Example(title: "Map recorder",
                 description: "Record and replay map animations and actions.",
-                type: MapRecorderExample.self)
+                type: MapRecorderExample.self),
+        Example(title: "Resize MapView",
+                description: "Support smooth MapView resizing animations",
+                type: ResizeMapViewExample.self),
     ] + {
         if #available(iOS 13.0, *) {
             return [

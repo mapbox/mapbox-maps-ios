@@ -489,7 +489,7 @@ final class MapViewTestsWithScene: XCTestCase {
         let metalView = try XCTUnwrap(mapView.getMetalView(for: nil))
 
         XCTAssertEqual(metalView.translatesAutoresizingMaskIntoConstraints, false)
-        XCTAssertEqual(metalView.autoResizeDrawable, true)
+        XCTAssertEqual(metalView.autoResizeDrawable, false)
         XCTAssertEqual(metalView.contentScaleFactor, window.screen.nativeScale, accuracy: 0.001)
         XCTAssertEqual(metalView.contentMode, .center)
         XCTAssertEqual(metalView.isOpaque, true)

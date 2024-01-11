@@ -131,6 +131,7 @@
 		CADCF743258499570065C51B /* BasicMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF742258499570065C51B /* BasicMapExample.swift */; };
 		CAF9A9812583E49B007EF9EC /* TestableExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */; };
 		D308F1F32A4F5F6200220E9C /* InsetMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = D308F1F22A4F5F6200220E9C /* InsetMapExample.swift */; };
+		FEA28CAE2B35C035002203D5 /* ResizeMapViewExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA28CAD2B35C035002203D5 /* ResizeMapViewExample.swift */; };
 		FEA410F02A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410EF2A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift */; };
 		FEA410F22A263109002F1816 /* DashboardCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410F12A263109002F1816 /* DashboardCarPlaySceneDelegate.swift */; };
 		FEA410F42A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410F32A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift */; };
@@ -298,6 +299,7 @@
 		D308F1F22A4F5F6200220E9C /* InsetMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetMapExample.swift; sourceTree = "<group>"; };
 		FE355DAD2A275377003AC5DF /* Examples_CarPlay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Examples_CarPlay.entitlements; sourceTree = "<group>"; };
 		FE99952A2A1E05200068AB12 /* Lights3DExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lights3DExample.swift; sourceTree = "<group>"; };
+		FEA28CAD2B35C035002203D5 /* ResizeMapViewExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResizeMapViewExample.swift; sourceTree = "<group>"; };
 		FEA410EF2A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCarPlaySceneDelegage.swift; sourceTree = "<group>"; };
 		FEA410F12A263109002F1816 /* DashboardCarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCarPlaySceneDelegate.swift; sourceTree = "<group>"; };
 		FEA410F32A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrumentClusterCarPlaySceneDelegate.swift; sourceTree = "<group>"; };
@@ -526,6 +528,7 @@
 		7406E36E2806B659002CC41F /* Lab */ = {
 			isa = PBXGroup;
 			children = (
+				FEA28CAD2B35C035002203D5 /* ResizeMapViewExample.swift */,
 				959EDE5129F5520500AEE16C /* MapEventsExample.swift */,
 				95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */,
 				7406E36F2806B66F002CC41F /* ResizableImageExample.swift */,
@@ -847,6 +850,7 @@
 				3A347BAE2A9F676300EF9B39 /* WeatherAnnotationExample.swift in Sources */,
 				950889882ADDABB700D099C4 /* DynamicViewAnnotationExample.swift in Sources */,
 				95AFCFC12A4AF30E00395A86 /* ViewportPlayground.swift in Sources */,
+				FEA28CAE2B35C035002203D5 /* ResizeMapViewExample.swift in Sources */,
 				58A28B5C2869F69C006F7D93 /* GlobeFlyToExample.swift in Sources */,
 				95B9CBDF2A813BDA007E44F1 /* URLOpenExamples.swift in Sources */,
 				0C784D1126D002DC004AE7D0 /* FeatureStateExample.swift in Sources */,

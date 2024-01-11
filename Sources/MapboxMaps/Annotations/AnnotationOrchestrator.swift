@@ -10,6 +10,7 @@ public protocol Annotation {
     var geometry: Geometry { get }
 
     /// Properties associated with the annotation.
+    @available(*, deprecated, message: "Use customProperties instead.")
     var userInfo: [String: Any]? { get set }
 }
 
@@ -47,11 +48,7 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
     func handleDragEnded()
 }
 
-struct AnnotationGestureHandlers: Equatable {
-    static func == (lhs: AnnotationGestureHandlers, rhs: AnnotationGestureHandlers) -> Bool {
-        return true
-    }
-
+struct AnnotationGestureHandlers {
     var tap: ((MapContentGestureContext) -> Bool)?
     var longPress: ((MapContentGestureContext) -> Bool)?
 }

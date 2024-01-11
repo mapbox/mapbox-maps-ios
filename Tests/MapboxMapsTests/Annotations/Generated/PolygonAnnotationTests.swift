@@ -110,13 +110,53 @@ final class PolygonAnnotationTests: XCTestCase {
     }
 
     func testUserInfo() throws {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        let polygonCoords = [
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+        ]
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         let userInfo = ["foo": "bar"]
         annotation.userInfo = userInfo
 
         let featureProperties = try XCTUnwrap(annotation.feature.properties)
-        let actualUserInfo = featureProperties["userInfo"]??.rawValue as? [String: Any]
-        XCTAssertEqual(actualUserInfo?["foo"] as? String, userInfo["foo"])
+        let actualUserInfo = try XCTUnwrap(featureProperties["userInfo"]??.rawValue as? [String: Any])
+        XCTAssertEqual(actualUserInfo["foo"] as? String, userInfo["foo"])
+    }
+    
+    func testUserInfoNilWhenNonJSONObjectPassed() throws {
+        struct NonJSON: Equatable {}
+        let polygonCoords = [
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+        ]
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
+        annotation.userInfo = ["foo": NonJSON()]
+
+        let featureProperties = try XCTUnwrap(annotation.feature.properties)
+        let actualUserInfo = try XCTUnwrap(featureProperties["userInfo"]??.rawValue as? [String: Any])
+        XCTAssertNil(actualUserInfo["foo"] as? NonJSON)
+    }
+    
+    func testCustomData() throws {
+        let polygonCoords = [
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+        ]
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
+        let customData: JSONObject = ["foo": .string("bar")]
+        annotation.customData = customData
+
+        let actualCustomData = try XCTUnwrap(annotation.feature.properties?["custom_data"])
+        XCTAssertEqual(actualCustomData, .object(customData))
     }
 }
 

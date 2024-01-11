@@ -170,13 +170,35 @@ final class PolylineAnnotationTests: XCTestCase {
     }
 
     func testUserInfo() throws {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         let userInfo = ["foo": "bar"]
         annotation.userInfo = userInfo
 
         let featureProperties = try XCTUnwrap(annotation.feature.properties)
-        let actualUserInfo = featureProperties["userInfo"]??.rawValue as? [String: Any]
-        XCTAssertEqual(actualUserInfo?["foo"] as? String, userInfo["foo"])
+        let actualUserInfo = try XCTUnwrap(featureProperties["userInfo"]??.rawValue as? [String: Any])
+        XCTAssertEqual(actualUserInfo["foo"] as? String, userInfo["foo"])
+    }
+    
+    func testUserInfoNilWhenNonJSONObjectPassed() throws {
+        struct NonJSON: Equatable {}
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+        annotation.userInfo = ["foo": NonJSON()]
+
+        let featureProperties = try XCTUnwrap(annotation.feature.properties)
+        let actualUserInfo = try XCTUnwrap(featureProperties["userInfo"]??.rawValue as? [String: Any])
+        XCTAssertNil(actualUserInfo["foo"] as? NonJSON)
+    }
+    
+    func testCustomData() throws {
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+        let customData: JSONObject = ["foo": .string("bar")]
+        annotation.customData = customData
+
+        let actualCustomData = try XCTUnwrap(annotation.feature.properties?["custom_data"])
+        XCTAssertEqual(actualCustomData, .object(customData))
     }
 }
 

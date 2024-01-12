@@ -77,7 +77,7 @@ main() {
         set +e
         LOG_FILE="$ARTIFACTS_ROOT/${scheme}_xcode-$(date +%Y%m%d%H%M%S).log"
 
-        if ! xcodebuild clean build \
+        if ! xcodebuild clean build COMPILER_INDEX_STORE_ENABLE=NO \
             ${XCODE_BUILD_SETTING:--workspace "$SCRIPT_DIR/ValidateLatestMaps.xcworkspace"} \
             -scheme "$scheme" -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED='NO' &> "$LOG_FILE"; then

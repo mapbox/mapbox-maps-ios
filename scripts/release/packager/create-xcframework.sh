@@ -34,6 +34,7 @@ xcodebuild archive \
   -destination 'generic/platform=iOS Simulator' \
   -archivePath "$SIMULATOR_ARCHIVE_PATH" \
   BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+  COMPILER_INDEX_STORE_ENABLE=NO \
   SKIP_INSTALL=NO \
   ARCHS='x86_64 arm64' \
   EXCLUDED_ARCHS= \
@@ -52,6 +53,7 @@ xcodebuild archive \
   -destination 'generic/platform=iOS' \
   -archivePath "$DEVICE_ARCHIVE_PATH" \
   BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+  COMPILER_INDEX_STORE_ENABLE=NO \
   SKIP_INSTALL=NO \
   ARCHS='arm64' \
   EXCLUDED_ARCHS= \

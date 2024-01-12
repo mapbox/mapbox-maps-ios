@@ -1,12 +1,19 @@
 import UIKit
 import MapboxMaps
+import os
 
 final class CameraAnimatorsExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
+    lazy var barButtonItem = UIBarButtonItem(title: nil, style: .plain, target: self, action: #selector(barButtonTap(_:)))
+
     // Coordinate in New York City
-    let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
+    let newYorkCamera = CameraOptions(center: CLLocationCoordinate2D(latitude: 40.7128,
+                                                                     longitude: -74.0060),
+                                      zoom: 16,
+                                      bearing: 12,
+                                      pitch: 60.340)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,28 +22,70 @@ final class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
-            // Center the map over New York City.
-            self.mapView.mapboxMap.setCamera(to: CameraOptions(center: self.newYork))
-        }.store(in: &cancelables)
+        animationState = .reset
 
         // Allows the delegate to receive information about map events.
         mapView.mapboxMap.onMapLoaded.observeNext { _ in
-            print("Animating zoom from zoom lvl 3 -> zoom lvl 14")
-            self.startCameraAnimations()
+            self.navigationItem.rightBarButtonItem = self.barButtonItem
             self.finish()
         }.store(in: &cancelables)
     }
 
+    enum AnimationState {
+        case reset
+        case run
+        case stop
+
+        func next() -> AnimationState {
+            switch self {
+            case .reset: .run
+            case .run:   .stop
+            case .stop:  .reset
+            }
+        }
+
+        var title: String {
+            switch self {
+            case .reset: "Reset"
+            case .run:   "Run"
+            case .stop:  "Stop"
+            }
+        }
+    }
+
+    var animationState: AnimationState = .reset {
+        didSet {
+            barButtonItem.title = animationState.next().title
+            switch animationState {
+            case .reset:
+                // Center the map over New York City.
+                mapView.mapboxMap.setCamera(to: newYorkCamera)
+            case .run:
+                startCameraAnimations()
+            case .stop:
+                mapView.camera.cancelAnimations()
+            }
+        }
+    }
+
+    @objc func barButtonTap(_ barButtonItem: UIBarButtonItem) {
+        animationState = animationState.next()
+    }
+
     // Start a chain of camera animations
     func startCameraAnimations() {
+        os_log(.default, "Animating zoom from zoom to lvl 14")
+
         // Declare an animator that changes the map's
         let bearingAnimator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
             transition.bearing.toValue = -45
         }
 
-        bearingAnimator.addCompletion { (_) in
-            print("All animations complete!")
+        bearingAnimator.addCompletion { position in
+            os_log(.default, "All animations complete!")
+            if position == .end {
+                self.animationState = .stop
+            }
         }
 
         // Declare an animator that changes the map's pitch.
@@ -46,7 +95,7 @@ final class CameraAnimatorsExample: UIViewController, ExampleProtocol {
 
         // Begin the bearing animation once the pitch animation has finished.
         pitchAnimator.addCompletion { _ in
-            print("Animating camera bearing from 0 degrees -> 45 degrees")
+            os_log(.default, "Animating camera bearing to 45 degrees")
             bearingAnimator.startAnimation()
         }
 
@@ -57,11 +106,11 @@ final class CameraAnimatorsExample: UIViewController, ExampleProtocol {
 
         // Begin the pitch animation once the zoom animation has finished.
         zoomAnimator.addCompletion { _ in
-            print("Animating camera pitch from 0 degrees -> 55 degrees")
+            os_log(.default, "Animating camera pitch to 55 degrees")
             pitchAnimator.startAnimation()
         }
 
         // Begin the zoom animation.
-        zoomAnimator.startAnimation(afterDelay: 1)
+        zoomAnimator.startAnimation()
     }
 }

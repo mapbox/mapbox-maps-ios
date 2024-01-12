@@ -311,6 +311,8 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
         }
 
         UIView.performWithoutAnimation {
+            // set unique non-animatable value to detect same-transaction animations
+            cameraView.layer.needsDisplayOnBoundsChange.toggle()
             cameraView.syncLayer(to: transition.fromCameraOptions) // Set up the "from" values for the interpoloation
         }
         return transition

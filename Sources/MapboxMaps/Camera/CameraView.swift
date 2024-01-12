@@ -5,6 +5,8 @@ internal class CameraView: UIView {
 
     /// returns nil if the presentation layer is nil
     internal var presentationCameraOptions: CameraOptions? {
+        // Validate that the presentation has actual initial values
+        guard layer.presentation()?.needsDisplayOnBoundsChange == layer.needsDisplayOnBoundsChange else { return nil }
         return layer.presentation().map(cameraOptions(with:))
     }
 

@@ -12,7 +12,8 @@ let mapboxMapsPath: String? = nil
 let package = Package(
     name: "MapboxMaps",
     defaultLocalization: "en",
-    platforms: [.iOS(.v12)],
+    // Maps SDK doesn't support macOS but declared the minimum macOS requirement with downstrem deps to enable `swift run` cli tools
+    platforms: [.iOS(.v12), .macOS(.v10_15)],
     products: [
         .library(
             name: "MapboxMaps",

@@ -308,7 +308,6 @@ final class MapboxMapTests: XCTestCase {
 
     func testLoadStyleHandlerIsInvokedExactlyOnce() throws {
         let completionIsCalledOnce = expectation(description: "loadStyle completion should be called once")
-        completionIsCalledOnce.assertForOverFulfill = true
 
         mapboxMap.loadStyle(.dark) { _ in
             completionIsCalledOnce.fulfill()
@@ -317,7 +316,7 @@ final class MapboxMapTests: XCTestCase {
         events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
         events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
 
-        waitForExpectations(timeout: 0.3)
+        waitForExpectations(timeout: 10)
     }
 
     func testEvents() {

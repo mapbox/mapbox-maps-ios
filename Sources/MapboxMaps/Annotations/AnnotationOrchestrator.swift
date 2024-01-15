@@ -10,7 +10,7 @@ public protocol Annotation {
     var geometry: Geometry { get }
 
     /// Properties associated with the annotation.
-    @available(*, deprecated, message: "Use customProperties instead.")
+    @available(*, deprecated, message: "Will be deleted in future, for Mapbox-provided annotations see customData instead.")
     var userInfo: [String: Any]? { get set }
 }
 

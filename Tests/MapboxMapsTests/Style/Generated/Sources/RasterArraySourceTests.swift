@@ -36,6 +36,27 @@ final class RasterArraySourceTests: XCTestCase {
             XCTFail("Failed to decode RasterArraySource.")
         }
     }
+
+    func testSetPropertyValueWithFunction() {
+        let source = RasterArraySource(id: "test-source")
+            .url(String.testSourceValue())
+            .tiles([String].testSourceValue())
+            .bounds([Double].testSourceValue())
+            .minzoom(Double.testSourceValue())
+            .maxzoom(Double.testSourceValue())
+            .tileSize(Double.testSourceValue())
+            .attribution(String.testSourceValue())
+            .rasterLayers([RasterArraySource.RasterDataLayer].testSourceValue())
+
+        XCTAssertEqual(source.url, String.testSourceValue())
+        XCTAssertEqual(source.tiles, [String].testSourceValue())
+        XCTAssertEqual(source.bounds, [Double].testSourceValue())
+        XCTAssertEqual(source.minzoom, Double.testSourceValue())
+        XCTAssertEqual(source.maxzoom, Double.testSourceValue())
+        XCTAssertEqual(source.tileSize, Double.testSourceValue())
+        XCTAssertEqual(source.attribution, String.testSourceValue())
+        XCTAssertEqual(source.rasterLayers, [RasterArraySource.RasterDataLayer].testSourceValue())
+    }
 }
 
 // End of generated file

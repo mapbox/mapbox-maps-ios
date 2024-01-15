@@ -244,6 +244,14 @@ public struct HillshadeLayer: Layer, Equatable {
         with(self, setter(\.hillshadeAccentColor, newValue))
     }    
 
+    /// Controls the intensity of light emitted on the source features.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func hillshadeEmissiveStrength(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.hillshadeEmissiveStrength, newValue))
+    }    
+
     /// Intensity of the hillshade
 #if swift(>=5.8)
     @_documentation(visibility: public)
@@ -268,7 +276,7 @@ public struct HillshadeLayer: Layer, Equatable {
         with(self, setter(\.hillshadeIlluminationAnchor, newValue))
     }    
 
-    /// The direction of the light source used to generate the hillshading with 0 as the top of the viewport if `hillshade-illumination-anchor` is set to `viewport` and due north if `hillshade-illumination-anchor` is set to `map`.
+    /// The direction of the light source used to generate the hillshading with 0 as the top of the viewport if `hillshade-illumination-anchor` is set to `viewport` and due north if `hillshade-illumination-anchor` is set to `map` and no 3d lights enabled. If `hillshade-illumination-anchor` is set to `map` and 3d lights enabled, the direction from 3d lights is used instead.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

@@ -18,6 +18,7 @@ public struct StyleImage: Equatable {
     /// The distances the edges of content are inset from the image
     var contentInsets: UIEdgeInsets = .zero
 
+    /// Initialize a StyleImage with a new UIImage
     public init(id: String, image: UIImage, sdf: Bool = false, contentInsets: UIEdgeInsets = .zero) {
         self.id = id
         self.image = image
@@ -30,6 +31,15 @@ public struct StyleImage: Equatable {
 extension StyleImage: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
         visitor.model.images[id] = self
+    }
+}
+
+@_spi(Experimental)
+extension StyleImage {
+    /// Initialize a StyleImage from an existing UIImage
+    init?(named name: String, sdf: Bool = false, contentInsets: UIEdgeInsets = .zero) {
+        guard let image = UIImage(named: name) else { return nil }
+        self.init(id: name, image: image, sdf: sdf, contentInsets: contentInsets)
     }
 }
 

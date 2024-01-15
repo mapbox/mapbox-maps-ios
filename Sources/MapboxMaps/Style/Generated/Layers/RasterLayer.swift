@@ -317,6 +317,14 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.maxZoom, newValue))
     }
 
+    /// Displayed band of raster array source layer
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterArrayBand(_ newValue: Value<String>) -> Self {
+        with(self, setter(\.rasterArrayBand, newValue))
+    }    
+
     /// Increase or reduce the brightness of the image. The value is the maximum brightness.
 #if swift(>=5.8)
     @_documentation(visibility: public)
@@ -333,7 +341,7 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterBrightnessMin, newValue))
     }    
 
-    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 1024 uniformly spaced steps over the range specified by `raster-color-range`.
+    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -363,6 +371,14 @@ public struct RasterLayer: Layer, Equatable {
 #endif
     public func rasterContrast(_ newValue: Value<Double>) -> Self {
         with(self, setter(\.rasterContrast, newValue))
+    }    
+
+    /// Controls the intensity of light emitted on the source features.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterEmissiveStrength(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.rasterEmissiveStrength, newValue))
     }    
 
     /// Fade duration when a new tile is added.

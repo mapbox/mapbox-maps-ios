@@ -7,7 +7,7 @@ import Foundation
 #if swift(>=5.8)
 @_documentation(visibility: public)
 #endif
-@_spi(Experimental) public struct RasterArraySource: Source {
+@_spi(Experimental) public struct RasterArraySource: Source, Equatable {
 
 #if swift(>=5.8)
     @_documentation(visibility: public)
@@ -125,5 +125,75 @@ extension RasterArraySource {
         try container.encodeIfPresent(attribution, forKey: .attribution)
         try container.encodeIfPresent(rasterLayers, forKey: .rasterLayers)
     }
+}
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental) extension RasterArraySource {
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`.
+    public func url(_ newValue: String) -> Self {
+        with(self, setter(\.url, newValue))
+    }    
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// An array of one or more tile source URLs, as in the TileJSON spec.
+    public func tiles(_ newValue: [String]) -> Self {
+        with(self, setter(\.tiles, newValue))
+    }    
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL.
+    public func bounds(_ newValue: [Double]) -> Self {
+        with(self, setter(\.bounds, newValue))
+    }    
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// Minimum zoom level for which tiles are available, as in the TileJSON spec.
+    public func minzoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minzoom, newValue))
+    }    
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels.
+    public func maxzoom(_ newValue: Double) -> Self {
+        with(self, setter(\.maxzoom, newValue))
+    }    
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// The minimum visual size to display tiles for this layer. Only configurable for raster layers.
+    public func tileSize(_ newValue: Double) -> Self {
+        with(self, setter(\.tileSize, newValue))
+    }    
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// Contains an attribution to be displayed when the map is shown to a user.
+    public func attribution(_ newValue: String) -> Self {
+        with(self, setter(\.attribution, newValue))
+    }    
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// Contains the description of the raster data layers and the bands contained within the tiles.
+    public func rasterLayers(_ newValue: [RasterArraySource.RasterDataLayer]) -> Self {
+        with(self, setter(\.rasterLayers, newValue))
+    }    
 }
 // End of generated file.

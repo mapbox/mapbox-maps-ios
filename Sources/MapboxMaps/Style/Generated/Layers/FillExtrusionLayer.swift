@@ -472,7 +472,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         with(self, setter(\.fillExtrusionEdgeRadius, newValue))
     }    
 
-    /// Provides a control to futher fine-tune the look of the ambient occlusion on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Provides a control to futher fine-tune the look of the ambient occlusion on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -480,7 +480,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         with(self, setter(\.fillExtrusionAmbientOcclusionGroundAttenuation, newValue))
     }    
 
-    /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings in meters.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -496,7 +496,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         with(self, setter(\.fillExtrusionAmbientOcclusionIntensity, newValue))
     }    
 
-    /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with legacy light. When 3D light is enabled `fill-extrusion-ambient-occlusion-wall-radius` and `fill-extrusion-ambient-occlusion-ground-radius` are used instead.
+    /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with legacy light. When 3D lights are enabled `fill-extrusion-ambient-occlusion-wall-radius` and `fill-extrusion-ambient-occlusion-ground-radius` are used instead.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -504,7 +504,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         with(self, setter(\.fillExtrusionAmbientOcclusionRadius, newValue))
     }    
 
-    /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -536,7 +536,15 @@ public struct FillExtrusionLayer: Layer, Equatable {
         with(self, setter(\.fillExtrusionCutoffFadeRange, newValue))
     }    
 
-    /// The color of the flood light effect on the walls of the extruded buildings. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Controls the intensity of light emitted on the source features.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func fillExtrusionEmissiveStrength(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.fillExtrusionEmissiveStrength, newValue))
+    }    
+
+    /// The color of the flood light effect on the walls of the extruded buildings.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -544,7 +552,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         with(self, setter(\.fillExtrusionFloodLightColor, newValue))
     }    
 
-    /// Provides a control to futher fine-tune the look of the flood light on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// Provides a control to futher fine-tune the look of the flood light on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -552,7 +560,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         with(self, setter(\.fillExtrusionFloodLightGroundAttenuation, newValue))
     }    
 
-    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -560,7 +568,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         with(self, setter(\.fillExtrusionFloodLightGroundRadius, newValue))
     }    
 
-    /// The intensity of the flood light color. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// The intensity of the flood light color.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -568,7 +576,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         with(self, setter(\.fillExtrusionFloodLightIntensity, newValue))
     }    
 
-    /// The extent of the flood light effect on the walls of the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+    /// The extent of the flood light effect on the walls of the extruded buildings in meters.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

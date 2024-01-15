@@ -8,6 +8,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add `customData` field in Annotaion and deprecate `userInfo`. `userInfo` behaviour rolled back to v10 behaviour.
 * Fix MapView flickering during resizing.
 * Fix glitch in chained camera animations.
+* Make padding optional in `MapboxMap.camera(for:padding:bearing:pitch:maxZoom:offset:)` and `MapboxMap.camera(for:padding:bearing:pitch:)`.
 
 ## 11.1.0-rc.1 - 04 January, 2024
 

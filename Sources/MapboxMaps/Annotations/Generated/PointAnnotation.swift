@@ -26,29 +26,34 @@ public struct PointAnnotation: Annotation, Equatable {
     ///
     /// Should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
     public var tapHandler: ((MapContentGestureContext) -> Bool)? {
-        get { gestureHandlers.tap }
-        set { gestureHandlers.tap = newValue }
+        get { gestureHandlers.value.tap }
+        set { gestureHandlers.value.tap = newValue }
     }
 
     /// Handles long press gesture on this annotation.
     ///
     /// Should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
     public var longPressHandler: ((MapContentGestureContext) -> Bool)? {
-        get { gestureHandlers.longPress }
-        set { gestureHandlers.longPress = newValue }
+        get { gestureHandlers.value.longPress }
+        set { gestureHandlers.value.longPress = newValue }
     }
+    
+    /// JSON convertible properties associated with the annotation, used to enrich Feature GeoJSON `properties["custom_data"]` field.
+    public var customData = JSONObject()
 
-    /// Properties associated with the annotation
+    /// Properties associated with the annotation.
+    ///
+    /// - Note: This propert doesn't participate in `Equatable` comparisions and will strip non-JSON values when encoding to Feature GeoJSON.
+    @available(*, deprecated, message: "Use customData instead.")
     public var userInfo: [String: Any]? {
-        get { _userInfo?.rawValue as? [String: Any] }
-        set {
-            let newValue = newValue ?? [:]
-            _userInfo = JSONObject(rawValue: newValue)
-        }
+        get { _userInfo.value }
+        set { _userInfo.value = newValue }
     }
-    private var _userInfo: JSONObject?
+    
+    private var _userInfo: AlwaysEqual<[String: Any]?> = nil
+    private var gestureHandlers = AlwaysEqual(value: AnnotationGestureHandlers())
 
-    internal var layerProperties: [String: Any] {
+    var layerProperties: [String: Any] {
         var properties: [String: Any] = [:]
         properties["icon-anchor"] = iconAnchor?.rawValue
         properties["icon-image"] = iconImage
@@ -85,19 +90,19 @@ public struct PointAnnotation: Annotation, Equatable {
         return properties
     }
 
-    internal var feature: Feature {
+    var feature: Feature {
         var feature = Feature(geometry: geometry)
         feature.identifier = .string(id)
         var properties = JSONObject()
         properties["layerProperties"] = JSONValue(rawValue: layerProperties)
-        if let _userInfo {
-            properties["userInfo"] = .object(_userInfo)
+        properties["custom_data"] = .object(customData)
+        if let userInfoValue = _userInfo.value.flatMap(JSONValue.init) {
+            properties["userInfo"] = userInfoValue
         }
         feature.properties = properties
         return feature
     }
 
-    private var gestureHandlers = AnnotationGestureHandlers()
 
     /// Create a point annotation with a `Point` and an optional identifier.
     public init(id: String = UUID().uuidString, point: Point, isSelected: Bool = false, isDraggable: Bool = false) {

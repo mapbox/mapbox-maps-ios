@@ -3,7 +3,7 @@ import SwiftUI
 
 
 @available(iOS 15, *)
-struct URLOpenIOS15: View {
+struct AttributionEnvironmentURLOpen: View {
     @State private var alert: String?
     var body: some View {
         Map()
@@ -16,8 +16,24 @@ struct URLOpenIOS15: View {
     }
 }
 
+@available(iOS 16.4, *)
+struct AttributionDialogueWithSheet: View {
+    @State var sheet = true
+    var body: some View {
+        Map()
+            .additionalSafeAreaInsets(.bottom, 70)
+            .ignoresSafeArea()
+            .sheet(isPresented: $sheet) {
+                Text("Tap attribution info button")
+                    .interactiveDismissDisabled()
+                    .presentationBackgroundInteraction(.enabled(upThrough: .large))
+                    .presentationDetents([.height(80), .medium, .large])
+            }
+        }
+}
+
 @available(iOS 13, *)
-struct URLOpenIOS13: View {
+struct AttributionManualURLOpen: View {
     @State private var alert: String?
     var body: some View {
         Map(urlOpener: { alert = $0.absoluteString}) {}

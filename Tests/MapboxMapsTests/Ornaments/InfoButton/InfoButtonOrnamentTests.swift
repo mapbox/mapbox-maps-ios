@@ -116,7 +116,7 @@ extension InfoButtonOrnamentTests: AttributionDataSource {
 }
 
 extension InfoButtonOrnamentTests: AttributionDialogManagerDelegate {
-    func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController {
+    func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController? {
         return parentViewController
     }
 

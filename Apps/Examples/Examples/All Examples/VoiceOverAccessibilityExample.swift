@@ -247,8 +247,10 @@ extension FeatureIdentifier: CustomStringConvertible {
             return number.description
         case .string(let string):
             return string
+        #if USING_TURF_WITH_LIBRARY_EVOLUTION
         @unknown default:
             return String(describing: self)
+        #endif
         }
     }
 }

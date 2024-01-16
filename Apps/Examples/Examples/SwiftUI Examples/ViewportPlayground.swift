@@ -87,8 +87,11 @@ struct ViewportPlayground: View {
                 geometryType = "multiPolygon"
             case .geometryCollection(_):
                 geometryType = "geometryCollection"
+            #if USING_TURF_WITH_LIBRARY_EVOLUTION
             @unknown default:
                 geometryType = "unknownType"
+            #else
+            #endif
             }
             return "overview(\(geometryType))"
         }

@@ -1,0 +1,63 @@
+include:
+  - targets.yml
+targets:  
+  MapboxMapsTests:
+    templates:
+      - unit-test
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
+    sources: ../Tests/MapboxMapsTests
+    dependencies:
+      - target: MapboxMaps
+      - target: MapboxTestHost
+
+  MapboxTestHost:
+    templates:
+      - application
+      - installTokenScript
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxMapsTestHost"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Test Host
+        INFOPLIST_KEY_UIMainStoryboardFile: Main
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+    sources:
+      - path: ../Sources/MapboxTestHost
+    dependencies:
+      - package: Fingertips
+    scheme:
+      testTargets:
+          - MapboxMapsTests
+          - GestureTests
+      gatherCoverageData: true
+      coverageTargets:
+        - MapboxMaps
+
+  GestureTests:
+    templates:
+      - unit-test
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
+        IPHONEOS_DEPLOYMENT_TARGET: 13.0
+        GENERATE_INFOPLIST_FILE: YES
+    sources:
+      - path: "../Tests/MapboxMapsTests"
+        includes:
+          - "Integration Tests/MapViewIntegrationTestCase.swift"
+          - "Integration Tests/IntegrationTestCase.swift"
+          - "Helpers/Bundle+MapboxMapsTests.swift"
+          - "Helpers/String+FileSystemSafe.swift"
+          - "Helpers/XCTestCase+GuardForMetalDevice.swift"
+          - "Helpers/XCTestCase+MapboxAccessToken.swift"
+          - "Helpers/XCTestCase+TemporaryCacheDirectory.swift"
+      - path: ../Tests/GestureTests
+    dependencies:
+      - target: MapboxMaps
+      - target: MapboxTestHost
+      - package: Hammer

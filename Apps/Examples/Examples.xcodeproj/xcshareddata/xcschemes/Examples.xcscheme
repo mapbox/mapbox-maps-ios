@@ -4,7 +4,8 @@
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      runPostActionsOnFailure = "NO">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -14,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "077C4EE9252F7E88007636F1"
+               BlueprintIdentifier = "DF268D7B1F3C2B89CA87979A"
                BuildableName = "Examples.app"
                BlueprintName = "Examples"
                ReferencedContainer = "container:Examples.xcodeproj">
@@ -26,45 +27,67 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      enableAddressSanitizer = "YES"
-      enableASanStackUseAfterReturn = "YES">
+      shouldUseLaunchSchemeArgsEnv = "NO"
+      onlyGenerateCoverageForSpecifiedTargets = "NO">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../../Tests/TestPlans/Examples.xctestplan"
-            default = "YES">
+            default = "YES"
+            reference = "container:../../Tests/TestPlans/Examples.xctestplan">
          </TestPlanReference>
          <TestPlanReference
             reference = "container:../../Tests/TestPlans/Examples no unit tests.xctestplan">
          </TestPlanReference>
       </TestPlans>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "DF268D7B1F3C2B89CA87979A"
+            BuildableName = "Examples.app"
+            BlueprintName = "Examples"
+            ReferencedContainer = "container:Examples.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "077C4F0A252F7E89007636F1"
-               BuildableName = "ExamplesUITests.xctest"
-               BlueprintName = "ExamplesUITests"
-               ReferencedContainer = "container:Examples.xcodeproj">
-            </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "ExamplesUITests/testEveryExample()">
-               </Test>
-            </SkippedTests>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "077C4EFF252F7E89007636F1"
+               BlueprintIdentifier = "542BE47134765F0824559C2F"
                BuildableName = "ExamplesTests.xctest"
                BlueprintName = "ExamplesTests"
                ReferencedContainer = "container:Examples.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F3570A57FF15EEC3B4529EF0"
+               BuildableName = "ExamplesUITests.xctest"
+               BlueprintName = "ExamplesUITests"
+               ReferencedContainer = "container:Examples.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "MTL_HUD_ENABLED"
+            value = "1"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "MAPBOX_MAPS_SIGNPOSTS_ENABLED"
+            value = "1"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "MAPBOX_REOPEN_EXAMPLE"
+            value = "1"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -80,20 +103,22 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "077C4EE9252F7E88007636F1"
+            BlueprintIdentifier = "DF268D7B1F3C2B89CA87979A"
             BuildableName = "Examples.app"
             BlueprintName = "Examples"
             ReferencedContainer = "container:Examples.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "MAPBOX_MAPS_SIGNPOSTS_ENABLED"
-            value = "core,platform"
-            isEnabled = "NO">
+            key = "MTL_HUD_ENABLED"
+            value = "1"
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "MTL_HUD_ENABLED"
+            key = "MAPBOX_MAPS_SIGNPOSTS_ENABLED"
             value = "1"
             isEnabled = "NO">
          </EnvironmentVariable>
@@ -102,16 +127,11 @@
             value = "1"
             isEnabled = "YES">
          </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "DEBUG_FINGERTIP_WINDOW"
-            value = "1"
-            isEnabled = "NO">
-         </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
-      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldUseLaunchSchemeArgsEnv = "NO"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
@@ -119,12 +139,31 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "077C4EE9252F7E88007636F1"
+            BlueprintIdentifier = "DF268D7B1F3C2B89CA87979A"
             BuildableName = "Examples.app"
             BlueprintName = "Examples"
             ReferencedContainer = "container:Examples.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "MTL_HUD_ENABLED"
+            value = "1"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "MAPBOX_MAPS_SIGNPOSTS_ENABLED"
+            value = "1"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "MAPBOX_REOPEN_EXAMPLE"
+            value = "1"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

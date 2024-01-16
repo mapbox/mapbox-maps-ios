@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
 
+# Usage: Used as a build phase script in Xcode to run SwiftLint
+# Dependencies: MAPBOXMAPS_PATH (relative path to mapbox-maps-ios) build setting must be set in target that use this script, in order to find the .swiftlint.yml file
+
 # Support Howebrew path on Apple Silicon macOS
 export PATH="$PATH:/opt/homebrew/bin"
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+echo "MAPBOXMAPS_PATH=$MAPBOXMAPS_PATH"
 
-pushd "$SCRIPT_DIR/../" || exit 1
+pushd "$MAPBOXMAPS_PATH" || exit 1
 pwd
 
-# shellcheck disable=SC2068
+echo "Running SwiftLint in $PWD"
+
 if which swiftlint > /dev/null; then
-  swiftlint lint $@
+  swiftlint lint "$@"
 else
   echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
 fi

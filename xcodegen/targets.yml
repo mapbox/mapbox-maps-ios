@@ -1,0 +1,51 @@
+include:
+  - settings.yml
+targetTemplates:
+  maps-dependencies:
+    dependencies:
+      - framework: ../Carthage/Build/MapboxCoreMaps.xcframework
+      - framework: ../Carthage/Build/Turf.xcframework
+      - framework: ../Carthage/Build/MapboxCommon.xcframework
+
+  installTokenScript:
+    settings:
+      base:
+        INFOPLIST_PREFIX_HEADER: $(DERIVED_FILE_DIR)/InfoPlist.Prefix.h
+        INFOPLIST_PREPROCESS: YES
+    preBuildScripts:
+      - path: ../scripts/insert_access_token.sh
+        name: Insert Mapbox Access Token
+        showEnvVars: false
+        basedOnDependencyAnalysis: true
+        outputFiles:
+          - $(INFOPLIST_PREFIX_HEADER)
+
+  generateTokenFileScript:
+    preBuildScripts:
+      - path: ../scripts/generate_access_token_file.sh
+        name: Generate Mapbox Access Token File
+        showEnvVars: false
+        basedOnDependencyAnalysis: true
+        outputFiles:
+          - $(MAPBOXMAPS_PATH)/Tests/MapboxMapsTests/Helpers/MapboxAccessToken
+
+  application:
+    type: application
+    platform: iOS
+    settings:
+      groups:
+        - app_settings
+
+  unit-test:
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      groups:
+        - unit_test_settings
+
+  swiftlintScript:
+    postBuildScripts:
+      - path: ../scripts/run_swiftlint.sh
+        name: Run swiftlint
+        basedOnDependencyAnalysis: false
+        showEnvVars: false

@@ -1,8 +1,12 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Kila2/XcodeGen/master/Assets/json-schema/project.json
 name: MapboxMaps
-configFiles:
-  Debug: Configurations/base.xcconfig
-  Release: Configurations/base.xcconfig
+include:
+  - xcodegen/Examples.yml
+  - xcodegen/MapboxMaps.yml
+  - xcodegen/MapboxMapsTests.yml
+settings:
+  base:
+    MAPBOXMAPS_PATH: .
 options:
   bundleIdPrefix: com.mapbox
   defaultConfig: Release
@@ -16,6 +20,7 @@ options:
       - MapboxMaps
       - MapboxMapsTests
   preGenCommand: scripts/prepare_binary_dependencies.sh
+
 packages:
   Fingertips:
     url: git@github.com:mapbox/Fingertips.git
@@ -23,231 +28,29 @@ packages:
   Hammer:
     url: git@github.com:lyft/Hammer.git
     from: 0.14.3
-settings:
-  base:
-    DEVELOPMENT_TEAM: GJZR2MEM28
-    TARGETED_DEVICE_FAMILY: 1,2
-    MAPBOXMAPS_PATH: .
+
 targets:
-  MapboxMaps:
-    type: framework
-    platform: iOS
-    templates:
-      - maps-dependencies
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
-        SKIP_INSTALL: "NO"
-        LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks @loader_path/Frameworks
-        SWIFT_EMIT_PRIVATE_MODULE_INTERFACE: YES
-        RUN_DOCUMENTATION_COMPILER: YES
-        OTHER_DOCC_FLAGS: "--warnings-as-errors"
-      configs:
-        Debug:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) USING_TURF_WITH_LIBRARY_EVOLUTION
-        Release:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) RELEASE USING_TURF_WITH_LIBRARY_EVOLUTION
-    configFiles:
-      Debug: "Configurations/base.xcconfig"
-      Release: "Configurations/base.xcconfig"
-    sources:
-      - path: "Sources/MapboxMaps/"
-        excludes:
-          - "**/*.plist"
-          - "**/*.h"
-          - "**/.swiftlint.yml"
-      - path: "Sources/MapboxMaps/MapboxMaps.h"
-      - path: .
-        excludes:
-          - "**/*.xcodeproj"
-          - Apps
-          - Carthage/Checkouts
-          - .build
-        buildPhase: none
-        group: General
-
-  MapboxMapsTests:
-    templates:
-      - installTokenScript
-      - unit-test
-    settings:
-      base:
-        GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
-    sources: Tests/MapboxMapsTests
-    dependencies:
-      - target: MapboxTestHost
-
-  GestureTests:
-    templates:
-      - installTokenScript
-      - unit-test
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
-        IPHONEOS_DEPLOYMENT_TARGET: 13.0
-        GENERATE_INFOPLIST_FILE: YES
-    sources:
-      - path: "Tests/MapboxMapsTests"
-        includes:
-          - "Integration Tests/MapViewIntegrationTestCase.swift"
-          - "Integration Tests/IntegrationTestCase.swift"
-          - "Helpers/Bundle+MapboxMapsTests.swift"
-          - "Helpers/String+FileSystemSafe.swift"
-          - "Helpers/XCTestCase+GuardForMetalDevice.swift"
-          - "Helpers/XCTestCase+MapboxAccessToken.swift"
-          - "Helpers/XCTestCase+TemporaryCacheDirectory.swift"
-      - path: Tests/GestureTests
-    dependencies:
-      - target: MapboxTestHost
-      - package: Hammer
-
-  MapboxTestHost:
-    templates:
-      - installTokenScript
-      - assetCatalog
-      - application
-    platform: iOS
-    deploymentTarget: 12.0
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxMapsTestHost"
-        GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_CFBundleDisplayName: Test Host
-        INFOPLIST_KEY_UIMainStoryboardFile: Main
-        INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
-        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
-    sources:
-      - path: Sources/MapboxTestHost
-    scheme:
-      testTargets:
-          - MapboxMapsTests
-          - GestureTests
-      gatherCoverageData: true
-      coverageTargets:
-        - MapboxMaps
-
   Examples:
     templates:
-      - installTokenScript
-      - assetCatalog
-      - application
-    type: application
-    platform: iOS
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
-        SWIFT_OBJC_BRIDGING_HEADER: $(MAPBOXMAPS_PATH)/Apps/Examples/Examples/Examples-Bridging-Header.h
-
-    scheme:
-      testTargets:
-        - MapboxMapsTests
-        - ExamplesTests
-        - ExamplesUITests
-      gatherCoverageData: true
-      coverageTargets:
-        - MapboxMaps
-      environmentVariables:
-        - variable: MTL_HUD_ENABLED
-          value: 1
-        - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
-          value: 1
-          isEnabled: false
-        - variable: MAPBOX_REOPEN_EXAMPLE
-          value: 1
-    sources:
-      - path: Apps/Examples/Examples/
-
-  ExamplesTests:
-    templates:
-      - installTokenScript
-      - unit-test
-    settings:
-      base:
-        GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
-    sources:
-      - path: "Tests/ExamplesTests"
-    dependencies:
-      - target: Examples
-
-  ExamplesUITests:
-    templates:
-      - unit-test
-    type: bundle.ui-testing
-    settings:
-      base:
-        GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: "mapbox.ExamplesUITests"
-    sources: Tests/ExamplesUITests
-    dependencies:
-      - target: Examples
-
-targetTemplates:
-  maps-dependencies:
-    dependencies:
-      - framework: Carthage/Build/MapboxCoreMaps.xcframework
-      - framework: Carthage/Build/Turf.xcframework
-      - framework: Carthage/Build/MapboxCommon.xcframework
-
-  installTokenScript:
-    settings:
-      base:
-        INFOPLIST_PREFIX_HEADER: $(DERIVED_FILE_DIR)/InfoPlist.Prefix.h
-        INFOPLIST_PREPROCESS: YES
-    preBuildScripts:
-      - path: scripts/insert_access_token.sh
-        name: Insert Mapbox Access Token
-        showEnvVars: false
-        basedOnDependencyAnalysis: false
-        outputFiles:
-          - $(INFOPLIST_PREFIX_HEADER)
-
-  assetCatalog:
-    settings:
-      ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-      ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
-
-  application:
-    templates:
-      - swiftlint-script
+      - swiftlintScript
       - maps-dependencies
-    type: application
-    platform: iOS
-    configFiles:
-      Debug: "Configurations/apps.xcconfig"
-      Release: "Configurations/apps.xcconfig"
     settings:
       base:
-        CURRENT_PROJECT_VERSION: "1"
-        MARKETING_VERSION: "1.0.0"
+        SWIFT_OBJC_BRIDGING_HEADER: Apps/Examples/Examples/Examples-Bridging-Header.h
+      groups:
+        - turf_library_evolution_settings
     dependencies:
       - target: MapboxMaps
       - package: Fingertips
+    scheme:
+      testTargets:
+        - MapboxMapsTests
+      gatherCoverageData: true
+      coverageTargets:
+        - MapboxMaps
 
-  unit-test:
-    templates:
-      - installTokenScript
-    type: bundle.unit-test
-    platform: iOS
+  MapboxMaps:
     settings:
       base:
-        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
-    configFiles:
-      Debug: Configurations/unitTests.xcconfig
-      Release: Configurations/unitTests.xcconfig
-
-  swiftlint-script:
-    postBuildScripts:
-      - script: |
-          if [[ -f "scripts/run_swiftlint.sh" ]]; then
-            scripts/run_swiftlint.sh
-          elif [[ -f "mapbox-maps-ios/scripts/run_swiftlint.sh" ]]; then
-            mapbox-maps-ios/scripts/run_swiftlint.sh
-          else
-            find . -name "run_swiftlint.sh" -exec {} \; -quit
-          fi
-        name: Run swiftlint
-        basedOnDependencyAnalysis: false
-        showEnvVars: false
+        RUN_DOCUMENTATION_COMPILER: YES
+        OTHER_DOCC_FLAGS: "--warnings-as-errors"

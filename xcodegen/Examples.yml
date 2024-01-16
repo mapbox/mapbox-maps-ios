@@ -1,0 +1,48 @@
+include:
+  - targets.yml
+targets:
+  Examples:
+    templates:
+      - application
+      - installTokenScript
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
+    sources:
+      - path: ../Apps/Examples/Examples/
+    scheme:
+      testTargets:
+        - ExamplesTests
+        - ExamplesUITests
+      environmentVariables:
+        - variable: MTL_HUD_ENABLED
+          value: 1
+        - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
+          value: 1
+          isEnabled: false
+        - variable: MAPBOX_REOPEN_EXAMPLE
+          value: 1
+
+  ExamplesTests:
+    templates:
+      - unit-test
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
+    sources:
+      - path: ../Tests/ExamplesTests
+    dependencies:
+      - target: Examples
+
+  ExamplesUITests:
+    templates:
+      - unit-test
+    type: bundle.ui-testing
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: "mapbox.ExamplesUITests"
+    sources: ../Tests/ExamplesUITests
+    dependencies:
+      - target: Examples

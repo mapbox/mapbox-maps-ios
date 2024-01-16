@@ -43,8 +43,7 @@ step 'Creating MapboxMaps.xcodeproj'
 mkdir .xcode
 cp ../project.yml .xcode/
 pushd .xcode
-ln -s ../../../../../Sources .
-ln -s ../../../../../Configurations .
+ln -s ../../../../../../mapbox-maps-ios .
 xcodegen
 popd
 

@@ -94,8 +94,10 @@ extension Geometry {
             return multiPolygon.coordinates.flatMap { $0.flatMap { $0 } }
         case .geometryCollection(let geometryCollection):
             return geometryCollection.geometries.flatMap { $0.coordinates }
+        #if USING_TURF_WITH_LIBRARY_EVOLUTION
         @unknown default:
             return []
+        #endif
         }
     }
 }

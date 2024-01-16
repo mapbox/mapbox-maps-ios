@@ -4,7 +4,7 @@ internal protocol AttributionDataSource: AnyObject {
 }
 
 internal protocol AttributionDialogManagerDelegate: AnyObject {
-    func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController
+    func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController?
     func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, didTriggerActionFor attribution: Attribution)
 }
 
@@ -121,7 +121,8 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
 
     private func showAttributionDialog(for attributions: [Attribution]) {
         guard let viewController = delegate?.viewControllerForPresenting(self) else {
-            fatalError("No view controller found")
+            Log.error(forMessage: "Failed to present an attribution dialogue: no presenting view controller found.")
+            return
         }
 
         let title = NSLocalizedString("SDK_NAME",

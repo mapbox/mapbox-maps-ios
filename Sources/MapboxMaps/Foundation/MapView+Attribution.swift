@@ -2,8 +2,8 @@
 import UIKit
 
 extension MapView: AttributionDialogManagerDelegate {
-    func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController {
-        return parentViewController!
+    func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController? {
+        parentViewController?.topmostPresentedViewController
     }
 
     func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, didTriggerActionFor attribution: Attribution) {

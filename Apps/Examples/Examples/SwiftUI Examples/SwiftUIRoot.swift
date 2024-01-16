@@ -33,9 +33,12 @@ struct SwiftUIRoot: View {
                     ExampleLink("Puck playground", note: "Display user location using puck.", destination: PuckPlayground())
                     ExampleLink("Annotation Order", destination: AnnotationsOrderTestExample())
                     ExampleLink("Simple Map", note: "Camera observing, automatic dark mode support.", destination: SimpleMapExample())
-                    ExampleLink("AttributionURL open (iOS 13+)", note: "Override attribution url opener.", destination: URLOpenIOS13())
+                    ExampleLink("Attribution url via callback", note: "Works on iOS 13+", destination: AttributionManualURLOpen())
                     if #available(iOS 15.0, *) {
-                        ExampleLink("AttributionURL open (iOS 15+)", note: "Override attribution url opener.", destination: URLOpenIOS15())
+                        ExampleLink("Attribution url open via environment", note: "Works on iOS 15+", destination: AttributionEnvironmentURLOpen())
+                    }
+                    if #available(iOS 16.5, *) {
+                        ExampleLink("Attribution dialog with presented sheet", destination: AttributionDialogueWithSheet())
                     }
 
                 } header: { Text("Testing Examples") }

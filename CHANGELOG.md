@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Add `customData` field in Annotaion and deprecate `userInfo`. `userInfo` behaviour rolled back to v10 behaviour.
+* Fixed a bug where the attribution dialog does not appear when there is a presented view controller.
 
 ## 11.1.0-rc.1 - 04 January, 2024
 

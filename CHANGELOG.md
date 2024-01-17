@@ -5,13 +5,17 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Add easing curve parameter to `CameraAnimationsManager.fly(to:duration:curve:completion)`, make `TimingCurve` public with few more options.
-* Add `customData` field in Annotaion and deprecate `userInfo`. `userInfo` behaviour rolled back to v10 behaviour.
 * Fix MapView flickering during resizing.
 * Fix glitch in chained camera animations.
-* Make padding optional in `MapboxMap.camera(for:padding:bearing:pitch:maxZoom:offset:)` and `MapboxMap.camera(for:padding:bearing:pitch:)`.
 * Build XCFramework with `SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO` flag to avoid serialized search paths in Swift modules.
-* Fixed a bug where the attribution dialog does not appear when there is a presented view controller.
 * Fixed a crash that occurs when annotations have duplicate identifiers.
+
+## 11.1.0 - 17 January, 2024
+
+* Add `customData` field in Annotaion and deprecate `userInfo`. `userInfo` behaviour rolled back to v10 behaviour.
+* Fixed a bug where the attribution dialog does not appear when there is a presented view controller.
+* Make padding optional in `MapboxMap.camera(for:padding:bearing:pitch:maxZoom:offset:)` and `MapboxMap.camera(for:padding:bearing:pitch:)`.
+* Update CoreMaps to 11.1.0 and Common to 24.1.0
 
 ## 11.1.0-rc.1 - 04 January, 2024
 

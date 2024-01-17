@@ -760,6 +760,39 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         $displayLink.send()
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
     }
+
+    func testRemovingDuplicatedAnnotations() {
+      let polygonCoords1 = [
+                CLLocationCoordinate2DMake(25.51713945052515, -88.857177734375),
+                CLLocationCoordinate2DMake(25.51713945052515, -86.967529296875),
+                CLLocationCoordinate2DMake(27.244156283890756, -86.967529296875),
+                CLLocationCoordinate2DMake(27.244156283890756, -88.857177734375),
+                CLLocationCoordinate2DMake(25.51713945052515, -88.857177734375)
+            ]
+            let annotation1 = PolygonAnnotation(id: "A", polygon: .init(outerRing: .init(coordinates: polygonCoords1)), isSelected: false, isDraggable: false)
+      let polygonCoords2 = [
+                CLLocationCoordinate2DMake(26.51713945052515, -87.857177734375),
+                CLLocationCoordinate2DMake(26.51713945052515, -85.967529296875),
+                CLLocationCoordinate2DMake(28.244156283890756, -85.967529296875),
+                CLLocationCoordinate2DMake(28.244156283890756, -87.857177734375),
+                CLLocationCoordinate2DMake(26.51713945052515, -87.857177734375)
+            ]
+            let annotation2 = PolygonAnnotation(id: "B", polygon: .init(outerRing: .init(coordinates: polygonCoords2)), isSelected: false, isDraggable: false)
+      let polygonCoords3 = [
+                CLLocationCoordinate2DMake(27.51713945052515, -86.857177734375),
+                CLLocationCoordinate2DMake(27.51713945052515, -84.967529296875),
+                CLLocationCoordinate2DMake(29.244156283890756, -84.967529296875),
+                CLLocationCoordinate2DMake(29.244156283890756, -86.857177734375),
+                CLLocationCoordinate2DMake(27.51713945052515, -86.857177734375)
+            ]
+            let annotation3 = PolygonAnnotation(id: "A", polygon: .init(outerRing: .init(coordinates: polygonCoords3)), isSelected: false, isDraggable: false)
+      manager.annotations = [annotation1, annotation2, annotation3]
+
+      XCTAssertEqual(manager.annotations, [
+          annotation1,
+          annotation2
+      ])
+  }
 }
 
 // End of generated file

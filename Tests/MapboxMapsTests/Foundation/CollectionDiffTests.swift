@@ -55,7 +55,7 @@ final class CollectionDiffTests: XCTestCase {
         XCTAssertEqual(
             result,
             CollectionDiff(
-                remove: [Element(id: 1, value: "1")],
+                remove: [1],
                 update: [Element(id: 2, value: "Y")],
                 add: [Element(id: 3, value: "3")]
             )
@@ -77,7 +77,7 @@ final class CollectionDiffTests: XCTestCase {
         XCTAssertEqual(
             result,
             CollectionDiff(
-                remove: [Element(id: 3, value: "3")],
+                remove: [3],
                 update: [Element(id: 1, value: "X")],
                 add: [
                     Element(id: 2, value: "2"),

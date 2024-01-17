@@ -3339,6 +3339,18 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         $displayLink.send()
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
     }
+
+    func testRemovingDuplicatedAnnotations() {
+      let annotation1 = PointAnnotation(id: "A", point: .init(.init(latitude: 1, longitude: 1)), isSelected: false, isDraggable: false)
+      let annotation2 = PointAnnotation(id: "B", point: .init(.init(latitude: 2, longitude: 2)), isSelected: false, isDraggable: false)
+      let annotation3 = PointAnnotation(id: "A", point: .init(.init(latitude: 3, longitude: 3)), isSelected: false, isDraggable: false)
+      manager.annotations = [annotation1, annotation2, annotation3]
+
+      XCTAssertEqual(manager.annotations, [
+          annotation1,
+          annotation2
+      ])
+  }
 }
 
 private extension PointAnnotation {

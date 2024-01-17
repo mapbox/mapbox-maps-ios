@@ -17,10 +17,5 @@ extension RasterArraySource {
         @_documentation(visibility: public)
 #endif
         public let bands: [String]
-
-        internal init(layerId: String, bands: [String]) {
-            self.layerId = layerId
-            self.bands = bands
-        }
     }
 }

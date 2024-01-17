@@ -1073,6 +1073,21 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         $displayLink.send()
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
     }
+
+    func testRemovingDuplicatedAnnotations() {
+      let lineCoordinates1 = [ CLLocationCoordinate2DMake(1, 1), CLLocationCoordinate2DMake(11, 11) ]
+            let annotation1 = PolylineAnnotation(id: "A", lineString: .init(lineCoordinates1), isSelected: false, isDraggable: false)
+      let lineCoordinates2 = [ CLLocationCoordinate2DMake(2, 2), CLLocationCoordinate2DMake(12, 12) ]
+            let annotation2 = PolylineAnnotation(id: "B", lineString: .init(lineCoordinates2), isSelected: false, isDraggable: false)
+      let lineCoordinates3 = [ CLLocationCoordinate2DMake(3, 3), CLLocationCoordinate2DMake(13, 13) ]
+            let annotation3 = PolylineAnnotation(id: "A", lineString: .init(lineCoordinates3), isSelected: false, isDraggable: false)
+      manager.annotations = [annotation1, annotation2, annotation3]
+
+      XCTAssertEqual(manager.annotations, [
+          annotation1,
+          annotation2
+      ])
+  }
 }
 
 // End of generated file

@@ -14,10 +14,13 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     public let id: String
 
     /// The collection of ``PolygonAnnotation`` being managed.
+    ///
+    /// Each annotation must have a unique identifier. Duplicate IDs will cause only the first annotation to be displayed, while the rest will be ignored.
     public var annotations: [PolygonAnnotation] {
         get { mainAnnotations + draggedAnnotations }
         set {
             mainAnnotations = newValue
+            mainAnnotations.removeDuplicates()
             draggedAnnotations.removeAll(keepingCapacity: true)
             draggedAnnotationIndex = nil
         }

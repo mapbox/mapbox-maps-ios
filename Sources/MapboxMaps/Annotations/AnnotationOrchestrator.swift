@@ -1,19 +1,5 @@
 import UIKit
 
-/// A top-level interface for annotations.
-public protocol Annotation {
-
-    /// The unique identifier of the annotation.
-    var id: String { get }
-
-    /// The geometry that is backing this annotation.
-    var geometry: Geometry { get }
-
-    /// Properties associated with the annotation.
-    @available(*, deprecated, message: "Will be deleted in future, for Mapbox-provided annotations see customData instead.")
-    var userInfo: [String: Any]? { get set }
-}
-
 public protocol AnnotationManager: AnyObject {
 
     /// The id of this annotation manager.

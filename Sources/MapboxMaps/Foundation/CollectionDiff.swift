@@ -1,12 +1,12 @@
-struct CollectionDiff<T> {
-    var remove = [T]()
+struct CollectionDiff<T, ID> {
+    var remove = [ID]()
     var update = [T]()
     var add = [T]()
 
     var isEmpty: Bool { remove.isEmpty && update.isEmpty && add.isEmpty }
 }
 
-extension CollectionDiff: Equatable where T: Equatable {}
+extension CollectionDiff: Equatable where T: Equatable, ID: Equatable {}
 
 extension RandomAccessCollection {
     /// Returns operations needed to perform in order to get `self` from `old` collection.
@@ -14,52 +14,37 @@ extension RandomAccessCollection {
     /// Updates element if its `id` and position are the same, but `old != new`.
     ///
     /// - Complexity: O(n + m), where *n* is length of `self` and *m* is length of `old`.
-    func diff<ID>(from old: Self, id: (Element) -> ID) -> CollectionDiff<Element>
-    where ID: Hashable, Element: Equatable {
-        var result = CollectionDiff<Element>()
-
-        let oldIdsMap = Dictionary(uniqueKeysWithValues: zip(old, old.indices).map { (id($0), $1) })
+    func diff<ID>(from old: Self, id getId: (Element) -> ID) -> CollectionDiff<Element, ID>
+    where ID: Equatable, Element: Equatable {
+        var result = CollectionDiff<Element, ID>()
 
         var oldIt = old.startIndex
         var it = startIndex
 
-        while oldIt != old.endIndex && it != self.endIndex {
+        while oldIt != old.endIndex && it != endIndex {
             let element = self[it]
-            let oldElement: Element = old[oldIt]
-            let newId = id(element)
-            let oldId = id(oldElement)
+            let id = getId(element)
 
-            if newId == oldId {
+            let oldElement = old[oldIt]
+            let oldId = getId(oldElement)
+
+            if id == oldId {
+                // The elements are the same, update them if changed.
                 if oldElement != element {
                     result.update.append(element)
                 }
-                self.formIndex(&it, offsetBy: 1)
+                formIndex(&it, offsetBy: 1)
                 old.formIndex(&oldIt, offsetBy: 1)
+
                 continue
             }
 
-            if let foundOldIt = oldIdsMap[newId], foundOldIt > oldIt {
-                while oldIt != foundOldIt {
-                    result.remove.append(old[oldIt])
-                    old.formIndex(&oldIt, offsetBy: 1)
-                }
-                oldIt = foundOldIt
-                continue
-            }
-
-            break
-        }
-
-        while it != self.endIndex {
-            result.add.append(self[it])
-            self.formIndex(&it, offsetBy: 1)
-        }
-
-        while oldIt != old.endIndex {
-            result.remove.append(old[oldIt])
+            result.remove.append(oldId)
             old.formIndex(&oldIt, offsetBy: 1)
         }
 
+        result.add.append(contentsOf: self[it...])
+        result.remove.append(contentsOf: old[oldIt...].lazy.map(getId))
         return result
     }
 }

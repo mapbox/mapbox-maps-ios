@@ -11,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Make padding optional in `MapboxMap.camera(for:padding:bearing:pitch:maxZoom:offset:)` and `MapboxMap.camera(for:padding:bearing:pitch:)`.
 * Build XCFramework with `SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO` flag to avoid serialized search paths in Swift modules.
 * Fixed a bug where the attribution dialog does not appear when there is a presented view controller.
+* Fixed a crash that occurs when annotations have duplicate identifiers.
 
 ## 11.1.0-rc.1 - 04 January, 2024
 

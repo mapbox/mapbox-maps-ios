@@ -113,6 +113,7 @@ done
 
 echo "$BUILD_XCFRAMEWORK_COMMAND"
 eval "$BUILD_XCFRAMEWORK_COMMAND"
+rm -f xcodebuild.log # Remove build log that generated on the CI with xcodebuild wrapper
 
 # Clean Up
 step "Cleaning up intermediate artifacts for $PRODUCT"

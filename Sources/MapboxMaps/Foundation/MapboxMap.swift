@@ -30,7 +30,7 @@ protocol MapboxMapProtocol: AnyObject {
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool
     // swiftlint:disable:next function_parameter_count
     func camera(for coordinateBounds: CoordinateBounds,
-                padding: UIEdgeInsets,
+                padding: UIEdgeInsets?,
                 bearing: Double?,
                 pitch: Double?,
                 maxZoom: Double?,
@@ -436,7 +436,7 @@ public final class MapboxMap: StyleManager {
     ///   - offset: The center of the given bounds relative to the map's center, measured in points.
     /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for coordinateBounds: CoordinateBounds, // swiftlint:disable:this function_parameter_count
-                       padding: UIEdgeInsets,
+                       padding: UIEdgeInsets?,
                        bearing: Double?,
                        pitch: Double?,
                        maxZoom: Double?,
@@ -444,7 +444,7 @@ public final class MapboxMap: StyleManager {
         return CameraOptions(
             __map.cameraForCoordinateBounds(
                 for: coordinateBounds,
-                padding: padding.toMBXEdgeInsetsValue(),
+                padding: padding?.toMBXEdgeInsetsValue(),
                 bearing: bearing?.NSNumber,
                 pitch: pitch?.NSNumber,
                 maxZoom: maxZoom?.NSNumber,

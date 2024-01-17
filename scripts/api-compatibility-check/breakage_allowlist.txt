@@ -1315,3 +1315,6 @@ Var ModelLayer.slot has declared type change from Swift.String? to MapboxMaps.Sl
 Var RasterLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
 Var SkyLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
 Var SymbolLayer.slot has declared type change from Swift.String? to MapboxMaps.Slot?
+
+// Optional padding in camera for coordinate bounds
+Func MapboxMap.camera(for:padding:bearing:pitch:maxZoom:offset:) has parameter 1 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?

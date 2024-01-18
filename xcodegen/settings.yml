@@ -1,3 +1,6 @@
+settings:
+  base:
+    DEVELOPMENT_TEAM: GJZR2MEM28
 settingGroups:
   turf_library_evolution_settings:
     configs:

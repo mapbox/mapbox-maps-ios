@@ -1,6 +1,6 @@
 include:
   - targets.yml
-targets:  
+targets:
   MapboxMapsTests:
     templates:
       - unit-test
@@ -10,13 +10,13 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
     sources: ../Tests/MapboxMapsTests
     dependencies:
-      - target: MapboxMaps
       - target: MapboxTestHost
 
   MapboxTestHost:
     templates:
       - application
       - installTokenScript
+      - maps-dependencies
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxMapsTestHost"
@@ -30,6 +30,7 @@ targets:
       - path: ../Sources/MapboxTestHost
     dependencies:
       - package: Fingertips
+      - target: MapboxMaps
     scheme:
       testTargets:
           - MapboxMapsTests
@@ -58,6 +59,5 @@ targets:
           - "Helpers/XCTestCase+TemporaryCacheDirectory.swift"
       - path: ../Tests/GestureTests
     dependencies:
-      - target: MapboxMaps
       - target: MapboxTestHost
       - package: Hammer

@@ -1,25 +1,28 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Kila2/XcodeGen/master/Assets/json-schema/project.json
+
 include:
   - targets.yml
+packages:
+  Fingertips:
+    url: git@github.com:mapbox/Fingertips.git
+    from: 0.6.0
 targets:
   Examples:
     templates:
       - application
-      - installTokenScript
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
+        SWIFT_OBJC_BRIDGING_HEADER: $(MAPBOXMAPS_PATH)/Apps/Examples/Examples/Examples-Bridging-Header.h
     sources:
       - path: ../Apps/Examples/Examples/
+    dependencies:
+      - package: Fingertips
     scheme:
       testTargets:
         - ExamplesTests
         - ExamplesUITests
       environmentVariables:
-        - variable: MTL_HUD_ENABLED
-          value: 1
-        - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
-          value: 1
-          isEnabled: false
         - variable: MAPBOX_REOPEN_EXAMPLE
           value: 1
 

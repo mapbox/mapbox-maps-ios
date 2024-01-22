@@ -31,17 +31,9 @@ packages:
 
 targets:
   Examples:
-    templates:
-      - swiftlintScript
-      - maps-dependencies
     settings:
-      base:
-        SWIFT_OBJC_BRIDGING_HEADER: Apps/Examples/Examples/Examples-Bridging-Header.h
       groups:
         - turf_library_evolution_settings
-    dependencies:
-      - target: MapboxMaps
-      - package: Fingertips
     scheme:
       testTargets:
         - MapboxMapsTests

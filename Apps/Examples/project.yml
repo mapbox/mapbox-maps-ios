@@ -2,26 +2,24 @@ name: Examples
 include:
   - ../../xcodegen/Examples.yml
 packages:
-  Fingertips:
-    url: git@github.com:mapbox/Fingertips.git
-    from: 0.6.0
   MapboxMaps:
-    path: ../../.
+    path: ../../
 targets:
   Examples:
-    templates:
-      - swiftlintScript
-      - generateTokenFileScript
     settings:
       base:
-        SWIFT_OBJC_BRIDGING_HEADER: Examples/Examples-Bridging-Header.h
-        MAPBOXMAPS_PATH: ../../.
-    dependencies:REPLACE:
-      - package: MapboxMaps
-      - package: Fingertips
+        MAPBOXMAPS_PATH: ../../
     scheme:
       testPlans:
         - path: ../../Tests/TestPlans/Examples.xctestplan
           defaultPlan: true
         - path: ../../Tests/TestPlans/Examples no unit tests.xctestplan
           defaultPlan: true
+
+targetTemplates:
+  map-library:REPLACE:
+    dependencies:
+      - package: MapboxMaps
+
+  maps-dependencies:
+    dependencies:

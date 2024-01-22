@@ -8,6 +8,7 @@ final class DoubleTapGestureTestCase: GestureTestCase {
     func testDefaultQuickZoomInTwoTaps() async throws {
         try eventGenerator.fingerTap(numberOfTimes: 2)
 
+        XCTAssertFalse(mapView.camera.cameraAnimators.isEmpty)
         await mapView.camera.cameraAnimators.waitForAllAnimations()
 
         XCTAssertTrue(mapView.camera.cameraAnimators.isEmpty)

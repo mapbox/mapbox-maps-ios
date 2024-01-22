@@ -1,11 +1,15 @@
-include:
-  - settings.yml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Kila2/XcodeGen/master/Assets/json-schema/project.json
+
 targetTemplates:
   maps-dependencies:
     dependencies:
       - framework: ../Carthage/Build/MapboxCoreMaps.xcframework
       - framework: ../Carthage/Build/Turf.xcframework
       - framework: ../Carthage/Build/MapboxCommon.xcframework
+
+  map-library:
+    dependencies:
+      - target: MapboxMaps
 
   installTokenScript:
     settings:
@@ -30,11 +34,26 @@ targetTemplates:
           - $(MAPBOXMAPS_PATH)/Tests/MapboxMapsTests/Helpers/MapboxAccessToken
 
   application:
+    templates:
+      - maps-dependencies
+      - map-library
+      - installTokenScript
+      - swiftlintScript
     type: application
     platform: iOS
     settings:
       groups:
         - app_settings
+    scheme:
+      environmentVariables:
+        - variable: MTL_HUD_ENABLED
+          value: 1
+        # Set position of HUD to the bottom right corner
+        - variable: MTL_HUD_ALIGNMENT
+          value: 20
+        - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
+          value: 1
+          isEnabled: false
 
   unit-test:
     type: bundle.unit-test
@@ -49,3 +68,96 @@ targetTemplates:
         name: Run swiftlint
         basedOnDependencyAnalysis: false
         showEnvVars: false
+
+
+settings:
+  groups:
+    - base_settings
+
+settingGroups:
+  turf_library_evolution_settings:
+    configs:
+      Debug:
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) USING_TURF_WITH_LIBRARY_EVOLUTION
+      Release:
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) RELEASE USING_TURF_WITH_LIBRARY_EVOLUTION
+
+  app_settings:
+    base:
+      APPLICATION_EXTENSION_API_ONLY: NO
+      CURRENT_PROJECT_VERSION: "1"
+      MARKETING_VERSION: "1.0.0"
+      ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+      ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+      SKIP_INSTALL: NO
+
+  unit_test_settings:
+    base:
+      LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(PROJECT_DIR)/../lib"
+      APPLICATION_EXTENSION_API_ONLY: NO
+      GENERATE_INFOPLIST_FILE: YES
+
+  base_settings:
+    groups:
+      - deployment_settings
+      - warnings_settings
+      - static_analyzer_settings
+      - c++_settings
+    base:
+      ALWAYS_SEARCH_USER_PATHS: NO
+
+      LD_GENERATE_MAP_FILE: YES
+      APPLICATION_EXTENSION_API_ONLY: YES
+      ENABLE_USER_SCRIPT_SANDBOXING: NO
+      CURRENT_COMMIT_HASH: deadbeef
+    configs:
+      Debug:
+        ENABLE_TESTABILITY: YES
+
+  deployment_settings:
+    base:
+      DEVELOPMENT_TEAM: GJZR2MEM28
+      IPHONEOS_DEPLOYMENT_TARGET: 12.0
+      TARGETED_DEVICE_FAMILY: 1,2
+      SWIFT_VERSION: 5.7
+      SUPPORTS_MACCATALYST: NO
+      SKIP_INSTALL: YES
+
+  warnings_settings:
+    base:
+      GCC_TREAT_WARNINGS_AS_ERRORS: YES
+
+      # Apple Clang - Warnings - All languages
+      CLANG_WARN_ASSIGN_ENUM: YES
+      CLANG_WARN_COMPLETION_HANDLER_MISUSE: YES
+      CLANG_WARN_FRAMEWORK_INCLUDE_PRIVATE_FROM_PUBLIC: YES
+      CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION: YES
+      GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS: YES
+      GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS: YES
+      GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED: YES
+      GCC_WARN_SHADOW: YES
+      GCC_WARN_SIGN_COMPARE: YES
+      GCC_WARN_UNUSED_LABEL: YES
+
+      # Apple Clang - Warnings - C++
+      GCC_WARN_NON_VIRTUAL_DESTRUCTOR: YES
+
+  static_analyzer_settings:
+    base:
+      RUN_CLANG_STATIC_ANALYZER: YES
+      CLANG_ANALYZER_GCD_PERFORMANCE: YES
+      CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT: YES
+      CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
+      CLANG_ANALYZER_NONNULL: YES
+      CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION: YES_AGGRESSIVE
+      CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND: YES
+      CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY: YES
+    configs:
+      Release:
+        # Static analysis doesn't include Swift, so no harm enabling for those cases where there may be some Obj-C
+        CLANG_STATIC_ANALYZER_MODE: deep
+
+  c++_settings:
+    base:
+      CLANG_CXX_LANGUAGE_STANDARD: c++17
+      GCC_ENABLE_CPP_RTTI: NO

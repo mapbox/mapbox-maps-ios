@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Kila2/XcodeGen/master/Assets/json-schema/project.json
+
 include:
   - targets.yml
 targets:
@@ -15,8 +17,8 @@ targets:
   MapboxTestHost:
     templates:
       - application
-      - installTokenScript
       - maps-dependencies
+      - map-library
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxMapsTestHost"
@@ -30,7 +32,6 @@ targets:
       - path: ../Sources/MapboxTestHost
     dependencies:
       - package: Fingertips
-      - target: MapboxMaps
     scheme:
       testTargets:
           - MapboxMapsTests

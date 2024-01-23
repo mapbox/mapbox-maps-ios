@@ -542,7 +542,7 @@ public final class MapboxMap: StyleManager {
     /// This API isn't supported by Globe projection.
     ///
     /// - Parameters:
-    ///   - geometry: The geoemtry that will be displayed within the viewport.
+    ///   - geometry: The geometry that will be displayed within the viewport.
     ///   - padding: The new padding to be used by the camera.
     ///   - bearing: The new bearing to be used by the camera.
     ///   - pitch: The new pitch to be used by the camera.

@@ -22,6 +22,8 @@ final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, Exam
             self.finish()
         }.store(in: &cancelables)
 
+        addStyleLoadingDebugEvents()
+
         mapView.gestures.delegate = self
 
         // Enable the camera debug option to see camera state
@@ -29,6 +31,22 @@ final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, Exam
         mapView.debugOptions = debugOptions
 
         view.addSubview(mapView)
+    }
+
+    func addStyleLoadingDebugEvents() {
+        func logEvent<T: LogableEvent>(_ signal: Signal<T>) {
+            signal.observe {
+                print(Date(), $0.logString)
+            }.store(in: &cancelables)
+        }
+
+        logEvent(mapView.mapboxMap.onMapLoadingError)
+        logEvent(mapView.mapboxMap.onStyleDataLoaded)
+        logEvent(mapView.mapboxMap.onStyleImageMissing)
+        logEvent(mapView.mapboxMap.onMapIdle)
+        logEvent(mapView.mapboxMap.onMapLoaded)
+        logEvent(mapView.mapboxMap.onStyleImageMissing)
+        logEvent(mapView.mapboxMap.onStyleImageMissing)
     }
 
     func spinGlobe() {

@@ -1,0 +1,69 @@
+on:
+    workflow_call:
+      inputs:
+        project-path:
+          required: true
+          type: string
+
+jobs:
+    analyze:
+      name: Analyze
+      runs-on: ${{ matrix.executor }}
+      permissions:
+        actions: read
+        contents: read
+        security-events: write
+
+      strategy:
+        fail-fast: false
+        matrix:
+          language: ["javascript", "python", "ruby"]
+          executor: ["ubuntu-latest"]
+          include:
+            - language: "swift"
+              executor: "macos-latest"
+          # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Allow cloning public repositories from github.com via SSH
+          run: |
+            git config --global url.https://github.com/.insteadOf git@github.com:
+
+        - name: Inject tokens
+          if: matrix.language == 'swift'
+          run: |
+            echo "machine api.mapbox.com login mapbox password ${{ secrets.SDK_REGISTRY_TOKEN }}" >> ~/.netrc
+            chmod 0600 ~/.netrc
+
+            echo "test_token" > ~/.mapbox
+
+        # Initializes the CodeQL tools for scanning.
+        - name: Initialize CodeQL
+          uses: github/codeql-action/init@v3
+          with:
+            languages: ${{ matrix.language }}
+            # If you wish to specify custom queries, you can do so here or in a config file.
+            # By default, queries listed here will override any specified in a config file.
+            # Prefix the list here with "+" to use these queries and those in the config file.
+
+            # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+            # queries: security-extended,security-and-quality
+
+        - name: Build Examples
+          if: matrix.language == 'swift'
+          run: set -o pipefail && xcodebuild build -project '${{ inputs.project-path }}' -scheme MapboxMaps -destination 'generic/platform=iOS Simulator'| tee xcodebuild.log | xcpretty
+
+        - name: Archive xcodebuild.log
+          uses: actions/upload-artifact@v4
+          if: matrix.language == 'swift'
+          with:
+            name: xcodebuild.log
+            path: xcodebuild.log
+
+        - name: Perform CodeQL Analysis
+          uses: github/codeql-action/analyze@v3
+          with:
+            category: "/language:${{matrix.language}}"

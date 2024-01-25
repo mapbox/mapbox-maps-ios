@@ -10,6 +10,9 @@ on:
         destination:
           type: string
           default: generic/platform=iOS Simulator
+      secrets:
+        SDK_REGISTRY_TOKEN:
+          required: true
 
 jobs:
     analyze:

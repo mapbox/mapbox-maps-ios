@@ -5,11 +5,9 @@ on:
           required: true
           type: string
         scheme:
-          required: true
           type: string
           default: MapboxMaps
         destination:
-          required: true
           type: string
           default: generic/platform=iOS Simulator
 

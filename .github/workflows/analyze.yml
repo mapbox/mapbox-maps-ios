@@ -4,6 +4,14 @@ on:
         project-path:
           required: true
           type: string
+        scheme:
+          required: true
+          type: string
+          default: MapboxMaps
+        destination:
+          required: true
+          type: string
+          default: generic/platform=iOS Simulator
 
 jobs:
     analyze:
@@ -54,7 +62,7 @@ jobs:
 
         - name: Build Examples
           if: matrix.language == 'swift'
-          run: set -o pipefail && xcodebuild build -project '${{ inputs.project-path }}' -scheme MapboxMaps -destination 'generic/platform=iOS Simulator'| tee xcodebuild.log | xcpretty
+          run: set -o pipefail && xcodebuild build -project '${{ inputs.project-path }}' -scheme ${{ inputs.scheme }} -destination '${{ inputs.destination }}'| tee xcodebuild.log | xcpretty
 
         - name: Archive xcodebuild.log
           uses: actions/upload-artifact@v4

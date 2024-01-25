@@ -168,7 +168,7 @@ final class MockMapboxMap: MapboxMapProtocol {
     }
 
     let northOrientationStub = Stub<NorthOrientation, Void>()
-    func setNorthOrientation(northOrientation: NorthOrientation) {
+    func setNorthOrientation(_ northOrientation: NorthOrientation) {
         northOrientationStub.call(with: northOrientation)
     }
 

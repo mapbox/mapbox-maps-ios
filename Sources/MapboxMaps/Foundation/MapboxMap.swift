@@ -11,7 +11,7 @@ protocol MapboxMapProtocol: AnyObject {
     var options: MapOptions { get }
     func setCamera(to cameraOptions: CameraOptions)
     func setCameraBounds(with options: CameraBoundsOptions) throws
-    func setNorthOrientation(northOrientation: NorthOrientation)
+    func setNorthOrientation(_ northOrientation: NorthOrientation)
     func setConstrainMode(_ constrainMode: ConstrainMode)
     func setViewportMode(_ viewportMode: ViewportMode)
     func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions
@@ -291,9 +291,13 @@ public final class MapboxMap: StyleManager {
         }
     }
 
-    /// Reduces memory use. Useful to call when the application gets paused or
+    /// Reduces memory use. This is called automatically when the application gets paused or
     /// sent to background.
-    internal func reduceMemoryUse() {
+    ///
+    /// Calling this might have lead to temporary increased CPU load, as in-memory caches of tiles, images, textures etc.
+    /// will be cleared. This will cause the map to fetch the required resources anew.
+    /// For example, the map tiles will be re-created for the currently displayed portion of the map.
+    public func reduceMemoryUse() {
         __map.reduceMemoryUse()
     }
 
@@ -405,21 +409,21 @@ public final class MapboxMap: StyleManager {
     /// Set the map north orientation
     ///
     /// - Parameter northOrientation: The map north orientation to set
-    func setNorthOrientation(northOrientation: NorthOrientation) {
+    public func setNorthOrientation(_ northOrientation: NorthOrientation) {
         __map.setNorthOrientationFor(northOrientation)
     }
 
     /// Set the map constrain mode
     ///
     /// - Parameter constrainMode: The map constraint mode to set
-    func setConstrainMode(_ constrainMode: ConstrainMode) {
+    public func setConstrainMode(_ constrainMode: ConstrainMode) {
         __map.setConstrainModeFor(constrainMode)
     }
 
     /// Set the map viewport mode
     ///
     /// - Parameter viewportMode: The map viewport mode to set
-    func setViewportMode(_ viewportMode: ViewportMode) {
+    public func setViewportMode(_ viewportMode: ViewportMode) {
         __map.setViewportModeFor(viewportMode)
     }
 
@@ -786,10 +790,18 @@ public final class MapboxMap: StyleManager {
 
     // MARK: - Gesture and Animation Flags
 
+    /// Returns `true` if an animation is currently in progress.
+    public var isAnimationInProgress: Bool { __map.isUserAnimationInProgress() }
+
     private var animationCount = 0
 
     /// If implementing a custom animation mechanism, call this method when the animation begins.
-    /// Must always be paired with a corresponding call to `endAnimation()`
+    ///
+    /// Tells the map rendering engine that the animation is currently performed by the
+    /// user (e.g. with a `setCamera` calls series). It adjusts the engine for the animation use case.
+    /// In particular, it brings more stability to symbol placement and rendering.
+    ///
+    /// - Note: Must always be paired with a corresponding call to `endAnimation()`.
     public func beginAnimation() {
         animationCount += 1
         if animationCount == 1 {
@@ -798,7 +810,8 @@ public final class MapboxMap: StyleManager {
     }
 
     /// If implementing a custom animation mechanism, call this method when the animation ends.
-    /// Must always be paired with a corresponding call to `beginAnimation()`
+    ///
+    /// - Note: Must always be paired with a corresponding call to `beginAnimation()`.
     public func endAnimation() {
         assert(animationCount > 0)
         animationCount -= 1
@@ -807,10 +820,18 @@ public final class MapboxMap: StyleManager {
         }
     }
 
+    /// Returns `true` if a gesture is currently in progress.
+    public var isGestureInProgress: Bool { __map.isGestureInProgress() }
+
     private var gestureCount = 0
 
     /// If implementing a custom gesture, call this method when the gesture begins.
-    /// Must always be paired with a corresponding call to `endGesture()`
+    ///
+    /// Tells the map rendering engine that there is currently a gesture in progress. This
+    /// affects how the map renders labels, as it will use different texture filters if a gesture
+    /// is ongoing.
+    ///
+    /// - Note: Must always be paired with a corresponding call to `endGesture()`
     public func beginGesture() {
         gestureCount += 1
         if gestureCount == 1 {
@@ -820,7 +841,8 @@ public final class MapboxMap: StyleManager {
     }
 
     /// If implementing a custom gesture, call this method when the gesture ends.
-    /// Must always be paired with a corresponding call to `beginGesture()`
+    ///
+    /// - Note: Must always be paired with a corresponding call to `beginGesture()`.
     public func endGesture() {
         assert(gestureCount > 0)
         gestureCount -= 1

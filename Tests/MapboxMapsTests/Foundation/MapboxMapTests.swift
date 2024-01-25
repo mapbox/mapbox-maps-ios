@@ -250,6 +250,14 @@ final class MapboxMapTests: XCTestCase {
         _ = mapboxMap as MapFeatureQueryable
     }
 
+    func testGetAnimationInProgressGetter() {
+        XCTAssertFalse(mapboxMap.isAnimationInProgress)
+
+        mapboxMap.__testingMap.setUserAnimationInProgressForInProgress(true)
+
+        XCTAssertTrue(mapboxMap.isAnimationInProgress)
+    }
+
     func testBeginAndEndAnimation() {
         XCTAssertFalse(mapboxMap.__testingMap.isUserAnimationInProgress())
 
@@ -276,6 +284,14 @@ final class MapboxMapTests: XCTestCase {
         mapboxMap.endAnimation()
 
         XCTAssertFalse(mapboxMap.__testingMap.isUserAnimationInProgress())
+    }
+
+    func testGetGestureInProgressGetter() {
+        XCTAssertFalse(mapboxMap.isGestureInProgress)
+
+        mapboxMap.__testingMap.setGestureInProgressForInProgress(true)
+
+        XCTAssertTrue(mapboxMap.isGestureInProgress)
     }
 
     func testBeginAndEndGesture() {

@@ -29,6 +29,13 @@ public struct SourceType: ExpressibleByStringLiteral, RawRepresentable, Codable,
     @_spi(Experimental)
     public static let rasterArray: SourceType = "raster-array"
 
+    /// A custom geometry source.
+    public static let customGeometry: SourceType = "custom-geometry"
+
+    /// A custom raster source.
+    @_spi(Experimental)
+    public static let customRaster: SourceType = "custom-raster"
+
     public init(stringLiteral type: String) {
         self.rawValue = type
     }
@@ -52,6 +59,10 @@ public struct SourceType: ExpressibleByStringLiteral, RawRepresentable, Codable,
             return ImageSource.self
         case .model:
             return ModelSource.self
+        case .customGeometry:
+            return CustomGeometrySource.self
+        case .customRaster:
+            return CustomRasterSource.self
         default:
             return nil
         }

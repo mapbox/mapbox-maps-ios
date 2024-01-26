@@ -31,22 +31,24 @@ final class CustomRasterSourceExample: UIViewController, ExampleProtocol {
     }
 
     private func setupExample() {
-        do {
-            let rasterSourceOptions = CustomRasterSourceOptions(
-                fetchTileFunction: { [weak self] tileID in
-                    guard let self else { return }
+        let rasterSourceOptions = CustomRasterSourceOptions(
+            fetchTileFunction: { [weak self] tileID in
+                guard let self else { return }
 
-                    try! self.mapView.mapboxMap.setCustomRasterSourceTileData(
-                        forSourceId: ID.customRasterSource,
-                        tileId: tileID,
-                        image: rasterImages[currentImageIndex])
-                },
-                cancelTileFunction: { _ in },
-                minZoom: 0,
-                maxZoom: 0,
-                tileSize: 256 // Image for raster tile  must be of same dimensions as tile size of the source.
-            )
-            try mapView.mapboxMap.addCustomRasterSource(forSourceId: ID.customRasterSource, options: rasterSourceOptions)
+                try! self.mapView.mapboxMap.setCustomRasterSourceTileData(
+                    forSourceId: ID.customRasterSource,
+                    tileId: tileID,
+                    image: rasterImages[currentImageIndex])
+            },
+            cancelTileFunction: { _ in },
+            minZoom: 0,
+            maxZoom: 0,
+            tileSize: 256 // Image for raster tile must be of same dimensions as tile size of the source.
+        )
+        let customRasterSource = CustomRasterSource(id: ID.customRasterSource, options: rasterSourceOptions)
+
+        do {
+            try mapView.mapboxMap.addSource(customRasterSource)
 
             var rasterLayer = RasterLayer(id: ID.rasterLayer, source: ID.customRasterSource)
             rasterLayer.rasterColorMix = .constant([1, 0, 0, 0])

@@ -17,6 +17,8 @@
 - ``PromoteId``
 - ``Scheme``
 - ``Encoding``
+- ``CustomGeometrySource``
 - ``CustomGeometrySourceOptions``
+- ``CustomRasterSource``
 - ``CustomRasterSourceOptions``
 - ``TileFunctionCallback``

@@ -69,9 +69,24 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     }
 
     internal func addSource(_ source: Source, dataId: String? = nil) throws {
-        if let geoJSONSource = source as? GeoJSONSource {
-            try addGeoJSONSource(geoJSONSource, dataId: dataId)
-        } else {
+        switch source {
+        case let source as CustomRasterSource:
+            guard let options = source.options else {
+                throw StyleError(message: "CustomRasterSource does not have CustomRasterSourceOptions")
+            }
+            try handleExpected {
+                styleManager.addStyleCustomRasterSource(forSourceId: source.id, options: options)
+            }
+        case let source as CustomGeometrySource:
+            guard let options = source.options else {
+                throw StyleError(message: "CustomGeometrySource does not have CustomGeometrySourceOptions")
+            }
+            try handleExpected {
+                styleManager.addStyleCustomGeometrySource(forSourceId: source.id, options: options)
+            }
+        case let source as GeoJSONSource:
+            try addGeoJSONSource(source, dataId: dataId)
+        default:
             try addSourceInternal(source)
         }
     }

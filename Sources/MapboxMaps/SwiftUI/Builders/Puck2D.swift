@@ -110,9 +110,10 @@ public struct Puck2D: PrimitiveMapContent {
     }
 
     func _visit(_ visitor: MapContentVisitor) {
-        visitor.locationOptions = LocationOptions(
+        visitor.add(locationOptions: LocationOptions(
             puckType: .puck2D(configuration),
             puckBearing: bearing ?? .heading,
-            puckBearingEnabled: bearing != nil)
+            puckBearingEnabled: bearing != nil
+        ))
     }
 }

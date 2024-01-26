@@ -12,22 +12,29 @@ protocol MapContentAnnotationManager: AnyObject {
 
 /// Type erasure wrapper for annotation groups.
 struct AnnotationGroup {
+    var positionalId: AnyHashable
     var layerId: String?
     var update: (AnnotationOrchestrator, String, inout [AnyHashable: String]) -> Void
 
-    init(layerId: String? = nil, update: @escaping (AnnotationOrchestrator, String, inout [AnyHashable: String]) -> Void) {
+    init(
+        positionalId: AnyHashable,
+        layerId: String? = nil,
+        update: @escaping (AnnotationOrchestrator, String, inout [AnyHashable: String]) -> Void
+    ) {
+        self.positionalId = positionalId
         self.layerId = layerId
         self.update = update
     }
 
     init<M: MapContentAnnotationManager, Data: RandomAccessCollection, ID: Hashable>(
-        prefixId: [AnyHashable],
+        positionalId: AnyHashable,
         layerId: String?,
         layerPosition: LayerPosition?,
         store: ForEvery<M.AnnotationType, Data, ID>,
         make: @escaping (AnnotationOrchestrator, String, LayerPosition?) -> M,
         updateProperties: @escaping (M) -> Void
     ) {
+        self.positionalId = positionalId
         self.layerId = layerId
         // For some reason, the data in the store corrupts under tests in release mode when captured
         // by `update` closure. Copying the data fixes the issue.
@@ -40,10 +47,10 @@ struct AnnotationGroup {
             updateProperties(manager)
 
             var annotations = [M.AnnotationType]()
-            data.forEach { id, annotation in
+            data.forEach { elementId, annotation in
                 var annotation = annotation
-                let stringId = annotationsIdMap[id] ?? annotation.id
-                annotationsIdMap[id] = stringId
+                let stringId = annotationsIdMap[elementId] ?? annotation.id
+                annotationsIdMap[elementId] = stringId
                 annotation.id = stringId
                 annotation.isDraggable = false
                 annotation.isSelected = false

@@ -84,7 +84,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     func _visit(_ visitor: MapContentVisitor) {
         let group = AnnotationGroup(
-            prefixId: visitor.id,
+            positionalId: visitor.positionalId,
             layerId: layerId,
             layerPosition: layerPosition,
             store: store,

@@ -9,12 +9,12 @@ final class MapContentBuilderTests: XCTestCase {
 
         @MapContentBuilder func content() -> MapContent {
             DummyMapContent {
-                XCTAssertEqual($0.id.last, 0)
-                visitorIds += $0.id
+                XCTAssertEqual($0.positionalId.last, 0)
+                visitorIds += $0.positionalId
             }
             DummyMapContent {
-                XCTAssertEqual($0.id.last, 1)
-                visitorIds += $0.id
+                XCTAssertEqual($0.positionalId.last, 1)
+                visitorIds += $0.positionalId
             }
         }
 
@@ -24,7 +24,7 @@ final class MapContentBuilderTests: XCTestCase {
 
         XCTAssertEqual(composite.children.count, 2)
         XCTAssertEqual(visitorIds, [0, 1])
-        XCTAssertTrue(visitor.id.isEmpty)
+        XCTAssertTrue(visitor.positionalId.isEmpty)
     }
 
     func testOptionalMapContent() throws {
@@ -35,8 +35,8 @@ final class MapContentBuilderTests: XCTestCase {
             // This will form a nested CompositeMapContent, with one child if condition is true, empty otherwise.
             if condition {
                 DummyMapContent {
-                    XCTAssertEqual($0.id.last, 0)
-                    visitorIds += $0.id
+                    XCTAssertEqual($0.positionalId.last, 0)
+                    visitorIds += $0.positionalId
                 }
             }
         }
@@ -49,7 +49,7 @@ final class MapContentBuilderTests: XCTestCase {
 
         composite.visit(visitor)
         XCTAssertTrue(visitorIds.isEmpty)
-        XCTAssertTrue(visitor.id.isEmpty)
+        XCTAssertTrue(visitor.positionalId.isEmpty)
 
         condition = true
         composite = try XCTUnwrap(content() as? CompositeMapContent)
@@ -59,7 +59,7 @@ final class MapContentBuilderTests: XCTestCase {
 
         composite.visit(visitor)
         XCTAssertEqual(visitorIds, [0, 0])
-        XCTAssertTrue(visitor.id.isEmpty)
+        XCTAssertTrue(visitor.positionalId.isEmpty)
     }
 
     func testConditionalMapContent() throws {
@@ -69,11 +69,11 @@ final class MapContentBuilderTests: XCTestCase {
         @MapContentBuilder func content() -> MapContent {
             if condition {
                 DummyMapContent {
-                    visitorIds += $0.id
+                    visitorIds += $0.positionalId
                 }
             } else {
                 DummyMapContent {
-                    visitorIds += $0.id
+                    visitorIds += $0.positionalId
                 }
             }
         }
@@ -102,7 +102,7 @@ final class MapContentBuilderTests: XCTestCase {
         @MapContentBuilder func content() -> MapContent {
             ForEvery(data, id: \.self) { _ in
                 DummyMapContent {
-                    visitorIds += $0.id
+                    visitorIds += $0.positionalId
                 }
             }
         }

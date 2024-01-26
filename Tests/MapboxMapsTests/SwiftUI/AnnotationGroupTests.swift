@@ -35,7 +35,7 @@ final class AnnotationGroupTests: XCTestCase {
             DummyAnnotation(property: "foo")
         }
         var group = AnnotationGroup(
-            prefixId: [],
+            positionalId: 0,
             layerId: "layer-id",
             layerPosition: layerPos,
             store: store,
@@ -71,7 +71,7 @@ final class AnnotationGroupTests: XCTestCase {
             DummyAnnotation(property: "bar")
         }
         group = AnnotationGroup(
-            prefixId: [],
+            positionalId: 0,
             layerId: "layer-id",
             layerPosition: layerPos,
             store: store2,

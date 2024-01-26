@@ -9,6 +9,10 @@ struct CollectionDiff<T, ID> {
 extension CollectionDiff: Equatable where T: Equatable, ID: Equatable {}
 
 extension RandomAccessCollection {
+    func diff<ID>(from old: Self, id keyPath: KeyPath<Element, ID>) -> CollectionDiff<Element, ID>
+    where ID: Equatable, Element: Equatable {
+        diff(from: old, id: { $0[keyPath: keyPath] })
+    }
     /// Returns operations needed to perform in order to get `self` from `old` collection.
     /// Treats insertion in the middle as removing all the following elements and re-adding them.
     /// Updates element if its `id` and position are the same, but `old != new`.

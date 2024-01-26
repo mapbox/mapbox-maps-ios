@@ -42,9 +42,9 @@ final class PointAnnotationGroupTests: XCTestCase {
         // When
         visitor.visit(id: "any-id", content: group)
         let addedGroup = try XCTUnwrap(visitor.annotationGroups.first)
-        XCTAssertEqual(addedGroup.0, ["any-id"])
-        XCTAssertEqual(addedGroup.1.layerId, layerId)
-        addedGroup.1.update(orchestrator, layerId, &annotationIds)
+        XCTAssertEqual(addedGroup.positionalId, ["any-id"])
+        XCTAssertEqual(addedGroup.layerId, layerId)
+        addedGroup.update(orchestrator, layerId, &annotationIds)
 
         // Then
         let stubbed = orchestratorImpl.makePointAnnotationManagerStub.invocations[0]

@@ -9,10 +9,21 @@ struct Settings {
     var constrainMode: ConstrainMode = .heightOnly
     var ornamentSettings = OrnamentSettings()
     var debugOptions: MapViewDebugOptions = [.camera]
-
+    var performance = PerformanceSettings()
+    
     struct OrnamentSettings {
         var isScaleBarVisible = true
         var isCompassVisible = true
+    }
+    
+    struct PerformanceSettings {
+        var samplerOptions = PerformanceStatisticsOptions.SamplerOptions([.perFrame, .cumulative])
+        var samplingDurationMillis: UInt32 = 5000
+        var isStatisticsEnabled = false
+        
+        var statisticsOptions: PerformanceStatisticsOptions {
+            PerformanceStatisticsOptions(samplerOptions, samplingDurationMillis: Double(samplingDurationMillis))
+        }
     }
 }
 
@@ -20,33 +31,47 @@ struct Settings {
 struct MapSettingsExample : View {
     @State private var settingsOpened = false
     @State private var settings = Settings()
+    @State private var performanceStatistics: PerformanceStatistics? = nil
 
     var body: some View {
-        Map(initialViewport: .camera(center: .berlin, zoom: 12))
-            .cameraBounds(settings.cameraBounds)
-            .mapStyle(settings.mapStyle)
-            .gestureOptions(settings.gestureOptions)
-            .gestureHandlers(gestureHandlers)
-            .northOrientation(settings.orientation)
-            .constrainMode(settings.constrainMode)
-            .ornamentOptions(OrnamentOptions(
-                scaleBar: ScaleBarViewOptions(visibility: settings.ornamentSettings.isScaleBarVisible ? .visible : .hidden),
-                compass: CompassViewOptions(visibility: settings.ornamentSettings.isCompassVisible ? .visible : .hidden)
-            ))
-            .debugOptions(settings.debugOptions)
-            .ignoresSafeArea()
-            .sheet(isPresented: $settingsOpened) {
-                SettingsView(settings: $settings)
-                    .defaultDetents()
-            }
-            .safeOverlay(alignment: .trailing, content: {
-                MapStyleSelectorButton(mapStyle: $settings.mapStyle)
-            })
-            .toolbar {
-                Button("Settings") {
-                    settingsOpened.toggle()
+        ZStack(alignment: .bottom) {
+            Map(initialViewport: .camera(center: .berlin, zoom: 12))
+                .cameraBounds(settings.cameraBounds)
+                .mapStyle(settings.mapStyle)
+                .gestureOptions(settings.gestureOptions)
+                .gestureHandlers(gestureHandlers)
+                .northOrientation(settings.orientation)
+                .constrainMode(settings.constrainMode)
+                .collectPerformanceStatistics(settings.performance.isStatisticsEnabled ? settings.performance.statisticsOptions : nil) { stats in
+                    performanceStatistics = stats
                 }
+                .ornamentOptions(OrnamentOptions(
+                    scaleBar: ScaleBarViewOptions(visibility: settings.ornamentSettings.isScaleBarVisible ? .visible : .hidden),
+                    compass: CompassViewOptions(visibility: settings.ornamentSettings.isCompassVisible ? .visible : .hidden)
+                ))
+                .debugOptions(settings.debugOptions)
+                .ignoresSafeArea()
+                .sheet(isPresented: $settingsOpened) {
+                    SettingsView(settings: $settings)
+                        .defaultDetents()
+                }
+                .safeOverlay(alignment: .trailing) {
+                    MapStyleSelectorButton(mapStyle: $settings.mapStyle)
+                }
+                .toolbar {
+                    Button("Settings") {
+                        settingsOpened.toggle()
+                    }
+                }
+            
+            if settings.performance.isStatisticsEnabled, let stats = performanceStatistics {
+                VStack(alignment: .leading) {
+                    Text(stats.topRenderedLayerDescription).font(.safeMonospaced)
+                    Text(stats.renderingDurationStatisticsDescription).font(.safeMonospaced)
+                }
+                .floating()
             }
+        }
     }
 
     var gestureHandlers: MapGestureHandlers {
@@ -121,6 +146,22 @@ struct SettingsView : View {
             } header: {
                 Text("Debug Options")
             }
+            Section {
+                let samplerOptions = [
+                    ("Per Frame", PerformanceStatisticsOptions.SamplerOptions.perFrame),
+                    ("Cumulative", .cumulative)
+                ]
+                Toggle("Collect Statistics", isOn: $settings.performance.isStatisticsEnabled)
+                
+                if settings.performance.isStatisticsEnabled {
+                    Stepper("Sampling Duration, \(settings.performance.samplingDurationMillis) ms", value: $settings.performance.samplingDurationMillis, step: 1000)
+                    ForEach(samplerOptions, id: \.0) { option in
+                        Toggle(option.0, isOn: $settings.performance.samplerOptions.contains(option: option.1))
+                    }
+                }
+            } header: {
+                Text("Performance Statistics")
+            }
         }
     }
 }
@@ -147,5 +188,19 @@ struct MapSettingsExample_Preveiw: PreviewProvider {
         NavigationView {
             MapSettingsExample()
         }
+    }
+}
+
+extension PerformanceStatistics {
+    fileprivate var topRenderedLayerDescription: String {
+        if let topRenderedLayer = perFrameStatistics?.topRenderLayers.first {
+            return "Top rendered layer: `\(topRenderedLayer.name)` for \(topRenderedLayer.durationMillis)ms."
+        } else {
+            return "No information about topRenderedLayer."
+        }
+    }
+    
+    fileprivate var renderingDurationStatisticsDescription: String {
+        "Max rendering call duration: \(mapRenderDurationStatistics.maxMillis)ms.\nMedian rendering call duration: \(mapRenderDurationStatistics.medianMillis)ms"
     }
 }

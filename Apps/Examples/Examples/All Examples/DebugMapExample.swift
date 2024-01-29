@@ -1,17 +1,24 @@
 import UIKit
 @_spi(Experimental) import MapboxMaps
 
-private protocol DebugOptionSettingsDelegate: AnyObject {
-    func debugOptionSettingsDidChange(_ controller: SettingsViewController)
-}
-
-private struct MapDebugOptionSetting {
-    let debugOption: MapViewDebugOptions
-    let displayTitle: String
-}
-
-final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSettingsDelegate {
+final class DebugMapExample: UIViewController, ExampleProtocol {
+    private var collectStatisticsButton = UIButton(type: .system)
     private var mapView: MapView!
+    private var performanceStatisticsCancelable: AnyCancelable?
+    private let settings: [Setting] = [
+        Setting(option: .debug(.collision), title: "Debug collision"),
+        Setting(option: .debug(.depthBuffer), title: "Show depth buffer"),
+        Setting(option: .debug(.overdraw), title: "Debug overdraw"),
+        Setting(option: .debug(.parseStatus), title: "Show tile coordinate"),
+        Setting(option: .debug(.stencilClip), title: "Show stencil buffer"),
+        Setting(option: .debug(.tileBorders), title: "Debug tile clipping"),
+        Setting(option: .debug(.timestamps), title: "Show tile loaded time"),
+        Setting(option: .debug(.modelBounds), title: "Show 3D model bounding boxes"),
+        Setting(option: .debug(.light), title: "Show light conditions"),
+        Setting(option: .debug(.camera), title: "Show camera debug view"),
+        Setting(option: .debug(.padding), title: "Camera padding"),
+        Setting(option: .performance(.init([.perFrame, .cumulative], samplingDurationMillis: 5000)), title: "Performance statistics"),
+    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +59,7 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
     }
 
     @objc private func openDebugOptionsMenu(_ sender: UIBarButtonItem) {
-        let settingsViewController = SettingsViewController(debugOptions: mapView.debugOptions)
+        let settingsViewController = SettingsViewController(settings: settings)
         settingsViewController.delegate = self
 
         let navigationController = UINavigationController(rootViewController: settingsViewController)
@@ -68,34 +75,28 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
         showAlert(withTitle: "Displayed tiles", and: message)
     }
 
-    fileprivate func debugOptionSettingsDidChange(_ controller: SettingsViewController) {
-        controller.dismiss(animated: true, completion: nil)
-        mapView.debugOptions = controller.enabledDebugOptions
+    private func handle(statistics: PerformanceStatistics) {
+        showAlert(with: "\(statistics.topRenderedGroupDescription)\n\(statistics.renderingDurationStatisticsDescription)")
     }
 }
 
-private final class SettingsViewController: UIViewController, UITableViewDataSource {
+extension DebugMapExample: DebugOptionSettingsDelegate {
+    func settingsDidChange(debugOptions: MapViewDebugOptions, performanceOptions: PerformanceStatisticsOptions?) {
+        mapView.debugOptions = debugOptions
+        
+        guard let performanceOptions else { return performanceStatisticsCancelable = nil }
+        performanceStatisticsCancelable?.cancel()
+        performanceStatisticsCancelable = mapView.mapboxMap.collectPerformanceStatistics(performanceOptions, callback: handle(statistics:))
+    }
+}
 
+final class SettingsViewController: UIViewController, UITableViewDataSource {
     weak var delegate: DebugOptionSettingsDelegate?
     private var listView: UITableView!
+    private let settings: [Setting]
 
-    private(set) var enabledDebugOptions: MapViewDebugOptions
-    private let allSettings: [MapDebugOptionSetting] = [
-        MapDebugOptionSetting(debugOption: .collision, displayTitle: "Debug collision"),
-        MapDebugOptionSetting(debugOption: .depthBuffer, displayTitle: "Show depth buffer"),
-        MapDebugOptionSetting(debugOption: .overdraw, displayTitle: "Debug overdraw"),
-        MapDebugOptionSetting(debugOption: .parseStatus, displayTitle: "Show tile coordinate"),
-        MapDebugOptionSetting(debugOption: .stencilClip, displayTitle: "Show stencil buffer"),
-        MapDebugOptionSetting(debugOption: .tileBorders, displayTitle: "Debug tile clipping"),
-        MapDebugOptionSetting(debugOption: .timestamps, displayTitle: "Show tile loaded time"),
-        MapDebugOptionSetting(debugOption: .modelBounds, displayTitle: "Show 3D model bounding boxes"),
-        MapDebugOptionSetting(debugOption: .light, displayTitle: "Show light conditions"),
-        MapDebugOptionSetting(debugOption: .camera, displayTitle: "Show camera debug view"),
-        MapDebugOptionSetting(debugOption: .padding, displayTitle: "Camera padding")
-    ]
-
-    init(debugOptions: MapViewDebugOptions) {
-        enabledDebugOptions = debugOptions
+    fileprivate init(settings: [Setting]) {
+        self.settings = settings
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -134,11 +135,21 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
     }
 
     @objc private func saveSettings(_ sender: UIBarButtonItem) {
-        delegate?.debugOptionSettingsDidChange(self)
+        let debugOptions = settings
+            .filter(\.isEnabled)
+            .compactMap(\.option.debugOption)
+            .reduce(MapViewDebugOptions()) { result, next in result.union(next) }
+        
+        let performanceOptions = settings
+            .filter(\.isEnabled)
+            .compactMap(\.option.performanceOption)
+        
+        delegate?.settingsDidChange(debugOptions: debugOptions, performanceOptions: performanceOptions.first)
+        dismiss(animated: true, completion: nil)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        allSettings.count
+        settings.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -146,15 +157,9 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
         // swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! DebugOptionCell
 
-        let setting = allSettings[indexPath.row]
-        cell.configure(with: setting, isOptionEnabled: enabledDebugOptions.contains(setting.debugOption))
-        cell.onToggled { [unowned self] isEnabled in
-            if isEnabled {
-                self.enabledDebugOptions.insert(setting.debugOption)
-            } else {
-                self.enabledDebugOptions.remove(setting.debugOption)
-            }
-        }
+        let setting = settings[indexPath.row]
+        cell.configure(with: setting.title, isOptionEnabled: setting.isEnabled)
+        cell.onToggled(setting.toggle)
 
         return cell
     }
@@ -163,9 +168,9 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
 // MARK: Cell
 
 private class DebugOptionCell: UITableViewCell {
-
     private let titleLabel = UILabel()
     private let toggle = UISwitch()
+    private var onToggleHandler: (() -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -193,18 +198,69 @@ private class DebugOptionCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with setting: MapDebugOptionSetting, isOptionEnabled: Bool) {
-        titleLabel.text = setting.displayTitle
+    func configure(with title: String, isOptionEnabled: Bool) {
+        titleLabel.text = title
         toggle.isOn = isOptionEnabled
     }
 
-    private var onToggleHandler: ((Bool) -> Void)?
 
-    func onToggled(_ handler: @escaping (Bool) -> Void) {
+    func onToggled(_ handler: @escaping () -> Void) {
         onToggleHandler = handler
     }
 
     @objc private func didToggle(_ sender: UISwitch) {
-        onToggleHandler?(sender.isOn)
+        onToggleHandler?()
+    }
+}
+
+protocol DebugOptionSettingsDelegate: AnyObject {
+    func settingsDidChange(debugOptions: MapViewDebugOptions, performanceOptions: PerformanceStatisticsOptions?)
+}
+
+private final class Setting {
+    enum Option {
+        case debug(MapViewDebugOptions)
+        case performance(PerformanceStatisticsOptions)
+    }
+    
+    let option: Option
+    let title: String
+    private(set) var isEnabled: Bool
+    
+    init(option: Option, title: String, isEnabled: Bool = false) {
+        self.option = option
+        self.title = title
+        self.isEnabled = isEnabled
+    }
+    
+    func toggle() { isEnabled.toggle() }
+}
+
+extension Setting.Option {
+    var debugOption: MapViewDebugOptions? {
+        if case let .debug(option) = self { return option }
+        else { return nil }
+    }
+    
+    var performanceOption: PerformanceStatisticsOptions? {
+        if case let .performance(option) = self { return option }
+        else { return nil }
+    }
+}
+
+extension PerformanceStatistics {
+    fileprivate var topRenderedGroupDescription: String {
+        if let topRenderedGroup = perFrameStatistics?.topRenderGroups.first {
+            return "Top rendered group: `\(topRenderedGroup.name)` took \(topRenderedGroup.durationMillis)ms."
+        } else {
+            return "No information about topRenderedLayer."
+        }
+    }
+    
+    fileprivate var renderingDurationStatisticsDescription: String {
+        guard let drawCalls = cumulativeStatistics?.drawCalls else { return "Cumulative statistics haven't been collected." }
+        return """
+        Number of draw calls: \(drawCalls).
+        """
     }
 }

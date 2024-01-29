@@ -21,6 +21,8 @@ protocol MapboxMapProtocol: AnyObject {
     func endGesture()
     @discardableResult
     func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable
+    func collectPerformanceStatistics(_ options: PerformanceStatisticsOptions, callback: @escaping (PerformanceStatistics) -> Void) -> AnyCancelable
+
     // View annotation management
     func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?)
     func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
@@ -425,6 +427,33 @@ public final class MapboxMap: StyleManager {
     /// - Parameter viewportMode: The map viewport mode to set
     public func setViewportMode(_ viewportMode: ViewportMode) {
         __map.setViewportModeFor(viewportMode)
+    }
+
+    /// Collects CPU and GPU resource usage, as well as timings of layers and rendering groups, over a user-configurable sampling duration.
+    /// Use the collected information to identify layers or rendering groups that may be performing poorly.
+    ///
+    /// Use ``PerformanceStatisticsOptions`` to configure the following collection behaviours:
+    ///     - Which types of sampling to perform, whether cumulative, per-frame, or both.
+    ///     - Duration of sampling in milliseconds. A value of 0 forces the collection of performance statistics every frame.
+    ///
+    /// The statistics collection can be canceled using the ``AnyCancelable`` object returned by this function, note that if the token goes out of the scope it's deinitialized and thus canceled. Canceling collection will prevent the
+    /// callback from being called. Collection can be restarted by calling ``MapboxMap/collectPerformanceStatistics(_:callback:)`` again to obtain a new ``AnyCancelable`` object.
+    ///
+    /// The callback function will be called every time the configured sampling duration ``PerformanceStatisticsOptions/samplingDurationMillis`` has elapsed.
+    ///
+    /// - Parameters:
+    ///   - options The statistics collection options to collect.
+    ///   - callback The callback to be invoked when performance statistics are available.
+    /// - Returns:  The ``AnyCancelable`` object that can be used to cancel performance statistics collection.
+    #if swift(>=5.8)
+        @_documentation(visibility: public)
+    #endif
+    @_spi(Experimental)
+    public func collectPerformanceStatistics(_ options: PerformanceStatisticsOptions, callback: @escaping (PerformanceStatistics) -> Void) -> AnyCancelable {
+        __map.startPerformanceStatisticsCollection(for: options, callback: callback)
+        return BlockCancelable { [weak self] in
+            self?.__map.stopPerformanceStatisticsCollection()
+        }.erased
     }
 
     /// Calculates a `CameraOptions` to fit a `CoordinateBounds`

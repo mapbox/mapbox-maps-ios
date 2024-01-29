@@ -16,9 +16,8 @@ struct MapDependencies {
     var debugOptions = MapViewDebugOptions()
     var presentsWithTransaction = false
     var additionalSafeArea = SwiftUI.EdgeInsets()
-    var viewportOptions = ViewportOptions(
-        transitionsToIdleUponUserInteraction: true,
-        usesSafeAreaInsetsAsPadding: true)
+    var viewportOptions = ViewportOptions(transitionsToIdleUponUserInteraction: true, usesSafeAreaInsetsAsPadding: true)
+    var performanceStatisticsParameters: Map.PerformanceStatisticsParameters?
 
     var onMapTap: ((MapContentGestureContext) -> Void)?
     var onMapLongPress: ((MapContentGestureContext) -> Void)?
@@ -38,5 +37,13 @@ struct AnyEventSubscription {
                 action(payload)
             }
         }
+    }
+}
+
+@available(iOS 13.0, *)
+extension Map {
+    struct PerformanceStatisticsParameters {
+        var options: PerformanceStatisticsOptions
+        var callback: (PerformanceStatistics) -> Void
     }
 }

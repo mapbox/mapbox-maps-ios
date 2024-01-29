@@ -17,6 +17,7 @@ Use them to configure respective map options after creating a map view.
 * Expose experimental `CustomRasterSource` and non-experimental `CustomGeometrySource` as regular `Source`'s providing a better way to work with them and also allow for using them in Style DSL.
 * Introduce `SymbolLayer.iconColorSaturation` API.
 * Introduce experimental `RasterLayer.rasterElevation` API.
+* Introduce experimental `MapboxMap.collectPerformanceStatistics` allowing to collect map rendering performance statistics, both for UIKit and SwiftUI.
 
 ## 11.1.0 - 17 January, 2024
 

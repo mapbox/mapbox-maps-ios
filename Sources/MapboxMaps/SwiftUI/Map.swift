@@ -365,6 +365,31 @@ public extension Map {
         copyAssigned(self, \.mapDependencies.additionalSafeArea, insets)
     }
 
+    /// Collects CPU, GPU resource usage and timings of layers and rendering groups over a user-configurable sampling duration.
+    /// Use the collected information to find which layers or rendering groups might be performing poorly.
+    ///
+    /// Use ``PerformanceStatisticsOptions`` to configure the following collection behaviours:
+    ///     - Which types of sampling to perform, whether cumulative, per-frame, or both.
+    ///     - Duration of sampling in milliseconds. Value 0 forces the collection of performance statistics every frame.
+    ///     
+    /// Utilize ``PerformanceStatisticsCallback`` to observe the collected performance statistics. The callback function is invoked
+    /// after the configured sampling duration has elapsed. The callback is invoked on the main thread. The collection process is
+    /// continuous; without user-input, it restarts after each callback invocation. 
+    /// - Note: Specifying a negative sampling duration or omitting the callback function will result in no operation, which will be logged for visibility.
+    /// - Note: The statistics collection can be canceled by setting `nil` to the options parameter.
+    /// The callback function will be called every time the configured sampling duration ``PerformanceStatisticsOptions/sasamplingDurationMillis has elapsed.
+    ///
+    /// - Parameters:
+    ///   - options The statistics collection options to collect.
+    ///   - callback The callback to be invoked when performance statistics are available.
+    /// - Returns:  An ``AnyCancelable`` object that can be used to cancel performance statistics collection.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    func collectPerformanceStatistics(_ options: PerformanceStatisticsOptions?, callback: @escaping (PerformanceStatistics) -> Void) -> Self {
+        copyAssigned(self, \.mapDependencies.performanceStatisticsParameters, options.map { PerformanceStatisticsParameters(options: $0, callback: callback) })
+    }
+
     /// Sets the amount of additional safe area insets for the given edges.
     ///
     /// If called multiple times, the last call wins. This property behaves identically to the

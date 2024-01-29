@@ -190,4 +190,72 @@ final class MapBasicCoordinatorTests: XCTestCase {
         XCTAssertEqual(setViewportStub.invocations.count, 3)
         XCTAssertEqual(setViewportStub.invocations.last?.parameters, .idle)
     }
+
+    func testUpdateWithPerformanceStatisticsParametersCallsCoreMap() {
+        let deps = MapDependencies(performanceStatisticsParameters: .fixture())
+
+        update(with: deps)
+
+        XCTAssertEqual(mapView.mapboxMap.collectPerformanceStatisticsStub.invocations.map(\.parameters.options), [deps.performanceStatisticsParameters?.options])
+    }
+
+    func testUpdateWithNullPerformanceStatisticsParametersDoesNotCallCoreMap() {
+        let deps = MapDependencies(performanceStatisticsParameters: .fixture())
+
+        update(with: deps)
+        update(with: MapDependencies(performanceStatisticsParameters: nil))
+
+        XCTAssertEqual(mapView.mapboxMap.collectPerformanceStatisticsStub.invocations.map(\.parameters.options), [deps.performanceStatisticsParameters?.options])
+    }
+
+    func testUpdateWithSameOptionsDoesNotCallCoreMap() {
+        let deps1 = MapDependencies(performanceStatisticsParameters: .fixture())
+        let deps2 = MapDependencies(performanceStatisticsParameters: .fixture())
+
+        update(with: deps1)
+        update(with: deps2)
+
+        XCTAssertEqual(mapView.mapboxMap.collectPerformanceStatisticsStub.invocations.map(\.parameters.options), [deps1.performanceStatisticsParameters?.options])
+    }
+
+    func testUpdateWithSameOptionsAndNewCallbackInvokesNewCallback() {
+        let firstCallback = Stub<PerformanceStatistics, Void>()
+        let secondCallback = Stub<PerformanceStatistics, Void>()
+
+        update(with: MapDependencies(performanceStatisticsParameters: .fixture(callback: firstCallback.call)))
+        mapView.mapboxMap.collectPerformanceStatisticsStub.invocations.last?.parameters.callback(.fixture())
+        XCTAssertEqual(firstCallback.invocations.count, 1)
+        XCTAssertEqual(secondCallback.invocations.count, 0)
+
+        update(with: MapDependencies(performanceStatisticsParameters: .fixture(callback: secondCallback.call)))
+        mapView.mapboxMap.collectPerformanceStatisticsStub.invocations.last?.parameters.callback(.fixture())
+        XCTAssertEqual(firstCallback.invocations.count, 1)
+        XCTAssertEqual(secondCallback.invocations.count, 1)
+    }
+}
+
+@available(iOS 13.0, *)
+extension Map.PerformanceStatisticsParameters {
+    static func fixture(
+        options: PerformanceStatisticsOptions = PerformanceStatisticsOptions([.cumulative]),
+        callback: @escaping (PerformanceStatistics) -> Void = Stub<PerformanceStatistics, Void>().call
+    ) -> Map.PerformanceStatisticsParameters {
+        Map.PerformanceStatisticsParameters(options: options, callback: callback)
+    }
+}
+
+extension PerformanceStatistics {
+    static func fixture() -> PerformanceStatistics {
+        PerformanceStatistics(
+            collectionDurationMillis: 1000,
+            mapRenderDurationStatistics: DurationStatistics(maxMillis: 0, medianMillis: 0),
+            cumulativeStatistics: CumulativeRenderingStatistics(drawCalls: nil, textureBytes: nil, vertexBytes: nil),
+            perFrameStatistics: PerFrameRenderingStatistics(
+                topRenderGroups: [],
+                topRenderLayers: [],
+                shadowMapDurationStatistics: DurationStatistics(maxMillis: 0, medianMillis: 0),
+                uploadDurationStatistics: DurationStatistics(maxMillis: 0, medianMillis: 0)
+            )
+        )
+    }
 }

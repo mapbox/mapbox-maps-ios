@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 import CoreLocation
 import UIKit
 
@@ -190,5 +190,14 @@ final class MockMapboxMap: MapboxMapProtocol {
     let qrfStub = Stub<QRFParameters, Cancelable>(defaultReturnValue: MockCancelable())
     func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
         qrfStub.call(with: QRFParameters(point: point, options: options, completion: completion))
+    }
+
+    struct PerformanceStatisticsParameters {
+        let options: PerformanceStatisticsOptions
+        let callback: (PerformanceStatistics) -> Void
+    }
+    let collectPerformanceStatisticsStub = Stub<PerformanceStatisticsParameters, AnyCancelable>(defaultReturnValue: MockCancelable().erased)
+    func collectPerformanceStatistics(_ options: PerformanceStatisticsOptions, callback: @escaping (PerformanceStatistics) -> Void) -> AnyCancelable {
+        collectPerformanceStatisticsStub.call(with: PerformanceStatisticsParameters(options: options, callback: callback))
     }
 }

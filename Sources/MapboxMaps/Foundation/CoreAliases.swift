@@ -30,3 +30,4 @@ typealias CoreRuntimeStylingOptions = MapboxCoreMaps_Private.RuntimeStylingOptio
 typealias CoreObservable = MapboxCoreMaps_Private.Observable
 typealias CoreViewAnnotationPositionsUpdateListener = MapboxCoreMaps_Private.ViewAnnotationPositionsUpdateListener
 typealias CoreMapSnapshotter = MapboxCoreMaps_Private.MapSnapshotter
+typealias CorePerformanceSamplerOptions = MapboxCoreMaps_Private.PerformanceSamplerOptions

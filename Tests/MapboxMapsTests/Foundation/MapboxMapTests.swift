@@ -296,30 +296,49 @@ final class MapboxMapTests: XCTestCase {
 
     func testBeginAndEndGesture() {
         XCTAssertFalse(mapboxMap.__testingMap.isGestureInProgress())
+        XCTAssertEqual(mapboxMap.__testingMap.getCenterAltitudeMode(), .terrain)
 
         mapboxMap.beginGesture()
 
         XCTAssertTrue(mapboxMap.__testingMap.isGestureInProgress())
+        XCTAssertEqual(mapboxMap.__testingMap.getCenterAltitudeMode(), .sea)
 
+        mapboxMap.centerAltitudeMode = .terrain
         mapboxMap.beginGesture()
 
         XCTAssertTrue(mapboxMap.__testingMap.isGestureInProgress())
+        XCTAssertEqual(mapboxMap.__testingMap.getCenterAltitudeMode(), .sea)
 
         mapboxMap.endGesture()
 
         XCTAssertTrue(mapboxMap.__testingMap.isGestureInProgress())
+        XCTAssertEqual(mapboxMap.__testingMap.getCenterAltitudeMode(), .sea)
 
         mapboxMap.beginGesture()
 
         XCTAssertTrue(mapboxMap.__testingMap.isGestureInProgress())
+        XCTAssertEqual(mapboxMap.__testingMap.getCenterAltitudeMode(), .sea)
 
         mapboxMap.endGesture()
 
         XCTAssertTrue(mapboxMap.__testingMap.isGestureInProgress())
+        XCTAssertEqual(mapboxMap.__testingMap.getCenterAltitudeMode(), .sea)
 
         mapboxMap.endGesture()
 
         XCTAssertFalse(mapboxMap.__testingMap.isGestureInProgress())
+        XCTAssertEqual(mapboxMap.__testingMap.getCenterAltitudeMode(), .terrain)
+
+        mapboxMap.beginGesture()
+
+        XCTAssertTrue(mapboxMap.__testingMap.isGestureInProgress())
+        XCTAssertEqual(mapboxMap.__testingMap.getCenterAltitudeMode(), .sea)
+
+        mapboxMap.centerAltitudeMode = .sea
+        mapboxMap.endGesture()
+
+        XCTAssertFalse(mapboxMap.__testingMap.isGestureInProgress())
+        XCTAssertEqual(mapboxMap.__testingMap.getCenterAltitudeMode(), .sea)
     }
 
     func testLoadStyleHandlerIsInvokedExactlyOnce() throws {

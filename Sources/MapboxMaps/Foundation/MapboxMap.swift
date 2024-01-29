@@ -820,10 +820,25 @@ public final class MapboxMap: StyleManager {
         }
     }
 
+    /// Get/set the map centerAltitudeMode that defines how the map center point should react to terrain elevation changes.
+    /// See ``MapCenterAltitudeMode`` for options.
+    public var centerAltitudeMode: MapCenterAltitudeMode {
+        get { __map.getCenterAltitudeMode() }
+        set {
+            __map.setCenterAltitudeModeFor(newValue)
+            gestureState.intrinsicMode = newValue
+        }
+    }
+
+    private struct GestureState {
+        var count: Int
+        var intrinsicMode: MapCenterAltitudeMode
+    }
+
+    private lazy var gestureState = GestureState(count: 0, intrinsicMode: centerAltitudeMode)
+
     /// Returns `true` if a gesture is currently in progress.
     public var isGestureInProgress: Bool { __map.isGestureInProgress() }
-
-    private var gestureCount = 0
 
     /// If implementing a custom gesture, call this method when the gesture begins.
     ///
@@ -833,22 +848,25 @@ public final class MapboxMap: StyleManager {
     ///
     /// - Note: Must always be paired with a corresponding call to `endGesture()`
     public func beginGesture() {
-        gestureCount += 1
-        if gestureCount == 1 {
-            __map.setGestureInProgressForInProgress(true)
-            __map.setCenterAltitudeModeFor(.sea)
-        }
+        gestureState.count += 1
+        if gestureState.count == 1 { __map.setGestureInProgressForInProgress(true) }
+
+        /// We should set the center altitude mode to ``MapCenterAltitudeMode.sea`` during gestures to avoid bumpiness when the terrain is enabled.
+        /// It's not necessary to update ``MapCenterAltitudeMode`` if the user explicitly changed altitude to ``MapCenterAltitudeMode.sea`` before the gesture starts.
+        if centerAltitudeMode != .sea { __map.setCenterAltitudeModeFor(.sea) }
     }
 
     /// If implementing a custom gesture, call this method when the gesture ends.
     ///
     /// - Note: Must always be paired with a corresponding call to `beginGesture()`.
     public func endGesture() {
-        assert(gestureCount > 0)
-        gestureCount -= 1
-        if gestureCount == 0 {
+        assert(gestureState.count > 0)
+        gestureState.count -= 1
+        if gestureState.count == 0 {
             __map.setGestureInProgressForInProgress(false)
-            __map.setCenterAltitudeModeFor(.terrain)
+
+            /// After the gesture end we must ensure to set the ``centerAltitudeMode`` expected be the user.
+            __map.setCenterAltitudeModeFor(gestureState.intrinsicMode)
         }
     }
 }

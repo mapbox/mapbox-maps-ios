@@ -9,6 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix glitch in chained camera animations.
 * Build XCFramework with `SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO` flag to avoid serialized search paths in Swift modules.
 * Fixed a crash that occurs when annotations have duplicate identifiers.
+* Expose `MapboxMap.centerAltitudeMode` and ensure correct `centerAltitudeMode` on gesture ending.
 * Expose extra configuration methods for `MapboxMap`: `setNorthOrientation(_:)`, `setConstrainMode(_:)` and `setViewportMode(_:)`.
 Use them to configure respective map options after creating a map view.
 * Expose `MapboxMap.reduceMemoryUse()` which can be used in situations when it is important to keep the memory footprint minimal.

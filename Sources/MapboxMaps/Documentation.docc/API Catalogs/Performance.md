@@ -14,9 +14,13 @@
 
 ### Performance recording
 
-- ``PerfStatsCollected``
-- ``PerfStatsCollectionOptions``
-- ``PerfSamplerOptions``
+- ``PerformanceStatistics``
+- ``CumulativeRenderingStatistics``
+- ``DurationStatistics``
+- ``GroupPerformanceStatistics``
+- ``PerFrameRenderingStatistics``
+- ``PerformanceStatisticsOptions``
+- ``PerformanceStatisticsCallback``
 
 ### Logs
 

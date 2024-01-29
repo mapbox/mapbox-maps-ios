@@ -29,7 +29,7 @@ final class DelegatingMapClientTests: XCTestCase {
 
     func testGetMetalViewForwardsToDelegate() {
         let expectedDevice = MTLCreateSystemDefaultDevice()
-        let expectedView = MTKView()
+        let expectedView = MetalView(frame: CGRect(x: 0, y: 0, width: 64, height: 64), device: nil)
         delegate.getMetalViewStub.defaultReturnValue = expectedView
 
         let actualView = delegatingMapClient.getMetalView(for: expectedDevice)
@@ -44,6 +44,6 @@ final class DelegatingMapClientTests: XCTestCase {
             XCTAssertNil(actualDevice)
             XCTAssertNil(expectedDevice)
         }
-        XCTAssertEqual(actualView, expectedView)
+        XCTAssertIdentical(actualView, expectedView)
     }
 }

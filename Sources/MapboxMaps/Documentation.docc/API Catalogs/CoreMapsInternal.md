@@ -22,7 +22,6 @@ Maps rendering SDK also known as GL-Native. These are for internal use only.
 <!-- type aliases -->
 - ``CameraChangedCallback``
 - ``GenericEventCallback``
-- ``PerfStatsCollectedCallback``
 - ``MapLoadingErrorCallback``
 - ``RenderFrameFinishedCallback``
 - ``RenderFrameStartedCallback``

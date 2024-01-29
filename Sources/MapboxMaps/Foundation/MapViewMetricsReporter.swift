@@ -5,6 +5,6 @@ import MetalKit
     func beforeDisplayLinkCallback(displayLink: CADisplayLink)
     func afterDisplayLinkCallback(displayLink: CADisplayLink)
 
-    func beforeMetalViewDrawCallback(metalView: MTKView?)
-    func afterMetalViewDrawCallback(metalView: MTKView?)
+    func beforeMetalViewDrawCallback()
+    func afterMetalViewDrawCallback()
 }

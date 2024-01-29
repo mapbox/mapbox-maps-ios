@@ -1322,3 +1322,8 @@ Func CameraAnimationsManager.fly(to:duration:completion:) has parameter 2 type c
 
 // Optional padding in camera for coordinate bounds
 Func MapboxMap.camera(for:padding:bearing:pitch:maxZoom:offset:) has parameter 1 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
+
+
+// VisionOS support
+Func MapViewMetricsReporter.afterMetalViewDrawCallback(metalView:) has been renamed to Func afterMetalViewDrawCallback()
+Func MapViewMetricsReporter.beforeMetalViewDrawCallback(metalView:) has been renamed to Func beforeMetalViewDrawCallback()

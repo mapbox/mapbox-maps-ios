@@ -75,7 +75,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
     }
 
     /// The underlying metal view that is used to render the map
-    internal private(set) var metalView: MTKView?
+    internal private(set) var metalView: MetalView?
 
     private let cameraViewContainerView = UIView()
 
@@ -623,9 +623,9 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
             defer {
                 drawTrace?.end()
             }
-            metricsReporter?.beforeMetalViewDrawCallback(metalView: metalView)
+            metricsReporter?.beforeMetalViewDrawCallback()
             metalView?.draw()
-            metricsReporter?.afterMetalViewDrawCallback(metalView: metalView)
+            metricsReporter?.afterMetalViewDrawCallback()
         }
     }
 
@@ -714,7 +714,7 @@ extension MapView: DelegatingMapClientDelegate {
         OSLog.platform.signpostEvent("Set needs redraw")
     }
 
-    internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
+    internal func getMetalView(for metalDevice: MTLDevice?) -> MetalView? {
         let minSize = CGRect(x: 0, y: 0, width: 1, height: 1)
         let metalView = dependencyProvider.makeMetalView(frame: minSize.union(bounds), device: metalDevice)
 

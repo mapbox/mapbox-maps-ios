@@ -13,7 +13,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         var device: MTLDevice?
     }
     let makeMetalViewStub = Stub<MakeMetalViewParams, MockMetalView?>(defaultReturnValue: nil)
-    func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView {
+    func makeMetalView(frame: CGRect, device: MTLDevice?) -> MetalView {
         makeMetalViewStub.returnValueQueue.append(MockMetalView(frame: frame, device: device))
         return makeMetalViewStub.call(with: MakeMetalViewParams(frame: frame, device: device))!
     }

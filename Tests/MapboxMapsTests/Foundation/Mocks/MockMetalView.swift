@@ -1,6 +1,7 @@
 import MetalKit
+@testable import MapboxMaps
 
-final class MockMetalView: MTKView {
+final class MockMetalView: MetalView {
     let drawStub = Stub<Void, Void>()
     override func draw() {
         super.draw()

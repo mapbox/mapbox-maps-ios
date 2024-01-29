@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let coreMaps = MapsDependency.coreMaps(version: "11.1.0")
+let coreMaps = MapsDependency.coreMaps(version: "11.2.0-SNAPSHOT.0126T1736Z.c82057a", checksum: "d87bd0627f7364da0f5d746a912934b835c66ef21a444df77ef2c1730ff86b31")
 
 let common = MapsDependency.common(version: "24.1.0")
 

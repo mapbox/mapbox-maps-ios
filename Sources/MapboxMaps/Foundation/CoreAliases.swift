@@ -23,6 +23,7 @@ typealias CoreGeoJSONSourceData = MapboxCoreMaps_Private.GeoJSONSourceData
 typealias CoreMapRecorderOptions = MapboxCoreMaps_Private.MapRecorderOptions
 typealias CoreMapPlayerOptions = MapboxCoreMaps_Private.MapPlayerOptions
 typealias CoreMetalViewProvider = MapboxCoreMaps_Private.MBMMetalViewProvider
+typealias CoreMetalView = MapboxCoreMaps_Private.MBMMetalView
 typealias CoreMapClient = MapboxCoreMaps_Private.MapClient
 typealias CoreMapsResourceOptions = MapboxCoreMaps_Private.MapsResourceOptions
 typealias CoreRuntimeStylingOptions = MapboxCoreMaps_Private.RuntimeStylingOptions

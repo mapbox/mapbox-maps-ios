@@ -3,7 +3,7 @@ import MetalKit
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
     var notificationCenter: NotificationCenterProtocol { get }
     var bundle: BundleProtocol { get }
-    func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
+    func makeMetalView(frame: CGRect, device: MTLDevice?) -> MetalView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
     func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol
     func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
@@ -38,8 +38,8 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     private let mainQueue: MainQueueProtocol = MainQueueWrapper()
 
-    internal func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView {
-        MTKView(frame: frame, device: device)
+    internal func makeMetalView(frame: CGRect, device: MTLDevice?) -> MetalView {
+        MetalView(frame: frame, device: device)
     }
 
     internal func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol? {

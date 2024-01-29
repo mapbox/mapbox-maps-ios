@@ -2409,6 +2409,100 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-writing-mode"] as! [TextWritingMode], defaultValue)
     }
 
+    func testInitialIconColorSaturation() {
+        let initialValue = manager.iconColorSaturation
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconColorSaturation() {
+        let value = Double.random(in: 0...1)
+        manager.iconColorSaturation = value
+        XCTAssertEqual(manager.iconColorSaturation, value)
+
+        // test layer and source synced and properties added
+        $displayLink.send()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-saturation"] as! Double, value)
+    }
+
+    func testIconColorSaturationAnnotationPropertiesAddedWithoutDuplicate() {
+        let newIconColorSaturationProperty = Double.random(in: 0...1)
+        let secondIconColorSaturationProperty = Double.random(in: 0...1)
+
+        manager.iconColorSaturation = newIconColorSaturationProperty
+        $displayLink.send()
+        manager.iconColorSaturation = secondIconColorSaturationProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-saturation"] as! Double, secondIconColorSaturationProperty)
+    }
+
+    func testNewIconColorSaturationPropertyMergedWithAnnotationProperties() {
+        var annotations = [PointAnnotation]()
+        for _ in 0...5 {
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+            annotation.iconAnchor = IconAnchor.random()
+            annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+            annotation.iconRotate = Double.random(in: -100000...100000)
+            annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.random()
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+            annotation.symbolSortKey = Double.random(in: -100000...100000)
+            annotation.textAnchor = TextAnchor.random()
+            annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.textJustify = TextJustify.random()
+            annotation.textLetterSpacing = Double.random(in: -100000...100000)
+            annotation.textLineHeight = Double.random(in: -100000...100000)
+            annotation.textMaxWidth = Double.random(in: 0...100000)
+            annotation.textOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+            annotation.textRadialOffset = Double.random(in: -100000...100000)
+            annotation.textRotate = Double.random(in: -100000...100000)
+            annotation.textSize = Double.random(in: 0...100000)
+            annotation.textTransform = TextTransform.random()
+            annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
+            annotation.iconHaloBlur = Double.random(in: 0...100000)
+            annotation.iconHaloColor = StyleColor.random()
+            annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
+            annotation.iconOpacity = Double.random(in: 0...1)
+            annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
+            annotation.textHaloBlur = Double.random(in: 0...100000)
+            annotation.textHaloColor = StyleColor.random()
+            annotation.textHaloWidth = Double.random(in: 0...100000)
+            annotation.textOpacity = Double.random(in: 0...1)
+            annotations.append(annotation)
+        }
+        let newIconColorSaturationProperty = Double.random(in: 0...1)
+
+        manager.annotations = annotations
+        manager.iconColorSaturation = newIconColorSaturationProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-saturation"])
+    }
+
+    func testSetToNilIconColorSaturation() {
+        let newIconColorSaturationProperty = Double.random(in: 0...1)
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-saturation").value as! Double
+        manager.iconColorSaturation = newIconColorSaturationProperty
+        $displayLink.send()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-saturation"])
+
+        manager.iconColorSaturation = nil
+        $displayLink.send()
+        XCTAssertNil(manager.iconColorSaturation)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-saturation"] as! Double, defaultValue)
+    }
+
     func testInitialIconTranslate() {
         let initialValue = manager.iconTranslate
         XCTAssertNil(initialValue)

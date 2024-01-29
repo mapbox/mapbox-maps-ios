@@ -171,6 +171,12 @@ public struct SymbolLayer: Layer {
     /// Transition options for `iconColor`.
     public var iconColorTransition: StyleTransition?
 
+    /// Controls saturation level of the symbol icon. With the default value of 1 the icon color is preserved while with a value of 0 it is fully desaturated and looks black and white.
+    public var iconColorSaturation: Value<Double>?
+
+    /// Transition options for `iconColorSaturation`.
+    public var iconColorSaturationTransition: StyleTransition?
+
     /// Controls the intensity of light emitted on the source features.
     public var iconEmissiveStrength: Value<Double>?
 
@@ -282,6 +288,8 @@ public struct SymbolLayer: Layer {
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         try paintContainer.encodeIfPresent(iconColor, forKey: .iconColor)
         try paintContainer.encodeIfPresent(iconColorTransition, forKey: .iconColorTransition)
+        try paintContainer.encodeIfPresent(iconColorSaturation, forKey: .iconColorSaturation)
+        try paintContainer.encodeIfPresent(iconColorSaturationTransition, forKey: .iconColorSaturationTransition)
         try paintContainer.encodeIfPresent(iconEmissiveStrength, forKey: .iconEmissiveStrength)
         try paintContainer.encodeIfPresent(iconEmissiveStrengthTransition, forKey: .iconEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(iconHaloBlur, forKey: .iconHaloBlur)
@@ -373,6 +381,8 @@ public struct SymbolLayer: Layer {
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             iconColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .iconColor)
             iconColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconColorTransition)
+            iconColorSaturation = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconColorSaturation)
+            iconColorSaturationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconColorSaturationTransition)
             iconEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconEmissiveStrength)
             iconEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconEmissiveStrengthTransition)
             iconHaloBlur = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconHaloBlur)
@@ -516,6 +526,8 @@ public struct SymbolLayer: Layer {
     enum PaintCodingKeys: String, CodingKey {
         case iconColor = "icon-color"
         case iconColorTransition = "icon-color-transition"
+        case iconColorSaturation = "icon-color-saturation"
+        case iconColorSaturationTransition = "icon-color-saturation-transition"
         case iconEmissiveStrength = "icon-emissive-strength"
         case iconEmissiveStrengthTransition = "icon-emissive-strength-transition"
         case iconHaloBlur = "icon-halo-blur"

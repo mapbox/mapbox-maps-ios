@@ -78,6 +78,18 @@ public struct RasterLayer: Layer {
     /// Transition options for `rasterContrast`.
     public var rasterContrastTransition: StyleTransition?
 
+    /// Specifies an uniform elevation from the ground, in meters. Only supported with image sources.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var rasterElevation: Value<Double>?
+
+    /// Transition options for `rasterElevation`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var rasterElevationTransition: StyleTransition?
+
     /// Controls the intensity of light emitted on the source features.
     public var rasterEmissiveStrength: Value<Double>?
 
@@ -139,6 +151,8 @@ public struct RasterLayer: Layer {
         try paintContainer.encodeIfPresent(rasterColorRangeTransition, forKey: .rasterColorRangeTransition)
         try paintContainer.encodeIfPresent(rasterContrast, forKey: .rasterContrast)
         try paintContainer.encodeIfPresent(rasterContrastTransition, forKey: .rasterContrastTransition)
+        try paintContainer.encodeIfPresent(rasterElevation, forKey: .rasterElevation)
+        try paintContainer.encodeIfPresent(rasterElevationTransition, forKey: .rasterElevationTransition)
         try paintContainer.encodeIfPresent(rasterEmissiveStrength, forKey: .rasterEmissiveStrength)
         try paintContainer.encodeIfPresent(rasterEmissiveStrengthTransition, forKey: .rasterEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(rasterFadeDuration, forKey: .rasterFadeDuration)
@@ -178,6 +192,8 @@ public struct RasterLayer: Layer {
             rasterColorRangeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterColorRangeTransition)
             rasterContrast = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterContrast)
             rasterContrastTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterContrastTransition)
+            rasterElevation = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterElevation)
+            rasterElevationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterElevationTransition)
             rasterEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterEmissiveStrength)
             rasterEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterEmissiveStrengthTransition)
             rasterFadeDuration = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterFadeDuration)
@@ -227,6 +243,8 @@ public struct RasterLayer: Layer {
         case rasterColorRangeTransition = "raster-color-range-transition"
         case rasterContrast = "raster-contrast"
         case rasterContrastTransition = "raster-contrast-transition"
+        case rasterElevation = "raster-elevation"
+        case rasterElevationTransition = "raster-elevation-transition"
         case rasterEmissiveStrength = "raster-emissive-strength"
         case rasterEmissiveStrengthTransition = "raster-emissive-strength-transition"
         case rasterFadeDuration = "raster-fade-duration"

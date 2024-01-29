@@ -14,6 +14,8 @@ Use them to configure respective map options after creating a map view.
 * Expose `MapboxMap.reduceMemoryUse()` which can be used in situations when it is important to keep the memory footprint minimal.
 * Expose `MapboxMap.isAnimationInProgress` and `MapboxMap.isGestureInProgress` to query current status of both built-in and custom camera animations and gestures.
 * Expose experimental `CustomRasterSource` and non-experimental `CustomGeometrySource` as regular `Source`'s providing a better way to work with them and also allow for using them in Style DSL.
+* Introduce `SymbolLayer.iconColorSaturation` API.
+* Introduce experimental `RasterLayer.rasterElevation` API.
 
 ## 11.1.0 - 17 January, 2024
 

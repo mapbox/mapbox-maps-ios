@@ -65,6 +65,8 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
 
             layer.iconColor = Value<StyleColor>.testConstantValue()
             layer.iconColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.iconColorSaturation = Value<Double>.testConstantValue()
+            layer.iconColorSaturationTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconEmissiveStrength = Value<Double>.testConstantValue()
             layer.iconEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconHaloBlur = Value<Double>.testConstantValue()

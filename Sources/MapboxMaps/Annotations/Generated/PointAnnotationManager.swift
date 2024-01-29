@@ -538,6 +538,16 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
+    /// Controls saturation level of the symbol icon. With the default value of 1 the icon color is preserved while with a value of 0 it is fully desaturated and looks black and white.
+    public var iconColorSaturation: Double? {
+        get {
+            return layerProperties["icon-color-saturation"] as? Double
+        }
+        set {
+            layerProperties["icon-color-saturation"] = newValue
+        }
+    }
+
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     public var iconTranslate: [Double]? {
         get {

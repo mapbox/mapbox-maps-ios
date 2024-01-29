@@ -659,6 +659,32 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.textWritingMode, .constant(StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]))
     }
 
+    func testIconColorSaturation() throws {
+        // Test that the setter and getter work
+        let value = Double.random(in: 0...1)
+        manager.iconColorSaturation = value
+        XCTAssertEqual(manager.iconColorSaturation, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.iconColorSaturation {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.iconColorSaturation = nil
+        XCTAssertNil(manager.iconColorSaturation)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.iconColorSaturation, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-saturation").value as! NSNumber).doubleValue))
+    }
+
     func testIconTranslate() throws {
         // Test that the setter and getter work
         let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]

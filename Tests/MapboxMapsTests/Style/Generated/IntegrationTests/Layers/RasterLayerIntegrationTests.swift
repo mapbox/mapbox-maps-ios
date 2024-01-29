@@ -34,6 +34,8 @@ final class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.rasterColorRangeTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.rasterContrast = Value<Double>.testConstantValue()
             layer.rasterContrastTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.rasterElevation = Value<Double>.testConstantValue()
+            layer.rasterElevationTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.rasterEmissiveStrength = Value<Double>.testConstantValue()
             layer.rasterEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.rasterFadeDuration = Value<Double>.testConstantValue()

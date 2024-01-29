@@ -117,6 +117,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
         assign(manager, \.textRotationAlignment, value: textRotationAlignment)
         assign(manager, \.textVariableAnchor, value: textVariableAnchor)
         assign(manager, \.textWritingMode, value: textWritingMode)
+        assign(manager, \.iconColorSaturation, value: iconColorSaturation)
         assign(manager, \.iconTranslate, value: iconTranslate)
         assign(manager, \.iconTranslateAnchor, value: iconTranslateAnchor)
         assign(manager, \.textTranslate, value: textTranslate)
@@ -331,6 +332,15 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
 #endif
     public func textWritingMode(_ newValue: [TextWritingMode]) -> Self {
         with(self, setter(\.textWritingMode, newValue))
+    }
+
+    private var iconColorSaturation: Double?
+    /// Controls saturation level of the symbol icon. With the default value of 1 the icon color is preserved while with a value of 0 it is fully desaturated and looks black and white.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconColorSaturation(_ newValue: Double) -> Self {
+        with(self, setter(\.iconColorSaturation, newValue))
     }
 
     private var iconTranslate: [Double]?

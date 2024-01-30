@@ -2,6 +2,9 @@ import Foundation
 import UIKit
 import CoreLocation
 
+#if swift(>=5.9)
+    @available(visionOS, unavailable)
+#endif
 internal final class DefaultInterfaceOrientationProvider {
     var onInterfaceOrientationChange: Signal<UIInterfaceOrientation> { subject.signal }
 

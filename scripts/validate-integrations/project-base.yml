@@ -1,0 +1,41 @@
+# The base project doesn't require resolving SPM dependencies.
+name: ValidateLatestMaps
+options:
+  bundleIdPrefix: com.mapbox
+settings:
+  DEVELOPMENT_TEAM: GJZR2MEM28
+targets:
+  DirectDynamicDownload:
+    templates:
+      - Application
+    dependencies:
+      - framework: ${DYNAMIC_ARTIFACTS_PATH}/MapboxMaps.xcframework
+      - framework: ${DYNAMIC_ARTIFACTS_PATH}/MapboxCoreMaps.xcframework
+      - framework: ${DYNAMIC_ARTIFACTS_PATH}/MapboxCommon.xcframework
+      - framework: ${DYNAMIC_ARTIFACTS_PATH}/Turf.xcframework
+  DirectDynamicDownloadUITest:
+    templates:
+      - UITest
+    dependencies:
+      - target: DirectDynamicDownload
+targetTemplates:
+  Application:
+    sources: [ViewController.swift]
+    platform: iOS
+    deploymentTarget:
+      iOS: 12.0
+    type: application
+    info:
+      path: Info.plist
+      properties:
+        MBXAccessToken: ${MBX_TOKEN}
+        UILaunchStoryboardName: LaunchScreen
+    scheme:
+      testTargets:
+        - ${target_name}UITest
+  UITest:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: MapLoadingUITest.swift
+    info:
+      path: Info-tests.plist

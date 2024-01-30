@@ -16,6 +16,11 @@ public struct StyleURI: Hashable, RawRepresentable {
         guard let url = URL(string: rawValue), url.scheme != nil else {
             return nil
         }
+
+        guard url.isFileURL || url.host != nil else {
+            return nil
+        }
+
         self.rawValue = rawValue
     }
 

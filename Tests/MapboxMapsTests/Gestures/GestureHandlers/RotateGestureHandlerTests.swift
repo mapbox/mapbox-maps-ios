@@ -8,7 +8,7 @@ final class RotateGestureHandlerTests: XCTestCase {
     var rotateGestureHandler: RotateGestureHandler!
     var delegate: MockGestureHandlerDelegate!
     var view: UIView!
-    let interruptingRecognizers = Set([UIPanGestureRecognizer(), UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UITapGestureRecognizer()])
+    let interruptingRecognizers = UIGestureRecognizer.interruptingRecognizers([.longPress, .swipe, .screenEdge, .pan])
 
     override func setUp() {
         super.setUp()

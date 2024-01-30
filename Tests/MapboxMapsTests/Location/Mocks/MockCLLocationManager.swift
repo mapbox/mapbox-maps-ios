@@ -10,16 +10,7 @@ final class MockCLLocationManager: CLLocationManagerProtocol {
 
     var compatibleAccuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy
 
-    var heading: CLHeading?
-
-    @Stubbed var headingOrientation: CLDeviceOrientation = .unknown
-
     @Stubbed var delegate: CLLocationManagerDelegate?
-
-    let requestAlwaysAuthorizationStub = Stub<Void, Void>()
-    func requestAlwaysAuthorization() {
-        requestAlwaysAuthorizationStub.call()
-    }
 
     let requestWhenInUseAuthorizationStub = Stub<Void, Void>()
     func requestWhenInUseAuthorization() {
@@ -41,6 +32,11 @@ final class MockCLLocationManager: CLLocationManagerProtocol {
         stopUpdatingLocationStub.call()
     }
 
+#if !(swift(>=5.9) && os(visionOS))
+    var heading: CLHeading?
+
+    @Stubbed var headingOrientation: CLDeviceOrientation = .unknown
+
     let startUpdatingHeadingStub = Stub<Void, Void>()
     func startUpdatingHeading() {
         startUpdatingHeadingStub.call()
@@ -50,9 +46,5 @@ final class MockCLLocationManager: CLLocationManagerProtocol {
     func stopUpdatingHeading() {
         stopUpdatingHeadingStub.call()
     }
-
-    let dismissHeadingCalibrationDisplayStub = Stub<Void, Void>()
-    func dismissHeadingCalibrationDisplay() {
-        dismissHeadingCalibrationDisplayStub.call()
-    }
+#endif
 }

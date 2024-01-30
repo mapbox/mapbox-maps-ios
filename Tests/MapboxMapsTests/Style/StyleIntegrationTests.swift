@@ -234,7 +234,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testLocalizeLabelsv7() throws {
-        let mapView = MapView(frame: UIScreen.main.bounds)
+        let mapView = MapView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
 
         let styleJSONObject: [String: Any] = [
             "version": 7,
@@ -370,7 +370,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testLocalizeLabelsv8() throws {
-        let mapView = MapView(frame: UIScreen.main.bounds)
+        let mapView = MapView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
 
         let styleJSONObject: [String: Any] = [
             "version": 8,

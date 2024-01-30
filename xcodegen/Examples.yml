@@ -15,9 +15,27 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
         SWIFT_OBJC_BRIDGING_HEADER: $(MAPBOXMAPS_PATH)/Apps/Examples/Examples/Examples-Bridging-Header.h
     sources:
-      - path: ../Apps/Examples/Examples/
+      - path: ../Apps/Examples/Examples
+        excludes:
+          - VisionOSMain.swift
+          - "SwiftUI Examples/**"
+          - "All Examples/Sample Data/**"
+          - "Assets.xcassets/**"
+        destinationFilters: [iOS]
+      - path: ../Apps/Examples/Examples
+        includes:
+          - VisionOSMain.swift
+        destinationFilters: [visionOS]
+      - path: ../Apps/Examples/Examples
+        includes:
+          - "SwiftUI Examples/**"
+          - "All Examples/Sample Data/**"
+          - "Assets.xcassets/**"
+        # destinationFilters: [iOS, visionOS]
+
     dependencies:
       - package: Fingertips
+        destinationFilters: [iOS]
     scheme:
       testTargets:
         - ExamplesTests
@@ -35,6 +53,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
     sources:
       - path: ../Tests/ExamplesTests
+        destinationFilters: [iOS] # no-op on visionOS
     dependencies:
       - target: Examples
 
@@ -46,6 +65,9 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: "mapbox.ExamplesUITests"
-    sources: ../Tests/ExamplesUITests
+    sources:
+      - path: ../Tests/ExamplesUITests
+        destinationFilters: [iOS] # no-op on visionOS
+
     dependencies:
       - target: Examples

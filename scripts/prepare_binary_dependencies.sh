@@ -7,6 +7,9 @@ cd "$SCRIPT_DIR/../" || exit
 VERSIONS_PATH="scripts/release/packager/versions.json"
 MAPBOX_CORE_MAPS_VERSION="$(jq -r .MapboxCoreMaps $VERSIONS_PATH)"
 MAPBOX_COMMON_VERSION="$(jq -r .MapboxCommon $VERSIONS_PATH)"
+MAPBOX_TURF_VERSION="$(jq -r .Turf $VERSIONS_PATH)"
+
+XCODE_VERSION="$(xcodebuild -version | head -1 | cut -d ' ' -f 2)"
 
 release_folder() {
     [[ $1 = *"SNAPSHOT"* ]] && echo "snapshots" || echo "releases"
@@ -21,9 +24,10 @@ cat <<EOF > Cartfile.MapboxCommon.json
 EOF
 
 cat <<EOF > Cartfile
+# xcode version: $XCODE_VERSION
 binary "Cartfile.MapboxCoreMaps.json" == $MAPBOX_CORE_MAPS_VERSION
 binary "Cartfile.MapboxCommon.json" == $MAPBOX_COMMON_VERSION
-github "mapbox/turf-swift" == $(jq -r .Turf $VERSIONS_PATH)
+github "mapbox/turf-swift" == $MAPBOX_TURF_VERSION
 
 EOF
 
@@ -48,7 +52,14 @@ if [[ "$CURRENT_CONFIG_HASH" != "$EXPECTED_CONFIG_HASH" ]]; then
         echo "error: Carthage not found"
         exit 1
     fi
-    $CARTHAGE_BINARY update --use-netrc --platform ios --verbose --use-xcframeworks --cache-builds --configuration Cartfile.xcconfig
+
+    # build xcframeworks for visionOS starting from xcode 15.2
+    PLATFORM="iOS"
+    if [[ "$(printf '%s\n' "$XCODE_VERSION" "15.2" | sort -V -r | head -n1)" == "$XCODE_VERSION" ]]; then
+        PLATFORM="iOS,visionOS"
+    fi
+
+    $CARTHAGE_BINARY update --use-netrc --platform $PLATFORM --verbose --use-xcframeworks --cache-builds --configuration Cartfile.xcconfig
 
     echo "$CURRENT_CONFIG_HASH" > Carthage/config.version
 fi

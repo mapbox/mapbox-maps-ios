@@ -3,10 +3,10 @@ import XCTest
 
 internal class IntegrationTestCase: XCTestCase {
 
-    internal var window: UIWindow?
-    internal var rootViewController: UIViewController?
-    internal var createdWindow = false
-    internal var cancelables = Set<AnyCancelable>()
+    var window: UIWindow!
+    var rootViewController: UIViewController?
+    var cancelables = Set<AnyCancelable>()
+    private var createdViewController = false
 
     internal override func setUpWithError() throws {
         try super.setUpWithError()
@@ -18,10 +18,11 @@ internal class IntegrationTestCase: XCTestCase {
 
     internal override func tearDownWithError() throws {
         cancelables.removeAll()
-        if createdWindow {
+        if createdViewController {
             rootViewController?.viewWillDisappear(false)
             rootViewController?.viewDidDisappear(false)
         }
+        createdViewController = false
         rootViewController = nil
         window = nil
 
@@ -34,30 +35,44 @@ internal class IntegrationTestCase: XCTestCase {
         }
     }
 
-    private func setupScreenAndWindow() throws {
-        // Look for an existing window/rvc. This will be the case
+    private func loadWindow() -> UIWindow {
+        // Look for an existing window. This will be the case
         // when running with a host application
-        window = UIApplication.shared.windows.first
-        rootViewController = window?.rootViewController
-
-        if (window == nil) && (rootViewController == nil) {
-            createdWindow = true
-
-            let screen = UIScreen.main
-            let window = UIWindow(frame: screen.bounds)
-            let rootViewController = UIViewController()
-            window.screen = screen
-            window.rootViewController = rootViewController
-
-            // Load the view
-            _ = rootViewController.view
-            window.makeKeyAndVisible()
-            rootViewController.viewWillAppear(false)
-            rootViewController.viewDidAppear(false)
-
-            self.window = window
-            self.rootViewController = rootViewController
+        if let window = UIApplication.shared.keyWindowForTests {
+            return window
         }
+
+#if swift(>=5.9) && os(visionOS)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+#else
+        let screen = UIScreen.main
+        let window = UIWindow(frame: screen.bounds)
+        window.screen = screen
+#endif
+        return window
+    }
+
+    private func loadRootViewController() -> UIViewController {
+        if let vc = window.rootViewController {
+            return vc
+        }
+
+        let rootViewController = UIViewController()
+        window.rootViewController = rootViewController
+
+        // Load the view
+        _ = rootViewController.view
+        window.makeKeyAndVisible()
+        rootViewController.viewWillAppear(false)
+        rootViewController.viewDidAppear(false)
+        createdViewController = true
+        return rootViewController
+    }
+
+    private func setupScreenAndWindow() throws {
+
+        window = loadWindow()
+        rootViewController = loadRootViewController()
 
         XCTAssertNotNil(window)
         XCTAssertNotNil(rootViewController?.view)

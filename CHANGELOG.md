@@ -4,6 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Vision OS support.
 * Add easing curve parameter to `CameraAnimationsManager.fly(to:duration:curve:completion)`, make `TimingCurve` public with few more options.
 * Fix MapView flickering during resizing.
 * Fix glitch in chained camera animations.
@@ -18,6 +19,8 @@ Use them to configure respective map options after creating a map view.
 * Introduce `SymbolLayer.iconColorSaturation` API.
 * Introduce experimental `RasterLayer.rasterElevation` API.
 * Introduce experimental `MapboxMap.collectPerformanceStatistics` allowing to collect map rendering performance statistics, both for UIKit and SwiftUI.
+* Bump Turf version to `2.8.0`.
+* Bump minimum Xcode version to `14.3.1`.
 
 ## 11.1.0 - 17 January, 2024
 

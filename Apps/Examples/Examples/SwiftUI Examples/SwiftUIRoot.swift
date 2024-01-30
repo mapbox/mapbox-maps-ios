@@ -4,8 +4,6 @@ import UIKit
 
 @available(iOS 14.0, *)
 struct SwiftUIRoot: View {
-    @Environment(\.presentationMode) var presentationMode
-
     var body: some View {
         NavigationView {
             List {
@@ -46,13 +44,13 @@ struct SwiftUIRoot: View {
             .listStyle(.plain)
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
+            .modifier(ToolbarContentWhenPresented { dismiss in
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Close") {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
-            }
+            })
         }
     }
 }
@@ -80,6 +78,22 @@ struct ExampleLink<S, Destination>: View where S : StringProtocol, Destination: 
         }
     }
 }
+
+@available(iOS 14.0, *)
+private struct ToolbarContentWhenPresented<T: ToolbarContent>: ViewModifier {
+    @Environment(\.presentationMode) var presentationMode
+    var toolbarContent: (@escaping () -> Void) -> T
+    func body(content: Content) -> some View {
+        if presentationMode.wrappedValue.isPresented {
+            content.toolbar {
+                toolbarContent({ presentationMode.wrappedValue.dismiss() })
+            }
+        } else {
+            content
+        }
+    }
+}
+
 
 
 @available(iOS 14.0, *)

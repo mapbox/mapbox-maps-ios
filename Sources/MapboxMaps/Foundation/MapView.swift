@@ -714,18 +714,15 @@ extension MapView: DelegatingMapClientDelegate {
         OSLog.platform.signpostEvent("Set needs redraw")
     }
 
-    internal func getMetalView(for metalDevice: MTLDevice?) -> MetalView? {
+    func getMetalView(for metalDevice: MTLDevice?) -> MetalView? {
         let minSize = CGRect(x: 0, y: 0, width: 1, height: 1)
         let metalView = dependencyProvider.makeMetalView(frame: minSize.union(bounds), device: metalDevice)
 
         metalView.translatesAutoresizingMaskIntoConstraints = false
-        metalView.autoResizeDrawable = false
         metalView.contentScaleFactor = pixelRatio
         metalView.contentMode = .center
         metalView.isOpaque = isOpaque
         metalView.layer.isOpaque = isOpaque
-        metalView.isPaused = true
-        metalView.enableSetNeedsDisplay = false
         metalView.presentsWithTransaction = false
         metalView.sampleCount = antialiasingSampleCount
 

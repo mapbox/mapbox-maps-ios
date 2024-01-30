@@ -43,7 +43,11 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     internal func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol? {
+#if swift(>=5.9) && os(visionOS)
+        return CADisplayLink(target: target, selector: selector)
+#else
         window.screen.displayLink(withTarget: target, selector: selector)
+#endif
     }
 
     internal func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol {

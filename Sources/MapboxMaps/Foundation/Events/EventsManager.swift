@@ -76,7 +76,11 @@ internal final class EventsManager: EventsManagerProtocol {
     }
 
     private func getOrientation() -> String {
+#if swift(>=5.9) && os(visionOS)
+        let orientation = UIDeviceOrientation.unknown
+#else
         let orientation = UIDevice.current.orientation
+#endif
 
         let defaultOrientation = "Default - Unknown"
         let orientationToString: [UIDeviceOrientation: String] = [
@@ -108,7 +112,7 @@ internal final class EventsManager: EventsManagerProtocol {
         let userId = UIDevice.current.identifierForVendor?.uuidString ?? ""
         let model = lookupDeviceModel()
         let operatingSystem = String(format: "%@ %@", UIDevice.current.systemName, UIDevice.current.systemVersion)
-        let resolution = UIScreen.main.nativeScale
+        let resolution = ScreenShim.nativeScale
         let accessibilityFontScale = self.getContentScale(for: traits.preferredContentSizeCategory)
         let orientation = self.getOrientation()
         let wifi = ReachabilityFactory.reachability(forHostname: nil).currentNetworkStatus() == .reachableViaWiFi

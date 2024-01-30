@@ -88,7 +88,16 @@ public final class AppleLocationProvider {
     ///
     /// - Note: When the first observer is added, the underlying `CLLocationManager` instance will
     /// start to produce the heading updates. When the last observer is gone, it will stop.
-    public var onHeadingUpdate: Signal<Heading> { headingSubject.signal.skipNil() }
+#if swift(>=5.9)
+    @available(visionOS, unavailable)
+#endif
+    public var onHeadingUpdate: Signal<Heading> {
+#if !(swift(>=5.9) && os(visionOS))
+        headingSubject.signal.skipNil()
+#else
+        fatalError()
+#endif
+}
 
     /// A latest known location.
     ///
@@ -97,10 +106,12 @@ public final class AppleLocationProvider {
     public var latestLocation: Location? { locationSubject.value?.last }
 
     private let locationSubject = CurrentValueSignalSubject<[Location]?>()
-    private let headingSubject = CurrentValueSignalSubject<Heading?>()
-
     private lazy var locationObservingAdapter = SignalObservingAdapter(signal: onLocationUpdate, notify: notifyLocationObserver(_:_:))
+
+#if !(swift(>=5.9) && os(visionOS))
+    private let headingSubject = CurrentValueSignalSubject<Heading?>()
     private lazy var headingObservingAdapter = SignalObservingAdapter(signal: onHeadingUpdate, notify: notifyHeadingObserver(_:_:))
+#endif
 
     private var latestLocationAndAccuracyAuth: ([CLLocation], CLAccuracyAuthorization) {
         didSet {
@@ -132,6 +143,7 @@ public final class AppleLocationProvider {
         }
     }
 
+#if !(swift(>=5.9) && os(visionOS))
     private var isHeadingUpdating = false {
         didSet {
             if isHeadingUpdating {
@@ -145,32 +157,43 @@ public final class AppleLocationProvider {
             }
         }
     }
+#endif
 
     private let locationManager: CLLocationManagerProtocol
     internal let interfaceOrientation: Signal<UIInterfaceOrientation>
     internal let locationManagerDelegateProxy: CLLocationManagerDelegateProxy
     private let mayRequestWhenInUseAuthorization: Bool
+
+#if !(swift(>=5.9) && os(visionOS))
     // cache heading orientation for performance reasons,
     // as this property is going to be accessed fairly regularly
     private var headingOrientation: CLDeviceOrientation {
         didSet { locationManager.headingOrientation = headingOrientation }
     }
-    private var orientationChangeToken: AnyCancelable?
 
+    private var orientationChangeToken: AnyCancelable?
     var orientationProvider: DefaultInterfaceOrientationProvider?
+#endif
 
     /// Initializes the built-in location provider.
     public convenience init() {
+#if swift(>=5.9) && os(visionOS)
+        let interfaceOrientation = Signal(just: UIInterfaceOrientation.unknown)
+#else
         let orientationProvider = DefaultInterfaceOrientationProvider(
             notificationCenter: NotificationCenter.default,
             device: UIDevice.current)
+        let interfaceOrientation = orientationProvider.onInterfaceOrientationChange
+#endif
 
         self.init(locationManager: CLLocationManager(),
-                  interfaceOrientation: orientationProvider.onInterfaceOrientationChange,
+                  interfaceOrientation: interfaceOrientation,
                   mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil,
                   locationManagerDelegateProxy: CLLocationManagerDelegateProxy())
 
+#if !(swift(>=5.9) && os(visionOS))
         self.orientationProvider = orientationProvider
+#endif
     }
 
     internal init(locationManager: CLLocationManagerProtocol,
@@ -181,12 +204,16 @@ public final class AppleLocationProvider {
         self.mayRequestWhenInUseAuthorization = mayRequestWhenInUseAuthorization
         self.latestLocationAndAccuracyAuth = ([], locationManager.compatibleAccuracyAuthorization)
         self.interfaceOrientation = interfaceOrientation
+#if !(swift(>=5.9) && os(visionOS))
         self.headingOrientation = locationManager.headingOrientation
+#endif
         self.locationManagerDelegateProxy = locationManagerDelegateProxy
         self.locationManager.delegate = locationManagerDelegateProxy
 
         locationSubject.onObserved = { [weak self] in self?.isLocationUpdating = $0 }
+#if !(swift(>=5.9) && os(visionOS))
         headingSubject.onObserved = { [weak self] in self?.isHeadingUpdating = $0 }
+#endif
         locationManagerDelegateProxy.delegate = self
     }
 
@@ -195,9 +222,11 @@ public final class AppleLocationProvider {
         if isLocationUpdating {
             locationManager.stopUpdatingLocation()
         }
+#if !(swift(>=5.9) && os(visionOS))
         if isHeadingUpdating {
             locationManager.stopUpdatingHeading()
         }
+#endif
     }
 
     /// Requests permission to temporarily use location services with full accuracy.
@@ -208,6 +237,7 @@ public final class AppleLocationProvider {
 
     // MARK: - Location
 
+#if !(swift(>=5.9) && os(visionOS))
     private func updateHeadingOrientationIfNeeded(_ newInterfaceOrientation: UIInterfaceOrientation) {
         let headingOrientation = CLDeviceOrientation(interfaceOrientation: newInterfaceOrientation)
 
@@ -217,6 +247,7 @@ public final class AppleLocationProvider {
             self.headingOrientation = headingOrientation
         }
     }
+#endif
 }
 
 extension AppleLocationProvider: LocationProvider {
@@ -243,11 +274,23 @@ extension AppleLocationProvider: LocationProvider {
     }
 }
 
+#if swift(>=5.9)
+    @available(visionOS, unavailable)
+#endif
 extension AppleLocationProvider: HeadingProvider {
     /// A latest known heading.
     ///
     /// - Note: The heading updates only when there is at least one observer of heading updates.
-    public var latestHeading: Heading? { headingSubject.value }
+#if swift(>=5.9)
+    @available(visionOS, unavailable)
+#endif
+    public var latestHeading: Heading? {
+#if swift(>=5.9) && os(visionOS)
+        fatalError()
+#else
+        headingSubject.value
+#endif
+    }
 
     /// Adds a heading updates observer.
     ///
@@ -255,15 +298,29 @@ extension AppleLocationProvider: HeadingProvider {
     ///
     /// - Note: When the first observer is added, the underlying `CLLocationManager` instance will
     /// start to produce the heading updates.
+#if swift(>=5.9)
+    @available(visionOS, unavailable)
+#endif
     public func add(headingObserver: HeadingObserver) {
+#if swift(>=5.9) && os(visionOS)
+        fatalError()
+#else
         headingObservingAdapter.add(observer: headingObserver)
+#endif
     }
 
     /// Removes heading observer.
     ///
     /// When the last observer is gone, the underlying `CLLocationManager` it will stop heading updates.
+#if swift(>=5.9)
+    @available(visionOS, unavailable)
+#endif
     public func remove(headingObserver: HeadingObserver) {
+#if swift(>=5.9) && os(visionOS)
+        fatalError()
+#else
         headingObservingAdapter.remove(observer: headingObserver)
+#endif
     }
 }
 
@@ -276,9 +333,11 @@ extension AppleLocationProvider: CLLocationManagerDelegateProxyDelegate {
         latestLocationAndAccuracyAuth.0 = locations
     }
 
+#if !(swift(>=5.9) && os(visionOS))
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         headingSubject.value = Heading(from: newHeading)
     }
+#endif
 
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         Log.error(forMessage: "\(self) did fail with error: \(error)", category: "Location")
@@ -289,7 +348,7 @@ extension AppleLocationProvider: CLLocationManagerDelegateProxyDelegate {
         let accuracyAuthorization = locationManager.compatibleAccuracyAuthorization
         if #available(iOS 14.0, *),
            isLocationUpdating,
-           [.authorizedAlways, .authorizedWhenInUse].contains(locationManager.compatibleAuthorizationStatus),
+           locationManager.compatibleAuthorizationStatus.isAuthorized,
            accuracyAuthorization == .reducedAccuracy {
             locationManager.requestTemporaryFullAccuracyAuthorization(
                 withPurposeKey: "LocationAccuracyAuthorizationDescription")
@@ -299,6 +358,16 @@ extension AppleLocationProvider: CLLocationManagerDelegateProxyDelegate {
 
     public func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool {
         return delegate?.appleLocationProviderShouldDisplayHeadingCalibration(self) ?? false
+    }
+}
+
+private extension CLAuthorizationStatus {
+    var isAuthorized: Bool {
+        #if swift(>=5.9) && os(visionOS)
+        return [.authorizedWhenInUse].contains(self)
+        #else
+        return [.authorizedAlways, .authorizedWhenInUse].contains(self)
+        #endif
     }
 }
 

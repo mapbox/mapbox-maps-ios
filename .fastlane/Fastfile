@@ -47,6 +47,7 @@ platform :ios do
       skip_detect_devices: true,          # Required
       build_for_testing: true,            # Required
       sdk: 'iphoneos',                    # Required
+      destination: "generic/platform=iOS", # Required
       should_zip_build_products: true,     # Must be true to set the correct format for Firebase Test Lab,
       result_bundle: true,
       output_directory: "output/",

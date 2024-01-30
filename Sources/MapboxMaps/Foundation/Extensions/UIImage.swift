@@ -8,7 +8,7 @@ extension UIImage {
     /// - Parameters:
     ///   - mbmImage: The internal `Image` type to use for the `UIImage`.
     ///   - scale: The scale of the new `UIImage`.
-    internal convenience init?(mbmImage: CoreMapsImage, scale: CGFloat = UIScreen.main.scale) {
+    internal convenience init?(mbmImage: CoreMapsImage, scale: CGFloat = ScreenShim.scale) {
         guard let dataProvider = CGDataProvider(data: mbmImage.data.data as CFData) else {
             return nil
         }

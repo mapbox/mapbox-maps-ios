@@ -133,11 +133,13 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(cameraAnimatorsRunner.$isEnabled.setStub.invocations.map(\.parameters), [false])
     }
 
+    @available(*, deprecated)
     func testPreferredFramesPerSecondIsInitiallyZero() {
         XCTAssertEqual(mapView.preferredFramesPerSecond, 0)
         XCTAssertEqual(displayLink.preferredFramesPerSecond, mapView.preferredFramesPerSecond)
     }
 
+    @available(*, deprecated)
     func testPreferredFramesPerSecondUpdate() {
         mapView.preferredFramesPerSecond = 23
 
@@ -490,12 +492,14 @@ final class MapViewTestsWithScene: XCTestCase {
 
         XCTAssertEqual(metalView.translatesAutoresizingMaskIntoConstraints, false)
         XCTAssertEqual(metalView.autoResizeDrawable, false)
-        XCTAssertEqual(metalView.contentScaleFactor, window.screen.nativeScale, accuracy: 0.001)
+        XCTAssertEqual(metalView.contentScaleFactor, ScreenShim.nativeScale, accuracy: 0.001)
         XCTAssertEqual(metalView.contentMode, .center)
         XCTAssertEqual(metalView.isOpaque, true)
         XCTAssertEqual(metalView.layer.isOpaque, true)
+#if !(swift(>=5.9) && os(visionOS))
         XCTAssertEqual(metalView.isPaused, true)
         XCTAssertEqual(metalView.enableSetNeedsDisplay, false)
+#endif
         XCTAssertEqual(metalView.presentsWithTransaction, false)
         XCTAssertEqual(metalView.bounds.size, mapViewSize)
     }

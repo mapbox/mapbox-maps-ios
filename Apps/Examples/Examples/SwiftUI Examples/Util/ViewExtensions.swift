@@ -78,7 +78,7 @@ extension View {
         if #available(iOS 16.0, *) {
             return self.menuOrder(.fixed)
         } else {
-            return self
+            return AnyView(self)
         }
     }
 }

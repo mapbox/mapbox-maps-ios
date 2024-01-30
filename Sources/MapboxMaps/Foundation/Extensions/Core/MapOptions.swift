@@ -22,7 +22,7 @@ extension MapOptions {
                             crossSourceCollisions: Bool = true,
                             optimizeForTerrain: Bool = true,
                             size: CGSize? = nil,
-                            pixelRatio: CGFloat = UIScreen.main.nativeScale,
+                            pixelRatio: CGFloat? = nil,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: [])) {
         fatalError()
     }
@@ -46,7 +46,7 @@ extension MapOptions {
                             orientation: NorthOrientation = .upwards,
                             crossSourceCollisions: Bool = true,
                             size: CGSize? = nil,
-                            pixelRatio: CGFloat = UIScreen.main.nativeScale,
+                            pixelRatio: CGFloat? = nil,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: [])) {
 
         let mbmSize: Size?
@@ -63,7 +63,7 @@ extension MapOptions {
                   orientation: orientation.NSNumber,
                   crossSourceCollisions: crossSourceCollisions.NSNumber,
                   size: mbmSize,
-                  pixelRatio: Float(pixelRatio),
+                  pixelRatio: Float(pixelRatio ?? ScreenShim.nativeScale),
                   glyphsRasterizationOptions: glyphsRasterizationOptions)
     }
 

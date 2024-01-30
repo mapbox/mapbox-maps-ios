@@ -52,8 +52,10 @@ public final class LocationManager {
         locationProvider: LocationProvider,
         headingProvider: HeadingProvider? = nil
     ) {
+#if !(swift(>=5.9) && os(visionOS))
         // Patch the default location provider with the proper interface orientation view.
         (headingProvider as? AppleLocationProvider)?.orientationProvider?.view = interfaceOrientationView
+#endif
 
         onLocationChangeProxy.proxied = locationProvider.toSignal()
         onHeadingChangeProxy.proxied = headingProvider?.toSignal()
@@ -61,8 +63,11 @@ public final class LocationManager {
 
     /// Sets the custom provider that supply puck with the location and heading data.
     ///
+    /// - Note: On VisionOS, the ``AppleLocationProvider`` doesn't implement ``HeadingProvider``.
+    /// If you are using a custom instance of a location provider, override it using the ``LocationManager/override(locationProvider:headingProvider:)-8xcsf`` .
+    ///
     /// - Parameters:
-    ///  - provider: An object that provides both location and heading data, such as ``AppleLocationProvider``.
+    ///   - provider: An object that provides both location and heading data, such as ``AppleLocationProvider``.
     public func override(provider: LocationProvider & HeadingProvider) {
         self.override(locationProvider: provider, headingProvider: provider)
     }
@@ -78,13 +83,18 @@ public final class LocationManager {
                               styleManager: StyleProtocol,
                               mapboxMap: MapboxMapProtocol) {
         let provider = AppleLocationProvider()
+#if swift(>=5.9) && os(visionOS)
+        let headingProvider = Signal<Heading> {_ in .empty }
+#else
         provider.orientationProvider?.view = interfaceOrientationView
+        let headingProvider = provider.onHeadingUpdate.retaining(provider)
+#endif
 
         self.init(styleManager: styleManager,
                   mapboxMap: mapboxMap,
                   displayLink: displayLink,
                   locationProvider: provider.onLocationUpdate.retaining(provider),
-                  headingProvider: provider.onHeadingUpdate.retaining(provider),
+                  headingProvider: headingProvider,
                   nowTimestamp: .now)
         self.interfaceOrientationView = interfaceOrientationView
     }

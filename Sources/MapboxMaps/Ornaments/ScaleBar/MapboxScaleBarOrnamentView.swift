@@ -61,7 +61,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         let view = UIView()
         view.backgroundColor = Constants.primaryColor
         view.layer.borderColor = Constants.primaryColor.cgColor
-        view.layer.borderWidth = Constants.borderWidth / UIScreen.main.scale
+        view.layer.borderWidth = Constants.borderWidth / max(traitCollection.displayScale, 1.0) // displayScale can be zero
         view.layer.cornerRadius = Constants.barHeight / 2.0
         view.layer.masksToBounds = true
 

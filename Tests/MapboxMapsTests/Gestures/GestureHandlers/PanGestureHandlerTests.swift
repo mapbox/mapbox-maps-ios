@@ -10,7 +10,7 @@ final class PanGestureHandlerTests: XCTestCase {
     var panGestureHandler: PanGestureHandler!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
-    let interruptingRecognizers = Set([UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UITapGestureRecognizer()])
+    let interruptingRecognizers = UIGestureRecognizer.interruptingRecognizers([.longPress, .swipe, .screenEdge, .tap])
 
     override func setUp() {
         super.setUp()

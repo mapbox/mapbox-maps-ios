@@ -1327,3 +1327,5 @@ Func MapboxMap.camera(for:padding:bearing:pitch:maxZoom:offset:) has parameter 1
 // VisionOS support
 Func MapViewMetricsReporter.afterMetalViewDrawCallback(metalView:) has been renamed to Func afterMetalViewDrawCallback()
 Func MapViewMetricsReporter.beforeMetalViewDrawCallback(metalView:) has been renamed to Func beforeMetalViewDrawCallback()
+Constructor MapOptions.init(constrainMode:viewportMode:orientation:crossSourceCollisions:size:pixelRatio:glyphsRasterizationOptions:) has parameter 5 type change from CoreGraphics.CGFloat to CoreGraphics.CGFloat?
+Constructor TilesetDescriptorOptions.init(styleURI:zoomRange:pixelRatio:tilesets:stylePackOptions:extraOptions:) has parameter 2 type change from Swift.Float to Swift.Float?

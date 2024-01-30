@@ -2,6 +2,7 @@ import Foundation
 @testable import MapboxMaps
 import XCTest
 
+#if !(swift(>=5.9) && os(visionOS))
 final class DefaultInterfaceOrientationProviderTests: XCTestCase {
     var notificationCenter: MockNotificationCenter!
     var device: MockUIDevice!
@@ -118,3 +119,4 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
         XCTAssertEqual($orientation.setStub.invocations.count, 1)
     }
 }
+#endif // !(swift(>=5.9) && os(visionOS))

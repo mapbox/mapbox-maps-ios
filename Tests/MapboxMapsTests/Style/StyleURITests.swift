@@ -5,6 +5,15 @@ class StyleURITests: XCTestCase {
 
     // MARK: - Tests
 
+    private func getRealFileURL() throws -> String {
+        let path = try XCTUnwrap(Bundle.mapboxMapsTests.path(forResource: "empty-style-chicago", ofType: "json"))
+        if #available(iOS 16.0, *) {
+            return URL(filePath: path).absoluteString
+        } else {
+            return URL(fileURLWithPath: path).absoluteString
+        }
+    }
+
     func testCustomVersions() throws {
         checkCustomStyleURI(with: "mapbox://styles/mapbox/streets-v10")
         checkCustomStyleURI(with: "mapbox://styles/mapbox/outdoors-v10")
@@ -13,6 +22,11 @@ class StyleURITests: XCTestCase {
         checkCustomStyleURI(with: "mapbox://styles/mapbox/satellite-v8")
         checkCustomStyleURI(with: "mapbox://styles/mapbox/satellite-streets-v10")
         checkCustomStyleURI(with: "mapbox://styles/mapbox/standard")
+        checkCustomStyleURI(with: "https://foo")
+        checkCustomStyleURI(with: "https://foo.bar/baz")
+        checkCustomStyleURI(with: "https://foo/baz")
+        checkCustomStyleURI(with: try getRealFileURL())
+        checkCustomStyleURI(with: "file:///root")
     }
 
     func testDefaultStyleURIs() throws {
@@ -30,7 +44,6 @@ class StyleURITests: XCTestCase {
         checkInvalidStyleURI(with: "mapbox:\\styles/mapbox/streets-v11")
         checkInvalidStyleURI(with: "//styles/mapbox/streets-v11")
         checkInvalidStyleURI(with: "mapbox/styles/mapbox/streets-v11")
-
     }
 
     // MARK: - Helpers

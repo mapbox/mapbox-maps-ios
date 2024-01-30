@@ -25,6 +25,9 @@ public struct Heading: Equatable {
     }
 
     /// Creates a heading from CLHeading.
+#if swift(>=5.9)
+    @available(visionOS, unavailable)
+#endif
     public init(from clHeading: CLHeading) {
         var direction = clHeading.trueHeading
         if direction < 0 {

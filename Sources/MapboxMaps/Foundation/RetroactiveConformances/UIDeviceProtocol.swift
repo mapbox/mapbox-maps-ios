@@ -8,4 +8,7 @@ internal protocol UIDeviceProtocol: AnyObject {
     func endGeneratingDeviceOrientationNotifications()
 }
 
+#if swift(>=5.9)
+    @available(visionOS, unavailable)
+#endif
 extension UIDevice: UIDeviceProtocol { }

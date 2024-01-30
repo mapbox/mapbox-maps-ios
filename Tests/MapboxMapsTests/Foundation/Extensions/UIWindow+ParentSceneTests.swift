@@ -1,9 +1,12 @@
 import XCTest
+#if canImport(CarPlay)
 import CarPlay
+#endif
 @testable import MapboxMaps
 
 final class UIWindowParentSizeTests: XCTestCase {
 
+    #if canImport(CarPlay)
     func testCarPlayWindowReturnsCorrectParentScene() throws {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
@@ -12,6 +15,7 @@ final class UIWindowParentSizeTests: XCTestCase {
 
         XCTAssertEqual(window.parentScene, window.templateApplicationScene)
     }
+    #endif
 
     func testUIWindowReturnsCorrectParentScene() throws {
         guard #available(iOS 13.0, *) else {

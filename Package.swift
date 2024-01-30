@@ -3,24 +3,26 @@
 
 import PackageDescription
 
-let coreMaps = MapsDependency.coreMaps(version: "11.2.0-SNAPSHOT.0126T1736Z.c82057a", checksum: "d87bd0627f7364da0f5d746a912934b835c66ef21a444df77ef2c1730ff86b31")
-
-let common = MapsDependency.common(version: "24.1.0")
+let coreMaps = MapsDependency.coreMaps(
+    version: "11.2.0-SNAPSHOT.0129T1135Z.89fb196",
+    checksum: "79f384025c8593498b32a0f3ad72a80420758d651ecf0e1e1d151513a53896d1"
+)
+let common = MapsDependency.common(version: "24.2.0-beta.1")
 
 let mapboxMapsPath: String? = nil
 
 let package = Package(
     name: "MapboxMaps",
     defaultLocalization: "en",
-    // Maps SDK doesn't support macOS but declared the minimum macOS requirement with downstrem deps to enable `swift run` cli tools
-    platforms: [.iOS(.v12), .macOS(.v10_15)],
+    // Maps SDK doesn't support macOS but declared the minimum macOS requirement with downstream deps to enable `swift run` cli tools
+    platforms: [.iOS(.v12), .macOS(.v10_15), .custom("visionOS", versionString: "1.0")],
     products: [
         .library(
             name: "MapboxMaps",
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.7.0"),
+        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.8.0"),
     ] + coreMaps.packageDependencies + common.packageDependencies,
     targets: [
         .target(

@@ -12,7 +12,7 @@ final class SizeTrackingLayerTests: XCTestCase {
         view.willAnimateStub.reset()
         view.completeResizingStub.reset()
 
-        if let rootVC = UIApplication.shared.keyWindow?.rootViewController {
+        if let rootVC = UIApplication.shared.keyWindowForTests?.rootViewController {
             rootVC.view.addSubview(view)
         }
     }

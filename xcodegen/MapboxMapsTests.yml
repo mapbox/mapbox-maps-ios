@@ -19,6 +19,7 @@ targets:
       - application
       - maps-dependencies
       - map-library
+    supportedDestinations: [iOS, visionOS]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxMapsTestHost"
@@ -32,6 +33,7 @@ targets:
       - path: ../Sources/MapboxTestHost
     dependencies:
       - package: Fingertips
+        destinationFilters: [iOS]
     scheme:
       testTargets:
           - MapboxMapsTests
@@ -58,7 +60,10 @@ targets:
           - "Helpers/XCTestCase+GuardForMetalDevice.swift"
           - "Helpers/XCTestCase+MapboxAccessToken.swift"
           - "Helpers/XCTestCase+TemporaryCacheDirectory.swift"
+          - "Helpers/UIApplication+Tests.swift"
       - path: ../Tests/GestureTests
+        destinationFilters: [iOS]
     dependencies:
       - target: MapboxTestHost
       - package: Hammer
+        destinationFilters: [iOS]

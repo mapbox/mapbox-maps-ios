@@ -2,7 +2,6 @@ import XCTest
 @_spi(Experimental) @testable import MapboxMaps
 
 internal class StyleImportIntegrationTests: MapViewIntegrationTestCase {
-
     let styleJSONObject: [String: Any] = [
         "version": 8,
         "center": [

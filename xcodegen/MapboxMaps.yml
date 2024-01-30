@@ -5,7 +5,7 @@ include:
 targets:
   MapboxMaps:
     type: framework
-    platform: iOS
+    supportedDestinations: [iOS, visionOS]
     templates:
       - maps-dependencies
     settings:

@@ -28,7 +28,7 @@ final class MapboxMapTests: XCTestCase {
             return s
         })
         mapClient = MockMapClient()
-        mapClient.getMetalViewStub.defaultReturnValue = MetalView(frame: CGRect(origin: .zero, size: size))
+        mapClient.getMetalViewStub.defaultReturnValue = MetalView(frame: CGRect(origin: .zero, size: size), device: nil)
         mapInitOptions = MapInitOptions(mapOptions: MapOptions(size: size))
 
         let map = CoreMap(client: mapClient, mapOptions: mapInitOptions.mapOptions)

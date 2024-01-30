@@ -2,7 +2,6 @@ import Foundation
 import UIKit
 
 internal protocol UIApplicationProtocol: AnyObject {
-    var statusBarOrientation: UIInterfaceOrientation { get set }
     var applicationState: UIApplication.State { get }
 
     func open(_ url: URL)

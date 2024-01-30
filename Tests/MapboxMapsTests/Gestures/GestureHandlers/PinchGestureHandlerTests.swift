@@ -9,7 +9,7 @@ final class PinchGestureHandlerTests: XCTestCase {
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
     var initialPinchMidpoint: CGPoint!
-    let interruptingRecognizers = Set([UIPanGestureRecognizer(), UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer()])
+    let interruptingRecognizers = UIGestureRecognizer.interruptingRecognizers([.longPress, .swipe, .screenEdge, .pan])
 
     override func setUp() {
         super.setUp()

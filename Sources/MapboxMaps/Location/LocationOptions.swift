@@ -56,6 +56,9 @@ public struct LocationOptions: Equatable {
 public enum PuckBearing: Equatable {
     /// The puck should set its bearing using `heading: CLHeading`. Bearing will mimic user's
     /// spatial orientation.
+    ///
+    /// - Note: On visionOS, the heading-based puck bearing is not supported by default.
+    /// You can supply your custom data via the ``HeadingProvider`` in ``LocationManager`` to make it work.
     case heading
 
     /// The puck should set its bearing using `course: CLLocationDirection`. Bearing will mimic

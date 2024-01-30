@@ -8,7 +8,7 @@ final class SingleTapGestureHandlerTests: XCTestCase {
     var gestureHandler: SingleTapGestureHandler!
     var delegate: MockGestureHandlerDelegate!
     var view: UIView!
-    let interruptingRecognizers: Set<UIGestureRecognizer> = Set([UIPanGestureRecognizer(), UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UIRotationGestureRecognizer()])
+    let interruptingRecognizers = UIGestureRecognizer.interruptingRecognizers([.pan, .longPress, .swipe, .screenEdge, .rotation])
 
     override func setUp() {
         super.setUp()

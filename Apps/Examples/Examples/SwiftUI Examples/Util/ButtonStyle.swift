@@ -78,6 +78,8 @@ struct MapStyleSelectorButton: View {
                 .frame(width: 40, height: 40)
                 .floating(Circle())
         }
+#if !swift(>=5.9) || !os(visionOS)
         .fixedMenuOrder()
+#endif
     }
 }

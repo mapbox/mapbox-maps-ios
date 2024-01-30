@@ -19,6 +19,7 @@ options:
       - DebugApp
       - MapboxMaps
       - MapboxMapsTests
+  minimumXcodeGenVersion: "2.38.0"
   preGenCommand: scripts/prepare_binary_dependencies.sh
 
 packages:

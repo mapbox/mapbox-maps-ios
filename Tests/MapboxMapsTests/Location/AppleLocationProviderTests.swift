@@ -41,15 +41,19 @@ final class AppleLocationProviderTests: XCTestCase {
     }
 
     // Kickstarts heading updates
+#if !(swift(>=5.9) && os(visionOS))
     private func addNoopHeadingObserver() {
         locationProvider.onHeadingUpdate.observe { _ in }.store(in: &cancelables)
     }
+#endif
 
     func testInitializationDoesNotStartOrStopUpdating() {
         XCTAssertTrue(locationManager.startUpdatingLocationStub.invocations.isEmpty)
-        XCTAssertTrue(locationManager.startUpdatingHeadingStub.invocations.isEmpty)
         XCTAssertTrue(locationManager.stopUpdatingLocationStub.invocations.isEmpty)
+#if !(swift(>=5.9) && os(visionOS))
+        XCTAssertTrue(locationManager.startUpdatingHeadingStub.invocations.isEmpty)
         XCTAssertTrue(locationManager.stopUpdatingHeadingStub.invocations.isEmpty)
+#endif
     }
 
     func testObservingLocationStartsAndStopsLocationUpdates() {
@@ -68,11 +72,14 @@ final class AppleLocationProviderTests: XCTestCase {
         XCTAssertEqual(locationManager.startUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 1)
 
+#if !(swift(>=5.9) && os(visionOS))
         // no heading updates touched
         XCTAssertTrue(locationManager.startUpdatingHeadingStub.invocations.isEmpty)
         XCTAssertTrue(locationManager.stopUpdatingHeadingStub.invocations.isEmpty)
+#endif
     }
 
+#if !(swift(>=5.9) && os(visionOS))
     func testObservingHeadingStartsAndStopsHeadingUpdates() {
         let token = locationProvider.onHeadingUpdate.observe { _ in }
 
@@ -93,6 +100,7 @@ final class AppleLocationProviderTests: XCTestCase {
         XCTAssertTrue(locationManager.startUpdatingLocationStub.invocations.isEmpty)
         XCTAssertTrue(locationManager.stopUpdatingLocationStub.invocations.isEmpty)
     }
+#endif
 
     func testAddingALocationConsumerRequestsWhenInUseAuthorizationIfStatusIsNotDetermined() {
         locationManager.compatibleAuthorizationStatus = .notDetermined
@@ -102,6 +110,7 @@ final class AppleLocationProviderTests: XCTestCase {
         XCTAssertEqual(locationManager.requestWhenInUseAuthorizationStub.invocations.count, 1)
     }
 
+#if !(swift(>=5.9) && os(visionOS))
     func testAddingAHeadingConsumerDoesntRequestPermissions() {
         locationManager.compatibleAuthorizationStatus = .notDetermined
 
@@ -109,9 +118,10 @@ final class AppleLocationProviderTests: XCTestCase {
 
         XCTAssertTrue(locationManager.requestWhenInUseAuthorizationStub.invocations.isEmpty)
     }
+#endif
 
     func testAddingALocationConsumerDoesNotRequestWhenInUseAuthorizationForOtherStatuses() {
-        locationManager.compatibleAuthorizationStatus = [.restricted, .denied, .authorizedAlways, .authorizedWhenInUse].randomElement()!
+        locationManager.compatibleAuthorizationStatus = [.restricted, .denied, .authorizedWhenInUse].randomElement()!
 
         _ = locationProvider.onLocationUpdate.observe { _ in }
 
@@ -161,6 +171,7 @@ final class AppleLocationProviderTests: XCTestCase {
         XCTAssertTrue(locationProvider.getLastObservedLocation()?.coordinate == locations[1])
     }
 
+#if !(swift(>=5.9) && os(visionOS))
     func testObserversAreNotifiedOfNewHeadings() {
         // Observe via object api (HeadingProvider)
         var observedViaObjectAPI = [Heading]()
@@ -201,6 +212,7 @@ final class AppleLocationProviderTests: XCTestCase {
         XCTAssertEqual(observedViaObjectAPI, observed)
         XCTAssertEqual(locationProvider.latestHeading, heading2)
     }
+#endif
 
     func testConsumersAreNotifiedOfNewAccuracyAuthorizationsAfterLatestLocationIsUpdated() {
         let coordinate = CLLocationCoordinate2D.random()
@@ -238,7 +250,9 @@ final class AppleLocationProviderTests: XCTestCase {
                 mayRequestWhenInUseAuthorization: true,
                 locationManagerDelegateProxy: locationManagerDelegateProxy)
             locationProducer.onLocationUpdate.observe { _ in }.store(in: &cancelables)
+#if !(swift(>=5.9) && os(visionOS))
             locationProducer.onHeadingUpdate.observe { _ in }.store(in: &cancelables)
+#endif
             // reset to break a strong reference cycle from
             // locationProducer -> locationProvider -> setDelegateStub
             // -> locationProducer
@@ -246,7 +260,9 @@ final class AppleLocationProviderTests: XCTestCase {
             locationManager.$delegate.reset()
         }
         XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 1)
+#if !(swift(>=5.9) && os(visionOS))
         XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 1)
+#endif
     }
 
     func testDidChangeAuthorizationUpdatesLatestLocation() {
@@ -328,7 +344,7 @@ final class AppleLocationProviderTests: XCTestCase {
 
     func testRequestsTemporaryFullAccuracyAuthorizationWhenAccuracyIsReduced() {
         addNoopLocationObserver()
-        locationManager.compatibleAuthorizationStatus = [.authorizedAlways, .authorizedWhenInUse].randomElement()!
+        locationManager.compatibleAuthorizationStatus = .authorizedWhenInUse
         locationManager.compatibleAccuracyAuthorization = .reducedAccuracy
 
         locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
@@ -354,7 +370,7 @@ final class AppleLocationProviderTests: XCTestCase {
 
     func testDoesNotRequestTemporaryFullAccuracyAuthorizationWhenAccuracyIsFull() {
         addNoopLocationObserver()
-        locationManager.compatibleAuthorizationStatus = [.authorizedAlways, .authorizedWhenInUse].randomElement()!
+        locationManager.compatibleAuthorizationStatus = .authorizedWhenInUse
         locationManager.compatibleAccuracyAuthorization = .fullAccuracy
 
         locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
@@ -363,7 +379,7 @@ final class AppleLocationProviderTests: XCTestCase {
     }
 
     func testDoesNotRequestTemporaryFullAccuracyAuthorizationWhenNotUpdating() {
-        locationManager.compatibleAuthorizationStatus = [.authorizedAlways, .authorizedWhenInUse].randomElement()!
+        locationManager.compatibleAuthorizationStatus = .authorizedWhenInUse
         locationManager.compatibleAccuracyAuthorization = .reducedAccuracy
 
         locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
@@ -371,6 +387,7 @@ final class AppleLocationProviderTests: XCTestCase {
         XCTAssertTrue(locationManager.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
     }
 
+#if !(swift(>=5.9) && os(visionOS))
     func testHeadingOrientationChangeIsPropagated() {
         // given
         let newOrientation = UIInterfaceOrientation.landscapeRight
@@ -413,6 +430,7 @@ final class AppleLocationProviderTests: XCTestCase {
         XCTAssertEqual(locationManager.$headingOrientation.getStub.invocations.count, 0) // heading orientation should be cached by the provider
         XCTAssertEqual(locationManager.$headingOrientation.setStub.invocations.count, 0)
     }
+#endif
 
     func testOptions() {
         // given

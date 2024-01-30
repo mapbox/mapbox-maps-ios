@@ -1,5 +1,6 @@
 import CoreLocation
 
+#if !(swift(>=5.9) && os(visionOS))
 final class MockHeading: CLHeading {
 
     let trueHeadingStub = Stub<Void, CLLocationDirection>(defaultReturnValue: 0)
@@ -46,3 +47,4 @@ final class MockHeading: CLHeading {
         }
     }
 }
+#endif

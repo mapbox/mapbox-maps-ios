@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "mapbox-core-maps-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mapbox/mapbox-core-maps-ios.git",
+      "state" : {
+        "revision" : "6f1e56f01edb6145b9229f6eb4cd6c0557b647ac",
+        "version" : "11.2.0-beta.1"
+      }
+    },
+    {
       "identity" : "turf-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mapbox/turf-swift.git",

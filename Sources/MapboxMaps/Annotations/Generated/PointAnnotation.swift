@@ -37,6 +37,21 @@ public struct PointAnnotation: Annotation, Equatable {
         get { gestureHandlers.value.longPress }
         set { gestureHandlers.value.longPress = newValue }
     }
+
+    public var dragBeingHandler: (() -> Void)? {
+        get { gestureHandlers.value.dragBeing }
+        set { gestureHandlers.value.dragBeing = newValue }
+    }
+    
+    public var dragChangedHandler: (() -> Void)? {
+        get { gestureHandlers.value.dragChanged }
+        set { gestureHandlers.value.dragChanged = newValue }
+    }
+    
+    public var dragEndHandler: (() -> Void)? {
+        get { gestureHandlers.value.dragEnd }
+        set { gestureHandlers.value.dragEnd = newValue }
+    }
     
     /// JSON convertible properties associated with the annotation, used to enrich Feature GeoJSON `properties["custom_data"]` field.
     public var customData = JSONObject()

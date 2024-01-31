@@ -588,7 +588,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// 
+    ///
     /// Slot for the underlying layer.
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
@@ -678,6 +678,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             let annotation = mainAnnotations.remove(at: idx)
             draggedAnnotations.append(annotation)
             draggedAnnotationIndex = draggedAnnotations.endIndex - 1
+            annotation.dragEndHandler?()
             return true
         }
         return false
@@ -692,11 +693,13 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
 
         draggedAnnotations[draggedAnnotationIndex].point = point
+        draggedAnnotations[draggedAnnotationIndex].dragChangedHandler?()
     }
 
     internal func handleDragEnded() {
-        guard !isSwiftUI else { return }
-        draggedAnnotationIndex = nil
+        guard !isSwiftUI, let draggedAnnotationIndex = draggedAnnotationIndex else { return }
+        draggedAnnotations[draggedAnnotationIndex].dragEndHandler?()
+        self.draggedAnnotationIndex = nil
     }
 }
 

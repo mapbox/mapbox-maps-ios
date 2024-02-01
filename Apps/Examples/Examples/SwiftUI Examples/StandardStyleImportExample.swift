@@ -61,6 +61,7 @@ struct StandardStyleImportExample: View {
         }
         .padding(10)
         .floating(RoundedRectangle(cornerRadius: 10))
+        .limitPaneWidth()
     }
 }
 

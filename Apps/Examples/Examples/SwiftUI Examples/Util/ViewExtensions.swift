@@ -54,6 +54,10 @@ extension View {
         }
         return EmptyView()
     }
+
+    func limitPaneWidth() -> some View {
+        self.frame(maxWidth: 500)
+    }
 }
 
 @available(iOS 14.0, *)

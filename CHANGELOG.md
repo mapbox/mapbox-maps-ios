@@ -4,24 +4,33 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-* Vision OS support.
+## 11.2.0-beta.1 - 1 February, 2024
+
+### Features ✨ and improvements 🏁
+
+* Vision OS support. 🚀
 * Add easing curve parameter to `CameraAnimationsManager.fly(to:duration:curve:completion)`, make `TimingCurve` public with few more options.
-* Fix MapView flickering during resizing.
-* Fix glitch in chained camera animations.
-* Build XCFramework with `SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO` flag to avoid serialized search paths in Swift modules.
-* Fixed a crash that occurs when annotations have duplicate identifiers.
 * Expose `MapboxMap.centerAltitudeMode` and ensure correct `centerAltitudeMode` on gesture ending.
 * Expose extra configuration methods for `MapboxMap`: `setNorthOrientation(_:)`, `setConstrainMode(_:)` and `setViewportMode(_:)`.
 Use them to configure respective map options after creating a map view.
 * Expose `MapboxMap.reduceMemoryUse()` which can be used in situations when it is important to keep the memory footprint minimal.
 * Expose `MapboxMap.isAnimationInProgress` and `MapboxMap.isGestureInProgress` to query current status of both built-in and custom camera animations and gestures.
 * Expose experimental `CustomRasterSource` and non-experimental `CustomGeometrySource` as regular `Source`'s providing a better way to work with them and also allow for using them in Style DSL.
+* Introduce `tileCacheBudget` property on `GeoJsonSource`, `RasterSource`, `RasterDemSource`, `RasterArraySource`, `VectorSource`, `CustomGeometrySource`, and `CustomRasterSource`.
+* `MapboxMaps/setTileCacheBudget(size:)` will now use the `TileCacheBudgetSize` property, the older method with `TileCacheBudget` has been deprecated and will be removed in a future major release.
 * Introduce `SymbolLayer.iconColorSaturation` API.
 * Introduce experimental `RasterLayer.rasterElevation` API.
 * Introduce experimental `MapboxMap.collectPerformanceStatistics` allowing to collect map rendering performance statistics, both for UIKit and SwiftUI.
+
+### Bug fixes 🐞
+* Fix MapView flickering during resizing.
+* Fix glitch in chained camera animations.
+* Build XCFramework with `SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO` flag to avoid serialized search paths in Swift modules.
+* Fixed a crash that occurs when annotations have duplicate identifiers.
+
+### Dependency Updates
 * Bump Turf version to `2.8.0`.
 * Bump minimum Xcode version to `14.3.1`.
-* Introduce `tileCacheBudget` property on `GeoJsonSource`, `RasterSource`, `RasterDemSource`, `RasterArraySource`, `VectorSource`, `CustomGeometrySource`, and `CustomRasterSource`. This property defines a source-specific resource budget (`TileCacheBudgetSize`). When reached, the least recently used tile will be evicted from the cache. `MapboxMaps/setTileCacheBudget(size:)` will now use the `TileCacheBudgetSize` property, the older method with `TileCacheBudget` has been deprecated and will be removed in a future major release.  
 
 ## 11.1.0 - 17 January, 2024
 
@@ -51,7 +60,7 @@ Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value
 
 ## 11.0.0 - 29 November, 2023
 
-* Introduce [`Slot`](https://docs.mapbox.com/ios/maps/api/11.0.0-rc.2/documentation/mapboxmaps/slot/) for assining a layer to a slot.
+* Introduce [`Slot`](https://docs.mapbox.com/ios/maps/api/11.0.0-rc.2/documentation/mapboxmaps/slot/) for assigning a layer to a slot.
 * Update MapboxCoreMaps to v11.0.0 and MapboxCommon to v24.0.0
 
 ## 11.0.0-rc.2 - 17 November, 2023

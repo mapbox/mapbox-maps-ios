@@ -39,6 +39,9 @@ public struct RasterSource: Source {
     /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom. The default delta is 4.
     public var prefetchZoomDelta: Double?
 
+    /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.
+    public var tileCacheBudget: TileCacheBudgetSize?
+
     /// Minimum tile update interval in seconds, which is used to throttle the tile update network requests. If the given source supports loading tiles from a server, sets the minimum tile update interval. Update network requests that are more frequent than the minimum tile update interval are suppressed.
     public var minimumTileUpdateInterval: Double?
 
@@ -71,6 +74,7 @@ extension RasterSource {
         case attribution = "attribution"
         case volatile = "volatile"
         case prefetchZoomDelta = "prefetch-zoom-delta"
+        case tileCacheBudget = "tile-cache-budget"
         case minimumTileUpdateInterval = "minimum-tile-update-interval"
         case maxOverscaleFactorForParentTiles = "max-overscale-factor-for-parent-tiles"
         case tileRequestsDelay = "tile-requests-delay"
@@ -92,6 +96,7 @@ extension RasterSource {
 
     private func encodeVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
         try container.encodeIfPresent(prefetchZoomDelta, forKey: .prefetchZoomDelta)
+        try container.encodeIfPresent(tileCacheBudget, forKey: .tileCacheBudget)
         try container.encodeIfPresent(minimumTileUpdateInterval, forKey: .minimumTileUpdateInterval)
         try container.encodeIfPresent(maxOverscaleFactorForParentTiles, forKey: .maxOverscaleFactorForParentTiles)
         try container.encodeIfPresent(tileRequestsDelay, forKey: .tileRequestsDelay)

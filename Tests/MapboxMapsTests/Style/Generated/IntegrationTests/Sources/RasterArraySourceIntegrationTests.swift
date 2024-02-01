@@ -19,6 +19,7 @@ final class RasterArraySourceIntegrationTests: MapViewIntegrationTestCase {
             source.tiles = [String].testSourceValue()
             source.minzoom = Double.testSourceValue()
             source.maxzoom = Double.testSourceValue()
+            source.tileCacheBudget = TileCacheBudgetSize.testSourceValue()
 
             // Add the source
             do {

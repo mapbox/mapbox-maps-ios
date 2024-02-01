@@ -27,7 +27,7 @@
 ### Prefetching
 
 - ``MapboxMap/prefetchZoomDelta``
-- ``MapboxMap/setTileCacheBudget(_:)``
+- ``MapboxMap/setTileCacheBudget(size:)``
 - ``MapboxMap/shouldRenderWorldCopies``
 - ``MapboxMap/elevation(at:)``
 

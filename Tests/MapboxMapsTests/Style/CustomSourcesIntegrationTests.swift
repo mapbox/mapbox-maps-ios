@@ -13,7 +13,8 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
         mapView.mapboxMap.styleURI = .standard
 
         didFinishLoadingStyle = { mapView in
-            let source = CustomRasterSource(id: "test-source", options: CustomRasterSourceOptions(fetchTileFunction: { _ in }, cancelTileFunction: { _ in }))
+            var source = CustomRasterSource(id: "test-source", options: CustomRasterSourceOptions(fetchTileFunction: { _ in }, cancelTileFunction: { _ in }))
+            source.tileCacheBudget = .testSourceValue(.megabytes(7))
 
             // Add source
             do {
@@ -25,7 +26,9 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the source
             do {
-                _ = try mapView.mapboxMap.source(withId: "test-source", type: CustomRasterSource.self)
+                let retrievedSource = try mapView.mapboxMap.source(withId: "test-source", type: CustomRasterSource.self)
+                XCTAssertEqual(retrievedSource.tileCacheBudget, .testSourceValue(.megabytes(7)))
+
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve CustomRasterSource because of error: \(error)")
@@ -44,7 +47,8 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
         mapView.mapboxMap.styleURI = .standard
 
         didFinishLoadingStyle = { mapView in
-            let source = CustomGeometrySource(id: "test-source", options: CustomGeometrySourceOptions(fetchTileFunction: { _ in }, cancelTileFunction: { _ in }, tileOptions: TileOptions()))
+            var source = CustomGeometrySource(id: "test-source", options: CustomGeometrySourceOptions(fetchTileFunction: { _ in }, cancelTileFunction: { _ in }, tileOptions: TileOptions()))
+            source.tileCacheBudget = .testSourceValue(.megabytes(7))
 
             // Add source
             do {
@@ -56,7 +60,9 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the source
             do {
-                _ = try mapView.mapboxMap.source(withId: "test-source", type: CustomGeometrySource.self)
+                let retrievedSource = try mapView.mapboxMap.source(withId: "test-source", type: CustomGeometrySource.self)
+                XCTAssertEqual(retrievedSource.tileCacheBudget, .testSourceValue(.megabytes(7)))
+
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve CustomGeometrySource because of error: \(error)")

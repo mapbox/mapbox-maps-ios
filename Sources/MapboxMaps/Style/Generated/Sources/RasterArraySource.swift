@@ -66,6 +66,12 @@ import Foundation
 #endif
     public private(set) var rasterLayers: [RasterArraySource.RasterDataLayer]?
 
+    /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public var tileCacheBudget: TileCacheBudgetSize?
+
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -87,6 +93,7 @@ extension RasterArraySource {
         case tileSize = "tileSize"
         case attribution = "attribution"
         case rasterLayers = "rasterLayers"
+        case tileCacheBudget = "tile-cache-budget"
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -103,6 +110,7 @@ extension RasterArraySource {
     }
 
     private func encodeVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encodeIfPresent(tileCacheBudget, forKey: .tileCacheBudget)
     }
 
     private func encodeNonVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {

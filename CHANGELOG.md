@@ -21,6 +21,7 @@ Use them to configure respective map options after creating a map view.
 * Introduce experimental `MapboxMap.collectPerformanceStatistics` allowing to collect map rendering performance statistics, both for UIKit and SwiftUI.
 * Bump Turf version to `2.8.0`.
 * Bump minimum Xcode version to `14.3.1`.
+* Introduce `tileCacheBudget` property on `GeoJsonSource`, `RasterSource`, `RasterDemSource`, `RasterArraySource`, `VectorSource`, `CustomGeometrySource`, and `CustomRasterSource`. This property defines a source-specific resource budget (`TileCacheBudgetSize`). When reached, the least recently used tile will be evicted from the cache. `MapboxMaps/setTileCacheBudget(size:)` will now use the `TileCacheBudgetSize` property, the older method with `TileCacheBudget` has been deprecated and will be removed in a future major release.  
 
 ## 11.1.0 - 17 January, 2024
 

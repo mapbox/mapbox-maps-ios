@@ -678,8 +678,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             let annotation = mainAnnotations.remove(at: idx)
             draggedAnnotations.append(annotation)
             draggedAnnotationIndex = draggedAnnotations.endIndex - 1
-            annotation.dragBeingHandler?()
-            return true
+            return annotation.dragBeginHandler?(context) ?? false
         }
         return false
     }
@@ -698,7 +697,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     internal func handleDragEnded() {
         guard !isSwiftUI, let draggedAnnotationIndex = draggedAnnotationIndex else { return }
-        draggedAnnotations[draggedAnnotationIndex].dragEndHandler?()
+        draggedAnnotations[draggedAnnotationIndex].dragEndedHandler?()
         self.draggedAnnotationIndex = nil
     }
 }

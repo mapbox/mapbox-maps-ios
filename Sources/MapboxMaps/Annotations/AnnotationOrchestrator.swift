@@ -37,9 +37,9 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
 struct AnnotationGestureHandlers {
     var tap: ((MapContentGestureContext) -> Bool)?
     var longPress: ((MapContentGestureContext) -> Bool)?
-    var dragBeing: (() -> Void)?
+    var dragBegin: ((MapContentGestureContext) -> Bool)?
     var dragChanged: (() -> Void)?
-    var dragEnd: (() -> Void)?
+    var dragEnded: (() -> Void)?
 }
 
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).

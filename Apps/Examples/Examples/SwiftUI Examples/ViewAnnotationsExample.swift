@@ -21,6 +21,7 @@ struct ViewAnnotationsExample: View {
                     .background(
                         Circle().fill(selected ? .red : .blue))
                     .animation(.spring(), value: selected)
+                    .hoverEffect()
                     .onTapGesture {
                         selected.toggle()
                     }
@@ -89,6 +90,7 @@ struct ViewAnnotationsExample: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .floating(RoundedRectangle(cornerRadius: 10))
+            .limitPaneWidth()
             .onChangeOfSize { size in
                 overlayHeight = size.height
             }

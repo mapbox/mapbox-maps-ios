@@ -569,7 +569,7 @@ While maintaing the existing gesture approach we made minor improvements. In v11
 
 #### 2.12.7 Cache Management
 
-Experimental API `MapboxMap/setMemoryBudget(_:)` was renamed to ``MapboxMap/setTileCacheBudget(_:)`` and promoted to stable.
+Experimental API `MapboxMap/setMemoryBudget(_:)` was renamed to ``MapboxMap/setTileCacheBudget(size:)`` and promoted to stable.
 
 #### 2.12.8 Puck3D's scaling behavior
 

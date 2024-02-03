@@ -25,6 +25,7 @@ final class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
             source.encoding = Encoding.testSourceValue()
             source.volatile = Bool.testSourceValue()
             source.prefetchZoomDelta = Double.testSourceValue()
+            source.tileCacheBudget = TileCacheBudgetSize.testSourceValue()
             source.minimumTileUpdateInterval = Double.testSourceValue()
             source.maxOverscaleFactorForParentTiles = Double.testSourceValue()
             source.tileRequestsDelay = Double.testSourceValue()

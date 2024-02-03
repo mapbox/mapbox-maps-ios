@@ -311,9 +311,25 @@ public final class MapboxMap: StyleManager {
     /// If tile cache budget in megabytes is set, the engine will try to use ETC1 texture compression
     /// for raster layers, therefore, raster images with alpha channel will be rendered incorrectly.
     ///
+    /// If null is set, the tile cache budget size in tile units will be dynamically calculated based on
+    /// the current viewport size.
+    /// - Parameter size: The tile cache budget size to be used by the Map.
+    public func setTileCacheBudget(size: TileCacheBudgetSize?) {
+        __map.__setTileCacheBudgetFor(size?.coreTileCacheBudget)
+    }
+
+    /// The MapboxCoreMaps tile cache budget hint to be used by the map.
+    ///
+    /// The budget can be given in tile units or in megabytes. A Map will do the best effort to keep memory
+    /// allocations for a non essential resources within the budget.
+    ///
+    /// If tile cache budget in megabytes is set, the engine will try to use ETC1 texture compression
+    /// for raster layers, therefore, raster images with alpha channel will be rendered incorrectly.
+    ///
     /// If null is set, the tile cache budget in tile units will be dynamically calculated based on
     /// the current viewport size.
-    /// - Parameter tileCacheBudget: The tile cache budget hint to be used by the Map.
+    /// - Parameter tileCacheBudget: The MapboxCoreMaps tile cache budget hint to be used by the Map.
+    @available(*, deprecated, message: "Use .setTileCacheBudget(size: TileCacheBudgetSize?) instead.")
     public func setTileCacheBudget(_ tileCacheBudget: TileCacheBudget?) {
         __map.__setTileCacheBudgetFor(tileCacheBudget)
     }

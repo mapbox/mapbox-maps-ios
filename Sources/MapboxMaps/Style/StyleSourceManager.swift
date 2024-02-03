@@ -77,6 +77,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             try handleExpected {
                 styleManager.addStyleCustomRasterSource(forSourceId: source.id, options: options)
             }
+            try setVolatileProperties(source)
         case let source as CustomGeometrySource:
             guard let options = source.options else {
                 throw StyleError(message: "CustomGeometrySource does not have CustomGeometrySourceOptions")
@@ -84,6 +85,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             try handleExpected {
                 styleManager.addStyleCustomGeometrySource(forSourceId: source.id, options: options)
             }
+            try setVolatileProperties(source)
         case let source as GeoJSONSource:
             try addGeoJSONSource(source, dataId: dataId)
         default:
@@ -94,10 +96,12 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private func addSourceInternal(_ source: Source) throws {
         let sourceDictionary = try source.jsonObject(userInfo: [.nonVolatilePropertiesOnly: true])
         try addSource(withId: source.id, properties: sourceDictionary)
+        try setVolatileProperties(source)
+    }
 
+    private func setVolatileProperties(_ source: Source) throws {
         // volatile properties have to be set after the source has been added to the style
         let volatileProperties = try source.jsonObject(userInfo: [.volatilePropertiesOnly: true])
-
         try setSourceProperties(for: source.id, properties: volatileProperties)
     }
 

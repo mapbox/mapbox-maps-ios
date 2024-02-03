@@ -22,3 +22,4 @@
 - ``CustomRasterSource``
 - ``CustomRasterSourceOptions``
 - ``TileFunctionCallback``
+- ``TileCacheBudgetSize``

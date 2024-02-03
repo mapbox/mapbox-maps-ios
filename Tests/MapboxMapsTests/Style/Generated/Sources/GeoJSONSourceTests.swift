@@ -19,6 +19,7 @@ final class GeoJSONSourceTests: XCTestCase {
         source.generateId = Bool.testSourceValue()
         source.promoteId = PromoteId.testSourceValue()
         source.prefetchZoomDelta = Double.testSourceValue()
+        source.tileCacheBudget = TileCacheBudgetSize.testSourceValue()
 
         var data: Data?
         do {
@@ -48,6 +49,7 @@ final class GeoJSONSourceTests: XCTestCase {
             XCTAssert(decodedSource.generateId == Bool.testSourceValue())
             XCTAssert(decodedSource.promoteId == PromoteId.testSourceValue())
             XCTAssert(decodedSource.prefetchZoomDelta == Double.testSourceValue())
+            XCTAssert(decodedSource.tileCacheBudget == TileCacheBudgetSize.testSourceValue())
         } catch {
             XCTFail("Failed to decode GeoJSONSource.")
         }

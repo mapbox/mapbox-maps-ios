@@ -1,7 +1,6 @@
 import SwiftUI
 import UIKit
 @_spi(Experimental) import MapboxMaps
-
 @available(iOS 14.0, *)
 struct SwiftUIRoot: View {
     var body: some View {
@@ -21,7 +20,9 @@ struct SwiftUIRoot: View {
                 } header: { Text("Annotations") }
 
                 Section {
+#if !swift(>=5.9) || !os(visionOS)
                     ExampleLink("Query Rendered Features on tap", note: "Use MapReader and MapboxMap to query rendered features.", destination: FeaturesQueryExample())
+#endif
                     ExampleLink("Clustering data", note: "Display GeoJSON data with clustering using custom layers and handle interactions with them.", destination: ClusteringExample())
                 } header: { Text("Use cases") }
 
@@ -35,9 +36,11 @@ struct SwiftUIRoot: View {
                     if #available(iOS 15.0, *) {
                         ExampleLink("Attribution url open via environment", note: "Works on iOS 15+", destination: AttributionEnvironmentURLOpen())
                     }
+#if !swift(>=5.9) || !os(visionOS)
                     if #available(iOS 16.5, *) {
                         ExampleLink("Attribution dialog with presented sheet", destination: AttributionDialogueWithSheet())
                     }
+#endif
 
                 } header: { Text("Testing Examples") }
             }
@@ -95,10 +98,19 @@ private struct ToolbarContentWhenPresented<T: ToolbarContent>: ViewModifier {
 }
 
 
+@available(iOS 14.0, *)
+struct SwiftUIWrapper: View {
+    // A model for StandardStyleLocationsExample.
+    @StateObject var locationsModel = StandardStyleLocationsModel()
+    var body: some View {
+        SwiftUIRoot()
+            .environmentObject(locationsModel)
+    }
+}
 
 @available(iOS 14.0, *)
 func createSwiftUIExamplesController() -> UIViewController {
-    let controller =  UIHostingController(rootView: SwiftUIRoot())
+    let controller =  UIHostingController(rootView: SwiftUIWrapper())
     controller.title = title
     controller.modalPresentationStyle = .fullScreen
     return controller

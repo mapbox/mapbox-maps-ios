@@ -10,6 +10,7 @@ final class RasterArraySourceTests: XCTestCase {
         source.tiles = [String].testSourceValue()
         source.minzoom = Double.testSourceValue()
         source.maxzoom = Double.testSourceValue()
+        source.tileCacheBudget = TileCacheBudgetSize.testSourceValue()
 
         var data: Data?
         do {
@@ -30,6 +31,7 @@ final class RasterArraySourceTests: XCTestCase {
             XCTAssert(decodedSource.tiles == [String].testSourceValue())
             XCTAssert(decodedSource.minzoom == Double.testSourceValue())
             XCTAssert(decodedSource.maxzoom == Double.testSourceValue())
+            XCTAssert(decodedSource.tileCacheBudget == TileCacheBudgetSize.testSourceValue())
         } catch {
             XCTFail("Failed to decode RasterArraySource.")
         }

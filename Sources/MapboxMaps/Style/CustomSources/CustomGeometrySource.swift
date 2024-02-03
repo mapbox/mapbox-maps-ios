@@ -15,6 +15,10 @@ public struct CustomGeometrySource: Source {
     /// Settings for the custom geometry, including a fetchTileFunction callback
     public let options: CustomGeometrySourceOptions?
 
+    /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. 
+    /// - Note: Current implementation does not take into account resources allocated by the visible tiles.
+    public var tileCacheBudget: TileCacheBudgetSize?
+
     public init(id: String, options: CustomGeometrySourceOptions) {
         self.type = .customGeometry
         self.id = id
@@ -26,6 +30,7 @@ extension CustomGeometrySource {
     enum CodingKeys: String, CodingKey {
         case id
         case type
+        case tileCacheBudget = "tile-cache-budget"
     }
 
     /// Init from a decoder, note that the CustomGeometrySourceOptions are not decodable and need to be set separately
@@ -33,13 +38,30 @@ extension CustomGeometrySource {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(SourceType.self, forKey: .type)
+        tileCacheBudget = try container.decodeIfPresent(TileCacheBudgetSize.self, forKey: .tileCacheBudget)
         options = nil
     }
 
     /// Encode, note that options will not be included
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
-        try container.encode(type, forKey: .type)
+
+        if encoder.userInfo[.volatilePropertiesOnly] as? Bool == true {
+            try encodeVolatile(to: encoder, into: &container)
+        } else if encoder.userInfo[.nonVolatilePropertiesOnly] as? Bool == true {
+            try encodeNonVolatile(to: encoder, into: &container)
+        } else {
+            try encodeVolatile(to: encoder, into: &container)
+            try encodeNonVolatile(to: encoder, into: &container)
+        }
+    }
+
+    private func encodeVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encodeIfPresent(tileCacheBudget, forKey: .tileCacheBudget)
+    }
+
+    private func encodeNonVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encodeIfPresent(id, forKey: .id)
+        try container.encodeIfPresent(type, forKey: .type)
     }
 }

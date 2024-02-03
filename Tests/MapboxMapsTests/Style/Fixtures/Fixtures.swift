@@ -58,6 +58,12 @@ internal extension Dictionary where Key == String, Value == Expression {
     }
 }
 
+extension TileCacheBudgetSize {
+    static func testSourceValue(_ tileCacheBudget: TileCacheBudgetSize = .tiles(200)) -> TileCacheBudgetSize {
+        tileCacheBudget
+    }
+}
+
 internal extension Array where Element == [Double] {
     static func testSourceValue() -> [[Double]] {
         return [[30.0, 30.0], [0.0, 0.0], [30.0, 30.0], [0.0, 0.0]]

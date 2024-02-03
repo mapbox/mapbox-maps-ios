@@ -20,7 +20,7 @@ Most of the Maps SDK's features from iOS are supported on visionOS out-of-the-bo
 
 #### Eye tracking feedback
 
-All the interactive UI elements on Vision OS are expected to have visual feedback when the user looks at them. Currently, this effect is only available for native views and can be applied with [hoverEffect](https://developer.apple.com/documentation/swiftui/view/hovereffect(_:)). Mapbox Map renders most of the map content in Metal, which means the hover won't be available for map symbols, lines, polygons, and others. However, you can use [view annotations](https://docs.mapbox.com/ios/maps/guides/annotations/view-annotations/) to place interactive elements onto the map.
+All the interactive UI elements on visionOS are expected to have visual feedback when the user looks at them. Currently, this effect is only available for native views and can be applied with [hoverEffect](https://developer.apple.com/documentation/swiftui/view/hovereffect(_:)). Mapbox Map renders most of the map content in Metal, which means the hover won't be available for map symbols, lines, polygons, and others. However, you can use [view annotations](https://docs.mapbox.com/ios/maps/guides/annotations/view-annotations/) to place interactive elements onto the map.
 
 ```swift
 Map {

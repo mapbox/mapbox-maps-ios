@@ -8,7 +8,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Features ✨ and improvements 🏁
 
-* Vision OS support. 🚀
+* visionOS support. 🚀
 * Add easing curve parameter to `CameraAnimationsManager.fly(to:duration:curve:completion)`, make `TimingCurve` public with few more options.
 * Expose `MapboxMap.centerAltitudeMode` and ensure correct `centerAltitudeMode` on gesture ending.
 * Expose extra configuration methods for `MapboxMap`: `setNorthOrientation(_:)`, `setConstrainMode(_:)` and `setViewportMode(_:)`.

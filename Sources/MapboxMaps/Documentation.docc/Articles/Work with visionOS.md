@@ -1,4 +1,4 @@
-# Work with VisionOS
+# Work with visionOS
 
 Use Mapbox Maps in native applications for Apple Vision Pro.
 
@@ -10,11 +10,11 @@ Starting from version `11.2.0-beta.1` of Mapbox Maps, you can use the Mapbox Map
 
 - Note: Currently, visionOS is not supported in CocoaPods. Please use SPM or the binary [distribution](https://docs.mapbox.com/ios/maps/guides/install/) of MapboxMaps.
 
-### Make use of Mapbox Maps on VisionOS
+### Make use of Mapbox Maps on visionOS
 
-Working with Mapbox Maps on VisionOS is very similar to iOS. As the entry point to the map, you use ``Map`` if your application uses SwiftUI, and ``MapView`` if the application uses UIKit. You can find more information about SwiftUI support in <doc:SwiftUI-User-Guide>.
+Working with Mapbox Maps on visionOS is very similar to iOS. As the entry point to the map, you use ``Map`` if your application uses SwiftUI, and ``MapView`` if the application uses UIKit. You can find more information about SwiftUI support in <doc:SwiftUI-User-Guide>.
 
-Most of the Maps SDK's features from iOS are supported on VisionOS out-of-the-box. However, there are some platform limitations discussed below.
+Most of the Maps SDK's features from iOS are supported on visionOS out-of-the-box. However, there are some platform limitations discussed below.
 
 ### Limitations
 

@@ -169,6 +169,7 @@ final class PolylineAnnotationTests: XCTestCase {
         XCTAssertEqual(lineWidth, annotation.lineWidth)
     }
 
+    @available(*, deprecated)
     func testUserInfo() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
@@ -179,7 +180,8 @@ final class PolylineAnnotationTests: XCTestCase {
         let actualUserInfo = try XCTUnwrap(featureProperties["userInfo"]??.rawValue as? [String: Any])
         XCTAssertEqual(actualUserInfo["foo"] as? String, userInfo["foo"])
     }
-    
+
+    @available(*, deprecated)
     func testUserInfoNilWhenNonJSONObjectPassed() throws {
         struct NonJSON: Equatable {}
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
@@ -190,7 +192,8 @@ final class PolylineAnnotationTests: XCTestCase {
         let actualUserInfo = try XCTUnwrap(featureProperties["userInfo"]??.rawValue as? [String: Any])
         XCTAssertNil(actualUserInfo["foo"] as? NonJSON)
     }
-    
+
+    @available(*, deprecated)
     func testCustomData() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)

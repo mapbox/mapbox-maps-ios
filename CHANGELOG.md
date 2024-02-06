@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Add `onClusterTap` and `onClusterLongPress` to AnnotationManagers(UIKit) and AnnotationGroups(SwiftUI) which support clustering
+* Add annotations drag handlers callbacks `dragBeginHandler`, `dragChangeHandler`, `dragEndHandler` to all Annotation types.
 
 ## 11.2.0-beta.1 - 1 February, 2024
 

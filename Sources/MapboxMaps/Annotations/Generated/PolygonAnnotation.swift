@@ -37,21 +37,54 @@ public struct PolygonAnnotation: Annotation, Equatable {
         get { gestureHandlers.value.longPress }
         set { gestureHandlers.value.longPress = newValue }
     }
-    
+
+    /// The handler is invoked when the user begins to drag the annotation.
+    ///
+    /// The annotation should have `isDraggable` set to `true` to make id draggable.
+    ///
+    /// - Note: In SwiftUI, draggable annotations are not supported.
+    ///
+    /// The handler receives the `annotation` and the `context` parameters of the gesture:
+    /// - Use the `annotation` inout property to update properties of the annotation.
+    /// - The `context` contains position of the gesture.
+    /// Return `true` to allow dragging to begin, or `false` to prevent it and propagate the gesture to the map's other annotations or layers.
+    public var dragBeginHandler: ((inout PolygonAnnotation, MapContentGestureContext) -> Bool)? {
+        get { gestureHandlers.value.dragBegin }
+        set { gestureHandlers.value.dragBegin = newValue }
+    }
+
+    /// The handler is invoked when annotation is being dragged.
+    ///
+    /// The handler receives the `annotation` and the `context` parameters of the gesture:
+    /// - Use the `annotation` inout property to update properties of the annotation.
+    /// - The `context` contains position of the gesture.
+    public var dragChangeHandler: ((inout PolygonAnnotation, MapContentGestureContext) -> Void)? {
+        get { gestureHandlers.value.dragChange }
+        set { gestureHandlers.value.dragChange = newValue }
+    }
+
+    /// The handler receives the `annotation` and the `context` parameters of the gesture:
+    /// - Use the `annotation` inout property to update properties of the annotation.
+    /// - The `context` contains position of the gesture.
+    public var dragEndHandler: ((inout PolygonAnnotation, MapContentGestureContext) -> Void)? {
+        get { gestureHandlers.value.dragEnd }
+        set { gestureHandlers.value.dragEnd = newValue }
+    }
+
     /// JSON convertible properties associated with the annotation, used to enrich Feature GeoJSON `properties["custom_data"]` field.
     public var customData = JSONObject()
 
     /// Properties associated with the annotation.
     ///
-    /// - Note: This propert doesn't participate in `Equatable` comparisions and will strip non-JSON values when encoding to Feature GeoJSON.
+    /// - Note: This property doesn't participate in `Equatable` comparisions and will strip non-JSON values when encoding to Feature GeoJSON.
     @available(*, deprecated, message: "Use customData instead.")
     public var userInfo: [String: Any]? {
         get { _userInfo.value }
         set { _userInfo.value = newValue }
     }
-    
+
     private var _userInfo: AlwaysEqual<[String: Any]?> = nil
-    private var gestureHandlers = AlwaysEqual(value: AnnotationGestureHandlers())
+    private var gestureHandlers = AlwaysEqual(value: AnnotationGestureHandlers<PolygonAnnotation>())
 
     var layerProperties: [String: Any] {
         var properties: [String: Any] = [:]

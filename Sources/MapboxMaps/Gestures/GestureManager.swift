@@ -123,7 +123,7 @@ public final class GestureManager: GestureHandlerDelegate {
 
     /// Adds a long press handler for the layer with `layerId`.
     ///
-    /// The handler will be called in the event, starting with the topmost layer and propagating down to each layer under the tap in order. 
+    /// The handler will be called in the event, starting with the topmost layer and propagating down to each layer under the tap in order.
     public func onLayerLongPress(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable {
         mapContentGestureManager.onLayerLongPress(layerId, handler: handler)
     }

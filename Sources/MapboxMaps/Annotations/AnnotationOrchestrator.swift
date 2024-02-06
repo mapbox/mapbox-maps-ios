@@ -29,14 +29,17 @@ protocol AnnotationManagerInternal: AnnotationManager {
 
     func handleDragBegin(with featureId: String, context: MapContentGestureContext) -> Bool
 
-    func handleDragChanged(with translation: CGPoint)
+    func handleDragChange(with translation: CGPoint, context: MapContentGestureContext)
 
-    func handleDragEnded()
+    func handleDragEnd(context: MapContentGestureContext)
 }
 
-struct AnnotationGestureHandlers {
+struct AnnotationGestureHandlers<T: Annotation> {
     var tap: ((MapContentGestureContext) -> Bool)?
     var longPress: ((MapContentGestureContext) -> Bool)?
+    var dragBegin: ((inout T, MapContentGestureContext) -> Bool)?
+    var dragChange: ((inout T, MapContentGestureContext) -> Void)?
+    var dragEnd: ((inout T, MapContentGestureContext) -> Void)?
 }
 
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).

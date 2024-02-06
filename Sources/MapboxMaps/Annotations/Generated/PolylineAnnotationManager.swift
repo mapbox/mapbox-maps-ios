@@ -10,7 +10,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     public var sourceId: String { id }
 
     public var layerId: String { id }
-    
+
     private var dragId: String { "\(id)_drag" }
 
     public let id: String
@@ -322,15 +322,15 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - User interaction handling
 
-    
+
     func handleTap(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
-        
+
         guard let featureId = feature.identifier?.string else { return false }
-        
+
         let tappedIndex = annotations.firstIndex { $0.id == featureId }
         guard let tappedIndex else { return false }
         var tappedAnnotation = annotations[tappedIndex]
-        
+
         tappedAnnotation.isSelected.toggle()
 
         if !isSwiftUI {
@@ -355,36 +355,61 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     func handleDragBegin(with featureId: String, context: MapContentGestureContext) -> Bool {
         guard !isSwiftUI else { return false }
 
-        let predicate = { (annotation: PolylineAnnotation) -> Bool in
+        func predicate(annotation: PolylineAnnotation) -> Bool {
             annotation.id == featureId && annotation.isDraggable
         }
 
+        func tryBeginDragging(_ annotations: inout [PolylineAnnotation], idx: Int) -> Bool  {
+            var annotation = annotations[idx]
+            // If no drag handler set, the dragging is allowed
+            let dragAllowed = annotation.dragBeginHandler?(&annotation, context) ?? true
+            annotations[idx] = annotation
+            return dragAllowed
+        }
+
+        /// First, try to drag annotations that are already on the dragging layer.
         if let idx = draggedAnnotations.firstIndex(where: predicate) {
+            let dragAllowed = tryBeginDragging(&draggedAnnotations, idx: idx)
+            guard dragAllowed else {
+                return false
+            }
+
             draggedAnnotationIndex = idx
             return true
         }
 
+        /// Then, try to start dragging from the main set of annotations.
         if let idx = mainAnnotations.lastIndex(where: predicate) {
-            insertDraggedLayerAndSourceOnce {
-                let source = GeoJSONSource(id: dragId)
-                let layer = LineLayer(id: dragId, source: dragId)
-                do {
-                    try style.addSource(source)
-                    try style.addPersistentLayer(layer, layerPosition: .above(layerId))
-                } catch {
-                    Log.error(forMessage: "Add drag source/layer \(error)", category: "Annotations")
-                }
+            let dragAllowed = tryBeginDragging(&mainAnnotations, idx: idx)
+            guard dragAllowed else {
+                return false
             }
+
+            insertDraggedLayerAndSource()
 
             let annotation = mainAnnotations.remove(at: idx)
             draggedAnnotations.append(annotation)
             draggedAnnotationIndex = draggedAnnotations.endIndex - 1
             return true
         }
+
         return false
     }
 
-    func handleDragChanged(with translation: CGPoint) {
+    private func insertDraggedLayerAndSource() {
+        insertDraggedLayerAndSourceOnce {
+            let source = GeoJSONSource(id: dragId)
+            let layer = LineLayer(id: dragId, source: dragId)
+            do {
+                try style.addSource(source)
+                try style.addPersistentLayer(layer, layerPosition: .above(layerId))
+            } catch {
+                Log.error(forMessage: "Add drag source/layer \(error)", category: "Annotations")
+            }
+        }
+    }
+
+    func handleDragChange(with translation: CGPoint, context: MapContentGestureContext) {
         guard !isSwiftUI,
               let draggedAnnotationIndex,
               draggedAnnotationIndex < draggedAnnotations.endIndex,
@@ -393,12 +418,31 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
 
         draggedAnnotations[draggedAnnotationIndex].lineString = lineString
+
+        callDragHandler(\.dragChangeHandler, context: context)
     }
 
-    internal func handleDragEnded() {
+    func handleDragEnd(context: MapContentGestureContext) {
         guard !isSwiftUI else { return }
+        callDragHandler(\.dragEndHandler, context: context)
         draggedAnnotationIndex = nil
     }
+
+    private func callDragHandler(
+        _ keyPath: KeyPath<PolylineAnnotation, ((inout PolylineAnnotation, MapContentGestureContext) -> Void)?>,
+        context: MapContentGestureContext
+    ) {
+        guard let draggedAnnotationIndex, draggedAnnotationIndex < draggedAnnotations.endIndex else {
+            return
+        }
+
+        if let handler = draggedAnnotations[draggedAnnotationIndex][keyPath: keyPath] {
+            var copy = draggedAnnotations[draggedAnnotationIndex]
+            handler(&copy, context)
+            draggedAnnotations[draggedAnnotationIndex] = copy
+        }
+    }
 }
+
 
 // End of generated file.

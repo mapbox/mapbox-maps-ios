@@ -44,13 +44,17 @@ internal final class MockAnnotationManager: AnnotationManagerInternal {
         handleDragBeginStub(with: DragGestureParams(featureId: featureId, context: context))
     }
 
-    let handleDragChangedStub = Stub<CGPoint, Void>()
-    func handleDragChanged(with translation: CGPoint) {
-        handleDragChangedStub(with: translation)
+    struct DragParams {
+        var translation: CGPoint
+        var context: MapContentGestureContext
+    }
+    let handleDragChangeStub = Stub<DragParams, Void>()
+    func handleDragChange(with translation: CGPoint, context: MapContentGestureContext) {
+        handleDragChangeStub(with: DragParams(translation: translation, context: context))
     }
 
-    let handleDragEndedStub = Stub<Void, Void>()
-    func handleDragEnded() {
-        handleDragEndedStub()
+    let handleDragEndStub = Stub<MapContentGestureContext, Void>()
+    func handleDragEnd(context: MapContentGestureContext) {
+        handleDragEndStub.call(with: context)
     }
 }

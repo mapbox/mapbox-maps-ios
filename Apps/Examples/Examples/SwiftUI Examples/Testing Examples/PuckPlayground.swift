@@ -41,6 +41,7 @@ struct PuckPlayground: View {
             }
         }
         .mapStyle(mapStyle)
+        .debugOptions(.padding)
         .additionalSafeAreaInsets(sidePanel ? .trailing : .bottom, settingsHeight)
         .ignoresSafeArea()
         .safeOverlay(alignment: sidePanel ? .trailing : .bottom) {
@@ -49,8 +50,8 @@ struct PuckPlayground: View {
                 .onChangeOfSize { settingsHeight = sidePanel ? $0.width : $0.height }
         }
         .safeOverlay(alignment: .trailing) {
-                MapStyleSelectorButton(mapStyle: $mapStyle)
-                    .padding(.trailing, sidePanel ? 300 : 0)
+            MapStyleSelectorButton(mapStyle: $mapStyle)
+                .padding(.trailing, sidePanel ? 300 : 0)
         }
         .onChange(of: puckType) { newValue in
             if puckType == .d3 { // Switch to dusk mode to see model light emission

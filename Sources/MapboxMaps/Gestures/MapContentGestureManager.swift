@@ -88,7 +88,9 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
 
             for queriedFeature in queriedFeatures {
                 if !self.handle(using: { manager in manager.handleTap }, queriedFeature: queriedFeature, context: context) {
-                    if !self.handle(subscribers: \.layerTapSubscribers, queriedFeature: queriedFeature, context: context) { continue }
+                    if !self.handle(subscribers: \.layerTapSubscribers, queriedFeature: queriedFeature, context: context) {
+                        continue
+                    }
                 }
                 return
             }
@@ -110,7 +112,9 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
 
                 for queriedFeature in queriedFeatures {
                     if !self.handle(using: { manager in manager.handleLongPress }, queriedFeature: queriedFeature, context: context) {
-                        if !self.handle(subscribers: \.layerLongPressSubscribers, queriedFeature: queriedFeature, context: context) { continue }
+                        if !self.handle(subscribers: \.layerLongPressSubscribers, queriedFeature: queriedFeature, context: context) {
+                            continue
+                        }
                     }
                     isLongPressHandled = true
                 }
@@ -123,11 +127,11 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
         case .changed:
             guard let dragState else { return }
             let translation = dragState.point - point
-            dragState.manager.handleDragChanged(with: translation)
+            dragState.manager.handleDragChange(with: translation, context: context)
             self.dragState?.point = point
 
         case .ended, .cancelled:
-            dragState?.manager.handleDragEnded()
+            dragState?.manager.handleDragEnd(context: context)
             dragState = nil
 
         default:
@@ -138,7 +142,7 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
     private func handeDragBegin(queriedFeatures: [(String, QueriedFeature)], context: MapContentGestureContext) {
         if let dragState {
             assertionFailure()
-            dragState.manager.handleDragEnded()
+            dragState.manager.handleDragEnd(context: context)
         }
 
         for (layerId, queriedFeature) in queriedFeatures {

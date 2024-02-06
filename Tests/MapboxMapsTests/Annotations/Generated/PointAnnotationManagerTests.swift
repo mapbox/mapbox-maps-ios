@@ -204,6 +204,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         }
     }
 
+    @available(*, deprecated)
     func testHandleTap() throws {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
@@ -244,20 +245,20 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // invalid id
         delegateAnnotations = nil
-        var invalidFeature = Feature(geometry: nil)
+        let invalidFeature = Feature(geometry: nil)
         handled = manager.handleTap(layerId: "layerId", feature: invalidFeature, context: context)
 
         XCTAssertNil(delegateAnnotations)
         XCTAssertEqual(handled, false)
         XCTAssertEqual(taps.count, 1)
     }
-    
+
     func testHandleClusterTap() {
         let onClusterTap = Stub<AnnotationClusterGestureContext, Void>(defaultReturnValue: ())
         let context = MapContentGestureContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
         let annotationContext = AnnotationClusterGestureContext(point: context.point, coordinate: context.coordinate, expansionZoom: 4)
         manager.onClusterTap = onClusterTap.call
-        
+
         let isHandled = manager.handleTap(
             layerId: "mapbox-iOS-cluster-circle-layer-manager-\(id)",
             feature: annotations[1].feature,
@@ -266,15 +267,15 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         mapFeatureQueryable.getGeoJsonClusterExpansionZoomStub.invocations.map(\.parameters.completion).forEach { completion in
             completion(.success(FeatureExtensionValue(value: 4, features: nil)))
         }
-        
+
         XCTAssertTrue(isHandled)
         XCTAssertEqual(mapFeatureQueryable.getGeoJsonClusterExpansionZoomStub.invocations.map(\.parameters.feature), [
             annotations[1].feature
         ])
-        
+
         XCTAssertEqual(onClusterTap.invocations.map(\.parameters), [annotationContext])
     }
-    
+
     func testInitialIconAllowOverlap() {
         let initialValue = manager.iconAllowOverlap
         XCTAssertNil(initialValue)
@@ -3428,7 +3429,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
-
         _ = manager.handleDragBegin(with: "point1", context: .zero)
 
         let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
@@ -3453,7 +3453,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
         mapboxMap.cameraState.zoom = 1
 
-        manager.handleDragChanged(with: .random())
+        manager.handleDragChange(with: .random(), context: .zero)
 
         $displayLink.send()
 
@@ -3463,6 +3463,88 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             XCTAssertTrue(collection.features.contains(where: { $0.identifier?.rawValue as? String == annotation.id }))
         } else {
             XCTFail("GeoJSONObject should be a feature collection")
+        }
+    }
+
+    func testDragHandlers() throws {
+        struct GestureData {
+            var annotation: PointAnnotation
+            var context: MapContentGestureContext
+        }
+
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.isDraggable = true
+
+        let beginDragStub = Stub<GestureData, Bool>(defaultReturnValue: false)
+        let changeDragStub = Stub<GestureData, Void>()
+        let endDragStub = Stub<GestureData, Void>()
+        annotation.dragBeginHandler = { annotation, context in
+            beginDragStub.call(with: GestureData(annotation: annotation, context: context))
+        }
+        annotation.dragChangeHandler = { annotation, context in
+            changeDragStub.call(with: GestureData(annotation: annotation, context: context))
+        }
+        annotation.dragEndHandler = { annotation, context in
+            endDragStub.call(with: GestureData(annotation: annotation, context: context))
+        }
+        manager.annotations = [annotation]
+
+        mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
+        mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
+        mapboxMap.cameraState.zoom = 1
+
+        var context = MapContentGestureContext(point: CGPoint(x: 0, y: 1), coordinate: .init(latitude: 2, longitude: 3))
+
+        // test it twice to cover the case when annotation was already on drag layer.
+        for _ in 0...1 {
+            beginDragStub.reset()
+            changeDragStub.reset()
+            endDragStub.reset()
+
+            // skipped gesture
+            beginDragStub.defaultReturnValue = false
+            var res = manager.handleDragBegin(with: annotation.id, context: context)
+            XCTAssertEqual(beginDragStub.invocations.count, 1)
+            XCTAssertEqual(res, false)
+            var data = try XCTUnwrap(beginDragStub.invocations.last).parameters
+            XCTAssertEqual(data.annotation.id, annotation.id)
+            XCTAssertEqual(data.context.point, context.point)
+            XCTAssertEqual(data.context.coordinate, context.coordinate)
+
+            manager.handleDragChange(with: CGPoint(x: 10, y: 20), context: context)
+            manager.handleDragEnd(context:context)
+            XCTAssertEqual(changeDragStub.invocations.count, 0)
+            XCTAssertEqual(endDragStub.invocations.count, 0)
+
+            // handled gesture
+            context.point.x += 1
+            context.coordinate.latitude += 1
+            beginDragStub.defaultReturnValue = true
+            res = manager.handleDragBegin(with: annotation.id, context: context)
+            XCTAssertEqual(beginDragStub.invocations.count, 2)
+            XCTAssertEqual(res, true)
+            data = try XCTUnwrap(beginDragStub.invocations.last).parameters
+            XCTAssertEqual(data.annotation.id, annotation.id)
+            XCTAssertEqual(data.context.point, context.point)
+            XCTAssertEqual(data.context.coordinate, context.coordinate)
+
+            context.point.x += 1
+            context.coordinate.latitude += 1
+            manager.handleDragChange(with: CGPoint(x: 10, y: 20), context: context)
+            XCTAssertEqual(changeDragStub.invocations.count, 1)
+            data = try XCTUnwrap(changeDragStub.invocations.last).parameters
+            XCTAssertEqual(data.annotation.id, annotation.id)
+            XCTAssertEqual(data.context.point, context.point)
+            XCTAssertEqual(data.context.coordinate, context.coordinate)
+
+            context.point.x += 1
+            context.coordinate.latitude += 1
+            manager.handleDragEnd(context:context)
+            XCTAssertEqual(endDragStub.invocations.count, 1)
+            data = try XCTUnwrap(endDragStub.invocations.last).parameters
+            XCTAssertEqual(data.annotation.id, annotation.id)
+            XCTAssertEqual(data.context.point, context.point)
+            XCTAssertEqual(data.context.coordinate, context.coordinate)
         }
     }
 

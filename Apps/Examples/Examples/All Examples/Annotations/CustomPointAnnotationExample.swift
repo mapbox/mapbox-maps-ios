@@ -51,6 +51,14 @@ final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
             return true
         }
 
+        customPointAnnotation.dragBeginHandler = { annotation, _ in
+            annotation.iconSize = 1.2
+            return true // allow drag gesture begin
+        }
+        customPointAnnotation.dragEndHandler = { annotation, _ in
+            annotation.iconSize = 1
+        }
+
         // Add the annotation to the manager in order to render it on the map.
         pointAnnotationManager.annotations = [customPointAnnotation]
     }

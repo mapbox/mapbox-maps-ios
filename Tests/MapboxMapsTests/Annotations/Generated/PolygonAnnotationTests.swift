@@ -109,6 +109,7 @@ final class PolygonAnnotationTests: XCTestCase {
         XCTAssertEqual(fillPattern, annotation.fillPattern)
     }
 
+    @available(*, deprecated)
     func testUserInfo() throws {
         let polygonCoords = [
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
@@ -125,7 +126,8 @@ final class PolygonAnnotationTests: XCTestCase {
         let actualUserInfo = try XCTUnwrap(featureProperties["userInfo"]??.rawValue as? [String: Any])
         XCTAssertEqual(actualUserInfo["foo"] as? String, userInfo["foo"])
     }
-    
+
+    @available(*, deprecated)
     func testUserInfoNilWhenNonJSONObjectPassed() throws {
         struct NonJSON: Equatable {}
         let polygonCoords = [
@@ -142,7 +144,8 @@ final class PolygonAnnotationTests: XCTestCase {
         let actualUserInfo = try XCTUnwrap(featureProperties["userInfo"]??.rawValue as? [String: Any])
         XCTAssertNil(actualUserInfo["foo"] as? NonJSON)
     }
-    
+
+    @available(*, deprecated)
     func testCustomData() throws {
         let polygonCoords = [
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),

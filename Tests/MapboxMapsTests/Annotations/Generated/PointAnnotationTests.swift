@@ -452,6 +452,7 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(textOpacity, annotation.textOpacity)
     }
 
+    @available(*, deprecated)
     func testUserInfo() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         let userInfo = ["foo": "bar"]
@@ -461,7 +462,8 @@ final class PointAnnotationTests: XCTestCase {
         let actualUserInfo = try XCTUnwrap(featureProperties["userInfo"]??.rawValue as? [String: Any])
         XCTAssertEqual(actualUserInfo["foo"] as? String, userInfo["foo"])
     }
-    
+
+    @available(*, deprecated)
     func testUserInfoNilWhenNonJSONObjectPassed() throws {
         struct NonJSON: Equatable {}
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
@@ -471,7 +473,8 @@ final class PointAnnotationTests: XCTestCase {
         let actualUserInfo = try XCTUnwrap(featureProperties["userInfo"]??.rawValue as? [String: Any])
         XCTAssertNil(actualUserInfo["foo"] as? NonJSON)
     }
-    
+
+    @available(*, deprecated)
     func testCustomData() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         let customData: JSONObject = ["foo": .string("bar")]

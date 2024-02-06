@@ -243,7 +243,7 @@ class MapContentGestureManagerTests: XCTestCase {
         manager.handleDragBeginStub.defaultReturnValue = true // handles the drag
 
         var point = CGPoint(x: 10, y: 20)
-        let coordinate = CLLocationCoordinate2D(latitude: 30, longitude: 40)
+        var coordinate = CLLocationCoordinate2D(latitude: 30, longitude: 40)
         mapboxMap.coordinateForPointStub.defaultReturnValue = coordinate
 
         $onLongPress.send((point, .began))
@@ -264,20 +264,30 @@ class MapContentGestureManagerTests: XCTestCase {
 
         var translation = CGPoint(x: 10, y: 10)
         point = point + translation
+        coordinate.latitude += 10
+        coordinate.latitude += 5
+        mapboxMap.coordinateForPointStub.defaultReturnValue = coordinate
         $onLongPress.send((point, .changed))
-        XCTAssertEqual(manager.handleDragChangedStub.invocations.count, 1)
-        var dragParams = try XCTUnwrap(manager.handleDragChangedStub.invocations.last).parameters
-        XCTAssertEqual(dragParams, CGPoint(x: -10, y: -10))
+        XCTAssertEqual(manager.handleDragChangeStub.invocations.count, 1)
+        var dragParams = try XCTUnwrap(manager.handleDragChangeStub.invocations.last).parameters
+        XCTAssertEqual(dragParams.translation, CGPoint(x: -10, y: -10))
+        XCTAssertEqual(dragParams.context.point, CGPoint(x: 20.0, y: 30.0))
+        XCTAssertEqual(dragParams.context.coordinate, coordinate)
 
         translation = CGPoint(x: 5, y: 2)
         point = point + translation
         $onLongPress.send((point, .changed))
-        XCTAssertEqual(manager.handleDragChangedStub.invocations.count, 2)
-        dragParams = try XCTUnwrap(manager.handleDragChangedStub.invocations.last).parameters
-        XCTAssertEqual(dragParams, CGPoint(x: -5, y: -2))
+        XCTAssertEqual(manager.handleDragChangeStub.invocations.count, 2)
+        dragParams = try XCTUnwrap(manager.handleDragChangeStub.invocations.last).parameters
+        XCTAssertEqual(dragParams.translation, CGPoint(x: -5, y: -2))
+        XCTAssertEqual(dragParams.context.point, CGPoint(x: 25, y: 32))
+        XCTAssertEqual(dragParams.context.coordinate, coordinate)
 
         $onLongPress.send((point, .ended))
-        XCTAssertEqual(manager.handleDragEndedStub.invocations.count, 1)
+        XCTAssertEqual(manager.handleDragEndStub.invocations.count, 1)
+        let endContext = try XCTUnwrap(manager.handleDragEndStub.invocations.first).parameters
+        XCTAssertEqual(endContext.point, CGPoint(x: 25, y: 32))
+        XCTAssertEqual(endContext.coordinate, coordinate)
     }
 }
 

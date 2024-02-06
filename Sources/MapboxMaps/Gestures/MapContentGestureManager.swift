@@ -14,6 +14,7 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
 
     private typealias LayerTapGestureParams = (QueriedFeature, MapContentGestureContext)
     private typealias LayerSubscribersStore = ClosureHandlersStore<LayerTapGestureParams, Bool>
+    private typealias ManagerHandlerBlock = (AnnotationManagerInternal) -> (String, Feature, MapContentGestureContext) -> Bool
 
     private struct DragState {
         var point: CGPoint
@@ -40,8 +41,8 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
         onLongPress: Signal<(CGPoint, UIGestureRecognizer.State)>
     ) {
             self.annotations = annotations
-            self.mapFeatureQueryable = mapFeatureQueryable
             self.mapboxMap = mapboxMap
+            self.mapFeatureQueryable = mapFeatureQueryable
             onTap
                 .handle(in: MapContentGestureManager.handleTap(_:), ofWeak: self)
                 .store(in: &tokens)
@@ -82,17 +83,17 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
         let coordinate = mapboxMap.coordinate(for: point)
         let context = MapContentGestureContext(point: point, coordinate: coordinate)
 
-        let layerIds = Array(annotations.managersByLayerId.keys) + Array(layerTapSubscribers.keys)
-        queryToken = mapFeatureQueryable.queryRenderedFeatures(point: point, layerIds: layerIds) { [weak self] queryResult in
+        queryFeatures(context: context, subscribers: \.layerTapSubscribers) { [weak self] queriedFeatures, context in
             guard let self else { return }
-            let result = self.handle(queryResult: queryResult,
-                                     context: context,
-                                     handleManager: AnnotationManagerInternal.handleTap(with:context:),
-                                     layersGestureSubscribers: self.layerTapSubscribers)
-            if result == nil {
-                // No annotations or layers handled the tap, sending map tap signal.
-                self.mapTapSignal.send(context)
+
+            for queriedFeature in queriedFeatures {
+                if !handle(using: { manager in manager.handleTap }, queriedFeature: queriedFeature, context: context) {
+                    if !handle(subscribers: \.layerTapSubscribers, queriedFeature: queriedFeature, context: context) { continue }
+                }
+                return
             }
+
+            mapTapSignal.send(context)
         }
     }
 
@@ -103,33 +104,20 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
 
         switch state {
         case .began:
-            if let dragState {
-                assertionFailure()
-                dragState.manager.handleDragEnded()
-                self.dragState = nil
-            }
-            let layerIds = Array(annotations.managersByLayerId.keys) + Array(self.layerLongPressSubscribers.keys)
-            queryToken = mapFeatureQueryable.queryRenderedFeatures(point: point, layerIds: layerIds) { [weak self] queryResult in
+            queryFeatures(context: context, subscribers: \.layerLongPressSubscribers) { [weak self] queriedFeatures, context in
                 guard let self else { return }
+                var isLongPressHandled = false
 
-                // First, handle long-press gesture
-                let longPressResult = self.handle(queryResult: queryResult,
-                                                  context: context,
-                                                  handleManager: AnnotationManagerInternal.handleLongPress(with:context:),
-                                                  layersGestureSubscribers: self.layerLongPressSubscribers)
-                if longPressResult == nil {
-                    // No annotations or layers handled the long press, sending the map longPress signal
-                    self.mapLongPressSignal.send(context)
+                for queriedFeature in queriedFeatures {
+                    if !handle(using: { manager in manager.handleLongPress }, queriedFeature: queriedFeature, context: context) {
+                        if !handle(subscribers: \.layerLongPressSubscribers, queriedFeature: queriedFeature, context: context) { continue }
+                    }
+                    isLongPressHandled = true
                 }
 
-                // Second, handle drag-begin gesture
-                let dragStartResult = self.handle(queryResult: queryResult,
-                                                 context: context,
-                                                 handleManager: AnnotationManagerInternal.handleDragBegin(with:context:),
-                                                 layersGestureSubscribers: [:])
-                if let dragStartResult, case let .manager(manager) = dragStartResult {
-                    self.dragState = DragState(point: point, manager: manager)
-                }
+                if !isLongPressHandled { mapLongPressSignal.send(context) }
+
+                handeDragBegin(queriedFeatures: queriedFeatures, context: context)
             }
 
         case .changed:
@@ -141,65 +129,97 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
         case .ended, .cancelled:
             dragState?.manager.handleDragEnded()
             dragState = nil
+
         default:
             break
         }
     }
 
-    private enum ResultingGestureHandler {
-        case manager(AnnotationManagerInternal)
-        case layer
-    }
+    private func handeDragBegin(queriedFeatures: [(String, QueriedFeature)], context: MapContentGestureContext) {
+        if let dragState {
+            assertionFailure()
+            dragState.manager.handleDragEnded()
+        }
 
-    /// Takes query result and tries handle the gesture with appropriate handler. Returns that handler if it handled the action.
-    /// Returns `nil` if no handler found or no one handled the action.
-    private func handle(
-        queryResult: [(String, QueriedFeature)],
-        context: MapContentGestureContext,
-        handleManager: (AnnotationManagerInternal) -> (String, MapContentGestureContext) -> Bool,
-        layersGestureSubscribers: [String: LayerSubscribersStore]
-    ) -> ResultingGestureHandler? {
-        for (layer, queriedFeature) in queryResult {
-            if let manager = self.annotations.managersByLayerId[layer],
-               let featureId = queriedFeature.feature.identifier?.string {
-                if handleManager(manager)(featureId, context) {
-                    return .manager(manager)
-                }
-            }
-
-            if let store = layersGestureSubscribers[layer] {
-                for handler in store where handler((queriedFeature, context)) {
-                    return .layer
+        for (layerId, queriedFeature) in queriedFeatures {
+            if let manager = annotations.managersByLayerId[layerId], let featureId = queriedFeature.feature.stringId {
+                if manager.handleDragBegin(with: featureId, context: context) {
+                    dragState = DragState(point: context.point, manager: manager)
+                    return
                 }
             }
         }
-        return nil
+    }
+
+    private func handle(
+        using handledUsing: ManagerHandlerBlock,
+        queriedFeature: (String, QueriedFeature),
+        context: MapContentGestureContext
+    ) -> Bool {
+        let (layerId, queriedFeature) = queriedFeature
+        if let manager = annotations.managersByLayerId[layerId],
+            handledUsing(manager)(layerId, queriedFeature.feature, context) {
+            return true
+        }
+        return false
+    }
+
+    private func handle(
+        subscribers: KeyPath<MapContentGestureManager, [String: LayerSubscribersStore]>,
+        queriedFeature: (String, QueriedFeature),
+        context: MapContentGestureContext
+    ) -> Bool {
+        let (layerId, queriedFeature) = queriedFeature
+        if let store = self[keyPath: subscribers][layerId] {
+            for handler in store where handler((queriedFeature, context)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private func queryFeatures(
+        context: MapContentGestureContext,
+        subscribers: KeyPath<MapContentGestureManager, [String: LayerSubscribersStore]>? = nil,
+        handler: @escaping ([(String, QueriedFeature)], MapContentGestureContext) -> Void
+    ) {
+        var layerIds = Array(annotations.managersByLayerId.keys)
+        if let subscribers { layerIds += self[keyPath: subscribers].keys }
+        queryToken = mapFeatureQueryable.queryRenderedFeatures(point: context.point, layerIds: layerIds) { queriedFeatures in
+            handler(queriedFeatures, context)
+        }
     }
 }
 
 private extension MapFeatureQueryable {
     /// Queries the map for rendered features and returns result in form of [(LayerId, Feature)] array.
-    func queryRenderedFeatures(point: CGPoint, layerIds: [String], completion: @escaping ([(String, QueriedFeature)]) -> Void) -> AnyCancelable {
-        if layerIds.isEmpty {
+    func queryRenderedFeatures(
+        point: CGPoint,
+        layerIds: [String],
+        completion: @escaping ([(String, QueriedFeature)]) -> Void
+    ) -> AnyCancelable {
+        guard !layerIds.isEmpty else {
             completion([])
             return .empty
         }
+
         let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
-        return queryRenderedFeatures(
-            with: point,
-            options: options) { result in
-                switch result {
-                case .success(let features):
-                    let layerAndFeatures = features.flatMap { feature in
-                        feature.layers.map { ($0, feature.queriedFeature) }
-                    }
-                    completion(layerAndFeatures)
-                case .failure(let error):
-                    Log.warning(forMessage: "Failed to query map content gesture: \(error)",
-                                category: "Gestures")
-                    completion([])
+        return queryRenderedFeatures(with: point, options: options) { result in
+            switch result {
+            case .success(let features):
+                let layerAndFeatures = features.flatMap { feature in
+                    feature.layers.map { ($0, feature.queriedFeature) }
                 }
+                completion(layerAndFeatures)
+            case .failure(let error):
+                Log.warning(forMessage: "Failed to query map content gesture: \(error)", category: "Gestures")
+                completion([])
             }
-            .erased
+        }
+        .erased
     }
+}
+
+private extension Feature {
+    var stringId: String? { identifier?.string }
 }

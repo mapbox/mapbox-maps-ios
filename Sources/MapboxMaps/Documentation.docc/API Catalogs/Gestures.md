@@ -10,5 +10,6 @@
 - ``GestureManagerDelegate``
 - ``GestureType``
 - ``MapContentGestureContext``
+- ``AnnotationClusterGestureContext``
 - ``MapLayerGestureHandler``
 

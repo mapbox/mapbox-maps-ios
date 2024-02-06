@@ -250,7 +250,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         // first annotation, handles tap
         let context = MapContentGestureContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
-        var handled = manager.handleTap(with: annotations[0].id, context: context)
+        var handled = manager.handleTap(layerId: "layerId", feature: annotations[0].feature, context: context)
 
         var result = try XCTUnwrap(delegateAnnotations)
         XCTAssertEqual(result[0].id, annotations[0].id)
@@ -262,7 +262,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         // second annotation, skips handling tap
         delegateAnnotations = nil
-        handled = manager.handleTap(with: annotations[1].id, context: context)
+        handled = manager.handleTap(layerId: "layerId", feature: annotations[1].feature, context: context)
 
         result = try XCTUnwrap(delegateAnnotations)
         XCTAssertEqual(result[0].id, annotations[1].id)
@@ -270,13 +270,14 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         // invalid id
         delegateAnnotations = nil
-        handled = manager.handleTap(with: "invalid-id", context: context)
+        var invalidFeature = Feature(geometry: nil)
+        handled = manager.handleTap(layerId: "layerId", feature: invalidFeature, context: context)
 
         XCTAssertNil(delegateAnnotations)
         XCTAssertEqual(handled, false)
         XCTAssertEqual(taps.count, 1)
     }
-
+    
     func testInitialFillAntialias() {
         let initialValue = manager.fillAntialias
         XCTAssertNil(initialValue)

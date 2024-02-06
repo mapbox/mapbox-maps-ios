@@ -7,6 +7,7 @@ final class AnnotationManagerFactoryTests: XCTestCase {
     var offsetPointCalculator: OffsetPointCalculator!
     var offsetLineStringCalculator: OffsetLineStringCalculator!
     var offsetPolygonCalculator: OffsetPolygonCalculator!
+    var mapFeatureQueryable: MapFeatureQueryable!
     var factory: AnnotationManagerFactory!
     @TestSignal var displayLink: Signal<Void>
 
@@ -17,12 +18,14 @@ final class AnnotationManagerFactoryTests: XCTestCase {
         offsetPointCalculator = OffsetPointCalculator(mapboxMap: MockMapboxMap())
         offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: MockMapboxMap())
         offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: MockMapboxMap())
+        mapFeatureQueryable = MockMapFeatureQueryable()
         factory = AnnotationManagerFactory(
             style: style,
             displayLink: displayLink,
             offsetPointCalculator: offsetPointCalculator,
             offsetPolygonCalculator: offsetPolygonCalculator,
-            offsetLineStringCalculator: offsetLineStringCalculator)
+            offsetLineStringCalculator: offsetLineStringCalculator,
+            mapFeatureQueryable: mapFeatureQueryable)
     }
 
     override func tearDown() {
@@ -32,6 +35,7 @@ final class AnnotationManagerFactoryTests: XCTestCase {
         offsetPointCalculator = nil
         offsetLineStringCalculator = nil
         offsetPolygonCalculator = nil
+        mapFeatureQueryable = nil
         factory = nil
     }
 

@@ -94,7 +94,6 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 
     private func updateProperties(manager: PolylineAnnotationManager) {
-        assign(manager, \.slot, value: slot)
         assign(manager, \.lineCap, value: lineCap)
         assign(manager, \.lineMiterLimit, value: lineMiterLimit)
         assign(manager, \.lineRoundLimit, value: lineRoundLimit)

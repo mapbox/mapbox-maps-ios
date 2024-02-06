@@ -19,6 +19,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
             style: MockStyle(),
             layerPosition: .default,
             displayLink: Signal { _ in .empty },
+            mapFeatureQueryable: MockMapFeatureQueryable(),
             imagesManager: MockAnnotationImagesManager(),
             offsetCalculator: .init(mapboxMap: MockMapboxMap())
         )

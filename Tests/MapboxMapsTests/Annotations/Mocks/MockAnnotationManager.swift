@@ -15,36 +15,42 @@ internal final class MockAnnotationManager: AnnotationManagerInternal {
 
     let destroyStub = Stub<Void, Void>()
     func destroy() {
-        destroyStub.call()
+        destroyStub()
     }
 
     struct GestureParams {
-        var featureId: String
+        var layerId: String
+        var feature: Feature
         var context: MapContentGestureContext
     }
 
     let handleTapStub = Stub<GestureParams, Bool>(defaultReturnValue: false)
-    func handleTap(with featureId: String, context: MapContentGestureContext) -> Bool {
-        handleTapStub.call(with: GestureParams(featureId: featureId, context: context))
+    func handleTap(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
+        handleTapStub(with: GestureParams(layerId: layerId, feature: feature, context: context))
     }
 
     let handleLongPressStub = Stub<GestureParams, Bool>(defaultReturnValue: false)
-    func handleLongPress(with featureId: String, context: MapContentGestureContext) -> Bool {
-        handleLongPressStub.call(with: GestureParams(featureId: featureId, context: context))
+    func handleLongPress(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
+        handleLongPressStub(with: GestureParams(layerId: layerId, feature: feature, context: context))
     }
 
-    let handleDragBeginStub = Stub<GestureParams, Bool>(defaultReturnValue: false)
+    struct DragGestureParams {
+        var featureId: String
+        var context: MapContentGestureContext
+    }
+
+    let handleDragBeginStub = Stub<DragGestureParams, Bool>(defaultReturnValue: false)
     func handleDragBegin(with featureId: String, context: MapContentGestureContext) -> Bool {
-        handleDragBeginStub.call(with: GestureParams(featureId: featureId, context: context))
+        handleDragBeginStub(with: DragGestureParams(featureId: featureId, context: context))
     }
 
     let handleDragChangedStub = Stub<CGPoint, Void>()
     func handleDragChanged(with translation: CGPoint) {
-        handleDragChangedStub.call(with: translation)
+        handleDragChangedStub(with: translation)
     }
 
     let handleDragEndedStub = Stub<Void, Void>()
     func handleDragEnded() {
-        handleDragEndedStub.call()
+        handleDragEndedStub()
     }
 }

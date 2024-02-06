@@ -115,6 +115,36 @@ var body: some View {
 
 - Note:  Every gesture handler can receive the ``MapContentGestureContext`` that provides additional information about the gesture, such as point and the geographical coordinate. 
 
+## Clustered Annotations
+
+Nearby annotations may be grouped into clusters when the user zooms out the map and Mapbox Maps SDK defines functions to conveniently react on Tap and Long Press gestures on annotation clusters.
+
+- Note: Currently clustering is only supported for ``PointAnnotation``.
+
+Example below shows the case where the tap gesture on the cluster is handled and cluster gets expanded by setting the corresponding zoom level.
+
+```swift
+let clusterOptions = ClusterOptions(circleRadius: .constant(10), circleColor: .constant(StyleColor(.blue)))
+
+var body: some View {
+    Map {
+        PointAnnotationGroup(places) { places in
+            PointAnnotation(coordinate: place.coordinate)
+                .image(named: "intermediate-pin")
+                .onTapGesture { places.removeAll(where: { $0.id == place.id }) }
+        }
+        .clusterOptions(clusterOptions)
+        .onClusterTapGesture { context in
+            withViewportAnimation(.easeIn(duration: 1)) {
+                viewport = .camera(center: context.coordinate, zoom: context.expansionZoom)
+            }
+        }
+    }
+}
+```
+
+- Note: Annotation cluster gesture handlers receive the ``AnnotationClusterGestureContext`` that provides additional information about the gesture, such as point and the geographical coordinate and minimum expansion zoom of the cluster.
+
 ## Layers
 
 Annotations are not the only way to show content on the map. You can use Style API via the ``StyleManager-46yjd`` to organize content in layers or use a custom [Style](https://docs.mapbox.com/style-spec/guides/) for displaying larger data sets.

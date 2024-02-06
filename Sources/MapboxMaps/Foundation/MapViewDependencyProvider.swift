@@ -244,10 +244,9 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             displayLink: displayLink,
             offsetPointCalculator: offsetPointCalculator,
             offsetPolygonCalculator: offsetPolygonCalculator,
-            offsetLineStringCalculator: offsetLineStringCalculator)
-        return AnnotationOrchestratorImpl(
-            mapFeatureQueryable: mapFeatureQueryable,
-            factory: factory)
+            offsetLineStringCalculator: offsetLineStringCalculator,
+            mapFeatureQueryable: mapFeatureQueryable)
+        return AnnotationOrchestratorImpl(factory: factory)
     }
 
     // swiftlint:disable:next function_parameter_count

@@ -24,9 +24,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: MockMapboxMap())
         offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: MockMapboxMap())
         factory = MockAnnotationManagerFactory()
-        impl = AnnotationOrchestratorImpl(
-            mapFeatureQueryable: mapFeatureQueryable,
-            factory: factory)
+        impl = AnnotationOrchestratorImpl(factory: factory)
     }
 
     override func tearDown() {

@@ -14,25 +14,18 @@ internal protocol AnnotationOrchestratorImplProtocol: AnyObject {
     func removeAnnotationManager(withId id: String)
 }
 
-internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestratorImplProtocol {
-
+final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestratorImplProtocol {
     private(set) var managersByLayerId: [String: AnnotationManagerInternal] = [:]
-
-    private let mapFeatureQueryable: MapFeatureQueryable
 
     private let factory: AnnotationManagerFactoryProtocol
 
-    internal init(mapFeatureQueryable: MapFeatureQueryable,
-                  factory: AnnotationManagerFactoryProtocol) {
-        self.mapFeatureQueryable = mapFeatureQueryable
+    init(factory: AnnotationManagerFactoryProtocol) {
         self.factory = factory
         super.init()
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
-    internal var annotationManagersById: [String: AnnotationManager] {
-        annotationManagersByIdInternal
-    }
+    var annotationManagersById: [String: AnnotationManager] { annotationManagersByIdInternal }
 
     private var annotationManagersByIdInternal = [String: AnnotationManagerInternal]() {
         didSet {
@@ -54,9 +47,11 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     ///   - clusterOptions: Optionally set the `ClusterOptions` to cluster the Point Annotations
     /// - Returns: An instance of `PointAnnotationManager`
-    internal func makePointAnnotationManager(id: String,
-                                             layerPosition: LayerPosition?,
-                                             clusterOptions: ClusterOptions?) -> AnnotationManagerInternal {
+    func makePointAnnotationManager(
+        id: String,
+        layerPosition: LayerPosition?,
+        clusterOptions: ClusterOptions?
+    ) -> AnnotationManagerInternal {
         removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
         let annotationManager = factory.makePointAnnotationManager(
             id: id,
@@ -75,7 +70,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
     ///   - id: Optional string identifier for this manager..
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolygonAnnotationManager`
-    internal func makePolygonAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
+    func makePolygonAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
         removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
         let annotationManager = factory.makePolygonAnnotationManager(
             id: id,
@@ -94,7 +89,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolylineAnnotationManager`
-    internal func makePolylineAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
+    func makePolylineAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
         removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
         let annotationManager = factory.makePolylineAnnotationManager(
             id: id,
@@ -112,7 +107,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `CircleAnnotationManager`
-    internal func makeCircleAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
+    func makeCircleAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
         removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
         let annotationManager = factory.makeCircleAnnotationManager(
             id: id,

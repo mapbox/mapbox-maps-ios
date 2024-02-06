@@ -91,7 +91,6 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     }
 
     private func updateProperties(manager: PolygonAnnotationManager) {
-        assign(manager, \.slot, value: slot)
         assign(manager, \.fillAntialias, value: fillAntialias)
         assign(manager, \.fillEmissiveStrength, value: fillEmissiveStrength)
         assign(manager, \.fillTranslate, value: fillTranslate)

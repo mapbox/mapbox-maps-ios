@@ -33,9 +33,10 @@ struct AnnotationsExample: View {
 
     @State private var taps = [Tap]()
     @State private var alert: String?
+    @State private var viewport = Viewport.camera(center: .init(latitude: 27.2, longitude: -26.9), zoom: 1.53, bearing: 0, pitch: 0)
     var body: some View {
         MapReader { proxy in
-            Map(initialViewport: .camera(center: .init(latitude: 27.2, longitude: -26.9), zoom: 1.53, bearing: 0, pitch: 0)) {
+            Map(viewport: $viewport) {
                 ForEvery(Self.flights, id: \.name) { flight in
                     CircleAnnotationGroup(flight.airports, id: \.name) { airport in
                         CircleAnnotation(centerCoordinate: airport.coordinate, isDraggable: true)
@@ -97,6 +98,11 @@ struct AnnotationsExample: View {
                         }
                 }
                 .clusterOptions(clusterOptions)
+                .onClusterTapGesture { context in
+                    withViewportAnimation(.easeIn(duration: 1)) {
+                        viewport = .camera(center: context.coordinate, zoom: context.expansionZoom)
+                    }
+                }
             }
             .onMapTapGesture { context in
                 taps.append(Tap(coordinate: context.coordinate))

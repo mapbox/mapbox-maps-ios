@@ -29,19 +29,24 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
     private let offsetPointCalculator: OffsetPointCalculator
     private let offsetPolygonCalculator: OffsetPolygonCalculator
     private let offsetLineStringCalculator: OffsetLineStringCalculator
+    private let mapFeatureQueryable: MapFeatureQueryable
 
     private lazy var imagesManager = AnnotationImagesManager(style: style)
 
-    internal init(style: StyleProtocol,
-                  displayLink: Signal<Void>,
-                  offsetPointCalculator: OffsetPointCalculator,
-                  offsetPolygonCalculator: OffsetPolygonCalculator,
-                  offsetLineStringCalculator: OffsetLineStringCalculator) {
+    internal init(
+        style: StyleProtocol,
+        displayLink: Signal<Void>,
+        offsetPointCalculator: OffsetPointCalculator,
+        offsetPolygonCalculator: OffsetPolygonCalculator,
+        offsetLineStringCalculator: OffsetLineStringCalculator,
+        mapFeatureQueryable: MapFeatureQueryable
+    ) {
         self.style = style
         self.displayLink = displayLink
         self.offsetPointCalculator = offsetPointCalculator
         self.offsetPolygonCalculator = offsetPolygonCalculator
         self.offsetLineStringCalculator = offsetLineStringCalculator
+        self.mapFeatureQueryable = mapFeatureQueryable
     }
 
     internal func makePointAnnotationManager(
@@ -54,6 +59,7 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
                 layerPosition: layerPosition,
                 displayLink: displayLink,
                 clusterOptions: clusterOptions,
+                mapFeatureQueryable: mapFeatureQueryable,
                 imagesManager: imagesManager,
                 offsetCalculator: offsetPointCalculator)
         }

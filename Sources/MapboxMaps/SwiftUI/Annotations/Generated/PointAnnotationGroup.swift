@@ -93,7 +93,6 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
     }
 
     private func updateProperties(manager: PointAnnotationManager) {
-        assign(manager, \.slot, value: slot)
         assign(manager, \.iconAllowOverlap, value: iconAllowOverlap)
         assign(manager, \.iconIgnorePlacement, value: iconIgnorePlacement)
         assign(manager, \.iconKeepUpright, value: iconKeepUpright)
@@ -123,6 +122,9 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
         assign(manager, \.textTranslate, value: textTranslate)
         assign(manager, \.textTranslateAnchor, value: textTranslateAnchor)
         assign(manager, \.slot, value: slot)
+
+        manager.onClusterTap = onClusterTap
+        manager.onClusterLongPress = onClusterLongPress
     }
 
     // MARK: - Common layer properties
@@ -402,6 +404,36 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
 #endif
     public func clusterOptions(_ newValue: ClusterOptions) -> Self {
         with(self, setter(\.clusterOptions, newValue))
+    }
+    
+    private var onClusterTap: ((AnnotationClusterGestureContext) -> Void)?
+    
+    /// Adds a handler for tap gesture on annotations cluster.
+    ///
+    /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
+    ///
+    /// - Parameters:
+    ///   - handler: A handler for tap gesture on cluster.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func onClusterTapGesture(perform action: @escaping (AnnotationClusterGestureContext) -> Void) -> Self {
+        with(self, setter(\.onClusterTap, action))
+    }
+    
+    private var onClusterLongPress: ((AnnotationClusterGestureContext) -> Void)?
+    
+    /// Adds a handler for long press gesture on annotation cluster formed by annotations from the group.
+    ///
+    /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
+    ///
+    /// - Parameters:
+    ///   - handler: A handler for long press gesture on cluster.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func onClusterLongPressGesture(perform action: @escaping (AnnotationClusterGestureContext) -> Void) -> Self {
+        with(self, setter(\.onClusterLongPress, action))
     }
 
     private var layerPosition: LayerPosition?

@@ -180,7 +180,7 @@ class MapContentGestureManagerTests: XCTestCase {
 
         XCTAssertEqual(manager.handleTapStub.invocations.count, 1)
         let handleTapParameters = try XCTUnwrap(manager.handleTapStub.invocations.last).parameters
-        XCTAssertEqual(handleTapParameters.featureId, "annotation-id")
+        XCTAssertEqual(handleTapParameters.feature.identifier?.string, "annotation-id")
         XCTAssertEqual(handleTapParameters.context.point, point)
         XCTAssertEqual(handleTapParameters.context.coordinate, coordinate)
 
@@ -220,7 +220,7 @@ class MapContentGestureManagerTests: XCTestCase {
 
         XCTAssertEqual(manager.handleLongPressStub.invocations.count, 1)
         let handleLPParameters = try XCTUnwrap(manager.handleLongPressStub.invocations.last).parameters
-        XCTAssertEqual(handleLPParameters.featureId, "annotation-id")
+        XCTAssertEqual(handleLPParameters.feature.identifier?.string, "annotation-id")
         XCTAssertEqual(handleLPParameters.context.point, point)
         XCTAssertEqual(handleLPParameters.context.coordinate, coordinate)
 

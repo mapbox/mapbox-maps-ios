@@ -9,6 +9,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     var annotations = [PointAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
+    var mapFeatureQueryable: MockMapFeatureQueryable!
     var imagesManager: MockAnnotationImagesManager!
     var offsetCalculator: OffsetPointCalculator!
     var mapboxMap: MockMapboxMap!
@@ -18,6 +19,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         super.setUp()
 
         style = MockStyle()
+        mapFeatureQueryable = MockMapFeatureQueryable()
         imagesManager = MockAnnotationImagesManager()
         mapboxMap = MockMapboxMap()
         offsetCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
@@ -26,6 +28,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             style: style,
             layerPosition: nil,
             displayLink: displayLink,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -41,6 +44,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         expectation = nil
         delegateAnnotations = nil
         imagesManager = nil
+        mapFeatureQueryable = nil
         mapboxMap = nil
         offsetCalculator = nil
         manager = nil
@@ -56,6 +60,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             style: style,
             layerPosition: nil,
             displayLink: displayLink,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -72,6 +77,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             style: style,
             layerPosition: nil,
             displayLink: displayLink,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -98,6 +104,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             style: style,
             layerPosition: nil,
             displayLink: displayLink,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -113,6 +120,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             style: style,
             layerPosition: LayerPosition.at(4),
             displayLink: displayLink,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -216,7 +224,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // first annotation, handles tap
         let context = MapContentGestureContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
-        var handled = manager.handleTap(with: annotations[0].id, context: context)
+        var handled = manager.handleTap(layerId: "layerId", feature: annotations[0].feature, context: context)
 
         var result = try XCTUnwrap(delegateAnnotations)
         XCTAssertEqual(result[0].id, annotations[0].id)
@@ -228,7 +236,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // second annotation, skips handling tap
         delegateAnnotations = nil
-        handled = manager.handleTap(with: annotations[1].id, context: context)
+        handled = manager.handleTap(layerId: "layerId", feature: annotations[1].feature, context: context)
 
         result = try XCTUnwrap(delegateAnnotations)
         XCTAssertEqual(result[0].id, annotations[1].id)
@@ -236,13 +244,37 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // invalid id
         delegateAnnotations = nil
-        handled = manager.handleTap(with: "invalid-id", context: context)
+        var invalidFeature = Feature(geometry: nil)
+        handled = manager.handleTap(layerId: "layerId", feature: invalidFeature, context: context)
 
         XCTAssertNil(delegateAnnotations)
         XCTAssertEqual(handled, false)
         XCTAssertEqual(taps.count, 1)
     }
-
+    
+    func testHandleClusterTap() {
+        let onClusterTap = Stub<AnnotationClusterGestureContext, Void>(defaultReturnValue: ())
+        let context = MapContentGestureContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
+        let annotationContext = AnnotationClusterGestureContext(point: context.point, coordinate: context.coordinate, expansionZoom: 4)
+        manager.onClusterTap = onClusterTap.call
+        
+        let isHandled = manager.handleTap(
+            layerId: "mapbox-iOS-cluster-circle-layer-manager-\(id)",
+            feature: annotations[1].feature,
+            context: context
+        )
+        mapFeatureQueryable.getGeoJsonClusterExpansionZoomStub.invocations.map(\.parameters.completion).forEach { completion in
+            completion(.success(FeatureExtensionValue(value: 4, features: nil)))
+        }
+        
+        XCTAssertTrue(isHandled)
+        XCTAssertEqual(mapFeatureQueryable.getGeoJsonClusterExpansionZoomStub.invocations.map(\.parameters.feature), [
+            annotations[1].feature
+        ])
+        
+        XCTAssertEqual(onClusterTap.invocations.map(\.parameters), [annotationContext])
+    }
+    
     func testInitialIconAllowOverlap() {
         let initialValue = manager.iconAllowOverlap
         XCTAssertNil(initialValue)
@@ -3107,6 +3139,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLink: displayLink,
             clusterOptions: clusterOptions,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -3151,6 +3184,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLink: displayLink,
             clusterOptions: clusterOptions,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -3187,6 +3221,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLink: displayLink,
             clusterOptions: clusterOptions,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -3230,6 +3265,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLink: displayLink,
             clusterOptions: clusterOptions,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -3265,6 +3301,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLink: displayLink,
             clusterOptions: clusterOptions,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -3303,6 +3340,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLink: displayLink,
             clusterOptions: clusterOptions,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -3332,6 +3370,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLink: displayLink,
             clusterOptions: clusterOptions,
+            mapFeatureQueryable: mapFeatureQueryable,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )

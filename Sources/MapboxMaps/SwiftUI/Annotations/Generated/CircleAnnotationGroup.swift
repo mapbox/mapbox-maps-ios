@@ -95,7 +95,6 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>:
     }
 
     private func updateProperties(manager: CircleAnnotationManager) {
-        assign(manager, \.slot, value: slot)
         assign(manager, \.circleEmissiveStrength, value: circleEmissiveStrength)
         assign(manager, \.circlePitchAlignment, value: circlePitchAlignment)
         assign(manager, \.circlePitchScale, value: circlePitchScale)

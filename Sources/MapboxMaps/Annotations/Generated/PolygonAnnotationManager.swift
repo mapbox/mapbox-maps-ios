@@ -10,6 +10,8 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     public var sourceId: String { id }
 
     public var layerId: String { id }
+    
+    private var dragId: String { "\(id)_drag" }
 
     public let id: String
 
@@ -60,7 +62,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Storage for common layer properties
-    internal var layerProperties: [String: Any] = [:] {
+    var layerProperties: [String: Any] = [:] {
         didSet {
             syncLayerOnce.reset()
         }
@@ -77,7 +79,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     private var syncDragSourceOnce = Once(happened: true)
     private var syncLayerOnce = Once(happened: true)
     private var insertDraggedLayerAndSourceOnce = Once()
-    private var dragId: String { id + "_drag" }
     private var displayLinkToken: AnyCancelable?
 
     var allLayerIds: [String] { [layerId, dragId] }
@@ -85,11 +86,12 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     /// In SwiftUI isDraggable and isSelected are disabled.
     var isSwiftUI = false
 
-    internal init(id: String,
-                  style: StyleProtocol,
-                  layerPosition: LayerPosition?,
-                  displayLink: Signal<Void>,
-                  offsetCalculator: OffsetCalculatorType) {
+    init(id: String,
+         style: StyleProtocol,
+         layerPosition: LayerPosition?,
+         displayLink: Signal<Void>,
+         offsetCalculator: OffsetCalculatorType
+    ) {
         self.id = id
         self.style = style
         self.offsetCalculator = offsetCalculator
@@ -270,10 +272,15 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - User interaction handling
 
-    internal func handleTap(with featureId: String, context: MapContentGestureContext) -> Bool {
+    
+    func handleTap(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
+        
+        guard let featureId = feature.identifier?.string else { return false }
+        
         let tappedIndex = annotations.firstIndex { $0.id == featureId }
         guard let tappedIndex else { return false }
         var tappedAnnotation = annotations[tappedIndex]
+        
         tappedAnnotation.isSelected.toggle()
 
         if !isSwiftUI {
@@ -289,17 +296,17 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         return tappedAnnotation.tapHandler?(context) ?? false
     }
 
-    func handleLongPress(with featureId: String, context: MapContentGestureContext) -> Bool {
-        annotations.first {
-            $0.id == featureId
-        }?.longPressHandler?(context) ?? false
+    func handleLongPress(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
+        guard let featureId = feature.identifier?.string else { return false }
+
+        return annotations.first { $0.id == featureId }?.longPressHandler?(context) ?? false
     }
 
-    internal func handleDragBegin(with featureIdentifier: String, context: MapContentGestureContext) -> Bool {
+    func handleDragBegin(with featureId: String, context: MapContentGestureContext) -> Bool {
         guard !isSwiftUI else { return false }
 
         let predicate = { (annotation: PolygonAnnotation) -> Bool in
-            annotation.id == featureIdentifier && annotation.isDraggable
+            annotation.id == featureId && annotation.isDraggable
         }
 
         if let idx = draggedAnnotations.firstIndex(where: predicate) {
@@ -327,7 +334,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         return false
     }
 
-    internal func handleDragChanged(with translation: CGPoint) {
+    func handleDragChanged(with translation: CGPoint) {
         guard !isSwiftUI,
               let draggedAnnotationIndex,
               draggedAnnotationIndex < draggedAnnotations.endIndex,

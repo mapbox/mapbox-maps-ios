@@ -10,7 +10,11 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     public var sourceId: String { id }
 
     public var layerId: String { id }
+    
+    private var dragId: String { "\(id)_drag" }
 
+    private var clusterId: String { "mapbox-iOS-cluster-circle-layer-manager-\(id)" }
+    
     public let id: String
 
     /// The collection of ``PointAnnotation`` being managed.
@@ -60,7 +64,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Storage for common layer properties
-    internal var layerProperties: [String: Any] = [:] {
+    var layerProperties: [String: Any] = [:] {
         didSet {
             syncLayerOnce.reset()
         }
@@ -77,34 +81,38 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     private var syncDragSourceOnce = Once(happened: true)
     private var syncLayerOnce = Once(happened: true)
     private var insertDraggedLayerAndSourceOnce = Once()
-    private var dragId: String { id + "_drag" }
     private var displayLinkToken: AnyCancelable?
 
     /// List of images used by this ``PointAnnotationManager``.
     private(set) internal var allImages = Set<String>()
     private let imagesManager: AnnotationImagesManagerProtocol
     private var clusterOptions: ClusterOptions?
+    private let mapFeatureQueryable: MapFeatureQueryable
 
-    var allLayerIds: [String] { [layerId, dragId] }
+    public var onClusterTap: ((AnnotationClusterGestureContext) -> Void)?
+    public var onClusterLongPress: ((AnnotationClusterGestureContext) -> Void)?
+    var allLayerIds: [String] { [layerId, dragId, clusterId] }
 
     /// In SwiftUI isDraggable and isSelected are disabled.
     var isSwiftUI = false
 
-    internal init(id: String,
-                  style: StyleProtocol,
-                  layerPosition: LayerPosition?,
-                  displayLink: Signal<Void>,
-                  clusterOptions: ClusterOptions? = nil,
-                  imagesManager: AnnotationImagesManagerProtocol,
-                  offsetCalculator: OffsetCalculatorType) {
+    init(id: String,
+         style: StyleProtocol,
+         layerPosition: LayerPosition?,
+         displayLink: Signal<Void>,
+         clusterOptions: ClusterOptions? = nil,
+         mapFeatureQueryable: MapFeatureQueryable,
+         imagesManager: AnnotationImagesManagerProtocol,
+         offsetCalculator: OffsetCalculatorType
+    ) {
         self.id = id
         self.style = style
-        self.clusterOptions = clusterOptions
-        self.imagesManager = imagesManager
         self.offsetCalculator = offsetCalculator
 
+        self.clusterOptions = clusterOptions
+        self.imagesManager = imagesManager
+        self.mapFeatureQueryable = mapFeatureQueryable
         imagesManager.register(imagesConsumer: self)
-
         do {
             // Add the source with empty `data` property
             var source = GeoJSONSource(id: sourceId)
@@ -626,10 +634,33 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - User interaction handling
 
-    internal func handleTap(with featureId: String, context: MapContentGestureContext) -> Bool {
+    private var queryToken: AnyCancelable?
+    private func queryAnnotationClusterContext(
+        feature: Feature,
+        context: MapContentGestureContext,
+        completion: @escaping (Result<AnnotationClusterGestureContext, Error>) -> Void
+    ) {
+        queryToken = mapFeatureQueryable
+            .getAnnotationClusterContext(layerId: id, feature: feature, context: context, completion: completion)
+            .erased
+    }
+    
+    func handleTap(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
+        if layerId == clusterId, let onClusterTap {
+            queryAnnotationClusterContext(feature: feature, context: context) { result in
+                if case let .success(clusterContext) = result {
+                    onClusterTap(clusterContext)
+                }
+            }
+            return true
+        }
+        
+        guard let featureId = feature.identifier?.string else { return false }
+        
         let tappedIndex = annotations.firstIndex { $0.id == featureId }
         guard let tappedIndex else { return false }
         var tappedAnnotation = annotations[tappedIndex]
+        
         tappedAnnotation.isSelected.toggle()
 
         if !isSwiftUI {
@@ -645,17 +676,25 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         return tappedAnnotation.tapHandler?(context) ?? false
     }
 
-    func handleLongPress(with featureId: String, context: MapContentGestureContext) -> Bool {
-        annotations.first {
-            $0.id == featureId
-        }?.longPressHandler?(context) ?? false
+    func handleLongPress(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
+        if layerId == clusterId, let onClusterLongPress {
+            queryAnnotationClusterContext(feature: feature, context: context) { result in
+                if case let .success(clusterContext) = result {
+                    onClusterLongPress(clusterContext)
+                }
+            }
+            return true
+        }
+        guard let featureId = feature.identifier?.string else { return false }
+
+        return annotations.first { $0.id == featureId }?.longPressHandler?(context) ?? false
     }
 
-    internal func handleDragBegin(with featureIdentifier: String, context: MapContentGestureContext) -> Bool {
+    func handleDragBegin(with featureId: String, context: MapContentGestureContext) -> Bool {
         guard !isSwiftUI else { return false }
 
         let predicate = { (annotation: PointAnnotation) -> Bool in
-            annotation.id == featureIdentifier && annotation.isDraggable
+            annotation.id == featureId && annotation.isDraggable
         }
 
         if let idx = draggedAnnotations.firstIndex(where: predicate) {
@@ -683,7 +722,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         return false
     }
 
-    internal func handleDragChanged(with translation: CGPoint) {
+    func handleDragChanged(with translation: CGPoint) {
         guard !isSwiftUI,
               let draggedAnnotationIndex,
               draggedAnnotationIndex < draggedAnnotations.endIndex,

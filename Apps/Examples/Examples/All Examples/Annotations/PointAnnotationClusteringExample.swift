@@ -18,13 +18,6 @@ final class PointAnnotationClusteringExample: UIViewController, ExampleProtocol 
 
         view.addSubview(mapView)
 
-        // Add a tap gesture handler for clustering layer.
-        let circleClusterLayerId = "mapbox-iOS-cluster-circle-layer-manager-" + clusterLayerID
-        mapView.gestures.onLayerTap(circleClusterLayerId) { [weak self] queriedFeature, _ in
-            self?.handleClusterTap(queriedFeature: queriedFeature)
-            return true
-        }.store(in: &cancelables)
-
         // Add the source and style layers once the map has loaded.
         mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.addPointAnnotations()
@@ -135,6 +128,9 @@ final class PointAnnotationClusteringExample: UIViewController, ExampleProtocol 
                                             clusterProperties: clusterProperties)
         let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(id: clusterLayerID, clusterOptions: clusterOptions)
         pointAnnotationManager.annotations = annotations
+        pointAnnotationManager.onClusterTap = { [weak self] context in
+            self?.mapView.camera.ease(to: CameraOptions(center: context.coordinate, zoom: context.expansionZoom), duration: 1)
+        }
 
         // Additional properties on the text and circle layers can be modified like this below
         // To modify the text layer use: "mapbox-iOS-cluster-text-layer-manager-" and SymbolLayer.self
@@ -148,24 +144,6 @@ final class PointAnnotationClusteringExample: UIViewController, ExampleProtocol 
         }
 
         finish()
-    }
-
-    // If the tapped feature it is a cluster get the center and zoom level it expands at
-    // then move the camera there.
-    func handleClusterTap(queriedFeature: QueriedFeature) {
-        let cluster = queriedFeature.feature
-        let sourceID = clusterLayerID
-        if case let .point(clusterCenter) = cluster.geometry {
-            mapView.mapboxMap.getGeoJsonClusterExpansionZoom(forSourceId: sourceID, feature: cluster) { [weak self] result in
-                switch result {
-                case .success(let zoomLevel):
-                    let cameraOptions = CameraOptions(center: clusterCenter.coordinates, zoom: zoomLevel.value as? CGFloat)
-                    self?.mapView.camera.ease(to: cameraOptions, duration: 1)
-                case .failure(let error):
-                    print("An error occurred: \(error.localizedDescription). Please try another cluster.")
-                }
-            }
-        }
     }
 
     // Load GeoJSON file from local bundle and decode into a `FeatureCollection`.

@@ -87,13 +87,13 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
             guard let self else { return }
 
             for queriedFeature in queriedFeatures {
-                if !handle(using: { manager in manager.handleTap }, queriedFeature: queriedFeature, context: context) {
-                    if !handle(subscribers: \.layerTapSubscribers, queriedFeature: queriedFeature, context: context) { continue }
+                if !self.handle(using: { manager in manager.handleTap }, queriedFeature: queriedFeature, context: context) {
+                    if !self.handle(subscribers: \.layerTapSubscribers, queriedFeature: queriedFeature, context: context) { continue }
                 }
                 return
             }
 
-            mapTapSignal.send(context)
+            self.mapTapSignal.send(context)
         }
     }
 
@@ -109,15 +109,15 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
                 var isLongPressHandled = false
 
                 for queriedFeature in queriedFeatures {
-                    if !handle(using: { manager in manager.handleLongPress }, queriedFeature: queriedFeature, context: context) {
-                        if !handle(subscribers: \.layerLongPressSubscribers, queriedFeature: queriedFeature, context: context) { continue }
+                    if !self.handle(using: { manager in manager.handleLongPress }, queriedFeature: queriedFeature, context: context) {
+                        if !self.handle(subscribers: \.layerLongPressSubscribers, queriedFeature: queriedFeature, context: context) { continue }
                     }
                     isLongPressHandled = true
                 }
 
-                if !isLongPressHandled { mapLongPressSignal.send(context) }
+                if !isLongPressHandled { self.mapLongPressSignal.send(context) }
 
-                handeDragBegin(queriedFeatures: queriedFeatures, context: context)
+                self.handeDragBegin(queriedFeatures: queriedFeatures, context: context)
             }
 
         case .changed:

@@ -17,7 +17,7 @@ final class MapStyleContentBuilderTests: XCTestCase {
         composite._visit(visitor)
 
         XCTAssertEqual(composite.children.count, 2)
-        XCTAssertEqual(visitor.model.layers, [:])
+        XCTAssertEqual(visitor.model.layers, [])
         XCTAssertEqual(visitor.model.sources, [:])
         XCTAssertEqual(visitor.model.images, [:])
         XCTAssertEqual(visitor.model.terrain, terrain)

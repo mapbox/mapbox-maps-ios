@@ -702,6 +702,7 @@ struct NonEncodableLayer: Layer {
     var minZoom: Double?
     var maxZoom: Double?
     var slot: Slot?
+    var layerPosition: LayerPosition?
 
     init() {}
 

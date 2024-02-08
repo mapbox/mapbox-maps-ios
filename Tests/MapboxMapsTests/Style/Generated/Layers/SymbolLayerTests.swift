@@ -9,17 +9,20 @@ final class SymbolLayerTests: XCTestCase {
         var layer = SymbolLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
+        layer.slot = .testConstantValue()
 
         XCTAssertEqual(layer.id, "test-id")
         XCTAssertEqual(layer.type, LayerType.symbol)
         XCTAssertEqual(layer.minZoom, 10.0)
         XCTAssertEqual(layer.maxZoom, 20.0)
+        XCTAssertEqual(layer.slot, Slot.testConstantValue())
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
         var layer = SymbolLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
+        layer.slot = .testConstantValue()
 
         var data: Data?
         do {
@@ -40,6 +43,7 @@ final class SymbolLayerTests: XCTestCase {
             XCTAssert(decodedLayer.source == "source")
             XCTAssertEqual(decodedLayer.minZoom, 10.0)
             XCTAssertEqual(decodedLayer.maxZoom, 20.0)
+            XCTAssertEqual(layer.slot, Slot.testConstantValue())
         } catch {
             XCTFail("Failed to decode SymbolLayer")
         }
@@ -279,6 +283,7 @@ final class SymbolLayerTests: XCTestCase {
             .textVariableAnchor(Value<[TextAnchor]>.testConstantValue())
             .textWritingMode(Value<[TextWritingMode]>.testConstantValue())
             .iconColor(Value<StyleColor>.testConstantValue())
+            .iconColorSaturation(Value<Double>.testConstantValue())
             .iconEmissiveStrength(Value<Double>.testConstantValue())
             .iconHaloBlur(Value<Double>.testConstantValue())
             .iconHaloColor(Value<StyleColor>.testConstantValue())
@@ -345,6 +350,7 @@ final class SymbolLayerTests: XCTestCase {
         XCTAssertEqual(layer.textVariableAnchor, Value<[TextAnchor]>.testConstantValue())
         XCTAssertEqual(layer.textWritingMode, Value<[TextWritingMode]>.testConstantValue())
         XCTAssertEqual(layer.iconColor, Value<StyleColor>.testConstantValue())
+        XCTAssertEqual(layer.iconColorSaturation, Value<Double>.testConstantValue())
         XCTAssertEqual(layer.iconEmissiveStrength, Value<Double>.testConstantValue())
         XCTAssertEqual(layer.iconHaloBlur, Value<Double>.testConstantValue())
         XCTAssertEqual(layer.iconHaloColor, Value<StyleColor>.testConstantValue())

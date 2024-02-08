@@ -195,5 +195,13 @@ extension RasterArraySource {
     public func rasterLayers(_ newValue: [RasterArraySource.RasterDataLayer]) -> Self {
         with(self, setter(\.rasterLayers, newValue))
     }    
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.
+    public func tileCacheBudget(_ newValue: TileCacheBudgetSize) -> Self {
+        with(self, setter(\.tileCacheBudget, newValue))
+    }    
 }
 // End of generated file.

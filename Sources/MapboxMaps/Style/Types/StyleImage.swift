@@ -68,18 +68,21 @@ extension StyleImage {
 }
 
 struct ImageProperties {
+    let id: String
     let scale: Float
     let stretchXFirst: Float
     let stretchXSecond: Float
     let stretchYFirst: Float
     let stretchYSecond: Float
     let contentBox: ImageContent
+    let sdf: Bool
 
     init(styleImage: StyleImage) {
-        self.init(uiImage: styleImage.image, contentInsets: styleImage.contentInsets)
+        self.init(uiImage: styleImage.image, contentInsets: styleImage.contentInsets, id: styleImage.id, sdf: styleImage.sdf)
     }
 
-    init(uiImage: UIImage, contentInsets: UIEdgeInsets) {
+    init(uiImage: UIImage, contentInsets: UIEdgeInsets, id: String, sdf: Bool) {
+        self.id = id
         self.scale = Float(uiImage.scale)
         self.stretchXFirst = Float(uiImage.capInsets.left) * scale
         self.stretchXSecond = Float(uiImage.size.width - uiImage.capInsets.right) * scale
@@ -94,5 +97,6 @@ struct ImageProperties {
                                        top: contentBoxTop,
                                        right: contentBoxRight,
                                        bottom: contentBoxBottom)
+        self.sdf = sdf
     }
 }

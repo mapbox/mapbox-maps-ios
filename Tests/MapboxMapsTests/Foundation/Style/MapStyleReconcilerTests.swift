@@ -4,12 +4,14 @@ import XCTest
 final class MapStyleReconcilerTests: XCTestCase {
     var me: MapStyleReconciler!
     var styleManager: MockStyleManager!
+    var sourceManager: MockStyleSourceManager!
 
     override func setUp() {
         super.setUp()
         styleManager = MockStyleManager()
+        sourceManager = MockStyleSourceManager()
         styleManager.isStyleLoadedStub.defaultReturnValue = true
-        me = MapStyleReconciler(styleManager: styleManager)
+        me = MapStyleReconciler(styleManager: styleManager, sourceManager: sourceManager)
     }
 
     override func tearDown() {
@@ -17,6 +19,7 @@ final class MapStyleReconcilerTests: XCTestCase {
         resetAllStubs()
         me = nil
         styleManager = nil
+        sourceManager = nil
     }
 
     enum LoadResult {
@@ -419,13 +422,14 @@ final class MapStyleReconcilerTests: XCTestCase {
             RasterDemSource(id: "rasterDemSource")
             ImageSource(id: "imageSource")
             GeoJSONSource(id: "geoJSONSource")
+            RasterArraySource(id: "rasterArraySource")
         }
 
-        XCTAssertEqual(styleManager.addStyleSourceStub.invocations.count, 5)
+        XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 6)
 
         var sourceIDs = [String]()
-        for invocation in styleManager.addStyleSourceStub.invocations {
-            sourceIDs.append(invocation.parameters.sourceId)
+        for invocation in sourceManager.addSourceStub.invocations {
+            sourceIDs.append(invocation.parameters.source.id)
         }
 
         XCTAssertTrue(sourceIDs.contains("vectorSource"))
@@ -433,6 +437,60 @@ final class MapStyleReconcilerTests: XCTestCase {
         XCTAssertTrue(sourceIDs.contains("rasterDemSource"))
         XCTAssertTrue(sourceIDs.contains("imageSource"))
         XCTAssertTrue(sourceIDs.contains("geoJSONSource"))
+        XCTAssertTrue(sourceIDs.contains("rasterArraySource"))
+    }
+
+    func testUpdateSources() {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+        }
+
+        var vectorSource = VectorSource(id: "vectorSource")
+        var rasterSource = RasterSource(id: "rasterSource")
+        var rasterDEMSource = RasterDemSource(id: "rasterDemSource")
+        var imageSource = ImageSource(id: "imageSource")
+        var geoJSONSource = GeoJSONSource(id: "geoJSONSource")
+        var rasterArraySource = RasterArraySource(id: "rasterArraySource")
+
+        me.mapStyle = .standard {
+            vectorSource
+            rasterSource
+            rasterDEMSource
+            imageSource
+            geoJSONSource
+            rasterArraySource
+        }
+
+        vectorSource.minzoom = 1
+        rasterSource.minzoom = 2
+        rasterDEMSource.minzoom = 3
+        imageSource.url = "test"
+        geoJSONSource.data = GeoJSONSourceData.testSourceValue()
+        rasterArraySource.minzoom = 6
+
+        me.mapStyle = .standard {
+            vectorSource
+            rasterSource
+            rasterDEMSource
+            imageSource
+            geoJSONSource
+            rasterArraySource
+        }
+
+        XCTAssertEqual(sourceManager.setSourcePropertiesForParamsStub.invocations.count, 5)
+        XCTAssertEqual(sourceManager.updateGeoJSONSourceStub.invocations.count, 1)
+
+        var sourceIDs = [String]()
+        for invocation in sourceManager.setSourcePropertiesForParamsStub.invocations {
+            sourceIDs.append(invocation.parameters.sourceId)
+        }
+
+        /// Test each updated
+        XCTAssertTrue(sourceIDs.contains("vectorSource"))
+        XCTAssertTrue(sourceIDs.contains("rasterSource"))
+        XCTAssertTrue(sourceIDs.contains("rasterDemSource"))
+        XCTAssertTrue(sourceIDs.contains("imageSource"))
+        XCTAssertTrue(sourceIDs.contains("rasterArraySource"))
     }
 
     func testRemoveSource() {
@@ -444,16 +502,95 @@ final class MapStyleReconcilerTests: XCTestCase {
             VectorSource(id: "vectorSource")
         }
 
-        XCTAssertEqual(styleManager.addStyleSourceStub.invocations.count, 1)
+        XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 1)
 
         me.mapStyle = .standard
 
-        XCTAssertEqual(styleManager.removeStyleSourceStub.invocations.count, 1)
-        guard let removeSourceParameters = styleManager.removeStyleSourceStub.invocations.first?.parameters as? String else {
+        XCTAssertEqual(sourceManager.removeSourceStub.invocations.count, 1)
+        guard let removeSourceParameters = sourceManager.removeSourceStub.invocations.first?.parameters as? String else {
             XCTFail("Failed to get removeSourceParameters")
             return
         }
         XCTAssertEqual(removeSourceParameters, "vectorSource")
+    }
+
+    func testUpdateImage() {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+        }
+
+        var styleImage = StyleImage(id: "testStyleImage", image: UIImage.empty)
+
+        me.mapStyle = .standard {
+            styleImage
+        }
+
+        XCTAssertEqual(styleManager.addStyleImageStub.invocations.count, 1)
+
+        styleImage.sdf = true
+
+        me.mapStyle = .standard {
+            styleImage
+        }
+
+        XCTAssertEqual(styleManager.removeStyleImageStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.addStyleImageStub.invocations.count, 2)
+        XCTAssertEqual(styleManager.addStyleImageStub.invocations.first?.parameters.sdf, false)
+        XCTAssertEqual(styleManager.addStyleImageStub.invocations.first?.parameters.imageId, "testStyleImage")
+        XCTAssertEqual(styleManager.addStyleImageStub.invocations.last?.parameters.sdf, true)
+    }
+
+    func testDontUpdateSameImage() {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+        }
+
+        let styleImage = StyleImage(id: "testStyleImage", image: UIImage.empty)
+
+        me.mapStyle = .standard {
+            styleImage
+        }
+
+        XCTAssertEqual(styleManager.addStyleImageStub.invocations.count, 1)
+
+        me.mapStyle = .standard {
+            styleImage
+        }
+
+        XCTAssertEqual(styleManager.removeStyleImageStub.invocations.count, 0)
+        XCTAssertEqual(styleManager.addStyleImageStub.invocations.count, 1)
+
+        XCTAssertEqual(styleManager.addStyleImageStub.invocations.first?.parameters.imageId, "testStyleImage")
+
+    }
+
+    func testAddRemoveSource() {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+        }
+
+        let source = VectorSource(id: "test-source")
+            .url(String.testSourceValue())
+            .tiles([String].testSourceValue())
+
+        var boolean = true
+
+        me.mapStyle = .standard {
+            if boolean {
+                source
+            }
+        }
+
+        XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 1)
+
+        boolean = false
+        me.mapStyle = .standard {
+            if boolean {
+                source
+            }
+        }
+
+        XCTAssertEqual(sourceManager.removeSourceStub.invocations.count, 1)
     }
 
     func testStyleImportsReconcileFromNil() {

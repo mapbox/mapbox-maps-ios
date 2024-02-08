@@ -1,5 +1,5 @@
 struct MapStyleModel {
-    var layers = [String: LayerWrapper]()
+    var layers = [LayerWrapper]()
     var sources = [String: SourceWrapper]()
     var images = [String: StyleImage]()
     var terrain: Terrain?

@@ -147,7 +147,6 @@ public struct SkyLayer: Layer, Equatable {
 #endif
 @_spi(Experimental) extension SkyLayer {
 
-
     /// The slot this layer is assigned to. 
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
 #if swift(>=5.8)

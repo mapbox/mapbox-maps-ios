@@ -9,17 +9,20 @@ final class LocationIndicatorLayerTests: XCTestCase {
         var layer = LocationIndicatorLayer(id: "test-id")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
+        layer.slot = .testConstantValue()
 
         XCTAssertEqual(layer.id, "test-id")
         XCTAssertEqual(layer.type, LayerType.locationIndicator)
         XCTAssertEqual(layer.minZoom, 10.0)
         XCTAssertEqual(layer.maxZoom, 20.0)
+        XCTAssertEqual(layer.slot, Slot.testConstantValue())
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
         var layer = LocationIndicatorLayer(id: "test-id")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
+        layer.slot = .testConstantValue()
 
         var data: Data?
         do {
@@ -39,6 +42,7 @@ final class LocationIndicatorLayerTests: XCTestCase {
             XCTAssertEqual(decodedLayer.type, LayerType.locationIndicator)
             XCTAssertEqual(decodedLayer.minZoom, 10.0)
             XCTAssertEqual(decodedLayer.maxZoom, 20.0)
+            XCTAssertEqual(layer.slot, Slot.testConstantValue())
         } catch {
             XCTFail("Failed to decode LocationIndicatorLayer")
         }

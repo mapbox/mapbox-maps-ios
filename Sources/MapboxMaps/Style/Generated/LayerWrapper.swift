@@ -36,84 +36,84 @@ enum LayerWrapper: Equatable {
 @_spi(Experimental)
 extension FillLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .fill(self)
+        visitor.model.layers.append(.fill(self))
     }
 }
 
 @_spi(Experimental)
 extension LineLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .line(self)
+        visitor.model.layers.append(.line(self))
     }
 }
 
 @_spi(Experimental)
 extension SymbolLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .symbol(self)
+        visitor.model.layers.append(.symbol(self))
     }
 }
 
 @_spi(Experimental)
 extension CircleLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .circle(self)
+        visitor.model.layers.append(.circle(self))
     }
 }
 
 @_spi(Experimental)
 extension HeatmapLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .heatmap(self)
+        visitor.model.layers.append(.heatmap(self))
     }
 }
 
 @_spi(Experimental)
 extension FillExtrusionLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .fillExtrusion(self)
+        visitor.model.layers.append(.fillExtrusion(self))
     }
 }
 
 @_spi(Experimental)
 extension RasterLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .raster(self)
+        visitor.model.layers.append(.raster(self))
     }
 }
 
 @_spi(Experimental)
 extension HillshadeLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .hillshade(self)
+        visitor.model.layers.append(.hillshade(self))
     }
 }
 
 @_spi(Experimental)
 extension ModelLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .model(self)
+        visitor.model.layers.append(.model(self))
     }
 }
 
 @_spi(Experimental)
 extension BackgroundLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .background(self)
+        visitor.model.layers.append(.background(self))
     }
 }
 
 @_spi(Experimental)
 extension SkyLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .sky(self)
+        visitor.model.layers.append(.sky(self))
     }
 }
 
 @_spi(Experimental)
 extension LocationIndicatorLayer: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.layers[id] = .locationIndicator(self)
+        visitor.model.layers.append(.locationIndicator(self))
     }
 }
 

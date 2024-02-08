@@ -206,6 +206,14 @@ extension VectorSource {
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
+    /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.
+    public func tileCacheBudget(_ newValue: TileCacheBudgetSize) -> Self {
+        with(self, setter(\.tileCacheBudget, newValue))
+    }    
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     /// Minimum tile update interval in seconds, which is used to throttle the tile update network requests. If the given source supports loading tiles from a server, sets the minimum tile update interval. Update network requests that are more frequent than the minimum tile update interval are suppressed.
     public func minimumTileUpdateInterval(_ newValue: Double) -> Self {
         with(self, setter(\.minimumTileUpdateInterval, newValue))

@@ -262,7 +262,6 @@ public struct RasterLayer: Layer, Equatable {
     @_documentation(visibility: public)
 #endif
 @_spi(Experimental) extension RasterLayer {
-
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
 #if swift(>=5.8)
@@ -371,6 +370,14 @@ public struct RasterLayer: Layer, Equatable {
 #endif
     public func rasterContrast(_ newValue: Value<Double>) -> Self {
         with(self, setter(\.rasterContrast, newValue))
+    }    
+
+    /// Specifies an uniform elevation from the ground, in meters. Only supported with image sources.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func rasterElevation(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.rasterElevation, newValue))
     }    
 
     /// Controls the intensity of light emitted on the source features.

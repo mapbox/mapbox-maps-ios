@@ -301,7 +301,6 @@ public struct LineLayer: Layer, Equatable {
     @_documentation(visibility: public)
 #endif
 @_spi(Experimental) extension LineLayer {
-
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
 #if swift(>=5.8)

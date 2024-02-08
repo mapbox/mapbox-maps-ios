@@ -47,6 +47,7 @@ final class RasterArraySourceTests: XCTestCase {
             .tileSize(Double.testSourceValue())
             .attribution(String.testSourceValue())
             .rasterLayers([RasterArraySource.RasterDataLayer].testSourceValue())
+            .tileCacheBudget(TileCacheBudgetSize.testSourceValue())
 
         XCTAssertEqual(source.url, String.testSourceValue())
         XCTAssertEqual(source.tiles, [String].testSourceValue())
@@ -56,6 +57,7 @@ final class RasterArraySourceTests: XCTestCase {
         XCTAssertEqual(source.tileSize, Double.testSourceValue())
         XCTAssertEqual(source.attribution, String.testSourceValue())
         XCTAssertEqual(source.rasterLayers, [RasterArraySource.RasterDataLayer].testSourceValue())
+        XCTAssertEqual(source.tileCacheBudget, TileCacheBudgetSize.testSourceValue())
     }
 }
 

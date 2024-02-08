@@ -14,66 +14,80 @@ final class MapStyleContentVisitorTests: XCTestCase {
 
     func testAddAllLayerTypes() {
         let sourceID = "dummy"
-        let fill = FillLayer(id: "fill", source: sourceID)
-        let line = LineLayer(id: "line", source: sourceID)
-        let symbol = SymbolLayer(id: "symbol", source: sourceID)
-        let circle = CircleLayer(id: "circle", source: sourceID)
-        let heatmap = HeatmapLayer(id: "heatmap", source: sourceID)
-        let fillExtrusion = FillExtrusionLayer(id: "fillExtrusion", source: sourceID)
-        let raster = RasterLayer(id: "raster", source: sourceID)
-        let hillshade = HillshadeLayer(id: "hillshade", source: sourceID)
-        let model = ModelLayer(id: "model", source: sourceID)
-        let background = BackgroundLayer(id: "background")
-        let sky = SkyLayer(id: "sky")
-        let locationIndicator = LocationIndicatorLayer(id: "locationIndicator")
 
+        let fill = FillLayer(id: "fill", source: sourceID)
         fill._visit(mapStyleContentVisitor)
+
+        let line = LineLayer(id: "line", source: sourceID)
         line._visit(mapStyleContentVisitor)
+
+        let symbol = SymbolLayer(id: "symbol", source: sourceID)
         symbol._visit(mapStyleContentVisitor)
+
+        let circle = CircleLayer(id: "circle", source: sourceID)
         circle._visit(mapStyleContentVisitor)
+
+        let heatmap = HeatmapLayer(id: "heatmap", source: sourceID)
         heatmap._visit(mapStyleContentVisitor)
+
+        let fillExtrusion = FillExtrusionLayer(id: "fillExtrusion", source: sourceID)
         fillExtrusion._visit(mapStyleContentVisitor)
+
+        let raster = RasterLayer(id: "raster", source: sourceID)
         raster._visit(mapStyleContentVisitor)
+
+        let hillshade = HillshadeLayer(id: "hillshade", source: sourceID)
         hillshade._visit(mapStyleContentVisitor)
+
+        let model = ModelLayer(id: "model", source: sourceID)
         model._visit(mapStyleContentVisitor)
+
+        let background = BackgroundLayer(id: "background")
         background._visit(mapStyleContentVisitor)
+
+        let sky = SkyLayer(id: "sky")
         sky._visit(mapStyleContentVisitor)
+
+        let locationIndicator = LocationIndicatorLayer(id: "locationIndicator")
         locationIndicator._visit(mapStyleContentVisitor)
 
         XCTAssertEqual(mapStyleContentVisitor.model.layers,
-                       ["fill": LayerWrapper.fill(fill),
-                        "line": LayerWrapper.line(line),
-                       "symbol": LayerWrapper.symbol(symbol),
-                       "circle": LayerWrapper.circle(circle),
-                       "heatmap": LayerWrapper.heatmap(heatmap),
-                       "fillExtrusion": LayerWrapper.fillExtrusion(fillExtrusion),
-                       "raster": LayerWrapper.raster(raster),
-                       "hillshade": LayerWrapper.hillshade(hillshade),
-                       "model": LayerWrapper.model(model),
-                       "background": LayerWrapper.background(background),
-                       "sky": LayerWrapper.sky(sky),
-                       "locationIndicator": LayerWrapper.locationIndicator(locationIndicator)])
+                       [LayerWrapper.fill(fill),
+                        LayerWrapper.line(line),
+                        LayerWrapper.symbol(symbol),
+                        LayerWrapper.circle(circle),
+                        LayerWrapper.heatmap(heatmap),
+                        LayerWrapper.fillExtrusion(fillExtrusion),
+                        LayerWrapper.raster(raster),
+                        LayerWrapper.hillshade(hillshade),
+                        LayerWrapper.model(model),
+                        LayerWrapper.background(background),
+                        LayerWrapper.sky(sky),
+                        LayerWrapper.locationIndicator(locationIndicator)]
+        )
     }
 
     func testAddAllSourceTypes() {
         let vector = VectorSource(id: "vector")
-        let raster = RasterSource(id: "raster")
-        let rasterDem = RasterDemSource(id: "rasterDem")
-        let image = ImageSource(id: "image")
-        let geoJson = GeoJSONSource(id: "geoJson")
-
         vector._visit(mapStyleContentVisitor)
-        raster._visit(mapStyleContentVisitor)
-        rasterDem._visit(mapStyleContentVisitor)
-        image._visit(mapStyleContentVisitor)
-        geoJson._visit(mapStyleContentVisitor)
+        XCTAssertEqual(mapStyleContentVisitor.model.sources[vector.id], SourceWrapper.vector(vector))
 
-        XCTAssertEqual(mapStyleContentVisitor.model.sources,
-                       ["vector": SourceWrapper.vector(vector),
-                        "raster": SourceWrapper.raster(raster),
-                        "rasterDem": SourceWrapper.rasterDem(rasterDem),
-                        "image": SourceWrapper.image(image),
-                        "geoJson": SourceWrapper.geoJson(geoJson)])
+        let raster = RasterSource(id: "raster")
+        raster._visit(mapStyleContentVisitor)
+        XCTAssertEqual(mapStyleContentVisitor.model.sources[raster.id], SourceWrapper.raster(raster))
+
+        let rasterDem = RasterDemSource(id: "rasterDem")
+        rasterDem._visit(mapStyleContentVisitor)
+        XCTAssertEqual(mapStyleContentVisitor.model.sources[rasterDem.id], SourceWrapper.rasterDem(rasterDem))
+
+        let image = ImageSource(id: "image")
+        image._visit(mapStyleContentVisitor)
+        XCTAssertEqual(mapStyleContentVisitor.model.sources[image.id], SourceWrapper.image(image))
+
+        let geoJson = GeoJSONSource(id: "geoJson")
+        geoJson._visit(mapStyleContentVisitor)
+        XCTAssertEqual(mapStyleContentVisitor.model.sources[geoJson.id], SourceWrapper.geoJson(geoJson))
+
     }
 
     func testAddStyleImages() {
@@ -82,7 +96,7 @@ final class MapStyleContentVisitorTests: XCTestCase {
 
         image.visit(mapStyleContentVisitor)
 
-        XCTAssertEqual(mapStyleContentVisitor.model.images, ["styleImage": image])
+        XCTAssertEqual(mapStyleContentVisitor.model.images, [image.id: image])
     }
 
     func testAddTerrain() {

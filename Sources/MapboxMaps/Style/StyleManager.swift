@@ -73,7 +73,7 @@ public class StyleManager {
     ) {
         self.styleManager = styleManager
         self.sourceManager = sourceManager
-        styleReconciler = MapStyleReconciler(styleManager: styleManager)
+        styleReconciler = MapStyleReconciler(styleManager: styleManager, sourceManager: sourceManager)
     }
 
     // MARK: - Layers
@@ -1014,7 +1014,7 @@ public class StyleManager {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     public func addImage(_ image: UIImage, id: String, sdf: Bool = false, contentInsets: UIEdgeInsets = .zero) throws {
-        let imageProperties = ImageProperties(uiImage: image, contentInsets: contentInsets)
+        let imageProperties = ImageProperties(uiImage: image, contentInsets: contentInsets, id: id, sdf: sdf)
 
         try addImage(image,
                      id: id,

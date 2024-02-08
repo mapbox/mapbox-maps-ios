@@ -9,17 +9,20 @@ final class RasterLayerTests: XCTestCase {
         var layer = RasterLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
+        layer.slot = .testConstantValue()
 
         XCTAssertEqual(layer.id, "test-id")
         XCTAssertEqual(layer.type, LayerType.raster)
         XCTAssertEqual(layer.minZoom, 10.0)
         XCTAssertEqual(layer.maxZoom, 20.0)
+        XCTAssertEqual(layer.slot, Slot.testConstantValue())
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
         var layer = RasterLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
+        layer.slot = .testConstantValue()
 
         var data: Data?
         do {
@@ -40,6 +43,7 @@ final class RasterLayerTests: XCTestCase {
             XCTAssert(decodedLayer.source == "source")
             XCTAssertEqual(decodedLayer.minZoom, 10.0)
             XCTAssertEqual(decodedLayer.maxZoom, 20.0)
+            XCTAssertEqual(layer.slot, Slot.testConstantValue())
         } catch {
             XCTFail("Failed to decode RasterLayer")
         }
@@ -145,6 +149,7 @@ final class RasterLayerTests: XCTestCase {
             .rasterColorMix(Value<[Double]>.testConstantValue())
             .rasterColorRange(Value<[Double]>.testConstantValue())
             .rasterContrast(Value<Double>.testConstantValue())
+            .rasterElevation(Value<Double>.testConstantValue())
             .rasterEmissiveStrength(Value<Double>.testConstantValue())
             .rasterFadeDuration(Value<Double>.testConstantValue())
             .rasterHueRotate(Value<Double>.testConstantValue())
@@ -165,6 +170,7 @@ final class RasterLayerTests: XCTestCase {
         XCTAssertEqual(layer.rasterColorMix, Value<[Double]>.testConstantValue())
         XCTAssertEqual(layer.rasterColorRange, Value<[Double]>.testConstantValue())
         XCTAssertEqual(layer.rasterContrast, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.rasterElevation, Value<Double>.testConstantValue())
         XCTAssertEqual(layer.rasterEmissiveStrength, Value<Double>.testConstantValue())
         XCTAssertEqual(layer.rasterFadeDuration, Value<Double>.testConstantValue())
         XCTAssertEqual(layer.rasterHueRotate, Value<Double>.testConstantValue())

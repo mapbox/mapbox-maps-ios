@@ -16,4 +16,12 @@
     public static func buildEither(second content: MapStyleContent) -> MapStyleContent {
         ConditionalMapStyleContent.second(content)
     }
+
+    /// :nodoc:
+    public static func buildOptional(_ content: MapStyleContent?) -> MapStyleContent {
+        guard let content else {
+            return EmptyMapStyleContent()
+        }
+        return content
+    }
 }

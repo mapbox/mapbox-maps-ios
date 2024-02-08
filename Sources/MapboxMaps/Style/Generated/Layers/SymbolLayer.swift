@@ -565,7 +565,6 @@ public struct SymbolLayer: Layer, Equatable {
     @_documentation(visibility: public)
 #endif
 @_spi(Experimental) extension SymbolLayer {
-
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
 #if swift(>=5.8)
@@ -962,6 +961,14 @@ public struct SymbolLayer: Layer, Equatable {
 #endif
     public func iconColor(_ newValue: Value<StyleColor>) -> Self {
         with(self, setter(\.iconColor, newValue))
+    }    
+
+    /// Controls saturation level of the symbol icon. With the default value of 1 the icon color is preserved while with a value of 0 it is fully desaturated and looks black and white.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func iconColorSaturation(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.iconColorSaturation, newValue))
     }    
 
     /// Controls the intensity of light emitted on the source features.

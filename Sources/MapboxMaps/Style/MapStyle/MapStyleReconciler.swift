@@ -24,9 +24,11 @@ final class MapStyleReconciler {
     private var _mapStyle: MapStyle?
     private let _isStyleRootLoaded: CurrentValueSignalSubject<Bool>
     private var styleModel = MapStyleModel()
+    private var accessors: StyleAccessors
 
-    init(styleManager: StyleManagerProtocol) {
+    init(styleManager: StyleManagerProtocol, sourceManager: StyleSourceManagerProtocol) {
         self.styleManager = styleManager
+        self.accessors = StyleAccessors(styleManager: styleManager, styleSourceManager: sourceManager)
         self._isStyleRootLoaded = .init(false)
     }
 
@@ -115,14 +117,14 @@ final class MapStyleReconciler {
             switch stage {
             case .layers:
                 reconcileStyleImports(from: old.importConfigurations)
-                applyDiff(old: old.layers, new: styleModel.layers, accessor: styleManager.accessors.layers)
-                updateProperty(old: old.projection, new: styleModel.projection, accessor: styleManager.accessors.projection)
-                updateProperty(old: old.atmosphere, new: styleModel.atmosphere, accessor: styleManager.accessors.atmosphere)
-                updateProperty(old: old.terrain, new: styleModel.terrain, accessor: styleManager.accessors.terrain)
+                applyLayerDiff(old: old.layers, new: styleModel.layers, accessor: accessors.layers)
+                updateProperty(old: old.projection, new: styleModel.projection, accessor: accessors.projection)
+                updateProperty(old: old.atmosphere, new: styleModel.atmosphere, accessor: accessors.atmosphere)
+                updateProperty(old: old.terrain, new: styleModel.terrain, accessor: accessors.terrain)
             case .sources:
-                applyDiff(old: old.sources, new: styleModel.sources, accessor: styleManager.accessors.sources)
+                applyDiff(old: old.sources, new: styleModel.sources, accessor: accessors.sources)
             case .images:
-                applyDiff(old: old.images, new: styleModel.images, accessor: styleManager.accessors.images)
+                applyDiff(old: old.images, new: styleModel.images, accessor: accessors.images)
             }
         }
     }
@@ -176,8 +178,24 @@ private func updateProperty<T: Equatable>(old: T?, new: T?, accessor: Accessor<T
 
     if let new {
         wrapStyleDSLError { try accessor.insert(new) }
-    } else if let old {
-        wrapStyleDSLError { try accessor.remove(old) }
+    } else if old != nil {
+        wrapStyleDSLError { try accessor.remove(nil) }
+    }
+}
+
+private func applyLayerDiff(old: [LayerWrapper], new: [LayerWrapper], accessor: Accessor<LayerWrapper>) {
+    let diff = new.diff(from: old, id: \.asLayer.id)
+
+    for removeId in diff.remove {
+        wrapStyleDSLError { try accessor.remove(removeId) }
+    }
+
+    for layer in diff.add {
+        wrapStyleDSLError { try accessor.insert(layer) }
+    }
+
+    for layer in diff.update {
+        wrapStyleDSLError {  try accessor.update(nil, layer) }
     }
 }
 
@@ -191,7 +209,7 @@ private func applyDiff<T>(old: [String: T], new: [String: T], accessor: Accessor
     }
 
     removalKeys.forEach { key in
-        wrapStyleDSLError { try old[key].map(accessor.remove) }
+        wrapStyleDSLError { try accessor.remove(key) }
     }
     insertionKeys.forEach { key in
         wrapStyleDSLError { try new[key].map(accessor.insert) }

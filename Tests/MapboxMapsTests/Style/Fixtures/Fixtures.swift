@@ -103,6 +103,12 @@ internal extension Slot {
     }
 }
 
+internal extension LayerPosition {
+    static func testConstantValue() -> LayerPosition {
+        return LayerPosition.at(1)
+    }
+}
+
 internal extension PromoteId {
     static func testSourceValue() -> PromoteId {
         return .string("test-promote-id")

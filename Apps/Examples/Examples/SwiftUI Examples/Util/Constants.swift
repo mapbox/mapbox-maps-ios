@@ -14,6 +14,8 @@ extension CLLocationCoordinate2D {
     static let bangkok = CLLocationCoordinate2D(latitude: 13.756331, longitude: 100.501762)
     static let jakarta = CLLocationCoordinate2D(latitude: -6.175110, longitude: 106.865036)
     static let kyiv = CLLocationCoordinate2D(latitude: 50.541, longitude: 30.498)
+    static let tunis = CLLocationCoordinate2D(latitude: 36.806, longitude: 10.1815)
+    static let barcelona = CLLocationCoordinate2D(latitude: 41.3874, longitude: 2.168)
 }
 
 

@@ -5,6 +5,7 @@ enum SourceWrapper: Equatable  {
     case vector(VectorSource)
     case raster(RasterSource)
     case rasterDem(RasterDemSource)
+    case rasterArray(RasterArraySource)
     case image(ImageSource)
     case geoJson(GeoJSONSource)
 
@@ -13,6 +14,7 @@ enum SourceWrapper: Equatable  {
         case let .vector(source): return source
         case let .raster(source): return source
         case let .rasterDem(source): return source
+        case let .rasterArray(source): return source
         case let .image(source): return source
         case let .geoJson(source): return source
         }
@@ -20,7 +22,7 @@ enum SourceWrapper: Equatable  {
 }
 
 extension SourceWrapper {
-    static func update(old: SourceWrapper, new: SourceWrapper, styleSourceManager: StyleSourceManager) throws {
+    static func update(old: SourceWrapper, new: SourceWrapper, styleSourceManager: StyleSourceManagerProtocol) throws {
         assert(old.asSource.id == new.asSource.id)
 
         var props = [String: Any]()
@@ -44,6 +46,11 @@ extension SourceWrapper {
             encodeUpdate(\.minzoom, old: old, new: new, container: &props, key: "minzoom")
             encodeUpdate(\.maxzoom, old: old, new: new, container: &props, key: "maxzoom")
             encodeUpdate(\.volatile, old: old, new: new, container: &props, key: "volatile")
+        case let (.rasterArray(old), .rasterArray(new)):
+            encodeUpdate(\.url, old: old, new: new, container: &props, key: "url")
+            encodeUpdate(\.tiles, old: old, new: new, container: &props, key: "tiles")
+            encodeUpdate(\.minzoom, old: old, new: new, container: &props, key: "minzoom")
+            encodeUpdate(\.maxzoom, old: old, new: new, container: &props, key: "maxzoom")
         case let (.image(old), .image(new)):
             encodeUpdate(\.url, old: old, new: new, container: &props, key: "url")
             encodeUpdate(\.coordinates, old: old, new: new, container: &props, key: "coordinates")
@@ -89,6 +96,13 @@ extension RasterSource: PrimitiveMapStyleContent {
 extension RasterDemSource: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
         visitor.model.sources[id] = .rasterDem(self)
+    }
+}
+
+@_spi(Experimental)
+extension RasterArraySource: PrimitiveMapStyleContent {
+    func _visit(_ visitor: MapStyleContentVisitor) {
+        visitor.model.sources[id] = .rasterArray(self)
     }
 }
 

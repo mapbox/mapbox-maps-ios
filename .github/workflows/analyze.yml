@@ -27,7 +27,7 @@ jobs:
         fail-fast: false
         matrix:
           language: ["javascript", "python", "ruby"]
-          executor: ["ubuntu-latest"]
+          executor: ["self-hosted", "ubuntu", "codeql-lg", "SecurityandCompliance", "234858372212"]
           include:
             - language: "swift"
               executor: "macos-latest"

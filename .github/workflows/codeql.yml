@@ -2,9 +2,21 @@ name: "CodeQL"
 
 on:
   push:
-    branches: ['main', 'publisher-production', 'release/*', 'lts/*']
+    branches: ['main', 'publisher-production']
+    paths-ignore: 
+      - '.github'
+      - '.circleci'
+      - '.vscode'
+      - '**.md'
+      - '**.txt'
   pull_request:
-    branches: ['main', 'publisher-production', 'release/*', 'lts/*']
+    branches: ['main', 'publisher-production', 'release/**', '!release/**-alpha**']
+    paths-ignore: 
+      - '.github'
+      - '.circleci'
+      - '.vscode'
+      - '**.md'
+      - '**.txt'
   schedule:
     - cron: "16 20 * * 4"
 

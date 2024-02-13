@@ -3,9 +3,7 @@ import SwiftUI
 /// Represents a ``Map-swift.struct``content such as annotations.
 ///
 /// See implementations for more details.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental)
 public protocol MapContent {}
 

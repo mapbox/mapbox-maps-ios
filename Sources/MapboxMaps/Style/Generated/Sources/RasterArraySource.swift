@@ -4,77 +4,51 @@ import Foundation
 /// A raster array source
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#raster_array)
-#if swift(>=5.8)
 @_documentation(visibility: public)
-#endif
 @_spi(Experimental) public struct RasterArraySource: Source {
 
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public let type: SourceType
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public let id: String
 
     /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var url: String?
 
     /// An array of one or more tile source URLs, as in the TileJSON spec.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var tiles: [String]?
 
     /// An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public private(set) var bounds: [Double]?
 
     /// Minimum zoom level for which tiles are available, as in the TileJSON spec.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var minzoom: Double?
 
     /// Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var maxzoom: Double?
 
     /// The minimum visual size to display tiles for this layer. Only configurable for raster layers.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public private(set) var tileSize: Double?
 
     /// Contains an attribution to be displayed when the map is shown to a user.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public private(set) var attribution: String?
 
     /// Contains the description of the raster data layers and the bands contained within the tiles.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public private(set) var rasterLayers: [RasterArraySource.RasterDataLayer]?
 
     /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var tileCacheBudget: TileCacheBudgetSize?
 
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public init(id: String) {
         self.id = id
         self.type = .rasterArray

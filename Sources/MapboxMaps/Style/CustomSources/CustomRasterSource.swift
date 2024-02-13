@@ -3,39 +3,27 @@ import Foundation
 /// Describes a Custom Raster Source to be used in the style.
 ///
 /// To add the data, set options with a ``CustomRasterSourceOptions`` with a fetchTileFunction callback
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental)
 public struct CustomRasterSource: Source {
 
     /// The Source type
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public let type: SourceType = .customRaster
 
     /// Style source identifier.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public let id: String
 
     /// Settings for the custom raster source, including a fetchTileFunction callback
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public let options: CustomRasterSourceOptions?
 
     /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var tileCacheBudget: TileCacheBudgetSize?
 
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public init(id: String, options: CustomRasterSourceOptions) {
         self.id = id
         self.options = options

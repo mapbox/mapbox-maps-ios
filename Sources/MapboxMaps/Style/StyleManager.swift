@@ -411,9 +411,7 @@ public class StyleManager {
     /// MapStyle represents style configuration to load the style.
     ///
     /// It comprises from a StyleURI or style JSON complemented by style import configuration.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental)
     public var mapStyle: MapStyle? {
         get { styleReconciler.mapStyle }
@@ -466,9 +464,7 @@ public class StyleManager {
     ///   - mapStyle: A style to load.
     ///   - transition: Options for the style transition.
     ///   - completion: Closure called when the style has been fully loaded.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental)
     public func load(mapStyle: MapStyle,
                      transition: TransitionOptions? = nil,
@@ -1270,9 +1266,7 @@ public class StyleManager {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental) public func addStyleModel(modelId: String, modelUri: String) throws {
         try handleExpected {
             styleManager.addStyleModel(forModelId: modelId, modelUri: modelUri)
@@ -1286,9 +1280,7 @@ public class StyleManager {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental) public func removeStyleModel(modelId: String) throws {
         try handleExpected {
             styleManager.removeStyleModel(forModelId: modelId)
@@ -1302,9 +1294,7 @@ public class StyleManager {
     ///
     /// - Returns:
     ///     True if model exists, false otherwise.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental) public func hasStyleModel(modelId: String) -> Bool {
         return styleManager.hasStyleModel(forModelId: modelId)
     }

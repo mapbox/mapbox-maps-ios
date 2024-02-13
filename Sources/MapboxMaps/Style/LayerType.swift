@@ -42,9 +42,7 @@ public struct LayerType: ExpressibleByStringLiteral, RawRepresentable, Codable, 
     public static let sky: LayerType = "sky"
 
     /// Layer used for a 3D model
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental)
     public static let model: LayerType = "model"
 

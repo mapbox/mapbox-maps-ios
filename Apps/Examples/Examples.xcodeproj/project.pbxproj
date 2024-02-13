@@ -585,32 +585,32 @@
 			path = Lab;
 			sourceTree = "<group>";
 		};
-		"TEMP_3B399F92-9D2B-4B38-A72E-02B19CD823AB" /* iOS */ = {
+		"TEMP_013830E3-5FCE-44E9-8BF3-7C01A1C051FA" /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = iOS;
+			path = SwiftUI;
 			sourceTree = "<group>";
 		};
-		"TEMP_8F646053-4581-430A-9178-24F6E0EB7E54" /* All Examples */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "All Examples";
-			sourceTree = "<group>";
-		};
-		"TEMP_A6BB9FB3-8D52-4322-AA5D-8B6664BE3F84" /* Sample Data */ = {
+		"TEMP_1B6054FA-B5A0-4568-84CF-0833D368F91A" /* Sample Data */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = "Sample Data";
 			sourceTree = "<group>";
 		};
-		"TEMP_CA00C26A-3392-4E3B-88F3-A1B0437407E6" /* SwiftUI */ = {
+		"TEMP_7C36F109-1AA0-40A1-A53F-E0434C79F8F8" /* All Examples */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = SwiftUI;
+			path = "All Examples";
+			sourceTree = "<group>";
+		};
+		"TEMP_CFF36C10-66CE-4EFB-BCF3-8D7E95385E78" /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = iOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1046,7 +1046,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.7;
+				SWIFT_VERSION = 5.8;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
@@ -1178,7 +1178,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.7;
+				SWIFT_VERSION = 5.8;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 1.0;
 			};

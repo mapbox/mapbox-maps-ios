@@ -5,7 +5,7 @@ struct Settings {
     var mapStyle: MapStyle = .standard
     var orientation: NorthOrientation = .upwards
     var gestureOptions: GestureOptions = .init()
-    var cameraBounds: CameraBoundsOptions = .init()
+    var cameraBounds: CameraBoundsOptions = .world
     var constrainMode: ConstrainMode = .heightOnly
     var ornamentSettings = OrnamentSettings()
     var debugOptions: MapViewDebugOptions = [.camera]
@@ -85,6 +85,10 @@ struct MapSettingsExample : View {
 @available(iOS 14.0, *)
 struct SettingsView : View {
     @Binding var settings: Settings
+    #if os(visionOS)
+    @Environment(\.dismiss) private var dismiss
+    #endif
+
     var body: some View {
         Form {
             Section {
@@ -162,6 +166,11 @@ struct SettingsView : View {
             } header: {
                 Text("Performance Statistics")
             }
+            #if os(visionOS)
+            Button("Close Settings") {
+                dismiss()
+            }
+            #endif
         }
     }
 }

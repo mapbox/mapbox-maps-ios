@@ -476,7 +476,9 @@ public final class MapboxMap: StyleManager {
     ///
     /// - Parameters:
     ///   - coordinateBounds: The coordinate bounds that will be displayed within the viewport.
-    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding.
+    ///   - padding: The amount of padding in screen points to add to the given `coordinates`.
+    ///              This padding is not applied to the map but to the coordinates provided.
+    ///              If you want to apply padding to the map use `camera` parameter on ``camera(for:camera:coordinatesPadding:maxZoom:offset:)``
     ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
     ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
     ///   - maxZoom: The maximum zoom level to allow when the camera would transition to the specified bounds.
@@ -504,10 +506,13 @@ public final class MapboxMap: StyleManager {
     ///
     /// - Parameters:
     ///   - coordinates: Array of coordinates that should fit within the new viewport.
-    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding.
+    ///   - padding: The amount of padding in screen points to add to the given `coordinates`.
+    ///              This padding is not applied to the map but to the coordinates provided.
+    ///              If you want to apply padding to the map use `camera` parameter on ``camera(for:camera:coordinatesPadding:maxZoom:offset:)``
     ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
     ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
     /// - Returns: A `CameraOptions` that fits the provided constraints
+    @available(*, deprecated, message: "Use ``camera(for:camera:coordinatesPadding:maxZoom:offset:)`` instead.")
     public func camera(for coordinates: [CLLocationCoordinate2D],
                        padding: UIEdgeInsets?,
                        bearing: Double?,

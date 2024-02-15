@@ -7,12 +7,18 @@ Mapbox welcomes participation and contributions from everyone.
 * Add `onClusterTap` and `onClusterLongPress` to AnnotationManagers(UIKit) and AnnotationGroups(SwiftUI) which support clustering
 * Add annotations drag handlers callbacks `dragBeginHandler`, `dragChangeHandler`, `dragEndHandler` to all Annotation types.
 
+## 11.2.0-rc.1 - 15 February, 2024
+
+### Bug fixes 🐞
+
+* Fix Map and encompassing List scroll at the same time
+* visionOS small enhancements
+
 ## 11.2.0-beta.1 - 1 February, 2024
 
 ### Features ✨ and improvements 🏁
 
 * vision OS support. 🚀
-* Vision OS support. 🚀
 * Add easing curve parameter to `CameraAnimationsManager.fly(to:duration:curve:completion)`, make `TimingCurve` public with few more options.
 * Expose `MapboxMap.centerAltitudeMode` and ensure correct `centerAltitudeMode` on gesture ending.
 * Expose extra configuration methods for `MapboxMap`: `setNorthOrientation(_:)`, `setConstrainMode(_:)` and `setViewportMode(_:)`.

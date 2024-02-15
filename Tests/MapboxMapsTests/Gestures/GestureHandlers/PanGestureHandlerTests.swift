@@ -489,8 +489,4 @@ final class PanGestureHandlerTests: XCTestCase {
 
         panGestureHandler.assertNotRecognizedSimultaneously(gestureRecognizer, with: interruptingRecognizers)
     }
-
-    func testPinchShouldRecognizeSimultaneouslyWithAnyRecognizerAttachedToDifferentView() {
-        panGestureHandler.assertRecognizedSimultaneously(gestureRecognizer, with: interruptingRecognizers)
-    }
 }

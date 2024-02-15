@@ -172,7 +172,9 @@ extension PanGestureHandler: UIGestureRecognizerDelegate {
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
         guard gestureRecognizer === self.gestureRecognizer else { return false }
-        guard gestureRecognizer.attachedToSameView(as: otherGestureRecognizer) else { return true }
+        /// The map can be used inside a scroll view which has it's own `PanGestureRecognizer` and they should be mutually exclusive.
+        /// This will introduce problems for client who are going to implement custom `DragGesture` in SwiftUI, but it's considered as rare case.
+        /// That's said`gestureRecognizer.attachedToSameView` check is skipped here.
 
         switch otherGestureRecognizer {
         case is UIRotationGestureRecognizer:

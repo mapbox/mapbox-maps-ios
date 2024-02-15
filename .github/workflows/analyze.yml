@@ -37,7 +37,7 @@ jobs:
           executor: ${{ fromJson(inputs.executor) }}
           include:
             - language: "swift"
-              executor: "macos-14"
+              executor: "macos-13"
           # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 
       steps:

@@ -1,8 +1,6 @@
 import Foundation
 
-#if swift(>=5.8)
 @_documentation(visibility: internal)
-#endif
 extension StyleManager {
     /// :nodoc:
     @available(*, deprecated, renamed: "styleURI")

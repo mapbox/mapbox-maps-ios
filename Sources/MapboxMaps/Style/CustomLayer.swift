@@ -4,9 +4,7 @@ import Foundation
 ///
 /// With a power of ``CustomLayerHost`` you can implement your own Metal rendering behaviour
 /// and manipulate layer as a usual one.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental)
 public struct CustomLayer: Layer {
     public var id: String

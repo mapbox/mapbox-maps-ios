@@ -1,5 +1,3 @@
-#if swift(>=5.8)
-    @_documentation(visibility: internal)
-#endif
+@_documentation(visibility: internal)
 // swiftlint:disable:next missing_docs
 public typealias Polygon = Turf.Polygon

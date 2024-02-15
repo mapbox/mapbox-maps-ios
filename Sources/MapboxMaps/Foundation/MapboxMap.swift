@@ -461,9 +461,7 @@ public final class MapboxMap: StyleManager {
     ///   - options The statistics collection options to collect.
     ///   - callback The callback to be invoked when performance statistics are available.
     /// - Returns:  The ``AnyCancelable`` object that can be used to cancel performance statistics collection.
-    #if swift(>=5.8)
-        @_documentation(visibility: public)
-    #endif
+    @_documentation(visibility: public)
     @_spi(Experimental)
     public func collectPerformanceStatistics(_ options: PerformanceStatisticsOptions, callback: @escaping (PerformanceStatistics) -> Void) -> AnyCancelable {
         __map.startPerformanceStatisticsCollection(for: options, callback: callback)
@@ -1146,9 +1144,7 @@ extension MapboxMap {
 
     /// Returns a ``Signal`` that allows to subscribe to the event with specified string name.
     /// This method is reserved for the future use.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental)
     public subscript(eventName: String) -> Signal<GenericEvent> {
         events[eventName]
@@ -1359,9 +1355,7 @@ extension MapboxMap {
     ///
     /// - Parameters:
     ///   - options: Options for the tile cover method.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental)
     public func tileCover(for options: TileCoverOptions) -> [CanonicalTileID] {
         __map.__tileCover(

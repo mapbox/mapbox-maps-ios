@@ -51,9 +51,7 @@ import Turf
 /// See ``withViewportAnimation(_:body:completion:)`` and ``ViewportAnimation`` for more details about viewport animation.
 ///
 /// The ``Viewport`` allows you to read only the values that you set. If you need to read the actual camera state values, subscribe to ``Map/onCameraChanged(action:)`` event.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct Viewport: Equatable {
@@ -66,87 +64,61 @@ public struct Viewport: Equatable {
     }
 
     /// Options for the overview viewport.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public struct OverviewOptions: Equatable {
         /// Geometry to overview.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
         public var geometry: Geometry
         /// Camera bearing.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
         public var bearing: CGFloat
 
         /// Camera pitch.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
         public var pitch: CGFloat
 
         /// Extra padding that is added for the geometry during bounding box calculation.
         ///
         /// - Note: Geometry padding is different to camera padding ``Viewport/padding-swift.property``.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
         public var geometryPadding: SwiftUI.EdgeInsets
 
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
         /// The maximum zoom level to allow.
         public var maxZoom: Double?
 
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
         /// The center of the given bounds relative to the map's center, measured in points.
         public var offset: CGPoint?
     }
 
     /// Options for the follow puck viewport.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public struct FollowPuckOptions: Equatable {
         /// Camera zoom.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
         public var zoom: CGFloat
 
         /// Camera bearing.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
         public var bearing: FollowPuckViewportStateBearing
 
         /// Camera pitch.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
         public var pitch: CGFloat
     }
 
     let storage: Storage
 
     /// Denotes camera padding of the viewport.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var padding = SwiftUI.EdgeInsets()
 
     /// Idle viewport represents the state when user freely drags the map.
     ///
     /// The viewport is automatically switches to `idle` state when the user starts dragging the map.
     /// Setting the `idle` viewport results in cancelling any ongoing camera animation.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static var idle: Viewport {
         return Viewport(storage: .idle)
     }
@@ -154,9 +126,7 @@ public struct Viewport: Equatable {
     /// Sets camera to the default camera options defined in the current style.
     ///
     /// See more in the [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#center).
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static var styleDefault: Viewport {
         Viewport(storage: .styleDefault)
     }
@@ -170,9 +140,7 @@ public struct Viewport: Equatable {
     ///   - bearing: The bearing of the map, measured in degrees clockwise from true north.
     ///   - pitch: Pitch toward the horizon measured in degrees, with 0 degrees resulting in a top-down view for a two-dimensional map.
     /// - Returns: A viewport configured with given camera settings.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static func camera(center: CLLocationCoordinate2D? = nil,
                               anchor: CGPoint? = nil,
                               zoom: CGFloat? = nil,
@@ -197,9 +165,7 @@ public struct Viewport: Equatable {
     ///   - maxZoom: The maximum zoom level to allow.
     ///   - offset: The center of the given bounds relative to the map's center, measured in points.
     /// - Returns: A viewport configured with given overview settings.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static func overview(
         geometry: GeometryConvertible,
         bearing: CGFloat = 0,
@@ -229,9 +195,7 @@ public struct Viewport: Equatable {
     ///   - bearing: Bearing of the map.
     ///   - pitch: Pitch toward the horizon measured in degrees, with 0 degrees resulting in a top-down view for a two-dimensional map.
     /// - Returns: A viewport configured to follow the user location puck.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static func followPuck(zoom: CGFloat,
                                   bearing: FollowPuckViewportStateBearing = .constant(0),
                                   pitch: CGFloat = 0) -> Viewport {
@@ -254,9 +218,7 @@ public struct Viewport: Equatable {
     /// - Parameters:
     ///   - padding: Camera
     /// - Returns: A viewport with modified inset options.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func padding(_ padding: SwiftUI.EdgeInsets) -> Viewport {
         copyAssigned(self, \.padding, padding)
     }
@@ -267,9 +229,7 @@ public struct Viewport: Equatable {
     ///   - edges: The set of edges to pad. Default is a `all`.
     ///   - length: Amount of padding in points.
     /// - Returns: A viewport with modified inset options.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func padding(_ edges: Edge.Set = .all, _ length: CGFloat) -> Viewport {
         var copy = self
         copy.padding.updateEdges(edges, length)
@@ -277,17 +237,13 @@ public struct Viewport: Equatable {
     }
 
     /// `true` when viewport is idle.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var isIdle: Bool {
         return storage == .idle
     }
 
     /// `true` when camera is configured from the default style camera properties.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var isStyleDefault: Bool {
         return storage == .styleDefault
     }
@@ -295,9 +251,7 @@ public struct Viewport: Equatable {
     /// Returns the camera options if viewport is configured with camera options.
     ///
     /// - Note: The ``CameraOptions-swift.struct/padding`` is ignored, it is replaced with ``Viewport/padding``, see ``Viewport/padding(_:)``.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var camera: CameraOptions? {
         switch storage {
         case .camera(let camera):
@@ -308,9 +262,7 @@ public struct Viewport: Equatable {
     }
 
     /// Returns the overview options if viewport is configured to overview the specified geometry.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var overview: OverviewOptions? {
         switch storage {
         case .overview(let options):
@@ -321,9 +273,7 @@ public struct Viewport: Equatable {
     }
 
     /// Returns the follow puck options if viewport is configured to follow the user location puck.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var followPuck: FollowPuckOptions? {
         switch storage {
         case .followPuck(let options):

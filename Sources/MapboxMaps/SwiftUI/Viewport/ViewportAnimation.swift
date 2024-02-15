@@ -2,21 +2,15 @@ import SwiftUI
 import UIKit
 
 /// Specifies the animation for the map ``Viewport``.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental)
 public struct ViewportAnimation {
     /// Viewport transition factory closure.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public typealias ViewportTransitionFactory = (MapView) -> ViewportTransition
 
     /// A closure that creates a viewport transition using the MapView.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var makeViewportTransition: ViewportTransitionFactory
 
     /// A default viewport animation.
@@ -25,9 +19,7 @@ public struct ViewportAnimation {
     ///
     /// - Note: It's recommended to use the default animation with ``Viewport/followPuck(zoom:bearing:pitch:)``
     /// viewport, because it supports moving animation target (user location puck).
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static var `default`: ViewportAnimation {
         return ViewportAnimation { mapView in
             return mapView.viewport.makeDefaultViewportTransition(options: .init())
@@ -44,9 +36,7 @@ public struct ViewportAnimation {
     /// - Parameters:
     ///   - maxDuration: The maximum duration of the animation, measured in seconds.
     /// - Returns: A default viewport animation.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static func `default`(maxDuration: TimeInterval) -> ViewportAnimation {
         return ViewportAnimation { mapView in
             return mapView.viewport.makeDefaultViewportTransition(options: .init(maxDuration: maxDuration))
@@ -57,9 +47,7 @@ public struct ViewportAnimation {
     ///
     /// The fly animation usually follows the zoom-out, flight, zoom-in pattern in animation.
     /// The duration of the animation will be calculated automatically.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static var fly: ViewportAnimation {
         return ViewportAnimation { mapView in
             GenericViewportTransition { cameraOptions, completion in
@@ -75,9 +63,7 @@ public struct ViewportAnimation {
     /// - Parameters:
     ///   - duration: Duration of the animation, measured in seconds.
     /// - Returns: A fly animation.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static func fly(duration: TimeInterval) -> ViewportAnimation {
         return ViewportAnimation { mapView in
             GenericViewportTransition { cameraOptions, completion in
@@ -91,9 +77,7 @@ public struct ViewportAnimation {
     /// - Parameters:
     ///   - duration: Duration of the animation, measured in seconds.
     /// - Returns: An ease-out animation.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static func easeOut(duration: TimeInterval) -> ViewportAnimation {
         return .ease(curve: .easeOut, duration: duration)
     }
@@ -103,9 +87,7 @@ public struct ViewportAnimation {
     /// - Parameters:
     ///   - duration: Duration of the animation, measured in seconds.
     /// - Returns: An ease-in animation.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static func easeIn(duration: TimeInterval) -> ViewportAnimation {
         return .ease(curve: .easeIn, duration: duration)
     }
@@ -115,9 +97,7 @@ public struct ViewportAnimation {
     /// - Parameters:
     ///   - duration: Duration of the animation, measured in seconds.
     /// - Returns: An ease-in-out animation.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static func easeInOut(duration: TimeInterval) -> ViewportAnimation {
         return .ease(curve: .easeInOut, duration: duration)
     }
@@ -127,9 +107,7 @@ public struct ViewportAnimation {
     /// - Parameters:
     ///   - duration: Duration of the animation, measured in seconds.
     /// - Returns: A linear animation.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public static func linear(duration: TimeInterval) -> ViewportAnimation {
         return .ease(curve: .linear, duration: duration)
     }
@@ -184,9 +162,7 @@ struct ViewportAnimationData {
 /// ```
 ///
 /// See ``Viewport`` and ``ViewportAnimation`` documentation for more details.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @available(iOS 13.0, *)
 @_spi(Experimental)
 public func withViewportAnimation<Result>(

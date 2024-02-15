@@ -121,9 +121,7 @@ public final class ViewportManager {
     ///
     /// Use this state to set camera options instead of ``MapboxMap/setCamera(to:)``
     /// if you use experimental ``ViewportOptions/usesSafeAreaInsetsAsPadding``.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental)
     public func makeCameraViewportState(camera: CameraOptions) -> ViewportState {
         CameraViewportState(cameraOptions: Signal(just: camera), mapboxMap: mapboxMap, safeAreaPadding: impl.safeAreaPadding)

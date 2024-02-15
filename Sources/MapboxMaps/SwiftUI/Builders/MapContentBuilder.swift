@@ -1,7 +1,5 @@
 /// A result builder that creates map content from closures you provide.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental)
 @resultBuilder public struct MapContentBuilder {
 
@@ -28,9 +26,7 @@
 
 /// A result builder that creates array of homogenous elements.
 /// If element is missing, the resulting array leaves nil gaps.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental)
 @resultBuilder public struct ArrayBuilder<T> {
     /// :nodoc:

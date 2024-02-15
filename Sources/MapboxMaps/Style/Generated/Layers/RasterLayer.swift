@@ -26,7 +26,7 @@ public struct RasterLayer: Layer {
     /// Required for vector tile sources.
     /// Prohibited for all other source types, including GeoJSON sources.
     public var sourceLayer: String?
-    
+
     /// The slot this layer is assigned to. If specified, and a slot with that name exists, it will be placed at that position in the layer order.
     public var slot: Slot?
 
@@ -40,9 +40,7 @@ public struct RasterLayer: Layer {
     public var visibility: Value<Visibility>
 
     /// Displayed band of raster array source layer
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental) public var rasterArrayBand: Value<String>?
 
     /// Increase or reduce the brightness of the image. The value is the maximum brightness.
@@ -79,15 +77,11 @@ public struct RasterLayer: Layer {
     public var rasterContrastTransition: StyleTransition?
 
     /// Specifies an uniform elevation from the ground, in meters. Only supported with image sources.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental) public var rasterElevation: Value<Double>?
 
     /// Transition options for `rasterElevation`.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental) public var rasterElevationTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features.

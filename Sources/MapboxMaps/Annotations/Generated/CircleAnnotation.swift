@@ -125,71 +125,53 @@ public struct CircleAnnotation: Annotation, Equatable {
 
 }
 
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental) extension CircleAnnotation {
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func circleSortKey(_ newValue: Double) -> Self {
         with(self, setter(\.circleSortKey, newValue))
     }
 
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func circleBlur(_ newValue: Double) -> Self {
         with(self, setter(\.circleBlur, newValue))
     }
 
     /// The fill color of the circle.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func circleColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.circleColor, newValue))
     }
 
     /// The opacity at which the circle will be drawn.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func circleOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.circleOpacity, newValue))
     }
 
     /// Circle radius.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func circleRadius(_ newValue: Double) -> Self {
         with(self, setter(\.circleRadius, newValue))
     }
 
     /// The stroke color of the circle.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func circleStrokeColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.circleStrokeColor, newValue))
     }
 
     /// The opacity of the circle's stroke.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func circleStrokeOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.circleStrokeOpacity, newValue))
     }
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func circleStrokeWidth(_ newValue: Double) -> Self {
         with(self, setter(\.circleStrokeWidth, newValue))
     }
@@ -201,9 +183,7 @@ public struct CircleAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for tap gesture.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onTapGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
         with(self, setter(\.tapHandler, handler))
     }
@@ -212,9 +192,7 @@ public struct CircleAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for tap gesture.
-    #if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onTapGesture(handler: @escaping () -> Void) -> Self {
         onTapGesture { _ in
             handler()
@@ -228,9 +206,7 @@ public struct CircleAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for long press gesture.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onLongPressGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
         with(self, setter(\.longPressHandler, handler))
     }
@@ -239,9 +215,7 @@ public struct CircleAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for long press gesture.
-    #if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onLongPressGesture(handler: @escaping () -> Void) -> Self {
         onLongPressGesture { _ in
             handler()

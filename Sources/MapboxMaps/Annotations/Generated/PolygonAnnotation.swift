@@ -104,47 +104,35 @@ public struct PolygonAnnotation: Annotation, Equatable {
 
 }
 
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental) extension PolygonAnnotation {
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func fillSortKey(_ newValue: Double) -> Self {
         with(self, setter(\.fillSortKey, newValue))
     }
 
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func fillColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.fillColor, newValue))
     }
 
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func fillOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.fillOpacity, newValue))
     }
 
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func fillOutlineColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.fillOutlineColor, newValue))
     }
 
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func fillPattern(_ newValue: String) -> Self {
         with(self, setter(\.fillPattern, newValue))
     }
@@ -156,9 +144,7 @@ public struct PolygonAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for tap gesture.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onTapGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
         with(self, setter(\.tapHandler, handler))
     }
@@ -167,9 +153,7 @@ public struct PolygonAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for tap gesture.
-    #if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onTapGesture(handler: @escaping () -> Void) -> Self {
         onTapGesture { _ in
             handler()
@@ -183,9 +167,7 @@ public struct PolygonAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for long press gesture.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onLongPressGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
         with(self, setter(\.longPressHandler, handler))
     }
@@ -194,9 +176,7 @@ public struct PolygonAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for long press gesture.
-    #if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onLongPressGesture(handler: @escaping () -> Void) -> Self {
         onLongPressGesture { _ in
             handler()

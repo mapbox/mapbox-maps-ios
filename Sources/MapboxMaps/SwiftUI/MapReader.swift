@@ -14,22 +14,16 @@ import SwiftUI
 ///     }
 /// }
 /// ```
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct MapReader<Content: View>: View {
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public typealias ContentProvider = (MapProxy) -> Content
     @State private var mapViewProvider = MapViewProvider()
     public var content: ContentProvider
 
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public init(content: @escaping ContentProvider) {
         self.content = content
     }

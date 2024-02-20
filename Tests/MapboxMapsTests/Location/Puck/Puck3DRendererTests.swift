@@ -2,100 +2,151 @@ import XCTest
 @_spi(Experimental) @testable import MapboxMaps
 
 final class Puck3DRendererTests: XCTestCase {
-
-    var configuration: Puck3DConfiguration!
     var style: MockStyle!
-    var puckRenderDataSubject: CurrentValueSignalSubject<PuckRenderingData?>!
-    var renderDataObserved = false
     var puck3D: Puck3DRenderer!
 
     override func setUp() {
         super.setUp()
-        configuration = Puck3DConfiguration(
-            model: Model(),
-            modelScale: .constant([Double.random(in: 0...1000)]),
-            modelRotation: .constant([Double.random(in: 0...1000)]),
-            modelOpacity: .constant(Double.random(in: 0...1000)),
-            modelCastShadows: .constant(.random()),
-            modelReceiveShadows: .constant(.testConstantValue()),
-            modelEmissiveStrength: .constant(10)
-        )
         style = MockStyle()
-        puckRenderDataSubject = .init()
-        puckRenderDataSubject.onObserved = { [weak self] in self?.renderDataObserved = $0 }
-        recreatePuck()
+        puck3D = Puck3DRenderer(style: style)
     }
 
     override func tearDown() {
         puck3D = nil
-        puckRenderDataSubject = nil
-        renderDataObserved = false
         style = nil
-        configuration = nil
         super.tearDown()
     }
 
-    func recreatePuck() {
-        puck3D = Puck3DRenderer(
-            configuration: configuration,
-            style: style,
-            renderingData: puckRenderDataSubject.signal.skipNil())
-    }
-
-    func testDefaultPropertyValues() {
-        XCTAssertFalse(puck3D.isActive)
-        XCTAssertEqual(puck3D.puckBearing, .heading)
-        XCTAssertEqual(puck3D.puckBearingEnabled, false)
-    }
-
-    func testActivatingPuckBeginsAndsStopsObserving() throws {
-        XCTAssertEqual(renderDataObserved, false, "no observing by default")
-
-        puck3D.isActive = true
-        XCTAssertEqual(renderDataObserved, true, "starts observing upon activation")
-
-        puck3D.isActive = false
-        XCTAssertEqual(renderDataObserved, false, "stops observing upon deactivation")
-    }
-
-    func testSourceAndLayerAreNotAddedAtInitialization() {
-        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-    }
-
-    func testActivatingPuckDoesNotAddSourceAndLayerIfLatestLocationIsNil() {
-        puckRenderDataSubject.value = nil
-
-        puck3D.isActive = true
-
-        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-    }
-
-    func testActivatingPuckAddsSourceAndLayerIfLatestLocationIsNonNil() throws {
-        var data = PuckRenderingData.random()
-        data.heading = nil
-        let coordinate = data.location.coordinate
-        puckRenderDataSubject.value = data
-
-        style.sourceExistsStub.defaultReturnValue = false
-        style.layerExistsStub.defaultReturnValue = false
-
-        puck3D.isActive = true
-
+    func test_SetNewState_With3DPuck_StartsRendering() throws {
+        let configuration = Puck3DConfiguration(model: Model())
+        let newState: PuckRendererState = .fixture(locationOptions: .init(puckType: .puck3D(configuration)))
         var expectedModel = configuration.model
-        expectedModel.position = [coordinate.longitude, coordinate.latitude]
+        expectedModel.position = [newState.coordinate.longitude, newState.coordinate.latitude]
         expectedModel.orientation = [0, 0, 0]
+
+        puck3D.state = newState
+
+        try assertSourceAddedOnce(model: expectedModel)
+        try assertLayerAddedOnce(configuration: configuration)
+    }
+
+    func test_SetNewDuplicatedState_With3DPuck_DoNothing() throws {
+        let configuration = Puck3DConfiguration(model: Model())
+        let newState: PuckRendererState = .fixture(locationOptions: .init(puckType: .puck3D(configuration)))
+        var expectedModel = configuration.model
+        expectedModel.position = [newState.coordinate.longitude, newState.coordinate.latitude]
+        expectedModel.orientation = [0, 0, 0]
+
+        puck3D.state = newState
+        puck3D.state = newState
+
+        try assertSourceAddedOnce(model: expectedModel)
+        try assertLayerAddedOnce(configuration: configuration)
+    }
+
+    func test_SetNewState_With2DPuck_DoNotAddSourceOrLayer() throws {
+        let configuration = Puck2DConfiguration()
+        let newState: PuckRendererState = .fixture(locationOptions: .init(puckType: .puck2D(configuration)))
+
+        puck3D.state = newState
+
+        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
+        XCTAssertNil(style.addSourceStub.invocations.first)
+
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
+    }
+
+    func test_SetNewState_WithNil_RemovesLayerAndSource() throws {
+        let configuration = Puck3DConfiguration(model: Model())
+        let newState: PuckRendererState = .fixture(locationOptions: .init(puckType: .puck3D(configuration)))
+        var expectedModel = configuration.model
+        expectedModel.position = [newState.coordinate.longitude, newState.coordinate.latitude]
+        expectedModel.orientation = [0, 0, 0]
+
+        puck3D.state = newState
+        puck3D.state = nil
+
+        XCTAssertEqual(style.removeLayerStub.invocations.map(\.parameters), ["puck-model-layer"])
+        XCTAssertEqual(style.removeSourceStub.invocations.map(\.parameters), ["puck-model-source"])
+
+    }
+
+    func test_SetNewState_WithSameConfiguration_UpdatesOnlySources() throws {
+        let configuration = Puck3DConfiguration(model: Model())
+        let firstState: PuckRendererState = .fixture(locationOptions: .init(puckType: .puck3D(configuration)))
+        var firstModel = configuration.model
+        firstModel.position = [firstState.coordinate.longitude, firstState.coordinate.latitude]
+        firstModel.orientation = [0, 0, 0]
+
+        let secondState: PuckRendererState = .fixture(accuracyAuthorization: .fullAccuracy, locationOptions: .init(puckType: .puck3D(configuration)))
+        var secondModel = configuration.model
+        secondModel.position = [firstState.coordinate.longitude, firstState.coordinate.latitude]
+        secondModel.orientation = [0, 0, 0]
+
+        puck3D.state = firstState
+        style.sourceExistsStub.defaultReturnValue = true
+        puck3D.state = secondState
+
+        try assertSourceAddedOnce(model: firstModel)
+        try assertLayerAddedOnce(configuration: configuration)
+        try assertSourceUpdated(model: secondModel)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
+
+    }
+    func test_SetNewState_WithNewConfiguration_UpdatesSourcesAndLayer() throws {
+        let firstConfiguration = Puck3DConfiguration(model: Model())
+        let firstState: PuckRendererState = .fixture(locationOptions: .init(puckType: .puck3D(firstConfiguration)))
+        var firstModel = firstConfiguration.model
+        firstModel.position = [firstState.coordinate.longitude, firstState.coordinate.latitude]
+        firstModel.orientation = [0, 0, 0]
+
+        let secondConfiguration = Puck3DConfiguration(model: Model(), modelScale: .constant([3]))
+        let secondState: PuckRendererState = .fixture(locationOptions: .init(puckType: .puck3D(secondConfiguration)))
+        var secondModel = secondConfiguration.model
+        secondModel.position = [secondState.coordinate.longitude, secondState.coordinate.latitude]
+        secondModel.orientation = [0, 0, 0]
+
+        puck3D.state = firstState
+        style.sourceExistsStub.defaultReturnValue = true
+        style.layerExistsStub.defaultReturnValue = true
+        puck3D.state = secondState
+
+        try assertSourceAddedOnce(model: firstModel)
+        try assertLayerAddedOnce(configuration: firstConfiguration)
+        try assertSourceUpdated(model: secondModel)
+        try assertLayerUpdated(configuration: secondConfiguration)
+    }
+
+    private func assertSourceAddedOnce(model: Model) throws {
+        var expectedSource = ModelSource(id: "puck-model-source")
+        expectedSource.models = ["puck-model": model]
+
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         let actualSource = try XCTUnwrap(style.addSourceStub.invocations.first?.parameters.source as? ModelSource)
         XCTAssertEqual(actualSource.type, .model)
-        XCTAssertEqual(actualSource.models, ["puck-model": expectedModel])
-        XCTAssertEqual(style.addSourceStub.invocations.first?.parameters.source.id, "puck-model-source")
+        XCTAssertEqual(actualSource.models, expectedSource.models)
+        XCTAssertEqual(style.addSourceStub.invocations.first?.parameters.source.id, expectedSource.id)
+    }
 
+    private func assertSourceUpdated(model: Model) throws {
+        var expectedSource = ModelSource(id: "puck-model-source")
+        expectedSource.models = ["puck-model": model]
+
+        XCTAssertEqual(style.setSourcePropertiesStub.invocations.first?.parameters.sourceId, expectedSource.id)
+        let actualProperties = try XCTUnwrap(style.setSourcePropertiesStub.invocations.first?.parameters.properties)
+        let expectedProperties = try expectedSource.jsonObject()
+        XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
+        XCTAssertEqual(style.setSourcePropertiesStub.invocations.first?.parameters.sourceId, "puck-model-source")
+    }
+
+    private func assertLayerAddedOnce(configuration: Puck3DConfiguration) throws {
+        XCTAssertEqual(style.setLayerPropertyStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.first?.parameters.layerPosition, nil)
+
         let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
         XCTAssertEqual(actualLayer.id, "puck-model-layer")
         XCTAssertEqual(actualLayer.modelType, .constant(.locationIndicator))
@@ -105,181 +156,10 @@ final class Puck3DRendererTests: XCTestCase {
         XCTAssertEqual(actualLayer.modelCastShadows, configuration.modelCastShadows)
         XCTAssertEqual(actualLayer.modelReceiveShadows, configuration.modelReceiveShadows)
         XCTAssertEqual(actualLayer.modelEmissiveStrength, configuration.modelEmissiveStrength)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.first?.parameters.layerPosition, nil)
     }
 
-    func testModelOrientationBasedOnHeading() throws {
-        configuration.model.orientation = [
-            .random(in: 0..<360),
-            .random(in: 0..<360),
-            .random(in: 0..<360)]
-        recreatePuck()
-        let data = PuckRenderingData.random()
-        let heading = try XCTUnwrap(data.heading).direction
-
-        puckRenderDataSubject.value = data
-        style.sourceExistsStub.defaultReturnValue = false
-        puck3D.puckBearing = .heading
-        puck3D.puckBearingEnabled = true
-
-        puck3D.isActive = true
-
-        var expectedOrientation = configuration.model.orientation!
-        expectedOrientation[2] += heading
-        let actualSource = try XCTUnwrap(style.addSourceStub.invocations.first?.parameters.source as? ModelSource)
-        XCTAssertEqual(actualSource.models?["puck-model"]?.orientation, expectedOrientation)
-    }
-
-    func testModelOrientationBasedOnCourse() throws {
-        configuration.model.orientation = [
-            .random(in: 0..<360),
-            .random(in: 0..<360),
-            .random(in: 0..<360)]
-        recreatePuck()
-
-        let data = PuckRenderingData.random()
-
-        puckRenderDataSubject.value = data
-        style.sourceExistsStub.defaultReturnValue = false
-        puck3D.puckBearing = .course
-        puck3D.puckBearingEnabled = true
-
-        puck3D.isActive = true
-
-        var expectedOrientation = try XCTUnwrap(configuration.model.orientation)
-        expectedOrientation[2] += try XCTUnwrap(data.location.bearing)
-        let actualSource = try XCTUnwrap(style.addSourceStub.invocations.first?.parameters.source as? ModelSource)
-        XCTAssertEqual(actualSource.models?["puck-model"]?.orientation, expectedOrientation)
-    }
-
-    func testPuckBearingDisabledForHeading() throws {
-        configuration.model.orientation = [
-            .random(in: 0..<360),
-            .random(in: 0..<360),
-            .random(in: 0..<360)]
-        recreatePuck()
-
-        puckRenderDataSubject.value = .random()
-
-        style.sourceExistsStub.defaultReturnValue = false
-        puck3D.puckBearing = .heading
-        puck3D.puckBearingEnabled = false
-        puck3D.isActive = true
-
-        let expectedOrientation = configuration.model.orientation!
-        let actualSource = try XCTUnwrap(style.addSourceStub.invocations.first?.parameters.source as? ModelSource)
-        XCTAssertEqual(actualSource.models?["puck-model"]?.orientation, expectedOrientation)
-    }
-
-    func testPuckBearingDisabledForCourse() throws {
-        configuration.model.orientation = [
-            .random(in: 0..<360),
-            .random(in: 0..<360),
-            .random(in: 0..<360)]
-        recreatePuck()
-
-        puckRenderDataSubject.value = .random()
-
-        style.sourceExistsStub.defaultReturnValue = false
-        puck3D.puckBearing = .course
-        puck3D.puckBearingEnabled = false
-        puck3D.isActive = true
-
-        let expectedOrientation = configuration.model.orientation!
-        let actualSource = try XCTUnwrap(style.addSourceStub.invocations.first?.parameters.source as? ModelSource)
-        XCTAssertEqual(actualSource.models?["puck-model"]?.orientation, expectedOrientation)
-    }
-
-    func testModelRotation() throws {
-        configuration.modelRotation = .constant(.random(withLength: 3, generator: { .random(in: 0..<360) }))
-        recreatePuck()
-        puckRenderDataSubject.value = .random()
-        style.layerExistsStub.defaultReturnValue = false
-
-        puck3D.isActive = true
-
-        let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
-        XCTAssertEqual(actualLayer.modelRotation, configuration.modelRotation)
-    }
-
-    func testModelOpacity() throws {
-        configuration.modelOpacity = .constant(.random(in: 0.0...1.0))
-        recreatePuck()
-        puckRenderDataSubject.value = .random()
-        style.layerExistsStub.defaultReturnValue = false
-
-        puck3D.isActive = true
-
-        let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
-        XCTAssertEqual(actualLayer.modelOpacity, configuration.modelOpacity)
-    }
-
-    func testUpdateExistingSourceAndLayer() throws {
-        let location = Location.random()
-        puckRenderDataSubject.value = PuckRenderingData(location: location)
-
-        style.sourceExistsStub.defaultReturnValue = true
-        style.layerExistsStub.defaultReturnValue = true
-
-        puck3D.isActive = true
-
-        var expectedModel = configuration.model
-        expectedModel.position = [
-            location.coordinate.longitude,
-            location.coordinate.latitude]
-        expectedModel.orientation = [0, 0, 0]
-
-        // Source
-        var expectedSource = ModelSource(id: "puck-model-source")
-        expectedSource.models = ["puck-model": expectedModel]
-        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 1)
-        let actualProperties = try XCTUnwrap(style.setSourcePropertiesStub.invocations.first?.parameters.properties)
-        let expectedProperties = try expectedSource.jsonObject()
-        XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
-        XCTAssertEqual(style.setSourcePropertiesStub.invocations.first?.parameters.sourceId, "puck-model-source")
-
-        /// Layer
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
+    private func assertLayerUpdated(configuration: Puck3DConfiguration) throws {
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-
-        puckRenderDataSubject.value = PuckRenderingData(location: .random())
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1, "doesn't update layer without config change")
-
-        puck3D.configuration.modelOpacity = .constant(0.5)
-        puckRenderDataSubject.value = PuckRenderingData(location: .random())
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2, "updates layer with config change")
-    }
-
-    func testSettingPuckBearingWhenInactive() {
-        puckRenderDataSubject.value = .random()
-        style.sourceExistsStub.defaultReturnValue = false
-        style.layerExistsStub.defaultReturnValue = false
-        puck3D.isActive = false
-
-        puck3D.puckBearing = [.heading, .course].randomElement()!
-
-        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-    }
-
-    func testLocationUpdateWhenActive() throws {
-        puckRenderDataSubject.value = .random()
-        puck3D.isActive = true
-
-        style.sourceExistsStub.defaultReturnValue = true
-        style.layerExistsStub.defaultReturnValue = true
-        style.addSourceStub.reset()
-        style.setSourcePropertiesStub.reset()
-        style.addPersistentLayerStub.reset()
-
-        puckRenderDataSubject.value = .random()
-
-        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.first?.parameters.layerId, "puck-model-layer")
     }
 }

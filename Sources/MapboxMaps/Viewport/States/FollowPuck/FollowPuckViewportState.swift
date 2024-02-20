@@ -24,13 +24,13 @@ public final class FollowPuckViewportState {
         self.optionsSubject = optionsSubject
 
         let resultCamera = Signal
-            .combineLatest(optionsSubject.signal.skipRepeats(), onPuckRender)
-            .map { (options, puckData) in
+            .combineLatest(optionsSubject.signal.skipRepeats(), onPuckRender.map(\.followPuckState).skipRepeats())
+            .map { (options, renderingState) in
                 CameraOptions(
-                    center: puckData.location.coordinate,
+                    center: renderingState.coordinate,
                     padding: options.padding,
                     zoom: options.zoom,
-                    bearing: options.bearing?.evaluate(with: puckData),
+                    bearing: options.bearing?.evaluate(state: renderingState),
                     pitch: options.pitch)
             }
 
@@ -55,5 +55,38 @@ extension FollowPuckViewportState: ViewportState {
     /// See ``ViewportState/stopUpdatingCamera()``.
     public func stopUpdatingCamera() {
         impl.stopUpdatingCamera()
+    }
+}
+
+extension FollowPuckViewportState {
+    /// Substate of ``PuckRenderingData`` which contains only data needed for ``FollowPuckViewportState`` rendering.
+    /// Allows to use ``Signal.skipRepeats()`` and avoid unnecessary recalculations.
+    struct RenderingState: Equatable {
+        var coordinate: CLLocationCoordinate2D
+        var heading: CLLocationDirection?
+        var bearing: CLLocationDirection?
+    }
+}
+
+extension PuckRenderingData {
+    var followPuckState: FollowPuckViewportState.RenderingState {
+        FollowPuckViewportState.RenderingState(
+            coordinate: location.coordinate,
+            heading: heading?.direction,
+            bearing: location.bearing
+        )
+    }
+}
+
+extension FollowPuckViewportStateBearing {
+    func evaluate(state: FollowPuckViewportState.RenderingState) -> CLLocationDirection? {
+        switch self {
+        case .constant(let value):
+            return value
+        case .heading:
+            return state.heading
+        case .course:
+            return state.bearing
+        }
     }
 }

@@ -61,7 +61,7 @@ public struct Puck2DConfiguration: Equatable {
     /// The size of the images, as a scale factor applied to the size of the specified image.
     public var scale: Value<Double>?
 
-    // Location puck pulsing configuration is pulsing on the map.
+    /// Location puck pulsing configuration is pulsing on the map.
     public var pulsing: Pulsing?
 
     /// Flag determining if the horizontal accuracy ring should be shown arround the `Puck`. default value is false
@@ -81,13 +81,15 @@ public struct Puck2DConfiguration: Equatable {
     ///   - scale: The size of the images, as a scale factor applied to the size of the specified image.
     ///   - showsAccuracyRing: Indicates whether the location accurary ring should be shown.
     ///   - opacity: The opacity of the entire location indicator.
-    public init(topImage: UIImage? = nil,
-                bearingImage: UIImage? = nil,
-                shadowImage: UIImage? = nil,
-                scale: Value<Double>? = nil,
-                pulsing: Pulsing? = nil,
-                showsAccuracyRing: Bool = false,
-                opacity: Double = 1) {
+    public init(
+        topImage: UIImage? = nil,
+        bearingImage: UIImage? = nil,
+        shadowImage: UIImage? = nil,
+        scale: Value<Double>? = nil,
+        pulsing: Pulsing? = nil,
+        showsAccuracyRing: Bool = false,
+        opacity: Double = 1
+    ) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
@@ -151,6 +153,8 @@ public struct Puck3DConfiguration: Equatable {
     public var modelOpacity: Value<Double>?
 
     /// Enable/disable shadow casting for the puck model
+    ///
+    ///  - Note: Enabling shadows may impose extra performance costs and lead to extra rendering.
     @_documentation(visibility: public)
     @_spi(Experimental) public var modelCastShadows: Value<Bool>?
 
@@ -219,7 +223,7 @@ public struct Puck3DConfiguration: Equatable {
     }
 }
 
-extension UIImage {
+private extension UIImage {
     static let bearingImage = Ref {
         makeBearingImage(size: CGSize(width: 22, height: 22))
     }.weaklyCached()

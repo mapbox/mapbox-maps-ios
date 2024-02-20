@@ -49,6 +49,19 @@ extension ClosureHandlersStore: Sequence {
     }
 }
 
+extension ClosureHandlersStore: Collection {
+    var startIndex: Int { objectHandlers.startIndex }
+    var endIndex: Int { objectHandlers.endIndex }
+
+    subscript(position: Int) -> Handler {
+        objectHandlers[position].subject
+    }
+
+    func index(after i: Int) -> Int {
+        objectHandlers.index(after: i)
+   }
+}
+
 extension ClosureHandlersStore where ReturnType == Void {
     /// Use `signal` to subscribe to events.
     var signal: Signal<Payload> {

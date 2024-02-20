@@ -22,11 +22,15 @@ public final class LocationManager {
     public let onPuckRender: Signal<PuckRenderingData>
 
     /// Configuration options for the location manager.
-    public var options = LocationOptions() {
-        didSet {
-            puckManager.puckType = options.puckType
-            puckManager.puckBearing = options.puckBearing
-            puckManager.puckBearingEnabled = options.puckBearingEnabled
+    public var options: LocationOptions {
+        get { locationOptionsSubject.value }
+        set {
+            if newValue.puckType == nil {
+                puckManager.stop()
+            } else {
+                puckManager.start()
+            }
+            locationOptionsSubject.value = newValue
         }
     }
 
@@ -74,14 +78,17 @@ public final class LocationManager {
 
     private let onLocationChangeProxy = CurrentValueSignalProxy<[Location]>()
     private let onHeadingChangeProxy = CurrentValueSignalProxy<Heading>()
-    private let puckAnimator: ValueAnimator<PuckRenderingData?>
+    private let locationOptionsSubject: CurrentValueSignalSubject<LocationOptions>
+    private let puckAnimator: ValueAnimator<LocationChange?>
     private let puckManager: PuckManager
     private var interfaceOrientationView: Ref<UIView?>?
 
-    convenience internal init(interfaceOrientationView: Ref<UIView?>,
-                              displayLink: Signal<Void>,
-                              styleManager: StyleProtocol,
-                              mapboxMap: MapboxMapProtocol) {
+    convenience init(
+        interfaceOrientationView: Ref<UIView?>,
+        displayLink: Signal<Void>,
+        styleManager: StyleProtocol,
+        mapboxMap: MapboxMapProtocol
+    ) {
         let provider = AppleLocationProvider()
 #if swift(>=5.9) && os(visionOS)
         let headingProvider = Signal<Heading> {_ in .empty }
@@ -99,19 +106,24 @@ public final class LocationManager {
         self.interfaceOrientationView = interfaceOrientationView
     }
 
-    internal init(styleManager: StyleProtocol,
-                  mapboxMap: MapboxMapProtocol,
-                  displayLink: Signal<Void>,
-                  locationProvider: Signal<[Location]>,
-                  headingProvider: Signal<Heading>,
-                  nowTimestamp: Ref<Date>) {
+    init(
+        styleManager: StyleProtocol,
+        mapboxMap: MapboxMapProtocol,
+        displayLink: Signal<Void>,
+        locationProvider: Signal<[Location]>,
+        headingProvider: Signal<Heading>,
+        nowTimestamp: Ref<Date>,
+        locationOptions: LocationOptions = LocationOptions()
+    ) {
         onLocationChangeProxy.proxied = locationProvider
         onHeadingChangeProxy.proxied = headingProvider
+        locationOptionsSubject = CurrentValueSignalSubject(locationOptions)
 
         let tracedDisplayLink = displayLink
             .tracingInterval(SignpostName.mapViewDisplayLink, "Participant: LocationManager")
 
         let locationInterpolator = LocationInterpolator()
+
         puckAnimator = ValueAnimator(
             ValueInterpolator(
                 duration: 1.1,
@@ -124,26 +136,30 @@ public final class LocationManager {
                 interpolate: interpolateHeading(from:to:fraction:),
                 nowTimestamp: nowTimestamp),
             trigger: tracedDisplayLink,
-            reduce: PuckRenderingData.init(locations:heading:))
+            reduce: LocationChange.init(locations:heading:)
+        )
 
-        // Skip frames where there are no data to display.
-        onPuckRender = puckAnimator.output.skipNil()
+        let onPuckChange = Signal.combineLatest(
+            puckAnimator.output.skipNil().skipRepeats(),
+            locationOptionsSubject.signal.skipRepeats()
+        )
+
+        onPuckRender = onPuckChange
+            .map { (locationChange, _) in PuckRenderingData(locationChange: locationChange) }
 
         puckManager = PuckManager(
-            puck2DProvider: { [onPuckRender] configuration in
+            onPuckRenderState: onPuckChange.map(PuckRendererState.init(locationChange:locationOptions:)),
+            make2DRenderer: {
                 Puck2DRenderer(
-                    configuration: configuration,
                     style: styleManager,
-                    renderingData: onPuckRender,
                     mapboxMap: mapboxMap,
+                    displayLink: displayLink,
                     timeProvider: DefaultTimeProvider())
             },
-            puck3DProvider: { [onPuckRender] configuration in
-                Puck3DRenderer(
-                    configuration: configuration,
-                    style: styleManager,
-                    renderingData: onPuckRender)
-            })
+            make3DRenderer: {
+                Puck3DRenderer(style: styleManager)
+            }
+        )
     }
 
     /// Represents the latest location received from the location provider.

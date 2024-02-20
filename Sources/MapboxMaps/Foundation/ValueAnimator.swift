@@ -90,15 +90,13 @@ internal final class ValueInterpolator<Value>: ValueAnimatorParticipant {
 /// Value animator starts producing values and enables the underlying interpolators only when there are subscribers to it's output.
 /// When the last subscriber is gone, the interpolators are stopped and triggered stream is not observed.
 internal final class ValueAnimator<Output> {
-    typealias CalculateOutput = () -> Output
-
     var output: Signal<Output> { outputSubject.signal }
     private let outputSubject = SignalSubject<Output>()
     private let trigger: Signal<Void>
     private let participants: [ValueAnimatorParticipant]
 
     private var token: AnyCancelable?
-    private var calculateOutput: CalculateOutput
+    private var calculateOutput: () -> Output
 
     private var running = false {
         didSet {
@@ -132,7 +130,7 @@ internal final class ValueAnimator<Output> {
 
     private init(trigger: Signal<Void>,
                  participants: [ValueAnimatorParticipant],
-                 calculateOutput: @escaping CalculateOutput) {
+                 calculateOutput: @escaping () -> Output) {
         self.trigger = trigger
         self.participants = participants
         self.calculateOutput = calculateOutput

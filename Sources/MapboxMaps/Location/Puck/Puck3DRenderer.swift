@@ -1,57 +1,42 @@
 @_implementationOnly import MapboxCommon_Private
 
-internal final class Puck3DRenderer: Puck3DRendererProtocol {
-    private static let sourceID = "puck-model-source"
-    internal static let layerID = "puck-model-layer"
-
-    internal var isActive = false {
+final class Puck3DRenderer: PuckRenderer {
+    var state: PuckRendererState? {
         didSet {
-            guard isActive != oldValue else {
-                return
+            do {
+                if let state, state != oldValue {
+                    startRendering(newState: state, oldState: oldValue)
+                }
+                if state == nil {
+                    stopRendering()
+                }
             }
-            if isActive {
-                renderingData.observe { [weak self] data in
-                    self?.render(with: data)
-                }.store(in: &cancelables)
-            } else {
-                cancelables.removeAll()
-                try? style.removeLayer(withId: Self.layerID)
-                try? style.removeSource(withId: Self.sourceID)
-                onceConfigurationUpdated.reset()
-            }
-        }
-    }
-
-    // The change in this properties will be handled in the next render call (renderingData update).
-    // TODO: Those properties should come as part of rendering data.
-    var puckBearing: PuckBearing = .heading
-    var puckBearingEnabled: Bool = false
-    var configuration: Puck3DConfiguration {
-        didSet {
-            onceConfigurationUpdated.reset(if: configuration != oldValue)
         }
     }
 
     private let style: StyleProtocol
-    private let renderingData: Signal<PuckRenderingData>
-    private var onceConfigurationUpdated = Once()
 
-    private var cancelables = Set<AnyCancelable>()
-
-    internal init(configuration: Puck3DConfiguration,
-                  style: StyleProtocol,
-                  renderingData: Signal<PuckRenderingData>) {
-        self.configuration = configuration
+    init(style: StyleProtocol) {
         self.style = style
-        self.renderingData = renderingData
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func render(with data: PuckRenderingData) {
-        guard isActive else { return }
+    private func stopRendering() {
+        try? style.removeLayer(withId: Self.layerID)
+        try? style.removeSource(withId: Self.sourceID)
+    }
 
-        var model = configuration.model
-        model.position = [data.location.coordinate.longitude, data.location.coordinate.latitude]
+    private func startRendering(newState: PuckRendererState, oldState: PuckRendererState?) {
+        updateSourceModel(newState: newState, oldState: oldState)
+        updateLayer(newState: newState, oldState: oldState)
+    }
+
+    private func updateSourceModel(newState: PuckRendererState, oldState: PuckRendererState?) {
+        guard let newConfiguration = newState.configuration else {
+            return
+        }
+
+        var model = newConfiguration.model
+        model.position = [newState.coordinate.longitude, newState.coordinate.latitude]
 
         model.orientation = model.orientation
             .flatMap { orientation -> [Double]? in
@@ -64,18 +49,19 @@ internal final class Puck3DRenderer: Puck3DRendererProtocol {
                 return orientation
             } ?? [0, 0, 0]
 
-        if puckBearingEnabled {
-            switch puckBearing {
+        if newState.locationOptions.puckBearingEnabled {
+            switch newState.locationOptions.puckBearing {
             case .heading:
-                if let validHeadingDirection = data.heading?.direction {
+                if let validHeadingDirection = newState.heading?.direction {
                     model.orientation?[2] += validHeadingDirection
                 }
             case .course:
-                if let validCourseDirection = data.location.bearing {
+                if let validCourseDirection = newState.bearing {
                     model.orientation?[2] += validCourseDirection
                 }
             }
         }
+
         var source = ModelSource(id: Self.sourceID)
         source.models = ["puck-model": model]
 
@@ -89,32 +75,51 @@ internal final class Puck3DRenderer: Puck3DRendererProtocol {
         } catch {
             Log.error(forMessage: "Failed to update Puck3D Source properties, \(error)")
         }
+    }
+
+    private func updateLayer(newState: PuckRendererState, oldState: PuckRendererState?) {
+        guard let newConfiguration = newState.configuration,
+              newConfiguration != oldState?.configuration else {
+            return
+        }
 
         var modelLayer = ModelLayer(id: Self.layerID, source: Self.sourceID)
-        modelLayer.modelScale = configuration.modelScale
+        modelLayer.modelScale = newConfiguration.modelScale
         modelLayer.modelType = .constant(.locationIndicator)
-        modelLayer.modelRotation = configuration.modelRotation
-        modelLayer.modelOpacity = configuration.modelOpacity
-        modelLayer.modelCastShadows = configuration.modelCastShadows
-        modelLayer.modelReceiveShadows = configuration.modelReceiveShadows
-        modelLayer.modelScaleMode = configuration.modelScaleMode
-        modelLayer.modelEmissiveStrength = configuration.modelEmissiveStrength
+        modelLayer.modelRotation = newConfiguration.modelRotation
+        modelLayer.modelOpacity = newConfiguration.modelOpacity
+        modelLayer.modelCastShadows = newConfiguration.modelCastShadows
+        modelLayer.modelReceiveShadows = newConfiguration.modelReceiveShadows
+        modelLayer.modelScaleMode = newConfiguration.modelScaleMode
+        modelLayer.modelEmissiveStrength = newConfiguration.modelEmissiveStrength
 
         do {
             // create the layer if needed
             if !style.layerExists(withId: Self.layerID) {
                 try style.addPersistentLayer(modelLayer, layerPosition: nil)
             } else {
-                try onceConfigurationUpdated {
-                    var properties = try modelLayer.allStyleProperties()
-                    properties.removeValue(forKey: "id")
-                    properties.removeValue(forKey: "type")
-                    properties.removeValue(forKey: "source")
-                    try style.setLayerProperties(for: Self.layerID, properties: properties)
-                }
+                var properties = try modelLayer.allStyleProperties()
+                properties.removeValue(forKey: "id")
+                properties.removeValue(forKey: "type")
+                properties.removeValue(forKey: "source")
+                try style.setLayerProperties(for: Self.layerID, properties: properties)
             }
         } catch {
             Log.error(forMessage: "Failed to update Puck3D Layer properties, \(error)")
         }
     }
+}
+
+private extension PuckRendererState {
+    var configuration: Puck3DConfiguration? {
+        guard case let .puck3D(configuration) = locationOptions.puckType else {
+            return nil
+        }
+        return configuration
+    }
+}
+
+private extension Puck3DRenderer {
+    static let sourceID = "puck-model-source"
+    static let layerID = "puck-model-layer"
 }

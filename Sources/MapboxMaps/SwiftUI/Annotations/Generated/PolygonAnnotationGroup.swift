@@ -31,9 +31,7 @@
 ///     .slot("bottom")
 /// }
 /// ```
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental)
 public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: PrimitiveMapContent {
     let store: ForEvery<PolygonAnnotation, Data, ID>
@@ -44,9 +42,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     ///     - data: Collection of data.
     ///     - id: Data identifier key path.
     ///     - content: A closure that creates annotation for a given data item.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public init(_ data: Data, id: KeyPath<Data.Element, ID>, content: @escaping (Data.Element) -> PolygonAnnotation) {
         store = ForEvery(data: data, id: id, content: content)
     }
@@ -56,9 +52,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     /// - Parameters:
     ///     - data: Collection of identifiable data.
     ///     - content: A closure that creates annotation for a given data item.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @available(iOS 13.0, *)
     public init(_ data: Data, content: @escaping (Data.Element) -> PolygonAnnotation) where Data.Element: Identifiable, Data.Element.ID == ID {
         self.init(data, id: \.id, content: content)
@@ -68,9 +62,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     ///
     /// - Parameters:
     ///     - content: A builder closure that creates annotations.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public init(@ArrayBuilder<PolygonAnnotation> content: @escaping () -> [PolygonAnnotation?])
         where Data == Array<(Int, PolygonAnnotation)>, ID == Int {
         let annotations = content().enumerated().compactMap {
@@ -102,36 +94,28 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
 
     private var fillAntialias: Bool?
     /// Whether or not the fill should be antialiased.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func fillAntialias(_ newValue: Bool) -> Self {
         with(self, setter(\.fillAntialias, newValue))
     }
 
     private var fillEmissiveStrength: Double?
     /// Controls the intensity of light emitted on the source features.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func fillEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.fillEmissiveStrength, newValue))
     }
 
     private var fillTranslate: [Double]?
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func fillTranslate(_ newValue: [Double]) -> Self {
         with(self, setter(\.fillTranslate, newValue))
     }
 
     private var fillTranslateAnchor: FillTranslateAnchor?
     /// Controls the frame of reference for `fill-translate`.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func fillTranslateAnchor(_ newValue: FillTranslateAnchor) -> Self {
         with(self, setter(\.fillTranslateAnchor, newValue))
     }
@@ -142,9 +126,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
     /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func slot(_ newValue: String) -> Self {
         with(self, setter(\.slot, newValue))
     }
@@ -155,9 +137,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     /// Defines relative position of the layers drawing the annotations managed by the current group.
     ///
     /// - NOTE: Layer position isn't updatable. Only the first value passed to this function set will take effect.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func layerPosition(_ newValue: LayerPosition) -> Self {
         with(self, setter(\.layerPosition, newValue))
     }
@@ -168,9 +148,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     ///
     /// Use the identifier in ``layerPosition(_:)``, or to create view annotations bound the annotations from the group.
     /// For more information, see the ``MapViewAnnotation/init(layerId:featureId:content:)``.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func layerId(_ layerId: String) -> Self {
         with(self, setter(\.layerId, layerId))
     }

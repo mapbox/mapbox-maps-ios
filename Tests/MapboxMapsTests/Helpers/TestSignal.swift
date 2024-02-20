@@ -3,13 +3,11 @@ import Foundation
 
 @propertyWrapper
 final class TestSignal<T> {
-    var projectedValue: SignalSubject<T> {
-        return subject
-    }
+    var projectedValue: SignalSubject<T> { subject }
 
-    var wrappedValue: Signal<T> {
-        subject.signal
-    }
+    var wrappedValue: Signal<T> { subject.signal }
+
+    var subscribers: any Collection<(T) -> Void> { subject }
 
     let subject = SignalSubject<T>()
 }

@@ -2,147 +2,133 @@ import XCTest
 @testable import MapboxMaps
 
 final class PuckManagerTests: XCTestCase {
-
-    var puck2DProvider: Stub<Puck2DConfiguration, MockPuck2D>!
-    var puck3DProvider: Stub<Puck3DConfiguration, MockPuck3D>!
-    var puckManager: PuckManager!
+    var make2DRenderer: Stub<Void, MockPuckRenderer>!
+    var make3DRenderer: Stub<Void, MockPuckRenderer>!
+    var renderer2D: MockPuckRenderer!
+    @TestSignal var onPuckRenderState: Signal<PuckRendererState>
+    var me: PuckManager!
 
     override func setUp() {
         super.setUp()
-        puck2DProvider = Stub(defaultReturnValue: MockPuck2D())
-        puck3DProvider = Stub(defaultReturnValue: MockPuck3D())
-        puckManager = PuckManager(
-            puck2DProvider: puck2DProvider.call(with:),
-            puck3DProvider: puck3DProvider.call(with:))
+        renderer2D = MockPuckRenderer()
+        make2DRenderer = Stub(defaultReturnValue: renderer2D)
+        make3DRenderer = Stub(defaultReturnValue: MockPuckRenderer())
+        me = PuckManager(
+            onPuckRenderState: onPuckRenderState,
+            make2DRenderer: make2DRenderer.call,
+            make3DRenderer: make3DRenderer.call
+        )
     }
 
     override func tearDown() {
-        puckManager = nil
-        puck3DProvider = nil
-        puck2DProvider = nil
+        make2DRenderer = nil
+        make3DRenderer = nil
+        renderer2D = nil
+        me = nil
         super.tearDown()
     }
 
-    func testInitialPropertyValues() {
-        XCTAssertNil(puckManager.puckType)
-        XCTAssertEqual(puckManager.puckBearing, .heading)
-        XCTAssertEqual(puckManager.puckBearingEnabled, false)
+    func test_Start_SubscribesOnRenderingData() {
+        me.start()
+
+        XCTAssertEqual(_onPuckRenderState.subscribers.count, 1)
     }
 
-    func testSetPuckTypeToPuck2D() throws {
-        let configuration = Puck2DConfiguration()
-        puckManager.puckBearing = [.heading, .course].randomElement()!
-        puckManager.puckBearingEnabled = .random()
-        puckManager.puckType = .puck2D(configuration)
+    func test_Start_SeveralTimes_SubscribesOnRenderingData_Once() {
+        me.start()
+        me.start()
 
-        XCTAssertEqual(puck2DProvider.invocations.map(\.parameters), [configuration])
-        let puck = try XCTUnwrap(puck2DProvider.invocations.first?.returnValue)
-        XCTAssertEqual(puck.$puckBearing.setStub.invocations.map(\.parameters), [puckManager.puckBearing])
-        XCTAssertEqual(puck.$puckBearingEnabled.setStub.invocations.map(\.parameters), [puckManager.puckBearingEnabled])
-        XCTAssertEqual(puck.$isActive.setStub.invocations.map(\.parameters), [true])
-
-        // setting the same should update only configuration
-        var newConfiguration = Puck2DConfiguration()
-        newConfiguration.opacity = 0.5
-        puck2DProvider.reset()
-        puck.$puckBearing.setStub.reset()
-        puck.$puckBearingEnabled.setStub.reset()
-        puck.$isActive.setStub.reset()
-        puckManager.puckType = .puck2D(newConfiguration)
-        XCTAssertTrue(puck2DProvider.invocations.isEmpty)
-        XCTAssertTrue(puck.$puckBearing.setStub.invocations.isEmpty)
-        XCTAssertTrue(puck.$puckBearingEnabled.setStub.invocations.isEmpty)
-        XCTAssertTrue(puck.$isActive.setStub.invocations.isEmpty)
-        XCTAssertEqual(puck.$configuration.setStub.invocations.count, 1)
-        XCTAssertEqual(puck.$configuration.setStub.invocations.last?.parameters, newConfiguration)
+        XCTAssertEqual(_onPuckRenderState.subscribers.count, 1)
     }
 
-    func testSetPuckTypeToPuck3D() throws {
-        let configuration = Puck3DConfiguration(model: Model())
-        puckManager.puckBearing = [.heading, .course].randomElement()!
-        puckManager.puckBearingEnabled = .random()
-        puckManager.puckType = .puck3D(configuration)
+    func test_Stop_UnsubscribesFromRenderingData() {
+        me.start()
 
-        XCTAssertEqual(puck3DProvider.invocations.map(\.parameters), [configuration])
-        let puck = try XCTUnwrap(puck3DProvider.invocations.first?.returnValue)
-        XCTAssertEqual(puck.$puckBearing.setStub.invocations.map(\.parameters), [puckManager.puckBearing])
-        XCTAssertEqual(puck.$puckBearingEnabled.setStub.invocations.map(\.parameters), [puckManager.puckBearingEnabled])
-        XCTAssertEqual(puck.$isActive.setStub.invocations.map(\.parameters), [true])
+        me.stop()
 
-        // setting the same should update only configuration
-        let newConfiguration = Puck3DConfiguration(model: Model(uri: try XCTUnwrap(URL(string: "foo.bar"))))
-        puck3DProvider.reset()
-        puck.$puckBearing.setStub.reset()
-        puck.$puckBearingEnabled.setStub.reset()
-        puck.$isActive.setStub.reset()
-        puckManager.puckType = .puck3D(newConfiguration)
-        XCTAssertTrue(puck3DProvider.invocations.isEmpty)
-        XCTAssertTrue(puck.$puckBearing.setStub.invocations.isEmpty)
-        XCTAssertTrue(puck.$puckBearingEnabled.setStub.invocations.isEmpty)
-        XCTAssertTrue(puck.$isActive.setStub.invocations.isEmpty)
-        XCTAssertEqual(puck.$configuration.setStub.invocations.count, 1)
-        XCTAssertEqual(puck.$configuration.setStub.invocations.last?.parameters, newConfiguration)
+        XCTAssertEqual(_onPuckRenderState.subscribers.count, 0)
     }
 
-    // this is important so that if they're the same type of puck,
-    // the one getting deactivated doesn't remove the layer/source
-    // that the one getting activated added
-    func testOldPuckIsDeactivatedBeforeNewPuckIsActivated() throws {
-        var oldPuckDeactivated = false
-        puck2DProvider.defaultReturnValue.$isActive.setStub.defaultSideEffect = { invocation in
-            if !invocation.parameters {
-                oldPuckDeactivated = true
-            }
+    func test_ReceivesState_WithNilPuckType_UnsubscribesFromRenderingData() {
+        me.start()
+
+        $onPuckRenderState.send(.fixture(locationOptions: .init(puckType: nil)))
+
+        XCTAssertEqual(_onPuckRenderState.subscribers.count, 0)
+    }
+
+    func test_ReceivesState_With2DPuckType_Creates2DRenderer() {
+        me.start()
+
+        $onPuckRenderState.send(.fixture(locationOptions: .init(puckType: .fixture2D)))
+
+        XCTAssertEqual(_onPuckRenderState.subscribers.count, 1)
+        XCTAssertEqual(make2DRenderer.invocations.count, 1)
+        XCTAssertEqual(make3DRenderer.invocations.count, 0)
+    }
+
+    func test_ReceivesState_With3DPuckType_Creates3DRenderer() {
+        me.start()
+
+        $onPuckRenderState.send(.fixture(locationOptions: .init(puckType: .fixture3D)))
+
+        XCTAssertEqual(_onPuckRenderState.subscribers.count, 1)
+        XCTAssertEqual(make2DRenderer.invocations.count, 0)
+        XCTAssertEqual(make3DRenderer.invocations.count, 1)
+    }
+
+    func test_ReceivesState_WithNewPuckType_CreatesNewRenderer() {
+        me.start()
+
+        $onPuckRenderState.send(.fixture(locationOptions: .init(puckType: .fixture3D)))
+        $onPuckRenderState.send(.fixture(locationOptions: .init(puckType: .fixture2D)))
+
+        XCTAssertEqual(_onPuckRenderState.subscribers.count, 1)
+        XCTAssertEqual(make2DRenderer.invocations.count, 1)
+        XCTAssertEqual(make3DRenderer.invocations.count, 1)
+    }
+
+    func test_ReceivesState_WithNewPuckType_NullifiesPreviousRendererState() {
+        me.start()
+
+        $onPuckRenderState.send(.fixture(locationOptions: .init(puckType: .fixture2D)))
+        renderer2D.state = .fixture()
+        $onPuckRenderState.send(.fixture(locationOptions: .init(puckType: .fixture3D)))
+
+        XCTAssertNil(renderer2D.state)
+    }
+
+    func test_ReceivesState_SetItToRenderer() {
+        me.start()
+        $onPuckRenderState.send(.fixture(locationOptions: .init(puckType: .fixture2D)))
+
+        _onPuckRenderState.subscribers.forEach { handler in
+            handler(.fixture(coordinate: .fixture, locationOptions: .init(puckType: .fixture2D)))
         }
-        var oldPuckDeactivatedBeforeNewPuckActivated = false
-        puck3DProvider.defaultReturnValue.$isActive.setStub.defaultSideEffect = { invocation in
-            if invocation.parameters {
-                oldPuckDeactivatedBeforeNewPuckActivated = oldPuckDeactivated
-            }
-        }
 
-        puckManager.puckType = .puck2D()
-
-        puckManager.puckType = .puck3D(Puck3DConfiguration(model: Model()))
-
-        XCTAssertTrue(oldPuckDeactivatedBeforeNewPuckActivated)
+        XCTAssertEqual(renderer2D.state, .fixture(coordinate: .fixture, locationOptions: .init(puckType: .fixture2D)))
     }
+}
 
-    func testResettingPuckTypeToNil() {
-        let puck = MockPuck2D()
-        puck2DProvider.defaultReturnValue = puck
-        puckManager.puckType = .puck2D()
-        puck2DProvider.reset()
-        puck.$isActive.setStub.reset()
+private extension CLLocationCoordinate2D {
+    static let fixture: Self = .init(latitude: 23, longitude: 11)
+}
 
-        puckManager.puckType = nil
-
-        XCTAssertTrue(puck2DProvider.invocations.isEmpty)
-        XCTAssertTrue(puck3DProvider.invocations.isEmpty)
-        XCTAssertEqual(puck.$isActive.setStub.invocations.map(\.parameters), [false])
+extension PuckRendererState {
+    static func fixture(
+        coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0),
+        accuracyAuthorization: CLAccuracyAuthorization = .reducedAccuracy,
+        locationOptions: LocationOptions = .init()
+    ) -> Self {
+        PuckRendererState(
+            coordinate: coordinate,
+            accuracyAuthorization: accuracyAuthorization,
+            locationOptions: locationOptions
+        )
     }
+}
 
-    func testSettingPuckBearingWhenPuckTypeIsNonNil() {
-        let puck2d = MockPuck2D()
-        puck2DProvider.defaultReturnValue = puck2d
-        puckManager.puckType = .puck2D()
-        puck2d.$puckBearing.setStub.reset()
-        let bearingSource: PuckBearing = [.heading, .course].randomElement()!
-
-        puckManager.puckBearing = bearingSource
-
-        XCTAssertEqual(puck2d.$puckBearing.setStub.invocations.map(\.parameters), [bearingSource])
-    }
-
-    func testSettingPuckBearingEnabledWhenPuckTypeIsNonNil() {
-        let puck = MockPuck3D()
-        puck3DProvider.defaultReturnValue = puck
-        puckManager.puckType = .puck3D(.init(model: Model()))
-        puck.$puckBearingEnabled.setStub.reset()
-
-        let bearingEnable = Bool.random()
-        puckManager.puckBearingEnabled = bearingEnable
-
-        XCTAssertEqual(puck.$puckBearingEnabled.setStub.invocations.map(\.parameters), [bearingEnable])
-    }
+extension PuckType {
+    static let fixture3D: Self = .puck3D(Puck3DConfiguration(model: Model()))
+    static let fixture2D: Self = .puck2D(Puck2DConfiguration())
 }

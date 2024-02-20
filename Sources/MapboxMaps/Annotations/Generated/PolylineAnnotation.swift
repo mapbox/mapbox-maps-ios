@@ -167,95 +167,71 @@ public struct PolylineAnnotation: Annotation, Equatable {
 
 }
 
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
 @_spi(Experimental) extension PolylineAnnotation {
 
     /// The display of lines when joining.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func lineJoin(_ newValue: LineJoin) -> Self {
         with(self, setter(\.lineJoin, newValue))
     }
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func lineSortKey(_ newValue: Double) -> Self {
         with(self, setter(\.lineSortKey, newValue))
     }
 
     /// Blur applied to the line, in pixels.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func lineBlur(_ newValue: Double) -> Self {
         with(self, setter(\.lineBlur, newValue))
     }
 
     /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func lineBorderColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.lineBorderColor, newValue))
     }
 
     /// The width of the line border. A value of zero means no border.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func lineBorderWidth(_ newValue: Double) -> Self {
         with(self, setter(\.lineBorderWidth, newValue))
     }
 
     /// The color with which the line will be drawn.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func lineColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.lineColor, newValue))
     }
 
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func lineGapWidth(_ newValue: Double) -> Self {
         with(self, setter(\.lineGapWidth, newValue))
     }
 
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func lineOffset(_ newValue: Double) -> Self {
         with(self, setter(\.lineOffset, newValue))
     }
 
     /// The opacity at which the line will be drawn.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func lineOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.lineOpacity, newValue))
     }
 
     /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func linePattern(_ newValue: String) -> Self {
         with(self, setter(\.linePattern, newValue))
     }
 
     /// Stroke thickness.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func lineWidth(_ newValue: Double) -> Self {
         with(self, setter(\.lineWidth, newValue))
     }
@@ -267,9 +243,7 @@ public struct PolylineAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for tap gesture.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onTapGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
         with(self, setter(\.tapHandler, handler))
     }
@@ -278,9 +252,7 @@ public struct PolylineAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for tap gesture.
-    #if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onTapGesture(handler: @escaping () -> Void) -> Self {
         onTapGesture { _ in
             handler()
@@ -294,9 +266,7 @@ public struct PolylineAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for long press gesture.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onLongPressGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
         with(self, setter(\.longPressHandler, handler))
     }
@@ -305,9 +275,7 @@ public struct PolylineAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for long press gesture.
-    #if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func onLongPressGesture(handler: @escaping () -> Void) -> Self {
         onLongPressGesture { _ in
             handler()

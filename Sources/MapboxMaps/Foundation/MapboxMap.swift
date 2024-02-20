@@ -461,9 +461,7 @@ public final class MapboxMap: StyleManager {
     ///   - options The statistics collection options to collect.
     ///   - callback The callback to be invoked when performance statistics are available.
     /// - Returns:  The ``AnyCancelable`` object that can be used to cancel performance statistics collection.
-    #if swift(>=5.8)
-        @_documentation(visibility: public)
-    #endif
+    @_documentation(visibility: public)
     @_spi(Experimental)
     public func collectPerformanceStatistics(_ options: PerformanceStatisticsOptions, callback: @escaping (PerformanceStatistics) -> Void) -> AnyCancelable {
         __map.startPerformanceStatisticsCollection(for: options, callback: callback)
@@ -478,7 +476,9 @@ public final class MapboxMap: StyleManager {
     ///
     /// - Parameters:
     ///   - coordinateBounds: The coordinate bounds that will be displayed within the viewport.
-    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding.
+    ///   - padding: The amount of padding in screen points to add to the given `coordinates`.
+    ///              This padding is not applied to the map but to the coordinates provided.
+    ///              If you want to apply padding to the map use `camera` parameter on ``camera(for:camera:coordinatesPadding:maxZoom:offset:)``
     ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
     ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
     ///   - maxZoom: The maximum zoom level to allow when the camera would transition to the specified bounds.
@@ -506,10 +506,13 @@ public final class MapboxMap: StyleManager {
     ///
     /// - Parameters:
     ///   - coordinates: Array of coordinates that should fit within the new viewport.
-    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding.
+    ///   - padding: The amount of padding in screen points to add to the given `coordinates`.
+    ///              This padding is not applied to the map but to the coordinates provided.
+    ///              If you want to apply padding to the map use `camera` parameter on ``camera(for:camera:coordinatesPadding:maxZoom:offset:)``
     ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
     ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
     /// - Returns: A `CameraOptions` that fits the provided constraints
+    @available(*, deprecated, message: "Use ``camera(for:camera:coordinatesPadding:maxZoom:offset:)`` instead.")
     public func camera(for coordinates: [CLLocationCoordinate2D],
                        padding: UIEdgeInsets?,
                        bearing: Double?,
@@ -1146,9 +1149,7 @@ extension MapboxMap {
 
     /// Returns a ``Signal`` that allows to subscribe to the event with specified string name.
     /// This method is reserved for the future use.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental)
     public subscript(eventName: String) -> Signal<GenericEvent> {
         events[eventName]
@@ -1359,9 +1360,7 @@ extension MapboxMap {
     ///
     /// - Parameters:
     ///   - options: Options for the tile cover method.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental)
     public func tileCover(for options: TileCoverOptions) -> [CanonicalTileID] {
         __map.__tileCover(

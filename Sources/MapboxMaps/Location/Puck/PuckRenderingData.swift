@@ -7,17 +7,18 @@ public struct PuckRenderingData: Equatable {
     public var heading: Heading?
 
     /// Creates a puck rendering data.
-    public init(location: Location, heading: Heading? = nil) {
+    public init(
+        location: Location,
+        heading: Heading? = nil
+    ) {
         self.location = location
         self.heading = heading
     }
 }
 
 extension PuckRenderingData {
-    internal init?(locations: [Location]?, heading: Heading?) {
-        guard let location = locations?.last else {
-            return nil
-        }
-        self.init(location: location, heading: heading)
+    init(locationChange: LocationChange) {
+        self.location = locationChange.location
+        self.heading = locationChange.heading
     }
 }

@@ -2,90 +2,67 @@ import CoreLocation
 import MapboxCoreMaps
 import UIKit
 
-internal protocol PuckManagerProtocol: AnyObject {
-    var puckType: PuckType? { get set }
-    var puckBearing: PuckBearing { get set }
-    var puckBearingEnabled: Bool { get set }
-}
-
-internal final class PuckManager: PuckManagerProtocol {
-    private enum State {
-        case none
-        case puck2D(Puck2DRendererProtocol)
-        case puck3D(Puck3DRendererProtocol)
-
-        var puck: PuckRenderer? {
-            switch self {
-            case .none: return nil
-            case let .puck2D(p): return p
-            case let .puck3D(p): return p
-            }
-        }
-    }
-
-    internal var puckType: PuckType? {
+final class PuckManager {
+    private var renderer: PuckRenderer? {
         didSet {
-            // if puckType is nil, set puck to nil and return early
-            guard let puckType else {
-                state = .none
-                return
-            }
-            // if the non-nil puckType hasn't changed, return early
-            guard puckType != oldValue else {
-                return
-            }
-
-            switch (state, puckType) {
-            case let (.puck2D(puck2D), .puck2D(config)):
-                puck2D.configuration = config
-            case let (.puck3D(puck3D), .puck3D(config)):
-                puck3D.configuration = config
-            default:
-                recreatePuck(with: puckType)
-            }
+            oldValue?.state = nil
+            if renderer == nil { stop() }
         }
     }
 
-    internal var puckBearing: PuckBearing = .heading {
+    private var state: PuckRendererState? {
         didSet {
-            state.puck?.puckBearing = puckBearing
+            render(newState: state, oldState: oldValue)
         }
     }
 
-    internal var puckBearingEnabled: Bool = false {
-        didSet {
-            state.puck?.puckBearingEnabled = puckBearingEnabled
-        }
+    private let onPuckRenderState: Signal<PuckRendererState>
+    private let make2DRenderer: () -> PuckRenderer
+    private let make3DRenderer: () -> PuckRenderer
+    private var cancellables = Set<AnyCancelable>()
+
+    init(
+        onPuckRenderState: Signal<PuckRendererState>,
+        make2DRenderer: @escaping () -> PuckRenderer,
+        make3DRenderer: @escaping () -> PuckRenderer
+    ) {
+        self.onPuckRenderState = onPuckRenderState
+        self.make2DRenderer = make2DRenderer
+        self.make3DRenderer = make3DRenderer
     }
 
-    private var state: State = .none {
-        didSet {
-            // this order is important so that if they're the same type of puck,
-            // the old one doesn't remove the layer/source added by the new one.
-            oldValue.puck?.isActive = false
-            state.puck?.isActive = true
-        }
+    func start() {
+        guard cancellables.isEmpty else { return }
+
+        onPuckRenderState
+            .skipRepeats()
+            .observe { [weak self] newState in self?.state = newState }
+            .store(in: &cancellables)
     }
 
-    private let puck2DProvider: (Puck2DConfiguration) -> Puck2DRendererProtocol
-    private let puck3DProvider: (Puck3DConfiguration) -> Puck3DRendererProtocol
-
-    internal init(puck2DProvider: @escaping (Puck2DConfiguration) -> Puck2DRendererProtocol,
-                  puck3DProvider: @escaping (Puck3DConfiguration) -> Puck3DRendererProtocol) {
-        self.puck2DProvider = puck2DProvider
-        self.puck3DProvider = puck3DProvider
+    func stop() {
+        cancellables.removeAll()
     }
 
-    private func recreatePuck(with type: PuckType) {
-        let newState: State
-        switch type {
-        case .puck2D(let configuration):
-            newState = .puck2D(puck2DProvider(configuration))
-        case .puck3D(let configuration):
-            newState = .puck3D(puck3DProvider(configuration))
+    private func render(newState: PuckRendererState?, oldState: PuckRendererState?) {
+        switch (newState?.locationOptions.puckType, oldState?.locationOptions.puckType) {
+        case (.puck2D, .puck3D), (.puck3D, .puck2D), (_, .none), (.none, _):
+            renderer = makeRenderer(with: newState)
+        case (.puck2D, .puck2D), (.puck3D, .puck3D):
+            break
         }
-        newState.puck?.puckBearing = puckBearing
-        newState.puck?.puckBearingEnabled = puckBearingEnabled
-        self.state = newState
+
+        renderer?.state = newState
+    }
+
+    private func makeRenderer(with options: PuckRendererState?) -> PuckRenderer? {
+        switch options?.locationOptions.puckType {
+        case .puck2D:
+            return make2DRenderer()
+        case .puck3D:
+            return make3DRenderer()
+        case .none:
+            return nil
+        }
     }
 }

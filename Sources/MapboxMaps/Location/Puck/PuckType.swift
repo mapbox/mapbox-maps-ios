@@ -61,7 +61,7 @@ public struct Puck2DConfiguration: Equatable {
     /// The size of the images, as a scale factor applied to the size of the specified image.
     public var scale: Value<Double>?
 
-    // Location puck pulsing configuration is pulsing on the map.
+    /// Location puck pulsing configuration is pulsing on the map.
     public var pulsing: Pulsing?
 
     /// Flag determining if the horizontal accuracy ring should be shown arround the `Puck`. default value is false
@@ -81,13 +81,15 @@ public struct Puck2DConfiguration: Equatable {
     ///   - scale: The size of the images, as a scale factor applied to the size of the specified image.
     ///   - showsAccuracyRing: Indicates whether the location accurary ring should be shown.
     ///   - opacity: The opacity of the entire location indicator.
-    public init(topImage: UIImage? = nil,
-                bearingImage: UIImage? = nil,
-                shadowImage: UIImage? = nil,
-                scale: Value<Double>? = nil,
-                pulsing: Pulsing? = nil,
-                showsAccuracyRing: Bool = false,
-                opacity: Double = 1) {
+    public init(
+        topImage: UIImage? = nil,
+        bearingImage: UIImage? = nil,
+        shadowImage: UIImage? = nil,
+        scale: Value<Double>? = nil,
+        pulsing: Pulsing? = nil,
+        showsAccuracyRing: Bool = false,
+        opacity: Double = 1
+    ) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
@@ -151,21 +153,17 @@ public struct Puck3DConfiguration: Equatable {
     public var modelOpacity: Value<Double>?
 
     /// Enable/disable shadow casting for the puck model
-#if swift(>=5.8)
+    ///
+    ///  - Note: Enabling shadows may impose extra performance costs and lead to extra rendering.
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental) public var modelCastShadows: Value<Bool>?
 
     /// Enable/disable shadow receiving for the puck model
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental) public var modelReceiveShadows: Value<Bool>?
 
     /// Defines scaling mode. Only applies to location-indicator type layers. Default to ``ModelScaleMode/viewport``.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental) public var modelScaleMode: Value<ModelScaleMode>?
 
     /// Strength of the emission.
@@ -173,9 +171,7 @@ public struct Puck3DConfiguration: Equatable {
     /// There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. windows).
     ///
     /// Default value is 1.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public var modelEmissiveStrength: Value<Double>?
 
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
@@ -207,9 +203,7 @@ public struct Puck3DConfiguration: Equatable {
     ///   - modelCastShadows: Enable/disable shadow casting for the puck model
     ///   - modelReceiveShadows: Enable/disable shadow receiving for the puck model
     ///   - modelEmissiveStrength: Strength of the light emission.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental) public init(model: Model,
                                     modelScale: Value<[Double]>? = nil,
                                     modelRotation: Value<[Double]>? = nil,
@@ -229,7 +223,7 @@ public struct Puck3DConfiguration: Equatable {
     }
 }
 
-extension UIImage {
+private extension UIImage {
     static let bearingImage = Ref {
         makeBearingImage(size: CGSize(width: 22, height: 22))
     }.weaklyCached()

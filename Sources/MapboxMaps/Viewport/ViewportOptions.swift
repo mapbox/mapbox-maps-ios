@@ -14,9 +14,7 @@ public struct ViewportOptions: Hashable {
     /// You can use `UIViewController.additionalSafeAreaInsets` to control the additional amount of padding.
     ///
     /// Default value is `false`. If you use ``Map-struct`` in SwiftUI this value is true by default.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental)
     public var usesSafeAreaInsetsAsPadding: Bool
 
@@ -32,9 +30,7 @@ public struct ViewportOptions: Hashable {
     /// - Parameters:
     ///    - transitionsToIdleUponUserInteraction: If `true`, viewport will idle when map receives pan gesture. Default value is `true`.
     ///    - usesSafeAreaInsetsAsPadding: If `true`, all viewport states increase the camera padding by the amount of the safe area insets.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental)
     public init(transitionsToIdleUponUserInteraction: Bool,
                 usesSafeAreaInsetsAsPadding: Bool) {

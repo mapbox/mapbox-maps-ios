@@ -2,28 +2,25 @@ import XCTest
 @testable import MapboxMaps
 
 final class FollowPuckViewportStateBearingTests: XCTestCase {
+    let state = FollowPuckViewportState.RenderingState(coordinate: .random())
 
     func testConstant() {
         let value = CLLocationDirection.random(in: 0..<360)
 
         let bearing = FollowPuckViewportStateBearing.constant(value)
 
-        XCTAssertEqual(bearing.evaluate(with: .random()), value)
+        XCTAssertEqual(bearing.evaluate(state: state), value)
     }
 
     func testHeading() {
-        let data = PuckRenderingData.random()
-
         let bearing = FollowPuckViewportStateBearing.heading
 
-        XCTAssertEqual(bearing.evaluate(with: data), data.heading?.direction)
+        XCTAssertEqual(bearing.evaluate(state: state), state.heading)
     }
 
     func testCourse() {
-        let data = PuckRenderingData.random()
-
         let bearing = FollowPuckViewportStateBearing.course
 
-        XCTAssertEqual(bearing.evaluate(with: data), data.location.bearing)
+        XCTAssertEqual(bearing.evaluate(state: state), state.bearing)
     }
 }

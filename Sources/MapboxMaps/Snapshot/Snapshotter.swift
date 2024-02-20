@@ -312,9 +312,7 @@ public class Snapshotter: StyleManager {
     ///
     /// - Parameters:
     ///  - options: Options for the tile cover method.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     @_spi(Experimental)
     public func tileCover(for options: TileCoverOptions) -> [CanonicalTileID] {
         mapSnapshotter.__tileCover(

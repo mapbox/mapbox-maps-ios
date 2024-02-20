@@ -10,9 +10,16 @@ on:
         destination:
           type: string
           default: generic/platform=iOS Simulator
+        executor:
+          type: string
+          default: '["ubuntu-latest"]'
       secrets:
         SDK_REGISTRY_TOKEN:
           required: true
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
     analyze:
@@ -27,10 +34,10 @@ jobs:
         fail-fast: false
         matrix:
           language: ["javascript", "python", "ruby"]
-          executor: ["ubuntu-latest"]
+          executor: ${{ fromJson(inputs.executor) }}
           include:
             - language: "swift"
-              executor: "macos-latest"
+              executor: "macos-13"
           # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 
       steps:

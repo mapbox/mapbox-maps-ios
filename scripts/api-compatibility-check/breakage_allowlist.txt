@@ -1333,7 +1333,6 @@ Constructor TilesetDescriptorOptions.init(styleURI:zoomRange:pixelRatio:tilesets
 Func AnnotationOrchestrator.makePointAnnotationManager(id:layerPosition:clusterOptions:) has been renamed to Func makePointAnnotationManager(id:layerPosition:clusterOptions:onClusterTap:onClusterLongPress:)
 
 // Post v11 GA
-Removed Decls
-Func MapStyle.==(_:_:) has been removed 
+Func MapStyle.==(_:_:) has been removed
 Protocol Conformance Change
-Struct MapStyle has removed conformance to Equatable 
+Struct MapStyle has removed conformance to Equatable

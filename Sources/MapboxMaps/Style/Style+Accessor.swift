@@ -55,9 +55,10 @@ struct StyleAccessors {
     private static func buildLayerAccessor(styleManager: StyleManagerProtocol) -> Accessor<LayerWrapper> {
         Accessor(
             insert: {
-                let properties = try $0.asLayer.allStyleProperties()
+                let properties = try $0.layer.asLayer.allStyleProperties()
+                let layerPosition = $0.position?.corePosition
                 try handleExpected {
-                    styleManager.addStyleLayer(forProperties: properties, layerPosition: nil)
+                    styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition)
                 }
             },
             remove: { id in
@@ -67,13 +68,20 @@ struct StyleAccessors {
                     }
                 }
             },
-            update: { _, new in
-                let properties = try new.asLayer.jsonObject()
+            update: { old, new in
+                let properties = try new.layer.asLayer.jsonObject()
                 try handleExpected {
                     styleManager.setStyleLayerPropertiesForLayerId(
-                        new.asLayer.id,
+                        new.layer.asLayer.id,
                         properties: properties
                     )
+                }
+
+                if old?.position != new.position,
+                let layerPosition = new.position?.corePosition {
+                    try handleExpected {
+                        styleManager.moveStyleLayer(forLayerId: new.layer.asLayer.id, layerPosition: layerPosition)
+                    }
                 }
             },
             isEqual: ==

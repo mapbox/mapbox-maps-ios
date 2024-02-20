@@ -74,6 +74,7 @@ struct DynamicStylingExample: View {
                             LineLayer(id: "lineLayer", source: "lines")
                                 .lineColor(.constant(StyleColor(red: 195, green: 088, blue: 049, alpha: 1)!))
                                 .lineWidth(.constant(20))
+                                .slot(.bottom)
                         case .polygon:
                             FillLayer(id: "fill", source: "lines")
                                 .fillColor(.constant(StyleColor(.blue)))

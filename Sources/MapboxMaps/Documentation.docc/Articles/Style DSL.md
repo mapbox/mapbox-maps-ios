@@ -4,7 +4,7 @@ Use declarative syntax to modify your Mapbox Style at runtime.
 
 ## Overview
 
-In version `11.2.0-beta.1` of MapboxMaps we introduced an experimental Style DSL to make runtime styling easier to manage. With the Style DSL you can add or edit Sources, Layers, Images, and other map style elements with ease in both Swift UI- and UIKit-based implementations. This paradigm works with Mapbox Standard, classic Mapbox styles like Streets and Dark, and any custom styles that you've built with Mapbox Studio. As this feature is experimental, you will need to import `MapboxMaps` with the experimental API enabled. 
+In version `11.3.0-beta.1` of MapboxMaps we introduced an experimental Style DSL to make runtime styling easier to manage. With the Style DSL you can add or edit Sources, Layers, Images, and other map style elements with ease in both Swift UI- and UIKit-based implementations. This paradigm works with Mapbox Standard, classic Mapbox styles like Streets and Dark, and any custom styles that you've built with Mapbox Studio. As this feature is experimental, you will need to import `MapboxMaps` with the experimental API enabled. 
 
 ### Getting started
 
@@ -34,7 +34,7 @@ With the Style DSL you can declare additions or changes to Sources, Layers, Imag
                     .lineOpacity(.constant(0.6))
                     .lineWidth(.constant(2.0))
                     .lineCap(.constant(.round))
-                    .slot("bottom")
+                    .slot(.bottom)
             })
     }
     ```
@@ -52,7 +52,7 @@ With the Style DSL you can declare additions or changes to Sources, Layers, Imag
             .lineOpacity(.constant(0.6))
             .lineWidth(.constant(2.0))
             .lineCap(.constant(.round))
-            .slot("bottom")
+            .slot(.bottom)
     }
     ```
     }
@@ -92,16 +92,17 @@ As seen, you can modify source and layer properties with a builder pattern. This
     
     func updateStyle(useTerrain: Bool) {
         mapboxMap.mapStyle = .standard {
-        if useTerrain {
-            StyleProjection(name: .globe)
-            RasterDemSource(id: "mapbox-dem")
-                .url("mapbox://mapbox.mapbox-terrain-dem-v1")
-                .tileSize(514)
-                .maxzoom(14.0)
-            Terrain(sourceId: "mapbox-dem")
-                .exaggeration(.constant(5))
-        } else {
-            StyleProjection(name: .mercator)
+            if useTerrain {
+                StyleProjection(name: .globe)
+                RasterDemSource(id: "mapbox-dem")
+                    .url("mapbox://mapbox.mapbox-terrain-dem-v1")
+                    .tileSize(514)
+                    .maxzoom(14.0)
+                Terrain(sourceId: "mapbox-dem")
+                    .exaggeration(.constant(5))
+            } else {
+                StyleProjection(name: .mercator)
+            }
         }
     }
     ```

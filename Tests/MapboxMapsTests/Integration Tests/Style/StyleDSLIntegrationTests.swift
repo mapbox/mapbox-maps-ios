@@ -194,4 +194,107 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [expectation], timeout: 5)
     }
+
+    internal func testLayerPosition() {
+        let expectation = self.expectation(description: "Wait for mapStyle to load")
+        expectation.expectedFulfillmentCount = 2
+
+        var layer = FillLayer(id: "test-fill", source: "test-source")
+            .position(LayerPosition.above("poi-label"))
+
+        mapView.mapboxMap.mapStyle = .streets {
+            layer
+        }
+
+        didFinishLoadingStyle = { mapView in
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.count, 135)
+            print(mapView.mapboxMap.allLayerIdentifiers)
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[126].id, "test-fill")
+            expectation.fulfill()
+
+            layer.position = .below("poi-label")
+
+            mapView.mapboxMap.mapStyle = .streets {
+                layer
+            }
+        }
+
+        didBecomeIdle = { mapView in
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[125].id, "test-fill")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 5)
+    }
+
+    internal func testLayerPositionWithSlots() {
+        let expectation = self.expectation(description: "Wait for mapStyle to load")
+        expectation.expectedFulfillmentCount = 1
+
+        let layer = FillLayer(id: "test-line", source: "test-source")
+            .slot(.bottom)
+            .position(LayerPosition.at(0))
+
+        mapView.mapboxMap.mapStyle = .standard {
+            layer
+        }
+
+        didFinishLoadingStyle = { mapView in
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.count, 1)
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[0].id, "test-line")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 5)
+    }
+
+    internal func testLayerPositionsForAllLayerTypes() {
+        let expectation = self.expectation(description: "Wait for mapStyle to load")
+        expectation.expectedFulfillmentCount = 1
+
+        mapView.mapboxMap.mapStyle = .streets {
+            FillLayer(id: "fill", source: "test-source")
+                .position(.at(1))
+            LineLayer(id: "line", source: "test-source")
+                .position(.at(2))
+            SymbolLayer(id: "symbol", source: "test-source")
+                .position(.at(3))
+            CircleLayer(id: "circle", source: "test-source")
+                .position(.at(4))
+            HeatmapLayer(id: "heatmap", source: "test-source")
+                .position(.at(5))
+            FillExtrusionLayer(id: "fillextrusion", source: "test-source")
+                .position(.at(6))
+            RasterLayer(id: "raster", source: "test-source")
+                .position(.at(7))
+            HillshadeLayer(id: "hillshadeLayer", source: "test-source")
+                .position(.at(8))
+            ModelLayer(id: "model", source: "test-source")
+                .position(.at(9))
+            BackgroundLayer(id: "background")
+                .position(.at(10))
+            SkyLayer(id: "sky")
+                .position(.at(11))
+            LocationIndicatorLayer(id: "location")
+                .position(.at(12))
+        }
+
+        didFinishLoadingStyle = { mapView in
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[1].id, "fill")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[2].id, "line")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[3].id, "symbol")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[4].id, "circle")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[5].id, "heatmap")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[6].id, "fillextrusion")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[7].id, "raster")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[8].id, "hillshadeLayer")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[9].id, "model")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[10].id, "background")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[11].id, "sky")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[12].id, "location")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 5)
+    }
 }

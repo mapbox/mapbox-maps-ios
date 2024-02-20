@@ -11,6 +11,10 @@ protocol PrimitiveMapStyleContent: MapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor)
 }
 
+protocol LayerMapStyleContent: PrimitiveMapStyleContent {
+    func _visit(_ visitor: MapStyleContentVisitor, layerPosition: LayerPosition?)
+}
+
 extension MapStyleContent {
     func visit(_ visitor: MapStyleContentVisitor) {
         (self as? PrimitiveMapStyleContent)?._visit(visitor)

@@ -184,7 +184,7 @@ private func updateProperty<T: Equatable>(old: T?, new: T?, accessor: Accessor<T
 }
 
 private func applyLayerDiff(old: [LayerWrapper], new: [LayerWrapper], accessor: Accessor<LayerWrapper>) {
-    let diff = new.diff(from: old, id: \.asLayer.id)
+    let diff = new.diff(from: old, id: \.layer.asLayer.id)
 
     for removeId in diff.remove {
         wrapStyleDSLError { try accessor.remove(removeId) }
@@ -195,7 +195,8 @@ private func applyLayerDiff(old: [LayerWrapper], new: [LayerWrapper], accessor: 
     }
 
     for layer in diff.update {
-        wrapStyleDSLError {  try accessor.update(nil, layer) }
+        let oldLayer = old.first { $0.id == layer.id }
+        wrapStyleDSLError {  try accessor.update(oldLayer, layer) }
     }
 }
 

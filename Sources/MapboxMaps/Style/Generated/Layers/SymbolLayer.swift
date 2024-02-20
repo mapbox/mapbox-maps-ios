@@ -599,7 +599,7 @@ public struct SymbolLayer: Layer, Equatable {
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-    public func slot(_ newValue: Slot) -> Self {
+    public func slot(_ newValue: Slot?) -> Self {
         with(self, setter(\.slot, newValue))
     }
 

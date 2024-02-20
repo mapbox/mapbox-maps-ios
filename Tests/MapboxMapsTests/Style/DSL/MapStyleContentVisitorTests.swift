@@ -52,18 +52,18 @@ final class MapStyleContentVisitorTests: XCTestCase {
         locationIndicator._visit(mapStyleContentVisitor)
 
         XCTAssertEqual(mapStyleContentVisitor.model.layers,
-                       [LayerWrapper.fill(fill),
-                        LayerWrapper.line(line),
-                        LayerWrapper.symbol(symbol),
-                        LayerWrapper.circle(circle),
-                        LayerWrapper.heatmap(heatmap),
-                        LayerWrapper.fillExtrusion(fillExtrusion),
-                        LayerWrapper.raster(raster),
-                        LayerWrapper.hillshade(hillshade),
-                        LayerWrapper.model(model),
-                        LayerWrapper.background(background),
-                        LayerWrapper.sky(sky),
-                        LayerWrapper.locationIndicator(locationIndicator)]
+                       [LayerWrapper(.fill(fill)),
+                        LayerWrapper(.line(line)),
+                        LayerWrapper(.symbol(symbol)),
+                        LayerWrapper(.circle(circle)),
+                        LayerWrapper(.heatmap(heatmap)),
+                        LayerWrapper(.fillExtrusion(fillExtrusion)),
+                        LayerWrapper(.raster(raster)),
+                        LayerWrapper(.hillshade(hillshade)),
+                        LayerWrapper(.model(model)),
+                        LayerWrapper(.background(background)),
+                        LayerWrapper(.sky(sky)),
+                        LayerWrapper(.locationIndicator(locationIndicator))]
         )
     }
 

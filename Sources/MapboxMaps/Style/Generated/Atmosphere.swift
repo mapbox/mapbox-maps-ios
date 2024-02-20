@@ -1,7 +1,6 @@
 // This file is generated.
 import Foundation
 
-
 /// A style's fog property is a global effect that improves depth perception by fading out distant objects.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/fog/)

@@ -123,4 +123,10 @@ final class MapStyleContentVisitorTests: XCTestCase {
         XCTAssertEqual(mapStyleContentVisitor.model.projection, projection)
     }
 
+    func testTransition() {
+        let transition = TransitionOptions(duration: 6, delay: 1, enablePlacementTransitions: true)
+        transition._visit(mapStyleContentVisitor)
+
+        XCTAssertEqual(mapStyleContentVisitor.model.transition, transition)
+    }
 }

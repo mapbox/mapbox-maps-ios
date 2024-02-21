@@ -48,7 +48,6 @@ struct DynamicStylingExample: View {
 
     @State var connectionType = ConnectionType.line
     @State var showConnections = true
-    @State var styleTransitions = false
     @State private var settingsHeight = 0.0
     @State var cities = CityCollection.northern
     @State private var mapStyle = MapStyle.standard
@@ -87,10 +86,7 @@ struct DynamicStylingExample: View {
                         .data(.featureCollection(cities.pointFeatureCollection))
                     StyleImage(id: "pin", image: self.pin)
                     SymbolLayer(id: "pin", source: "points")
-                        .iconImage(.constant(.name("pin")))
-                    if styleTransitions {
-                        TransitionOptions(duration: 6, delay: 1, enablePlacementTransitions: true)
-                    }
+                            .iconImage(.constant(.name("pin")))
                 })
                 .additionalSafeAreaInsets(sidePanel ? .trailing : .bottom, settingsHeight)
                 .ignoresSafeArea()
@@ -116,7 +112,6 @@ struct DynamicStylingExample: View {
             RadioButtonSettingView(title: "Cities:", value: $cities)
             RadioButtonSettingView(title: "Connection Type:", value: $connectionType)
             Toggle("Show connections", isOn: $showConnections)
-            Toggle("Transition styles slowly", isOn: $styleTransitions)
         }
         .padding(10)
         .floating(RoundedRectangle(cornerRadius: 10))

@@ -29,9 +29,3 @@ extension TransitionOptions {
         __enablePlacementTransitions?.boolValue
     }
 }
-
-extension TransitionOptions: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.transition = self
-    }
-}

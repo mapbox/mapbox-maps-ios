@@ -49,7 +49,7 @@ final class MapStyleReconciler {
                     self?.reconcile(stages: [.sources], from: oldModel)
                 },
                 layers: { [weak self] in
-                    if let transition = self?.styleModel.transition {
+                    if let transition {
                         self?.styleManager.setStyleTransitionFor(transition)
                     }
                     // This callback means the style description is loaded.
@@ -143,7 +143,7 @@ extension MapStyle {
         let visitor = MapStyleContentVisitor()
         let mapStyleContent = (content?()) ?? EmptyMapStyleContent()
         mapStyleContent.visit(visitor)
-        visitor.model.transition = visitor.model.transition ?? transition
+        visitor.model.transition = transition
         visitor.model.importConfigurations = importConfigurations
         return visitor.model
     }

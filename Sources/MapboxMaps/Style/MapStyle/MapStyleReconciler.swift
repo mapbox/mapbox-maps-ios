@@ -121,6 +121,7 @@ final class MapStyleReconciler {
                 updateProperty(old: old.projection, new: styleModel.projection, accessor: accessors.projection)
                 updateProperty(old: old.atmosphere, new: styleModel.atmosphere, accessor: accessors.atmosphere)
                 updateProperty(old: old.terrain, new: styleModel.terrain, accessor: accessors.terrain)
+                updateProperty(old: old.light, new: styleModel.light, accessor: accessors.light)
             case .sources:
                 applyDiff(old: old.sources, new: styleModel.sources, accessor: accessors.sources)
             case .images:

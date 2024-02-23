@@ -67,4 +67,33 @@ public struct AmbientLight: Codable, StyleEncodable, Equatable {
     }
 }
 
+extension AmbientLight {
+
+    /// Color of the ambient light.
+    public func color(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.color, newValue))
+    }
+
+    /// Transition property for `color`
+    public func colorTransition(_ newValue: StyleTransition) -> Self {
+        with(self, setter(\.colorTransition, newValue))
+    }
+
+    /// A multiplier for the color of the ambient light.
+    public func intensity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.intensity, newValue))
+    }
+
+    /// Transition property for `intensity`
+    public func intensityTransition(_ newValue: StyleTransition) -> Self {
+        with(self, setter(\.intensityTransition, newValue))
+    }
+}
+
+@_spi(Experimental)
+extension AmbientLight: PrimitiveMapStyleContent {
+    func _visit(_ visitor: MapStyleContentVisitor) {
+        visitor.model.setLight(self)
+    }
+}
 // End of generated file.

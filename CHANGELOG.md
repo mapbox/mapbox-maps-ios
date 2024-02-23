@@ -8,7 +8,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Experimental `MapStyle` no longer conforms to Equatable.
 
 ### Features ✨ and improvements 🏁
-* Introduce an experimental Style DSL, enabling developers to add map style content like Sources, Layers, Style Images, Terrain, and Atmosphere to their map style at runtime in a declarative pattern. See the documentation [here](https://docs.mapbox.com/ios/maps/api/11.2.0-beta.1/documentation/mapboxmaps/style-dsl) for more information. For SwiftUI users, this Style DSL provides a more natural approach to manipulating content. 
+* Introduce an experimental Style DSL, enabling developers to add map style content like Sources, Layers, Style Images, Terrain, Light and Atmosphere to their map style at runtime in a declarative pattern. See the documentation [here](https://docs.mapbox.com/ios/maps/api/11.2.0-beta.1/documentation/mapboxmaps/style-dsl) for more information. For SwiftUI users, this Style DSL provides a more natural approach to manipulating content.
 * Add `onClusterTap` and `onClusterLongPress` to AnnotationManagers(UIKit) and AnnotationGroups(SwiftUI) which support clustering
 * Add annotations drag handlers callbacks `dragBeginHandler`, `dragChangeHandler`, `dragEndHandler` to all Annotation types.
 

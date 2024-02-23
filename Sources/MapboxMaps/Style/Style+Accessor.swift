@@ -22,6 +22,7 @@ struct StyleAccessors {
     var images: Accessor<StyleImage>
     var terrain: Accessor<Terrain>
     var atmosphere: Accessor<Atmosphere>
+    var light: Accessor<MapStyleModel.Light>
     var projection: Accessor<StyleProjection>
 
     init(styleManager: StyleManagerProtocol, styleSourceManager: StyleSourceManagerProtocol) {
@@ -30,6 +31,7 @@ struct StyleAccessors {
         images = StyleAccessors.buildImageAccessor(styleManager: styleManager)
         terrain = StyleAccessors.buildTerrainAccessor(styleManager: styleManager)
         atmosphere = StyleAccessors.buildAtmosphereAccessor(styleManager: styleManager)
+        light = StyleAccessors.buildLightAccessor(styleManager: styleManager)
         projection = StyleAccessors.buildProjectionAccessor(styleManager: styleManager)
     }
 
@@ -145,6 +147,26 @@ struct StyleAccessors {
                 let properties = NSNull()
                 try handleExpected {
                     styleManager.setStyleAtmosphereForProperties(properties)
+                }
+            }
+        )
+    }
+
+    private static func buildLightAccessor(styleManager: StyleManagerProtocol) -> Accessor<MapStyleModel.Light> {
+        .property(
+            set: { value in
+                guard let properties = try value.styleLightProperties else {
+                    throw TypeConversionError.invalidObject
+                }
+
+                try handleExpected {
+                    styleManager.setStyleLightsForLights(properties)
+                }
+            },
+            remove: {
+                let properties = NSNull()
+                try handleExpected {
+                    styleManager.setStyleLightsForLights(properties)
                 }
             }
         )

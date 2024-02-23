@@ -97,4 +97,58 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
     }
 }
 
+extension DirectionalLight {
+
+    /// Enable/Disable shadow casting for this light
+    public func castShadows(_ newValue: Value<Bool>) -> Self {
+        with(self, setter(\.castShadows, newValue))
+    }
+
+    /// Color of the directional light.
+    public func color(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.color, newValue))
+    }
+
+    /// Transition property for `color`
+    public func colorTransition(_ newValue: StyleTransition) -> Self {
+        with(self, setter(\.colorTransition, newValue))
+    }
+
+    /// Direction of the light source specified as [a azimuthal angle, p polar angle] where a indicates the azimuthal angle of the light relative to north (in degrees and proceeding clockwise), and p indicates polar angle of the light (from 0 degree, directly above, to 180 degree, directly below).
+    public func direction(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.direction, newValue))
+    }
+
+    /// Transition property for `direction`
+    public func directionTransition(_ newValue: StyleTransition) -> Self {
+        with(self, setter(\.directionTransition, newValue))
+    }
+
+    /// A multiplier for the color of the directional light.
+    public func intensity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.intensity, newValue))
+    }
+
+    /// Transition property for `intensity`
+    public func intensityTransition(_ newValue: StyleTransition) -> Self {
+        with(self, setter(\.intensityTransition, newValue))
+    }
+
+    /// Determines the shadow strength, affecting the shadow receiver surfaces final color. Values near 0.0 reduce the shadow contribution to the final color. Values near to 1.0 make occluded surfaces receive almost no directional light. Designed to be used mostly for transitioning between values 0 and 1.
+    public func shadowIntensity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.shadowIntensity, newValue))
+    }
+
+    /// Transition property for `shadowIntensity`
+    public func shadowIntensityTransition(_ newValue: StyleTransition) -> Self {
+        with(self, setter(\.shadowIntensityTransition, newValue))
+    }
+}
+
+@_spi(Experimental)
+extension DirectionalLight: PrimitiveMapStyleContent {
+    func _visit(_ visitor: MapStyleContentVisitor) {
+        visitor.model.setLight(self)
+    }
+}
 // End of generated file.

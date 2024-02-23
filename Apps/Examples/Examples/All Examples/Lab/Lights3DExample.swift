@@ -31,36 +31,24 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func setupExample() {
-        add3DLights()
-    }
-
-    func add3DLights(azimuth: Double = 210, polarAngle: Double = 30, ambientColor: UIColor = .white) {
-        do {
-            var directionalLight = DirectionalLight(id: directionalLightId)
-            directionalLight.intensity = .constant(0.5)
-            directionalLight.direction = .constant([azimuth, polarAngle])
-            directionalLight.directionTransition = StyleTransition(duration: 0, delay: 0)
-            directionalLight.castShadows = .constant(true)
-            directionalLight.shadowIntensity = .constant(1)
-
-            var ambientLight = AmbientLight(id: ambientLightId)
-            ambientLight.color = .constant(.init(ambientColor))
-            ambientLight.intensity = .constant(0.5)
-
-            try mapView.mapboxMap.setLights(ambient: ambientLight, directional: directionalLight)
-
-            var atmosphere = Atmosphere()
-            atmosphere.range = .constant([0, 12])
-            atmosphere.horizonBlend = .constant(0.1)
-            atmosphere.starIntensity = .constant(0.2)
-            atmosphere.color = .constant(StyleColor(red: 240, green: 196, blue: 152, alpha: 1)!)
-            atmosphere.highColor = .constant(StyleColor(red: 221, green: 209, blue: 197, alpha: 1)!)
-            atmosphere.spaceColor = .constant(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!)
-
-            try mapView.mapboxMap.setAtmosphere(atmosphere)
-        } catch {
-            print("Failed to set 3D light due to:", error)
+    func setupExample(azimuth: Double = 210, polarAngle: Double = 30, ambientColor: UIColor = .lightGray) {
+        mapView.mapboxMap.mapStyle = .standard { [directionalLightId, ambientLightId] in
+            Atmosphere()
+                .range(.constant([0, 12]))
+                .horizonBlend(.constant(0.1))
+                .starIntensity(.constant(0.2))
+                .color(.constant(StyleColor(red: 240, green: 196, blue: 152, alpha: 1)!))
+                .highColor(.constant(StyleColor(red: 221, green: 209, blue: 197, alpha: 1)!))
+                .spaceColor(.constant(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!))
+            DirectionalLight(id: directionalLightId)
+                .intensity(.constant(0.5))
+                .direction(.constant([azimuth, polarAngle]))
+                .directionTransition(StyleTransition(duration: 0, delay: 0))
+                .castShadows(.constant(true))
+                .shadowIntensity(.constant(1))
+            AmbientLight(id: ambientLightId)
+                .color(.constant(StyleColor(ambientColor)))
+                .intensity(.constant(0.5))
         }
     }
 

@@ -85,4 +85,48 @@ public struct FlatLight: Codable, StyleEncodable, Equatable {
     }
 }
 
+extension FlatLight {
+
+    /// Whether extruded geometries are lit relative to the map or viewport.
+    public func anchor(_ newValue: Value<Anchor>) -> Self {
+        with(self, setter(\.anchor, newValue))
+    }
+
+    /// Color tint for lighting extruded geometries.
+    public func color(_ newValue: Value<StyleColor>) -> Self {
+        with(self, setter(\.color, newValue))
+    }
+
+    /// Transition property for `color`
+    public func colorTransition(_ newValue: StyleTransition) -> Self {
+        with(self, setter(\.colorTransition, newValue))
+    }
+
+    /// Intensity of lighting (on a scale from 0 to 1). Higher numbers will present as more extreme contrast.
+    public func intensity(_ newValue: Value<Double>) -> Self {
+        with(self, setter(\.intensity, newValue))
+    }
+
+    /// Transition property for `intensity`
+    public func intensityTransition(_ newValue: StyleTransition) -> Self {
+        with(self, setter(\.intensityTransition, newValue))
+    }
+
+    /// Position of the light source relative to lit (extruded) geometries, in [r radial coordinate, a azimuthal angle, p polar angle] where r indicates the distance from the center of the base of an object to its light, a indicates the position of the light relative to 0 degree (0 degree when `light.anchor` is set to `viewport` corresponds to the top of the viewport, or 0 degree when `light.anchor` is set to `map` corresponds to due north, and degrees proceed clockwise), and p indicates the height of the light (from 0 degree, directly above, to 180 degree, directly below).
+    public func position(_ newValue: Value<[Double]>) -> Self {
+        with(self, setter(\.position, newValue))
+    }
+
+    /// Transition property for `position`
+    public func positionTransition(_ newValue: StyleTransition) -> Self {
+        with(self, setter(\.positionTransition, newValue))
+    }
+}
+
+@_spi(Experimental)
+extension FlatLight: PrimitiveMapStyleContent {
+    func _visit(_ visitor: MapStyleContentVisitor) {
+        visitor.model.setLight(self)
+    }
+}
 // End of generated file.

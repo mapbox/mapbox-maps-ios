@@ -135,9 +135,7 @@ own `UIWindow` and root view controller, before adding the MapView to it.
     MAPBOX_ACCESS_TOKEN = pk.myaccesstoken
     ```
 
-  * a resource in the test bundle named MapboxAccessToken. This file is
-    generated at build time via a pre-action on the scheme when running tests
-    using `MapboxMaps`. The pre-action pulls the token from `~/mapbox` or `~/.mapbox`.
+  * a resource in the test bundle named `MapboxAccessToken`.
 
 * `MapViewIntegrationTestCase` subclasses the above, and sets the `MapView`.
   Closures are used to expose key map events to subclasses. Please don't add

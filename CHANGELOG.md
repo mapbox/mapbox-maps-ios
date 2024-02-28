@@ -8,6 +8,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Add annotations drag handlers callbacks `dragBeginHandler`, `dragChangeHandler`, `dragEndHandler` to all Annotation types.
 * Bump core maps version to 11.2.0 and common sdk to 24.2.0.
 
+## 11.2.0 - 28 February, 2024
+
+* Bump core maps version to 11.2.0 and common sdk to 24.2.0.
+
 ## 11.2.0-rc.1 - 15 February, 2024
 
 ### Bug fixes 🐞

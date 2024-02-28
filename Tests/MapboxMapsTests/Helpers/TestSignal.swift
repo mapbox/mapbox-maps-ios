@@ -7,8 +7,6 @@ final class TestSignal<T> {
 
     var wrappedValue: Signal<T> { subject.signal }
 
-    var subscribers: any Collection<(T) -> Void> { subject }
-
     let subject = SignalSubject<T>()
 }
 

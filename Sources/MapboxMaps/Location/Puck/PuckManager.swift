@@ -2,67 +2,98 @@ import CoreLocation
 import MapboxCoreMaps
 import UIKit
 
-final class PuckManager {
-    private var renderer: PuckRenderer? {
-        didSet {
-            oldValue?.state = nil
-            if renderer == nil { stop() }
+final class PuckManager<Renderer2D: PuckRenderer, Renderer3D: PuckRenderer>
+where Renderer2D.Configuration == Puck2DConfiguration, Renderer3D.Configuration == Puck3DConfiguration {
+    var locationOptions: LocationOptions {
+        get { locationOptionsSubject.value }
+        set {
+            locationOptionsSubject.value = newValue
+            subscribeOnUpdates()
         }
     }
 
-    private var state: PuckRendererState? {
-        didSet {
-            render(newState: state, oldState: oldValue)
-        }
-    }
+    private var renderer2D: Renderer2D?
+    private var renderer3D: Renderer3D?
 
-    private let onPuckRenderState: Signal<PuckRendererState>
-    private let make2DRenderer: () -> PuckRenderer
-    private let make3DRenderer: () -> PuckRenderer
+    private let make2DRenderer: () -> Renderer2D
+    private let make3DRenderer: () -> Renderer3D
+
+    private let onPuckRender: Signal<PuckRenderingData>
+    private let locationOptionsSubject: CurrentValueSignalSubject<LocationOptions>
     private var cancellables = Set<AnyCancelable>()
 
     init(
-        onPuckRenderState: Signal<PuckRendererState>,
-        make2DRenderer: @escaping () -> PuckRenderer,
-        make3DRenderer: @escaping () -> PuckRenderer
+        locationOptionsSubject: CurrentValueSignalSubject<LocationOptions>,
+        onPuckRender: Signal<PuckRenderingData>,
+        make2DRenderer: @escaping () -> Renderer2D,
+        make3DRenderer: @escaping () -> Renderer3D
     ) {
-        self.onPuckRenderState = onPuckRenderState
+        self.locationOptionsSubject = locationOptionsSubject
+        self.onPuckRender = onPuckRender
         self.make2DRenderer = make2DRenderer
         self.make3DRenderer = make3DRenderer
     }
 
-    func start() {
+    private func subscribeOnUpdates() {
         guard cancellables.isEmpty else { return }
 
-        onPuckRenderState
-            .skipRepeats()
-            .observe { [weak self] newState in self?.state = newState }
-            .store(in: &cancellables)
-    }
-
-    func stop() {
-        cancellables.removeAll()
-    }
-
-    private func render(newState: PuckRendererState?, oldState: PuckRendererState?) {
-        switch (newState?.locationOptions.puckType, oldState?.locationOptions.puckType) {
-        case (.puck2D, .puck3D), (.puck3D, .puck2D), (_, .none), (.none, _):
-            renderer = makeRenderer(with: newState)
-        case (.puck2D, .puck2D), (.puck3D, .puck3D):
-            break
+        Signal.combineLatest(
+            onPuckRender.skipRepeats(),
+            locationOptionsSubject.signal.skipRepeats()
+        )
+        .observe { [weak self] (data, locationOptions) in
+            self?.startRendering(data: data, locationOptions: locationOptions)
         }
-
-        renderer?.state = newState
+        .store(in: &cancellables)
     }
 
-    private func makeRenderer(with options: PuckRendererState?) -> PuckRenderer? {
-        switch options?.locationOptions.puckType {
-        case .puck2D:
-            return make2DRenderer()
-        case .puck3D:
-            return make3DRenderer()
+    private func startRendering(
+        data: PuckRenderingData,
+        locationOptions: LocationOptions
+    ) {
+        switch locationOptions.puckType {
         case .none:
-            return nil
+            stopRendering()
+            cancellables.removeAll()
+
+        case let .puck2D(configuration):
+            if renderer3D != nil {
+                stopRendering()
+            }
+
+            if renderer2D == nil {
+                renderer2D = make2DRenderer()
+            }
+
+            renderer2D?.state = PuckRendererState(
+                data: data,
+                bearingEnabled: locationOptions.puckBearingEnabled,
+                bearingType: locationOptions.puckBearing,
+                configuration: configuration
+            )
+
+        case let .puck3D(configuration):
+            if renderer2D != nil {
+                stopRendering()
+            }
+
+            if renderer3D == nil {
+                renderer3D = make3DRenderer()
+            }
+
+            renderer3D?.state = PuckRendererState(
+                data: data,
+                bearingEnabled: locationOptions.puckBearingEnabled,
+                bearingType: locationOptions.puckBearing,
+                configuration: configuration
+            )
         }
+    }
+
+    private func stopRendering() {
+        renderer2D?.state = nil
+        renderer2D = nil
+        renderer3D?.state = nil
+        renderer3D = nil
     }
 }

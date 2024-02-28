@@ -154,7 +154,7 @@ public struct Puck3DConfiguration: Equatable {
 
     /// Enable/disable shadow casting for the puck model
     ///
-    ///  - Note: Enabling shadows may impose extra performance costs and lead to extra rendering.
+    ///  - Note: Shadows may impose extra performance costs and lead to extra rendering.
     @_documentation(visibility: public)
     @_spi(Experimental) public var modelCastShadows: Value<Bool>?
 

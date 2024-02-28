@@ -1,5 +1,5 @@
 // This file is generated.
-import Foundation
+import UIKit
 
 /// A global directional light source which is only applied on 3D and hillshade layers. Using this type disables other light sources.
 ///
@@ -86,40 +86,85 @@ public struct FlatLight: Codable, StyleEncodable, Equatable {
 }
 
 extension FlatLight {
+    /// Whether extruded geometries are lit relative to the map or viewport.
+    @_documentation(visibility: public)
+    public func anchor(_ constant: Anchor) -> Self {
+        with(self, setter(\.anchor, .constant(constant)))
+    }
 
     /// Whether extruded geometries are lit relative to the map or viewport.
-    public func anchor(_ newValue: Value<Anchor>) -> Self {
-        with(self, setter(\.anchor, newValue))
+    @_documentation(visibility: public)
+    public func anchor(_ expression: Expression) -> Self {
+        with(self, setter(\.anchor, .expression(expression)))
+    }
+
+
+    /// Color tint for lighting extruded geometries.
+    @_documentation(visibility: public)
+    public func color(_ constant: StyleColor) -> Self {
+        with(self, setter(\.color, .constant(constant)))
     }
 
     /// Color tint for lighting extruded geometries.
-    public func color(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.color, newValue))
+    @_documentation(visibility: public)
+    public func color(_ color: UIColor) -> Self {
+        with(self, setter(\.color, .constant(StyleColor(color))))
     }
 
     /// Transition property for `color`
-    public func colorTransition(_ newValue: StyleTransition) -> Self {
-        with(self, setter(\.colorTransition, newValue))
+    @_documentation(visibility: public)
+    public func colorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.colorTransition, transition))
     }
 
+    /// Color tint for lighting extruded geometries.
+    @_documentation(visibility: public)
+    public func color(_ expression: Expression) -> Self {
+        with(self, setter(\.color, .expression(expression)))
+    }
+
+
     /// Intensity of lighting (on a scale from 0 to 1). Higher numbers will present as more extreme contrast.
-    public func intensity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.intensity, newValue))
+    @_documentation(visibility: public)
+    public func intensity(_ constant: Double) -> Self {
+        with(self, setter(\.intensity, .constant(constant)))
     }
 
     /// Transition property for `intensity`
-    public func intensityTransition(_ newValue: StyleTransition) -> Self {
-        with(self, setter(\.intensityTransition, newValue))
+    @_documentation(visibility: public)
+    public func intensityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.intensityTransition, transition))
+    }
+
+    /// Intensity of lighting (on a scale from 0 to 1). Higher numbers will present as more extreme contrast.
+    @_documentation(visibility: public)
+    public func intensity(_ expression: Expression) -> Self {
+        with(self, setter(\.intensity, .expression(expression)))
+    }
+
+
+    /// Position of the light source relative to lit (extruded) geometries, in [r radial coordinate, a azimuthal angle, p polar angle] where r indicates the distance from the center of the base of an object to its light, a indicates the position of the light relative to 0 degree (0 degree when `light.anchor` is set to `viewport` corresponds to the top of the viewport, or 0 degree when `light.anchor` is set to `map` corresponds to due north, and degrees proceed clockwise), and p indicates the height of the light (from 0 degree, directly above, to 180 degree, directly below).
+    @_documentation(visibility: public)
+    public func position(_ constant: [Double]) -> Self {
+        with(self, setter(\.position, .constant(constant)))
     }
 
     /// Position of the light source relative to lit (extruded) geometries, in [r radial coordinate, a azimuthal angle, p polar angle] where r indicates the distance from the center of the base of an object to its light, a indicates the position of the light relative to 0 degree (0 degree when `light.anchor` is set to `viewport` corresponds to the top of the viewport, or 0 degree when `light.anchor` is set to `map` corresponds to due north, and degrees proceed clockwise), and p indicates the height of the light (from 0 degree, directly above, to 180 degree, directly below).
-    public func position(_ newValue: Value<[Double]>) -> Self {
-        with(self, setter(\.position, newValue))
+    @_documentation(visibility: public)
+    public func position(radial: Double, azimuthal: Double, polar: Double) -> Self {
+        with(self, setter(\.position, .constant([radial, azimuthal, polar])))
     }
 
     /// Transition property for `position`
-    public func positionTransition(_ newValue: StyleTransition) -> Self {
-        with(self, setter(\.positionTransition, newValue))
+    @_documentation(visibility: public)
+    public func positionTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.positionTransition, transition))
+    }
+
+    /// Position of the light source relative to lit (extruded) geometries, in [r radial coordinate, a azimuthal angle, p polar angle] where r indicates the distance from the center of the base of an object to its light, a indicates the position of the light relative to 0 degree (0 degree when `light.anchor` is set to `viewport` corresponds to the top of the viewport, or 0 degree when `light.anchor` is set to `map` corresponds to due north, and degrees proceed clockwise), and p indicates the height of the light (from 0 degree, directly above, to 180 degree, directly below).
+    @_documentation(visibility: public)
+    public func position(_ expression: Expression) -> Self {
+        with(self, setter(\.position, .expression(expression)))
     }
 }
 

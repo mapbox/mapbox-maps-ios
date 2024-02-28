@@ -117,11 +117,11 @@ final class HeatmapLayerTests: XCTestCase {
             .slot(Slot.testConstantValue())
             .minZoom(Double.testConstantValue())
             .maxZoom(Double.testConstantValue())
-            .heatmapColor(Value<StyleColor>.testConstantValue())
-            .heatmapIntensity(Value<Double>.testConstantValue())
-            .heatmapOpacity(Value<Double>.testConstantValue())
-            .heatmapRadius(Value<Double>.testConstantValue())
-            .heatmapWeight(Value<Double>.testConstantValue())
+            .heatmapColor(StyleColor.testConstantValue())
+            .heatmapIntensity(Double.testConstantValue())
+            .heatmapOpacity(Double.testConstantValue())
+            .heatmapRadius(Double.testConstantValue())
+            .heatmapWeight(Double.testConstantValue())
 
         XCTAssertEqual(layer.filter, Expression.testConstantValue())
         XCTAssertEqual(layer.source, String.testConstantValue())
@@ -129,11 +129,11 @@ final class HeatmapLayerTests: XCTestCase {
         XCTAssertEqual(layer.slot, Slot.testConstantValue())
         XCTAssertEqual(layer.minZoom, Double.testConstantValue())
         XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
-        XCTAssertEqual(layer.heatmapColor, Value<StyleColor>.testConstantValue())
-        XCTAssertEqual(layer.heatmapIntensity, Value<Double>.testConstantValue())
-        XCTAssertEqual(layer.heatmapOpacity, Value<Double>.testConstantValue())
-        XCTAssertEqual(layer.heatmapRadius, Value<Double>.testConstantValue())
-        XCTAssertEqual(layer.heatmapWeight, Value<Double>.testConstantValue())
+        XCTAssertEqual(layer.heatmapColor, Value.constant(StyleColor.testConstantValue()))
+        XCTAssertEqual(layer.heatmapIntensity, Value.constant(Double.testConstantValue()))
+        XCTAssertEqual(layer.heatmapOpacity, Value.constant(Double.testConstantValue()))
+        XCTAssertEqual(layer.heatmapRadius, Value.constant(Double.testConstantValue()))
+        XCTAssertEqual(layer.heatmapWeight, Value.constant(Double.testConstantValue()))
     }
 }
 

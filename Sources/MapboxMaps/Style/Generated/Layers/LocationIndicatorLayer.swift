@@ -1,5 +1,5 @@
 // This file is generated.
-import Foundation
+import UIKit
 
 /// Location Indicator layer.
 ///
@@ -243,163 +243,324 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     }
 }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
+@_documentation(visibility: public)
 @_spi(Experimental) extension LocationIndicatorLayer {
 
-    /// The slot this layer is assigned to. 
+    /// The slot this layer is assigned to.
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func slot(_ newValue: Slot?) -> Self {
         with(self, setter(\.slot, newValue))
     }
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func minZoom(_ newValue: Double) -> Self {
         with(self, setter(\.minZoom, newValue))
     }
 
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
     }
 
     /// Name of image in sprite to use as the middle of the location indicator.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func bearingImage(_ newValue: Value<ResolvedImage>) -> Self {
-        with(self, setter(\.bearingImage, newValue))
-    }    
+    public func bearingImage(_ constant: String) -> Self {
+        with(self, setter(\.bearingImage, .constant(.name(constant))))
+    }
+
+    /// Name of image in sprite to use as the middle of the location indicator.
+    @_documentation(visibility: public)
+    public func bearingImage(_ expression: Expression) -> Self {
+        with(self, setter(\.bearingImage, .expression(expression)))
+    }
+
 
     /// Name of image in sprite to use as the background of the location indicator.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func shadowImage(_ newValue: Value<ResolvedImage>) -> Self {
-        with(self, setter(\.shadowImage, newValue))
-    }    
+    public func shadowImage(_ constant: String) -> Self {
+        with(self, setter(\.shadowImage, .constant(.name(constant))))
+    }
+
+    /// Name of image in sprite to use as the background of the location indicator.
+    @_documentation(visibility: public)
+    public func shadowImage(_ expression: Expression) -> Self {
+        with(self, setter(\.shadowImage, .expression(expression)))
+    }
+
 
     /// Name of image in sprite to use as the top of the location indicator.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func topImage(_ newValue: Value<ResolvedImage>) -> Self {
-        with(self, setter(\.topImage, newValue))
-    }    
+    public func topImage(_ constant: String) -> Self {
+        with(self, setter(\.topImage, .constant(.name(constant))))
+    }
+
+    /// Name of image in sprite to use as the top of the location indicator.
+    @_documentation(visibility: public)
+    public func topImage(_ expression: Expression) -> Self {
+        with(self, setter(\.topImage, .expression(expression)))
+    }
+
 
     /// The accuracy, in meters, of the position source used to retrieve the position of the location indicator.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func accuracyRadius(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.accuracyRadius, newValue))
-    }    
+    public func accuracyRadius(_ constant: Double) -> Self {
+        with(self, setter(\.accuracyRadius, .constant(constant)))
+    }
+
+    /// Transition property for `accuracyRadius`
+    @_documentation(visibility: public)
+    public func accuracyRadiusTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.accuracyRadiusTransition, transition))
+    }
+
+    /// The accuracy, in meters, of the position source used to retrieve the position of the location indicator.
+    @_documentation(visibility: public)
+    public func accuracyRadius(_ expression: Expression) -> Self {
+        with(self, setter(\.accuracyRadius, .expression(expression)))
+    }
+
 
     /// The color for drawing the accuracy radius border. To adjust transparency, set the alpha component of the color accordingly.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func accuracyRadiusBorderColor(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.accuracyRadiusBorderColor, newValue))
-    }    
+    public func accuracyRadiusBorderColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.accuracyRadiusBorderColor, .constant(constant)))
+    }
+
+    /// The color for drawing the accuracy radius border. To adjust transparency, set the alpha component of the color accordingly.
+    @_documentation(visibility: public)
+    public func accuracyRadiusBorderColor(_ color: UIColor) -> Self {
+        with(self, setter(\.accuracyRadiusBorderColor, .constant(StyleColor(color))))
+    }
+
+    /// Transition property for `accuracyRadiusBorderColor`
+    @_documentation(visibility: public)
+    public func accuracyRadiusBorderColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.accuracyRadiusBorderColorTransition, transition))
+    }
+
+    /// The color for drawing the accuracy radius border. To adjust transparency, set the alpha component of the color accordingly.
+    @_documentation(visibility: public)
+    public func accuracyRadiusBorderColor(_ expression: Expression) -> Self {
+        with(self, setter(\.accuracyRadiusBorderColor, .expression(expression)))
+    }
+
 
     /// The color for drawing the accuracy radius, as a circle. To adjust transparency, set the alpha component of the color accordingly.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func accuracyRadiusColor(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.accuracyRadiusColor, newValue))
-    }    
+    public func accuracyRadiusColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.accuracyRadiusColor, .constant(constant)))
+    }
+
+    /// The color for drawing the accuracy radius, as a circle. To adjust transparency, set the alpha component of the color accordingly.
+    @_documentation(visibility: public)
+    public func accuracyRadiusColor(_ color: UIColor) -> Self {
+        with(self, setter(\.accuracyRadiusColor, .constant(StyleColor(color))))
+    }
+
+    /// Transition property for `accuracyRadiusColor`
+    @_documentation(visibility: public)
+    public func accuracyRadiusColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.accuracyRadiusColorTransition, transition))
+    }
+
+    /// The color for drawing the accuracy radius, as a circle. To adjust transparency, set the alpha component of the color accordingly.
+    @_documentation(visibility: public)
+    public func accuracyRadiusColor(_ expression: Expression) -> Self {
+        with(self, setter(\.accuracyRadiusColor, .expression(expression)))
+    }
+
 
     /// The bearing of the location indicator.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func bearing(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.bearing, newValue))
-    }    
+    public func bearing(_ constant: Double) -> Self {
+        with(self, setter(\.bearing, .constant(constant)))
+    }
+
+    /// Transition property for `bearing`
+    @_documentation(visibility: public)
+    public func bearingTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.bearingTransition, transition))
+    }
+
+    /// The bearing of the location indicator.
+    @_documentation(visibility: public)
+    public func bearing(_ expression: Expression) -> Self {
+        with(self, setter(\.bearing, .expression(expression)))
+    }
+
 
     /// The size of the bearing image, as a scale factor applied to the size of the specified image.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func bearingImageSize(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.bearingImageSize, newValue))
-    }    
+    public func bearingImageSize(_ constant: Double) -> Self {
+        with(self, setter(\.bearingImageSize, .constant(constant)))
+    }
+
+    /// Transition property for `bearingImageSize`
+    @_documentation(visibility: public)
+    public func bearingImageSizeTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.bearingImageSizeTransition, transition))
+    }
+
+    /// The size of the bearing image, as a scale factor applied to the size of the specified image.
+    @_documentation(visibility: public)
+    public func bearingImageSize(_ expression: Expression) -> Self {
+        with(self, setter(\.bearingImageSize, .expression(expression)))
+    }
+
 
     /// The color of the circle emphasizing the indicator. To adjust transparency, set the alpha component of the color accordingly.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func emphasisCircleColor(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.emphasisCircleColor, newValue))
-    }    
+    public func emphasisCircleColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.emphasisCircleColor, .constant(constant)))
+    }
+
+    /// The color of the circle emphasizing the indicator. To adjust transparency, set the alpha component of the color accordingly.
+    @_documentation(visibility: public)
+    public func emphasisCircleColor(_ color: UIColor) -> Self {
+        with(self, setter(\.emphasisCircleColor, .constant(StyleColor(color))))
+    }
+
+    /// Transition property for `emphasisCircleColor`
+    @_documentation(visibility: public)
+    public func emphasisCircleColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.emphasisCircleColorTransition, transition))
+    }
+
+    /// The color of the circle emphasizing the indicator. To adjust transparency, set the alpha component of the color accordingly.
+    @_documentation(visibility: public)
+    public func emphasisCircleColor(_ expression: Expression) -> Self {
+        with(self, setter(\.emphasisCircleColor, .expression(expression)))
+    }
+
 
     /// The radius, in pixel, of the circle emphasizing the indicator, drawn between the accuracy radius and the indicator shadow.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func emphasisCircleRadius(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.emphasisCircleRadius, newValue))
-    }    
+    public func emphasisCircleRadius(_ constant: Double) -> Self {
+        with(self, setter(\.emphasisCircleRadius, .constant(constant)))
+    }
+
+    /// Transition property for `emphasisCircleRadius`
+    @_documentation(visibility: public)
+    public func emphasisCircleRadiusTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.emphasisCircleRadiusTransition, transition))
+    }
+
+    /// The radius, in pixel, of the circle emphasizing the indicator, drawn between the accuracy radius and the indicator shadow.
+    @_documentation(visibility: public)
+    public func emphasisCircleRadius(_ expression: Expression) -> Self {
+        with(self, setter(\.emphasisCircleRadius, .expression(expression)))
+    }
+
 
     /// The displacement off the center of the top image and the shadow image when the pitch of the map is greater than 0. This helps producing a three-dimensional appearence.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func imagePitchDisplacement(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.imagePitchDisplacement, newValue))
-    }    
+    public func imagePitchDisplacement(_ constant: Double) -> Self {
+        with(self, setter(\.imagePitchDisplacement, .constant(constant)))
+    }
+
+    /// The displacement off the center of the top image and the shadow image when the pitch of the map is greater than 0. This helps producing a three-dimensional appearence.
+    @_documentation(visibility: public)
+    public func imagePitchDisplacement(_ expression: Expression) -> Self {
+        with(self, setter(\.imagePitchDisplacement, .expression(expression)))
+    }
+
 
     /// An array of [latitude, longitude, altitude] position of the location indicator.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func location(_ newValue: Value<[Double]>) -> Self {
-        with(self, setter(\.location, newValue))
-    }    
+    public func location(_ constant: [Double]) -> Self {
+        with(self, setter(\.location, .constant(constant)))
+    }
+
+    /// An array of [latitude, longitude, altitude] position of the location indicator.
+    @_documentation(visibility: public)
+    public func location(coordinate: CLLocationCoordinate2D) -> Self {
+        with(self, setter(\.location, .constant([coordinate.latitude, coordinate.longitude])))
+    }
+
+    /// Transition property for `location`
+    @_documentation(visibility: public)
+    public func locationTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.locationTransition, transition))
+    }
+
+    /// An array of [latitude, longitude, altitude] position of the location indicator.
+    @_documentation(visibility: public)
+    public func location(_ expression: Expression) -> Self {
+        with(self, setter(\.location, .expression(expression)))
+    }
+
 
     /// The opacity of the entire location indicator layer.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func locationIndicatorOpacity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.locationIndicatorOpacity, newValue))
-    }    
+    public func locationIndicatorOpacity(_ constant: Double) -> Self {
+        with(self, setter(\.locationIndicatorOpacity, .constant(constant)))
+    }
+
+    /// Transition property for `locationIndicatorOpacity`
+    @_documentation(visibility: public)
+    public func locationIndicatorOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.locationIndicatorOpacityTransition, transition))
+    }
+
+    /// The opacity of the entire location indicator layer.
+    @_documentation(visibility: public)
+    public func locationIndicatorOpacity(_ expression: Expression) -> Self {
+        with(self, setter(\.locationIndicatorOpacity, .expression(expression)))
+    }
+
 
     /// The amount of the perspective compensation, between 0 and 1. A value of 1 produces a location indicator of constant width across the screen. A value of 0 makes it scale naturally according to the viewing projection.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func perspectiveCompensation(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.perspectiveCompensation, newValue))
-    }    
+    public func perspectiveCompensation(_ constant: Double) -> Self {
+        with(self, setter(\.perspectiveCompensation, .constant(constant)))
+    }
+
+    /// The amount of the perspective compensation, between 0 and 1. A value of 1 produces a location indicator of constant width across the screen. A value of 0 makes it scale naturally according to the viewing projection.
+    @_documentation(visibility: public)
+    public func perspectiveCompensation(_ expression: Expression) -> Self {
+        with(self, setter(\.perspectiveCompensation, .expression(expression)))
+    }
+
 
     /// The size of the shadow image, as a scale factor applied to the size of the specified image.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func shadowImageSize(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.shadowImageSize, newValue))
-    }    
+    public func shadowImageSize(_ constant: Double) -> Self {
+        with(self, setter(\.shadowImageSize, .constant(constant)))
+    }
+
+    /// Transition property for `shadowImageSize`
+    @_documentation(visibility: public)
+    public func shadowImageSizeTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.shadowImageSizeTransition, transition))
+    }
+
+    /// The size of the shadow image, as a scale factor applied to the size of the specified image.
+    @_documentation(visibility: public)
+    public func shadowImageSize(_ expression: Expression) -> Self {
+        with(self, setter(\.shadowImageSize, .expression(expression)))
+    }
+
 
     /// The size of the top image, as a scale factor applied to the size of the specified image.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func topImageSize(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.topImageSize, newValue))
-    }    
+    public func topImageSize(_ constant: Double) -> Self {
+        with(self, setter(\.topImageSize, .constant(constant)))
+    }
+
+    /// Transition property for `topImageSize`
+    @_documentation(visibility: public)
+    public func topImageSizeTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.topImageSizeTransition, transition))
+    }
+
+    /// The size of the top image, as a scale factor applied to the size of the specified image.
+    @_documentation(visibility: public)
+    public func topImageSize(_ expression: Expression) -> Self {
+        with(self, setter(\.topImageSize, .expression(expression)))
+    }
 }
 
 // End of generated file.

@@ -1,5 +1,5 @@
 // This file is generated.
-import Foundation
+import UIKit
 
 /// A heatmap.
 ///
@@ -153,24 +153,18 @@ public struct HeatmapLayer: Layer, Equatable {
     }
 }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
+@_documentation(visibility: public)
 @_spi(Experimental) extension HeatmapLayer {
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func filter(_ newValue: Expression) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func source(_ newValue: String) -> Self {
         with(self, setter(\.source, newValue))
     }
@@ -179,77 +173,117 @@ public struct HeatmapLayer: Layer, Equatable {
     ///
     /// Required for vector tile sources.
     /// Prohibited for all other source types, including GeoJSON sources.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func sourceLayer(_ newValue: String) -> Self {
         with(self, setter(\.sourceLayer, newValue))
-    }   
-    
-    /// The slot this layer is assigned to. 
+    }
+
+    /// The slot this layer is assigned to.
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func slot(_ newValue: Slot?) -> Self {
         with(self, setter(\.slot, newValue))
     }
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func minZoom(_ newValue: Double) -> Self {
         with(self, setter(\.minZoom, newValue))
     }
 
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
     }
 
     /// Defines the color of each pixel based on its density value in a heatmap. Should be an expression that uses `["heatmap-density"]` as input.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func heatmapColor(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.heatmapColor, newValue))
-    }    
+    public func heatmapColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.heatmapColor, .constant(constant)))
+    }
+
+    /// Defines the color of each pixel based on its density value in a heatmap. Should be an expression that uses `["heatmap-density"]` as input.
+    @_documentation(visibility: public)
+    public func heatmapColor(_ color: UIColor) -> Self {
+        with(self, setter(\.heatmapColor, .constant(StyleColor(color))))
+    }
+
+    /// Defines the color of each pixel based on its density value in a heatmap. Should be an expression that uses `["heatmap-density"]` as input.
+    @_documentation(visibility: public)
+    public func heatmapColor(_ expression: Expression) -> Self {
+        with(self, setter(\.heatmapColor, .expression(expression)))
+    }
+
 
     /// Similar to `heatmap-weight` but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func heatmapIntensity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.heatmapIntensity, newValue))
-    }    
+    public func heatmapIntensity(_ constant: Double) -> Self {
+        with(self, setter(\.heatmapIntensity, .constant(constant)))
+    }
+
+    /// Transition property for `heatmapIntensity`
+    @_documentation(visibility: public)
+    public func heatmapIntensityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.heatmapIntensityTransition, transition))
+    }
+
+    /// Similar to `heatmap-weight` but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.
+    @_documentation(visibility: public)
+    public func heatmapIntensity(_ expression: Expression) -> Self {
+        with(self, setter(\.heatmapIntensity, .expression(expression)))
+    }
+
 
     /// The global opacity at which the heatmap layer will be drawn.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func heatmapOpacity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.heatmapOpacity, newValue))
-    }    
+    public func heatmapOpacity(_ constant: Double) -> Self {
+        with(self, setter(\.heatmapOpacity, .constant(constant)))
+    }
+
+    /// Transition property for `heatmapOpacity`
+    @_documentation(visibility: public)
+    public func heatmapOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.heatmapOpacityTransition, transition))
+    }
+
+    /// The global opacity at which the heatmap layer will be drawn.
+    @_documentation(visibility: public)
+    public func heatmapOpacity(_ expression: Expression) -> Self {
+        with(self, setter(\.heatmapOpacity, .expression(expression)))
+    }
+
 
     /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func heatmapRadius(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.heatmapRadius, newValue))
-    }    
+    public func heatmapRadius(_ constant: Double) -> Self {
+        with(self, setter(\.heatmapRadius, .constant(constant)))
+    }
+
+    /// Transition property for `heatmapRadius`
+    @_documentation(visibility: public)
+    public func heatmapRadiusTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.heatmapRadiusTransition, transition))
+    }
+
+    /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
+    @_documentation(visibility: public)
+    public func heatmapRadius(_ expression: Expression) -> Self {
+        with(self, setter(\.heatmapRadius, .expression(expression)))
+    }
+
 
     /// A measure of how much an individual point contributes to the heatmap. A value of 10 would be equivalent to having 10 points of weight 1 in the same spot. Especially useful when combined with clustering.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func heatmapWeight(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.heatmapWeight, newValue))
-    }    
+    public func heatmapWeight(_ constant: Double) -> Self {
+        with(self, setter(\.heatmapWeight, .constant(constant)))
+    }
+
+    /// A measure of how much an individual point contributes to the heatmap. A value of 10 would be equivalent to having 10 points of weight 1 in the same spot. Especially useful when combined with clustering.
+    @_documentation(visibility: public)
+    public func heatmapWeight(_ expression: Expression) -> Self {
+        with(self, setter(\.heatmapWeight, .expression(expression)))
+    }
 }
 
 // End of generated file.

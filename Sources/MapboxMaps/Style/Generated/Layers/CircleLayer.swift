@@ -1,5 +1,5 @@
 // This file is generated.
-import Foundation
+import UIKit
 
 /// A filled circle.
 ///
@@ -237,24 +237,18 @@ public struct CircleLayer: Layer, Equatable {
     }
 }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
+@_documentation(visibility: public)
 @_spi(Experimental) extension CircleLayer {
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func filter(_ newValue: Expression) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func source(_ newValue: String) -> Self {
         with(self, setter(\.source, newValue))
     }
@@ -263,141 +257,269 @@ public struct CircleLayer: Layer, Equatable {
     ///
     /// Required for vector tile sources.
     /// Prohibited for all other source types, including GeoJSON sources.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func sourceLayer(_ newValue: String) -> Self {
         with(self, setter(\.sourceLayer, newValue))
-    }   
-    
-    /// The slot this layer is assigned to. 
+    }
+
+    /// The slot this layer is assigned to.
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func slot(_ newValue: Slot?) -> Self {
         with(self, setter(\.slot, newValue))
     }
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func minZoom(_ newValue: Double) -> Self {
         with(self, setter(\.minZoom, newValue))
     }
 
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
     }
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circleSortKey(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.circleSortKey, newValue))
-    }    
+    public func circleSortKey(_ constant: Double) -> Self {
+        with(self, setter(\.circleSortKey, .constant(constant)))
+    }
+
+    /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
+    @_documentation(visibility: public)
+    public func circleSortKey(_ expression: Expression) -> Self {
+        with(self, setter(\.circleSortKey, .expression(expression)))
+    }
+
 
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circleBlur(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.circleBlur, newValue))
-    }    
+    public func circleBlur(_ constant: Double) -> Self {
+        with(self, setter(\.circleBlur, .constant(constant)))
+    }
+
+    /// Transition property for `circleBlur`
+    @_documentation(visibility: public)
+    public func circleBlurTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleBlurTransition, transition))
+    }
+
+    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    @_documentation(visibility: public)
+    public func circleBlur(_ expression: Expression) -> Self {
+        with(self, setter(\.circleBlur, .expression(expression)))
+    }
+
 
     /// The fill color of the circle.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circleColor(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.circleColor, newValue))
-    }    
+    public func circleColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.circleColor, .constant(constant)))
+    }
+
+    /// The fill color of the circle.
+    @_documentation(visibility: public)
+    public func circleColor(_ color: UIColor) -> Self {
+        with(self, setter(\.circleColor, .constant(StyleColor(color))))
+    }
+
+    /// Transition property for `circleColor`
+    @_documentation(visibility: public)
+    public func circleColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleColorTransition, transition))
+    }
+
+    /// The fill color of the circle.
+    @_documentation(visibility: public)
+    public func circleColor(_ expression: Expression) -> Self {
+        with(self, setter(\.circleColor, .expression(expression)))
+    }
+
 
     /// Controls the intensity of light emitted on the source features.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circleEmissiveStrength(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.circleEmissiveStrength, newValue))
-    }    
+    public func circleEmissiveStrength(_ constant: Double) -> Self {
+        with(self, setter(\.circleEmissiveStrength, .constant(constant)))
+    }
+
+    /// Transition property for `circleEmissiveStrength`
+    @_documentation(visibility: public)
+    public func circleEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleEmissiveStrengthTransition, transition))
+    }
+
+    /// Controls the intensity of light emitted on the source features.
+    @_documentation(visibility: public)
+    public func circleEmissiveStrength(_ expression: Expression) -> Self {
+        with(self, setter(\.circleEmissiveStrength, .expression(expression)))
+    }
+
 
     /// The opacity at which the circle will be drawn.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circleOpacity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.circleOpacity, newValue))
-    }    
+    public func circleOpacity(_ constant: Double) -> Self {
+        with(self, setter(\.circleOpacity, .constant(constant)))
+    }
+
+    /// Transition property for `circleOpacity`
+    @_documentation(visibility: public)
+    public func circleOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleOpacityTransition, transition))
+    }
+
+    /// The opacity at which the circle will be drawn.
+    @_documentation(visibility: public)
+    public func circleOpacity(_ expression: Expression) -> Self {
+        with(self, setter(\.circleOpacity, .expression(expression)))
+    }
+
 
     /// Orientation of circle when map is pitched.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circlePitchAlignment(_ newValue: Value<CirclePitchAlignment>) -> Self {
-        with(self, setter(\.circlePitchAlignment, newValue))
-    }    
+    public func circlePitchAlignment(_ constant: CirclePitchAlignment) -> Self {
+        with(self, setter(\.circlePitchAlignment, .constant(constant)))
+    }
+
+    /// Orientation of circle when map is pitched.
+    @_documentation(visibility: public)
+    public func circlePitchAlignment(_ expression: Expression) -> Self {
+        with(self, setter(\.circlePitchAlignment, .expression(expression)))
+    }
+
 
     /// Controls the scaling behavior of the circle when the map is pitched.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circlePitchScale(_ newValue: Value<CirclePitchScale>) -> Self {
-        with(self, setter(\.circlePitchScale, newValue))
-    }    
+    public func circlePitchScale(_ constant: CirclePitchScale) -> Self {
+        with(self, setter(\.circlePitchScale, .constant(constant)))
+    }
+
+    /// Controls the scaling behavior of the circle when the map is pitched.
+    @_documentation(visibility: public)
+    public func circlePitchScale(_ expression: Expression) -> Self {
+        with(self, setter(\.circlePitchScale, .expression(expression)))
+    }
+
 
     /// Circle radius.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circleRadius(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.circleRadius, newValue))
-    }    
+    public func circleRadius(_ constant: Double) -> Self {
+        with(self, setter(\.circleRadius, .constant(constant)))
+    }
+
+    /// Transition property for `circleRadius`
+    @_documentation(visibility: public)
+    public func circleRadiusTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleRadiusTransition, transition))
+    }
+
+    /// Circle radius.
+    @_documentation(visibility: public)
+    public func circleRadius(_ expression: Expression) -> Self {
+        with(self, setter(\.circleRadius, .expression(expression)))
+    }
+
 
     /// The stroke color of the circle.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circleStrokeColor(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.circleStrokeColor, newValue))
-    }    
+    public func circleStrokeColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.circleStrokeColor, .constant(constant)))
+    }
+
+    /// The stroke color of the circle.
+    @_documentation(visibility: public)
+    public func circleStrokeColor(_ color: UIColor) -> Self {
+        with(self, setter(\.circleStrokeColor, .constant(StyleColor(color))))
+    }
+
+    /// Transition property for `circleStrokeColor`
+    @_documentation(visibility: public)
+    public func circleStrokeColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleStrokeColorTransition, transition))
+    }
+
+    /// The stroke color of the circle.
+    @_documentation(visibility: public)
+    public func circleStrokeColor(_ expression: Expression) -> Self {
+        with(self, setter(\.circleStrokeColor, .expression(expression)))
+    }
+
 
     /// The opacity of the circle's stroke.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circleStrokeOpacity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.circleStrokeOpacity, newValue))
-    }    
+    public func circleStrokeOpacity(_ constant: Double) -> Self {
+        with(self, setter(\.circleStrokeOpacity, .constant(constant)))
+    }
+
+    /// Transition property for `circleStrokeOpacity`
+    @_documentation(visibility: public)
+    public func circleStrokeOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleStrokeOpacityTransition, transition))
+    }
+
+    /// The opacity of the circle's stroke.
+    @_documentation(visibility: public)
+    public func circleStrokeOpacity(_ expression: Expression) -> Self {
+        with(self, setter(\.circleStrokeOpacity, .expression(expression)))
+    }
+
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circleStrokeWidth(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.circleStrokeWidth, newValue))
-    }    
+    public func circleStrokeWidth(_ constant: Double) -> Self {
+        with(self, setter(\.circleStrokeWidth, .constant(constant)))
+    }
+
+    /// Transition property for `circleStrokeWidth`
+    @_documentation(visibility: public)
+    public func circleStrokeWidthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleStrokeWidthTransition, transition))
+    }
+
+    /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
+    @_documentation(visibility: public)
+    public func circleStrokeWidth(_ expression: Expression) -> Self {
+        with(self, setter(\.circleStrokeWidth, .expression(expression)))
+    }
+
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circleTranslate(_ newValue: Value<[Double]>) -> Self {
-        with(self, setter(\.circleTranslate, newValue))
-    }    
+    public func circleTranslate(_ constant: [Double]) -> Self {
+        with(self, setter(\.circleTranslate, .constant(constant)))
+    }
+
+    /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+    @_documentation(visibility: public)
+    public func circleTranslate(x: Double, y: Double) -> Self {
+        with(self, setter(\.circleTranslate, .constant([x, y])))
+    }
+
+    /// Transition property for `circleTranslate`
+    @_documentation(visibility: public)
+    public func circleTranslateTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleTranslateTransition, transition))
+    }
+
+    /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+    @_documentation(visibility: public)
+    public func circleTranslate(_ expression: Expression) -> Self {
+        with(self, setter(\.circleTranslate, .expression(expression)))
+    }
+
 
     /// Controls the frame of reference for `circle-translate`.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func circleTranslateAnchor(_ newValue: Value<CircleTranslateAnchor>) -> Self {
-        with(self, setter(\.circleTranslateAnchor, newValue))
-    }    
+    public func circleTranslateAnchor(_ constant: CircleTranslateAnchor) -> Self {
+        with(self, setter(\.circleTranslateAnchor, .constant(constant)))
+    }
+
+    /// Controls the frame of reference for `circle-translate`.
+    @_documentation(visibility: public)
+    public func circleTranslateAnchor(_ expression: Expression) -> Self {
+        with(self, setter(\.circleTranslateAnchor, .expression(expression)))
+    }
 }
 
 // End of generated file.

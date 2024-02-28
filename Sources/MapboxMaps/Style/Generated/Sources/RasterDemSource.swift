@@ -118,129 +118,74 @@ extension RasterDemSource {
     }
 }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-@_spi(Experimental) extension RasterDemSource {
+@_documentation(visibility: public)
+@_spi(Experimental)
+extension RasterDemSource {
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`.
+    @_documentation(visibility: public)
     public func url(_ newValue: String) -> Self {
         with(self, setter(\.url, newValue))
-    }    
+    }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     /// An array of one or more tile source URLs, as in the TileJSON spec.
+    @_documentation(visibility: public)
     public func tiles(_ newValue: [String]) -> Self {
         with(self, setter(\.tiles, newValue))
-    }    
+    }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    /// An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL.
-    public func bounds(_ newValue: [Double]) -> Self {
-        with(self, setter(\.bounds, newValue))
-    }    
-
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     /// Minimum zoom level for which tiles are available, as in the TileJSON spec.
+    @_documentation(visibility: public)
     public func minzoom(_ newValue: Double) -> Self {
         with(self, setter(\.minzoom, newValue))
-    }    
+    }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     /// Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels.
+    @_documentation(visibility: public)
     public func maxzoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxzoom, newValue))
-    }    
+    }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    /// The minimum visual size to display tiles for this layer. Only configurable for raster layers.
-    public func tileSize(_ newValue: Double) -> Self {
-        with(self, setter(\.tileSize, newValue))
-    }    
-
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    /// Contains an attribution to be displayed when the map is shown to a user.
-    public func attribution(_ newValue: String) -> Self {
-        with(self, setter(\.attribution, newValue))
-    }    
-
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    /// The encoding used by this source. Mapbox Terrain RGB is used by default
-    public func encoding(_ newValue: Encoding) -> Self {
-        with(self, setter(\.encoding, newValue))
-    }    
-
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     /// A setting to determine whether a source's tiles are cached locally.
+    @_documentation(visibility: public)
     public func volatile(_ newValue: Bool) -> Self {
         with(self, setter(\.volatile, newValue))
-    }    
+    }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom. The default delta is 4.
+    @_documentation(visibility: public)
     public func prefetchZoomDelta(_ newValue: Double) -> Self {
         with(self, setter(\.prefetchZoomDelta, newValue))
-    }    
+    }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.
+    @_documentation(visibility: public)
     public func tileCacheBudget(_ newValue: TileCacheBudgetSize) -> Self {
         with(self, setter(\.tileCacheBudget, newValue))
-    }    
+    }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     /// Minimum tile update interval in seconds, which is used to throttle the tile update network requests. If the given source supports loading tiles from a server, sets the minimum tile update interval. Update network requests that are more frequent than the minimum tile update interval are suppressed.
+    @_documentation(visibility: public)
     public func minimumTileUpdateInterval(_ newValue: Double) -> Self {
         with(self, setter(\.minimumTileUpdateInterval, newValue))
-    }    
+    }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     /// When a set of tiles for a current zoom level is being rendered and some of the ideal tiles that cover the screen are not yet loaded, parent tile could be used instead. This might introduce unwanted rendering side-effects, especially for raster tiles that are overscaled multiple times. This property sets the maximum limit for how much a parent tile can be overscaled.
+    @_documentation(visibility: public)
     public func maxOverscaleFactorForParentTiles(_ newValue: Double) -> Self {
         with(self, setter(\.maxOverscaleFactorForParentTiles, newValue))
-    }    
+    }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     /// For the tiled sources, this property sets the tile requests delay. The given delay comes in action only during an ongoing animation or gestures. It helps to avoid loading, parsing and rendering of the transient tiles and thus to improve the rendering performance, especially on low-end devices.
+    @_documentation(visibility: public)
     public func tileRequestsDelay(_ newValue: Double) -> Self {
         with(self, setter(\.tileRequestsDelay, newValue))
-    }    
+    }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     /// For the tiled sources, this property sets the tile network requests delay. The given delay comes in action only during an ongoing animation or gestures. It helps to avoid loading the transient tiles from the network and thus to avoid redundant network requests. Note that tile-network-requests-delay value is superseded with tile-requests-delay property value, if both are provided.
+    @_documentation(visibility: public)
     public func tileNetworkRequestsDelay(_ newValue: Double) -> Self {
         with(self, setter(\.tileNetworkRequestsDelay, newValue))
-    }    
+    }
 }
 // End of generated file.

@@ -1,5 +1,5 @@
 // This file is generated.
-import Foundation
+import UIKit
 
 /// A layer to render 3D Models.
 @_documentation(visibility: public)
@@ -296,24 +296,18 @@ import Foundation
     }
 }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
+@_documentation(visibility: public)
 @_spi(Experimental) extension ModelLayer {
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func filter(_ newValue: Expression) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func source(_ newValue: String) -> Self {
         with(self, setter(\.source, newValue))
     }
@@ -322,165 +316,373 @@ import Foundation
     ///
     /// Required for vector tile sources.
     /// Prohibited for all other source types, including GeoJSON sources.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func sourceLayer(_ newValue: String) -> Self {
         with(self, setter(\.sourceLayer, newValue))
-    }   
-    
-    /// The slot this layer is assigned to. 
+    }
+
+    /// The slot this layer is assigned to.
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func slot(_ newValue: Slot?) -> Self {
         with(self, setter(\.slot, newValue))
     }
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func minZoom(_ newValue: Double) -> Self {
         with(self, setter(\.minZoom, newValue))
     }
 
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
     }
 
     /// Model to render.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelId(_ newValue: Value<String>) -> Self {
-        with(self, setter(\.modelId, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelId(_ constant: String) -> Self {
+        with(self, setter(\.modelId, .constant(constant)))
+    }
+
+    /// Model to render.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelId(_ expression: Expression) -> Self {
+        with(self, setter(\.modelId, .expression(expression)))
+    }
+
 
     /// Intensity of the ambient occlusion if present in the 3D model.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelAmbientOcclusionIntensity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.modelAmbientOcclusionIntensity, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelAmbientOcclusionIntensity(_ constant: Double) -> Self {
+        with(self, setter(\.modelAmbientOcclusionIntensity, .constant(constant)))
+    }
+
+    /// Transition property for `modelAmbientOcclusionIntensity`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelAmbientOcclusionIntensityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.modelAmbientOcclusionIntensityTransition, transition))
+    }
+
+    /// Intensity of the ambient occlusion if present in the 3D model.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelAmbientOcclusionIntensity(_ expression: Expression) -> Self {
+        with(self, setter(\.modelAmbientOcclusionIntensity, .expression(expression)))
+    }
+
 
     /// Enable/Disable shadow casting for this layer
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelCastShadows(_ newValue: Value<Bool>) -> Self {
-        with(self, setter(\.modelCastShadows, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelCastShadows(_ constant: Bool) -> Self {
+        with(self, setter(\.modelCastShadows, .constant(constant)))
+    }
+
+    /// Enable/Disable shadow casting for this layer
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelCastShadows(_ expression: Expression) -> Self {
+        with(self, setter(\.modelCastShadows, .expression(expression)))
+    }
+
 
     /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelColor(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.modelColor, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.modelColor, .constant(constant)))
+    }
+
+    /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelColor(_ color: UIColor) -> Self {
+        with(self, setter(\.modelColor, .constant(StyleColor(color))))
+    }
+
+    /// Transition property for `modelColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.modelColorTransition, transition))
+    }
+
+    /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelColor(_ expression: Expression) -> Self {
+        with(self, setter(\.modelColor, .expression(expression)))
+    }
+
 
     /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelColorMixIntensity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.modelColorMixIntensity, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelColorMixIntensity(_ constant: Double) -> Self {
+        with(self, setter(\.modelColorMixIntensity, .constant(constant)))
+    }
+
+    /// Transition property for `modelColorMixIntensity`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelColorMixIntensityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.modelColorMixIntensityTransition, transition))
+    }
+
+    /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelColorMixIntensity(_ expression: Expression) -> Self {
+        with(self, setter(\.modelColorMixIntensity, .expression(expression)))
+    }
+
 
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff  on pitched map views. The automatic cutoff range is calculated according to the minimum required zoom level of the source and layer. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelCutoffFadeRange(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.modelCutoffFadeRange, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelCutoffFadeRange(_ constant: Double) -> Self {
+        with(self, setter(\.modelCutoffFadeRange, .constant(constant)))
+    }
+
+    /// This parameter defines the range for the fade-out effect before an automatic content cutoff  on pitched map views. The automatic cutoff range is calculated according to the minimum required zoom level of the source and layer. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelCutoffFadeRange(_ expression: Expression) -> Self {
+        with(self, setter(\.modelCutoffFadeRange, .expression(expression)))
+    }
+
 
     /// Strength of the emission. There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. doors). Expressions that depend on measure-light are not supported when using GeoJSON or vector tile as the model layer source.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelEmissiveStrength(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.modelEmissiveStrength, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelEmissiveStrength(_ constant: Double) -> Self {
+        with(self, setter(\.modelEmissiveStrength, .constant(constant)))
+    }
+
+    /// Transition property for `modelEmissiveStrength`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.modelEmissiveStrengthTransition, transition))
+    }
+
+    /// Strength of the emission. There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. doors). Expressions that depend on measure-light are not supported when using GeoJSON or vector tile as the model layer source.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelEmissiveStrength(_ expression: Expression) -> Self {
+        with(self, setter(\.modelEmissiveStrength, .expression(expression)))
+    }
+
 
     /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelHeightBasedEmissiveStrengthMultiplier(_ newValue: Value<[Double]>) -> Self {
-        with(self, setter(\.modelHeightBasedEmissiveStrengthMultiplier, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelHeightBasedEmissiveStrengthMultiplier(_ constant: [Double]) -> Self {
+        with(self, setter(\.modelHeightBasedEmissiveStrengthMultiplier, .constant(constant)))
+    }
+
+    /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelHeightBasedEmissiveStrengthMultiplier(gradientBegin: Double, gradientEnd: Double, valueAtBegin: Double, valueAtEnd: Double, gradientCurvePower: Double) -> Self {
+        with(self, setter(\.modelHeightBasedEmissiveStrengthMultiplier, .constant([gradientBegin, gradientEnd, valueAtBegin, valueAtEnd, gradientCurvePower])))
+    }
+
+    /// Transition property for `modelHeightBasedEmissiveStrengthMultiplier`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelHeightBasedEmissiveStrengthMultiplierTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.modelHeightBasedEmissiveStrengthMultiplierTransition, transition))
+    }
+
+    /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelHeightBasedEmissiveStrengthMultiplier(_ expression: Expression) -> Self {
+        with(self, setter(\.modelHeightBasedEmissiveStrengthMultiplier, .expression(expression)))
+    }
+
 
     /// The opacity of the model layer.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelOpacity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.modelOpacity, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelOpacity(_ constant: Double) -> Self {
+        with(self, setter(\.modelOpacity, .constant(constant)))
+    }
+
+    /// Transition property for `modelOpacity`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.modelOpacityTransition, transition))
+    }
+
+    /// The opacity of the model layer.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelOpacity(_ expression: Expression) -> Self {
+        with(self, setter(\.modelOpacity, .expression(expression)))
+    }
+
 
     /// Enable/Disable shadow receiving for this layer
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelReceiveShadows(_ newValue: Value<Bool>) -> Self {
-        with(self, setter(\.modelReceiveShadows, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelReceiveShadows(_ constant: Bool) -> Self {
+        with(self, setter(\.modelReceiveShadows, .constant(constant)))
+    }
+
+    /// Enable/Disable shadow receiving for this layer
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelReceiveShadows(_ expression: Expression) -> Self {
+        with(self, setter(\.modelReceiveShadows, .expression(expression)))
+    }
+
 
     /// The rotation of the model in euler angles [lon, lat, z].
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelRotation(_ newValue: Value<[Double]>) -> Self {
-        with(self, setter(\.modelRotation, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelRotation(_ constant: [Double]) -> Self {
+        with(self, setter(\.modelRotation, .constant(constant)))
+    }
+
+    /// The rotation of the model in euler angles [lon, lat, z].
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelRotation(x: Double, y: Double, z: Double) -> Self {
+        with(self, setter(\.modelRotation, .constant([x, y, z])))
+    }
+
+    /// Transition property for `modelRotation`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelRotationTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.modelRotationTransition, transition))
+    }
+
+    /// The rotation of the model in euler angles [lon, lat, z].
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelRotation(_ expression: Expression) -> Self {
+        with(self, setter(\.modelRotation, .expression(expression)))
+    }
+
 
     /// Material roughness. Material is fully smooth for value 0, and fully rough for value 1. Affects only layers using batched-model source.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelRoughness(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.modelRoughness, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelRoughness(_ constant: Double) -> Self {
+        with(self, setter(\.modelRoughness, .constant(constant)))
+    }
+
+    /// Transition property for `modelRoughness`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelRoughnessTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.modelRoughnessTransition, transition))
+    }
+
+    /// Material roughness. Material is fully smooth for value 0, and fully rough for value 1. Affects only layers using batched-model source.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelRoughness(_ expression: Expression) -> Self {
+        with(self, setter(\.modelRoughness, .expression(expression)))
+    }
+
 
     /// The scale of the model.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelScale(_ newValue: Value<[Double]>) -> Self {
-        with(self, setter(\.modelScale, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelScale(_ constant: [Double]) -> Self {
+        with(self, setter(\.modelScale, .constant(constant)))
+    }
+
+    /// The scale of the model.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelScale(x: Double, y: Double, z: Double) -> Self {
+        with(self, setter(\.modelScale, .constant([x, y, z])))
+    }
+
+    /// Transition property for `modelScale`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelScaleTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.modelScaleTransition, transition))
+    }
+
+    /// The scale of the model.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelScale(_ expression: Expression) -> Self {
+        with(self, setter(\.modelScale, .expression(expression)))
+    }
+
 
     /// Defines scaling mode. Only applies to location-indicator type layers.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelScaleMode(_ newValue: Value<ModelScaleMode>) -> Self {
-        with(self, setter(\.modelScaleMode, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelScaleMode(_ constant: ModelScaleMode) -> Self {
+        with(self, setter(\.modelScaleMode, .constant(constant)))
+    }
+
+    /// Defines scaling mode. Only applies to location-indicator type layers.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelScaleMode(_ expression: Expression) -> Self {
+        with(self, setter(\.modelScaleMode, .expression(expression)))
+    }
+
 
     /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelTranslation(_ newValue: Value<[Double]>) -> Self {
-        with(self, setter(\.modelTranslation, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelTranslation(_ constant: [Double]) -> Self {
+        with(self, setter(\.modelTranslation, .constant(constant)))
+    }
+
+    /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelTranslation(x: Double, y: Double, z: Double) -> Self {
+        with(self, setter(\.modelTranslation, .constant([x, y, z])))
+    }
+
+    /// Transition property for `modelTranslation`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelTranslationTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.modelTranslationTransition, transition))
+    }
+
+    /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelTranslation(_ expression: Expression) -> Self {
+        with(self, setter(\.modelTranslation, .expression(expression)))
+    }
+
 
     /// Defines rendering behavior of model in respect to other 3D scene objects.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func modelType(_ newValue: Value<ModelType>) -> Self {
-        with(self, setter(\.modelType, newValue))
-    }    
+    @_spi(Experimental)
+    public func modelType(_ constant: ModelType) -> Self {
+        with(self, setter(\.modelType, .constant(constant)))
+    }
+
+    /// Defines rendering behavior of model in respect to other 3D scene objects.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelType(_ expression: Expression) -> Self {
+        with(self, setter(\.modelType, .expression(expression)))
+    }
 }
 
 // End of generated file.

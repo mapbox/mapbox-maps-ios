@@ -3,13 +3,13 @@ import UIKit
 
 internal extension Value where T == Double {
     static func testConstantValue() -> Value<Double> {
-        return .constant(1.0)
+        return .constant(.testConstantValue())
     }
 }
 
 internal extension Value where T == [Double] {
     static func testConstantValue() -> Value<[Double]> {
-        return .constant([1.0, 2.0])
+        return .constant(.testConstantValue())
     }
 }
 

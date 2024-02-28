@@ -1,5 +1,5 @@
 // This file is generated.
-import Foundation
+import UIKit
 
 /// An indirect light affecting all objects in the map adding a constant amount of light on them. It has no explicit direction and cannot cast shadows.
 ///
@@ -68,25 +68,47 @@ public struct AmbientLight: Codable, StyleEncodable, Equatable {
 }
 
 extension AmbientLight {
+    /// Color of the ambient light.
+    @_documentation(visibility: public)
+    public func color(_ constant: StyleColor) -> Self {
+        with(self, setter(\.color, .constant(constant)))
+    }
 
     /// Color of the ambient light.
-    public func color(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.color, newValue))
+    @_documentation(visibility: public)
+    public func color(_ color: UIColor) -> Self {
+        with(self, setter(\.color, .constant(StyleColor(color))))
     }
 
     /// Transition property for `color`
-    public func colorTransition(_ newValue: StyleTransition) -> Self {
-        with(self, setter(\.colorTransition, newValue))
+    @_documentation(visibility: public)
+    public func colorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.colorTransition, transition))
     }
 
+    /// Color of the ambient light.
+    @_documentation(visibility: public)
+    public func color(_ expression: Expression) -> Self {
+        with(self, setter(\.color, .expression(expression)))
+    }
+
+
     /// A multiplier for the color of the ambient light.
-    public func intensity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.intensity, newValue))
+    @_documentation(visibility: public)
+    public func intensity(_ constant: Double) -> Self {
+        with(self, setter(\.intensity, .constant(constant)))
     }
 
     /// Transition property for `intensity`
-    public func intensityTransition(_ newValue: StyleTransition) -> Self {
-        with(self, setter(\.intensityTransition, newValue))
+    @_documentation(visibility: public)
+    public func intensityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.intensityTransition, transition))
+    }
+
+    /// A multiplier for the color of the ambient light.
+    @_documentation(visibility: public)
+    public func intensity(_ expression: Expression) -> Self {
+        with(self, setter(\.intensity, .expression(expression)))
     }
 }
 

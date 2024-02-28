@@ -1,5 +1,5 @@
 // This file is generated.
-import Foundation
+import UIKit
 
 /// Raster map textures such as satellite imagery.
 ///
@@ -252,24 +252,18 @@ public struct RasterLayer: Layer, Equatable {
     }
 }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
+@_documentation(visibility: public)
 @_spi(Experimental) extension RasterLayer {
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func filter(_ newValue: Expression) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func source(_ newValue: String) -> Self {
         with(self, setter(\.source, newValue))
     }
@@ -278,149 +272,293 @@ public struct RasterLayer: Layer, Equatable {
     ///
     /// Required for vector tile sources.
     /// Prohibited for all other source types, including GeoJSON sources.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func sourceLayer(_ newValue: String) -> Self {
         with(self, setter(\.sourceLayer, newValue))
-    }   
-    
-    /// The slot this layer is assigned to. 
+    }
+
+    /// The slot this layer is assigned to.
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func slot(_ newValue: Slot?) -> Self {
         with(self, setter(\.slot, newValue))
     }
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func minZoom(_ newValue: Double) -> Self {
         with(self, setter(\.minZoom, newValue))
     }
 
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
     }
 
     /// Displayed band of raster array source layer
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterArrayBand(_ newValue: Value<String>) -> Self {
-        with(self, setter(\.rasterArrayBand, newValue))
-    }    
+    @_spi(Experimental)
+    public func rasterArrayBand(_ constant: String) -> Self {
+        with(self, setter(\.rasterArrayBand, .constant(constant)))
+    }
+
+    /// Displayed band of raster array source layer
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func rasterArrayBand(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterArrayBand, .expression(expression)))
+    }
+
 
     /// Increase or reduce the brightness of the image. The value is the maximum brightness.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterBrightnessMax(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.rasterBrightnessMax, newValue))
-    }    
+    public func rasterBrightnessMax(_ constant: Double) -> Self {
+        with(self, setter(\.rasterBrightnessMax, .constant(constant)))
+    }
+
+    /// Transition property for `rasterBrightnessMax`
+    @_documentation(visibility: public)
+    public func rasterBrightnessMaxTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.rasterBrightnessMaxTransition, transition))
+    }
+
+    /// Increase or reduce the brightness of the image. The value is the maximum brightness.
+    @_documentation(visibility: public)
+    public func rasterBrightnessMax(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterBrightnessMax, .expression(expression)))
+    }
+
 
     /// Increase or reduce the brightness of the image. The value is the minimum brightness.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterBrightnessMin(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.rasterBrightnessMin, newValue))
-    }    
+    public func rasterBrightnessMin(_ constant: Double) -> Self {
+        with(self, setter(\.rasterBrightnessMin, .constant(constant)))
+    }
+
+    /// Transition property for `rasterBrightnessMin`
+    @_documentation(visibility: public)
+    public func rasterBrightnessMinTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.rasterBrightnessMinTransition, transition))
+    }
+
+    /// Increase or reduce the brightness of the image. The value is the minimum brightness.
+    @_documentation(visibility: public)
+    public func rasterBrightnessMin(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterBrightnessMin, .expression(expression)))
+    }
+
 
     /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterColor(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.rasterColor, newValue))
-    }    
+    public func rasterColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.rasterColor, .constant(constant)))
+    }
+
+    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
+    @_documentation(visibility: public)
+    public func rasterColor(_ color: UIColor) -> Self {
+        with(self, setter(\.rasterColor, .constant(StyleColor(color))))
+    }
+
+    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
+    @_documentation(visibility: public)
+    public func rasterColor(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterColor, .expression(expression)))
+    }
+
 
     /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r * src.r + mix.g * src.g + mix.b * src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is *not* multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterColorMix(_ newValue: Value<[Double]>) -> Self {
-        with(self, setter(\.rasterColorMix, newValue))
-    }    
+    public func rasterColorMix(_ constant: [Double]) -> Self {
+        with(self, setter(\.rasterColorMix, .constant(constant)))
+    }
+
+    /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r * src.r + mix.g * src.g + mix.b * src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is *not* multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
+    @_documentation(visibility: public)
+    public func rasterColorMix(red: Double, green: Double, blue: Double, offset: Double) -> Self {
+        with(self, setter(\.rasterColorMix, .constant([red, green, blue, offset])))
+    }
+
+    /// Transition property for `rasterColorMix`
+    @_documentation(visibility: public)
+    public func rasterColorMixTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.rasterColorMixTransition, transition))
+    }
+
+    /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r * src.r + mix.g * src.g + mix.b * src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is *not* multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
+    @_documentation(visibility: public)
+    public func rasterColorMix(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterColorMix, .expression(expression)))
+    }
+
 
     /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterColorRange(_ newValue: Value<[Double]>) -> Self {
-        with(self, setter(\.rasterColorRange, newValue))
-    }    
+    public func rasterColorRange(_ constant: [Double]) -> Self {
+        with(self, setter(\.rasterColorRange, .constant(constant)))
+    }
+
+    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
+    @_documentation(visibility: public)
+    public func rasterColorRange(min: Double, max: Double) -> Self {
+        with(self, setter(\.rasterColorRange, .constant([min, max])))
+    }
+
+    /// Transition property for `rasterColorRange`
+    @_documentation(visibility: public)
+    public func rasterColorRangeTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.rasterColorRangeTransition, transition))
+    }
+
+    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
+    @_documentation(visibility: public)
+    public func rasterColorRange(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterColorRange, .expression(expression)))
+    }
+
 
     /// Increase or reduce the contrast of the image.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterContrast(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.rasterContrast, newValue))
-    }    
+    public func rasterContrast(_ constant: Double) -> Self {
+        with(self, setter(\.rasterContrast, .constant(constant)))
+    }
+
+    /// Transition property for `rasterContrast`
+    @_documentation(visibility: public)
+    public func rasterContrastTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.rasterContrastTransition, transition))
+    }
+
+    /// Increase or reduce the contrast of the image.
+    @_documentation(visibility: public)
+    public func rasterContrast(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterContrast, .expression(expression)))
+    }
+
 
     /// Specifies an uniform elevation from the ground, in meters. Only supported with image sources.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterElevation(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.rasterElevation, newValue))
-    }    
+    @_spi(Experimental)
+    public func rasterElevation(_ constant: Double) -> Self {
+        with(self, setter(\.rasterElevation, .constant(constant)))
+    }
+
+    /// Transition property for `rasterElevation`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func rasterElevationTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.rasterElevationTransition, transition))
+    }
+
+    /// Specifies an uniform elevation from the ground, in meters. Only supported with image sources.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func rasterElevation(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterElevation, .expression(expression)))
+    }
+
 
     /// Controls the intensity of light emitted on the source features.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterEmissiveStrength(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.rasterEmissiveStrength, newValue))
-    }    
+    public func rasterEmissiveStrength(_ constant: Double) -> Self {
+        with(self, setter(\.rasterEmissiveStrength, .constant(constant)))
+    }
+
+    /// Transition property for `rasterEmissiveStrength`
+    @_documentation(visibility: public)
+    public func rasterEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.rasterEmissiveStrengthTransition, transition))
+    }
+
+    /// Controls the intensity of light emitted on the source features.
+    @_documentation(visibility: public)
+    public func rasterEmissiveStrength(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterEmissiveStrength, .expression(expression)))
+    }
+
 
     /// Fade duration when a new tile is added.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterFadeDuration(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.rasterFadeDuration, newValue))
-    }    
+    public func rasterFadeDuration(_ constant: Double) -> Self {
+        with(self, setter(\.rasterFadeDuration, .constant(constant)))
+    }
+
+    /// Fade duration when a new tile is added.
+    @_documentation(visibility: public)
+    public func rasterFadeDuration(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterFadeDuration, .expression(expression)))
+    }
+
 
     /// Rotates hues around the color wheel.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterHueRotate(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.rasterHueRotate, newValue))
-    }    
+    public func rasterHueRotate(_ constant: Double) -> Self {
+        with(self, setter(\.rasterHueRotate, .constant(constant)))
+    }
+
+    /// Transition property for `rasterHueRotate`
+    @_documentation(visibility: public)
+    public func rasterHueRotateTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.rasterHueRotateTransition, transition))
+    }
+
+    /// Rotates hues around the color wheel.
+    @_documentation(visibility: public)
+    public func rasterHueRotate(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterHueRotate, .expression(expression)))
+    }
+
 
     /// The opacity at which the image will be drawn.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterOpacity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.rasterOpacity, newValue))
-    }    
+    public func rasterOpacity(_ constant: Double) -> Self {
+        with(self, setter(\.rasterOpacity, .constant(constant)))
+    }
+
+    /// Transition property for `rasterOpacity`
+    @_documentation(visibility: public)
+    public func rasterOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.rasterOpacityTransition, transition))
+    }
+
+    /// The opacity at which the image will be drawn.
+    @_documentation(visibility: public)
+    public func rasterOpacity(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterOpacity, .expression(expression)))
+    }
+
 
     /// The resampling/interpolation method to use for overscaling, also known as texture magnification filter
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterResampling(_ newValue: Value<RasterResampling>) -> Self {
-        with(self, setter(\.rasterResampling, newValue))
-    }    
+    public func rasterResampling(_ constant: RasterResampling) -> Self {
+        with(self, setter(\.rasterResampling, .constant(constant)))
+    }
+
+    /// The resampling/interpolation method to use for overscaling, also known as texture magnification filter
+    @_documentation(visibility: public)
+    public func rasterResampling(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterResampling, .expression(expression)))
+    }
+
 
     /// Increase or reduce the saturation of the image.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func rasterSaturation(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.rasterSaturation, newValue))
-    }    
+    public func rasterSaturation(_ constant: Double) -> Self {
+        with(self, setter(\.rasterSaturation, .constant(constant)))
+    }
+
+    /// Transition property for `rasterSaturation`
+    @_documentation(visibility: public)
+    public func rasterSaturationTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.rasterSaturationTransition, transition))
+    }
+
+    /// Increase or reduce the saturation of the image.
+    @_documentation(visibility: public)
+    public func rasterSaturation(_ expression: Expression) -> Self {
+        with(self, setter(\.rasterSaturation, .expression(expression)))
+    }
 }
 
 // End of generated file.

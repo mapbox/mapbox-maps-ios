@@ -1,5 +1,5 @@
 // This file is generated.
-import Foundation
+import UIKit
 
 /// A spherical dome around the map that is always rendered behind all other layers.
 /// Warning: As of v10.6.0, ``Atmosphere`` is the preferred method for atmospheric styling. Sky layer is not supported by the globe projection, and will be phased out in future major release.
@@ -142,107 +142,179 @@ public struct SkyLayer: Layer, Equatable {
     }
 }
 
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
+@_documentation(visibility: public)
 @_spi(Experimental) extension SkyLayer {
 
-    /// The slot this layer is assigned to. 
+    /// The slot this layer is assigned to.
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func slot(_ newValue: Slot?) -> Self {
         with(self, setter(\.slot, newValue))
     }
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func minZoom(_ newValue: Double) -> Self {
         with(self, setter(\.minZoom, newValue))
     }
 
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
     }
 
     /// A color used to tweak the main atmospheric scattering coefficients. Using white applies the default coefficients giving the natural blue color to the atmosphere. This color affects how heavily the corresponding wavelength is represented during scattering. The alpha channel describes the density of the atmosphere, with 1 maximum density and 0 no density.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func skyAtmosphereColor(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.skyAtmosphereColor, newValue))
-    }    
+    public func skyAtmosphereColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.skyAtmosphereColor, .constant(constant)))
+    }
+
+    /// A color used to tweak the main atmospheric scattering coefficients. Using white applies the default coefficients giving the natural blue color to the atmosphere. This color affects how heavily the corresponding wavelength is represented during scattering. The alpha channel describes the density of the atmosphere, with 1 maximum density and 0 no density.
+    @_documentation(visibility: public)
+    public func skyAtmosphereColor(_ color: UIColor) -> Self {
+        with(self, setter(\.skyAtmosphereColor, .constant(StyleColor(color))))
+    }
+
+    /// A color used to tweak the main atmospheric scattering coefficients. Using white applies the default coefficients giving the natural blue color to the atmosphere. This color affects how heavily the corresponding wavelength is represented during scattering. The alpha channel describes the density of the atmosphere, with 1 maximum density and 0 no density.
+    @_documentation(visibility: public)
+    public func skyAtmosphereColor(_ expression: Expression) -> Self {
+        with(self, setter(\.skyAtmosphereColor, .expression(expression)))
+    }
+
 
     /// A color applied to the atmosphere sun halo. The alpha channel describes how strongly the sun halo is represented in an atmosphere sky layer.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func skyAtmosphereHaloColor(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.skyAtmosphereHaloColor, newValue))
-    }    
+    public func skyAtmosphereHaloColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.skyAtmosphereHaloColor, .constant(constant)))
+    }
+
+    /// A color applied to the atmosphere sun halo. The alpha channel describes how strongly the sun halo is represented in an atmosphere sky layer.
+    @_documentation(visibility: public)
+    public func skyAtmosphereHaloColor(_ color: UIColor) -> Self {
+        with(self, setter(\.skyAtmosphereHaloColor, .constant(StyleColor(color))))
+    }
+
+    /// A color applied to the atmosphere sun halo. The alpha channel describes how strongly the sun halo is represented in an atmosphere sky layer.
+    @_documentation(visibility: public)
+    public func skyAtmosphereHaloColor(_ expression: Expression) -> Self {
+        with(self, setter(\.skyAtmosphereHaloColor, .expression(expression)))
+    }
+
 
     /// Position of the sun center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the sun relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the sun, where 0 degree is directly above, at zenith, and 90 degree at the horizon. When this property is ommitted, the sun center is directly inherited from the light position.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func skyAtmosphereSun(_ newValue: Value<[Double]>) -> Self {
-        with(self, setter(\.skyAtmosphereSun, newValue))
-    }    
+    public func skyAtmosphereSun(_ constant: [Double]) -> Self {
+        with(self, setter(\.skyAtmosphereSun, .constant(constant)))
+    }
+
+    /// Position of the sun center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the sun relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the sun, where 0 degree is directly above, at zenith, and 90 degree at the horizon. When this property is ommitted, the sun center is directly inherited from the light position.
+    @_documentation(visibility: public)
+    public func skyAtmosphereSun(azimuthal: Double, polar: Double) -> Self {
+        with(self, setter(\.skyAtmosphereSun, .constant([azimuthal, polar])))
+    }
+
+    /// Position of the sun center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the sun relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the sun, where 0 degree is directly above, at zenith, and 90 degree at the horizon. When this property is ommitted, the sun center is directly inherited from the light position.
+    @_documentation(visibility: public)
+    public func skyAtmosphereSun(_ expression: Expression) -> Self {
+        with(self, setter(\.skyAtmosphereSun, .expression(expression)))
+    }
+
 
     /// Intensity of the sun as a light source in the atmosphere (on a scale from 0 to a 100). Setting higher values will brighten up the sky.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func skyAtmosphereSunIntensity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.skyAtmosphereSunIntensity, newValue))
-    }    
+    public func skyAtmosphereSunIntensity(_ constant: Double) -> Self {
+        with(self, setter(\.skyAtmosphereSunIntensity, .constant(constant)))
+    }
+
+    /// Intensity of the sun as a light source in the atmosphere (on a scale from 0 to a 100). Setting higher values will brighten up the sky.
+    @_documentation(visibility: public)
+    public func skyAtmosphereSunIntensity(_ expression: Expression) -> Self {
+        with(self, setter(\.skyAtmosphereSunIntensity, .expression(expression)))
+    }
+
 
     /// Defines a radial color gradient with which to color the sky. The color values can be interpolated with an expression using `sky-radial-progress`. The range [0, 1] for the interpolant covers a radial distance (in degrees) of [0, `sky-gradient-radius`] centered at the position specified by `sky-gradient-center`.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func skyGradient(_ newValue: Value<StyleColor>) -> Self {
-        with(self, setter(\.skyGradient, newValue))
-    }    
+    public func skyGradient(_ constant: StyleColor) -> Self {
+        with(self, setter(\.skyGradient, .constant(constant)))
+    }
+
+    /// Defines a radial color gradient with which to color the sky. The color values can be interpolated with an expression using `sky-radial-progress`. The range [0, 1] for the interpolant covers a radial distance (in degrees) of [0, `sky-gradient-radius`] centered at the position specified by `sky-gradient-center`.
+    @_documentation(visibility: public)
+    public func skyGradient(_ color: UIColor) -> Self {
+        with(self, setter(\.skyGradient, .constant(StyleColor(color))))
+    }
+
+    /// Defines a radial color gradient with which to color the sky. The color values can be interpolated with an expression using `sky-radial-progress`. The range [0, 1] for the interpolant covers a radial distance (in degrees) of [0, `sky-gradient-radius`] centered at the position specified by `sky-gradient-center`.
+    @_documentation(visibility: public)
+    public func skyGradient(_ expression: Expression) -> Self {
+        with(self, setter(\.skyGradient, .expression(expression)))
+    }
+
 
     /// Position of the gradient center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the gradient center relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the gradient center, where 0 degree is directly above, at zenith, and 90 degree at the horizon.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func skyGradientCenter(_ newValue: Value<[Double]>) -> Self {
-        with(self, setter(\.skyGradientCenter, newValue))
-    }    
+    public func skyGradientCenter(_ constant: [Double]) -> Self {
+        with(self, setter(\.skyGradientCenter, .constant(constant)))
+    }
+
+    /// Position of the gradient center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the gradient center relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the gradient center, where 0 degree is directly above, at zenith, and 90 degree at the horizon.
+    @_documentation(visibility: public)
+    public func skyGradientCenter(azimuthal: Double, polar: Double) -> Self {
+        with(self, setter(\.skyGradientCenter, .constant([azimuthal, polar])))
+    }
+
+    /// Position of the gradient center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the gradient center relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the gradient center, where 0 degree is directly above, at zenith, and 90 degree at the horizon.
+    @_documentation(visibility: public)
+    public func skyGradientCenter(_ expression: Expression) -> Self {
+        with(self, setter(\.skyGradientCenter, .expression(expression)))
+    }
+
 
     /// The angular distance (measured in degrees) from `sky-gradient-center` up to which the gradient extends. A value of 180 causes the gradient to wrap around to the opposite direction from `sky-gradient-center`.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func skyGradientRadius(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.skyGradientRadius, newValue))
-    }    
+    public func skyGradientRadius(_ constant: Double) -> Self {
+        with(self, setter(\.skyGradientRadius, .constant(constant)))
+    }
+
+    /// The angular distance (measured in degrees) from `sky-gradient-center` up to which the gradient extends. A value of 180 causes the gradient to wrap around to the opposite direction from `sky-gradient-center`.
+    @_documentation(visibility: public)
+    public func skyGradientRadius(_ expression: Expression) -> Self {
+        with(self, setter(\.skyGradientRadius, .expression(expression)))
+    }
+
 
     /// The opacity of the entire sky layer.
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func skyOpacity(_ newValue: Value<Double>) -> Self {
-        with(self, setter(\.skyOpacity, newValue))
-    }    
+    public func skyOpacity(_ constant: Double) -> Self {
+        with(self, setter(\.skyOpacity, .constant(constant)))
+    }
+
+    /// Transition property for `skyOpacity`
+    @_documentation(visibility: public)
+    public func skyOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.skyOpacityTransition, transition))
+    }
+
+    /// The opacity of the entire sky layer.
+    @_documentation(visibility: public)
+    public func skyOpacity(_ expression: Expression) -> Self {
+        with(self, setter(\.skyOpacity, .expression(expression)))
+    }
+
 
     /// The type of the sky
-#if swift(>=5.8)
     @_documentation(visibility: public)
-#endif
-    public func skyType(_ newValue: Value<SkyType>) -> Self {
-        with(self, setter(\.skyType, newValue))
-    }    
+    public func skyType(_ constant: SkyType) -> Self {
+        with(self, setter(\.skyType, .constant(constant)))
+    }
+
+    /// The type of the sky
+    @_documentation(visibility: public)
+    public func skyType(_ expression: Expression) -> Self {
+        with(self, setter(\.skyType, .expression(expression)))
+    }
 }
 
 // End of generated file.

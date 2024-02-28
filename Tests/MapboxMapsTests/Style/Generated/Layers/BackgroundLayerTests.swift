@@ -111,18 +111,18 @@ final class BackgroundLayerTests: XCTestCase {
             .slot(Slot.testConstantValue())
             .minZoom(Double.testConstantValue())
             .maxZoom(Double.testConstantValue())
-            .backgroundColor(Value<StyleColor>.testConstantValue())
-            .backgroundEmissiveStrength(Value<Double>.testConstantValue())
-            .backgroundOpacity(Value<Double>.testConstantValue())
-            .backgroundPattern(Value<ResolvedImage>.testConstantValue())
+            .backgroundColor(StyleColor.testConstantValue())
+            .backgroundEmissiveStrength(Double.testConstantValue())
+            .backgroundOpacity(Double.testConstantValue())
+            .backgroundPattern(String.testConstantValue())
 
         XCTAssertEqual(layer.slot, Slot.testConstantValue())
         XCTAssertEqual(layer.minZoom, Double.testConstantValue())
         XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
-        XCTAssertEqual(layer.backgroundColor, Value<StyleColor>.testConstantValue())
-        XCTAssertEqual(layer.backgroundEmissiveStrength, Value<Double>.testConstantValue())
-        XCTAssertEqual(layer.backgroundOpacity, Value<Double>.testConstantValue())
-        XCTAssertEqual(layer.backgroundPattern, Value<ResolvedImage>.testConstantValue())
+        XCTAssertEqual(layer.backgroundColor, Value.constant(StyleColor.testConstantValue()))
+        XCTAssertEqual(layer.backgroundEmissiveStrength, Value.constant(Double.testConstantValue()))
+        XCTAssertEqual(layer.backgroundOpacity, Value.constant(Double.testConstantValue()))
+        XCTAssertEqual(layer.backgroundPattern, Value<ResolvedImage>.constant(.name(String.testConstantValue())))
     }
 }
 

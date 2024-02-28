@@ -59,12 +59,12 @@ struct DynamicStylingExample: View {
             Map(initialViewport: .camera(center: .init(latitude: 46.80, longitude: 11.18), zoom: 3, pitch: 45))
                 .mapStyle(mapStyle {
                     Atmosphere()
-                        .range(.constant([0, 12]))
-                        .horizonBlend(.constant(0.1))
-                        .starIntensity(.constant(0.2))
-                        .color(.constant(StyleColor(red: 240, green: 196, blue: 152, alpha: 1)!))
-                        .highColor(.constant(StyleColor(red: 221, green: 209, blue: 197, alpha: 1)!))
-                        .spaceColor(.constant(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!))
+                        .range(start: 0, end: 12)
+                        .horizonBlend(0.1)
+                        .starIntensity(0.2)
+                        .color(StyleColor(red: 240, green: 196, blue: 152, alpha: 1)!)
+                        .highColor(StyleColor(red: 221, green: 209, blue: 197, alpha: 1)!)
+                        .spaceColor(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!)
 
                     if showConnections {
                         GeoJSONSource(id: "lines")
@@ -72,13 +72,13 @@ struct DynamicStylingExample: View {
                         switch connectionType {
                         case .line:
                             LineLayer(id: "lineLayer", source: "lines")
-                                .lineColor(.constant(StyleColor(red: 195, green: 088, blue: 049, alpha: 1)!))
-                                .lineWidth(.constant(20))
+                                .lineColor(StyleColor(red: 195, green: 088, blue: 049, alpha: 1)!)
+                                .lineWidth(20)
                                 .slot(.bottom)
                         case .polygon:
                             FillLayer(id: "fill", source: "lines")
-                                .fillColor(.constant(StyleColor(.blue)))
-                                .fillOpacity(.constant(0.5))
+                                .fillColor(.blue)
+                                .fillOpacity(0.5)
                         }
                     }
 
@@ -86,7 +86,7 @@ struct DynamicStylingExample: View {
                         .data(.featureCollection(cities.pointFeatureCollection))
                     StyleImage(id: "pin", image: self.pin)
                     SymbolLayer(id: "pin", source: "points")
-                            .iconImage(.constant(.name("pin")))
+                            .iconImage("pin")
                 })
                 .additionalSafeAreaInsets(sidePanel ? .trailing : .bottom, settingsHeight)
                 .ignoresSafeArea()

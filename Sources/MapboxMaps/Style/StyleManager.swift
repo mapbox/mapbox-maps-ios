@@ -1488,6 +1488,9 @@ extension StyleManager {
  */
 public struct StyleTransition: Codable, Equatable {
 
+    /// Disabled style transition
+    public static let zero = StyleTransition(duration: 0, delay: 0)
+
     internal enum CodingKeys: String, CodingKey {
         case duration
         case delay

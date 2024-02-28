@@ -593,6 +593,32 @@ final class MapStyleReconcilerTests: XCTestCase {
         XCTAssertEqual(sourceManager.removeSourceStub.invocations.count, 1)
     }
 
+    func testUpdateStyleModel() {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+        }
+
+        var model = Model(id: "test-id", uri: .init(string: "test-URL"))
+        me.mapStyle = .standard {
+            model
+        }
+
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.first?.parameters.modelId, "test-id")
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.first?.parameters.modelUri, "test-URL")
+
+        model.position = .testSourceValue()
+
+        me.mapStyle = .standard {
+            model
+        }
+
+        XCTAssertEqual(styleManager.removeStyleModelStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.count, 2)
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.last?.parameters.modelId, "test-id")
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.last?.parameters.modelUri, "test-URL")
+    }
+
     func testStyleImportsReconcileFromNil() {
         MapStyleReconciler.reconcileStyleImports(
             from: nil,

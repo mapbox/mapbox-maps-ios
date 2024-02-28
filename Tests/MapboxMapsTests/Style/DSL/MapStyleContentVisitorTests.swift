@@ -123,4 +123,19 @@ final class MapStyleContentVisitorTests: XCTestCase {
         XCTAssertEqual(mapStyleContentVisitor.model.projection, projection)
     }
 
+    func testAddModel() {
+        let model = Model(id: "test-id", uri: .init(string: "test-URL"))
+
+        model._visit(mapStyleContentVisitor)
+
+        XCTAssertEqual(mapStyleContentVisitor.model.models, [model.id: model])
+    }
+
+    func testDontAddModelWithoutIDorURL() {
+        let model = Model()
+
+        model._visit(mapStyleContentVisitor)
+
+        XCTAssertEqual(mapStyleContentVisitor.model.models, [:])
+    }
 }

@@ -18,40 +18,33 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.ornaments.options.scaleBar.visibility = .visible
 
-        view.addSubview(mapView)
-
-        mapView.mapboxMap.loadStyle(.standard) { [weak self] _ in
-            self?.setupExample()
-        }
-    }
-
-    private func setupExample() {
-        guard let mapboxMap = mapView.mapboxMap else {
-            return
-        }
-
-        try! mapboxMap.addStyleModel(modelId: Constants.duckModelId, modelUri: Constants.duck)
-        try! mapboxMap.addStyleModel(modelId: Constants.carModelId, modelUri: Constants.car)
-
-        var source = GeoJSONSource(id: Constants.sourceId)
+        /// Create a Feature to hold the coordinates of the duck and car.
+        /// Both Features will be added to a GeoJSONSource below as a feature collection
         var duckFeature = Feature(geometry: Constants.duckCoordinates)
         duckFeature.properties = [Constants.modelIdKey: .string(Constants.duckModelId)]
         var carFeature = Feature(geometry: Constants.mapboxHelsinki)
         carFeature.properties = [Constants.modelIdKey: .string(Constants.carModelId)]
 
-        source.data = .featureCollection(FeatureCollection(features: [duckFeature, carFeature]))
+        mapView.mapboxMap.mapStyle = .standard {
+            /// Add Models for both the duck and car using an id and a URL to the resource
+            Model(id: Constants.duckModelId, uri: Constants.duck)
+            Model(id: Constants.carModelId, uri: Constants.car)
 
-        try! mapboxMap.addSource(source)
+            /// Add a GeoJSONSource to the map and add the two features with geometry information
+            GeoJSONSource(id: Constants.sourceId)
+                .data(.featureCollection(FeatureCollection(features: [duckFeature, carFeature])))
 
-        var layer = ModelLayer(id: "model-layer-id", source: Constants.sourceId)
-        layer.modelId = .expression(Exp(.get) { Constants.modelIdKey })
-        layer.modelType = .constant(.common3d)
-        layer.modelScale = .constant([40, 40, 40])
-        layer.modelTranslation = .constant([0, 0, 0])
-        layer.modelRotation = .constant([0, 0, 90])
-        layer.modelOpacity = .constant(0.7)
+            /// Add a Model visualization layer which displays the two models stored in the GeoJSONSource according to the set properties
+            ModelLayer(id: "model-layer-id", source: Constants.sourceId)
+                .modelId(Exp(.get) { Constants.modelIdKey })
+                .modelType(.common3d)
+                .modelScale([40, 40, 40])
+                .modelTranslation([0, 0, 0])
+                .modelRotation([0, 0, 90])
+                .modelOpacity(0.7)
+        }
 
-        try! mapboxMap.addLayer(layer)
+        view.addSubview(mapView)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -69,7 +62,7 @@ extension ModelLayerExample {
         static let sourceId = "source-id"
         static let duckModelId = "model-id-duck"
         static let carModelId = "model-id-car"
-        static let duck = "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Embedded/Duck.gltf"
-        static let car = Bundle.main.url(forResource: "sportcar", withExtension: "glb")!.absoluteString
+        static let duck = URL.init(string: "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Embedded/Duck.gltf")
+        static let car = Bundle.main.url(forResource: "sportcar", withExtension: "glb")!
     }
 }

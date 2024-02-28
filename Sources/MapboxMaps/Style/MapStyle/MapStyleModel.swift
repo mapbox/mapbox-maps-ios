@@ -27,6 +27,7 @@ struct MapStyleModel {
     var layers = [LayerWrapper]()
     var sources = [String: SourceWrapper]()
     var images = [String: StyleImage]()
+    var models = [String: Model]()
     var terrain: Terrain?
     var atmosphere: Atmosphere?
     var light: Light?

@@ -297,4 +297,27 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [expectation], timeout: 5)
     }
+
+    internal func testAddAndRemoveModel() {
+        let expectation = self.expectation(description: "Wait for mapStyle to load")
+        expectation.expectedFulfillmentCount = 1
+
+        let model = Model(id: "test-id", uri: .init(string: "test-URL"))
+
+        mapView.mapboxMap.mapStyle = .streets {
+            model
+        }
+
+        didFinishLoadingStyle = { mapView in
+            XCTAssertTrue(mapView.mapboxMap.hasStyleModel(modelId: "test-id"))
+
+            // Remove model
+            mapView.mapboxMap.mapStyle = .streets
+            XCTAssertFalse(mapView.mapboxMap.hasStyleModel(modelId: "test-id"))
+
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 5)
+    }
 }

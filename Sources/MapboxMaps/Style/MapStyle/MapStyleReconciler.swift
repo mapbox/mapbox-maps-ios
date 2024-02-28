@@ -57,7 +57,7 @@ final class MapStyleReconciler {
                     self?._isStyleRootLoaded.value = true
                 },
                 images: { [weak self] in
-                    self?.reconcile(stages: [.images], from: oldModel)
+                    self?.reconcile(stages: [.imagesAndModels], from: oldModel)
                 },
                 completed: { [weak self] in
                     completion?(nil)
@@ -108,8 +108,8 @@ final class MapStyleReconciler {
     private enum StyleLoadingStage {
         case layers
         case sources
-        case images
-        static var all = [StyleLoadingStage.layers, .sources, .images]
+        case imagesAndModels
+        static var all = [StyleLoadingStage.layers, .sources, .imagesAndModels]
     }
 
     private func reconcile(stages: [StyleLoadingStage], from old: MapStyleModel) {
@@ -124,8 +124,9 @@ final class MapStyleReconciler {
                 updateProperty(old: old.light, new: styleModel.light, accessor: accessors.light)
             case .sources:
                 applyDiff(old: old.sources, new: styleModel.sources, accessor: accessors.sources)
-            case .images:
+            case .imagesAndModels:
                 applyDiff(old: old.images, new: styleModel.images, accessor: accessors.images)
+                applyDiff(old: old.models, new: styleModel.models, accessor: accessors.models)
             }
         }
     }

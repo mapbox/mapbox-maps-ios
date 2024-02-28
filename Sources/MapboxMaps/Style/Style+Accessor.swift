@@ -20,6 +20,7 @@ struct StyleAccessors {
     var sources: Accessor<SourceWrapper>
     var layers: Accessor<LayerWrapper>
     var images: Accessor<StyleImage>
+    var models: Accessor<Model>
     var terrain: Accessor<Terrain>
     var atmosphere: Accessor<Atmosphere>
     var light: Accessor<MapStyleModel.Light>
@@ -29,6 +30,7 @@ struct StyleAccessors {
         sources = StyleAccessors.buildSourceAccessor(styleSourceManager: styleSourceManager)
         layers = StyleAccessors.buildLayerAccessor(styleManager: styleManager)
         images = StyleAccessors.buildImageAccessor(styleManager: styleManager)
+        models = StyleAccessors.buildModelAccessor(styleManager: styleManager)
         terrain = StyleAccessors.buildTerrainAccessor(styleManager: styleManager)
         atmosphere = StyleAccessors.buildAtmosphereAccessor(styleManager: styleManager)
         light = StyleAccessors.buildLightAccessor(styleManager: styleManager)
@@ -41,14 +43,12 @@ struct StyleAccessors {
                 try styleSourceManager.addSource($0.asSource, dataId: nil)
             },
             remove: { id in
-                if let id {
-                    try styleSourceManager.removeSource(withId: id)
-                }
+                guard let id else { return }
+                try styleSourceManager.removeSource(withId: id)
             },
             update: { old, new in
-                if let old {
-                    try SourceWrapper.update(old: old, new: new, styleSourceManager: styleSourceManager)
-                }
+                guard let old else { return }
+                try SourceWrapper.update(old: old, new: new, styleSourceManager: styleSourceManager)
             },
             isEqual: { _, _ in false }
         )
@@ -59,16 +59,11 @@ struct StyleAccessors {
             insert: {
                 let properties = try $0.layer.asLayer.allStyleProperties()
                 let layerPosition = $0.position?.corePosition
-                try handleExpected {
-                    styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition)
-                }
+                try handleExpected { styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition) }
             },
             remove: { id in
-                if let id {
-                    try handleExpected {
-                        styleManager.removeStyleLayer(forLayerId: id)
-                    }
-                }
+                guard let id else { return }
+                try handleExpected { styleManager.removeStyleLayer(forLayerId: id) }
             },
             update: { old, new in
                 let properties = try new.layer.asLayer.jsonObject()
@@ -79,12 +74,9 @@ struct StyleAccessors {
                     )
                 }
 
-                if old?.position != new.position,
-                let layerPosition = new.position?.corePosition {
-                    try handleExpected {
-                        styleManager.moveStyleLayer(forLayerId: new.layer.asLayer.id, layerPosition: layerPosition)
-                    }
-                }
+                guard old?.position != new.position,
+                      let layerPosition = new.position?.corePosition else { return }
+                try handleExpected { styleManager.moveStyleLayer(forLayerId: new.layer.asLayer.id, layerPosition: layerPosition) }
             },
             isEqual: ==
         )
@@ -96,22 +88,41 @@ struct StyleAccessors {
                 try StyleAccessors.insertImage(image: $0, styleManager: styleManager)
             },
             remove: { id in
-                if let id {
-                    try handleExpected {
-                        styleManager.removeStyleImage(forImageId: id)
-                    }
-                }
+                guard let id else { return }
+                try handleExpected { styleManager.removeStyleImage(forImageId: id) }
             },
             update: { old, new in
-                if let id = old?.id {
-                    try handleExpected {
-                        styleManager.removeStyleImage(forImageId: id)
-                    }
-                }
+                guard let id = old?.id else { return }
+                try handleExpected { styleManager.removeStyleImage(forImageId: id) }
                 try StyleAccessors.insertImage(image: new, styleManager: styleManager)
             },
             isEqual: ==
         )
+    }
+
+    private static func buildModelAccessor(styleManager: StyleManagerProtocol) -> Accessor<Model> {
+        Accessor(
+            insert: { try addStyleModel($0, styleManager) },
+            remove: { id in
+                try removeStyleModel(id, styleManager)
+            },
+            update: { old, new in
+                guard let id = old?.id else { return }
+                try removeStyleModel(id, styleManager)
+                try addStyleModel(new, styleManager)
+            },
+            isEqual: ==
+        )
+    }
+
+    private static let removeStyleModel: (String?, StyleManagerProtocol) throws -> Void = { id, styleManager in
+        guard let id else { return }
+        try handleExpected { styleManager.removeStyleModel(forModelId: id) }
+    }
+
+    private static let addStyleModel: (Model, StyleManagerProtocol) throws -> Void = { model, styleManager in
+        guard let id = model.id, let uri = model.uri else { return }
+        try handleExpected { styleManager.addStyleModel(forModelId: id, modelUri: uri.absoluteString) }
     }
 
     private static func buildTerrainAccessor(styleManager: StyleManagerProtocol) -> Accessor<Terrain> {
@@ -120,15 +131,11 @@ struct StyleAccessors {
                 guard let terrainDictionary = try $0.toJSON() as? [String: Any] else {
                     throw TypeConversionError.unexpectedType
                 }
-                try handleExpected {
-                    styleManager.setStyleTerrainForProperties(terrainDictionary)
-                }
+                try handleExpected { styleManager.setStyleTerrainForProperties(terrainDictionary) }
             },
             remove: {
                 let properties = NSNull()
-                try handleExpected {
-                    styleManager.setStyleTerrainForProperties(properties)
-                }
+                try handleExpected { styleManager.setStyleTerrainForProperties(properties) }
             }
         )
     }
@@ -139,15 +146,11 @@ struct StyleAccessors {
                 guard let properties = try $0.toJSON() as? [String: Any] else {
                     throw TypeConversionError.unexpectedType
                 }
-                try handleExpected {
-                    styleManager.setStyleAtmosphereForProperties(properties)
-                }
+                try handleExpected { styleManager.setStyleAtmosphereForProperties(properties) }
             },
             remove: {
                 let properties = NSNull()
-                try handleExpected {
-                    styleManager.setStyleAtmosphereForProperties(properties)
-                }
+                try handleExpected { styleManager.setStyleAtmosphereForProperties(properties) }
             }
         )
     }
@@ -159,15 +162,11 @@ struct StyleAccessors {
                     throw TypeConversionError.invalidObject
                 }
 
-                try handleExpected {
-                    styleManager.setStyleLightsForLights(properties)
-                }
+                try handleExpected { styleManager.setStyleLightsForLights(properties) }
             },
             remove: {
                 let properties = NSNull()
-                try handleExpected {
-                    styleManager.setStyleLightsForLights(properties)
-                }
+                try handleExpected { styleManager.setStyleLightsForLights(properties) }
             }
         )
     }
@@ -176,15 +175,11 @@ struct StyleAccessors {
         .property(
             set: {
                 let properties = try $0.allStyleProperties()
-                try handleExpected {
-                    styleManager.setStyleProjectionForProperties(properties)
-                }
+                try handleExpected { styleManager.setStyleProjectionForProperties(properties) }
             },
             remove: {
                 let properties = NSNull()
-                try handleExpected {
-                    styleManager.setStyleProjectionForProperties(properties)
-                }
+                try handleExpected { styleManager.setStyleProjectionForProperties(properties) }
             }
         )
     }

@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class FeatureTests: XCTestCase {
 
@@ -88,6 +88,27 @@ final class FeatureTests: XCTestCase {
             "d": [1, 2, 3],
             "e": ["f": "g"],
             "h": nil]
+
+        let commonFeature = MapboxCommon.Feature(feature)
+
+        XCTAssertEqual(
+            commonFeature.properties,
+            [
+                "a": NSNumber(value: 123),
+                "b": NSString(string: "c"),
+                "d": NSArray(array: [1, 2, 3]),
+                "e": NSDictionary(dictionary: ["f": "g"])])
+        XCTAssertFalse(commonFeature.properties.keys.contains("h"))
+    }
+
+    func testSetPropertiesWithFunction() throws {
+        var feature = Feature(geometry: geometry)
+            .properties([
+                "a": 123,
+                "b": "c",
+                "d": [1, 2, 3],
+                "e": ["f": "g"],
+                "h": nil])
 
         let commonFeature = MapboxCommon.Feature(feature)
 

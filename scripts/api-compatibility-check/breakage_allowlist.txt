@@ -1336,3 +1336,4 @@ Func AnnotationOrchestrator.makePointAnnotationManager(id:layerPosition:clusterO
 Func MapStyle.==(_:_:) has been removed
 Protocol Conformance Change
 Struct MapStyle has removed conformance to Equatable
+Constructor Model.init(uri:position:orientation:) has been removed

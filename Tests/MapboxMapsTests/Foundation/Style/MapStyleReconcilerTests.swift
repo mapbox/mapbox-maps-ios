@@ -493,7 +493,7 @@ final class MapStyleReconcilerTests: XCTestCase {
         XCTAssertTrue(sourceIDs.contains("rasterArraySource"))
     }
 
-    func testRemoveSource() {
+    func testRemoveSource() throws {
         styleManager.setStyleURIStub.defaultSideEffect = { invoc in
             self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
         }
@@ -506,11 +506,8 @@ final class MapStyleReconcilerTests: XCTestCase {
 
         me.mapStyle = .standard
 
-        XCTAssertEqual(sourceManager.removeSourceStub.invocations.count, 1)
-        guard let removeSourceParameters = sourceManager.removeSourceStub.invocations.first?.parameters as? String else {
-            XCTFail("Failed to get removeSourceParameters")
-            return
-        }
+        XCTAssertEqual(sourceManager.removeSourceUncheckedStub.invocations.count, 1)
+        let removeSourceParameters = try XCTUnwrap(sourceManager.removeSourceUncheckedStub.invocations.first?.parameters as? String)
         XCTAssertEqual(removeSourceParameters, "vectorSource")
     }
 
@@ -590,7 +587,7 @@ final class MapStyleReconcilerTests: XCTestCase {
             }
         }
 
-        XCTAssertEqual(sourceManager.removeSourceStub.invocations.count, 1)
+        XCTAssertEqual(sourceManager.removeSourceUncheckedStub.invocations.count, 1)
     }
 
     func testUpdateStyleModel() {

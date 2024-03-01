@@ -44,7 +44,7 @@ struct StyleAccessors {
             },
             remove: { id in
                 guard let id else { return }
-                try styleSourceManager.removeSource(withId: id)
+                try styleSourceManager.removeSourceUnchecked(withId: id)
             },
             update: { old, new in
                 guard let old else { return }

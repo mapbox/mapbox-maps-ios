@@ -111,6 +111,7 @@ internal protocol StyleManagerProtocol {
         image: CoreMapsImage) -> Expected<NSNull, NSString>
 
     func removeStyleSource(forSourceId sourceId: String) -> Expected<NSNull, NSString>
+    func removeStyleSourceUnchecked(forSourceId sourceId: String) -> Expected<NSNull, NSString>
 
     // 3D Light
     func getStyleLights() -> [StyleObjectInfo]

@@ -138,7 +138,7 @@ where Value: CaseIterable, Value: Hashable, Value.AllCases: RandomAccessCollecti
 }
 
 @available(iOS 14.0, *)
-struct StyleDSLExample_Previews: PreviewProvider {
+struct DynamicStylingExample_Previews: PreviewProvider {
     static var previews: some View {
         DynamicStylingExample()
     }

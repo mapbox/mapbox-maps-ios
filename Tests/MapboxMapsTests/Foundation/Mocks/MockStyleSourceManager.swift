@@ -64,6 +64,11 @@ final class MockStyleSourceManager: StyleSourceManagerProtocol {
         removeSourceStub.call(with: id)
     }
 
+    let removeSourceUncheckedStub = Stub<String, Void>()
+    func removeSourceUnchecked(withId id: String) throws {
+        removeSourceUncheckedStub.call(with: id)
+    }
+
     let sourceExistsStub = Stub<String, Bool>(defaultReturnValue: false)
     func sourceExists(withId id: String) -> Bool {
         return sourceExistsStub.call(with: id)

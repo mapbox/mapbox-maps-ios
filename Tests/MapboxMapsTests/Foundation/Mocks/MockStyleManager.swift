@@ -409,6 +409,11 @@ class MockStyleManager: StyleManagerProtocol {
         removeStyleSourceStub.call(with: sourceId)
     }
 
+    let removeStyleSourceUncheckedStub = Stub<String, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func removeStyleSourceUnchecked(forSourceId sourceId: String) -> Expected<NSNull, NSString> {
+        removeStyleSourceUncheckedStub.call(with: sourceId)
+    }
+
     struct SetStylePropertyParameters {
         let property: String
         let value: Any

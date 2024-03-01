@@ -14,6 +14,7 @@ internal protocol StyleSourceManagerProtocol: AnyObject {
     func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?)
     func addSource(withId id: String, properties: [String: Any]) throws
     func removeSource(withId id: String) throws
+    func removeSourceUnchecked(withId id: String) throws
     func sourceExists(withId id: String) -> Bool
     func sourceProperty(for sourceId: String, property: String) -> StylePropertyValue
     func sourceProperties(for sourceId: String) throws -> [String: Any]
@@ -194,6 +195,14 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     internal func removeSource(withId id: String) throws {
         try handleExpected {
             return styleManager.removeStyleSource(forSourceId: id)
+        }
+
+        workItemTracker.cancelAll(for: id)
+    }
+
+    internal func removeSourceUnchecked(withId id: String) throws {
+        try handleExpected {
+            return styleManager.removeStyleSourceUnchecked(forSourceId: id)
         }
 
         workItemTracker.cancelAll(for: id)

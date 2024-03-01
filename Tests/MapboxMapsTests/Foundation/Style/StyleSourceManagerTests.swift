@@ -96,6 +96,18 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(styleManager.removeStyleSourceStub.invocations.first?.parameters, id)
     }
 
+    func testRemoveSourceUnchecked() throws {
+        let id = String.randomASCII(withLength: 23)
+        styleManager.removeStyleSourceUncheckedStub.defaultReturnValue = Expected(error: "No such source")
+        XCTAssertThrowsError(try sourceManager.removeSourceUnchecked(withId: id))
+        XCTAssertEqual(styleManager.removeStyleSourceUncheckedStub.invocations.count, 1)
+
+        styleManager.removeStyleSourceUncheckedStub.defaultReturnValue = Expected(value: NSNull())
+        try sourceManager.removeSourceUnchecked(withId: id)
+        XCTAssertEqual(styleManager.removeStyleSourceUncheckedStub.invocations.count, 2)
+        XCTAssertEqual(styleManager.removeStyleSourceUncheckedStub.invocations.first?.parameters, id)
+    }
+
     func testStyleCanCheckIfSourceExist() {
         styleManager.styleSourceExistsStub.defaultReturnValue = true
         XCTAssertTrue(sourceManager.sourceExists(withId: "dummy-source-id"))

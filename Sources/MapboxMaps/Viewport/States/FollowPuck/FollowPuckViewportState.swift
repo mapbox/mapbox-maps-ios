@@ -30,7 +30,7 @@ public final class FollowPuckViewportState {
                     center: renderingState.coordinate,
                     padding: options.padding,
                     zoom: options.zoom,
-                    bearing: options.bearing?.evaluate(state: renderingState),
+                    bearing: options.bearing?.evaluate(with: renderingState),
                     pitch: options.pitch)
             }
 
@@ -75,18 +75,5 @@ extension PuckRenderingData {
             heading: heading?.direction,
             bearing: location.bearing
         )
-    }
-}
-
-extension FollowPuckViewportStateBearing {
-    func evaluate(state: FollowPuckViewportState.RenderingState) -> CLLocationDirection? {
-        switch self {
-        case .constant(let value):
-            return value
-        case .heading:
-            return state.heading
-        case .course:
-            return state.bearing
-        }
     }
 }

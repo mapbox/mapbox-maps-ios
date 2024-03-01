@@ -43,14 +43,16 @@ final class Puck2DRendererTests: XCTestCase {
         puckBearingEnabled: Bool = false,
         puckBearing: PuckBearing = .course,
         configuration: Puck2DConfiguration = .makeDefault(showBearing: true)
-    ) -> PuckRendererState {
+    ) -> PuckRendererState<Puck2DConfiguration> {
         let state = PuckRendererState(
             coordinate: coordinate,
             horizontalAccuracy: horizontalAccuracy,
             accuracyAuthorization: accuracyAuthorization,
             bearing: course,
             heading: heading.map { Heading(direction: $0, accuracy: .random(in: 0..<360)) },
-            locationOptions: .init(puckType: .puck2D(configuration), puckBearing: puckBearing, puckBearingEnabled: puckBearingEnabled)
+            configuration: configuration,
+            bearingEnabled: puckBearingEnabled,
+            bearingType: puckBearing
         )
         puck2D.state = state
         return state
@@ -64,13 +66,6 @@ final class Puck2DRendererTests: XCTestCase {
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
         XCTAssertEqual(style.addImageStub.invocations.count, 0)
-    }
-
-    func testActivatingPuckDoesNotAddLayerIfLatestConfigurationIsNil() {
-        puck2D.state = .fixture()
-
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
     }
 
     func verifyAddImages(
@@ -97,12 +92,6 @@ final class Puck2DRendererTests: XCTestCase {
 
         XCTAssertEqual(parameters[2].id, "locationIndicatorLayerShadowImage", line: line)
         XCTAssertTrue(parameters[2].image === configuration.shadowImage, line: line)
-    }
-
-    func testActivatingPuckDoesNotAddImagesIfLatestConfigurationIsNil() throws {
-        puck2D.state = .fixture()
-
-        XCTAssertEqual(style.addImageStub.invocations.count, 0)
     }
 
     func testAddsDefaultImagesWhenConfigurationImagesAreNil() {
@@ -138,22 +127,20 @@ final class Puck2DRendererTests: XCTestCase {
         XCTAssertEqual(style.removeImageStub.invocations[1].parameters, "locationIndicatorLayerBearingImage")
     }
 
-    func makeExpectedLayerProperties(with state: PuckRendererState, bearing: Double? = nil) -> [String: Any] {
-        guard case let .puck2D(configuration) = state.locationOptions.puckType else {
-            XCTFail("No configuraition")
-            return [:]
-        }
-
+    func makeExpectedLayerProperties(
+        with state: PuckRendererState<Puck2DConfiguration>,
+        bearing: Double? = nil
+    ) -> [String: Any] {
         var expectedLayoutLayerProperties = [LocationIndicatorLayer.LayoutCodingKeys: Any]()
         expectedLayoutLayerProperties[.topImage] = "locationIndicatorLayerTopImage"
-        if configuration.bearingImage != nil {
+        if state.configuration.bearingImage != nil {
             expectedLayoutLayerProperties[.bearingImage] = "locationIndicatorLayerBearingImage"
         }
-        if configuration.shadowImage != nil {
+        if state.configuration.shadowImage != nil {
             expectedLayoutLayerProperties[.shadowImage] = "locationIndicatorLayerShadowImage"
         }
 
-        let resolvedScale = configuration.scale ?? .constant(1)
+        let resolvedScale = state.configuration.scale ?? .constant(1)
         let scale = try! resolvedScale.toJSON()
 
         var expectedPaintLayerProperties = [LocationIndicatorLayer.PaintCodingKeys: Any]()
@@ -165,7 +152,7 @@ final class Puck2DRendererTests: XCTestCase {
         expectedPaintLayerProperties[.emphasisCircleRadiusTransition] = ["duration": 0, "delay": 0]
         expectedPaintLayerProperties[.bearingTransition] = ["duration": 0, "delay": 0]
         expectedPaintLayerProperties[.bearing] = bearing
-        expectedPaintLayerProperties[.locationIndicatorOpacity] = configuration.opacity
+        expectedPaintLayerProperties[.locationIndicatorOpacity] = state.configuration.opacity
         expectedPaintLayerProperties[.locationIndicatorOpacityTransition] = ["duration": 0, "delay": 0]
 
         var expectedProperties = expectedLayoutLayerProperties

@@ -1,7 +1,7 @@
 @_implementationOnly import MapboxCommon_Private
 
 final class Puck3DRenderer: PuckRenderer {
-    var state: PuckRendererState? {
+    var state: PuckRendererState<Puck3DConfiguration>? {
         didSet {
             do {
                 if let state, state != oldValue {
@@ -25,17 +25,13 @@ final class Puck3DRenderer: PuckRenderer {
         try? style.removeSource(withId: Self.sourceID)
     }
 
-    private func startRendering(newState: PuckRendererState, oldState: PuckRendererState?) {
+    private func startRendering(newState: PuckRendererState<Puck3DConfiguration>, oldState: PuckRendererState<Puck3DConfiguration>?) {
         updateSourceModel(newState: newState, oldState: oldState)
         updateLayer(newState: newState, oldState: oldState)
     }
 
-    private func updateSourceModel(newState: PuckRendererState, oldState: PuckRendererState?) {
-        guard let newConfiguration = newState.configuration else {
-            return
-        }
-
-        var model = newConfiguration.model
+    private func updateSourceModel(newState: PuckRendererState<Puck3DConfiguration>, oldState: PuckRendererState<Puck3DConfiguration>?) {
+        var model = newState.configuration.model
         model.position = [newState.coordinate.longitude, newState.coordinate.latitude]
 
         model.orientation = model.orientation
@@ -49,8 +45,8 @@ final class Puck3DRenderer: PuckRenderer {
                 return orientation
             } ?? [0, 0, 0]
 
-        if newState.locationOptions.puckBearingEnabled {
-            switch newState.locationOptions.puckBearing {
+        if newState.bearingEnabled {
+            switch newState.bearingType {
             case .heading:
                 if let validHeadingDirection = newState.heading?.direction {
                     model.orientation?[2] += validHeadingDirection
@@ -77,9 +73,9 @@ final class Puck3DRenderer: PuckRenderer {
         }
     }
 
-    private func updateLayer(newState: PuckRendererState, oldState: PuckRendererState?) {
-        guard let newConfiguration = newState.configuration,
-              newConfiguration != oldState?.configuration else {
+    private func updateLayer(newState: PuckRendererState<Puck3DConfiguration>, oldState: PuckRendererState<Puck3DConfiguration>?) {
+        let newConfiguration = newState.configuration
+        guard newConfiguration != oldState?.configuration else {
             return
         }
 
@@ -107,15 +103,6 @@ final class Puck3DRenderer: PuckRenderer {
         } catch {
             Log.error(forMessage: "Failed to update Puck3D Layer properties, \(error)")
         }
-    }
-}
-
-private extension PuckRendererState {
-    var configuration: Puck3DConfiguration? {
-        guard case let .puck3D(configuration) = locationOptions.puckType else {
-            return nil
-        }
-        return configuration
     }
 }
 

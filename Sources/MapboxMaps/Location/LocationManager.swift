@@ -23,15 +23,8 @@ public final class LocationManager {
 
     /// Configuration options for the location manager.
     public var options: LocationOptions {
-        get { locationOptionsSubject.value }
-        set {
-            if newValue.puckType == nil {
-                puckManager.stop()
-            } else {
-                puckManager.start()
-            }
-            locationOptionsSubject.value = newValue
-        }
+        get { puckManager.locationOptions }
+        set { puckManager.locationOptions = newValue }
     }
 
     /// Sets the custom providers that supply puck with the location data.
@@ -78,9 +71,8 @@ public final class LocationManager {
 
     private let onLocationChangeProxy = CurrentValueSignalProxy<[Location]>()
     private let onHeadingChangeProxy = CurrentValueSignalProxy<Heading>()
-    private let locationOptionsSubject: CurrentValueSignalSubject<LocationOptions>
-    private let puckAnimator: ValueAnimator<LocationChange?>
-    private let puckManager: PuckManager
+    private let puckAnimator: ValueAnimator<PuckRenderingData?>
+    private let puckManager: PuckManager<Puck2DRenderer, Puck3DRenderer>
     private var interfaceOrientationView: Ref<UIView?>?
 
     convenience init(
@@ -112,12 +104,10 @@ public final class LocationManager {
         displayLink: Signal<Void>,
         locationProvider: Signal<[Location]>,
         headingProvider: Signal<Heading>,
-        nowTimestamp: Ref<Date>,
-        locationOptions: LocationOptions = LocationOptions()
+        nowTimestamp: Ref<Date>
     ) {
         onLocationChangeProxy.proxied = locationProvider
         onHeadingChangeProxy.proxied = headingProvider
-        locationOptionsSubject = CurrentValueSignalSubject(locationOptions)
 
         let tracedDisplayLink = displayLink
             .tracingInterval(SignpostName.mapViewDisplayLink, "Participant: LocationManager")
@@ -136,19 +126,14 @@ public final class LocationManager {
                 interpolate: interpolateHeading(from:to:fraction:),
                 nowTimestamp: nowTimestamp),
             trigger: tracedDisplayLink,
-            reduce: LocationChange.init(locations:heading:)
+            reduce: PuckRenderingData.init(locations:heading:)
         )
 
-        let onPuckChange = Signal.combineLatest(
-            puckAnimator.output.skipNil().skipRepeats(),
-            locationOptionsSubject.signal.skipRepeats()
-        )
-
-        onPuckRender = onPuckChange
-            .map { (locationChange, _) in PuckRenderingData(locationChange: locationChange) }
+        onPuckRender = puckAnimator.output.skipNil().skipRepeats()
 
         puckManager = PuckManager(
-            onPuckRenderState: onPuckChange.map(PuckRendererState.init(locationChange:locationOptions:)),
+            locationOptionsSubject: CurrentValueSignalSubject(LocationOptions()),
+            onPuckRender: onPuckRender,
             make2DRenderer: {
                 Puck2DRenderer(
                     style: styleManager,

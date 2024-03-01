@@ -1,21 +1,30 @@
 /// Substate of ``PuckRenderingData`` which contains only data needed for ``FollowPuckViewportState`` rendering.
 /// Allows to use ``Signal.skipRepeats()`` and avoid unnecessary recalculations.
-struct PuckRendererState: Equatable {
+struct PuckRendererState<Configuration: Equatable>: Equatable {
     var coordinate: CLLocationCoordinate2D
     var horizontalAccuracy: CLLocationAccuracy?
     var accuracyAuthorization: CLAccuracyAuthorization
     var bearing: CLLocationDirection?
     var heading: Heading?
-    var locationOptions: LocationOptions
+    var configuration: Configuration
+    var bearingEnabled: Bool
+    var bearingType: PuckBearing
 }
 
 extension PuckRendererState {
-    init(locationChange: LocationChange, locationOptions: LocationOptions) {
-        self.coordinate = locationChange.location.coordinate
-        self.horizontalAccuracy = locationChange.location.horizontalAccuracy
-        self.accuracyAuthorization = locationChange.location.accuracyAuthorization
-        self.bearing = locationChange.location.bearing
-        self.heading = locationChange.heading
-        self.locationOptions = locationOptions
+    init(
+        data: PuckRenderingData,
+        bearingEnabled: Bool,
+        bearingType: PuckBearing,
+        configuration: Configuration
+    ) {
+        self.coordinate = data.location.coordinate
+        self.horizontalAccuracy = data.location.horizontalAccuracy
+        self.accuracyAuthorization = data.location.accuracyAuthorization
+        self.bearing = data.location.bearing
+        self.heading = data.heading
+        self.configuration = configuration
+        self.bearingEnabled = bearingEnabled
+        self.bearingType = bearingType
     }
 }

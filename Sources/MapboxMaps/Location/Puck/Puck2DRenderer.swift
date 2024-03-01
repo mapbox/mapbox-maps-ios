@@ -4,7 +4,7 @@ import UIKit
 import os
 
 final class Puck2DRenderer: PuckRenderer {
-    var state: PuckRendererState? {
+    var state: PuckRendererState<Puck2DConfiguration>? {
         didSet {
             do {
                 if let state, state != oldValue {
@@ -46,15 +46,12 @@ final class Puck2DRenderer: PuckRenderer {
 
     // MARK: State handling
 
-    private func startRendering(newState: PuckRendererState, oldState: PuckRendererState?) throws {
-        guard let newConfiguration = newState.configuration else {
-            return
-        }
-
+    private func startRendering(newState: PuckRendererState<Puck2DConfiguration>, oldState: PuckRendererState<Puck2DConfiguration>?) throws {
+        let newConfiguration = newState.configuration
         if newConfiguration != oldState?.configuration || newState.accuracyAuthorization != oldState?.accuracyAuthorization {
             try updateLayer(newState: newState, oldState: oldState)
         } else {
-            try updateLayerFastPath(with: newState, configuration: newConfiguration)
+            try updateLayerFastPath(with: newState)
         }
 
         if let pulsing = newConfiguration.pulsing, pulsing.isEnabled, displayLinkToken == nil {
@@ -101,11 +98,9 @@ final class Puck2DRenderer: PuckRenderer {
 
     // MARK: Layer
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
-    private func updateLayer(newState: PuckRendererState, oldState: PuckRendererState?) throws {
-        guard let newConfiguration = newState.configuration else {
-            return
-        }
+    // swiftlint:disable:next function_body_length
+    private func updateLayer(newState: PuckRendererState<Puck2DConfiguration>, oldState: PuckRendererState<Puck2DConfiguration>?) throws {
+        let newConfiguration = newState.configuration
         var newLayerLayoutProperties = [LocationIndicatorLayer.LayoutCodingKeys: Any]()
         var newLayerPaintProperties = [LocationIndicatorLayer.PaintCodingKeys: Any]()
 
@@ -144,8 +139,8 @@ final class Puck2DRenderer: PuckRenderer {
                 newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(newConfiguration.accuracyRingBorderColor).rawValue
             }
 
-            if newState.locationOptions.puckBearingEnabled {
-                switch newState.locationOptions.puckBearing {
+            if newState.bearingEnabled {
+                switch newState.bearingType {
                 case .heading:
                     newLayerPaintProperties[.bearing] = newState.heading?.direction ?? 0
                 case .course:
@@ -250,26 +245,26 @@ final class Puck2DRenderer: PuckRenderer {
         }
     }
 
-    private func updateLayerFastPath(with data: PuckRendererState, configuration: Puck2DConfiguration) throws {
+    private func updateLayerFastPath(with state: PuckRendererState<Puck2DConfiguration>) throws {
         var layerProperties: [String: Any] = [
             LocationIndicatorLayer.PaintCodingKeys.location.rawValue: [
-                data.coordinate.latitude,
-                data.coordinate.longitude,
+                state.coordinate.latitude,
+                state.coordinate.longitude,
                 0
             ]
         ]
 
-        switch data.accuracyAuthorization {
+        switch state.accuracyAuthorization {
         case .fullAccuracy:
-            if configuration.showsAccuracyRing {
-                layerProperties[LocationIndicatorLayer.PaintCodingKeys.accuracyRadius.rawValue] = data.horizontalAccuracy
+            if state.configuration.showsAccuracyRing {
+                layerProperties[LocationIndicatorLayer.PaintCodingKeys.accuracyRadius.rawValue] = state.horizontalAccuracy
             }
-            if data.locationOptions.puckBearingEnabled {
-                switch data.locationOptions.puckBearing {
+            if state.bearingEnabled {
+                switch state.bearingType {
                 case .heading:
-                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = data.heading?.direction ?? 0
+                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = state.heading?.direction ?? 0
                 case .course:
-                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = data.bearing ?? 0
+                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = state.bearing ?? 0
                 }
             }
         case .reducedAccuracy:
@@ -282,11 +277,11 @@ final class Puck2DRenderer: PuckRenderer {
     }
 
     private func renderPulsing() throws {
-        guard let state, let configuration = state.configuration else {
+        guard let state else {
             return
         }
 
-        guard let pulsing = configuration.pulsing, pulsing.isEnabled else {
+        guard let pulsing = state.configuration.pulsing, pulsing.isEnabled else {
             // Remove the pulsing when it became disabled.
             if pulsingAnimationStartTimestamp != nil {
                 try style.setLayerProperties(for: Self.layerID, properties: [
@@ -352,15 +347,6 @@ private extension Puck2DConfiguration.Pulsing.Radius {
 internal extension ClosedRange where Bound: AdditiveArithmetic {
     var magnitude: Bound {
         return upperBound - lowerBound
-    }
-}
-
-private extension PuckRendererState {
-    var configuration: Puck2DConfiguration? {
-        guard case let .puck2D(configuration) = locationOptions.puckType else {
-            return nil
-        }
-        return configuration
     }
 }
 

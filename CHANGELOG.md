@@ -9,8 +9,14 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Features ✨ and improvements 🏁
 * Introduce an experimental Style DSL, enabling developers to add map style content like Sources, Layers, Style Images, Terrain, Light and Atmosphere to their map style at runtime in a declarative pattern. See the documentation [here](https://docs.mapbox.com/ios/maps/api/11.2.0-beta.1/documentation/mapboxmaps/style-dsl) for more information. For SwiftUI users, this Style DSL provides a more natural approach to manipulating content.
+* Update the minimum Xcode version to 15.2 (Swift 5.9).
 * Add `onClusterTap` and `onClusterLongPress` to AnnotationManagers(UIKit) and AnnotationGroups(SwiftUI) which support clustering
 * Add annotations drag handlers callbacks `dragBeginHandler`, `dragChangeHandler`, `dragEndHandler` to all Annotation types.
+* Bump core maps version to 11.2.0 and common sdk to 24.2.0.
+
+## 11.2.0 - 28 February, 2024
+
+* Bump core maps version to 11.2.0 and common sdk to 24.2.0.
 
 ## 11.2.0-rc.1 - 15 February, 2024
 

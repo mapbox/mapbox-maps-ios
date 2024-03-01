@@ -4,7 +4,7 @@ import Foundation
 /// A RGB-encoded raster DEM source
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#raster_dem)
-public struct RasterDemSource: Source, Equatable {
+public struct RasterDemSource: Source {
 
     public let type: SourceType
     public let id: String

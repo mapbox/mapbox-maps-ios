@@ -243,6 +243,10 @@ class MockStyleManager: StyleManagerProtocol {
     struct AddStyleLayerParameters {
         let properties: Any
         let layerPosition: CoreLayerPosition?
+
+        var layerId: String? {
+            (properties as? [String: Any])?["id"] as? String
+        }
     }
     let addStyleLayerStub = Stub<AddStyleLayerParameters, Expected<NSNull, NSString>>(
         defaultReturnValue: .init(value: NSNull())

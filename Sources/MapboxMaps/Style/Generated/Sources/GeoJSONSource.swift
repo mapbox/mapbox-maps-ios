@@ -4,7 +4,7 @@ import Foundation
 /// A GeoJSON data source.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#geo_json)
-public struct GeoJSONSource: Source, Equatable {
+public struct GeoJSONSource: Source {
 
     public let type: SourceType
     public let id: String

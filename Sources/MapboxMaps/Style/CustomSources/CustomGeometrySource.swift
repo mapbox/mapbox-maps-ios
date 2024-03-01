@@ -4,7 +4,7 @@ import Foundation
 ///
 /// A CustomGeometrySource uses a coalescing model for frequent data updates targeting the same tile id.
 /// This means that the in-progress request as well as the last scheduled request are guaranteed to finish.
-public struct CustomGeometrySource: Source, Equatable {
+public struct CustomGeometrySource: Source {
 
     /// The Source type
     public let type: SourceType

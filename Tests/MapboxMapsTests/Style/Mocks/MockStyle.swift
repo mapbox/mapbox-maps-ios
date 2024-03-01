@@ -2,6 +2,12 @@ import UIKit
 @testable @_spi(Experimental) import MapboxMaps
 
 final class MockStyle: StyleProtocol {
+    var mapStyleContent: Any?
+    @available(iOS 13.0, *)
+    func setMapStyleContent(_ content: any MapStyleContent) {
+        mapStyleContent = content
+    }
+
     @TestPublished var styleRootLoaded = false
     var isStyleRootLoaded: Signal<Bool> { $styleRootLoaded }
 

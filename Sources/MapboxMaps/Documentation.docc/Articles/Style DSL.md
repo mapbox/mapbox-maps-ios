@@ -1,4 +1,4 @@
-# Style DSL
+# Style DSL User Guide
 
 Use declarative syntax to modify your Mapbox Style at runtime. 
 

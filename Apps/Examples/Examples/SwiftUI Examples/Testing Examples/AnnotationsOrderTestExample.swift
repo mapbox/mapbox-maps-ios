@@ -5,14 +5,25 @@ import SwiftUI
 struct AnnotationsOrderTestExample: View {
     @State var bluePolygon = true
     @State var greenPolygon = true
+    @State var yellowLayer = true
+    @State var purpleLayer = true
     @State var circles = true
     @State var tapMessage: String?
     @State var longPressMessage: String?
 
     var body: some View {
-        MapReader { proxy in
             Map(initialViewport: .camera(center: .init(latitude: 27.2, longitude: -26.9), zoom: 1.53, bearing: 0, pitch: 0)) {
                 mapContent
+            }
+            .mapStyle(.standard) {
+                if yellowLayer {
+                    TestLayer(id: "yellow-layer", radius: 2, color: .yellow, coordinate: .init(latitude: -5, longitude: 30))
+                }
+                if purpleLayer {
+                    TestLayer(id: "purple-layer", radius: 2.5, color: .purple, coordinate: .init(latitude: 17, longitude: 12))
+                }
+                TestLayer(id: "black-layer", radius: 2, color: .black.darker, coordinate: .init(latitude: -10, longitude: 0))
+
             }
             .onLayerTapGesture("purple-layer") { feature, context in
                 tapMessage = gestureMessage("Purple layer", context: context)
@@ -22,14 +33,19 @@ struct AnnotationsOrderTestExample: View {
                 longPressMessage = gestureMessage("Purple layer", context: context)
                 return true // handled, do not propagate to layers below or map
             }
+            .onLayerTapGesture("black-layer") { feature, context in
+                tapMessage = gestureMessage("Black layer", context: context)
+                return true
+            }
+            .onLayerTapGesture("yellow-layer") { feature, context in
+                tapMessage = gestureMessage("Yellow layer", context: context)
+                return true
+            }
             .onMapTapGesture { context in
                 tapMessage = gestureMessage("Map", context: context)
             }
             .onMapLongPressGesture { context in
                 longPressMessage = gestureMessage("Map", context: context)
-            }
-            .onStyleLoaded { _ in
-                proxy.map.map { initStyleLayer($0) }
             }
             .ignoresSafeArea()
             .safeOverlay(alignment: .bottom) {
@@ -51,6 +67,8 @@ struct AnnotationsOrderTestExample: View {
                             Toggle("Blue polygon", isOn: $bluePolygon)
                             Toggle("Circles", isOn: $circles)
                             Toggle("Green polygon", isOn: $greenPolygon)
+                            Toggle("Purple layer", isOn: $purpleLayer)
+                            Toggle("Yellow layer", isOn: $yellowLayer)
                         }
                         .toggleStyleButton()
                     }
@@ -59,7 +77,6 @@ struct AnnotationsOrderTestExample: View {
                 .padding(.bottom, 30)
             }
         }
-    }
 
     @MapContentBuilder
     var mapContent: MapContent {
@@ -72,7 +89,7 @@ struct AnnotationsOrderTestExample: View {
                     CLLocationCoordinate2D(latitude: 20, longitude: 0),
                 ]
             ])
-            polygonAnnotation(for: poly, color: .systemBlue) { context in
+            polygonAnnotation(id: "blue-poly", for: poly, color: .systemBlue) { context in
                 tapMessage = gestureMessage("Blue polygon", context: context)
                 return true
             } onLongPressGesture: { context in
@@ -120,7 +137,7 @@ struct AnnotationsOrderTestExample: View {
                     CLLocationCoordinate2D(latitude: 30, longitude: 10),
                 ]
             ])
-            polygonAnnotation(for: polygon2, color: .systemGreen) { context in
+            polygonAnnotation(id: "green-poly", for: polygon2, color: .systemGreen) { context in
                 tapMessage = gestureMessage("Green polygon", context: context)
                 return true
             } onLongPressGesture: { context in
@@ -132,17 +149,20 @@ struct AnnotationsOrderTestExample: View {
 
     @MapContentBuilder
     func polygonAnnotation(
+        id: String,
         for polygon: Polygon,
         color: UIColor,
         onTapGesture: @escaping (MapContentGestureContext) -> Bool,
         onLongPressGesture: @escaping (MapContentGestureContext) -> Bool
     ) -> MapContent {
-        PolygonAnnotation(polygon: polygon)
-            .fillColor(StyleColor(color))
-            .fillOpacity(0.5)
-            .fillOutlineColor(StyleColor(.black))
-            .onTapGesture(handler: onTapGesture)
-            .onLongPressGesture(handler: onLongPressGesture)
+        PolygonAnnotationGroup {
+            PolygonAnnotation(polygon: polygon)
+                .fillColor(StyleColor(color))
+                .fillOpacity(0.5)
+                .fillOutlineColor(StyleColor(.black))
+                .onTapGesture(handler: onTapGesture)
+                .onLongPressGesture(handler: onLongPressGesture)
+        }.layerId(id)
 
         if let coordinates = polygon.coordinates.last, let firstCoord = coordinates.first {
             let lineCoordinates = coordinates + [firstCoord]
@@ -151,43 +171,30 @@ struct AnnotationsOrderTestExample: View {
                 .lineColor(StyleColor(color.darker))
         }
     }
+}
 
-    private func initStyleLayer(_ map: MapboxMap) {
-        var layer = FillLayer(id: "purple-layer", source: "pl")
-        layer.fillColor = .constant(StyleColor(.purple))
-        layer.fillOpacity = .constant(0.3)
-        layer.slot = .middle
+@available(iOS 13.0, *)
+private struct TestLayer: MapStyleContent {
+    var id: String
+    var radius: LocationDistance
+    var color: UIColor
+    var coordinate: CLLocationCoordinate2D
 
-        var source = GeoJSONSource(id: "pl")
-        let circlePolygon = Polygon(center: .init(latitude: 17, longitude: 12), radius: 3000000, vertices: 60)
-        source.data = .geometry(.polygon(circlePolygon))
-
-        try? map.addSource(source)
-        try? map.addLayer(layer)
+    var body: some MapStyleContent {
+        let sourceId = "\(id)-source"
+        FillLayer(id: id, source: sourceId)
+            .fillColor(color)
+            .fillOpacity(0.4)
+        LineLayer(id: "\(id)-border", source: sourceId)
+            .lineColor(color.darker)
+            .lineOpacity(0.4)
+            .lineWidth(2)
+        GeoJSONSource(id: sourceId)
+            .data(.geometry(.polygon(Polygon(center: coordinate, radius: radius * 1000000, vertices: 60))))
     }
 }
 
 private func gestureMessage(_ label: String, context: MapContentGestureContext) -> String {
     let coordinate =  String(format: "%.2f, %.2f", context.coordinate.latitude, context.coordinate.longitude)
     return "\(label) (\(coordinate))"
-}
-
-private extension UIColor {
-    var darker: UIColor {
-        var r: CGFloat = 0.0
-        var g: CGFloat = 0.0
-        var b: CGFloat = 0.0
-        var a: CGFloat = 0.0
-
-        guard getRed(&r, green: &g, blue: &b, alpha: &a) else { return self }
-
-        let v = 0.3
-
-        return UIColor(red: max(r - v, 0.0),
-                       green: max(g - v, 0.0),
-                       blue: max(b - v, 0.0),
-                       alpha: a)
-
-
-    }
 }

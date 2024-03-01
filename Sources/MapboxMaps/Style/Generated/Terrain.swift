@@ -19,14 +19,9 @@ public struct Terrain: Codable, Equatable  {
     public var exaggerationTransition: StyleTransition?
 }
 
-#if swift(>=5.8)
+@_spi(Experimental)
 @_documentation(visibility: public)
-#endif
-@_spi(Experimental) extension Terrain: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.terrain = self
-    }
-
+extension Terrain {
     /// Exaggerates the elevation of the terrain by multiplying the data from the DEM with this value.
     @_documentation(visibility: public)
     public func exaggeration(_ constant: Double) -> Self {
@@ -43,6 +38,14 @@ public struct Terrain: Codable, Equatable  {
     @_documentation(visibility: public)
     public func exaggeration(_ expression: Expression) -> Self {
         with(self, setter(\.exaggeration, .expression(expression)))
+    }
+}
+
+@_spi(Experimental)
+@available(iOS 13.0, *)
+extension Terrain: MapStyleContent, PrimitiveMapStyleContent {
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedUniqueProperty(keyPath: \.terrain, value: self))
     }
 }
 

@@ -5,7 +5,7 @@ import Foundation
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#raster_array)
 @_documentation(visibility: public)
-@_spi(Experimental) public struct RasterArraySource: Source, Equatable {
+@_spi(Experimental) public struct RasterArraySource: Source {
 
     @_documentation(visibility: public)
     public let type: SourceType

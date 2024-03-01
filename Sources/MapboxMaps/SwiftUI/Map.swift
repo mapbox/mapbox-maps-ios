@@ -250,6 +250,20 @@ public extension Map {
         copyAssigned(self, \.mapDependencies.mapStyle, mapStyle)
     }
 
+    /// Sets style and style content to the map.
+    ///
+    /// See more information in the <doc:Style-DSL>.
+    ///
+    /// - Parameters:
+    ///     - mapStyle: A map style configuration.
+    @_documentation(visibility: public)
+    func mapStyle(_ mapStyle: MapStyle, @MapStyleContentBuilder content: () -> some MapStyleContent) -> Self {
+        var copy = self
+        copy.mapDependencies.mapStyle = mapStyle
+        copy.mapDependencies.mapStyleContent = evaluate(mapStyleContent: content)
+        return copy
+    }
+
     /// Sets constraint mode to the map. If not set, `heightOnly` will be in use.
     @_documentation(visibility: public)
     func constrainMode(_ constrainMode: ConstrainMode) -> Self {

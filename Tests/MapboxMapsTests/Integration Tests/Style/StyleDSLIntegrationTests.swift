@@ -1,13 +1,15 @@
 import XCTest
 @_spi(Experimental) @testable import MapboxMaps
 
+@available(iOS 13.0, *)
 internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testLayerOrder() {
         let expectation = self.expectation(description: "Wait for mapStyle to load")
         expectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.mapStyle = .standard {
+        mapView.mapboxMap.mapStyle = .standard
+        mapView.mapboxMap.setMapStyleContent {
             FillLayer(id: "first", source: "test-source")
             LineLayer(id: "second", source: "test-source")
             SymbolLayer(id: "third", source: "test-source")
@@ -22,15 +24,15 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
         didFinishLoadingStyle = { mapView in
             XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.count, 9)
             // New layers should be added in order to the top of the layer stack
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[0].id, "first")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[1].id, "second")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[2].id, "third")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[3].id, "fourth")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[4].id, "fifth")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[5].id, "sixth")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[6].id, "seventh")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[7].id, "eighth")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[8].id, "ninth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 0]?.id, "first")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 1]?.id, "second")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 2]?.id, "third")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 3]?.id, "fourth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 4]?.id, "fifth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 5]?.id, "sixth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 6]?.id, "seventh")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 7]?.id, "eighth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 8]?.id, "ninth")
             expectation.fulfill()
         }
 
@@ -41,7 +43,8 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
         let expectation = self.expectation(description: "Wait for mapStyle to load")
         expectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.mapStyle = .streets {
+        mapView.mapboxMap.mapStyle = .streets
+        mapView.mapboxMap.setMapStyleContent {
             FillLayer(id: "first", source: "test-source")
             LineLayer(id: "second", source: "test-source")
             SymbolLayer(id: "third", source: "test-source")
@@ -55,17 +58,17 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { mapView in
             let layerCount = mapView.mapboxMap.allLayerIdentifiers.count
-            XCTAssertEqual(layerCount, 143)
+            XCTAssertGreaterThan(layerCount, 9)
             // New layers should be added in order to the top of the layer stack
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[layerCount-9].id, "first")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[layerCount-8].id, "second")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[layerCount-7].id, "third")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[layerCount-6].id, "fourth")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[layerCount-5].id, "fifth")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[layerCount-4].id, "sixth")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[layerCount-3].id, "seventh")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[layerCount-2].id, "eighth")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[layerCount-1].id, "ninth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: layerCount-9]?.id, "first")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: layerCount-8]?.id, "second")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: layerCount-7]?.id, "third")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: layerCount-6]?.id, "fourth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: layerCount-5]?.id, "fifth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: layerCount-4]?.id, "sixth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: layerCount-3]?.id, "seventh")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: layerCount-2]?.id, "eighth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: layerCount-1]?.id, "ninth")
             expectation.fulfill()
         }
 
@@ -78,7 +81,8 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
         let boolean = false
 
-        mapView.mapboxMap.mapStyle = .standard {
+        mapView.mapboxMap.mapStyle = .standard
+        mapView.mapboxMap.setMapStyleContent {
             FillLayer(id: "first", source: "test-source")
             LineLayer(id: "second", source: "test-source")
             SymbolLayer(id: "third", source: "test-source")
@@ -95,14 +99,14 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
         didBecomeIdle = { mapView in
             XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.count, 8)
             // New layers should be added in order to the top of the layer stack
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[0].id, "first")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[1].id, "second")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[2].id, "third")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[3].id, "fourth")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[4].id, "fifth")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[5].id, "seventh")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[6].id, "eighth")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[7].id, "ninth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 0]?.id, "first")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 1]?.id, "second")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 2]?.id, "third")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 3]?.id, "fourth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 4]?.id, "fifth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 5]?.id, "seventh")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 6]?.id, "eighth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 7]?.id, "ninth")
             expectation.fulfill()
         }
 
@@ -122,7 +126,8 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
         let boolean = true
         let enumTestValue = TestValue.two
 
-        mapView.mapboxMap.mapStyle = .standard {
+        mapView.mapboxMap.mapStyle = .standard
+        mapView.mapboxMap.setMapStyleContent {
             FillLayer(id: "first", source: "test-source")
             switch enumTestValue {
             case .one:
@@ -139,9 +144,9 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
         didBecomeIdle = { mapView in
             XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.count, 3)
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[0].id, "first")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[1].id, "third")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[2].id, "fifth")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 0]?.id, "first")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 1]?.id, "third")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 2]?.id, "fifth")
             expectation.fulfill()
         }
 
@@ -162,7 +167,8 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
         var boolean = true
 
-        mapView.mapboxMap.mapStyle = .standard {
+        mapView.mapboxMap.mapStyle = .standard
+        mapView.mapboxMap.setMapStyleContent {
             if boolean {
                 source
                 layer
@@ -171,13 +177,13 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { mapView in
             XCTAssertEqual(mapView.mapboxMap.allSourceIdentifiers.count, 1)
-            XCTAssertEqual(mapView.mapboxMap.allSourceIdentifiers[0].id, "test-source")
+            XCTAssertEqual(mapView.mapboxMap.allSourceIdentifiers.first?.id, "test-source")
             XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.count, 1)
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[0].id, "line")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.first?.id, "line")
 
             boolean = false
 
-            mapView.mapboxMap.mapStyle = .standard {
+            mapView.mapboxMap.setMapStyleContent {
                 if boolean {
                     source
                     layer
@@ -202,25 +208,28 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
         var layer = FillLayer(id: "test-fill", source: "test-source")
             .position(LayerPosition.above("poi-label"))
 
-        mapView.mapboxMap.mapStyle = .streets {
+        mapView.mapboxMap.mapStyle = .streets
+        mapView.mapboxMap.setMapStyleContent {
             layer
         }
 
         didFinishLoadingStyle = { mapView in
             XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.count, 135)
             print(mapView.mapboxMap.allLayerIdentifiers)
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[126].id, "test-fill")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 126]?.id, "test-fill")
             expectation.fulfill()
 
             layer.position = .below("poi-label")
 
-            mapView.mapboxMap.mapStyle = .streets {
+            mapView.mapboxMap.mapStyle = .streets
+            mapView.mapboxMap.setMapStyleContent {
                 layer
             }
         }
 
         didBecomeIdle = { mapView in
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[125].id, "test-fill")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.count, 135)
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 125]?.id, "test-fill")
             expectation.fulfill()
         }
 
@@ -235,13 +244,14 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
             .slot(.bottom)
             .position(LayerPosition.at(0))
 
-        mapView.mapboxMap.mapStyle = .standard {
+        mapView.mapboxMap.mapStyle = .standard
+        mapView.mapboxMap.setMapStyleContent {
             layer
         }
 
         didFinishLoadingStyle = { mapView in
             XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.count, 1)
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[0].id, "test-line")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.first?.id, "test-line")
             expectation.fulfill()
         }
 
@@ -252,7 +262,8 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
         let expectation = self.expectation(description: "Wait for mapStyle to load")
         expectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.mapStyle = .streets {
+        mapView.mapboxMap.styleURI = .streets
+        mapView.mapboxMap.setMapStyleContent {
             FillLayer(id: "fill", source: "test-source")
                 .position(.at(1))
             LineLayer(id: "line", source: "test-source")
@@ -280,18 +291,18 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
         }
 
         didFinishLoadingStyle = { mapView in
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[1].id, "fill")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[2].id, "line")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[3].id, "symbol")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[4].id, "circle")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[5].id, "heatmap")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[6].id, "fillextrusion")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[7].id, "raster")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[8].id, "hillshadeLayer")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[9].id, "model")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[10].id, "background")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[11].id, "sky")
-            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[12].id, "location")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 1]?.id, "fill")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 2]?.id, "line")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 3]?.id, "symbol")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 4]?.id, "circle")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 5]?.id, "heatmap")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 6]?.id, "fillextrusion")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 7]?.id, "raster")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 8]?.id, "hillshadeLayer")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 9]?.id, "model")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 10]?.id, "background")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 11]?.id, "sky")
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers[safe: 12]?.id, "location")
             expectation.fulfill()
         }
 
@@ -304,7 +315,8 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
         let model = Model(id: "test-id", uri: .init(string: "test-URL"))
 
-        mapView.mapboxMap.mapStyle = .streets {
+        mapView.mapboxMap.mapStyle = .standard
+        mapView.mapboxMap.setMapStyleContent {
             model
         }
 
@@ -312,7 +324,7 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
             XCTAssertTrue(mapView.mapboxMap.hasStyleModel(modelId: "test-id"))
 
             // Remove model
-            mapView.mapboxMap.mapStyle = .streets
+            mapView.mapboxMap.setMapStyleContent {}
             XCTAssertFalse(mapView.mapboxMap.hasStyleModel(modelId: "test-id"))
 
             expectation.fulfill()

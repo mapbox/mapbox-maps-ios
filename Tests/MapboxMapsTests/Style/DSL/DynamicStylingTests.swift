@@ -37,47 +37,4 @@ final class DynamicStylingTests: XCTestCase {
         XCTAssertEqual(styleImage.sdf, Bool.testConstantValue())
         XCTAssertEqual(styleImage.contentInsets, UIEdgeInsets.testConstantValue())
     }
-
-    // Test isEqual
-
-    struct Dummy {
-        let id: Int
-        let name: String
-    }
-
-    func testEqualityByID() {
-        let dummy1 = Dummy(id: 1, name: "Test")
-        let dummy2 = Dummy(id: 1, name: "Test2")
-
-        let areEqual = MapboxMaps.isEqual(by: \Dummy.id, lhs: dummy1, rhs: dummy2)
-
-        XCTAssertTrue(areEqual, "Expected IDs to be equal but they are not.")
-    }
-
-    func testInequalityByID() {
-        let dummy1 = Dummy(id: 1, name: "Test")
-        let dummy2 = Dummy(id: 2, name: "Test2")
-
-        let areEqual = MapboxMaps.isEqual(by: \Dummy.id, lhs: dummy1, rhs: dummy2)
-
-        XCTAssertFalse(areEqual, "Expected IDs to be different but they are not.")
-    }
-
-    func testEqualityByName() {
-        let dummy1 = Dummy(id: 1, name: "Test")
-        let dummy2 = Dummy(id: 1, name: "Test")
-
-        let areEqual = MapboxMaps.isEqual(by: \Dummy.name, lhs: dummy1, rhs: dummy2)
-
-        XCTAssertTrue(areEqual, "Expected names to be equal but they are not.")
-    }
-
-    func testInequalityByName() {
-        let dummy1 = Dummy(id: 1, name: "Test")
-        let dummy2 = Dummy(id: 1, name: "Test2")
-
-        let areEqual = MapboxMaps.isEqual(by: \Dummy.name, lhs: dummy1, rhs: dummy2)
-
-        XCTAssertFalse(areEqual, "Expected names to be different but they are not.")
-    }
 }

@@ -54,6 +54,9 @@ targetTemplates:
         - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
           value: 1
           isEnabled: false
+        - variable: MAPBOX_MAPS_STYLE_DSL_LOGS_ENABLED
+          value: 1
+          isEnabled: false
 
   unit-test:
     type: bundle.unit-test

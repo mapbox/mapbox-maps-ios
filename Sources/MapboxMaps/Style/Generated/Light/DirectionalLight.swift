@@ -200,9 +200,10 @@ extension DirectionalLight {
 }
 
 @_spi(Experimental)
-extension DirectionalLight: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.setLight(self)
+@available(iOS 13.0, *)
+extension DirectionalLight: MapStyleContent, PrimitiveMapStyleContent {
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedUniqueProperty(keyPath: \.lights.directional, value: self))
     }
 }
 // End of generated file.

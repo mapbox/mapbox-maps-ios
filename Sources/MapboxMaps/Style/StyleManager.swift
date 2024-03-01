@@ -8,6 +8,8 @@ protocol StyleProtocol: AnyObject {
     var styleDefaultCamera: CameraOptions { get }
     var uri: StyleURI? { get set }
     var mapStyle: MapStyle? { get set }
+    @available(iOS 13.0, *)
+    func setMapStyleContent(_ content: any MapStyleContent)
     func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
@@ -66,6 +68,7 @@ public class StyleManager {
     private let sourceManager: StyleSourceManagerProtocol
     private let styleManager: StyleManagerProtocol
     private let styleReconciler: MapStyleReconciler
+    private let styleContentReconciler: Any?
 
     internal init(
         with styleManager: StyleManagerProtocol,
@@ -73,7 +76,14 @@ public class StyleManager {
     ) {
         self.styleManager = styleManager
         self.sourceManager = sourceManager
-        styleReconciler = MapStyleReconciler(styleManager: styleManager, sourceManager: sourceManager)
+        styleReconciler = MapStyleReconciler(styleManager: styleManager)
+        if #available(iOS 13.0, *) {
+            styleContentReconciler = MapStyleContentReconciler(
+                managers: StyleManagers(style: styleManager, source: sourceManager),
+                styleIsLoaded: styleReconciler.isStyleRootLoaded)
+        } else {
+            styleContentReconciler = nil
+        }
     }
 
     // MARK: - Layers
@@ -416,6 +426,51 @@ public class StyleManager {
     public var mapStyle: MapStyle? {
         get { styleReconciler.mapStyle }
         set { styleReconciler.mapStyle = newValue }
+    }
+
+    /// Sets style content to the map.
+    ///
+    /// Use this method to declaratively specify which runtime styling components will be added to the style.
+    ///
+    /// ```swift
+    /// let mapView = MapView()
+    /// mapView.mapboxMap.setMapStyleContent {
+    ///     VectorSource(id: "traffic-source")
+    ///         .tiles(["traffic-tiles-url"])
+    ///     LineLayer(id: "traffic-layer", source: "traffic-source")
+    ///         .lineColor(.red)
+    /// }
+    /// ```
+    ///
+    /// - Note: Don't wait until the style is loaded, it is safe to set style content just when the map is created.
+    ///
+    /// Call this method whenever the app state changes, the style will be modified incrementally.
+    /// The style content is unique per map, make sure that all the styling components
+    /// you need are in the style content upon every call.
+    ///
+    /// ```swift
+    /// func onMapStateChanged(_ state: State) {
+    ///   mapView.mapboxMap.setMapStyleContent {
+    ///     if state.displayTraffic {
+    ///         VectorSource(id: "traffic-source")
+    ///             .tiles(["traffic-tiles-url"])
+    ///         LineLayer(id: "traffic-layer", source: "traffic-source")
+    ///             .lineColor(state.trafficColor)
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// See more information in the <doc:Style-DSL>.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    @available(iOS 13.0, *)
+    public func setMapStyleContent(@MapStyleContentBuilder content: () -> some MapStyleContent) {
+        setMapStyleContent(evaluate(mapStyleContent: content))
+    }
+
+    @available(iOS 13.0, *)
+    func setMapStyleContent(_ content: any MapStyleContent) {
+        (styleContentReconciler as? MapStyleContentReconciler)?.content = content
     }
 
     /// Get or set the style URI
@@ -1083,10 +1138,7 @@ public class StyleManager {
     /// Set global directional lightning.
     /// - Parameter flatLight: The flat light source.
     public func setLights(_ flatLight: FlatLight) throws {
-        let rawLight = try flatLight.allStyleProperties()
-        try handleExpected {
-            return styleManager.setStyleLightsForLights([rawLight])
-        }
+        try styleManager.setLights(flatLight)
     }
 
     /// Set dynamic lightning.
@@ -1094,11 +1146,7 @@ public class StyleManager {
     ///   - ambientLight: The ambient light source.
     ///   - directionalLight: The directional light source.
     public func setLights(ambient ambientLight: AmbientLight, directional directionalLight: DirectionalLight) throws {
-        let rawAmbientLight = try ambientLight.allStyleProperties()
-        let rawDirectionalLight = try directionalLight.allStyleProperties()
-        try handleExpected {
-            return styleManager.setStyleLightsForLights([rawAmbientLight, rawDirectionalLight])
-        }
+        try styleManager.setLights(ambient: ambientLight, directional: directionalLight)
     }
 
     /// Sets the value of a style light property in lights list.
@@ -1415,6 +1463,23 @@ public class StyleManager {
     @_spi(Experimental) public func invalidateCustomRasterSourceRegion(forSourceId sourceId: String, bounds: CoordinateBounds) throws {
         try handleExpected {
             return styleManager.invalidateStyleCustomRasterSourceRegion(forSourceId: sourceId, bounds: bounds)
+        }
+    }
+}
+
+extension StyleManagerProtocol {
+    func setLights(_ flatLight: FlatLight) throws {
+        let rawLight = try flatLight.allStyleProperties()
+        try handleExpected {
+            setStyleLightsForLights([rawLight])
+        }
+    }
+
+    func setLights(ambient ambientLight: AmbientLight, directional directionalLight: DirectionalLight) throws {
+        let rawAmbientLight = try ambientLight.allStyleProperties()
+        let rawDirectionalLight = try directionalLight.allStyleProperties()
+        try handleExpected {
+            setStyleLightsForLights([rawAmbientLight, rawDirectionalLight])
         }
     }
 }

@@ -4,7 +4,7 @@ import Foundation
 /// An image data source.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#image)
-public struct ImageSource: Source, Equatable {
+public struct ImageSource: Source {
 
     public let type: SourceType
     public let id: String

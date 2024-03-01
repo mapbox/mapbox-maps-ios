@@ -1,159 +1,172 @@
 // This file is generated.
 import Foundation
+import os
 
-enum SourceWrapper: Equatable  {
-    case vector(VectorSource)
-    case raster(RasterSource)
-    case rasterDem(RasterDemSource)
-    case rasterArray(RasterArraySource)
-    case image(ImageSource)
-    case geoJson(GeoJSONSource)
-    case customGeometry(CustomGeometrySource)
-    case customRaster(CustomRasterSource)
-
-    var asSource: Source {
-        switch(self) {
-        case let .vector(source): return source
-        case let .raster(source): return source
-        case let .rasterDem(source): return source
-        case let .rasterArray(source): return source
-        case let .image(source): return source
-        case let .geoJson(source): return source
-        case let .customGeometry(source): return source
-        case let .customRaster(source): return source
-        }
-    }
+/// The protocol encapsulates the update process of a specific source.
+protocol UpdatableSource {
+    func update(from old: Self, with manager: StyleSourceManagerProtocol) throws
 }
 
-extension SourceWrapper {
-    static func update(old: SourceWrapper, new: SourceWrapper, styleSourceManager: StyleSourceManagerProtocol) throws {
-        assert(old.asSource.id == new.asSource.id)
-
+@_spi(Experimental)
+@available(iOS 13.0, *)
+extension VectorSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+    func update(from old: VectorSource, with manager: StyleSourceManagerProtocol) throws {
+        assert(old.id == id)
         var props = [String: Any]()
-
-        switch (old, new) {
-        case let (.vector(old), .vector(new)):
-            encodeUpdate(\.url, old: old, new: new, container: &props, key: "url")
-            encodeUpdate(\.tiles, old: old, new: new, container: &props, key: "tiles")
-            encodeUpdate(\.minzoom, old: old, new: new, container: &props, key: "minzoom")
-            encodeUpdate(\.maxzoom, old: old, new: new, container: &props, key: "maxzoom")
-            encodeUpdate(\.volatile, old: old, new: new, container: &props, key: "volatile")
-        case let (.raster(old), .raster(new)):
-            encodeUpdate(\.url, old: old, new: new, container: &props, key: "url")
-            encodeUpdate(\.tiles, old: old, new: new, container: &props, key: "tiles")
-            encodeUpdate(\.minzoom, old: old, new: new, container: &props, key: "minzoom")
-            encodeUpdate(\.maxzoom, old: old, new: new, container: &props, key: "maxzoom")
-            encodeUpdate(\.volatile, old: old, new: new, container: &props, key: "volatile")
-        case let (.rasterDem(old), .rasterDem(new)):
-            encodeUpdate(\.url, old: old, new: new, container: &props, key: "url")
-            encodeUpdate(\.tiles, old: old, new: new, container: &props, key: "tiles")
-            encodeUpdate(\.minzoom, old: old, new: new, container: &props, key: "minzoom")
-            encodeUpdate(\.maxzoom, old: old, new: new, container: &props, key: "maxzoom")
-            encodeUpdate(\.volatile, old: old, new: new, container: &props, key: "volatile")
-        case let (.rasterArray(old), .rasterArray(new)):
-            encodeUpdate(\.url, old: old, new: new, container: &props, key: "url")
-            encodeUpdate(\.tiles, old: old, new: new, container: &props, key: "tiles")
-            encodeUpdate(\.minzoom, old: old, new: new, container: &props, key: "minzoom")
-            encodeUpdate(\.maxzoom, old: old, new: new, container: &props, key: "maxzoom")
-        case let (.image(old), .image(new)):
-            encodeUpdate(\.url, old: old, new: new, container: &props, key: "url")
-            encodeUpdate(\.coordinates, old: old, new: new, container: &props, key: "coordinates")
-        case let (.geoJson(old), .geoJson(new)):
-            if !isEqual(by: \.data, lhs: old, rhs: new) {
-                guard let data = new.data else {
-                    return
-                }
-                styleSourceManager.updateGeoJSONSource(withId: new.id, data: data, dataId: nil)
-            }
-        case let (.customGeometry(old), .customGeometry(new)):
-            if old.options != new.options {
-                try styleSourceManager.removeSourceUnchecked(withId: old.id)
-                try styleSourceManager.addSource(new, dataId: nil)
-            } else {
-                encodeUpdate(\.tileCacheBudget, old: old, new: new, container: &props, key: CustomGeometrySource.CodingKeys.tileCacheBudget.rawValue)
-            }
-        case let (.customRaster(old), .customRaster(new)):
-            if old.options != new.options {
-                try styleSourceManager.removeSourceUnchecked(withId: old.id)
-                try styleSourceManager.addSource(new, dataId: nil)
-            } else {
-                encodeUpdate(\.tileCacheBudget, old: old, new: new, container: &props, key: CustomGeometrySource.CodingKeys.tileCacheBudget.rawValue)
-            }
-        default:
-            assertionFailure("Can't change type of source: \(old.asSource.type) to \(new.asSource.type)")
-            return
-        }
-
+        encodeUpdate(\.url, old: old, new: self, container: &props, key: "url")
+        encodeUpdate(\.tiles, old: old, new: self, container: &props, key: "tiles")
+        encodeUpdate(\.minzoom, old: old, new: self, container: &props, key: "minzoom")
+        encodeUpdate(\.maxzoom, old: old, new: self, container: &props, key: "maxzoom")
+        encodeUpdate(\.volatile, old: old, new: self, container: &props, key: "volatile")
         if !props.isEmpty {
-            try styleSourceManager.setSourceProperties(for: new.asSource.id, properties: props)
+            try manager.setSourceProperties(for: id, properties: props)
         }
     }
 
-    private static func encodeUpdate<T, U: Equatable>(_ keyPath: KeyPath<T, U>, old: T, new: T, container: inout [String: Any], key: String) {
-        if !isEqual(by: keyPath, lhs: old, rhs: new) {
-            container[key] = new[keyPath: keyPath]
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedSource(source: self))
+    }
+}
+
+@_spi(Experimental)
+@available(iOS 13.0, *)
+extension RasterSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+    func update(from old: RasterSource, with manager: StyleSourceManagerProtocol) throws {
+        assert(old.id == id)
+        var props = [String: Any]()
+        encodeUpdate(\.url, old: old, new: self, container: &props, key: "url")
+        encodeUpdate(\.tiles, old: old, new: self, container: &props, key: "tiles")
+        encodeUpdate(\.minzoom, old: old, new: self, container: &props, key: "minzoom")
+        encodeUpdate(\.maxzoom, old: old, new: self, container: &props, key: "maxzoom")
+        encodeUpdate(\.volatile, old: old, new: self, container: &props, key: "volatile")
+        if !props.isEmpty {
+            try manager.setSourceProperties(for: id, properties: props)
         }
     }
-}
 
-@_spi(Experimental)
-extension VectorSource: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.sources[id] = .vector(self)
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedSource(source: self))
     }
 }
 
 @_spi(Experimental)
-extension RasterSource: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.sources[id] = .raster(self)
+@available(iOS 13.0, *)
+extension RasterDemSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+    func update(from old: RasterDemSource, with manager: StyleSourceManagerProtocol) throws {
+        assert(old.id == id)
+        var props = [String: Any]()
+        encodeUpdate(\.url, old: old, new: self, container: &props, key: "url")
+        encodeUpdate(\.tiles, old: old, new: self, container: &props, key: "tiles")
+        encodeUpdate(\.minzoom, old: old, new: self, container: &props, key: "minzoom")
+        encodeUpdate(\.maxzoom, old: old, new: self, container: &props, key: "maxzoom")
+        encodeUpdate(\.volatile, old: old, new: self, container: &props, key: "volatile")
+        if !props.isEmpty {
+            try manager.setSourceProperties(for: id, properties: props)
+        }
+    }
+
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedSource(source: self))
     }
 }
 
 @_spi(Experimental)
-extension RasterDemSource: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.sources[id] = .rasterDem(self)
+@available(iOS 13.0, *)
+extension RasterArraySource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+    func update(from old: RasterArraySource, with manager: StyleSourceManagerProtocol) throws {
+        assert(old.id == id)
+        var props = [String: Any]()
+        encodeUpdate(\.url, old: old, new: self, container: &props, key: "url")
+        encodeUpdate(\.tiles, old: old, new: self, container: &props, key: "tiles")
+        encodeUpdate(\.minzoom, old: old, new: self, container: &props, key: "minzoom")
+        encodeUpdate(\.maxzoom, old: old, new: self, container: &props, key: "maxzoom")
+        if !props.isEmpty {
+            try manager.setSourceProperties(for: id, properties: props)
+        }
+    }
+
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedSource(source: self))
     }
 }
 
 @_spi(Experimental)
-extension RasterArraySource: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.sources[id] = .rasterArray(self)
+@available(iOS 13.0, *)
+extension ImageSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+    func update(from old: ImageSource, with manager: StyleSourceManagerProtocol) throws {
+        assert(old.id == id)
+        var props = [String: Any]()
+        encodeUpdate(\.url, old: old, new: self, container: &props, key: "url")
+        encodeUpdate(\.coordinates, old: old, new: self, container: &props, key: "coordinates")
+        if !props.isEmpty {
+            try manager.setSourceProperties(for: id, properties: props)
+        }
+    }
+
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedSource(source: self))
     }
 }
 
 @_spi(Experimental)
-extension ImageSource: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.sources[id] = .image(self)
+@available(iOS 13.0, *)
+extension GeoJSONSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+    func update(from old: GeoJSONSource, with manager: StyleSourceManagerProtocol) throws {
+        assert(old.id == id)
+        if !isEqual(by: \.data, lhs: self, rhs:old) {
+            guard let data else { return }
+            os_log(.debug, log: .styleDsl, "source update GeoJSON data %s", id)
+            manager.updateGeoJSONSource(withId: id, data: data, dataId: nil)
+        }
+    }
+
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedSource(source: self))
     }
 }
 
+@available(iOS 13.0, *)
 @_spi(Experimental)
-extension GeoJSONSource: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.sources[id] = .geoJson(self)
+extension CustomGeometrySource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+    func update(from old: CustomGeometrySource, with manager: StyleSourceManagerProtocol) throws {
+        assert(old.id == id)
+        var props = [String: Any]()
+        encodeUpdate(\.tileCacheBudget, old: old, new: self, container: &props, key: CustomGeometrySource.CodingKeys.tileCacheBudget.rawValue)
+        if !props.isEmpty {
+            try manager.setSourceProperties(for: id, properties: props)
+        }
+    }
+
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedSource(source: self))
     }
 }
 
+@available(iOS 13.0, *)
 @_spi(Experimental)
-extension CustomGeometrySource: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.sources[id] = .customGeometry(self)
+extension CustomRasterSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+    func update(from old: CustomRasterSource, with manager: StyleSourceManagerProtocol) throws {
+        assert(old.id == id)
+        var props = [String: Any]()
+        encodeUpdate(\.tileCacheBudget, old: old, new: self, container: &props, key: CustomRasterSource.CodingKeys.tileCacheBudget.rawValue)
+        if !props.isEmpty {
+            try manager.setSourceProperties(for: id, properties: props)
+        }
+    }
+
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedSource(source: self))
     }
 }
 
-@_spi(Experimental)
-extension CustomRasterSource: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.sources[id] = .customRaster(self)
-    }
-}
-
-func isEqual<T, U: Equatable>(by keyPath: KeyPath<T, U>, lhs: T, rhs: T) -> Bool {
+private func isEqual<T, U: Equatable>(by keyPath: KeyPath<T, U>, lhs: T, rhs: T) -> Bool {
     return lhs[keyPath: keyPath] == rhs[keyPath: keyPath]
+}
+
+private func encodeUpdate<T, U: Equatable>(_ keyPath: KeyPath<T, U>, old: T, new: T, container: inout [String: Any], key: String) {
+    if !isEqual(by: keyPath, lhs: old, rhs: new) {
+        container[key] = new[keyPath: keyPath]
+    }
 }
 
 // End of generated file.

@@ -12,15 +12,21 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds)
-        setDefaultCamera()
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 40.713589095634475,
+                                                                         longitude: -74.00370030835559),
+                                          zoom: 16.868,
+                                          bearing: 60.54,
+                                          pitch: 60)
+        mapView.mapboxMap.setCamera(to: cameraOptions)
         view.addSubview(mapView)
 
         mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
-            self?.setupExample()
             self?.finish()
         }.store(in: &cancelables)
 
         navigationItem.rightBarButtonItem = sunAnimationButton()
+
+        updateMapState()
     }
 
     func sunAnimationButton() -> UIBarButtonItem {
@@ -31,65 +37,38 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func setupExample(azimuth: Double = 210, polarAngle: Double = 30, ambientColor: UIColor = .lightGray) {
-        mapView.mapboxMap.mapStyle = .standard { [directionalLightId, ambientLightId] in
-            Atmosphere()
-                .range(start: 0, end: 12)
-                .horizonBlend(0.1)
-                .starIntensity(0.2)
-                .color(StyleColor(red: 240, green: 196, blue: 152, alpha: 1)!)
-                .highColor(StyleColor(red: 221, green: 209, blue: 197, alpha: 1)!)
-                .spaceColor(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!)
-            DirectionalLight(id: directionalLightId)
-                .intensity(0.5)
-                .direction(azimuthal: azimuth, polar: polarAngle)
-                .directionTransition(.zero)
-                .castShadows(true)
-                .shadowIntensity(1)
-            AmbientLight(id: ambientLightId)
-                .color(ambientColor)
-                .intensity(0.5)
+    func updateMapState(azimuth: Double = 210, polarAngle: Double = 30, ambientColor: UIColor = .lightGray) {
+        if #available(iOS 13.0, *) {
+            /// We use the new experimental style content feature to set the lights.
+            mapView.mapboxMap.setMapStyleContent {
+                Atmosphere()
+                    .range(start: 0, end: 12)
+                    .horizonBlend(0.1)
+                    .starIntensity(0.2)
+                    .color(StyleColor(red: 240, green: 196, blue: 152, alpha: 1)!)
+                    .highColor(StyleColor(red: 221, green: 209, blue: 197, alpha: 1)!)
+                    .spaceColor(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!)
+                DirectionalLight(id: directionalLightId)
+                    .intensity(0.5)
+                    .direction(azimuthal: azimuth, polar: polarAngle)
+                    .directionTransition(.zero)
+                    .castShadows(true)
+                    .shadowIntensity(1)
+                AmbientLight(id: ambientLightId)
+                    .color(ambientColor)
+                    .intensity(0.5)
+            }
         }
-    }
-
-    func updateSunLight(animationProgress: Double) {
-        // Calculate azimuth and polar angle based on animation progress
-        let azimuth = 180.0 - (360.0 * animationProgress)
-        let polarAngle = 45.0 * sin(animationProgress * Double.pi)
-
-        do {
-            let lightIntensity = generateLightIntensityValue(progress: animationProgress)
-            try mapView.mapboxMap.setLightProperty(
-                for: directionalLightId,
-                property: "direction",
-                value: [azimuth, polarAngle]
-            )
-            try mapView.mapboxMap.setLightProperty(
-                for: directionalLightId,
-                property: "intensity",
-                value: lightIntensity
-            )
-
-            let color = StyleColor(generateSunColor(progress: animationProgress))
-            try mapView.mapboxMap.setLightProperty(for: ambientLightId, property: "color", value: color.rawValue)
-            try mapView.mapboxMap.setLightProperty(for: ambientLightId, property: "intensity", value: lightIntensity)
-        } catch {
-            print("Failed to update sun light due to:", error)
-        }
-    }
-
-    func setDefaultCamera() {
-        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 40.713589095634475,
-                                                                         longitude: -74.00370030835559),
-                                          zoom: 16.868,
-                                          bearing: 60.54,
-                                          pitch: 60)
-        mapView.mapboxMap.setCamera(to: cameraOptions)
     }
 
     var animationProgress = 0.0 {
         didSet {
-            updateSunLight(animationProgress: animationProgress)
+            // Calculate azimuth and polar angle based on animation progress
+            let azimuth = 180.0 - (360.0 * animationProgress)
+            let polarAngle = 45.0 * sin(animationProgress * Double.pi)
+            let color = generateSunColor(progress: animationProgress)
+
+            updateMapState(azimuth: azimuth, polarAngle: polarAngle, ambientColor: color)
         }
     }
 

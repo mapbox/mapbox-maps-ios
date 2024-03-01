@@ -1,27 +1,41 @@
 /// A result builder that creates map style content from closures you provide.
+///
+/// See more information in the <doc:Style-DSL>.
+@available(iOS 13.0, *)
 @_spi(Experimental)
-/// :nodoc:
-@resultBuilder public struct MapStyleContentBuilder {
-    /// :nodoc:
-    public static func buildBlock(_ content: MapStyleContent...) -> MapStyleContent {
-        CompositeStyleContent(content.map { $0.visit })
+@_documentation(visibility: public)
+@resultBuilder
+public struct MapStyleContentBuilder {
+    /// Builds an expression within the map style content builder.
+    public static func buildExpression<Content>(_ content: Content) -> Content where Content: MapStyleContent {
+        content
     }
 
-    /// :nodoc:
-    public static func buildEither(first content: MapStyleContent) -> MapStyleContent {
-        ConditionalMapStyleContent.first(content)
+    /// Builds a block within the map style content builder.
+    public static func buildBlock<Content>(_ content: Content) -> Content where Content: MapStyleContent {
+        content
     }
 
-    /// :nodoc:
-    public static func buildEither(second content: MapStyleContent) -> MapStyleContent {
-        ConditionalMapStyleContent.second(content)
+    /// Builds an empty map style content.
+    public static func buildBlock() -> EmptyMapStyleContent { EmptyMapStyleContent() }
+
+    /// Build a block composed of multiple elements within the map style content builder.
+    public static func buildBlock<each Content>(_ content: repeat each Content) -> TupleMapStyleContent<(repeat each Content)> where repeat each Content: MapStyleContent {
+        TupleMapStyleContent(repeat each content)
     }
 
-    /// :nodoc:
-    public static func buildOptional(_ content: MapStyleContent?) -> MapStyleContent {
-        guard let content else {
-            return EmptyMapStyleContent()
-        }
-        return content
+    /// Builds conditional content within the map style content builder.
+    public static func buildEither<First, Second>(first content: First) -> ConditionalMapStyleContent<First, Second> where First: MapStyleContent, Second: MapStyleContent {
+        ConditionalMapStyleContent<First, Second>(first: content)
+    }
+
+    /// Builds conditional content within the map style content builder.
+    public static func buildEither<First, Second>(second content: Second) -> ConditionalMapStyleContent<First, Second> where First: MapStyleContent, Second: MapStyleContent {
+        ConditionalMapStyleContent<First, Second>(second: content)
+    }
+
+    /// Builds optional content within the map style content builder.
+    public static func buildOptional<T: MapStyleContent>(_ component: T?) -> OptionalMapStyleContent<T> {
+        OptionalMapStyleContent(content: component)
     }
 }

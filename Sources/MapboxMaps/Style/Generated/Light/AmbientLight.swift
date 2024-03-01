@@ -113,9 +113,10 @@ extension AmbientLight {
 }
 
 @_spi(Experimental)
-extension AmbientLight: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.setLight(self)
+@available(iOS 13.0, *)
+extension AmbientLight: MapStyleContent, PrimitiveMapStyleContent {
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedUniqueProperty(keyPath: \.lights.ambient, value: self))
     }
 }
 // End of generated file.

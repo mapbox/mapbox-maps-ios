@@ -15,8 +15,9 @@ public struct StyleProjection: Hashable, Codable, StyleEncodable, Equatable {
 }
 
 @_spi(Experimental)
-extension StyleProjection: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.projection = self
+@available(iOS 13.0, *)
+extension StyleProjection: MapStyleContent, PrimitiveMapStyleContent {
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedUniqueProperty(keyPath: \.projection, value: self))
     }
 }

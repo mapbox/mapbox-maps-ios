@@ -28,9 +28,10 @@ public struct StyleImage: Equatable {
 }
 
 @_spi(Experimental)
-extension StyleImage: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.images[id] = self
+@available(iOS 13.0, *)
+extension StyleImage: MapStyleContent, PrimitiveMapStyleContent {
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedImage(image: self))
     }
 }
 

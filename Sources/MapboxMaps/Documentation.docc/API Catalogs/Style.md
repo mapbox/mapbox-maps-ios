@@ -1,8 +1,8 @@
-#  Style Objects
+# Style
 
 ## Topics
 
-### Style
+### Runtime styling
 
 - ``StyleManager-46yjd``
 - ``StyleURI``
@@ -23,3 +23,12 @@
 - ``StyleProjection``
 - ``StyleProjectionName``
 - ``CancelError``
+
+### Style DSL
+
+- ``MapStyleContent``
+- ``TupleMapStyleContent``
+- ``EmptyMapStyleContent``
+- ``OptionalMapStyleContent``
+- ``ConditionalMapStyleContent``
+- ``MapStyleContentBuilder``

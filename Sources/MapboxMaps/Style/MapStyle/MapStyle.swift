@@ -63,7 +63,6 @@ public struct MapStyle {
     }
     var loadMethod: LoadMethod
     var importConfigurations: [StyleImportConfiguration]
-    var content: (() -> MapStyleContent)?
 
     /// Creates a map style using a Mapbox Style JSON.
     ///
@@ -91,13 +90,6 @@ public struct MapStyle {
     public init(uri: StyleURI, importConfigurations: [StyleImportConfiguration] = []) {
         self.loadMethod = .uri(uri)
         self.importConfigurations = importConfigurations
-    }
-
-    /// Add MapStyleContent such as Sources, Layers, and Images to your style at runtime
-    public func callAsFunction(@MapStyleContentBuilder content: @escaping () -> MapStyleContent) -> MapStyle {
-        var newMapStyle = self
-        newMapStyle.content = content
-        return newMapStyle
     }
 
     /// [Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) is a general-purpose style with 3D visualization.

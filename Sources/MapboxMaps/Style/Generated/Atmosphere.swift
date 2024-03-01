@@ -68,14 +68,17 @@ public struct Atmosphere: Codable, Equatable  {
     }
 }
 
-#if swift(>=5.8)
-@_documentation(visibility: public)
-#endif
-@_spi(Experimental) extension Atmosphere: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        visitor.model.atmosphere = self
-    }
 
+@_spi(Experimental)
+@available(iOS 13.0, *)
+extension Atmosphere: MapStyleContent, PrimitiveMapStyleContent {
+    func visit(_ node: MapStyleNode) {
+        node.mount(MountedUniqueProperty(keyPath: \.atmosphere, value: self))
+    }
+}
+
+@_documentation(visibility: public)
+extension Atmosphere {
     /// The color of the atmosphere region immediately below the horizon and within the `range` and above the horizon and within `horizon-blend`. Using opacity is recommended only for smoothly transitioning fog on/off as anything less than 100% opacity results in more tiles loaded and drawn.
     @_documentation(visibility: public)
     public func color(_ constant: StyleColor) -> Self {

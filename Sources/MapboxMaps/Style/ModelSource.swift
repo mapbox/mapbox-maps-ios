@@ -24,13 +24,14 @@ public struct Model: Equatable, Codable {
 }
 
 @_spi(Experimental)
-extension Model: PrimitiveMapStyleContent {
-    func _visit(_ visitor: MapStyleContentVisitor) {
-        guard let id, uri != nil else {
+@available(iOS 13.0, *)
+extension Model: MapStyleContent, PrimitiveMapStyleContent {
+    func visit(_ node: MapStyleNode) {
+        guard id != nil, uri != nil else {
             Log.warning(forMessage: "Failed to add Model to StyleModel because it does not have an id or uri.", category: "styleDSL")
             return
         }
-        visitor.model.models[id] = self
+        node.mount(MountedModel(model: self))
     }
 }
 

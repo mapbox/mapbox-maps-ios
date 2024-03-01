@@ -235,7 +235,8 @@ extension CoreStyleManager: StyleManagerProtocol {
             canceledCallback: { _ in
                 errorToken?.cancel()
                 callbacks.cancelled?()
-            })
+            },
+            errorCallback: nil)
         if isJson {
             setStyleJSONForJson(style, stylingOptions: options)
         } else {

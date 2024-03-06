@@ -34,7 +34,7 @@ class ViewController: UIViewController {
     }
 }
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var window: UIWindow? = UIWindow(frame: UIScreen.main.bounds)
 

@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "地図を回転して真北を向く";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "方位磁針";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "クレジット、フィードバック フォームなどを表示します";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "この地図について";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "匿名の使用状況データを提供することで、OpenStreetMap と Mapbox の地図をより良くすることができます。";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "参加しないでください";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "参加する";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "匿名の使用状況データを提供することで、OpenStreetMap と Mapbox の地図をより良くすることに貢献しています。";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "参加をやめる";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "引き続き参加してください";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "もっと教えてください";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox テレメトリ";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Mapbox マップをより良くする";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "マップボックスのプライバシーポリシー";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Mapbox マップを利用";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "キャンセル";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "この地図を改善してください";
+
+"OpenStreetMap contributors" = "OpenStreetMap の貢献者";

@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Otočí mapu směrem k severu";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "Kompas";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Zobrazuje kredity, formulář zpětné vazby a další";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "O této mapě";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "Můžete pomoci vylepšit mapy OpenStreetMap a Mapbox tím, že přispějete anonymními údaji o používání.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "Neúčastnit se";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Účastnit se";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "Pomáháte zlepšovat mapy OpenStreetMap a Mapbox tím, že přispíváte anonymními údaji o používání.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Přestat se účastnit";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Pokračujte v účasti";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Řekni mi více";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Telemetrie Mapboxu";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Vylepšete Mapbox Maps";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Zásady ochrany osobních údajů Mapbox";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Provozováno na Mapbox Maps";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "Zrušení";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Vylepšete tuto mapu";
+
+"OpenStreetMap contributors" = "Přispěvatelé OpenStreetMap";

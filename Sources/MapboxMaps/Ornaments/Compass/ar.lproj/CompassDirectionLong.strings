@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "الشرق";
+
+/* East by north, long */
+"EbN" = "الشرق بالشمال";
+
+/* East by south, long */
+"EbS" = "الشرق بالجنوب";
+
+/* East-northeast, long */
+"ENE" = "الشرق والشمال الشرقي";
+
+/* East-southeast, long */
+"ESE" = "الشرق والجنوب الشرقي";
+
+/* North, long */
+"N" = "الشمال";
+
+/* North by east, long */
+"NbE" = "الشمال بالشرق";
+
+/* North by west, long */
+"NbW" = "الشمال بالغرب";
+
+/* Northeast, long */
+"NE" = "الشمال الشرقي";
+
+/* Northeast by east, long */
+"NEbE" = "الشمال الشرقي شرقًا";
+
+/* Northeast by north, long */
+"NEbN" = "الشمال الشرقي من الشمال";
+
+/* North-northeast, long */
+"NNE" = "الشمال-الشمال الشرقي";
+
+/* North-northwest, long */
+"NNW" = "الشمال-الشمال الغربي";
+
+/* Northwest, long */
+"NW" = "الشمال الغربي";
+
+/* Northwest by north, long */
+"NWbN" = "الشمال الغربي من الشمال";
+
+/* Northwest by west, long */
+"NWbW" = "الشمال الغربي باتجاه الغرب";
+
+/* South, long */
+;"س" = "S"
+
+/* South by east, long */
+"SbE" = "الجنوب من الشرق";
+
+/* South by west, long */
+"SbW" = "الجنوب باتجاه الغرب";
+
+/* Southeast, long */
+"SE" = "جنوب شرق";
+
+/* Southeast by east, long */
+"SEbE" = "الجنوب الشرقي من الشرق";
+
+/* Southeast by south, long */
+"SEbS" = "الجنوب الشرقي من الجنوب";
+
+/* South-southeast, long */
+"SSE" = "جنوب-جنوب شرق";
+
+/* South-southwest, long */
+"SSW" = "جنوب-جنوب غرب";
+
+/* Southwest, long */
+"SW" = "الجنوب الغربي";
+
+/* Southwest by south, long */
+"SWbS" = "الجنوب الغربي من الجنوب";
+
+/* Southwest by west, long */
+"SWbW" = "الجنوب الغربي باتجاه الغرب";
+
+/* West, long */
+"W" = "الغرب";
+
+/* West by north, long */
+"WbN" = "الغرب شمالًا";
+
+/* West by south, long */
+"WbS" = "الغرب بالجنوب";
+
+/* West-northwest, long */
+"WNW" = "الغرب-الشمال الغربي";
+
+/* West-southwest, long */
+"WSW" = "الغرب-الجنوب الغربي";

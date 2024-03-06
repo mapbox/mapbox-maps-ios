@@ -118,6 +118,7 @@
 		D77EEB488CFD90F602077E8F /* CustomPointAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5DB9BD5E97D3C0080EC5D3 /* CustomPointAnnotationExample.swift */; platformFilters = (ios, ); };
 		D9297596469F9B31C2350B43 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A615EFC3D6CF2A25C9864086 /* UIViewController+Extensions.swift */; platformFilters = (ios, ); };
 		D94672F30272E31087AB5DDD /* NavigationSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC5980DD30479F30127BA71 /* NavigationSimulator.swift */; platformFilters = (ios, ); };
+		D98624793DA36578289F02FF /* MapScrollExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65535FB9F190778001AB847A /* MapScrollExample.swift */; };
 		DA69CB0BD9F0DDA0FD1387B0 /* DataJoinExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D0CD9C2D04EA5B12E7F84C /* DataJoinExample.swift */; platformFilters = (ios, ); };
 		DFC64A62538E787D57B6514D /* DynamicViewAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3333EF3E0F1C789809F385AF /* DynamicViewAnnotationExample.swift */; platformFilters = (ios, ); };
 		E121F023995CCF2F3A65BC2A /* LocateMeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DA0608D44DEF6C4A82777C /* LocateMeExample.swift */; };
@@ -201,7 +202,6 @@
 		4DCBE814694CF08A9C2E4A42 /* AddOneMarkerSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOneMarkerSymbolExample.swift; sourceTree = "<group>"; };
 		4EE19F00E87B31FDE5481D56 /* ExamplesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamplesTests.swift; sourceTree = "<group>"; };
 		50618B3CF42CCF735CCAE9B4 /* fragment-realestate-NY.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "fragment-realestate-NY.json"; sourceTree = "<group>"; };
-		5554DBFA5DE4F0AAEA67785D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		588FD640D91E9DD366703F7B /* SnapshotterExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotterExample.swift; sourceTree = "<group>"; };
 		590D83805AA598D2B0A7638A /* ExamplesTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExamplesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		59AACE9E33102AE90526569F /* ViewAnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationsExample.swift; sourceTree = "<group>"; };
@@ -213,6 +213,7 @@
 		6239A5CDA61892902765B843 /* FeaturesAtPointExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesAtPointExample.swift; sourceTree = "<group>"; };
 		62DA0608D44DEF6C4A82777C /* LocateMeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocateMeExample.swift; sourceTree = "<group>"; };
 		640198169EEDFC7CBEFCFCCF /* StandardStyleImportExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardStyleImportExample.swift; sourceTree = "<group>"; };
+		65535FB9F190778001AB847A /* MapScrollExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapScrollExample.swift; sourceTree = "<group>"; };
 		67FA937DC17F7EA27931763A /* RasterTileSourceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterTileSourceExample.swift; sourceTree = "<group>"; };
 		6A090EE21C9A65BE2697868F /* NavigationSimulatorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSimulatorExample.swift; sourceTree = "<group>"; };
 		6BB52F9D3A810B1A9CEC832C /* Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example.swift; sourceTree = "<group>"; };
@@ -290,6 +291,7 @@
 		F0CE51977FA6E83B6F11BE5C /* Examples.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Examples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F393DF039D7AD2F35C8DE4CE /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		F890746B56E20150A053B41B /* AnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsExample.swift; sourceTree = "<group>"; };
+		FC1CEEE6277DEAD9FDFF4AAC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FE2A263DD2E9DC52CEE356FA /* sf_airport_route.geojson */ = {isa = PBXFileReference; path = sf_airport_route.geojson; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -311,6 +313,7 @@
 			children = (
 				3595A6E8FB1FD9F41DEB5C6F /* AnnotationsOrderTestExample.swift */,
 				7A77AEDBF679F223D4412FEE /* AttributionDialogueExamples.swift */,
+				65535FB9F190778001AB847A /* MapScrollExample.swift */,
 				E6E875420B5C674C8CCAB9B1 /* MapSettingsExample.swift */,
 				C0CC67084BA1191D0B179A94 /* PuckPlayground.swift */,
 				78811E5A3185D2D32495870A /* SimpleMapExample.swift */,
@@ -585,34 +588,6 @@
 			path = Lab;
 			sourceTree = "<group>";
 		};
-		"TEMP_013830E3-5FCE-44E9-8BF3-7C01A1C051FA" /* SwiftUI */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SwiftUI;
-			sourceTree = "<group>";
-		};
-		"TEMP_1B6054FA-B5A0-4568-84CF-0833D368F91A" /* Sample Data */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Sample Data";
-			sourceTree = "<group>";
-		};
-		"TEMP_7C36F109-1AA0-40A1-A53F-E0434C79F8F8" /* All Examples */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "All Examples";
-			sourceTree = "<group>";
-		};
-		"TEMP_CFF36C10-66CE-4EFB-BCF3-8D7E95385E78" /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = iOS;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -863,6 +838,7 @@
 				AE51E276DCD8CF89AB339224 /* LongTapAnimationExample.swift in Sources */,
 				03EEF25ABD58ADD9631AB509 /* MapEventsExample.swift in Sources */,
 				3FD83483E0AE57790504CB0C /* MapRecorderExample.swift in Sources */,
+				D98624793DA36578289F02FF /* MapScrollExample.swift in Sources */,
 				8913C410B72BE0C40EE02BB9 /* MapSettingsExample.swift in Sources */,
 				4ACB99FAFBF38A425EBD0285 /* ModelLayerExample.swift in Sources */,
 				F5311222553DA118AC571D82 /* MultipleGeometriesExample.swift in Sources */,
@@ -935,7 +911,7 @@
 		55FDF5B3329BFD6E6C346D80 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				5554DBFA5DE4F0AAEA67785D /* Base */,
+				FC1CEEE6277DEAD9FDFF4AAC /* en */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";

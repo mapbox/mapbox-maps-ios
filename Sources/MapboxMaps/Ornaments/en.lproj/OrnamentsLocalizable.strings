@@ -39,3 +39,15 @@
 
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Mapbox Privacy Policy";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Powered by Mapbox Maps";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "Cancel";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Improve this map";
+
+"OpenStreetMap contributors" = "OpenStreetMap contributors";

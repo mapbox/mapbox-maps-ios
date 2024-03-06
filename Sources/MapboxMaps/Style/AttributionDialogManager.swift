@@ -125,10 +125,7 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
             return
         }
 
-        let title = NSLocalizedString("SDK_NAME",
-                                      tableName: nil,
-                                      value: "Powered by Mapbox Maps",
-                                      comment: "Action sheet title")
+        let title = Bundle.mapboxMaps.localizedString(forKey: "SDK_NAME", value: "Powered by Mapbox", table: Ornaments.localizableTableName)
 
         let alert: UIAlertController
 
@@ -142,10 +139,10 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
 
         // Non actionable single item gets displayed as alert's message
         if attributions.count == 1, let attribution = attributions.first, attribution.kind == .nonActionable {
-            alert.message = attribution.title
+            alert.message = attribution.localizedTitle
         } else {
             for attribution in attributions {
-                let action = UIAlertAction(title: attribution.title, style: .default) { _ in
+                let action = UIAlertAction(title: attribution.localizedTitle, style: .default) { _ in
                     self.delegate?.attributionDialogManager(self, didTriggerActionFor: attribution)
                 }
                 action.isEnabled = attribution.kind != .nonActionable
@@ -171,7 +168,7 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
 
         alert.addAction(privacyPolicyAction)
 
-        let cancelTitle = NSLocalizedString("CANCEL",
+        let cancelTitle = NSLocalizedString("ATTRIBUTION_CANCEL",
                                             tableName: Ornaments.localizableTableName,
                                             bundle: bundle,
                                             value: "Cancel",
@@ -180,5 +177,17 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
         alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel))
 
         viewController.present(alert, animated: true, completion: nil)
+    }
+}
+
+private extension Attribution {
+    var localizedTitle: String {
+        NSLocalizedString(
+            title,
+            tableName: Ornaments.localizableTableName,
+            bundle: .mapboxMaps,
+            value: title,
+            comment: "Attribution from sources."
+        )
     }
 }

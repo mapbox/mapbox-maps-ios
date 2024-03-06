@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "wschód";
+
+/* East by north, long */
+"EbN" = "wschód od północy";
+
+/* East by south, long */
+"EbS" = "wschód na południe";
+
+/* East-northeast, long */
+"ENE" = "wschód-północny wschód";
+
+/* East-southeast, long */
+"ESE" = "wschód-południowy wschód";
+
+/* North, long */
+"N" = "północ";
+
+/* North by east, long */
+"NbE" = "północ na wschód";
+
+/* North by west, long */
+"NbW" = "północ na zachód";
+
+/* Northeast, long */
+"NE" = "północny wschód";
+
+/* Northeast by east, long */
+"NEbE" = "północny wschód przez wschód";
+
+/* Northeast by north, long */
+"NEbN" = "północny wschód przez północ";
+
+/* North-northeast, long */
+"NNE" = "północno-północny wschód";
+
+/* North-northwest, long */
+"NNW" = "północno-północny zachód";
+
+/* Northwest, long */
+"NW" = "północny zachód";
+
+/* Northwest by north, long */
+"NWbN" = "północny zachód przez północ";
+
+/* Northwest by west, long */
+"NWbW" = "północny zachód na zachód";
+
+/* South, long */
+"S" = "południe";
+
+/* South by east, long */
+"SbE" = "południe na wschód";
+
+/* South by west, long */
+"SbW" = "południe na zachód";
+
+/* Southeast, long */
+"SE" = "południowy wschód";
+
+/* Southeast by east, long */
+"SEbE" = "południowy wschód od wschodu";
+
+/* Southeast by south, long */
+"SEbS" = "południowy wschód od południa";
+
+/* South-southeast, long */
+"SSE" = "południowy wschód";
+
+/* South-southwest, long */
+"SSW" = "południowy zachód";
+
+/* Southwest, long */
+"SW" = "południowy zachód";
+
+/* Southwest by south, long */
+"SWbS" = "południowy zachód przez południe";
+
+/* Southwest by west, long */
+"SWbW" = "południowy zachód od zachodu";
+
+/* West, long */
+"W" = "zachód";
+
+/* West by north, long */
+"WbN" = "zachód od północy";
+
+/* West by south, long */
+"WbS" = "zachód przez południe";
+
+/* West-northwest, long */
+"WNW" = "zachód-północny zachód";
+
+/* West-southwest, long */
+"WSW" = "zachód-południowy zachód";

@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Roterar kartan så att den är vänd rakt norrut";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "Kompass";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Visar poäng, ett feedbackformulär och mer";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "Om denna karta";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "Du kan hjälpa till att göra OpenStreetMap- och Mapbox-kartor bättre genom att bidra med anonym användningsdata.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "Delta inte";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Delta";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "Du hjälper till att göra OpenStreetMap- och Mapbox-kartor bättre genom att bidra med anonym användningsdata.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Sluta delta";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Fortsätt delta";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Berätta mer";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox Telemetri";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Gör Mapbox Maps bättre";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Mapbox sekretesspolicy";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Drivs av Mapbox Maps";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "Annullera";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Förbättra den här kartan";
+
+"OpenStreetMap contributors" = "OpenStreetMap-bidragsgivare";

@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "將地圖旋轉至正北";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "羅盤";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "顯示製作人員、回饋表等";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "關於這張地圖";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "您可以透過貢獻匿名使用資料來幫助改進 OpenStreetMap 和 Mapbox 地圖。";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "不參加";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "參加";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "您的匿名數據幫助 OpenStreetMap 和 Mapbox 的地圖變得更好。";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "不再參與";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "繼續參與";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "告訴我更多";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox 遙測";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "讓 Mapbox 地圖變得更好";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Mapbox 隱私權政策";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "由 Mapbox 地圖提供支持";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "取消";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "讓 Mapbox 地圖變得更好";
+
+"OpenStreetMap contributors" = "OpenStreetMap 貢獻者";

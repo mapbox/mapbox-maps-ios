@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Xoay bản đồ về phía bắc";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "La bàn";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Hiển thị các khoản tín dụng, biểu mẫu phản hồi và hơn thế nữa";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "Về bản đồ này";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "Bạn có thể giúp cải thiện bản đồ OpenStreetMap và Mapbox bằng cách đóng góp dữ liệu sử dụng ẩn danh.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "Đừng tham gia";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Tham gia";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "Bạn đang giúp cải thiện bản đồ OpenStreetMap và Mapbox bằng cách đóng góp dữ liệu sử dụng ẩn danh.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Ngừng tham gia";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Tiếp tục tham gia";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Cho tôi biết thêm";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Đo từ xa Mapbox";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Làm cho bản đồ Mapbox tốt hơn";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Chính sách quyền riêng tư của Mapbox";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Được hỗ trợ bởi Mapbox Maps";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "Hủy bỏ";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Cải thiện bản đồ này";
+
+"OpenStreetMap contributors" = "Người đóng góp cho OpenStreetMap";

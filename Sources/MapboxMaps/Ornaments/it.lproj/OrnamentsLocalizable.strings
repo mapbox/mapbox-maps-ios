@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Ruota la mappa in modo che sia rivolta verso nord";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "Bussola";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Mostra crediti, un modulo di feedback e altro ancora";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "A proposito di questa mappa";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "Puoi contribuire a migliorare le mappe OpenStreetMap e Mapbox fornendo dati di utilizzo anonimi.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "Non partecipare";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Partecipare";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "Stai contribuendo a migliorare le mappe OpenStreetMap e Mapbox fornendo dati di utilizzo anonimi.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Smettere di partecipare";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Continua a partecipare";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Dimmi di più";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Telemetria Mapbox";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Migliora le mappe Mapbox";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Informativa sulla privacy di Mapbox";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Fornito da Mapbox Maps";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "Annulla";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Migliora questa mappa";
+
+"OpenStreetMap contributors" = "Contributori di OpenStreetMap";

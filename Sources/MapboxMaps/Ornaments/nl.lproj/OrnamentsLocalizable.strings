@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Draait de kaart naar het noorden";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "Kompas";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Toont credits, een feedbackformulier en meer";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "Over deze kaart";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "U kunt helpen OpenStreetMap- en Mapbox-kaarten beter te maken door anonieme gebruiksgegevens bij te dragen.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "Doe niet mee";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Deelnemen";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "U helpt OpenStreetMap- en Mapbox-kaarten beter te maken door anonieme gebruiksgegevens bij te dragen.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Stop met deelnemen";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Blijf meedoen";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Vertel me meer";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox-telemetrie";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Maak Mapbox-kaarten beter";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Mapbox-privacybeleid";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Mogelijk gemaakt door Mapbox Maps";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "Annuleren";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Verbeter deze kaart";
+
+"OpenStreetMap contributors" = "OpenStreetMap-bijdragers";

@@ -1,6 +1,6 @@
 import MetalKit
 
-internal protocol MapViewDependencyProviderProtocol: AnyObject {
+protocol MapViewDependencyProviderProtocol: AnyObject {
     var notificationCenter: NotificationCenterProtocol { get }
     var bundle: BundleProtocol { get }
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MetalView
@@ -31,7 +31,7 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeEventsManager() -> EventsManagerProtocol
 }
 
-internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
+final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
     internal let notificationCenter: NotificationCenterProtocol = NotificationCenter.default
 
     internal let bundle: BundleProtocol = Bundle.main
@@ -179,11 +179,13 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                                                    cameraAnimationsManager: cameraAnimationsManager)
     }
 
-    internal func makeGestureManager(view: UIView,
-                                     mapboxMap: MapboxMapProtocol,
-                                     mapFeatureQueryable: MapFeatureQueryable,
-                                     annotations: AnnotationOrchestratorImplProtocol,
-                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
+    func makeGestureManager(
+        view: UIView,
+        mapboxMap: MapboxMapProtocol,
+        mapFeatureQueryable: MapFeatureQueryable,
+        annotations: AnnotationOrchestratorImplProtocol,
+        cameraAnimationsManager: CameraAnimationsManagerProtocol
+    ) -> GestureManager {
         let singleTap = makeSingleTapGestureHandler(
             view: view,
             cameraAnimationsManager: cameraAnimationsManager)

@@ -7,3 +7,11 @@ extension UIGestureRecognizer {
        view === other.view
     }
 }
+
+/// Can be used to decide whether the recognizer should receive the touch.
+/// In case where the recognizer is known to be attached to some view we may ignore any touches that is going to be delievered to unrelated view.
+extension UIGestureRecognizer {
+    func attachedToSameView(as touch: UITouch) -> Bool {
+        view === touch.view
+    }
+}

@@ -31,6 +31,7 @@ public struct MapViewAnnotation: MapContent {
     var annotatedFeature: AnnotatedFeature
     var allowOverlap: Bool = false
     var visible: Bool = true
+    var allowHitTesting: Bool = true
     var selected: Bool = false
     var allowOverlapWithPuck: Bool = false
     var ignoreCameraPadding: Bool = false
@@ -91,6 +92,12 @@ public struct MapViewAnnotation: MapContent {
     @_documentation(visibility: public)
     public func allowOverlap(_ allowOverlap: Bool) -> MapViewAnnotation {
         with(self, setter(\.allowOverlap, allowOverlap))
+    }
+
+    /// Configures whether this view participates in hit test operations.  Defaults to `true`.
+    @_documentation(visibility: public)
+    public func allowHitTesting(_ allowHitTesting: Bool) -> MapViewAnnotation {
+        with(self, setter(\.allowHitTesting, allowHitTesting))
     }
 
     /// When `false`, the annotation won't be shown on top of Puck.

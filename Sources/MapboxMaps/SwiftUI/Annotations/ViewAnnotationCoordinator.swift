@@ -73,12 +73,16 @@ private struct DisplayedViewAnnotation {
         weak var annotation: ViewAnnotation?
 
         let wrapContent = { (content: AnyView) in
-            content.fixedSize().onChangeOfSize { _ in
-                annotation?.setNeedsUpdateSize()
-            }
+            content
+                .fixedSize()
+                .allowsHitTesting(viewAnnotation.allowHitTesting)
+                .onChangeOfSize { _ in
+                    annotation?.setNeedsUpdateSize()
+                }
         }
 
         let vc = UIHostingController(rootView: wrapContent(viewAnnotation.content))
+
         self.viewController = vc
         self._update = { content in
             vc.rootView = wrapContent(content)
@@ -89,6 +93,7 @@ private struct DisplayedViewAnnotation {
         update(with: viewAnnotation)
 
         vc.view.backgroundColor = .clear
+        vc.view.isUserInteractionEnabled = viewAnnotation.allowHitTesting
     }
 
     func update(with viewAnnotation: MapViewAnnotation) {

@@ -75,7 +75,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
     }
 
     /// The underlying metal view that is used to render the map
-    internal private(set) var metalView: MetalView?
+    private(set) var metalView: MetalView?
 
     private let cameraViewContainerView = UIView()
 

@@ -39,7 +39,7 @@ struct ViewAnnotationsExample: View {
                 .allowOverlap(allowOverlap)
                 // Allow bottom, top, left, right positions of anchor.
                 .variableAnchors(
-                    [ViewAnnotationAnchor.bottom, .top, .left, .right].map { .init(anchor: $0) }
+                    [ViewAnnotationAnchor.bottom, .bottomLeft, .bottomRight].map { .init(anchor: $0) }
                 )
                 .onAnchorChanged { config in
                     guard let idx = taps.firstIndex(where: { $0.id == tap.id }) else { return }
@@ -82,6 +82,9 @@ struct ViewAnnotationsExample: View {
         // Add bottom padding for the bottom config panel, View Annotations won't appear there.
         .additionalSafeAreaInsets(.bottom, overlayHeight)
         .ignoresSafeArea(edges: [.leading, .trailing, .bottom])
+        .onTapGesture {
+            print("SwiftUI view tap received.")
+        }
         .safeOverlay(alignment: .bottom) {
             VStack(alignment: .leading) {
                 Text("Tap to add annotations")

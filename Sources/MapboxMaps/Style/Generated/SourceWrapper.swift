@@ -8,6 +8,8 @@ enum SourceWrapper: Equatable  {
     case rasterArray(RasterArraySource)
     case image(ImageSource)
     case geoJson(GeoJSONSource)
+    case customGeometry(CustomGeometrySource)
+    case customRaster(CustomRasterSource)
 
     var asSource: Source {
         switch(self) {
@@ -17,6 +19,8 @@ enum SourceWrapper: Equatable  {
         case let .rasterArray(source): return source
         case let .image(source): return source
         case let .geoJson(source): return source
+        case let .customGeometry(source): return source
+        case let .customRaster(source): return source
         }
     }
 }
@@ -60,6 +64,20 @@ extension SourceWrapper {
                     return
                 }
                 styleSourceManager.updateGeoJSONSource(withId: new.id, data: data, dataId: nil)
+            }
+        case let (.customGeometry(old), .customGeometry(new)):
+            if old.options != new.options {
+                try styleSourceManager.removeSourceUnchecked(withId: old.id)
+                try styleSourceManager.addSource(new, dataId: nil)
+            } else {
+                encodeUpdate(\.tileCacheBudget, old: old, new: new, container: &props, key: CustomGeometrySource.CodingKeys.tileCacheBudget.rawValue)
+            }
+        case let (.customRaster(old), .customRaster(new)):
+            if old.options != new.options {
+                try styleSourceManager.removeSourceUnchecked(withId: old.id)
+                try styleSourceManager.addSource(new, dataId: nil)
+            } else {
+                encodeUpdate(\.tileCacheBudget, old: old, new: new, container: &props, key: CustomGeometrySource.CodingKeys.tileCacheBudget.rawValue)
             }
         default:
             assertionFailure("Can't change type of source: \(old.asSource.type) to \(new.asSource.type)")
@@ -117,6 +135,20 @@ extension ImageSource: PrimitiveMapStyleContent {
 extension GeoJSONSource: PrimitiveMapStyleContent {
     func _visit(_ visitor: MapStyleContentVisitor) {
         visitor.model.sources[id] = .geoJson(self)
+    }
+}
+
+@_spi(Experimental)
+extension CustomGeometrySource: PrimitiveMapStyleContent {
+    func _visit(_ visitor: MapStyleContentVisitor) {
+        visitor.model.sources[id] = .customGeometry(self)
+    }
+}
+
+@_spi(Experimental)
+extension CustomRasterSource: PrimitiveMapStyleContent {
+    func _visit(_ visitor: MapStyleContentVisitor) {
+        visitor.model.sources[id] = .customRaster(self)
     }
 }
 

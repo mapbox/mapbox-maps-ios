@@ -6,6 +6,7 @@ import Turf
 struct ViewAnnotationsExample: View {
     @State private var taps: [Tap] = []
     @State private var allowOverlap: Bool = false
+    @State private var ignoreAllSafeArea: Bool = true
     @State private var selected = false
     @State private var etaAnnotationAnchor = ViewAnnotationAnchor.center
     @State private var overlayHeight: CGFloat = 0
@@ -81,7 +82,7 @@ struct ViewAnnotationsExample: View {
         }
         // Add bottom padding for the bottom config panel, View Annotations won't appear there.
         .additionalSafeAreaInsets(.bottom, overlayHeight)
-        .ignoresSafeArea(edges: [.leading, .trailing, .bottom])
+        .ignoresSafeArea(edges: ignoreAllSafeArea ? [.all] : [.horizontal, .bottom])
         .onTapGesture {
             print("SwiftUI view tap received.")
         }
@@ -89,6 +90,7 @@ struct ViewAnnotationsExample: View {
             VStack(alignment: .leading) {
                 Text("Tap to add annotations")
                 Toggle("Allow overlap", isOn: $allowOverlap)
+                Toggle("Ignore all safe area", isOn: $ignoreAllSafeArea)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 6)

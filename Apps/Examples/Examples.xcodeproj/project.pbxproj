@@ -18,6 +18,7 @@
 		10ECE7FE19CEC239DDA96961 /* ExampleProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C7CEE3F343DF482D428211 /* ExampleProtocol.swift */; platformFilters = (ios, ); };
 		1372F3B8047B6B4EE70933D9 /* StandardStyleExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996964F634A4536F664C2611 /* StandardStyleExample.swift */; platformFilters = (ios, ); };
 		14799547EFD5C4757FBAD6E4 /* ViewportExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C19E67A2E87A3D18B7B511 /* ViewportExample.swift */; platformFilters = (ios, ); };
+		1687412AC1637D7EA697C7A4 /* View+OnShake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9078B1B13E54C2FFC5FFC /* View+OnShake.swift */; };
 		1820AE40702C7875656BA2D7 /* radar0.gif in Resources */ = {isa = PBXBuildFile; fileRef = 1BCE444AC33D2F1F88F4CCF0 /* radar0.gif */; };
 		18F76FE745B049D1F0CAF6CA /* GeoJSONSourceExample.geojson in Resources */ = {isa = PBXBuildFile; fileRef = F033C8EFB89A90D6705B047D /* GeoJSONSourceExample.geojson */; };
 		191391C51FC69A6D36EB67F0 /* ResizableImageExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A0818B5BC601707E3235A9 /* ResizableImageExample.swift */; platformFilters = (ios, ); };
@@ -227,6 +228,7 @@
 		7DB76F486D80FED88678B04D /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
 		7DCBE4524A8793B4DE950533 /* PolygonAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonAnnotationExample.swift; sourceTree = "<group>"; };
 		7F5E598A16FA446F583344CB /* TrackingModeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingModeExample.swift; sourceTree = "<group>"; };
+		83E9078B1B13E54C2FFC5FFC /* View+OnShake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+OnShake.swift"; sourceTree = "<group>"; };
 		858990E6795D3162A941E82C /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		876CE24F4E565ED342DDDCD6 /* radar4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = radar4.gif; sourceTree = "<group>"; };
 		87D0CD9C2D04EA5B12E7F84C /* DataJoinExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataJoinExample.swift; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 				CBD8F852552CA316EFFCDD64 /* CalloutView.swift */,
 				75D03F5A3A0E879717BFE421 /* Constants.swift */,
 				26964B05A794CC808C594AB5 /* SwiftExtensions.swift */,
+				83E9078B1B13E54C2FFC5FFC /* View+OnShake.swift */,
 				F393DF039D7AD2F35C8DE4CE /* ViewExtensions.swift */,
 			);
 			path = Util;
@@ -870,6 +873,7 @@
 				7036A19FCD2CCE85BDDF4E00 /* TrackingModeExample.swift in Sources */,
 				A6A68B4ED674A924ACBD8FA2 /* UIColor+Random.swift in Sources */,
 				D9297596469F9B31C2350B43 /* UIViewController+Extensions.swift in Sources */,
+				1687412AC1637D7EA697C7A4 /* View+OnShake.swift in Sources */,
 				CF5C5513D659D4981706DDEC /* ViewAnnotationAnimationExample.swift in Sources */,
 				BD99E89F050E7D93846147FF /* ViewAnnotationBasicExample.swift in Sources */,
 				4EF3E4C342C3F8ED5BF6C332 /* ViewAnnotationMarkerExample.swift in Sources */,

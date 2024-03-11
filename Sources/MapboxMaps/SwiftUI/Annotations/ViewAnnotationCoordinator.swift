@@ -19,7 +19,8 @@ final class ViewAnnotationCoordinator {
 
     init(viewAnnotationsManager: ViewAnnotationsManaging,
          addViewController: @escaping ViewControllerHandler,
-         removeViewController: @escaping ViewControllerHandler) {
+         removeViewController: @escaping ViewControllerHandler
+    ) {
         self.viewAnnotationsManager = viewAnnotationsManager
         self.addViewController = addViewController
         self.removeViewController = removeViewController
@@ -94,6 +95,7 @@ private struct DisplayedViewAnnotation {
 
         vc.view.backgroundColor = .clear
         vc.view.isUserInteractionEnabled = viewAnnotation.allowHitTesting
+        vc.disableSafeArea()
     }
 
     func update(with viewAnnotation: MapViewAnnotation) {
@@ -108,5 +110,18 @@ private struct DisplayedViewAnnotation {
         annotation.onVisibilityChanged = viewAnnotation.actions.visibility
         annotation.onAnchorCoordinateChanged = viewAnnotation.actions.anchorCoordinate
         _update(viewAnnotation.content)
+    }
+}
+
+@available(iOS 13.0, *)
+private extension UIHostingController {
+    func disableSafeArea() {
+        if #available(iOS 16.4, *) {
+            safeAreaRegions = SafeAreaRegions()
+        } else {
+            /// This is a private API, but it's the only good way to disable safe area in UIHostingController in iOS 16.4 and lower
+            /// Details: https://stackoverflow.com/questions/70156299/cannot-place-swiftui-view-outside-the-safearea-when-embedded-in-uihostingcontrol
+            _disableSafeArea = true
+        }
     }
 }

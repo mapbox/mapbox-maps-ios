@@ -4,7 +4,7 @@ import UIKit
 @available(iOS 14.0, *)
 struct SwiftUIRoot: View {
     var body: some View {
-        NavigationView {
+        ExamplesNavigationView {
             List {
                 Section {
                     ExampleLink("Show me the map!", note: "Just a Map().", destination: Map().ignoresSafeArea())
@@ -44,16 +44,6 @@ struct SwiftUIRoot: View {
 
                 } header: { Text("Testing Examples") }
             }
-            .listStyle(.plain)
-            .navigationTitle(title)
-            .navigationBarTitleDisplayMode(.inline)
-            .modifier(ToolbarContentWhenPresented { dismiss in
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Close") {
-                        dismiss()
-                    }
-                }
-            })
         }
     }
 }
@@ -69,13 +59,13 @@ struct ExampleLink<S, Destination>: View where S : StringProtocol, Destination: 
         self.destination = destination
     }
     var body: some View {
-        NavigationLink(destination: destination) {
+        NavigationLink(destination: ExampleView(destination)) {
             VStack(alignment: .leading) {
                 Text(title)
                 note.map {
                     Text($0)
-                    .font(.footnote)
-                    .foregroundColor(.gray)
+                        .font(.footnote)
+                        .foregroundColor(.gray)
                 }
             }
         }
@@ -114,6 +104,48 @@ func createSwiftUIExamplesController() -> UIViewController {
     controller.title = title
     controller.modalPresentationStyle = .fullScreen
     return controller
+}
+
+
+@available(iOS 14.0, *)
+struct ExamplesNavigationView<Content>: View where Content: View {
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        NavigationView {
+            content
+                .listStyle(.plain)
+                .navigationTitle(title)
+                .navigationBarTitleDisplayMode(.inline)
+                .modifier(ToolbarContentWhenPresented { dismiss in
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Close") { dismiss() }
+                    }
+                })
+        }
+    }
+}
+
+@available(iOS 14.0, *)
+struct ExampleView<Content>: View where Content: View {
+    @State private var isNavigationBarHidden = false
+    let content: Content
+
+    init(@ViewBuilder _ content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .navigationBarHidden(isNavigationBarHidden)
+            .onShake {
+                isNavigationBarHidden.toggle()
+            }
+    }
 }
 
 private let title = "SwiftUI Examples"

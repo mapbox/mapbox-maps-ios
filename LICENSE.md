@@ -1,6 +1,6 @@
 ## License
 
-Mapbox Maps for iOS version 11.2.0
+Mapbox Maps for iOS version 11.3.0-beta.1
 Mapbox Maps iOS SDK
 
 Copyright &copy; 2021 - 2024 Mapbox, Inc. All rights reserved.
@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### MapboxCoreMaps,11.2.0,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### MapboxCoreMaps,11.3.0-beta.1,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Core Maps version 10.0
@@ -986,7 +986,7 @@ SOFTWARE.
 
 ---
 
-### protozero,1.5.2,BSD-2-Clause,Mapbox,https://github.com/mapbox/protozero
+### protozero,1.7.1,BSD-2-Clause,Mapbox,https://github.com/mapbox/protozero
 
 ```
 protozero copyright (c) Mapbox.
@@ -1070,7 +1070,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### wagyu,0.4.3,BSL-1.0,Angus Johnson and Mapbox,https://github.com/mapbox/wagyu.git
+### wagyu,0.5.0,BSL-1.0,Angus Johnson and Mapbox,https://github.com/mapbox/wagyu.git
 
 ```
 Parts of the code in the Wagyu Library are derived from the version of the 
@@ -1082,12 +1082,14 @@ Date      :  2 July 2015
 Website   :  http://www.angusj.com
 
 Copyright for portions of the derived code in the Wagyu library are held 
-by Angus Johnson, 2010-2015. All other copyright for the Wagyu Library are held by 
-Mapbox, 2016. This code is published in accordance with, and retains the same license
-as the Clipper Library by Angus Johnson.
+by Angus Johnson, 2010-2015. Copyright for the "include/mapbox/geometry/wagyu/almost_equal.hpp" 
+file is held by Google Inc and its license is listed at the top of that file.
+All other copyright for the Wagyu Library are held by Mapbox, 2016. This code 
+is published in accordance with, and retains the same license as the Clipper 
+Library by Angus Johnson.
 
 Copyright (c) 2010-2015, Angus Johnson
-Copyright (c) 2016, Mapbox
+Copyright (c) 2016-2020, Mapbox
 
 Permission is hereby granted, free of charge, to any person or organization
 obtaining a copy of the software and accompanying documentation covered by
@@ -1406,12 +1408,27 @@ For more information, please refer to <http://unlicense.org>
 
 ---
 
-### tinygltf,2.2.0,MIT,Syoyo Fujita,https://github.com/syoyo/tinygltf
+### cgltf,1.13,MIT,Johannes Kuhlmann,https://github.com/jkuhlmann/cgltf
+
+```
+Copyright (c) 2018-2021 Johannes Kuhlmann
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+```
+
+---
+
+### meshoptimizer,0.20,MIT,zeux,https://github.com/zeux/meshoptimizer
 
 ```
 MIT License
 
-Copyright (c) 2017 Syoyo Fujita, Aurélien Chatelain and many contributors
+Copyright (c) 2016-2023 Arseny Kapoulkine
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1604,7 +1621,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### glm,0.9.9.8,MIT,g-truc,https://github.com/g-truc/glm
+### glm,1.0.0,MIT,g-truc,https://github.com/g-truc/glm
 
 ```
 ================================================================================

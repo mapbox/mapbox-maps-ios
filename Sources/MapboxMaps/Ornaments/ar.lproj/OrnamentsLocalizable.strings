@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "لتدوير الخريطة لمواجهة الشمال";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "بوصلة";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "يظهر الاعتمادات، ونموذج ردود الفعل، وأكثر من ذلك";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "حول هذه الخريطة";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "يمكنك المساعدة في تحسين خرائط OpenStreetMap وMapbox من خلال المساهمة ببيانات استخدام مجهولة المصدر.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "لا تشارك";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "يشارك";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "أنت تساعد في تحسين خرائط OpenStreetMap وMapbox من خلال المساهمة ببيانات استخدام مجهولة المصدر.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "التوقف عن المشاركة";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "استمر في المشاركة";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "اخبرني المزيد";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox القياس عن بعد";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "جعل خرائط Mapbox أفضل";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "سياسة خصوصية Mapbox";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "مدعوم من خرائط Mapbox";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "كانس؛";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "تحسين هذه الخريطة";
+
+"OpenStreetMap contributors" = "المساهمين في OpenStreetMap";

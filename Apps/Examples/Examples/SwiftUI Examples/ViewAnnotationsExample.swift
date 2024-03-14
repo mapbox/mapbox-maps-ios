@@ -6,6 +6,7 @@ import Turf
 struct ViewAnnotationsExample: View {
     @State private var taps: [Tap] = []
     @State private var allowOverlap: Bool = false
+    @State private var ignoreAllSafeArea: Bool = true
     @State private var selected = false
     @State private var etaAnnotationAnchor = ViewAnnotationAnchor.center
     @State private var overlayHeight: CGFloat = 0
@@ -39,7 +40,7 @@ struct ViewAnnotationsExample: View {
                 .allowOverlap(allowOverlap)
                 // Allow bottom, top, left, right positions of anchor.
                 .variableAnchors(
-                    [ViewAnnotationAnchor.bottom, .top, .left, .right].map { .init(anchor: $0) }
+                    [ViewAnnotationAnchor.bottom, .bottomLeft, .bottomRight].map { .init(anchor: $0) }
                 )
                 .onAnchorChanged { config in
                     guard let idx = taps.firstIndex(where: { $0.id == tap.id }) else { return }
@@ -81,11 +82,12 @@ struct ViewAnnotationsExample: View {
         }
         // Add bottom padding for the bottom config panel, View Annotations won't appear there.
         .additionalSafeAreaInsets(.bottom, overlayHeight)
-        .ignoresSafeArea(edges: [.leading, .trailing, .bottom])
+        .ignoresSafeArea(edges: ignoreAllSafeArea ? [.all] : [.horizontal, .bottom])
         .safeOverlay(alignment: .bottom) {
             VStack(alignment: .leading) {
                 Text("Tap to add annotations")
                 Toggle("Allow overlap", isOn: $allowOverlap)
+                Toggle("Ignore all safe area", isOn: $ignoreAllSafeArea)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 6)

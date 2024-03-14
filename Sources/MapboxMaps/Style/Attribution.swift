@@ -1,7 +1,7 @@
 import Foundation
 import WebKit
 
-internal struct Attribution: Hashable {
+struct Attribution: Hashable {
 
     enum Style: CaseIterable {
         case regular
@@ -136,6 +136,7 @@ internal struct Attribution: Hashable {
 
     /// Parse the raw attribution strings from sources synchronously.
     /// Known for intermittent crashes - https://developer.apple.com/forums/thread/115405?answerId=356326022#356326022
+    /// 
     /// - Parameter rawAttributions: Array of HTML strings
     /// - Returns: Array of Attribution structs
     private static func parseSynchronously(_ rawAttributions: [String]) -> [Attribution] {

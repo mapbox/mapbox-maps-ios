@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Pasuka žemėlapį į šiaurę";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "Kompasas";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Rodomi kreditai, atsiliepimų forma ir kt";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "Apie šį žemėlapį";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "Galite padėti pagerinti OpenStreetMap ir Mapbox žemėlapius pateikdami anoniminius naudojimo duomenis.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "Nedalyvauk";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Dalyvauti";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "Pateikdami anoniminius naudojimo duomenis, padedate tobulinti OpenStreetMap ir Mapbox žemėlapius.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Nustokite dalyvauti";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Dalyvaukite toliau";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Pasakyk man daugiau";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox telemetrija";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Patobulinkite Mapbox žemėlapius";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Mapbox privatumo politika";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Parengta naudojant Mapbox Maps";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "Atšaukti";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Patobulinkite šį žemėlapį";
+
+"OpenStreetMap contributors" = "OpenStreetMap bendradarbiai";

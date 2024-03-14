@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "정북을 향하도록 지도를 회전합니다";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "나침반";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "크레딧, 피드백 양식 등을 표시합니다.";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "지도 정보";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "익명의 사용 데이터를 제공하면 OpenStreetMap 및 Mapbox 지도를 개선하는 데 도움이 될 수 있습니다.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "참여하지 마세요";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "참가하다";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "익명의 사용 데이터를 제공하여 OpenStreetMap 및 Mapbox 지도를 개선하는 데 도움을 주고 계십니다.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "참여 중지";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "계속 참여하세요";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "더 말 해주세요";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox 원격 측정";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Mapbox 지도를 더 좋게 만들기";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Mapbox 개인정보 보호정책";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Mapbox 지도 제공";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "취소";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "이 지도를 개선하세요";
+
+"OpenStreetMap contributors" = "OpenStreetMap 기여자";

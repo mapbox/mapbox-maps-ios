@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Компас. Актывуйце, каб разгарнуць карту на поўнач.";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "Компас";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Паказаць форму зваротнай сувязі і іншае.";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "Аб гэтай карце";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "Вы можаце дапамагчы палепшыць карты OpenStreetMap і Mapbox падаючы абязлічаныя даныя аб выкарыстанні.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "Спыніць удзел";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Удзельнічаць";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "Вы дапамагаеце паляпшаць карты OpenStreetMap і Mapbox, падаючы абязлічаныя даныя аб выкарыстанні";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Спыніць удзел";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Працягнуць удзел";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Дадатковая інфармацыя";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox Тэлеметрыя";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Зрабіць карты Mapbox лепей";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Палітыка прыватнасці Mapbox";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Hа платформе Mapbox Maps";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "Скасаваць";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Палепшыць карту";
+
+"OpenStreetMap contributors" = "Суаўтары OpenStreetMap";

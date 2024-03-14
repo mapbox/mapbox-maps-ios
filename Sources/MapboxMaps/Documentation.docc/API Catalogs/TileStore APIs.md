@@ -29,6 +29,10 @@
 <!--should next item be public?-->
 - ``TileDataDomain``
 - ``TileCacheBudgetType``
+- ``TileRegionEstimateOptions``
+- ``TileRegionEstimateProgress``
+- ``TileRegionEstimateResult``
+- ``TileRegionEstimateProgressCallback``
 
 ### Style pack
 

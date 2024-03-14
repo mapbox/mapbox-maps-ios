@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Gira el mapa para mirar hacia el norte";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "Brújula";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Muestra créditos, un formulario de comentarios y más.";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "Acerca de este mapa";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "Puedes ayudar a mejorar los mapas de OpenStreetMap y Mapbox contribuyendo con datos de uso anónimos.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "No participes";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Participar";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "Usted está ayudando a mejorar los mapas de OpenStreetMap y Mapbox al contribuir con datos de uso anónimos.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Dejar de participar";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Sigue participando";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Dime más";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Telemetría de Mapbox";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Mejorar los mapas de Mapbox";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Política de privacidad de Mapbox";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Desarrollado por Mapbox Maps";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "Cancelar";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Mejorar este mapa";
+
+"OpenStreetMap contributors" = "Colaboradores de OpenStreetMap";

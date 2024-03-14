@@ -27,6 +27,11 @@ class MetalView: UIView, CoreMetalView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let view = super.hitTest(point, with: event)
+        return view == self ? nil : view
+    }
+
     func draw() {
         onRender?()
     }
@@ -79,6 +84,11 @@ class MetalView: MTKView, CoreMetalView {
 
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let view = super.hitTest(point, with: event)
+        return view == self ? nil : view
     }
 }
 #endif

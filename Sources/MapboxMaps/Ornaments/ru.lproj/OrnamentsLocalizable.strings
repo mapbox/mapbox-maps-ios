@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Активируйте, чтобы развернуть карту на север.";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "Компас";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Показать форму обратной связи и другое.";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "О карте";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "Вы можете помочь улучшить карты OpenStreetMap и Mapbox, предоставив анонимные данные об использовании.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "Не участвовать";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Участвовать";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "Вы помогаете улучшить карты OpenStreetMap и Mapbox, предоставляя анонимные данные об использовании.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Прекратить участие";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Продолжить участие";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Дополнительная информация";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox Tелеметрия";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Сделать карты Mapbox лучше";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Политика конфиденциальности Mapbox";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Предоставлено Mapbox Maps";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "Отмена";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Улучшить карту";
+
+"OpenStreetMap contributors" = "Участники OpenStreetMap";

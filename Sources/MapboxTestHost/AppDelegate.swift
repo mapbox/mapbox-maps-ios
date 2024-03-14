@@ -3,7 +3,7 @@ import UIKit
 import Fingertips
 #endif
 
-@UIApplicationMain
+@main
 public class AppDelegate: UIResponder, UIApplicationDelegate {
 #if !(swift(>=5.9) && os(visionOS))
     public var window: UIWindow? = {

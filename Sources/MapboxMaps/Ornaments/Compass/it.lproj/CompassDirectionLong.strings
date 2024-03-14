@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "est";
+
+/* East by north, long */
+"EbN" = "est da nord";
+
+/* East by south, long */
+"EbS" = "da est a sud";
+
+/* East-northeast, long */
+"ENE" = "est-nordest";
+
+/* East-southeast, long */
+"ESE" = "est-sudest";
+
+/* North, long */
+"N" = "nord";
+
+/* North by east, long */
+"NbE" = "nord-est";
+
+/* North by west, long */
+"NbW" = "nord-ovest";
+
+/* Northeast, long */
+"NE" = "nord-est";
+
+/* Northeast by east, long */
+"NEbE" = "nord-est da est";
+
+/* Northeast by north, long */
+"NEbN" = "nordest dal nord";
+
+/* North-northeast, long */
+"NNE" = "nord-nordest";
+
+/* North-northwest, long */
+"NNW" = "nord-nordovest";
+
+/* Northwest, long */
+"NO" = "nordovest";
+
+/* Northwest by north, long */
+"NWbN" = "nordovest da nord";
+
+/* Northwest by west, long */
+"NWbW" = "nordovest da ovest";
+
+/* South, long */
+"S" = "sud";
+
+/* South by east, long */
+"SbE" = "da sud a est";
+
+/* South by west, long */
+"SbW" = "sud-ovest";
+
+/* Southeast, long */
+"SE" = "sud-est";
+
+/* Southeast by east, long */
+"SEbE" = "sud-est da est";
+
+/* Southeast by south, long */
+"SEbS" = "sud-est da sud";
+
+/* South-southeast, long */
+"SSE" = "sud-sudest";
+
+/* South-southwest, long */
+"SSW" = "sud-sudovest";
+
+/* Southwest, long */
+"SW" = "sud-ovest";
+
+/* Southwest by south, long */
+"SWbS" = "sud-ovest da sud";
+
+/* Southwest by west, long */
+"SWbW" = "sud-ovest da ovest";
+
+/* West, long */
+"W" = "ovest";
+
+/* West by north, long */
+"WbN" = "ovest da nord";
+
+/* West by south, long */
+"WbS" = "ovest da sud";
+
+/* West-northwest, long */
+"WNW" = "ovest-nordovest";
+
+/* West-southwest, long */
+"WSW" = "ovest-sudovest";

@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Повертає мапу на північ";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "Компас";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Показує джерела, форму зворотнього зв'язку тощо";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "Про цю мапу";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "Ви можете допомогти покращити OpenStreetMap та Mapbox, надавши анонімні дані про користування.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "Не брати участь";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Брати участь";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "Ви допомагаєте покращити OpenStreetMap та Mapbox надаючи анонімні дані про користування.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Не брати участь";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Продовжувати брати участь";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Розкажіть більше";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox Телеметрія";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Зробимо мапи Mapbox кращими";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Політика конфіденційності Mapbox";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Мапи від Mapbox";
+
+/* "Title of button for dismissing attribution action sheet" */
+"ATTRIBUTION_CANCEL" = "Скасувати";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Поліпшити цю мапу";
+
+"OpenStreetMap contributors" = "Учасники OpenStreetMap";

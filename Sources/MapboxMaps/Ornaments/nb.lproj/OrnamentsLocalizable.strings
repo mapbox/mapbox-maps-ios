@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "Roterer kartet slik at det vender rett nord";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "Kompass";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "Viser studiepoeng, et tilbakemeldingsskjema og mer";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "Om dette kartet";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "Du kan bidra til å gjøre OpenStreetMap- og Mapbox-kart bedre ved å bidra med anonyme bruksdata.";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "Ikke delta";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "Delta";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "Du er med på å gjøre OpenStreetMap- og Mapbox-kart bedre ved å bidra med anonyme bruksdata.";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "Slutt å delta";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "Fortsett å delta";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "Fortell meg mer";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox Telemetri";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "Gjør Mapbox Maps bedre";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Mapbox personvernerklæring";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Drevet av Mapbox Maps";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "Avbryt";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "Forbedre dette kartet";
+
+"OpenStreetMap contributors" = "OpenStreetMap-bidragsytere";

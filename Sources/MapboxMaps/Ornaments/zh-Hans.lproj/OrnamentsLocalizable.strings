@@ -1,0 +1,53 @@
+/* Accessibility hint */
+"COMPASS_A11Y_HINT" = "将地图旋转至正北";
+
+/* Accessibility label */
+"COMPASS_A11Y_LABEL" = "罗盘";
+
+/* Accessibility hint */
+"INFO_A11Y_HINT" = "显示制作人员、反馈表等";
+
+/* Accessibility label */
+"INFO_A11Y_LABEL" = "关于这张地图";
+
+/* Telemetry prompt message */
+"TELEMETRY_DISABLED_MSG" = "您可以通过贡献匿名使用数据来帮助改进 OpenStreetMap 和 Mapbox 地图。";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_OFF" = "不参加";
+
+/* Telemetry prompt button */
+"TELEMETRY_DISABLED_ON" = "参加";
+
+/* Telemetry prompt message */
+"TELEMETRY_ENABLED_MSG" = "您的匿名数据将帮助 OpenStreetMap 和 Mapbox 的地图变得更好。";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_OFF" = "不再参与";
+
+/* Telemetry prompt button */
+"TELEMETRY_ENABLED_ON" = "继续参与";
+
+/* Telemetry prompt button */
+"TELEMETRY_MORE" = "告诉我更多";
+
+/* Action in attribution sheet */
+"TELEMETRY_NAME" = "Mapbox 遥测";
+
+/* Telemetry prompt title */
+"TELEMETRY_TITLE" = "让 Mapbox 地图变得更好";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Mapbox 隐私政策";
+
+/* Header in attribution sheet */
+"SDK_NAME" = "Powered by Mapbox";
+
+/* Title of button for dismissing attribution action sheet */
+"ATTRIBUTION_CANCEL" = "取消";
+
+// MARK: - Strings that SDK expect to receive from sources
+
+"Improve this map" = "让 Mapbox 地图变得更好";
+
+"OpenStreetMap contributors" = "OpenStreetMap 贡献者";

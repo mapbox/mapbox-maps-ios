@@ -2,7 +2,6 @@ import XCTest
 @testable import MapboxMaps
 
 final class SingleTapGestureHandlerTests: XCTestCase {
-
     var gestureRecognizer: MockTapGestureRecognizer!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var gestureHandler: SingleTapGestureHandler!
@@ -63,5 +62,36 @@ final class SingleTapGestureHandlerTests: XCTestCase {
 
     func testShouldRecognizeSimultaneouslyWithAnyRecognizerAttachedToDifferentView() {
         gestureHandler.assertRecognizedSimultaneously(gestureRecognizer, with: interruptingRecognizers)
+    }
+
+    func testShouldNotReceiveTouchTargetingDifferentView() {
+        let touch = MockUITouch(view: UIView())
+
+        let isHandled = gestureHandler.gestureRecognizer(
+            gestureRecognizer,
+            shouldReceive: touch
+        )
+
+        XCTAssertFalse(isHandled)
+    }
+
+    func testShouldReceiveTouchTargetingSameView() {
+        let touch = MockUITouch(view: gestureRecognizer.view)
+
+        let isHandled = gestureHandler.gestureRecognizer(
+            gestureRecognizer,
+            shouldReceive: touch
+        )
+
+        XCTAssertTrue(isHandled)
+    }
+}
+
+private final class MockUITouch: UITouch {
+    override var view: UIView { _view }
+    private let _view: UIView
+
+    init(view: UIView) {
+        self._view = view
     }
 }

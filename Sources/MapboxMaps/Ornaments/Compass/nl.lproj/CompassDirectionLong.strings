@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "oost";
+
+/* East by north, long */
+"EbN" = "oost naar noord";
+
+/* East by south, long */
+"EbS" = "oost naar zuid";
+
+/* East-northeast, long */
+"ENE" = "oost-noordoost";
+
+/* East-southeast, long */
+"ESE" = "oost-zuidoost";
+
+/* North, long */
+"N" = "noorden";
+
+/* North by east, long */
+"NbE" = "noord naar oost";
+
+/* North by west, long */
+"NbW" = "noord bij west";
+
+/* Northeast, long */
+"NO" = "noordoosten";
+
+/* Northeast by east, long */
+"NEbE" = "noordoost door oost";
+
+/* Northeast by north, long */
+"NEbN" = "noordoost door noord";
+
+/* North-northeast, long */
+"NNO" = "noord-noordoost";
+
+/* North-northwest, long */
+"NNW" = "noord-noordwest";
+
+/* Northwest, long */
+"NW" = "noordwesten";
+
+/* Northwest by north, long */
+"NWbN" = "noordwest naar noord";
+
+/* Northwest by west, long */
+"NWbW" = "noordwest naar west";
+
+/* South, long */
+"S" = "zuid";
+
+/* South by east, long */
+"SbE" = "zuid aan oost";
+
+/* South by west, long */
+"SbW" = "zuid bij west";
+
+/* Southeast, long */
+"ZO" = "zuidoost";
+
+/* Southeast by east, long */
+"SEbE" = "zuidoost naar oost";
+
+/* Southeast by south, long */
+"SEbS" = "zuidoost naar zuid";
+
+/* South-southeast, long */
+"SSE" = "zuid-zuidoost";
+
+/* South-southwest, long */
+"SSW" = "zuid-zuidwest";
+
+/* Southwest, long */
+"ZW" = "zuidwesten";
+
+/* Southwest by south, long */
+"SWbS" = "zuidwest naar zuid";
+
+/* Southwest by west, long */
+"SWbW" = "zuidwest naar west";
+
+/* West, long */
+"W" = "west";
+
+/* West by north, long */
+"WbN" = "west naar noord";
+
+/* West by south, long */
+"WbS" = "west naar zuid";
+
+/* West-northwest, long */
+"WNW" = "west-noordwest";
+
+/* West-southwest, long */
+"WSW" = "west-zuidwest";

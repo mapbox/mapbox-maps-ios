@@ -83,9 +83,6 @@ struct ViewAnnotationsExample: View {
         // Add bottom padding for the bottom config panel, View Annotations won't appear there.
         .additionalSafeAreaInsets(.bottom, overlayHeight)
         .ignoresSafeArea(edges: ignoreAllSafeArea ? [.all] : [.horizontal, .bottom])
-        .onTapGesture {
-            print("SwiftUI view tap received.")
-        }
         .safeOverlay(alignment: .bottom) {
             VStack(alignment: .leading) {
                 Text("Tap to add annotations")

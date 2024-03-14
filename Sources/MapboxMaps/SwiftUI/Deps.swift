@@ -54,6 +54,6 @@ extension Map {
 extension Map {
     struct FrameRate: Equatable {
         var range: ClosedRange<Float>?
-        var preffered: Float?
+        var preferred: Float?
     }
 }

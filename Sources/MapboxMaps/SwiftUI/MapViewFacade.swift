@@ -63,9 +63,9 @@ private extension MapView {
             preferredFrameRateRange = CAFrameRateRange(
                 minimum: clampedRange.lowerBound,
                 maximum: clampedRange.upperBound,
-                preferred: frameRate.preffered?.clamped(to: clampedRange)
+                preferred: frameRate.preferred?.clamped(to: clampedRange)
             )
-        } else if let preferred = frameRate.preffered {
+        } else if let preferred = frameRate.preferred {
             let clampedValue = preferred.clamped(to: 1...Float(Int.max))
 
             if clampedValue != preferred {
@@ -85,12 +85,12 @@ private extension MapView {
     @available(iOS 13.0, *)
     func getFrameRate() -> Map.FrameRate {
         if #available(iOS 15.0, *) {
-            Map.FrameRate(
+            return Map.FrameRate(
                 range: preferredFrameRateRange.minimum...preferredFrameRateRange.maximum,
-                preffered: preferredFrameRateRange.preferred
+                preferred: preferredFrameRateRange.preferred
             )
         } else {
-            Map.FrameRate(range: nil, preffered: Float(preferredFramesPerSecond))
+            return Map.FrameRate(range: nil, preferred: Float(preferredFramesPerSecond))
         }
     }
 }

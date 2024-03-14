@@ -293,11 +293,11 @@ public extension Map {
     ///
     /// - Parameters:
     ///    - range: Allowed frame rate range. Negative and values less than 1 will be clamped to 1.
-    ///    - preffered: Preffered frame rate.  Negative and values less than 1 will be clamped to 1, while too large values will be clamped to Int.max.
+    ///    - preferred: Preferred frame rate.  Negative and values less than 1 will be clamped to 1, while too large values will be clamped to Int.max.
     @_documentation(visibility: public)
-    func frameRate(range: ClosedRange<Float>? = nil, preffered: Float? = nil) -> Self {
+    func frameRate(range: ClosedRange<Float>? = nil, preferred: Float? = nil) -> Self {
         copyAssigned(
-            self, \.mapDependencies.frameRate, FrameRate(range: range, preffered: preffered))
+            self, \.mapDependencies.frameRate, FrameRate(range: range, preferred: preferred))
     }
 
     /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`

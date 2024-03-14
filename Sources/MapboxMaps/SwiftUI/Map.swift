@@ -43,7 +43,7 @@ import SwiftUI
 /// ```
 ///
 /// Check out the <doc:SwiftUI-User-Guide> for more information about ``Map`` capabilities, and the <doc:Map-Content-Gestures-User-Guide> for more information about gesture handling.
-    @_documentation(visibility: public)
+@_documentation(visibility: public)
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct Map: UIViewControllerRepresentable {
@@ -95,7 +95,8 @@ public struct Map: UIViewControllerRepresentable {
     ) {
         self.viewport = _viewport
         self.urlOpenerProvider = urlOpenerProvider
-        content?().visit(mapContentVisitor)
+        content?()
+            .visit(mapContentVisitor)
     }
 
     public func makeCoordinator() -> Coordinator {
@@ -149,7 +150,7 @@ public struct Map: UIViewControllerRepresentable {
     }
 }
 
-    @_documentation(visibility: public)
+@_documentation(visibility: public)
 @available(iOS 13.0, *)
 extension Map {
 
@@ -230,7 +231,7 @@ extension Map {
     }
 }
 
-    @_documentation(visibility: public)
+@_documentation(visibility: public)
 @available(iOS 13.0, *)
 public extension Map {
     /// Sets camera bounds.
@@ -276,6 +277,27 @@ public extension Map {
     @_documentation(visibility: public)
     func debugOptions(_ debugOptions: MapViewDebugOptions) -> Self {
         copyAssigned(self, \.mapDependencies.debugOptions, debugOptions)
+    }
+
+    /// A boolean value that determines whether the view is opaque. Default is true.
+    @_documentation(visibility: public)
+    func opaque(_ value: Bool) -> Self {
+        copyAssigned(self, \.mapDependencies.isOpaque, value)
+    }
+
+    /// The preferred frames per second used for map rendering.
+    /// The system can change the available range of frame rates because of factors in system policies and a person’s preferences.
+    /// Changing this setting maybe beneficial to get smoother experience on devices which support 120 FPS.
+    ///
+    /// - Note: `range` values  have effect only on iOS 15.0 and newer. Value`nil` in any of the parameters is interpreted as using system default value.
+    ///
+    /// - Parameters:
+    ///    - range: Allowed frame rate range. Negative and values less than 1 will be clamped to 1.
+    ///    - preffered: Preffered frame rate.  Negative and values less than 1 will be clamped to 1, while too large values will be clamped to Int.max.
+    @_documentation(visibility: public)
+    func frameRate(range: ClosedRange<Float>? = nil, preffered: Float? = nil) -> Self {
+        copyAssigned(
+            self, \.mapDependencies.frameRate, FrameRate(range: range, preffered: preffered))
     }
 
     /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`

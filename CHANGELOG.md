@@ -11,6 +11,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix taps propagation on `ViewAnnotation`.
 * Fix view annotations positioning on `.ignoresSafeArea(.all)` in SwiftUI
 * Bump core maps version to 11.2.0 and common sdk to 24.2.0.
+* Expose `captureSnapshot` on `MapProxy` which allows to capture SwiftUI Map snapshot using `MapReader`
+* Expose `opaque` and `frameRate` on SwiftUI Map
+* Add `includeOverlays` parameter to `MapView.snapshot()`
 * Added Attribution and Telemetry pop-up dialogs and compass view content description translations for Arabic, Belarusian, Bulgarian, Catalan, Chinese Simplified, Chinese Traditional, Czech, Danish, Dutch, French, Galician, German, Hebrew, Italian, Japanese, Korean, Lithuanian, Norwegian, Polish, Belarusian, Russian, Spanish, Swedish, Ukranian and Vietnamese.
 
 ## 11.2.0 - 28 February, 2024

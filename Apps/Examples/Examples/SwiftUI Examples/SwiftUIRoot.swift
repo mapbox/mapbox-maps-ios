@@ -11,6 +11,8 @@ struct SwiftUIRoot: View {
                     ExampleLink("Locate Me", note: "Use Viewport to create user location control.", destination: LocateMeExample())
                     ExampleLink("Locations", note: "New look of locations, configure standard style parameters.", destination: StandardStyleLocationsExample())
                     ExampleLink("Standard Style Import", note: "Import Mapbox Standard style into your custom style.", destination: StandardStyleImportExample())
+                    ExampleLink("Simple Map", note: "Camera observing, automatic dark mode support.", destination: SimpleMapExample())
+                    ExampleLink("Snapshot Map", note: "Make a snapshot of the map.", destination: SnapshotMapExample())
                 } header: { Text("Getting started") }
 
                 Section {
@@ -31,7 +33,7 @@ struct SwiftUIRoot: View {
                     ExampleLink("Viewport Playground", note: "Showcase of the possible viewport states.", destination: ViewportPlayground())
                     ExampleLink("Puck playground", note: "Display user location using puck.", destination: PuckPlayground())
                     ExampleLink("Annotation Order", destination: AnnotationsOrderTestExample())
-                    ExampleLink("Simple Map", note: "Camera observing, automatic dark mode support.", destination: SimpleMapExample())
+
                     ExampleLink("Attribution url via callback", note: "Works on iOS 13+", destination: AttributionManualURLOpen())
                     if #available(iOS 15.0, *) {
                         ExampleLink("Attribution url open via environment", note: "Works on iOS 15+", destination: AttributionEnvironmentURLOpen())

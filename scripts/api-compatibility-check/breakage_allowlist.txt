@@ -1332,3 +1332,6 @@ Constructor TilesetDescriptorOptions.init(styleURI:zoomRange:pixelRatio:tilesets
 
 // Add onClusterTap/onClusterLongPress
 Func AnnotationOrchestrator.makePointAnnotationManager(id:layerPosition:clusterOptions:) has been renamed to Func makePointAnnotationManager(id:layerPosition:clusterOptions:onClusterTap:onClusterLongPress:)
+
+// Add `includeOverlays` parameter to `MapView.snapshot()`
+Func MapView.snapshot() has been renamed to Func snapshot(includeOverlays:)

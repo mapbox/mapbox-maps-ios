@@ -91,6 +91,8 @@ final class MapBasicCoordinator {
         assign(&mapView, \.gestureManager.options, value: deps.gestureOptions)
         assign(&mapView, \.ornaments.options, value: deps.ornamentOptions)
         assign(&mapView, \.debugOptions, value: deps.debugOptions)
+        assign(&mapView, \.isOpaque, value: deps.isOpaque)
+        assign(&mapView, \.frameRate, value: deps.frameRate)
         assign(&mapView, \.presentsWithTransaction, value: deps.presentsWithTransaction)
         assign(&mapView, \.viewportManager.options, value: deps.viewportOptions)
 

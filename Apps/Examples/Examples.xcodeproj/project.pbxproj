@@ -71,6 +71,7 @@
 		7036A19FCD2CCE85BDDF4E00 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5E598A16FA446F583344CB /* TrackingModeExample.swift */; platformFilters = (ios, ); };
 		7365170E39A459EB4DFA198B /* ExamplesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE18E37A8652B4807D2459F1 /* ExamplesUITests.swift */; platformFilters = (ios, ); };
 		7686448F8648BECC75A912B6 /* DashboardCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913B4773A82AD6357D6AAEA1 /* DashboardCarPlaySceneDelegate.swift */; platformFilters = (ios, ); };
+		79843B780E7C5DC68433B745 /* SnapshotMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5A8729C9AEA4711B56B5F0 /* SnapshotMapExample.swift */; };
 		79B889CF23A3C0A5EA7F6ADD /* ApplicationCarPlaySceneDelegage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3F37CAE7A0B66BE429525C /* ApplicationCarPlaySceneDelegage.swift */; platformFilters = (ios, ); };
 		7B9835E597E0B2655E181A48 /* ExampleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A6063E57EC170F558A3F74 /* ExampleTableViewController.swift */; platformFilters = (ios, ); };
 		7E84D4D6459049E452808C91 /* AnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = F890746B56E20150A053B41B /* AnnotationsExample.swift */; };
@@ -258,6 +259,7 @@
 		A8359ECB5024BEF3722C3CA1 /* PointAnnotationClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotationClusteringExample.swift; sourceTree = "<group>"; };
 		A8700CFE38DA4F1333F9E0F9 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "mapbox-maps-ios"; path = ../..; sourceTree = SOURCE_ROOT; };
 		A9A26CBC58F3271DBFD2EE7D /* CustomLayerShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomLayerShaderTypes.h; sourceTree = "<group>"; };
+		AC5A8729C9AEA4711B56B5F0 /* SnapshotMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMapExample.swift; sourceTree = "<group>"; };
 		B05B410135D0B466B73C0765 /* annotations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = annotations.json; sourceTree = "<group>"; };
 		B31A932A62B6142FE20C39DF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B33F64CDBA98B91EE819B2C4 /* AddMarkersSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMarkersSymbolExample.swift; sourceTree = "<group>"; };
@@ -368,6 +370,7 @@
 				46CE3D9C2873C0767DD76D85 /* ClusteringExample.swift */,
 				A6B06A1D70F479D8DC5C375A /* FeaturesQueryExample.swift */,
 				62DA0608D44DEF6C4A82777C /* LocateMeExample.swift */,
+				AC5A8729C9AEA4711B56B5F0 /* SnapshotMapExample.swift */,
 				640198169EEDFC7CBEFCFCCF /* StandardStyleImportExample.swift */,
 				DD6F1212BB2453DBFECE12F2 /* StandardStyleLocationsExample.swift */,
 				90CEF3209781923E53974F20 /* SwiftUIRoot.swift */,
@@ -889,6 +892,7 @@
 				4791CACAC0846107E4B0955B /* SceneKitExample.swift in Sources */,
 				F613749DCDDDDC6F041032A0 /* SimpleMapExample.swift in Sources */,
 				1F860D5B445E75772C4C3B6C /* SkyLayerExample.swift in Sources */,
+				79843B780E7C5DC68433B745 /* SnapshotMapExample.swift in Sources */,
 				F2B385831A78B3EE16BFEA69 /* SnapshotterCoreGraphicsExample.swift in Sources */,
 				68FD9E1F4606B2729BA1E6DC /* SnapshotterExample.swift in Sources */,
 				442DB919BE75CE7B0A537757 /* SpinningGlobeExample.swift in Sources */,

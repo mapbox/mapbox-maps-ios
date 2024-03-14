@@ -1,3 +1,5 @@
+import SwiftUI
+
 /// A proxy for access map interfaces on underlying Mapbox Map.
     @_documentation(visibility: public)
 @_spi(Experimental)
@@ -24,4 +26,16 @@ public struct MapProxy {
     /// Handles location events on map.
     @_documentation(visibility: public)
     public var location: LocationManager? { provider.mapView?.location }
+
+    /// Captures the snapshot of the displayed Map.
+    /// 
+    /// - Parameters:
+    ///   - includeOverlays: Whether to show ornaments (scale bar, compass, attribution, etc.) or any other custom subviews on the resulting image.
+    @_documentation(visibility: public)
+    public func captureSnapshot(includeOverlays: Bool = false) -> UIImage? {
+        guard let uiImage = try? provider.mapView?.snapshot(includeOverlays: includeOverlays) else {
+            return nil
+        }
+        return uiImage
+    }
 }

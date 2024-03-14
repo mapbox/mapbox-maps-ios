@@ -11,6 +11,7 @@ Mapbox SDK to share objects and utilities across SDKs. These are for internal us
 - ``StylePackError-class``
 - ``ValueConverter``
 - ``TileRegionError-class``
+- ``SdkInformationQuery``
 
 <!-- functions -->
 - ``MBXAccuracyAuthorizationToString(_:)``

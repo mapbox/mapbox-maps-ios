@@ -94,6 +94,49 @@ extension TileStore: TileStoreProtocol {
         }
     }
 
+    /// Estimates the storage and transfer size of a tile region.
+    ///
+    /// - Parameters:
+    ///  - id The tile region identifier.
+    ///  - loadOptions The tile region load options.
+    ///  - estimateOptions The options for the estimate operation. Optional, default values will be aplied if nil.
+    ///  - onProgress Invoked multiple times to report progess of the estimate operation.
+    ///  - onFinished Invoked only once upon success, failure, or cancelation of the estimate operation.
+    /// - Returns: a `Cancelable` object to cancel the estimate request
+    ///
+    /// This can be used for estimating existing or new tile regions. For new tile
+    /// regions, both geometry and tileset descriptors need to be provided to the
+    /// given load options.  If a tile region with the given id already exists, its
+    /// geometry and tileset descriptors are reused unless a different value is
+    /// provided in the region load options.
+    ///
+    /// Estimating a tile region does not mutate exising tile regions on the tile store.
+    ///
+    /// - Note:
+    ///     The user-provided callbacks will be executed on a TileStore-controlled worker thread;
+    ///     it is the responsibility of the user to dispatch to a user-controlled thread.
+    @discardableResult
+    public func estimateTileRegion(forId id: String,
+                                   loadOptions: TileRegionLoadOptions,
+                                   estimateOptions: TileRegionEstimateOptions? = nil,
+                                   progress: @escaping TileRegionEstimateProgressCallback,
+                                   completion: @escaping (Result<TileRegionEstimateResult, Error>) -> Void) -> Cancelable {
+        if let estimateOptions = estimateOptions {
+            return __estimateTileRegion(forId: id,
+                                        loadOptions: loadOptions,
+                                        estimateOptions: estimateOptions,
+                                        onProgress: progress,
+                                        onFinished: tileStoreClosureAdapter(for: completion, type: TileRegionEstimateResult.self))
+        }
+        // Use overloaded version
+        else {
+            return __estimateTileRegion(forId: id,
+                                        options: loadOptions,
+                                        onProgress: progress,
+                                        onFinished: tileStoreClosureAdapter(for: completion, type: TileRegionEstimateResult.self))
+        }
+    }
+
     /// Checks if a tile region with the given id contains all tilesets from all
     /// of the given tileset descriptors.
     ///

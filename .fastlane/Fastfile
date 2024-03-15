@@ -41,7 +41,11 @@ platform :ios do
       workspace: 'Apps/Apps.xcworkspace',
       scheme: 'Examples',                  # XCTest scheme
       clean: true,                        # Recommended: This would ensure the build would not include unnecessary files
-      configuration: "Release",
+      # Use the Debug mode here to avoid the compiler crash
+      # https://github.com/apple/swift/issues/72117#issuecomment-1999619388
+      # using the SWIFT_COMPILATION_MODE=incremental doesn't for this scheme.
+      # configuration: "Release",
+      configuration: "Debug",
       testplan: "Examples no unit tests",
       xcargs: "ENABLE_TESTABILITY=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO COMPILER_INDEX_STORE_ENABLE=NO",
       skip_detect_devices: true,          # Required
@@ -130,7 +134,9 @@ platform :ios do
       scheme: 'MapboxTestHost',
       clean: true,
       configuration: "Release",
-      xcargs: "ENABLE_TESTABILITY=YES COMPILER_INDEX_STORE_ENABLE=NO",
+      # Use here SWIFT_COMPILATION_MODE=incremental to avoid the compiler crash
+      # https://github.com/apple/swift/issues/72117#issuecomment-1999619388
+      xcargs: "ENABLE_TESTABILITY=YES COMPILER_INDEX_STORE_ENABLE=NO SWIFT_COMPILATION_MODE=incremental",
       build_for_testing: true,
       destination: 'generic/platform=iOS',
       should_zip_build_products: true,

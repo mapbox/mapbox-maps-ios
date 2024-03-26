@@ -584,9 +584,11 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         mapboxMap.size = size
 
         metalView.drawableSize = CGSize(width: size.width * pixelRatio, height: size.height * pixelRatio)
-        // DrawableSize setter will recalculate `contentScaleFactor` if the new drawableSize doesn't fit into
-        // the current bounds.size and scale.
-        assert(metalView.contentScaleFactor == pixelRatio)
+        if metalView.contentScaleFactor != pixelRatio {
+            // DrawableSize setter will recalculate `contentScaleFactor` if the new drawableSize doesn't fit into
+            // the current bounds.size and scale.
+            Log.error(forMessage: "MetalView content scale factor \(metalView.contentScaleFactor) is not equal to pixel ratio \(pixelRatio)")
+        }
 
         // GL-Native will trigger update on `mapboxMap.size` update but it will come in the next frame.
         // To reduce glitches we can schedule repaint in the next frame to resize map texture.

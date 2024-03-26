@@ -4,7 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-[tile store] Expose API for estimating Tile Region downloads and storage size.
+* [tile store] Expose API for estimating Tile Region downloads and storage size.
+* Remove metal view's contentScaleFactor assertion.
 
 # 11.3.0-beta.1 - 14 March, 2024
 

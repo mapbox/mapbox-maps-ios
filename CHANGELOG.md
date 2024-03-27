@@ -4,8 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-### Breaking changes ⚠️
+### Potentially breaking changes ⚠️
 * Experimental `MapStyle` no longer conforms to Equatable.
+* `TransitionOptions` is now a Swift struct rather than an Objective-C class.
 
 ### Features ✨ and improvements 🏁
 * Introduce an experimental Style DSL, enabling developers to add map style content like Sources, Layers, Style Images, Terrain, Light and Atmosphere to their map style at runtime in a declarative pattern. See the documentation [here](https://docs.mapbox.com/ios/maps/api/11.2.0-beta.1/documentation/mapboxmaps/style-dsl) for more information. For SwiftUI users, this Style DSL provides a more natural approach to manipulating content.

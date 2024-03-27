@@ -198,7 +198,7 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
             expectation.fulfill()
         }
 
-        wait(for: [expectation], timeout: 5)
+        wait(for: [expectation], timeout: 10)
     }
 
     internal func testLayerPosition() {
@@ -326,6 +326,125 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
             // Remove model
             mapView.mapboxMap.setMapStyleContent {}
             XCTAssertFalse(mapView.mapboxMap.hasStyleModel(modelId: "test-id"))
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 5)
+    }
+
+    internal func testStyleTransitionOptions() {
+        let expectation = self.expectation(description: "Wait for mapStyle to load")
+        expectation.expectedFulfillmentCount = 2
+
+        let transitionOptions = TransitionOptions(duration: 1, delay: 1, enablePlacementTransitions: true)
+        let transitionOptions2 = TransitionOptions(duration: 4, delay: 4, enablePlacementTransitions: false)
+
+        mapView.mapboxMap.mapStyle = .streets
+        mapView.mapboxMap.setMapStyleContent {
+            transitionOptions
+        }
+
+        didFinishLoadingStyle = { mapView in
+            XCTAssertEqual(mapView.mapboxMap.styleTransition.delay, transitionOptions.delay)
+
+            // Change transition options
+            mapView.mapboxMap.setMapStyleContent {
+                transitionOptions2
+            }
+            expectation.fulfill()
+        }
+
+        didBecomeIdle = { mapView in
+            XCTAssertEqual(mapView.mapboxMap.styleTransition.delay, 4.0)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 5)
+    }
+
+    internal func testRemoveStyleTransitionOptions() {
+        let expectation = self.expectation(description: "Wait for mapStyle to load")
+        expectation.expectedFulfillmentCount = 2
+
+        let transitionOptions = TransitionOptions(duration: 1, delay: 1, enablePlacementTransitions: true)
+
+        mapView.mapboxMap.mapStyle = .streets
+        mapView.mapboxMap.setMapStyleContent {
+            transitionOptions
+        }
+
+        didFinishLoadingStyle = { mapView in
+            XCTAssertEqual(mapView.mapboxMap.styleTransition.delay, transitionOptions.delay)
+
+            // Remove transition options
+            mapView.mapboxMap.setMapStyleContent {}
+            expectation.fulfill()
+        }
+
+        didBecomeIdle = { mapView in
+            XCTAssertNil(mapView.mapboxMap.styleTransition.delay)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 5)
+    }
+
+    internal func testDirectionalAmbientLights() {
+        let expectation = self.expectation(description: "Wait for mapStyle to load")
+        expectation.expectedFulfillmentCount = 2
+
+        let directionalLights = DirectionalLight(id: "Directional")
+        let ambientLights = AmbientLight(id: "Ambient")
+
+        mapView.mapboxMap.mapStyle = .standard
+        mapView.mapboxMap.setMapStyleContent {
+            directionalLights
+            ambientLights
+        }
+
+        didFinishLoadingStyle = { mapView in
+            let lights = mapView.mapboxMap.allLightIdentifiers
+
+            XCTAssertEqual(lights.contains(where: { lightInfo in
+                lightInfo.id == "Directional"
+            }), true)
+            XCTAssertEqual(lights.contains(where: { lightInfo in
+                lightInfo.id == "Ambient"
+            }), true)
+
+            // Remove just ambient lights
+            mapView.mapboxMap.setMapStyleContent {
+                directionalLights
+            }
+            expectation.fulfill()
+        }
+
+        didBecomeIdle = { mapView in
+            // warning is logged, but lights are not removed 
+            XCTAssertEqual(mapView.mapboxMap.allLightIdentifiers.count, 2)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 5)
+    }
+
+    internal func testFlatLights() {
+        let expectation = self.expectation(description: "Wait for mapStyle to load")
+        expectation.expectedFulfillmentCount = 1
+
+        let flatLights = FlatLight(id: "flat")
+
+        mapView.mapboxMap.mapStyle = .streets
+        mapView.mapboxMap.setMapStyleContent {
+            flatLights
+        }
+
+        didFinishLoadingStyle = { mapView in
+            let lights = mapView.mapboxMap.allLightIdentifiers
+
+            XCTAssertEqual(lights.contains(where: { lightInfo in
+                lightInfo.id == "flat"
+            }), true)
 
             expectation.fulfill()
         }

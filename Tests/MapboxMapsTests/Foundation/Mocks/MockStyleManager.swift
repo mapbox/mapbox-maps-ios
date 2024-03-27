@@ -49,7 +49,7 @@ class MockStyleManager: StyleManagerProtocol {
     }
 
     let getStyleTransitionStub = Stub<Void, MapboxCoreMaps.TransitionOptions>(
-        defaultReturnValue: TransitionOptions(duration: nil, delay: nil, enablePlacementTransitions: nil)
+        defaultReturnValue: .init(TransitionOptions())
     )
     func getStyleTransition() -> MapboxCoreMaps.TransitionOptions {
         getStyleTransitionStub.call()

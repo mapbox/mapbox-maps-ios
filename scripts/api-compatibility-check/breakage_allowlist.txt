@@ -1340,3 +1340,13 @@ Func MapStyle.==(_:_:) has been removed
 Protocol Conformance Change
 Struct MapStyle has removed conformance to Equatable
 Constructor Model.init(uri:position:orientation:) has been removed
+
+// Change TransitionOptions from Extension to Struct 
+Extension TransitionOptions has been changed to a Struct
+Extension TransitionOptions has ObjC name change from MBMTransitionOptions to 
+Extension TransitionOptions has removed conformance to CVarArg
+Extension TransitionOptions has removed conformance to CustomDebugStringConvertible
+Extension TransitionOptions has removed conformance to CustomStringConvertible
+Extension TransitionOptions has removed conformance to Hashable
+Extension TransitionOptions has removed conformance to NSObjectProtocol
+Extension TransitionOptions is no longer open for subclassing

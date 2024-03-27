@@ -23,6 +23,7 @@ struct DynamicStylingExample: View {
 
     @State var connectionKind = ConnectionComponent.Kind.line
     @State var settingsHeight = 0.0
+    @State var styleTransitions = false
     @State var cities = CityCollection.northern
     @State var pinFeatures: FeaturesRef?
     @State var connectionFeatures: FeaturesRef?
@@ -68,6 +69,9 @@ struct DynamicStylingExample: View {
                     StyleImage(id: "pin-icon", image: pinIcon.image)
                     SymbolLayer(id: "pin", source: "points")
                         .iconImage("pin-icon")
+                    if styleTransitions {
+                        TransitionOptions(duration: 5)
+                    }
                 }
 
                 if let route {
@@ -129,6 +133,7 @@ struct DynamicStylingExample: View {
 
             Toggle("Custom Atmosphere", isOn: $customAtmosphere)
             Toggle("Custom Lights", isOn: $customLights)
+            Toggle("Transition styles slowly", isOn: $styleTransitions)
         }
         .padding(10)
         .floating(RoundedRectangle(cornerRadius: 10))

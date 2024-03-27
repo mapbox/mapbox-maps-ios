@@ -336,7 +336,7 @@ extension Snapshotter {
     public var onStyleLoaded: Signal<StyleLoaded> { events.signal(for: \.onStyleLoaded) }
 
     /// The requested style data has been loaded. The `type` property defines what kind of style data has been loaded.
-    /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyle(_:transition:completion:)-2jmep`` is used to load style.
+    /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyle(_:transition:completion:)-1ilz1`` is used to load style.
     ///
     /// Based on an event data `type` property value, following use-cases may be implemented:
     /// - `style`: Style is parsed, style layer properties could be read and modified, style layers and sources could be

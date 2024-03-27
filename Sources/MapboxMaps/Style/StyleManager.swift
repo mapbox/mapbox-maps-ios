@@ -554,10 +554,10 @@ public class StyleManager {
     /// - SeeAlso: ``MapboxMap/onNext(event:handler:)``
     public var styleTransition: TransitionOptions {
         get {
-            styleManager.getStyleTransition()
+            TransitionOptions(styleManager.getStyleTransition())
         }
         set {
-            styleManager.setStyleTransitionFor(newValue)
+            styleManager.setStyleTransitionFor(newValue.coreOptions)
         }
     }
 

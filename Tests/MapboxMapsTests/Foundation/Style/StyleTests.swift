@@ -104,23 +104,24 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testGetStyleTransition() {
-        let stubTransition = MapboxCoreMaps.TransitionOptions(
+        let stubTransition = TransitionOptions(
             duration: .random(in: 0...300),
             delay: .random(in: 0...300),
             enablePlacementTransitions: .random())
-        styleManager.getStyleTransitionStub.defaultReturnValue = stubTransition
+        styleManager.getStyleTransitionStub.defaultReturnValue = stubTransition.coreOptions
 
         XCTAssertEqual(style.styleTransition, stubTransition)
     }
 
-    func testSetStyleTransition() {
-        let stubTransition = MapboxCoreMaps.TransitionOptions(
+    func testSetStyleTransition() throws {
+        let stubTransition = TransitionOptions(
             duration: .random(in: 0...300),
             delay: .random(in: 0...300),
             enablePlacementTransitions: .random())
         style.styleTransition = stubTransition
 
-        XCTAssertEqual(styleManager.setStyleTransitionStub.invocations.last?.parameters, stubTransition)
+        let coreTransitionOptions = try XCTUnwrap(styleManager.setStyleTransitionStub.invocations.last?.parameters)
+        XCTAssertEqual(TransitionOptions(coreTransitionOptions), stubTransition)
     }
 
     // MARK: Layer

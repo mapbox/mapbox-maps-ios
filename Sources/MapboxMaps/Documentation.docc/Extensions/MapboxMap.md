@@ -4,8 +4,8 @@
 
 ### Style loading
 
-- ``MapboxMap/loadStyle(_:transition:completion:)-2jmep``
-- ``MapboxMap/loadStyle(_:transition:completion:)-4vvrf``
+- ``MapboxMap/loadStyle(_:transition:completion:)-6icex``
+- ``MapboxMap/loadStyle(_:transition:completion:)-1ilz1``
 
 ### Map events
 

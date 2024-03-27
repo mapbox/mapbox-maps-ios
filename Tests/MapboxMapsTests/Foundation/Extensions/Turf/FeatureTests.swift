@@ -102,7 +102,7 @@ final class FeatureTests: XCTestCase {
     }
 
     func testSetPropertiesWithFunction() throws {
-        var feature = Feature(geometry: geometry)
+        let feature = Feature(geometry: geometry)
             .properties([
                 "a": 123,
                 "b": "c",

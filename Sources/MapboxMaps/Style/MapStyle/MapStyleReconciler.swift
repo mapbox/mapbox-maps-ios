@@ -45,11 +45,11 @@ final class MapStyleReconciler {
                     /// can continue loading.
                     /// We can safely add new content via style DSL.
                     guard let self else { return }
-                    if let transition {
-                        self.styleManager.setStyleTransitionFor(transition)
-                    }
                     self.reconcileStyleImports(from: oldMapStyle?.importConfigurations)
                     self._isStyleRootLoaded.value = true
+                    if let transition {
+                        self.styleManager.setStyleTransitionFor(transition.coreOptions)
+                    }
                 },
                 completed: { [weak self] in
                     completion?(nil)

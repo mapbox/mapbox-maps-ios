@@ -13,6 +13,7 @@ struct MapStyleUniqueProperties {
     var terrain: Terrain?
     var atmosphere: Atmosphere?
     var projection: StyleProjection?
+    var transition: TransitionOptions?
     var lights = Lights()
 
     private func update<T: Equatable & Encodable>(_ label: String, old: T?, new: T?, setter: (Any) -> Expected<NSNull, NSString>) {
@@ -37,20 +38,30 @@ struct MapStyleUniqueProperties {
         update("projection", old: old.projection, new: projection, setter: style.setStyleProjectionForProperties(_:))
         update("terrain", old: old.terrain, new: terrain, setter: style.setStyleTerrainForProperties(_:))
 
-        guard old.lights != lights else { return }
+        if old.lights != lights {
+            wrapStyleDSLError {
+                if let directional = lights.directional, let ambient = lights.ambient {
+                    os_log(.debug, log: .styleDsl, "set 3d lights")
+                    try style.setLights(ambient: ambient, directional: directional)
+                } else if lights.directional != nil || lights.ambient != nil {
+                    Log.warning(forMessage: "Incorrect 3D light configuration. Specify both directional and ambient lights.", category: "StyleDSL")
+                } else if let flat = lights.flat {
+                    os_log(.debug, log: .styleDsl, "set flat light")
+                    try style.setLights(flat)
+                } else {
+                    os_log(.debug, log: .styleDsl, "remove lights")
+                    try handleExpected { style.setStyleLightsForLights(NSNull()) }
+                }
+            }
+        }
 
-        wrapStyleDSLError {
-            if let directional = lights.directional, let ambient = lights.ambient {
-                os_log(.debug, log: .styleDsl, "set 3d lights")
-                try style.setLights(ambient: ambient, directional: directional)
-            } else if lights.directional != nil || lights.ambient != nil {
-                Log.warning(forMessage: "Incorrect 3D light configuration. Specify both directional and ambient lights.", category: "StyleDSL")
-            } else if let flat = lights.flat {
-                os_log(.debug, log: .styleDsl, "set flat light")
-                try style.setLights(flat)
-            } else {
-                os_log(.debug, log: .styleDsl, "remove lights")
-                try handleExpected { style.setStyleLightsForLights(NSNull()) }
+        if old.transition != transition {
+            wrapStyleDSLError {
+                if let transition {
+                    style.setStyleTransitionFor(transition.coreOptions)
+                } else {
+                    style.setStyleTransitionFor(TransitionOptions().coreOptions)
+                }
             }
         }
     }

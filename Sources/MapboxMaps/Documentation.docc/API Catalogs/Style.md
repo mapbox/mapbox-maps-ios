@@ -23,6 +23,7 @@
 - ``StyleProjection``
 - ``StyleProjectionName``
 - ``CancelError``
+- ``TransitionOptions-struct``
 
 ### Style DSL
 

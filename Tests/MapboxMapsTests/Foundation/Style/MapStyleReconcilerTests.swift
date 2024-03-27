@@ -162,7 +162,9 @@ final class MapStyleReconcilerTests: XCTestCase {
 
         XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 1)
         XCTAssertEqual(styleManager.setStyleTransitionStub.invocations.count, 1)
-        XCTAssertEqual(styleManager.setStyleTransitionStub.invocations.last?.parameters, transition)
+
+        let coreTransitionOptions = try XCTUnwrap(styleManager.setStyleTransitionStub.invocations.last?.parameters)
+        XCTAssertEqual(TransitionOptions(coreTransitionOptions), transition)
 
         XCTAssertEqual(calls, 2)
     }

@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+# 11.3.0-rc.1 - 27 March, 2024
+
+* [tile store] Expose API for estimating Tile Region downloads and storage size.
+* Remove metal view's contentScaleFactor assertion.
+* Bump core maps version to 11.3.0-rc.1 and common sdk to 24.3.0-rc.1.
+
 # 11.3.0-beta.1 - 14 March, 2024
 
 * Update the minimum Xcode version to 15.2 (Swift 5.9).

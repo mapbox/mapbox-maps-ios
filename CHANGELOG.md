@@ -11,6 +11,11 @@ Mapbox welcomes participation and contributions from everyone.
 ### Features ✨ and improvements 🏁
 * Introduce an experimental Style DSL, enabling developers to add map style content like Sources, Layers, Style Images, Terrain, Light and Atmosphere to their map style at runtime in a declarative pattern. See the documentation [here](https://docs.mapbox.com/ios/maps/api/11.2.0-beta.1/documentation/mapboxmaps/style-dsl) for more information. For SwiftUI users, this Style DSL provides a more natural approach to manipulating content.
 [tile store] Expose API for estimating Tile Region downloads and storage size.
+# 11.3.0-rc.1 - 27 March, 2024
+
+* [tile store] Expose API for estimating Tile Region downloads and storage size.
+* Remove metal view's contentScaleFactor assertion.
+* Bump core maps version to 11.3.0-rc.1 and common sdk to 24.3.0-rc.1.
 
 # 11.3.0-beta.1 - 14 March, 2024
 

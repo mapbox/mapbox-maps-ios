@@ -1209,6 +1209,54 @@ of the loading operation. Any <code>Result</code> error could be of type
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:So12MBXTileStoreC10MapboxMapsE18estimateTileRegion5forId11loadOptions0eK08progress10completionSo13MBXCancelable_pSS_So0ag4LoadK0CSo0ag8EstimateK0CSgySo0agP8ProgressCcys6ResultOySo0agpR0Cs5Error_pGctF"></a>
+                    <a name="//apple_ref/swift/Method/estimateTileRegion(forId:loadOptions:estimateOptions:progress:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So12MBXTileStoreC10MapboxMapsE18estimateTileRegion5forId11loadOptions0eK08progress10completionSo13MBXCancelable_pSS_So0ag4LoadK0CSo0ag8EstimateK0CSgySo0agP8ProgressCcys6ResultOySo0agpR0Cs5Error_pGctF"><span class="token-name">estimateTileRegion(forId:loadOptions:estimateOptions:progress:completion:)</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Estimates the storage and transfer size of a tile region.</p>
+
+<p>This can be used for estimating existing or new tile regions. For new tile
+regions, both geometry and tileset descriptors need to be provided to the
+given load options.  If a tile region with the given id already exists, its
+geometry and tileset descriptors are reused unless a different value is
+provided in the region load options.</p>
+
+<p>Estimating a tile region does not mutate exising tile regions on the tile store.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    The user-provided callbacks will be executed on a TileStore-controlled worker thread;
+it is the responsibility of the user to dispatch to a user-controlled thread.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">estimateTileRegion</span><span class="p">(</span><span class="n">forId</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+                               <span class="nv">loadOptions</span><span class="p">:</span> <span class="kt">TileRegionLoadOptions</span><span class="p">,</span>
+                               <span class="nv">estimateOptions</span><span class="p">:</span> <span class="kt">TileRegionEstimateOptions</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                               <span class="nv">progress</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">TileRegionEstimateProgressCallback</span><span class="p">,</span>
+                               <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">TileRegionEstimateResult</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Cancelable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a <code>Cancelable</code> object to cancel the estimate request</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:So12MBXTileStoreC10MapboxMapsE29tileRegionContainsDescriptors5forId11descriptors10completionySS_SaySo20MBXTilesetDescriptorCGys6ResultOySbs5Error_pGctF"></a>
                     <a name="//apple_ref/swift/Method/tileRegionContainsDescriptors(forId:descriptors:completion:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:So12MBXTileStoreC10MapboxMapsE29tileRegionContainsDescriptors5forId11descriptors10completionySS_SaySo20MBXTilesetDescriptorCGys6ResultOySbs5Error_pGctF"><span class="token-name">tileRegionContainsDescriptors(forId:descriptors:completion:)</span><span class="token-icon" /></a>

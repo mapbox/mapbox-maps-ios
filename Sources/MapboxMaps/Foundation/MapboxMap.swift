@@ -809,7 +809,7 @@ public final class MapboxMap: StyleManager {
     // MARK: - Drag API
 
     /// Calculates target point where camera should move after drag. The method
-    /// should be called after `dragStart` and before `dragEnd`.
+    /// should be called after `beginGesture` and before `endGesture`.
     ///
     /// - Parameters:
     ///   - fromPoint: The point from which the map is dragged.

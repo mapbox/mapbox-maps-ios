@@ -17,8 +17,17 @@ struct MountedLayer<L>: MapStyleMountedComponent where L: Layer, L: Equatable {
         let properties = try layer.allStyleProperties()
         let position = position ?? context.lastLayerId.map { .above($0) } ?? context.startLayerPosition
 
-        try handleExpected {
-            context.managers.style.addStyleLayer(forProperties: properties, layerPosition: position?.corePosition)
+        if let customLayer = layer as? CustomLayer {
+            try handleExpected {
+                context.managers.style.addStyleCustomLayer(forLayerId: customLayer.id, layerHost: customLayer.renderer, layerPosition: position?.corePosition)
+            }
+            try handleExpected {
+                context.managers.style.setStyleLayerPropertiesForLayerId(layer.id, properties: properties)
+            }
+        } else {
+            try handleExpected {
+                context.managers.style.addStyleLayer(forProperties: properties, layerPosition: position?.corePosition)
+            }
         }
     }
 

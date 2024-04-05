@@ -86,6 +86,8 @@ public struct LayerType: ExpressibleByStringLiteral, RawRepresentable, Codable, 
             return SkyLayer.self
         case .model:
             return ModelLayer.self
+        case .custom:
+            return CustomLayer.self
         default:
             return nil
         }

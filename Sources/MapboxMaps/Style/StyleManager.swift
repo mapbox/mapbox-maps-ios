@@ -460,7 +460,7 @@ public class StyleManager {
     /// }
     /// ```
     ///
-    /// See more information in the <doc:Style-DSL>.
+    /// See more information in the <doc:Declarative-Map-Styling>.
     @_documentation(visibility: public)
     @_spi(Experimental)
     @available(iOS 13.0, *)

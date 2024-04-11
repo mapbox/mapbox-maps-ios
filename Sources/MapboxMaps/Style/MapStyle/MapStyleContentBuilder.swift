@@ -1,6 +1,6 @@
 /// A result builder that creates map style content from closures you provide.
 ///
-/// See more information in the <doc:Style-DSL>.
+/// See more information in the <doc:Declarative-Map-Styling>.
 @available(iOS 13.0, *)
 @_spi(Experimental)
 @_documentation(visibility: public)

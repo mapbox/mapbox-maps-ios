@@ -252,7 +252,7 @@ public extension Map {
 
     /// Sets style and style content to the map.
     ///
-    /// See more information in the <doc:Style-DSL>.
+    /// See more information in the <doc:Declarative-Map-Styling>.
     ///
     /// - Parameters:
     ///     - mapStyle: A map style configuration.

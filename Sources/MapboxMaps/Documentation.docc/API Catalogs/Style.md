@@ -25,7 +25,7 @@
 - ``CancelError``
 - ``TransitionOptions-struct``
 
-### Style DSL
+### Declarative Map Styling
 
 - ``MapStyleContent``
 - ``TupleMapStyleContent``

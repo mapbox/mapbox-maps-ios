@@ -92,6 +92,10 @@ extension Ref {
     static func weakRef<O: AnyObject>(_ object: O) -> Ref where Value == O? {
         Ref { [weak object] in object }
     }
+
+    static func weakRef<T, O: AnyObject>(_ object: O, property: KeyPath<O, T>) -> Ref where Value == T? {
+        Ref { [weak object] in object?[keyPath: property] }
+    }
 }
 
 extension MutableRef {

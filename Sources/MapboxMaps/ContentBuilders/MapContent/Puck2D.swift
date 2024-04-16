@@ -12,7 +12,8 @@ import UIKit
 /// ```
     @_documentation(visibility: public)
 @_spi(Experimental)
-public struct Puck2D: PrimitiveMapContent {
+@available(iOS 13.0, *)
+public struct Puck2D: MapContent, PrimitiveMapContent {
     private var configuration: Puck2DConfiguration
     private var bearing: PuckBearing?
 
@@ -93,11 +94,13 @@ public struct Puck2D: PrimitiveMapContent {
         copyAssigned(self, \.configuration.slot, slot)
     }
 
-    func _visit(_ visitor: MapContentVisitor) {
-        visitor.add(locationOptions: LocationOptions(
+    @available(iOS 13.0, *)
+    func visit(_ node: MapContentNode) {
+        let locationOptions = LocationOptions(
             puckType: .puck2D(configuration),
             puckBearing: bearing ?? .heading,
             puckBearingEnabled: bearing != nil
-        ))
+        )
+        node.mount(MountedUniqueProperty(keyPath: \.location, value: locationOptions))
     }
 }

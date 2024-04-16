@@ -218,4 +218,12 @@ public struct PolygonAnnotation: Annotation, Equatable {
     }
 }
 
+@_spi(Experimental)
+@available(iOS 13.0, *)
+extension PolygonAnnotation: MapContent, PrimitiveMapContent, MapContentAnnotation {
+    func visit(_ node: MapContentNode) {
+        PolygonAnnotationGroup { self }.visit(node)
+    }
+}
+
 // End of generated file.

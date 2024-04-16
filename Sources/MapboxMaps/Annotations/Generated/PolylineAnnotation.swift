@@ -284,4 +284,12 @@ public struct PolylineAnnotation: Annotation, Equatable {
     }
 }
 
+@_spi(Experimental)
+@available(iOS 13.0, *)
+extension PolylineAnnotation: MapContent, PrimitiveMapContent, MapContentAnnotation {
+    func visit(_ node: MapContentNode) {
+        PolylineAnnotationGroup { self }.visit(node)
+    }
+}
+
 // End of generated file.

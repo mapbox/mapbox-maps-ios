@@ -84,3 +84,34 @@ public final class MapInitOptions: NSObject {
         return hasher.finalize()
     }
 }
+
+extension MapInitOptions {
+    func resolved(
+        in bounds: CGRect,
+        overridingStyleURI: URL?
+    ) -> MapInitOptions {
+        if self.mapOptions.size == nil {
+            // Update using the view's size
+            let resolvedMapOptions = MapOptions(
+                __contextMode: mapOptions.__contextMode,
+                constrainMode: mapOptions.__constrainMode,
+                viewportMode: mapOptions.__viewportMode,
+                orientation: mapOptions.__orientation,
+                crossSourceCollisions: mapOptions.__crossSourceCollisions,
+                size: Size(width: Float(bounds.width), height: Float(bounds.height)),
+                pixelRatio: mapOptions.pixelRatio,
+                glyphsRasterizationOptions: mapOptions.glyphsRasterizationOptions)
+
+            // Use the overriding style URI if provided (currently from IB)
+            let resolvedStyleURI = overridingStyleURI.map { StyleURI(url: $0) } ?? styleURI
+
+            return MapInitOptions(
+                mapOptions: resolvedMapOptions,
+                cameraOptions: cameraOptions,
+                styleURI: resolvedStyleURI,
+                styleJSON: styleJSON)
+        } else {
+            return self
+        }
+    }
+}

@@ -201,8 +201,8 @@ extension DirectionalLight {
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension DirectionalLight: MapStyleContent, PrimitiveMapStyleContent {
-    func visit(_ node: MapStyleNode) {
+extension DirectionalLight: MapStyleContent, PrimitiveMapContent {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedUniqueProperty(keyPath: \.lights.directional, value: self))
     }
 }

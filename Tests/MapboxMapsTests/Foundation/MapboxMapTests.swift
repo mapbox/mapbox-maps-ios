@@ -32,7 +32,7 @@ final class MapboxMapTests: XCTestCase {
         mapInitOptions = MapInitOptions(mapOptions: MapOptions(size: size))
 
         let map = CoreMap(client: mapClient, mapOptions: mapInitOptions.mapOptions)
-        mapboxMap = MapboxMap(map: map, events: events, styleSourceManager: MockStyleSourceManager())
+        mapboxMap = MapboxMap(map: map, events: events)
     }
 
     override func tearDown() {

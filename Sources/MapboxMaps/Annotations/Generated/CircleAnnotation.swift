@@ -257,4 +257,12 @@ public struct CircleAnnotation: Annotation, Equatable {
     }
 }
 
+@_spi(Experimental)
+@available(iOS 13.0, *)
+extension CircleAnnotation: MapContent, PrimitiveMapContent, MapContentAnnotation {
+    func visit(_ node: MapContentNode) {
+        CircleAnnotationGroup { self }.visit(node)
+    }
+}
+
 // End of generated file.

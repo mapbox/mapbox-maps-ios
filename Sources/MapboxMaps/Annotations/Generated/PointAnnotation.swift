@@ -515,4 +515,12 @@ public struct PointAnnotation: Annotation, Equatable {
     }
 }
 
+@_spi(Experimental)
+@available(iOS 13.0, *)
+extension PointAnnotation: MapContent, PrimitiveMapContent, MapContentAnnotation {
+    func visit(_ node: MapContentNode) {
+        PointAnnotationGroup { self }.visit(node)
+    }
+}
+
 // End of generated file.

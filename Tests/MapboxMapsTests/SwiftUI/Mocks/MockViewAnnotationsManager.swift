@@ -1,7 +1,7 @@
 import UIKit
 @testable import MapboxMaps
 
-class MockViewAnnotationsManager: ViewAnnotationsManaging {
+final class MockViewAnnotationsManager: ViewAnnotationsManaging {
     let mapboxMap = MockMapboxMap()
     @TestSignal var displayLink: Signal<Void>
     var superview = UIView()

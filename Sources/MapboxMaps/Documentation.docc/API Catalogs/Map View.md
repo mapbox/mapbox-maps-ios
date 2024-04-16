@@ -14,6 +14,3 @@
 - ``GlyphsRasterizationMode``
 - ``NorthOrientation``
 - ``ViewportMode``
-
-
-

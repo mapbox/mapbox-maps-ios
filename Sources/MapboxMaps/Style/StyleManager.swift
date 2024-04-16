@@ -9,10 +9,13 @@ protocol StyleProtocol: AnyObject {
     var uri: StyleURI? { get set }
     var mapStyle: MapStyle? { get set }
     @available(iOS 13.0, *)
-    func setMapStyleContent(_ content: any MapStyleContent)
-    func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
+    func setMapContent(_ content: () -> any MapContent)
+    @available(iOS 13.0, *)
+    func setMapContentDependencies(_ dependencies: MapContentDependencies)
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
+    func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
+    func moveLayer(withId id: String, to position: LayerPosition) throws
     func removeLayer(withId id: String) throws
     func layerExists(withId id: String) -> Bool
     func layerProperties(for layerId: String) throws -> [String: Any]
@@ -68,21 +71,20 @@ public class StyleManager {
     private let sourceManager: StyleSourceManagerProtocol
     private let styleManager: StyleManagerProtocol
     private let styleReconciler: MapStyleReconciler
-    private let styleContentReconciler: Any?
+    private let contentReconciler: AnyObject?
 
-    internal init(
-        with styleManager: StyleManagerProtocol,
-        sourceManager: StyleSourceManagerProtocol
-    ) {
-        self.styleManager = styleManager
+    init(with styleManager: StyleManagerProtocol, sourceManager: StyleSourceManagerProtocol) {
         self.sourceManager = sourceManager
-        styleReconciler = MapStyleReconciler(styleManager: styleManager)
-        if #available(iOS 13.0, *) {
-            styleContentReconciler = MapStyleContentReconciler(
-                managers: StyleManagers(style: styleManager, source: sourceManager),
-                styleIsLoaded: styleReconciler.isStyleRootLoaded)
+        self.styleManager = styleManager
+        self.styleReconciler = MapStyleReconciler(styleManager: styleManager)
+        self.contentReconciler = if #available(iOS 13.0, *) {
+            MapContentReconciler(
+                styleManager: styleManager,
+                sourceManager: sourceManager,
+                styleIsLoaded: styleReconciler.isStyleRootLoaded
+            )
         } else {
-            styleContentReconciler = nil
+            nil
         }
     }
 
@@ -145,19 +147,6 @@ public class StyleManager {
 
         let layerProperties = try customLayer.allStyleProperties()
         try setLayerProperties(for: customLayer.id, properties: layerProperties)
-    }
-
-    /**
-     Moves a `layer` to a new layer position in the style.
-     - Parameter layerId: The layer to move
-     - Parameter position: Position to move the layer in the stack of layers on the map. Defaults to the top layer.
-
-     - Throws: `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
-     */
-    public func moveLayer(withId id: String, to position: LayerPosition) throws {
-        try handleExpected {
-            styleManager.moveStyleLayer(forLayerId: id, layerPosition: position.corePosition)
-        }
     }
 
     /**
@@ -460,17 +449,30 @@ public class StyleManager {
     /// }
     /// ```
     ///
+    /// - Warning: Avoind having strong references to `MapboxMap` or `MapView` in your custom content as it will lead to strong reference cycles.
+    ///
     /// See more information in the <doc:Declarative-Map-Styling>.
     @_documentation(visibility: public)
     @_spi(Experimental)
     @available(iOS 13.0, *)
     public func setMapStyleContent(@MapStyleContentBuilder content: () -> some MapStyleContent) {
-        setMapStyleContent(evaluate(mapStyleContent: content))
+        setMapContent({
+            MapStyleContentAdapter(content())
+        })
     }
 
     @available(iOS 13.0, *)
-    func setMapStyleContent(_ content: any MapStyleContent) {
-        (styleContentReconciler as? MapStyleContentReconciler)?.content = content
+    func setMapContent(_ content: () -> any MapContent) {
+        if let contentReconciler = contentReconciler as? MapContentReconciler {
+            contentReconciler.content = content()
+        }
+    }
+
+    @available(iOS 13.0, *)
+    func setMapContentDependencies(_ dependencies: MapContentDependencies) {
+        if let contentReconciler = contentReconciler as? MapContentReconciler {
+            contentReconciler.setMapContentDependencies(dependencies)
+        }
     }
 
     /// Get or set the style URI
@@ -670,6 +672,20 @@ public class StyleManager {
     public func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         try handleExpected {
             return styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
+        }
+    }
+
+    /// Moves a style layer with given `layerId` to the new position.
+    ///
+    /// - Parameters:
+    ///   - layerId: Style layer id
+    ///   - layerPosition: Position to move the layer in the stack of layers on the map. Defaults to the top layer.
+    ///
+    /// - Throws:
+    ///     `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
+    public func moveLayer(withId id: String, to position: LayerPosition) throws {
+        try handleExpected {
+            styleManager.moveStyleLayer(forLayerId: id, layerPosition: position.corePosition)
         }
     }
 

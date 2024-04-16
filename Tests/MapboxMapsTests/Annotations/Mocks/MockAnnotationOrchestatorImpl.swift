@@ -8,7 +8,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
     @Stubbed
     var annotationManagersById: [String: AnnotationManager] = [:]
 
-    struct MakePointAnnotationManagerParams {
+    struct MakePointAnnotationManagerParams: Equatable {
         var id: String
         var layerPosition: LayerPosition?
         var clusterOptions: ClusterOptions?
@@ -34,7 +34,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
                 clusterOptions: clusterOptions))
         }
 
-    struct MakePolygonAnnotationManagerParams {
+    struct MakePolygonAnnotationManagerParams: Equatable {
         var id: String
         var layerPosition: LayerPosition?
     }
@@ -53,7 +53,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
                 layerPosition: layerPosition))
         }
 
-    struct MakePolylineAnnotationManagerParams {
+    struct MakePolylineAnnotationManagerParams: Equatable {
         var id: String
         var layerPosition: LayerPosition?
     }
@@ -72,7 +72,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
                 layerPosition: layerPosition))
         }
 
-    struct MakeCircleAnnotationManagerParams {
+    struct MakeCircleAnnotationManagerParams: Equatable {
         var id: String
         var layerPosition: LayerPosition?
     }

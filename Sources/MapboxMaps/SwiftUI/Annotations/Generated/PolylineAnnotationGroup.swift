@@ -34,10 +34,11 @@
 ///     .slot("middle")
 /// }
 /// ```
-    @_documentation(visibility: public)
+@_documentation(visibility: public)
 @_spi(Experimental)
-public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: PrimitiveMapContent {
-    let store: ForEvery<PolylineAnnotation, Data, ID>
+@available(iOS 13.0, *)
+public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
+    let annotations: [(ID, PolylineAnnotation)]
 
     /// Creates a group that identifies data by given key path.
     ///
@@ -47,7 +48,9 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     ///     - content: A closure that creates annotation for a given data item.
     @_documentation(visibility: public)
     public init(_ data: Data, id: KeyPath<Data.Element, ID>, content: @escaping (Data.Element) -> PolylineAnnotation) {
-        store = ForEvery(data: data, id: id, content: content)
+        annotations = data.map { element in
+            (element[keyPath: id], content(element))
+        }
     }
 
     /// Creates a group from identifiable data.
@@ -68,21 +71,11 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     @_documentation(visibility: public)
     public init(@ArrayBuilder<PolylineAnnotation> content: @escaping () -> [PolylineAnnotation?])
         where Data == Array<(Int, PolylineAnnotation)>, ID == Int {
-        let annotations = content().enumerated().compactMap {
-            $0.element == nil ? nil : ($0.offset, $0.element!)
-        }
-        self.init(annotations, id: \.0, content: \.1)
-    }
 
-    func _visit(_ visitor: MapContentVisitor) {
-        let group = AnnotationGroup(
-            positionalId: visitor.positionalId,
-            layerId: layerId,
-            layerPosition: layerPosition,
-            store: store,
-            make: { $0.makePolylineAnnotationManager(id: $1, layerPosition: $2) },
-            updateProperties: { self.updateProperties(manager: $0) })
-        visitor.add(annotationGroup: group)
+        let annotations = content()
+            .enumerated()
+            .compactMap { $0.element == nil ? nil : ($0.offset, $0.element!) }
+        self.init(annotations, id: \.0, content: \.1)
     }
 
     private func updateProperties(manager: PolylineAnnotationManager) {
@@ -197,13 +190,30 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 }
 
-extension PolylineAnnotation: PrimitiveMapContent, MapContentAnnotation {
-    func _visit(_ visitor: MapContentVisitor) {
-        PolylineAnnotationGroup { self }
-            ._visit(visitor)
+@available(iOS 13.0, *)
+extension PolylineAnnotationGroup: MapContent, PrimitiveMapContent {
+    func visit(_ node: MapContentNode) {
+        let group = MountedAnnotationGroup(
+            layerId: layerId ?? node.id.stringId,
+            customLayerPosition: layerPosition,
+            clusterOptions: nil,
+            annotations: annotations,
+            updateProperties: updateProperties
+        )
+        node.mount(group)
     }
 }
 
-extension PolylineAnnotationManager: MapContentAnnotationManager {}
+@available(iOS 13.0, *)
+extension PolylineAnnotationManager: MapContentAnnotationManager {
+    static func make(
+        layerId: String,
+        layerPosition: LayerPosition?,
+        clusterOptions: ClusterOptions? = nil,
+        using orchestrator: AnnotationOrchestrator
+    ) -> Self {
+        orchestrator.makePolylineAnnotationManager(id: layerId, layerPosition: layerPosition) as! Self
+    }
+}
 
 // End of generated file.

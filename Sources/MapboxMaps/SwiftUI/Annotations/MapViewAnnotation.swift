@@ -19,10 +19,10 @@ import SwiftUI
 /// The view annotations are great for displaying unique interactive features. However, they may be suboptimal for large amounts of data and don't support clustering. For those cases use ``PointAnnotation`` or Runtime Styling API, for example, ``SymbolLayer`` with ``GeoJSONSource``.
 ///
 /// - Note: View Annotations appear above all content of MapView (e.g. layers, annotations, puck). If you need to display annotation between layers or below puck, use ``PointAnnotation``.
-    @_documentation(visibility: public)
+@_documentation(visibility: public)
 @_spi(Experimental)
 @available(iOS 13.0, *)
-public struct MapViewAnnotation: MapContent {
+public struct MapViewAnnotation {
     struct Actions {
         var visibility: ((Bool) -> Void)?
         var anchor: ((ViewAnnotationAnchorConfig) -> Void)?
@@ -82,10 +82,6 @@ public struct MapViewAnnotation: MapContent {
     ) {
         self.annotatedFeature = annotatedFeature
         self.content = AnyView(content())
-    }
-
-    func _visit(_ visitor: MapContentVisitor) {
-        visitor.add(viewAnnotation: self)
     }
 
     /// If true, the annotation will be visible even if it collides with other annotations. Defaults to `false`.
@@ -170,4 +166,8 @@ public struct MapViewAnnotation: MapContent {
 }
 
 @available(iOS 13.0, *)
-extension MapViewAnnotation: PrimitiveMapContent {}
+extension MapViewAnnotation: MapContent, PrimitiveMapContent {
+    func visit(_ node: MapContentNode) {
+        node.mount(MountedViewAnnotation(mapViewAnnotation: self))
+    }
+}

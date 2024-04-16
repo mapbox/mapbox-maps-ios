@@ -11,6 +11,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Experimental `MapStyle` no longer conforms to Equatable.
 * `TransitionOptions` is now a Swift struct rather than an Objective-C class.
+* Experimental protocol `MapContent` now has associated generic type and body requirement.
+* Experimental `MapContentBuilder` methods signatures have changed to work with generic `MapContent`.
 
 ### Features ✨ and improvements 🏁
 

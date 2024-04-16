@@ -1350,3 +1350,28 @@ Extension TransitionOptions has removed conformance to CustomStringConvertible
 Extension TransitionOptions has removed conformance to Hashable
 Extension TransitionOptions has removed conformance to NSObjectProtocol
 Extension TransitionOptions is no longer open for subclassing
+
+
+// Make MapContent gereic over the Body and adjust MapContentBuilder to use opaque types
+Constructor ForEvery.init(_:content:) has generic signature change from <Content, Data, ID where Content == MapboxMaps.MapContent, Data : Swift.RandomAccessCollection, ID == Data.Element.ID, Data.Element : Swift.Identifiable> to <Content, Data, ID where Content : MapboxMaps.MapContent, Data : Swift.RandomAccessCollection, ID == Data.Element.ID, Data.Element : Swift.Identifiable> 
+Constructor ForEvery.init(_:id:content:) has generic signature change from <Content, Data, ID where Content == MapboxMaps.MapContent, Data : Swift.RandomAccessCollection, ID : Swift.Hashable> to <Content, Data, ID where Content : MapboxMaps.MapContent, Data : Swift.RandomAccessCollection, ID : Swift.Hashable> 
+Func MapContentBuilder.buildBlock(_:) has generic signature change from  to <each Content where repeat each Content : MapboxMaps.MapContent> 
+Func MapContentBuilder.buildEither(first:) has generic signature change from  to <First, Second where First : MapboxMaps.MapContent, Second : MapboxMaps.MapContent> 
+Func MapContentBuilder.buildEither(second:) has generic signature change from  to <First, Second where First : MapboxMaps.MapContent, Second : MapboxMaps.MapContent> 
+Func MapContentBuilder.buildOptional(_:) has generic signature change from  to <T where T : MapboxMaps.MapContent> 
+Protocol MapContent has generic signature change from  to <Self.Body : MapboxMaps.MapContent> 
+Struct ForEvery has generic signature change from <Content, Data, ID where Data : Swift.RandomAccessCollection, ID : Swift.Hashable> to <Content, Data, ID where Content : MapboxMaps.MapContent, Data : Swift.RandomAccessCollection, ID : Swift.Hashable> 
+Constructor Map.init(initialViewport:content:) has parameter 1 type change from () -> MapboxMaps.MapContent to () -> some MapboxMaps.MapContent 
+Constructor Map.init(initialViewport:urlOpener:content:) has parameter 2 type change from () -> MapboxMaps.MapContent to () -> some MapboxMaps.MapContent 
+Constructor Map.init(viewport:content:) has parameter 1 type change from () -> MapboxMaps.MapContent to () -> some MapboxMaps.MapContent 
+Constructor Map.init(viewport:urlOpener:content:) has parameter 2 type change from () -> MapboxMaps.MapContent to () -> some MapboxMaps.MapContent 
+Func MapContentBuilder.buildBlock(_:) has parameter 0 type change from MapboxMaps.MapContent... to repeat each Content 
+Func MapContentBuilder.buildBlock(_:) has return type change from MapboxMaps.MapContent to MapboxMaps.TupleMapContent<(repeat each Content)> 
+Func MapContentBuilder.buildEither(first:) has parameter 0 type change from MapboxMaps.MapContent to First 
+Func MapContentBuilder.buildEither(first:) has return type change from MapboxMaps.MapContent to MapboxMaps.ConditionalMapContent<First, Second> 
+Func MapContentBuilder.buildEither(second:) has parameter 0 type change from MapboxMaps.MapContent to Second 
+Func MapContentBuilder.buildEither(second:) has return type change from MapboxMaps.MapContent to MapboxMaps.ConditionalMapContent<First, Second> 
+Func MapContentBuilder.buildOptional(_:) has parameter 0 type change from (MapboxMaps.MapContent)? to T? 
+Func MapContentBuilder.buildOptional(_:) has return type change from MapboxMaps.MapContent to MapboxMaps.OptionalMapContent<T> 
+AssociatedType MapContent.Body has been added as a protocol requirement 
+Var MapContent.body has been added as a protocol requirement 

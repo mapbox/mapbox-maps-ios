@@ -8,6 +8,8 @@
 
 ### SwiftUI
 - ``Map-swift.struct``
+- ``MapContent``
+- ``MapContentBuilder``
 - ``MapStyle``
 - ``Viewport``
 - ``ViewportAnimation``
@@ -20,12 +22,11 @@
 - ``Puck2D``
 - ``Puck3D``
 - ``MapReader``
-- ``MapContent``
 - ``MapProxy``
-- ``MapContentBuilder``
 - ``Viewport/FollowPuckOptions``
 - ``Viewport/OverviewOptions``
 - ``MapGestureHandlers``
 - ``MapURLOpener``
 - ``ForEvery``
 - ``ArrayBuilder``
+

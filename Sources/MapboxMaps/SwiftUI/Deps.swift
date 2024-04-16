@@ -5,7 +5,7 @@ import MapboxCoreMaps
 struct MapDependencies {
     var cameraBounds = CameraBoundsOptions()
     var mapStyle: MapStyle = .standard
-    var mapStyleContent: any MapStyleContent = EmptyMapStyleContent()
+    var mapContent: () -> any MapContent = { EmptyMapContent() }
     var gestureOptions = GestureOptions()
     var gestureHandlers = MapGestureHandlers()
     var constrainMode = ConstrainMode.heightOnly

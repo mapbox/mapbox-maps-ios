@@ -33,10 +33,11 @@
 ///     .slot("top")
 /// }
 /// ```
-    @_documentation(visibility: public)
+@_documentation(visibility: public)
 @_spi(Experimental)
-public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: PrimitiveMapContent {
-    let store: ForEvery<PointAnnotation, Data, ID>
+@available(iOS 13.0, *)
+public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
+    let annotations: [(ID, PointAnnotation)]
 
     /// Creates a group that identifies data by given key path.
     ///
@@ -46,7 +47,9 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
     ///     - content: A closure that creates annotation for a given data item.
     @_documentation(visibility: public)
     public init(_ data: Data, id: KeyPath<Data.Element, ID>, content: @escaping (Data.Element) -> PointAnnotation) {
-        store = ForEvery(data: data, id: id, content: content)
+        annotations = data.map { element in
+            (element[keyPath: id], content(element))
+        }
     }
 
     /// Creates a group from identifiable data.
@@ -67,21 +70,11 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
     @_documentation(visibility: public)
     public init(@ArrayBuilder<PointAnnotation> content: @escaping () -> [PointAnnotation?])
         where Data == Array<(Int, PointAnnotation)>, ID == Int {
-        let annotations = content().enumerated().compactMap {
-            $0.element == nil ? nil : ($0.offset, $0.element!)
-        }
-        self.init(annotations, id: \.0, content: \.1)
-    }
 
-    func _visit(_ visitor: MapContentVisitor) {
-        let group = AnnotationGroup(
-            positionalId: visitor.positionalId,
-            layerId: layerId,
-            layerPosition: layerPosition,
-            store: store,
-            make: { $0.makePointAnnotationManager(id: $1, layerPosition: $2, clusterOptions: clusterOptions) },
-            updateProperties: { self.updateProperties(manager: $0) })
-        visitor.add(annotationGroup: group)
+        let annotations = content()
+            .enumerated()
+            .compactMap { $0.element == nil ? nil : ($0.offset, $0.element!) }
+        self.init(annotations, id: \.0, content: \.1)
     }
 
     private func updateProperties(manager: PointAnnotationManager) {
@@ -386,13 +379,30 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
     }
 }
 
-extension PointAnnotation: PrimitiveMapContent, MapContentAnnotation {
-    func _visit(_ visitor: MapContentVisitor) {
-        PointAnnotationGroup { self }
-            ._visit(visitor)
+@available(iOS 13.0, *)
+extension PointAnnotationGroup: MapContent, PrimitiveMapContent {
+    func visit(_ node: MapContentNode) {
+        let group = MountedAnnotationGroup(
+            layerId: layerId ?? node.id.stringId,
+            customLayerPosition: layerPosition,
+            clusterOptions: clusterOptions,
+            annotations: annotations,
+            updateProperties: updateProperties
+        )
+        node.mount(group)
     }
 }
 
-extension PointAnnotationManager: MapContentAnnotationManager {}
+@available(iOS 13.0, *)
+extension PointAnnotationManager: MapContentAnnotationManager {
+    static func make(
+        layerId: String,
+        layerPosition: LayerPosition?,
+        clusterOptions: ClusterOptions? = nil,
+        using orchestrator: AnnotationOrchestrator
+    ) -> Self {
+        orchestrator.makePointAnnotationManager(id: layerId, layerPosition: layerPosition, clusterOptions: clusterOptions) as! Self
+    }
+}
 
 // End of generated file.

@@ -181,24 +181,14 @@ public final class MapboxMap: StyleManager {
         __map.destroyRenderer()
     }
 
-    internal init(map: CoreMap, events: MapEvents, styleSourceManager: StyleSourceManagerProtocol) {
+    init(map: CoreMap, events: MapEvents) {
         self.__map = map
         self.events = events
 
-        super.init(with: map, sourceManager: styleSourceManager)
+        super.init(with: map, sourceManager: StyleSourceManager(styleManager: map))
 
         __map.createRenderer()
         _isDefaultCameraInitialized.proxied = onCameraChanged.map { _ in true }
-    }
-
-    internal convenience init(mapClient: CoreMapClient, mapInitOptions: MapInitOptions, styleSourceManager: StyleSourceManagerProtocol? = nil) {
-        let map = CoreMap(
-            client: mapClient,
-            mapOptions: mapInitOptions.mapOptions)
-        self.init(
-            map: map,
-            events: MapEvents(observable: map),
-            styleSourceManager: styleSourceManager ?? StyleSourceManager(styleManager: map))
     }
 
     // MARK: - Render loop

@@ -60,7 +60,6 @@ final class Puck3DRendererTests: XCTestCase {
 
     func test_SetNewState_WithSameConfiguration_UpdatesOnlySources() throws {
         let configuration = Puck3DConfiguration(model: Model())
-        let coordinates = CLLocationCoordinate2D.random()
         let firstState: PuckRendererState = .fixture(
             accuracyAuthorization: .reducedAccuracy,
             configuration: configuration

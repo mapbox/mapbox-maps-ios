@@ -36,81 +36,81 @@ struct DynamicStylingExample: View {
     @State var viewport: Viewport = .exampleOverview
 
     var body: some View {
-        Map(viewport: $viewport)
-            .mapStyle(mapStyle) {
-                if customAtmosphere {
-                    Atmosphere()
-                        .range(start: 0, end: 12)
-                        .horizonBlend(0.1)
-                        .starIntensity(0.2)
-                        .color(StyleColor(red: 240, green: 196, blue: 152, alpha: 1)!)
-                        .highColor(StyleColor(red: 221, green: 209, blue: 197, alpha: 1)!)
-                        .spaceColor(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!)
-                }
+        Map(viewport: $viewport) {
+            if customAtmosphere {
+                Atmosphere()
+                    .range(start: 0, end: 12)
+                    .horizonBlend(0.1)
+                    .starIntensity(0.2)
+                    .color(StyleColor(red: 240, green: 196, blue: 152, alpha: 1)!)
+                    .highColor(StyleColor(red: 221, green: 209, blue: 197, alpha: 1)!)
+                    .spaceColor(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!)
+            }
 
-                if customLights {
-                    DirectionalLight(id: "directional-light")
-                        .intensity(0.5)
-                        .direction(azimuthal: 210, polar: 30)
-                        .directionTransition(.zero)
-                        .castShadows(true)
-                        .shadowIntensity(1)
-                    AmbientLight(id: "ambient-light")
-                        .color(.lightGray)
-                        .intensity(0.5)
-                }
+            if customLights {
+                DirectionalLight(id: "directional-light")
+                    .intensity(0.5)
+                    .direction(azimuthal: 210, polar: 30)
+                    .directionTransition(.zero)
+                    .castShadows(true)
+                    .shadowIntensity(1)
+                AmbientLight(id: "ambient-light")
+                    .color(.lightGray)
+                    .intensity(0.5)
+            }
 
-                if let connectionFeatures {
-                    ConnectionComponent(data: connectionFeatures, kind: connectionKind, color: connectionColor)
-                }
+            if let connectionFeatures {
+                ConnectionComponent(data: connectionFeatures, kind: connectionKind, color: connectionColor)
+            }
 
-                if let pinFeatures {
-                    LazyGeoJSON(id: "points", features: pinFeatures)
-                    StyleImage(id: "pin-icon", image: pinIcon.image)
-                    SymbolLayer(id: "pin", source: "points")
-                        .iconImage("pin-icon")
-                    if styleTransitions {
-                        TransitionOptions(duration: 5)
-                    }
+            if let pinFeatures {
+                LazyGeoJSON(id: "points", features: pinFeatures)
+                StyleImage(id: "pin-icon", image: pinIcon.image)
+                SymbolLayer(id: "pin", source: "points")
+                    .iconImage("pin-icon")
+                if styleTransitions {
+                    TransitionOptions(duration: 5)
                 }
+            }
 
-                if let route {
-                    RouteLine(id: "LA-SF", featureRef: route)
-                }
+            if let route {
+                RouteLine(id: "LA-SF", featureRef: route)
+            }
 
-                ModelsComponent()
-            }
-            .additionalSafeAreaInsets(.bottom, settingsHeight)
-            .onLayerTapGesture("connection-fill") { _, _ in
-                connectionColor = .random
-                return true
-            }
-            .debugOptions(.camera)
-            .ignoresSafeArea()
-            .safeOverlay(alignment: .bottom) {
-                settingsBody
-                    .onChangeOfSize { settingsHeight = $0.height }
-            }
-            .safeOverlay(alignment: .trailing) {
-                MapStyleSelectorButton(mapStyle: $mapStyle)
-            }
-            .onChange(of: cities) { _ in updateFeatures() }
-            .onAppear {
-                updateFeatures()
-                loadRoute()
-                connectionColor = .random
-            }
-            .toolbar {
-                ToolbarItem {
-                    Menu {
-                        Button("Overview") { viewport = .exampleOverview }
-                        Button("Models") { viewport = .modelsOverview }
-                        Button("Route") { viewport = .routeOverview }
-                    } label: {
-                        Text("Jump to...")
-                    }
+            ModelsComponent()
+        }
+        .mapStyle(mapStyle)
+        .additionalSafeAreaInsets(.bottom, settingsHeight)
+        .onLayerTapGesture("connection-fill") { _, _ in
+            connectionColor = .random
+            return true
+        }
+        .debugOptions(.camera)
+        .ignoresSafeArea()
+        .safeOverlay(alignment: .bottom) {
+            settingsBody
+                .onChangeOfSize { settingsHeight = $0.height }
+        }
+        .safeOverlay(alignment: .trailing) {
+            MapStyleSelectorButton(mapStyle: $mapStyle)
+        }
+        .onChange(of: cities) { _ in updateFeatures() }
+        .onAppear {
+            updateFeatures()
+            loadRoute()
+            connectionColor = .random
+        }
+        .toolbar {
+            ToolbarItem {
+                Menu {
+                    Button("Overview") { viewport = .exampleOverview }
+                    Button("Models") { viewport = .modelsOverview }
+                    Button("Route") { viewport = .routeOverview }
+                } label: {
+                    Text("Jump to...")
                 }
             }
+        }
     }
 
 
@@ -233,7 +233,6 @@ struct RouteLine: MapStyleContent {
             .lineBorderColor("#327AC2")
             .lineEmissiveStrength(1)
             .slot("middle")
-
     }
 }
 

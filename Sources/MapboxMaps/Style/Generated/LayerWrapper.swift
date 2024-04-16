@@ -5,19 +5,19 @@ import Foundation
 @_spi(Experimental)
 @_documentation(visibility: public)
 @available(iOS 13.0, *)
-public struct LayerAtPosition<L>: MapStyleContent, PrimitiveMapStyleContent where L: Layer, L: Equatable {
+public struct LayerAtPosition<L>: MapStyleContent, PrimitiveMapContent where L: Layer, L: Equatable {
     // The layer wrapped in its ``LayerPosition``
     var layer: L
     var position: LayerPosition
 
-    func visit(_ node: MapStyleNode) {
-        node.mount(MountedLayer(layer: layer, position: position))
+    func visit(_ node: MapContentNode) {
+        node.mount(MountedLayer(layer: layer, customPosition: position))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension FillLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension FillLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -27,14 +27,14 @@ extension FillLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension LineLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension LineLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -44,14 +44,14 @@ extension LineLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension SymbolLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension SymbolLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -61,14 +61,14 @@ extension SymbolLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension CircleLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension CircleLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -78,14 +78,14 @@ extension CircleLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension HeatmapLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension HeatmapLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -95,14 +95,14 @@ extension HeatmapLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension FillExtrusionLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension FillExtrusionLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -112,14 +112,14 @@ extension FillExtrusionLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension RasterLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension RasterLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -129,14 +129,14 @@ extension RasterLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension HillshadeLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension HillshadeLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -146,14 +146,14 @@ extension HillshadeLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension ModelLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension ModelLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -163,14 +163,14 @@ extension ModelLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension BackgroundLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension BackgroundLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -180,14 +180,14 @@ extension BackgroundLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension SkyLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension SkyLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -197,14 +197,14 @@ extension SkyLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension LocationIndicatorLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension LocationIndicatorLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -214,7 +214,7 @@ extension LocationIndicatorLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }

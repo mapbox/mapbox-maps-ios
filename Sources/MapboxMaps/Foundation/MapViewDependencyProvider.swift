@@ -22,11 +22,13 @@ protocol MapViewDependencyProviderProtocol: AnyObject {
                                  anyTouchGestureRecognizer: UIGestureRecognizer,
                                  doubleTapGestureRecognizer: UIGestureRecognizer,
                                  doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportManagerImplProtocol
-    func makeAnnotationOrchestratorImpl(in view: UIView,
-                                        mapboxMap: MapboxMapProtocol,
-                                        mapFeatureQueryable: MapFeatureQueryable,
-                                        style: StyleProtocol,
-                                        displayLink: Signal<Void>) -> AnnotationOrchestratorImplProtocol
+    func makeAnnotationOrchestratorImpl(
+        in view: UIView,
+        mapboxMap: MapboxMapProtocol,
+        mapFeatureQueryable: MapFeatureQueryable,
+        style: StyleProtocol,
+        displayLink: Signal<Void>
+    ) -> AnnotationOrchestratorImplProtocol
 
     func makeEventsManager() -> EventsManagerProtocol
 }
@@ -233,11 +235,13 @@ final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
             mapContentGestureManager: mapContentGestureManager)
     }
 
-    internal func makeAnnotationOrchestratorImpl(in view: UIView,
-                                                 mapboxMap: MapboxMapProtocol,
-                                                 mapFeatureQueryable: MapFeatureQueryable,
-                                                 style: StyleProtocol,
-                                                 displayLink: Signal<Void>) -> AnnotationOrchestratorImplProtocol {
+    func makeAnnotationOrchestratorImpl(
+        in view: UIView,
+        mapboxMap: MapboxMapProtocol,
+        mapFeatureQueryable: MapFeatureQueryable,
+        style: StyleProtocol,
+        displayLink: Signal<Void>
+    ) -> AnnotationOrchestratorImplProtocol {
         let offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
         let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
         let offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)

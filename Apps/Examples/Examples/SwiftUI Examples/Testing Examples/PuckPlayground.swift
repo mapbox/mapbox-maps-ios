@@ -6,10 +6,12 @@ struct PuckPlayground: View {
     enum PuckType: String, CaseIterable, CustomStringConvertible {
         case d2
         case d3
+        case none
         var description: String {
             switch self {
             case .d2: return "2D"
             case .d3: return "3D"
+            case .none: return "None"
             }
         }
     }
@@ -41,6 +43,8 @@ struct PuckPlayground: View {
                     .modelOpacity(opacity)
                     .modelEmissiveStrength(puck3dSettings.emission)
                     .slot(slot)
+            case .none:
+                EmptyMapContent()
             }
         }
         .mapStyle(mapStyle)
@@ -71,16 +75,6 @@ struct PuckPlayground: View {
     private var settingsBody: some View {
         VStack(alignment: .leading) {
             RadioButtonSettingView(title: "Puck Type", value: $puckType)
-            RadioButtonSettingView(title: "Bearing", value: $bearingType)
-            SliderSettingView(title: "Opacity", value: $opacity, range: 0...1, step: 0.1)
-            HStack {
-                Text("Slot")
-                Picker("Slot", selection: $slot) {
-                    ForEach([Slot.bottom, .middle, .top, nil], id: \.self) { t in
-                        Text(t?.rawValue ?? "nil").tag(t)
-                    }
-                }.pickerStyle(.segmented)
-            }
 
             switch puckType {
             case .d2:
@@ -88,16 +82,36 @@ struct PuckPlayground: View {
                     Toggle("Accuracy ring", isOn: $puck2dSettings.accuracyRing)
                     RadioButtonSettingView(title: "Pulsing", value: $puck2dSettings.pulsing)
                     RadioButtonSettingView(title: "Top Image", value: $puck2dSettings.topImage)
+                    RadioButtonSettingView(title: "Bearing", value: $bearingType)
+                    SliderSettingView(title: "Opacity", value: $opacity, range: 0...1, step: 0.1)
+                    slotSettings
                 }
             case.d3:
                 RadioButtonSettingView(title: "Model", value: $puck3dSettings.modelType)
                 SliderSettingView(title: "Scale", value: $puck3dSettings.scale, range: 1...3, step: 0.25)
                 SliderSettingView(title: "Light emission", value: $puck3dSettings.emission, range: 0...2, step: 0.1)
+                RadioButtonSettingView(title: "Bearing", value: $bearingType)
+                SliderSettingView(title: "Opacity", value: $opacity, range: 0...1, step: 0.1)
+                slotSettings
+            case .none:
+                EmptyView()
             }
         }
         .padding(10)
         .floating(RoundedRectangle(cornerRadius: 10))
         .limitPaneWidth()
+    }
+
+    @ViewBuilder
+    private var slotSettings: some View {
+        HStack {
+            Text("Slot")
+            Picker("Slot", selection: $slot) {
+                ForEach([Slot.bottom, .middle, .top, nil], id: \.self) { t in
+                    Text(t?.rawValue ?? "nil").tag(t)
+                }
+            }.pickerStyle(.segmented)
+        }
     }
 }
 

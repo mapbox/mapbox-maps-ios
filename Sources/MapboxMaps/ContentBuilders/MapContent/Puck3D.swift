@@ -11,9 +11,10 @@
 ///     Puck3D(model: model, bearing: .course)
 /// }
 /// ```
-    @_documentation(visibility: public)
+@_documentation(visibility: public)
 @_spi(Experimental)
-public struct Puck3D: PrimitiveMapContent {
+@available(iOS 13.0, *)
+public struct Puck3D: MapContent, PrimitiveMapContent {
     private var configuration: Puck3DConfiguration
     private var bearing: PuckBearing?
 
@@ -124,11 +125,13 @@ public struct Puck3D: PrimitiveMapContent {
         copyAssigned(self, \.configuration.slot, slot)
     }
 
-    func _visit(_ visitor: MapContentVisitor) {
-        visitor.add(locationOptions: LocationOptions(
+    @available(iOS 13.0, *)
+    func visit(_ node: MapContentNode) {
+        let locationOptions = LocationOptions(
             puckType: .puck3D(configuration),
             puckBearing: bearing ?? .heading,
             puckBearingEnabled: bearing != nil
-        ))
+        )
+        node.mount(MountedUniqueProperty(keyPath: \.location, value: locationOptions))
     }
 }

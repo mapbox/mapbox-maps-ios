@@ -25,8 +25,8 @@ public struct Model: Equatable, Codable {
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension Model: MapStyleContent, PrimitiveMapStyleContent {
-    func visit(_ node: MapStyleNode) {
+extension Model: MapStyleContent, PrimitiveMapContent {
+    func visit(_ node: MapContentNode) {
         guard id != nil, uri != nil else {
             Log.warning(forMessage: "Failed to add Model to StyleModel because it does not have an id or uri.", category: "styleDSL")
             return

@@ -88,7 +88,7 @@ final class MapBasicCoordinator {
         }
 
         mapView.styleManager.mapStyle = deps.mapStyle
-        mapView.styleManager.setMapStyleContent(deps.mapStyleContent)
+        mapView.styleManager.setMapContent(deps.mapContent)
         assign(&mapView, \.gestureManager.options, value: deps.gestureOptions)
         assign(&mapView, \.ornaments.options, value: deps.ornamentOptions)
         assign(&mapView, \.debugOptions, value: deps.debugOptions)

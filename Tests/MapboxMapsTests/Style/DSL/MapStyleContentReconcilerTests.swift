@@ -2,17 +2,49 @@ import XCTest
 @_spi(Experimental) @testable import MapboxMaps
 
 @available(iOS 13.0, *)
-final class MapStyleContentReconcilerTests: XCTestCase {
-    var me: MapStyleContentReconciler!
+final class MapContentReconcilerTests: XCTestCase {
+    var me: MapContentReconciler!
     var styleManager: MockStyleManager!
     var sourceManager: MockStyleSourceManager!
+    var style: MockStyle!
+    var annotationsOrchestrator: AnnotationOrchestrator!
+    var orchestratorImpl: MockAnnotationOrchestatorImpl!
+    var viewAnnotationsManager: ViewAnnotationManager!
+    var locationManager: LocationManager!
+    var circleAnnotationManager: CircleAnnotationManager!
+
     @TestPublished var styleIsLoaded = true
 
     override func setUp() {
         styleManager = MockStyleManager()
         sourceManager = MockStyleSourceManager()
+        style = MockStyle()
+        orchestratorImpl = MockAnnotationOrchestatorImpl()
+        annotationsOrchestrator = AnnotationOrchestrator(impl: orchestratorImpl)
+        viewAnnotationsManager = ViewAnnotationManager(containerView: UIView(), mapboxMap: MockMapboxMap(), displayLink: Signal(just: ()))
+        locationManager = LocationManager(
+            interfaceOrientationView: Ref({ nil }),
+            displayLink: Signal(just: ()),
+            styleManager: style,
+            mapboxMap: MockMapboxMap()
+        )
+        circleAnnotationManager = CircleAnnotationManager(
+            id: "test",
+            style: style,
+            layerPosition: .default,
+            displayLink: Signal { _ in .empty },
+            offsetCalculator: OffsetPointCalculator(mapboxMap: MockMapboxMap())
+        )
         styleIsLoaded = true
-        me = MapStyleContentReconciler(managers: StyleManagers(style: styleManager, source: sourceManager), styleIsLoaded: $styleIsLoaded)
+
+        me = MapContentReconciler(styleManager: styleManager, sourceManager: sourceManager, styleIsLoaded: $styleIsLoaded)
+        me.setMapContentDependencies(MapContentDependencies(
+            layerAnnotations: Ref.weakRef(self, property: \.annotationsOrchestrator),
+            viewAnnotations: Ref.weakRef(self, property: \.viewAnnotationsManager),
+            location: Ref.weakRef(self, property: \.locationManager),
+            addAnnotationViewController: { _ in },
+            removeAnnotationViewController: { _ in }
+        ))
     }
 
     override func tearDown() {
@@ -21,7 +53,7 @@ final class MapStyleContentReconcilerTests: XCTestCase {
         styleManager = nil
     }
 
-    private func setContent(@MapStyleContentBuilder content: () -> some MapStyleContent) {
+    private func setContent(@MapContentBuilder content: () -> some MapContent) {
         me.content = content()
     }
 
@@ -34,6 +66,7 @@ final class MapStyleContentReconcilerTests: XCTestCase {
         }
 
         styleIsLoaded = true
+        styleManager.styleLayerExistsStub.defaultReturnValue = true
 
         lineLayer.lineColor = .constant(StyleColor.init(.brown))
 
@@ -116,6 +149,7 @@ final class MapStyleContentReconcilerTests: XCTestCase {
     }
 
     func testReconcileAddRemoveContent() {
+        styleManager.styleLayerExistsStub.defaultReturnValue = true
         let terrain = Terrain(sourceId: "testTerrain")
         let atmosphere = Atmosphere()
         let symbolLayer = SymbolLayer(id: "testSymbol", source: "testSymbolSource")
@@ -200,6 +234,42 @@ final class MapStyleContentReconcilerTests: XCTestCase {
         }
     }
 
+    func testAddLayerAgainAfterStyleSwitch() {
+        styleManager.styleLayerExistsStub.defaultReturnValue = false
+        let lineLayer = LineLayer(id: "testLine", source: "testLineSource")
+
+        setContent {
+            lineLayer
+        }
+
+        styleManager.styleLayerExistsStub.defaultReturnValue = false
+
+        setContent {
+            lineLayer
+        }
+
+        let addLayerInv = styleManager.addStyleLayerStub.invocations
+        XCTAssertEqual(addLayerInv.count, 2)
+        guard let layerProperties = addLayerInv.first?.parameters.properties as? [String: Any] else {
+            XCTFail("Failed to get layerProperties")
+            return
+        }
+        XCTAssertEqual(layerProperties["type"] as? String, "line")
+        XCTAssertEqual(layerProperties["id"] as? String, "testLine")
+        XCTAssertEqual(layerProperties["source"] as? String, "testLineSource")
+
+        let updateLayerInv = styleManager.setStyleLayerPropertiesStub.invocations
+        XCTAssertEqual(updateLayerInv.count, 0)
+
+        guard let layer2Properties = addLayerInv.last?.parameters.properties as? [String: Any] else {
+            XCTFail("Failed to get layer properties")
+            return
+        }
+        XCTAssertEqual(layer2Properties["type"] as? String, "line")
+        XCTAssertEqual(layer2Properties["id"] as? String, "testLine")
+        XCTAssertEqual(layer2Properties["source"] as? String, "testLineSource")
+    }
+
     func testAddSources() {
         setContent {
             VectorSource(id: "vectorSource")
@@ -225,7 +295,37 @@ final class MapStyleContentReconcilerTests: XCTestCase {
         XCTAssertTrue(sourceIDs.contains("rasterArraySource"))
     }
 
+    func testAddSourcesAgainAfterStyleSwitch() {
+        setContent {
+            VectorSource(id: "vectorSource")
+            RasterSource(id: "rasterSource")
+            RasterDemSource(id: "rasterDemSource")
+            ImageSource(id: "imageSource")
+            GeoJSONSource(id: "geoJSONSource")
+            RasterArraySource(id: "rasterArraySource")
+        }
+
+        XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 6)
+
+        sourceManager.sourceExistsStub.defaultReturnValue = false
+
+        setContent {
+            VectorSource(id: "vectorSource")
+            RasterSource(id: "rasterSource")
+            RasterDemSource(id: "rasterDemSource")
+            ImageSource(id: "imageSource")
+            GeoJSONSource(id: "geoJSONSource")
+            RasterArraySource(id: "rasterArraySource")
+        }
+
+        XCTAssertEqual(sourceManager.addSourceStub.invocations.map(\.parameters.source.id), [
+            "vectorSource", "rasterSource", "rasterDemSource", "imageSource", "geoJSONSource", "rasterArraySource",
+            "vectorSource", "rasterSource", "rasterDemSource", "imageSource", "geoJSONSource", "rasterArraySource",
+        ])
+    }
+
     func testUpdateSources() {
+        sourceManager.sourceExistsStub.defaultReturnValue = true
         var vectorSource = VectorSource(id: "vectorSource")
         var rasterSource = RasterSource(id: "rasterSource")
         var rasterDEMSource = RasterDemSource(id: "rasterDemSource")
@@ -275,13 +375,14 @@ final class MapStyleContentReconcilerTests: XCTestCase {
     }
 
     func testRemoveSource() throws {
+        sourceManager.sourceExistsStub.defaultReturnValue = true
         setContent {
             VectorSource(id: "vectorSource")
         }
 
         XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 1)
 
-        setContent { }
+        setContent {}
 
         XCTAssertEqual(sourceManager.removeSourceUncheckedStub.invocations.count, 1)
         let removeSourceParameters = try XCTUnwrap(sourceManager.removeSourceUncheckedStub.invocations.first?.parameters as? String)
@@ -289,6 +390,8 @@ final class MapStyleContentReconcilerTests: XCTestCase {
     }
 
     func testUpdateImage() {
+        styleManager.hasStyleImageStub.defaultReturnValue = true
+
         var styleImage = StyleImage(id: "testStyleImage", image: UIImage.empty)
 
         setContent {
@@ -315,7 +418,27 @@ final class MapStyleContentReconcilerTests: XCTestCase {
         XCTAssertEqual(styleManager.removeStyleImageStub.invocations.last?.parameters, "testStyleImage")
     }
 
+    func testAddImageAgainAfterStyleSwitch() {
+        let styleImage = StyleImage(id: "testStyleImage", image: UIImage.empty)
+
+        setContent {
+            styleImage
+        }
+
+        XCTAssertEqual(styleManager.addStyleImageStub.invocations.count, 1)
+
+        styleManager.hasStyleImageStub.defaultReturnValue = false
+
+        setContent {
+            styleImage
+        }
+
+        XCTAssertEqual(styleManager.addStyleImageStub.invocations.count, 2)
+        XCTAssertEqual(styleManager.addStyleImageStub.invocations.map(\.parameters.imageId), ["testStyleImage", "testStyleImage"])
+    }
+
     func testDontUpdateSameImage() {
+        styleManager.hasStyleImageStub.defaultReturnValue = true
         let styleImage = StyleImage(id: "testStyleImage", image: UIImage.empty)
 
         setContent {
@@ -329,12 +452,13 @@ final class MapStyleContentReconcilerTests: XCTestCase {
         }
 
         XCTAssertEqual(styleManager.addStyleImageStub.invocations.count, 1)
-
         XCTAssertEqual(styleManager.addStyleImageStub.invocations.first?.parameters.imageId, "testStyleImage")
 
     }
 
     func testAddRemoveSource() {
+        sourceManager.sourceExistsStub.defaultReturnValue = true
+
         let source = VectorSource(id: "test-source")
             .url(String.testSourceValue())
             .tiles([String].testSourceValue())
@@ -359,7 +483,27 @@ final class MapStyleContentReconcilerTests: XCTestCase {
         XCTAssertEqual(sourceManager.removeSourceUncheckedStub.invocations.count, 1)
     }
 
+    func testAddStyleModelAgainAfterStyleSwitch() {
+        let model = Model(id: "test-id", uri: .init(string: "test-URL"))
+
+        setContent {
+            model
+        }
+
+        styleManager.hasStyleModelStub.defaultReturnValue = false
+
+        setContent {
+            model
+        }
+
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.count, 2)
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.map(\.parameters.modelId), ["test-id", "test-id"])
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.map(\.parameters.modelUri), ["test-URL", "test-URL"])
+    }
+
     func testUpdateStyleModel() {
+        styleManager.hasStyleModelStub.defaultReturnValue = true
+
         var model = Model(id: "test-id", uri: .init(string: "test-URL"))
         setContent {
             model
@@ -385,45 +529,129 @@ final class MapStyleContentReconcilerTests: XCTestCase {
         XCTAssertEqual(styleManager.removeStyleModelStub.invocations.last?.parameters.modelId, "test-id")
     }
 
-    func testComponent() throws {
-        let route1 = Component.Route(json: "foo")
+    func testForEvery() {
+        styleManager.hasStyleModelStub.defaultReturnValue = true
+
         setContent {
-            Component(id: "foo", route: route1, condition: true)
+            ForEvery([1, 2], id: \.self) { id in
+                Model(id: "test-id-\(id)", uri: .init(string: "test-URL-\(id)"))
+            }
         }
 
-        XCTAssertEqual(styleManager.addStyleLayerStub.invocations.count, 2)
-        XCTAssertEqual(styleManager.addStyleLayerStub.invocations.first?.parameters.layerId, "foo")
-        XCTAssertEqual(styleManager.addStyleLayerStub.invocations.last?.parameters.layerId, "condition-true")
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.map(\.parameters.modelId), ["test-id-1", "test-id-2"])
+        XCTAssertEqual(styleManager.removeStyleModelStub.invocations.map(\.parameters.modelId), [])
 
-        XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 1)
-        XCTAssertEqual(sourceManager.addSourceStub.invocations.last?.parameters.source.id, "route")
+        setContent {
+            ForEvery([1, 3, 2], id: \.self) { id in
+                Model(id: "test-id-\(id)", uri: .init(string: "test-URL-\(id)"))
+            }
+        }
+
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.map(\.parameters.modelId), ["test-id-1", "test-id-2", "test-id-3"])
+        XCTAssertEqual(styleManager.removeStyleModelStub.invocations.map(\.parameters.modelId), [])
+
+        setContent {
+            ForEvery([2], id: \.self) { id in
+                Model(id: "test-id-\(id)", uri: .init(string: "test-URL-\(id)"))
+            }
+        }
+
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.map(\.parameters.modelId), ["test-id-1", "test-id-2", "test-id-3"])
+        let removedModels = styleManager.removeStyleModelStub.invocations.map(\.parameters.modelId)
+        XCTAssertTrue(removedModels.contains("test-id-1"))
+        XCTAssertTrue(removedModels.contains("test-id-3"))
+    }
+
+    func testComponent() throws {
+        sourceManager.sourceExistsStub.defaultReturnValue = true
+        styleManager.styleLayerExistsStub.defaultReturnValue = true
+        orchestratorImpl.makeCircleAnnotationManagerStub.defaultReturnValue = circleAnnotationManager
+        let route1 = MapContentFixture.Route(json: "foo")
+        var component = MapContentFixture(id: "foo", route: route1, condition: true)
+
+        setContent { component }
+
+        XCTAssertEqual(styleManager.addStyleLayerStub.invocations.map(\.parameters.layerId), ["foo", "condition-true"])
+        XCTAssertEqual(sourceManager.addSourceStub.invocations.map(\.parameters.source.id), ["route"])
         let addedSource = try XCTUnwrap(sourceManager.addSourceStub.invocations.last?.parameters.source) as? GeoJSONSource
         XCTAssertEqual(addedSource?.data, .string("foo"))
+        XCTAssertEqual(viewAnnotationsManager.objectAnnotations.count, 1)
+        verifyAnnotationOptions(viewAnnotationsManager.objectAnnotations.values.first, component.mapViewAnnotation)
+        XCTAssertEqual(circleAnnotationManager.annotations, [
+            CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
+            CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
+        ])
+        XCTAssertEqual(orchestratorImpl.removeAnnotationManagerStub.invocations.map(\.parameters), [])
+        XCTAssertEqual(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.map(\.parameters), [
+            .init(id: "circle-test", layerPosition: .at(0))
+        ])
+        XCTAssertEqual(locationManager.options, LocationOptions(
+            puckType: .puck3D(Puck3DConfiguration(model: Model())),
+            puckBearing: .heading,
+            puckBearingEnabled: false
+        ))
 
-        setContent {
-            Component(id: "foo", route: route1, condition: false)
-        }
+        component = MapContentFixture(id: "foo", route: route1, condition: false)
+        setContent { component }
 
         XCTAssertEqual(styleManager.addStyleLayerStub.invocations.count, 3)
         XCTAssertEqual(styleManager.addStyleLayerStub.invocations.last?.parameters.layerId, "condition-false")
         XCTAssertEqual(styleManager.removeStyleLayerStub.invocations.count, 1)
         XCTAssertEqual(styleManager.removeStyleLayerStub.invocations.last?.parameters, "condition-true")
+        XCTAssertEqual(viewAnnotationsManager.objectAnnotations.count, 1)
+        verifyAnnotationOptions(viewAnnotationsManager.objectAnnotations.values.first, component.mapViewAnnotation)
+        XCTAssertEqual(circleAnnotationManager.annotations, [
+            CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
+            CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
+        ])
+        XCTAssertEqual(orchestratorImpl.removeAnnotationManagerStub.invocations.map(\.parameters), [
+            "circle-test"
+        ])
+        XCTAssertEqual(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.map(\.parameters), [
+            .init(id: "circle-test", layerPosition: .at(0)),
+            .init(id: "circle-test", layerPosition: .at(0))
+        ])
+        XCTAssertEqual(locationManager.options, LocationOptions(
+            puckType: .puck3D(Puck3DConfiguration(model: Model())),
+            puckBearing: .heading,
+            puckBearingEnabled: false
+        ))
 
-        setContent {
-            Component(id: "foo", route: route1, optional: "optional", condition: false)
-        }
+        component = MapContentFixture(id: "foo", route: route1, optional: "optional", condition: false)
+        setContent { component }
 
         XCTAssertEqual(styleManager.addStyleLayerStub.invocations.count, 4)
         XCTAssertEqual(styleManager.addStyleLayerStub.invocations.last?.parameters.layerId, "optional")
 
         XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 1)
         XCTAssertEqual(sourceManager.updateGeoJSONSourceStub.invocations.count, 0)
+        XCTAssertEqual(viewAnnotationsManager.objectAnnotations.count, 1)
+        verifyAnnotationOptions(viewAnnotationsManager.objectAnnotations.values.first, component.mapViewAnnotation)
+        XCTAssertEqual(circleAnnotationManager.annotations, [
+            CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
+            CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
+        ])
+        XCTAssertEqual(orchestratorImpl.removeAnnotationManagerStub.invocations.map(\.parameters), [
+            "circle-test",
+            "circle-test"
+        ])
+        XCTAssertEqual(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.map(\.parameters), [
+            .init(id: "circle-test", layerPosition: .at(0)),
+            .init(id: "circle-test", layerPosition: .at(0)),
+            .init(id: "circle-test", layerPosition: .at(0))
+        ])
+        XCTAssertEqual(locationManager.options, LocationOptions(
+            puckType: .puck3D(Puck3DConfiguration(model: Model())),
+            puckBearing: .heading,
+            puckBearingEnabled: false
+        ))
 
-        let route2 = Component.Route(json: "bar")
+        let route2 = MapContentFixture.Route(json: "bar")
+        style.styleRootLoaded.toggle()
+        style.styleRootLoaded.toggle()
+        component = MapContentFixture(id: "foo", route: route2, optional: "optional", condition: false)
 
-        setContent {
-            Component(id: "foo", route: route2, optional: "optional", condition: false)
-        }
+        setContent { component}
 
         XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 1)
         XCTAssertEqual(sourceManager.updateGeoJSONSourceStub.invocations.count, 1)
@@ -433,6 +661,28 @@ final class MapStyleContentReconcilerTests: XCTestCase {
         XCTAssertEqual(styleManager.addStyleLayerStub.invocations.count, 4)
         XCTAssertEqual(styleManager.getStyleLayerPropertiesStub.invocations.count, 0)
         XCTAssertEqual(styleManager.removeStyleLayerStub.invocations.count, 1)
+        XCTAssertEqual(viewAnnotationsManager.objectAnnotations.count, 1)
+        verifyAnnotationOptions(viewAnnotationsManager.objectAnnotations.values.first, component.mapViewAnnotation)
+        XCTAssertEqual(circleAnnotationManager.annotations, [
+            CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
+            CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
+        ])
+        XCTAssertEqual(orchestratorImpl.removeAnnotationManagerStub.invocations.map(\.parameters), [
+            "circle-test",
+            "circle-test",
+            "circle-test"
+        ])
+        XCTAssertEqual(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.map(\.parameters), [
+            .init(id: "circle-test", layerPosition: .at(0)),
+            .init(id: "circle-test", layerPosition: .at(0)),
+            .init(id: "circle-test", layerPosition: .at(0)),
+            .init(id: "circle-test", layerPosition: .at(0))
+        ])
+        XCTAssertEqual(locationManager.options, LocationOptions(
+            puckType: .puck3D(Puck3DConfiguration(model: Model())),
+            puckBearing: .heading,
+            puckBearingEnabled: false
+        ))
 
         setContent {}
 
@@ -440,43 +690,32 @@ final class MapStyleContentReconcilerTests: XCTestCase {
         XCTAssertEqual(styleManager.removeStyleLayerStub.invocations.count, 4)
         XCTAssertEqual(sourceManager.removeSourceUncheckedStub.invocations.count, 1)
         XCTAssertEqual(sourceManager.removeSourceUncheckedStub.invocations.last?.parameters, "route")
+        XCTAssertEqual(viewAnnotationsManager.objectAnnotations.count, 0)
+        XCTAssertEqual(orchestratorImpl.removeAnnotationManagerStub.invocations.map(\.parameters), [
+            "circle-test",
+            "circle-test",
+            "circle-test",
+            "circle-test"
+        ])
+        XCTAssertEqual(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.map(\.parameters), [
+            .init(id: "circle-test", layerPosition: .at(0)),
+            .init(id: "circle-test", layerPosition: .at(0)),
+            .init(id: "circle-test", layerPosition: .at(0)),
+            .init(id: "circle-test", layerPosition: .at(0))
+        ])
+        XCTAssertEqual(locationManager.options, LocationOptions())
+
     }
 }
 
 @available(iOS 13.0, *)
-struct Component: MapStyleContent {
-    class Route {
-        let json: String
-        init(json: String) {
-            self.json = json
-        }
-    }
-
-    struct RouteLine: MapStyleContent {
-        var route: Route
-        var body: some MapStyleContent {
-            GeoJSONSource(id: "route")
-                .data(.string(route.json))
-        }
-    }
-
-    var id: String
-    var route: Route
-    var optional: String?
-    var condition: Bool
-
-    var body: some MapStyleContent {
-        SymbolLayer(id: id, source: "test")
-        RouteLine(route: route)
-
-        if let optional {
-            SymbolLayer(id: optional, source: "test")
-        }
-
-        if condition {
-            SymbolLayer(id: "condition-true", source: "test")
-        } else {
-            SymbolLayer(id: "condition-false", source: "test")
-        }
-    }
+func verifyAnnotationOptions(
+    _ annotation: ViewAnnotation?,
+    _ mapViewAnnotation: MapViewAnnotation
+) {
+    XCTAssertEqual(annotation?.annotatedFeature, mapViewAnnotation.annotatedFeature)
+    XCTAssertEqual(annotation?.allowOverlap, mapViewAnnotation.allowOverlap)
+    XCTAssertEqual(annotation?.visible, mapViewAnnotation.visible)
+    XCTAssertEqual(annotation?.selected, mapViewAnnotation.selected)
+    XCTAssertEqual(annotation?.variableAnchors, mapViewAnnotation.variableAnchors)
 }

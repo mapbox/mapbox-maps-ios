@@ -138,7 +138,7 @@ extension CustomLayer {
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension CustomLayer: MapStyleContent, PrimitiveMapStyleContent {
+extension CustomLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
@@ -148,7 +148,7 @@ extension CustomLayer: MapStyleContent, PrimitiveMapStyleContent {
         LayerAtPosition(layer: self, position: position)
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))
     }
 }

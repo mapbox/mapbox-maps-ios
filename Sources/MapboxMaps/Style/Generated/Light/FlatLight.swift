@@ -170,8 +170,8 @@ extension FlatLight {
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension FlatLight: MapStyleContent, PrimitiveMapStyleContent {
-    func visit(_ node: MapStyleNode) {
+extension FlatLight: MapStyleContent, PrimitiveMapContent {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedUniqueProperty(keyPath: \.lights.flat, value: self))
     }
 }

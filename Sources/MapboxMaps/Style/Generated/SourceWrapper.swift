@@ -9,7 +9,7 @@ protocol UpdatableSource {
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension VectorSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+extension VectorSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: VectorSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
         var props = [String: Any]()
@@ -23,14 +23,14 @@ extension VectorSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleConte
         }
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedSource(source: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension RasterSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+extension RasterSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: RasterSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
         var props = [String: Any]()
@@ -44,14 +44,14 @@ extension RasterSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleConte
         }
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedSource(source: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension RasterDemSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+extension RasterDemSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: RasterDemSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
         var props = [String: Any]()
@@ -65,14 +65,14 @@ extension RasterDemSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleCo
         }
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedSource(source: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension RasterArraySource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+extension RasterArraySource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: RasterArraySource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
         var props = [String: Any]()
@@ -85,14 +85,14 @@ extension RasterArraySource: UpdatableSource, MapStyleContent, PrimitiveMapStyle
         }
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedSource(source: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension ImageSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+extension ImageSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: ImageSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
         var props = [String: Any]()
@@ -103,31 +103,31 @@ extension ImageSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleConten
         }
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedSource(source: self))
     }
 }
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension GeoJSONSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+extension GeoJSONSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: GeoJSONSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
         if !isEqual(by: \.data, lhs: self, rhs:old) {
             guard let data else { return }
-            os_log(.debug, log: .styleDsl, "source update GeoJSON data %s", id)
+            os_log(.debug, log: .contentDSL, "source update GeoJSON data %s", id)
             manager.updateGeoJSONSource(withId: id, data: data, dataId: nil)
         }
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedSource(source: self))
     }
 }
 
 @available(iOS 13.0, *)
 @_spi(Experimental)
-extension CustomGeometrySource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+extension CustomGeometrySource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: CustomGeometrySource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
         var props = [String: Any]()
@@ -137,14 +137,14 @@ extension CustomGeometrySource: UpdatableSource, MapStyleContent, PrimitiveMapSt
         }
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedSource(source: self))
     }
 }
 
 @available(iOS 13.0, *)
 @_spi(Experimental)
-extension CustomRasterSource: UpdatableSource, MapStyleContent, PrimitiveMapStyleContent {
+extension CustomRasterSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: CustomRasterSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
         var props = [String: Any]()
@@ -154,7 +154,7 @@ extension CustomRasterSource: UpdatableSource, MapStyleContent, PrimitiveMapStyl
         }
     }
 
-    func visit(_ node: MapStyleNode) {
+    func visit(_ node: MapContentNode) {
         node.mount(MountedSource(source: self))
     }
 }

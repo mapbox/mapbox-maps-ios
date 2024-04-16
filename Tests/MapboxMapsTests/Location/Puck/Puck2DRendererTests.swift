@@ -619,7 +619,7 @@ final class Puck2DRendererTests: XCTestCase {
 
         var config = Puck2DConfiguration()
         config.slot = "some-slot"
-        let state = updateState(configuration: config)
+        let state = updateState(with: .fullAccuracy, heading: nil, configuration: config)
 
         let expectedProperties = makeExpectedLayerProperties(with: state)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)

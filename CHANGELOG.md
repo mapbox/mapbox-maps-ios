@@ -3,6 +3,7 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
+* Allow to assign slot to 2D and 3D location indicators.
 
 ## 11.3.0 - 10 April, 2024
 

@@ -116,6 +116,14 @@ public struct Puck3D: PrimitiveMapContent {
         copyAssigned(self, \.configuration.modelEmissiveStrength, .expression(modelEmissiveStrength))
     }
 
+    /// The ``Slot`` where to put puck layers.
+    ///
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+    @_documentation(visibility: public)
+    public func slot(_ slot: Slot?) -> Puck3D {
+        copyAssigned(self, \.configuration.slot, slot)
+    }
+
     func _visit(_ visitor: MapContentVisitor) {
         visitor.add(locationOptions: LocationOptions(
             puckType: .puck3D(configuration),

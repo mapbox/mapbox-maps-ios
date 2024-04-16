@@ -98,7 +98,7 @@ final class Puck2DRenderer: PuckRenderer {
 
     // MARK: Layer
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func updateLayer(newState: PuckRendererState<Puck2DConfiguration>, oldState: PuckRendererState<Puck2DConfiguration>?) throws {
         let newConfiguration = newState.configuration
         var newLayerLayoutProperties = [LocationIndicatorLayer.LayoutCodingKeys: Any]()
@@ -234,6 +234,10 @@ final class Puck2DRenderer: PuckRenderer {
         // layer causes MapboxCoreMaps to skip clearing images when the style reloads.
         // https://github.com/mapbox/mapbox-maps-ios/issues/860
         try updateImages(newConfiguration: newConfiguration, oldConfiguration: oldState?.configuration)
+
+        if newConfiguration.slot != oldState?.configuration.slot {
+            allLayerProperties[LocationIndicatorLayer.RootCodingKeys.slot.rawValue] = newConfiguration.slot?.rawValue ?? ""
+        }
 
         // Update or add the layer
         if style.layerExists(withId: Self.layerID) {

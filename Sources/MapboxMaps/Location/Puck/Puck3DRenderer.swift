@@ -88,6 +88,7 @@ final class Puck3DRenderer: PuckRenderer {
         modelLayer.modelReceiveShadows = newConfiguration.modelReceiveShadows
         modelLayer.modelScaleMode = newConfiguration.modelScaleMode
         modelLayer.modelEmissiveStrength = newConfiguration.modelEmissiveStrength
+        modelLayer.slot = newConfiguration.slot
 
         do {
             // create the layer if needed

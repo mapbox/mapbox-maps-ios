@@ -73,6 +73,11 @@ public struct Puck2DConfiguration: Equatable {
     /// The color of the accuracy ring border.
     public var accuracyRingBorderColor: UIColor
 
+    /// The ``Slot`` where to put puck layers.
+    ///
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+    public var slot: Slot?
+
     /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, opacity and accuracy ring visibility.
     /// - Parameters:
     ///   - topImage: The image to use as the top layer for the location indicator.
@@ -171,8 +176,12 @@ public struct Puck3DConfiguration: Equatable {
     /// There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. windows).
     ///
     /// Default value is 1.
-    @_documentation(visibility: public)
     public var modelEmissiveStrength: Value<Double>?
+
+    /// The ``Slot`` where to put puck layers.
+    ///
+    /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+    public var slot: Slot?
 
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
     /// - Parameters:

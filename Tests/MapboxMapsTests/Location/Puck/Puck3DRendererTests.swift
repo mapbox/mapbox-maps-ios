@@ -149,6 +149,7 @@ final class Puck3DRendererTests: XCTestCase {
         XCTAssertEqual(actualLayer.modelCastShadows, configuration.modelCastShadows)
         XCTAssertEqual(actualLayer.modelReceiveShadows, configuration.modelReceiveShadows)
         XCTAssertEqual(actualLayer.modelEmissiveStrength, configuration.modelEmissiveStrength)
+        XCTAssertEqual(actualLayer.slot, configuration.slot)
     }
 
     private func assertLayerUpdated(configuration: Puck3DConfiguration) throws {

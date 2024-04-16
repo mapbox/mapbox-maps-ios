@@ -19,6 +19,7 @@ struct PuckPlayground: View {
     @State private var puckType = PuckType.d2
     @State private var bearingType = PuckBearing.heading
     @State private var opacity = 1.0
+    @State private var slot: Slot?
     @State private var puck3dSettings = Puck3DSettings()
     @State private var puck2dSettings = Puck2DSettings()
     @State private var mapStyle = MapStyle.standard(lightPreset: .day)
@@ -33,11 +34,13 @@ struct PuckPlayground: View {
                     .showsAccuracyRing(puck2dSettings.accuracyRing)
                     .opacity(opacity)
                     .topImage(puck2dSettings.topImage.asPuckTopImage)
+                    .slot(slot)
             case .d3:
                 Puck3D(model: puck3dSettings.modelType.model, bearing: bearingType)
                     .modelScale(puck3dSettings.modelScale)
                     .modelOpacity(opacity)
                     .modelEmissiveStrength(puck3dSettings.emission)
+                    .slot(slot)
             }
         }
         .mapStyle(mapStyle)
@@ -70,6 +73,14 @@ struct PuckPlayground: View {
             RadioButtonSettingView(title: "Puck Type", value: $puckType)
             RadioButtonSettingView(title: "Bearing", value: $bearingType)
             SliderSettingView(title: "Opacity", value: $opacity, range: 0...1, step: 0.1)
+            HStack {
+                Text("Slot")
+                Picker("Slot", selection: $slot) {
+                    ForEach([Slot.bottom, .middle, .top, nil], id: \.self) { t in
+                        Text(t?.rawValue ?? "nil").tag(t)
+                    }
+                }.pickerStyle(.segmented)
+            }
 
             switch puckType {
             case .d2:

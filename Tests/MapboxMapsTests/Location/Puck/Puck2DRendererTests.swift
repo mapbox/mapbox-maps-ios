@@ -164,6 +164,10 @@ final class Puck2DRendererTests: XCTestCase {
         expectedProperties["id"] = "puck"
         expectedProperties["type"] = "location-indicator"
 
+        if let slot = state.configuration.slot?.rawValue {
+            expectedProperties["slot"] = slot
+        }
+
         return expectedProperties
     }
 
@@ -608,5 +612,17 @@ final class Puck2DRendererTests: XCTestCase {
         )
         XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(0)).rawValue, color)
         XCTAssertEqual(expectedRadius, radius)
+    }
+
+    func testSlot() throws {
+        style.layerExistsStub.defaultReturnValue = false
+
+        var config = Puck2DConfiguration()
+        config.slot = "some-slot"
+        let state = updateState(configuration: config)
+
+        let expectedProperties = makeExpectedLayerProperties(with: state)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
+        XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 }

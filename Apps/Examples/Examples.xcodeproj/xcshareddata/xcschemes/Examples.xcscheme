@@ -88,6 +88,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "MAPBOX_MAPS_CONTENT_DSL_LOGS_ENABLED"
+            value = "1"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "MAPBOX_REOPEN_EXAMPLE"
             value = "1"
             isEnabled = "YES">
@@ -133,6 +138,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "MAPBOX_MAPS_CONTENT_DSL_LOGS_ENABLED"
+            value = "1"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "MAPBOX_REOPEN_EXAMPLE"
             value = "1"
             isEnabled = "YES">
@@ -170,6 +180,11 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "MAPBOX_MAPS_SIGNPOSTS_ENABLED"
+            value = "1"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "MAPBOX_MAPS_CONTENT_DSL_LOGS_ENABLED"
             value = "1"
             isEnabled = "NO">
          </EnvironmentVariable>

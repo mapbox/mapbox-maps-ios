@@ -318,7 +318,17 @@ struct Examples {
             title: "Add custom raster source",
             description: "Load a custom raster source to Style and display it on a map as animated weather data using RasterLayer.",
             type: CustomRasterSourceExample.self),
-    ]
+    ] + {
+        if #available(iOS 13.0, *) {
+            return [
+                Example(title: "Runtime slots example",
+                    description: "Shows shows how to use the runtime slots.",
+                    type: RuntimeSlotsExample.self),
+            ]
+        } else {
+            return []
+        }
+    }()
 
     // Examples that show use cases related to user interaction with the map.
     static let userInteractionExamples = [

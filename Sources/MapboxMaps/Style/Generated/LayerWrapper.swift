@@ -204,6 +204,23 @@ extension SkyLayer: MapStyleContent, PrimitiveMapContent {
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
+extension SlotLayer: MapStyleContent, PrimitiveMapContent {
+    /// Positions this layer at a specified position.
+    ///
+    /// - Note: This method should be called last in a chain of layer updates.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func position(_ position: LayerPosition) -> LayerAtPosition<Self> {
+        LayerAtPosition(layer: self, position: position)
+    }
+
+    func visit(_ node: MapContentNode) {
+        node.mount(MountedLayer(layer: self))
+    }
+}
+
+@_spi(Experimental)
+@available(iOS 13.0, *)
 extension LocationIndicatorLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///

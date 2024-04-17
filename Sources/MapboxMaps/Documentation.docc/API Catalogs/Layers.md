@@ -25,4 +25,5 @@
 - ``CustomLayerHost``
 - ``ElevationData``
 - ``Slot``
+- ``SlotLayer``
 - ``LayerAtPosition``

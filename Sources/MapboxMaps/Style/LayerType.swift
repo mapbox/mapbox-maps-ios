@@ -41,6 +41,9 @@ public struct LayerType: ExpressibleByStringLiteral, RawRepresentable, Codable, 
     /// Layer representing the sky
     public static let sky: LayerType = "sky"
 
+    /// Layer representing a place for other layers.
+    public static let slot: LayerType = "slot"
+
     /// Layer used for a 3D model
     @_documentation(visibility: public)
     @_spi(Experimental)

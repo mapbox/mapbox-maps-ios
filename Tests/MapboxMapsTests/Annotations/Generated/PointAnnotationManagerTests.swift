@@ -3490,7 +3490,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager.annotations = [annotation]
 
         mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
-        mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
+        mapboxMap.coordinateForPointStub.defaultReturnValue = .init(latitude: 23.5432356, longitude: -12.5326744)
         mapboxMap.cameraState.zoom = 1
 
         var context = MapContentGestureContext(point: CGPoint(x: 0, y: 1), coordinate: .init(latitude: 2, longitude: 3))

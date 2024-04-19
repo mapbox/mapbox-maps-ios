@@ -71,7 +71,7 @@ final class SlotLayerTests: XCTestCase {
     }
 
     func testEncodingAndDecodingOfPaintProperties() {
-       var layer = SlotLayer(id: "test-id")
+       let layer = SlotLayer(id: "test-id")
 
        var data: Data?
        do {

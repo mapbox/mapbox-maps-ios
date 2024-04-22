@@ -53,6 +53,9 @@ rm -rf .xcode
 
 popd
 
+step 'Sign XCFrameworks'
+codesign --timestamp -v --sign "Apple Distribution: Mapbox, Inc. (GJZR2MEM28)" artifacts/*.xcframework
+
 step 'Add License and README to bundle'
 cp ../../../LICENSE.md artifacts/
 cp "$README_PATH" artifacts/README.md

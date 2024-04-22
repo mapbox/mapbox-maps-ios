@@ -9,11 +9,13 @@ Mapbox welcomes participation and contributions from everyone.
 * `MapStyle` now accepts `importConfigurations` as a map where the key is `importId` instead of an array
 * `StyleImportConfiguration.standard` is no more exposed, use `MapStyle.standard()` to provide configuration for Standard style
 
+
 * Allow to assign slot to 2D and 3D location indicators.
 * Allow to add slots at runtime.
 * Expose API to interact with styile imports using Declarative Styling and regular imperative API.
 * Expose `StyleImport` for declarative styling as `MapStyleContent`.
 * Expose `removeStyleImport`, `moveStyleImport`, `updateStyleImport`, `addStyleImport` methods on `StyleManager`
+* Add codesign for XCFrameworks.
 
 ## 11.3.0 - 10 April, 2024
 

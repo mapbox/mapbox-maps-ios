@@ -17,6 +17,11 @@ ENV["SPACESHIP_SKIP_2FA_UPGRADE"] = "1"
 
 platform :ios do
 
+  lane :setup_distribution_cert do
+    setup_ci
+    match(type: "appstore")
+  end
+
   lane :build_examples_tests do
     app_store_connect_api_key
     setup_circle_ci

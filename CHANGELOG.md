@@ -5,19 +5,55 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 ### Experimental API breaking changes ⚠️
-* `TransitionOptions` is now a Swift struct rather than an Objective-C class.
-* Experimental `MapStyle` no longer conforms to Equatable.
-* Experimental protocol `MapContent` now has associated generic type and body requirement.
-* Experimental `MapContentBuilder` methods signatures have changed to work with generic `MapContent`.
-* `StyleImportConfiguration` was removed from public API
-* `MapStyle` now accepts single `configuration` as `JSONObject`
-* `StyleImportConfiguration.standard` is no more exposed, use `MapStyle.standard()` to provide configuration for Standard style
 
+In this release, we introduce the new [Declarative Styling API](https://docs.tilestream.net/ios/maps/api/latest/documentation/mapboxmaps/declarative-map-styling) for UIKit and SwiftUI. This change is based on `MapContent` introduced for SwiftUI; therefore, it has been restructured. The changes are compatible; however, in some rare cases, you may need to adjust your code.
+
+* [SwiftUI] `MapContent` now supports custom implementations, similar to SwiftUI views. The `MapContent` protocol now requires the `var body: some MapContent` implementation.
+* [SwiftUI] PointAnnotation and Puck3D property-setters that consumed fixed-length arrays reworked to use named properties or platform types for better readability:
+```swift
+// Before
+PointAnnotation()
+    .iconOffset([10, 20]) // x, y
+    .iconTextFitPadding([1, 2, 3, 4]) // top, right, bottom, left
+Puck3D()
+    .modelScale([1, 2, 3]) // x, y, z
+
+// After
+PointAnnotation()
+    .iconOffset(x: 10, y: 20)
+    .iconTextFitPadding(UIEdgeInsets(top: 1, left: 4, bottom: 3, right: 2))
+Puck3D()
+    .modelScale(x: 1, y: 2, z: 3)
+```
+* `StyleImportConfiguration` was removed from public API, the `MapStyle` now contains the configuration directly.
+* `TransitionOptions` is now a Swift `struct` rather than an Objective-C `class`.
+
+### Features ✨ and improvements 🏁
+
+* All the style primitives can now be used as `MapContent` in SwiftUI.
+```swift
+@_spi(Experimental) MapboxMaps
+Map {
+    LineLayer(id: "traffic")
+        .lineColor(.red)
+        .lineWidth(2)
+}
+```
+
+* UIKit applications can now use the `setMapStyleContent` to use style primitives:
+```swift
+@_spi(Experimental) MapboxMaps
+mapView.mapboxMap.setMapStyleContent {
+    LineLayer(id: "traffic")
+        .lineColor(.red)
+        .lineWidth(2)
+}
+```
 
 * Allow to assign slot to 2D and 3D location indicators.
 * Allow observing start/stop event of `CameraAnimator`
   You can observe start/stop event of `CameraAnimator` by using new `CameraAnimationsManager` APIs as shown below
-  ```
+  ```swift
   // Observe start event of any CameraAnimator owned by AnimationOwner.cameraAnimationsManager
   mapView.camera
     .onCameraAnimatorStarted(with: [.cameraAnimationsManager]) { cameraAnimator in
@@ -32,7 +68,7 @@ Mapbox welcomes participation and contributions from everyone.
     .store(in: &cancelables)
   ```
   You can also observe directly on an instance of `CameraAnimator` when using low-level camera APIs to create a custom animator
-  ```
+  ```swift
   // Declare an animator that changes the map's bearing
   let bearingAnimator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
     transition.bearing.toValue = -45
@@ -48,6 +84,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Allow to assign layerPosition to 2D and 3D location indicators in imperative API.
 * Make Puck2D and Puck3D to be positioned according to relative layer positon in declarative API instead of always top-most position.
 * Add codesign for XCFrameworks.
+
 
 ## 11.3.0 - 10 April, 2024
 

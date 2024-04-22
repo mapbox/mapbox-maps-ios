@@ -789,12 +789,6 @@ public struct FillExtrusionLayer: Layer, Equatable {
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
     @_documentation(visibility: public)
-    public func fillExtrusionTranslate(_ constant: [Double]) -> Self {
-        with(self, setter(\.fillExtrusionTranslate, .constant(constant)))
-    }
-
-    /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
-    @_documentation(visibility: public)
     public func fillExtrusionTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.fillExtrusionTranslate, .constant([x, y])))
     }

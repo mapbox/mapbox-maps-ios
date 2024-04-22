@@ -362,12 +362,6 @@ public struct FillLayer: Layer, Equatable {
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     @_documentation(visibility: public)
-    public func fillTranslate(_ constant: [Double]) -> Self {
-        with(self, setter(\.fillTranslate, .constant(constant)))
-    }
-
-    /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-    @_documentation(visibility: public)
     public func fillTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.fillTranslate, .constant([x, y])))
     }

@@ -276,9 +276,9 @@ struct ModelsComponent: MapStyleContent {
         ModelLayer(id: "models", source: "models-geojson")
             .modelId(Exp(.get) { "model" })
             .modelType(.common3d)
-            .modelScale([40, 40, 40])
-            .modelTranslation([0, 0, 0])
-            .modelRotation([0, 0, 90])
+            .modelScale(x: 40, y: 40, z: 40)
+            .modelTranslation(x: 0, y: 0, z: 0)
+            .modelRotation(x: 0, y: 0, z: 90)
             .modelOpacity(0.7)
     }
 

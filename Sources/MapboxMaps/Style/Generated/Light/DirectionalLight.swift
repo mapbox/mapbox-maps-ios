@@ -138,12 +138,6 @@ extension DirectionalLight {
 
     /// Direction of the light source specified as [a azimuthal angle, p polar angle] where a indicates the azimuthal angle of the light relative to north (in degrees and proceeding clockwise), and p indicates polar angle of the light (from 0 degree, directly above, to 180 degree, directly below).
     @_documentation(visibility: public)
-    public func direction(_ constant: [Double]) -> Self {
-        with(self, setter(\.direction, .constant(constant)))
-    }
-
-    /// Direction of the light source specified as [a azimuthal angle, p polar angle] where a indicates the azimuthal angle of the light relative to north (in degrees and proceeding clockwise), and p indicates polar angle of the light (from 0 degree, directly above, to 180 degree, directly below).
-    @_documentation(visibility: public)
     public func direction(azimuthal: Double, polar: Double) -> Self {
         with(self, setter(\.direction, .constant([azimuthal, polar])))
     }

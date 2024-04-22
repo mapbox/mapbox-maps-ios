@@ -41,8 +41,9 @@ struct PuckPlayground: View {
             TestLayer(id: "layer", radius: 3, color: .black, coordinate: .apple, slot: .top)
 
             if case .d3 = puckType {
+                let scale = puck3dSettings.modelType.initialScale * puck3dSettings.scale
                 Puck3D(model: puck3dSettings.modelType.model, bearing: bearingType)
-                    .modelScale(puck3dSettings.modelScale)
+                    .modelScale(x: scale, y: scale, z: scale)
                     .modelOpacity(opacity)
                     .modelEmissiveStrength(puck3dSettings.emission)
                     .slot(slot)
@@ -177,7 +178,6 @@ private struct Puck3DSettings {
         }
     }
     var scale = 1.0
-    var modelScale: [Double] { .init(repeating: scale * modelType.initialScale, count: 3) }
     var modelType = ModelType.sportcar
     var emission = 1.0
 }

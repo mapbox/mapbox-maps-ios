@@ -158,7 +158,7 @@ public struct CircleAnnotation: Annotation, Equatable {
 
 }
 
-    @_documentation(visibility: public)
+@_documentation(visibility: public)
 @_spi(Experimental) extension CircleAnnotation {
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
@@ -171,6 +171,12 @@ public struct CircleAnnotation: Annotation, Equatable {
     @_documentation(visibility: public)
     public func circleBlur(_ newValue: Double) -> Self {
         with(self, setter(\.circleBlur, newValue))
+    }
+
+    /// The fill color of the circle.
+    @_documentation(visibility: public)
+    public func circleColor(_ color: UIColor) -> Self {
+        circleColor(StyleColor(color))
     }
 
     /// The fill color of the circle.
@@ -189,6 +195,12 @@ public struct CircleAnnotation: Annotation, Equatable {
     @_documentation(visibility: public)
     public func circleRadius(_ newValue: Double) -> Self {
         with(self, setter(\.circleRadius, newValue))
+    }
+
+    /// The stroke color of the circle.
+    @_documentation(visibility: public)
+    public func circleStrokeColor(_ color: UIColor) -> Self {
+        circleStrokeColor(StyleColor(color))
     }
 
     /// The stroke color of the circle.

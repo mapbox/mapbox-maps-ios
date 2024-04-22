@@ -150,7 +150,7 @@ final class CircleLayerTests: XCTestCase {
             .circleStrokeColor(StyleColor.testConstantValue())
             .circleStrokeOpacity(Double.testConstantValue())
             .circleStrokeWidth(Double.testConstantValue())
-            .circleTranslate([Double].testConstantValue())
+            .circleTranslate(x: 0, y: 1)
             .circleTranslateAnchor(CircleTranslateAnchor.testConstantValue())
 
         XCTAssertEqual(layer.filter, Expression.testConstantValue())
@@ -170,7 +170,7 @@ final class CircleLayerTests: XCTestCase {
         XCTAssertEqual(layer.circleStrokeColor, Value.constant(StyleColor.testConstantValue()))
         XCTAssertEqual(layer.circleStrokeOpacity, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.circleStrokeWidth, Value.constant(Double.testConstantValue()))
-        XCTAssertEqual(layer.circleTranslate, Value.constant([Double].testConstantValue()))
+        XCTAssertEqual(layer.circleTranslate, Value.constant([0, 1]))
         XCTAssertEqual(layer.circleTranslateAnchor, Value.constant(CircleTranslateAnchor.testConstantValue()))
     }
 }

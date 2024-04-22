@@ -8,14 +8,14 @@ final class DynamicStylingTests: XCTestCase {
             .color(StyleColor.testConstantValue())
             .highColor(StyleColor.testConstantValue())
             .horizonBlend(Double.testConstantValue())
-            .range([Double].testConstantValue())
+            .range(start: 0, end: 1)
             .spaceColor(StyleColor.testConstantValue())
             .starIntensity(Double.testConstantValue())
 
         XCTAssertEqual(atmosphere.color, Value<StyleColor>.constant(.testConstantValue()))
         XCTAssertEqual(atmosphere.highColor, Value<StyleColor>.constant(.testConstantValue()))
         XCTAssertEqual(atmosphere.horizonBlend, Value<Double>.testConstantValue())
-        XCTAssertEqual(atmosphere.range, Value<[Double]>.testConstantValue())
+        XCTAssertEqual(atmosphere.range, .constant([0, 1]))
         XCTAssertEqual(atmosphere.spaceColor, Value<StyleColor>.constant(.testConstantValue()))
         XCTAssertEqual(atmosphere.starIntensity, Value<Double>.testConstantValue())
     }

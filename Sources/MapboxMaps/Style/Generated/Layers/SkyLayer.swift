@@ -204,12 +204,6 @@ public struct SkyLayer: Layer, Equatable {
 
     /// Position of the sun center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the sun relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the sun, where 0 degree is directly above, at zenith, and 90 degree at the horizon. When this property is ommitted, the sun center is directly inherited from the light position.
     @_documentation(visibility: public)
-    public func skyAtmosphereSun(_ constant: [Double]) -> Self {
-        with(self, setter(\.skyAtmosphereSun, .constant(constant)))
-    }
-
-    /// Position of the sun center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the sun relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the sun, where 0 degree is directly above, at zenith, and 90 degree at the horizon. When this property is ommitted, the sun center is directly inherited from the light position.
-    @_documentation(visibility: public)
     public func skyAtmosphereSun(azimuthal: Double, polar: Double) -> Self {
         with(self, setter(\.skyAtmosphereSun, .constant([azimuthal, polar])))
     }
@@ -252,12 +246,6 @@ public struct SkyLayer: Layer, Equatable {
         with(self, setter(\.skyGradient, .expression(expression)))
     }
 
-
-    /// Position of the gradient center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the gradient center relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the gradient center, where 0 degree is directly above, at zenith, and 90 degree at the horizon.
-    @_documentation(visibility: public)
-    public func skyGradientCenter(_ constant: [Double]) -> Self {
-        with(self, setter(\.skyGradientCenter, .constant(constant)))
-    }
 
     /// Position of the gradient center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the gradient center relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the gradient center, where 0 degree is directly above, at zenith, and 90 degree at the horizon.
     @_documentation(visibility: public)

@@ -167,7 +167,7 @@ public struct PolylineAnnotation: Annotation, Equatable {
 
 }
 
-    @_documentation(visibility: public)
+@_documentation(visibility: public)
 @_spi(Experimental) extension PolylineAnnotation {
 
     /// The display of lines when joining.
@@ -190,6 +190,12 @@ public struct PolylineAnnotation: Annotation, Equatable {
 
     /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
     @_documentation(visibility: public)
+    public func lineBorderColor(_ color: UIColor) -> Self {
+        lineBorderColor(StyleColor(color))
+    }
+
+    /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
+    @_documentation(visibility: public)
     public func lineBorderColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.lineBorderColor, newValue))
     }
@@ -198,6 +204,12 @@ public struct PolylineAnnotation: Annotation, Equatable {
     @_documentation(visibility: public)
     public func lineBorderWidth(_ newValue: Double) -> Self {
         with(self, setter(\.lineBorderWidth, newValue))
+    }
+
+    /// The color with which the line will be drawn.
+    @_documentation(visibility: public)
+    public func lineColor(_ color: UIColor) -> Self {
+        lineColor(StyleColor(color))
     }
 
     /// The color with which the line will be drawn.

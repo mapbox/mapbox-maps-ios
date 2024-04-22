@@ -470,13 +470,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// An array of [latitude, longitude, altitude] position of the location indicator.
     @_documentation(visibility: public)
-    public func location(_ constant: [Double]) -> Self {
-        with(self, setter(\.location, .constant(constant)))
-    }
-
-    /// An array of [latitude, longitude, altitude] position of the location indicator.
-    @_documentation(visibility: public)
-    public func location(coordinate: CLLocationCoordinate2D) -> Self {
+    public func location(_ coordinate: CLLocationCoordinate2D) -> Self {
         with(self, setter(\.location, .constant([coordinate.latitude, coordinate.longitude])))
     }
 

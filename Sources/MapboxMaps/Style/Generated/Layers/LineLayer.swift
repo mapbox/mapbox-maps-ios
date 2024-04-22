@@ -636,12 +636,6 @@ public struct LineLayer: Layer, Equatable {
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     @_documentation(visibility: public)
-    public func lineTranslate(_ constant: [Double]) -> Self {
-        with(self, setter(\.lineTranslate, .constant(constant)))
-    }
-
-    /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-    @_documentation(visibility: public)
     public func lineTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.lineTranslate, .constant([x, y])))
     }
@@ -671,12 +665,6 @@ public struct LineLayer: Layer, Equatable {
         with(self, setter(\.lineTranslateAnchor, .expression(expression)))
     }
 
-
-    /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
-    @_documentation(visibility: public)
-    public func lineTrimOffset(_ constant: [Double]) -> Self {
-        with(self, setter(\.lineTrimOffset, .constant(constant)))
-    }
 
     /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
     @_documentation(visibility: public)

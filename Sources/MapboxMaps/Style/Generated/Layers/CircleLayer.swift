@@ -486,12 +486,6 @@ public struct CircleLayer: Layer, Equatable {
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     @_documentation(visibility: public)
-    public func circleTranslate(_ constant: [Double]) -> Self {
-        with(self, setter(\.circleTranslate, .constant(constant)))
-    }
-
-    /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-    @_documentation(visibility: public)
     public func circleTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.circleTranslate, .constant([x, y])))
     }

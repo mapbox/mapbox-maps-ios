@@ -150,12 +150,6 @@ extension Atmosphere {
 
     /// The start and end distance range in which fog fades from fully transparent to fully opaque. The distance to the point at the center of the map is defined as zero, so that negative range values are closer to the camera, and positive values are farther away.
     @_documentation(visibility: public)
-    public func range(_ constant: [Double]) -> Self {
-        with(self, setter(\.range, .constant(constant)))
-    }
-
-    /// The start and end distance range in which fog fades from fully transparent to fully opaque. The distance to the point at the center of the map is defined as zero, so that negative range values are closer to the camera, and positive values are farther away.
-    @_documentation(visibility: public)
     public func range(start: Double, end: Double) -> Self {
         with(self, setter(\.range, .constant([start, end])))
     }
@@ -216,12 +210,6 @@ extension Atmosphere {
         with(self, setter(\.starIntensity, .expression(expression)))
     }
 
-
-    /// An array of two number values, specifying the vertical range, measured in meters, over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
-    @_documentation(visibility: public)
-    public func verticalRange(_ constant: [Double]) -> Self {
-        with(self, setter(\.verticalRange, .constant(constant)))
-    }
 
     /// An array of two number values, specifying the vertical range, measured in meters, over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
     @_documentation(visibility: public)

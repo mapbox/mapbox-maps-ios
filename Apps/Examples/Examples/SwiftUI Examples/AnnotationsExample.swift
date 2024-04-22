@@ -42,7 +42,7 @@ struct AnnotationsExample: View {
                         CircleAnnotation(centerCoordinate: airport.coordinate, isDraggable: true)
                             .circleColor(StyleColor(flight.color))
                             .circleRadius(10)
-                            .circleStrokeColor(.init(.black))
+                            .circleStrokeColor(.black)
                             .circleStrokeWidth(1)
                             .onTapGesture {
                                 alert = "Airport: \(airport.name)"
@@ -92,7 +92,7 @@ struct AnnotationsExample: View {
                     PointAnnotation(coordinate: tap.coordinate)
                         .image(named: "intermediate-pin")
                         .iconAnchor(.bottom)
-                        .iconOffset([0, 12])
+                        .iconOffset(x: 0, y: 12)
                         .onTapGesture {
                             taps.removeAll(where: { $0.id == tap.id })
                         }

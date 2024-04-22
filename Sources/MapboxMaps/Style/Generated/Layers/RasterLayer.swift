@@ -370,12 +370,6 @@ public struct RasterLayer: Layer, Equatable {
 
     /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r * src.r + mix.g * src.g + mix.b * src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is *not* multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
     @_documentation(visibility: public)
-    public func rasterColorMix(_ constant: [Double]) -> Self {
-        with(self, setter(\.rasterColorMix, .constant(constant)))
-    }
-
-    /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r * src.r + mix.g * src.g + mix.b * src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is *not* multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
-    @_documentation(visibility: public)
     public func rasterColorMix(red: Double, green: Double, blue: Double, offset: Double) -> Self {
         with(self, setter(\.rasterColorMix, .constant([red, green, blue, offset])))
     }
@@ -392,12 +386,6 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterColorMix, .expression(expression)))
     }
 
-
-    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
-    @_documentation(visibility: public)
-    public func rasterColorRange(_ constant: [Double]) -> Self {
-        with(self, setter(\.rasterColorRange, .constant(constant)))
-    }
 
     /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
     @_documentation(visibility: public)

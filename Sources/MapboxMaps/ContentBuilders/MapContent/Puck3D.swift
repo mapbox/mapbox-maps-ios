@@ -27,14 +27,14 @@ public struct Puck3D: MapContent, PrimitiveMapContent {
 
     /// The scale of the model.
     @_documentation(visibility: public)
-    public func modelScale(_ modelScale: [Double]) -> Puck3D {
-        copyAssigned(self, \.configuration.modelScale, .constant(modelScale))
+    public func modelScale(x: Double, y: Double, z: Double) -> Puck3D {
+        copyAssigned(self, \.configuration.modelScale, .constant([x, y, z]))
     }
 
     /// The rotation of the model in euler angles [lon, lat, z].
     @_documentation(visibility: public)
-    public func modelRotation(_ modelRotation: [Double]) -> Puck3D {
-        copyAssigned(self, \.configuration.modelRotation, .constant(modelRotation))
+    public func modelRotation(x: Double, y: Double, z: Double) -> Puck3D {
+        copyAssigned(self, \.configuration.modelRotation, .constant([x, y, z]))
     }
 
     /// The opacity of the model used as the location puck

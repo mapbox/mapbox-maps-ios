@@ -174,9 +174,9 @@ final class LineLayerTests: XCTestCase {
             .lineOffset(Double.testConstantValue())
             .lineOpacity(Double.testConstantValue())
             .linePattern(String.testConstantValue())
-            .lineTranslate([Double].testConstantValue())
+            .lineTranslate(x: 0, y: 1)
             .lineTranslateAnchor(LineTranslateAnchor.testConstantValue())
-            .lineTrimOffset([Double].testConstantValue())
+            .lineTrimOffset(start: 0, end: 1)
             .lineWidth(Double.testConstantValue())
 
         XCTAssertEqual(layer.filter, Expression.testConstantValue())
@@ -202,9 +202,9 @@ final class LineLayerTests: XCTestCase {
         XCTAssertEqual(layer.lineOffset, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineOpacity, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.linePattern, Value<ResolvedImage>.constant(.name(String.testConstantValue())))
-        XCTAssertEqual(layer.lineTranslate, Value.constant([Double].testConstantValue()))
+        XCTAssertEqual(layer.lineTranslate, Value.constant([0, 1]))
         XCTAssertEqual(layer.lineTranslateAnchor, Value.constant(LineTranslateAnchor.testConstantValue()))
-        XCTAssertEqual(layer.lineTrimOffset, Value.constant([Double].testConstantValue()))
+        XCTAssertEqual(layer.lineTrimOffset, Value.constant([0, 1]))
         XCTAssertEqual(layer.lineWidth, Value.constant(Double.testConstantValue()))
     }
 }

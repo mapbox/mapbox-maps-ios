@@ -672,12 +672,6 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
     @_documentation(visibility: public)
-    public func iconOffset(_ constant: [Double]) -> Self {
-        with(self, setter(\.iconOffset, .constant(constant)))
-    }
-
-    /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
-    @_documentation(visibility: public)
     public func iconOffset(x: Double, y: Double) -> Self {
         with(self, setter(\.iconOffset, .constant([x, y])))
     }
@@ -782,13 +776,7 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
     @_documentation(visibility: public)
-    public func iconTextFitPadding(_ constant: [Double]) -> Self {
-        with(self, setter(\.iconTextFitPadding, .constant(constant)))
-    }
-
-    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    @_documentation(visibility: public)
-    public func iconTextFitPadding(padding: UIEdgeInsets) -> Self {
+    public func iconTextFitPadding(_ padding: UIEdgeInsets) -> Self {
         with(self, setter(\.iconTextFitPadding, .constant([padding.top, padding.right, padding.bottom, padding.left])))
     }
 
@@ -1019,12 +1007,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textMaxWidth, .expression(expression)))
     }
 
-
-    /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
-    @_documentation(visibility: public)
-    public func textOffset(_ constant: [Double]) -> Self {
-        with(self, setter(\.textOffset, .constant(constant)))
-    }
 
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
     @_documentation(visibility: public)
@@ -1335,12 +1317,6 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     @_documentation(visibility: public)
-    public func iconTranslate(_ constant: [Double]) -> Self {
-        with(self, setter(\.iconTranslate, .constant(constant)))
-    }
-
-    /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
-    @_documentation(visibility: public)
     public func iconTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.iconTranslate, .constant([x, y])))
     }
@@ -1496,12 +1472,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textOpacity, .expression(expression)))
     }
 
-
-    /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
-    @_documentation(visibility: public)
-    public func textTranslate(_ constant: [Double]) -> Self {
-        with(self, setter(\.textTranslate, .constant(constant)))
-    }
 
     /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     @_documentation(visibility: public)

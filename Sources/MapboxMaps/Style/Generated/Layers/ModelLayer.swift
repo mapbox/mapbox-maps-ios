@@ -483,13 +483,6 @@ import UIKit
     /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelHeightBasedEmissiveStrengthMultiplier(_ constant: [Double]) -> Self {
-        with(self, setter(\.modelHeightBasedEmissiveStrengthMultiplier, .constant(constant)))
-    }
-
-    /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func modelHeightBasedEmissiveStrengthMultiplier(gradientBegin: Double, gradientEnd: Double, valueAtBegin: Double, valueAtEnd: Double, gradientCurvePower: Double) -> Self {
         with(self, setter(\.modelHeightBasedEmissiveStrengthMultiplier, .constant([gradientBegin, gradientEnd, valueAtBegin, valueAtEnd, gradientCurvePower])))
     }
@@ -549,13 +542,6 @@ import UIKit
     /// The rotation of the model in euler angles [lon, lat, z].
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelRotation(_ constant: [Double]) -> Self {
-        with(self, setter(\.modelRotation, .constant(constant)))
-    }
-
-    /// The rotation of the model in euler angles [lon, lat, z].
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func modelRotation(x: Double, y: Double, z: Double) -> Self {
         with(self, setter(\.modelRotation, .constant([x, y, z])))
     }
@@ -600,13 +586,6 @@ import UIKit
     /// The scale of the model.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelScale(_ constant: [Double]) -> Self {
-        with(self, setter(\.modelScale, .constant(constant)))
-    }
-
-    /// The scale of the model.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func modelScale(x: Double, y: Double, z: Double) -> Self {
         with(self, setter(\.modelScale, .constant([x, y, z])))
     }
@@ -640,13 +619,6 @@ import UIKit
         with(self, setter(\.modelScaleMode, .expression(expression)))
     }
 
-
-    /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func modelTranslation(_ constant: [Double]) -> Self {
-        with(self, setter(\.modelTranslation, .constant(constant)))
-    }
 
     /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
     @_documentation(visibility: public)

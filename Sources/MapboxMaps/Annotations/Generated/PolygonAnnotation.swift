@@ -137,13 +137,19 @@ public struct PolygonAnnotation: Annotation, Equatable {
 
 }
 
-    @_documentation(visibility: public)
+@_documentation(visibility: public)
 @_spi(Experimental) extension PolygonAnnotation {
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     @_documentation(visibility: public)
     public func fillSortKey(_ newValue: Double) -> Self {
         with(self, setter(\.fillSortKey, newValue))
+    }
+
+    /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+    @_documentation(visibility: public)
+    public func fillColor(_ color: UIColor) -> Self {
+        fillColor(StyleColor(color))
     }
 
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
@@ -156,6 +162,12 @@ public struct PolygonAnnotation: Annotation, Equatable {
     @_documentation(visibility: public)
     public func fillOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.fillOpacity, newValue))
+    }
+
+    /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
+    @_documentation(visibility: public)
+    public func fillOutlineColor(_ color: UIColor) -> Self {
+        fillOutlineColor(StyleColor(color))
     }
 
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.

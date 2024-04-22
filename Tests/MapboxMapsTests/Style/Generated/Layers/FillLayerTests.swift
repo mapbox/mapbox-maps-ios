@@ -134,7 +134,7 @@ final class FillLayerTests: XCTestCase {
             .fillOpacity(Double.testConstantValue())
             .fillOutlineColor(StyleColor.testConstantValue())
             .fillPattern(String.testConstantValue())
-            .fillTranslate([Double].testConstantValue())
+            .fillTranslate(x: 0, y: 1)
             .fillTranslateAnchor(FillTranslateAnchor.testConstantValue())
 
         XCTAssertEqual(layer.filter, Expression.testConstantValue())
@@ -150,7 +150,7 @@ final class FillLayerTests: XCTestCase {
         XCTAssertEqual(layer.fillOpacity, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.fillOutlineColor, Value.constant(StyleColor.testConstantValue()))
         XCTAssertEqual(layer.fillPattern, Value<ResolvedImage>.constant(.name(String.testConstantValue())))
-        XCTAssertEqual(layer.fillTranslate, Value.constant([Double].testConstantValue()))
+        XCTAssertEqual(layer.fillTranslate, Value.constant([0, 1]))
         XCTAssertEqual(layer.fillTranslateAnchor, Value.constant(FillTranslateAnchor.testConstantValue()))
     }
 }

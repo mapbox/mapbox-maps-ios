@@ -29,4 +29,14 @@ final class MockCameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
     func add(_ animator: CameraAnimatorProtocol) {
         addStub.call(with: animator)
     }
+
+    let addCameraAnimatorStatusObserverStub = Stub<CameraAnimatorStatusObserver, Void>()
+    func add(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver) {
+        addCameraAnimatorStatusObserverStub.call(with: observer)
+    }
+
+    let removeCameraAnimatorStatusObserverStub = Stub<CameraAnimatorStatusObserver, Void>()
+    func remove(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver) {
+        removeCameraAnimatorStatusObserverStub.call(with: observer)
+    }
 }

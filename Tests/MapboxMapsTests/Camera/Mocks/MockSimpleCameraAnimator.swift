@@ -8,9 +8,9 @@ final class MockSimpleCameraAnimator: SimpleCameraAnimatorProtocol {
 
     @Stubbed var animationType: AnimationType = .unspecified
 
-    @Stubbed var delegate: CameraAnimatorDelegate?
-
     @Stubbed var to: CameraOptions = .random()
+
+    @TestSignal var onCameraAnimatorStatusChanged: Signal<CameraAnimatorStatus>
 
     let cancelStub = Stub<Void, Void>()
     func cancel() {

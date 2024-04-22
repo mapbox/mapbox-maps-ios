@@ -235,4 +235,34 @@ final class CameraAnimationsManagerTests: XCTestCase {
         XCTAssertEqual(impl.makeAnimatorWithDampingRatioStub.invocations.count, 1)
         XCTAssertEqual(impl.makeAnimatorWithDampingRatioStub.invocations.first?.parameters.animationOwner, .unspecified)
     }
+
+    func testObservingCameraAnimatorStarted() throws {
+        let mockAnimator = MockCameraAnimator()
+        var isStarted = false
+        _ = cameraAnimationsManager.onCameraAnimatorStarted { animator in
+            XCTAssertIdentical(animator, mockAnimator)
+            isStarted = true
+        }
+
+        let addedObserver = try XCTUnwrap(impl.addCameraAnimatorStatusObserverStub.invocations.last?.parameters)
+        addedObserver.onStarted?(mockAnimator)
+
+        XCTAssertTrue(isStarted)
+    }
+
+    func testObservingCameraAnimatorStopped() throws {
+        let mockAnimator = MockCameraAnimator()
+
+        var isStopped = false
+        _ = cameraAnimationsManager.onCameraAnimatorStopped { (animator, isCancelled) in
+            XCTAssertIdentical(animator, mockAnimator)
+            XCTAssertFalse(isCancelled)
+            isStopped = true
+        }
+
+        let addedObserver = try XCTUnwrap(impl.addCameraAnimatorStatusObserverStub.invocations.last?.parameters)
+        addedObserver.onStopped?(mockAnimator, false)
+
+        XCTAssertTrue(isStopped)
+    }
 }

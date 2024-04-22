@@ -177,4 +177,9 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
             curve: curve,
             owner: owner))
     }
+
+    let addCameraAnimatorStatusObserverStub = Stub<CameraAnimatorStatusObserver, AnyCancelable>(defaultReturnValue: .empty)
+    func add(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver) -> AnyCancelable {
+        addCameraAnimatorStatusObserverStub.call(with: observer)
+    }
 }

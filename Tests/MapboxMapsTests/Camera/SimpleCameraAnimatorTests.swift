@@ -13,7 +13,8 @@ final class SimpleCameraAnimatorTests: XCTestCase {
     var cameraOptionsInterpolator: MockCameraOptionsInterpolator!
     var dateProvider: MockDateProvider!
     var animator: SimpleCameraAnimator!
-    var delegate: MockCameraAnimatorDelegate!
+    var recordedCameraAnimatorStatus: [CameraAnimatorStatus] = []
+    var cancelables: Set<AnyCancelable> = []
 
     override func setUp() {
         super.setUp()
@@ -36,12 +37,12 @@ final class SimpleCameraAnimatorTests: XCTestCase {
             mainQueue: mainQueue,
             cameraOptionsInterpolator: cameraOptionsInterpolator,
             dateProvider: dateProvider)
-        delegate = MockCameraAnimatorDelegate()
-        animator.delegate = delegate
+        animator.onCameraAnimatorStatusChanged.observe { [unowned self] status in
+            self.recordedCameraAnimatorStatus.append(status)
+        }.store(in: &cancelables)
     }
 
     override func tearDown() {
-        delegate = nil
         animator = nil
         dateProvider = nil
         cameraOptionsInterpolator = nil
@@ -52,6 +53,7 @@ final class SimpleCameraAnimatorTests: XCTestCase {
         duration = nil
         to = nil
         from = nil
+        recordedCameraAnimatorStatus = []
         super.tearDown()
     }
 
@@ -66,7 +68,6 @@ final class SimpleCameraAnimatorTests: XCTestCase {
             mainQueue: mainQueue,
             cameraOptionsInterpolator: cameraOptionsInterpolator,
             dateProvider: dateProvider)
-        animator.delegate = delegate
     }
 
     func testOwner() {
@@ -85,13 +86,7 @@ final class SimpleCameraAnimatorTests: XCTestCase {
         animator.startAnimation()
 
         XCTAssertEqual(animator.state, .active)
-    }
-
-    func testStartAnimationCallsDelegate() {
-        animator.startAnimation()
-
-        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
-        XCTAssertIdentical(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters, animator)
+        XCTAssertEqual(recordedCameraAnimatorStatus, [.started])
     }
 
     func testStartAnimationAgainWhileItIsRunningDoesNotChangeTheUpdateFraction() {
@@ -113,23 +108,20 @@ final class SimpleCameraAnimatorTests: XCTestCase {
     func testStartAnimationWhileItIsCompleteDoesNotChangeTheState() {
         animator.startAnimation()
         animator.cancel()
+        XCTAssertEqual(recordedCameraAnimatorStatus, [.started, .stopped(reason: .cancelled)])
+        recordedCameraAnimatorStatus = []
 
         animator.startAnimation()
 
         XCTAssertEqual(animator.state, .inactive)
+        XCTAssertTrue(recordedCameraAnimatorStatus.isEmpty)
     }
 
     func testStartAnimationAfterDelaySetsStateToActive() {
         animator.startAnimation(afterDelay: .random(in: 0...10))
 
         XCTAssertEqual(animator.state, .active)
-    }
-
-    func testStartAnimationAfterDelayCallsDelegate() {
-        animator.startAnimation(afterDelay: .random(in: 0...10))
-
-        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
-        XCTAssertIdentical(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters, animator)
+        XCTAssertEqual(recordedCameraAnimatorStatus, [.started])
     }
 
     func testStartAnimationAfterDelayAgainWhileItIsRunningDoesNotChangeTheUpdateFraction() {
@@ -151,10 +143,13 @@ final class SimpleCameraAnimatorTests: XCTestCase {
     func testStartAnimationAfterDelayWhileItIsCompleteDoesNotChangeTheState() {
         animator.startAnimation()
         animator.cancel()
+        XCTAssertEqual(recordedCameraAnimatorStatus, [.started, .stopped(reason: .cancelled)])
+        recordedCameraAnimatorStatus = []
 
         animator.startAnimation(afterDelay: .random(in: 1...10))
 
         XCTAssertEqual(animator.state, .inactive)
+        XCTAssertTrue(recordedCameraAnimatorStatus.isEmpty)
     }
 
     func testUpdateAnimationWhenItHasNotYetStartedDoesNotSetCamera() {
@@ -215,8 +210,6 @@ final class SimpleCameraAnimatorTests: XCTestCase {
 
         animator.update()
 
-        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
-        XCTAssertIdentical(delegate.cameraAnimatorDidStopRunningStub.invocations.first?.parameters, animator)
     }
 
     func testUpdateAnimationWhenTimeElapsedIsDurationSetsStateToInactive() {

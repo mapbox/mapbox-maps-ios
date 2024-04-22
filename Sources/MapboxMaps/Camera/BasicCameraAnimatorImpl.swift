@@ -1,12 +1,6 @@
 import UIKit
 
-internal protocol BasicCameraAnimatorDelegate: AnyObject {
-    func basicCameraAnimatorDidStartRunning(_ animator: BasicCameraAnimatorProtocol)
-    func basicCameraAnimatorDidStopRunning(_ animator: BasicCameraAnimatorProtocol)
-}
-
 internal protocol BasicCameraAnimatorProtocol: AnyObject {
-    var delegate: BasicCameraAnimatorDelegate? { get set }
     var owner: AnimationOwner { get }
     var animationType: AnimationType { get }
     var transition: CameraTransition? { get }
@@ -15,6 +9,7 @@ internal protocol BasicCameraAnimatorProtocol: AnyObject {
     var isReversed: Bool { get set }
     var pausesOnCompletion: Bool { get set }
     var fractionComplete: Double { get set }
+    var onCameraAnimatorStatusChanged: Signal<CameraAnimatorStatus> { get }
     func startAnimation()
     func startAnimation(afterDelay delay: TimeInterval)
     func pauseAnimation()
@@ -51,8 +46,6 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
 
     private let mainQueue: MainQueueProtocol
 
-    internal weak var delegate: BasicCameraAnimatorDelegate?
-
     /// Represents the animation that this animator is attempting to execute
     private let animation: Animation
 
@@ -68,6 +61,9 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
         }
     }
 
+    private let cameraAnimatorStatusSignal = SignalSubject<CameraAnimatorStatus>()
+    var onCameraAnimatorStatusChanged: Signal<CameraAnimatorStatus> { cameraAnimatorStatusSignal.signal }
+
     /// The state from of the animator.
     internal var state: UIViewAnimatingState { propertyAnimator.state }
 
@@ -75,14 +71,16 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
         didSet {
             switch (oldValue, internalState) {
             case (.initial, .running), (.paused, .running):
-                delegate?.basicCameraAnimatorDidStartRunning(self)
-            case (.running, .paused), (.running, .final):
-                delegate?.basicCameraAnimatorDidStopRunning(self)
+                cameraAnimatorStatusSignal.send(.started)
+            case (.running, .paused):
+                cameraAnimatorStatusSignal.send(.paused)
+            case (.running, .final(let position)), (.paused, .final(let position)):
+                let isCancelled = position != .end
+                cameraAnimatorStatusSignal.send(.stopped(reason: isCancelled ? .cancelled : .finished))
             default:
                 // this matches cases where…
                 // * oldValue and internalState are the same
                 // * initial transitions to paused
-                // * paused transitions to final
                 // * initial transitions to final
                 // * the transition is invalid…
                 //     * running/paused/final --> initial

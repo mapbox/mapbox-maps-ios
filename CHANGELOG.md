@@ -11,6 +11,32 @@ Mapbox welcomes participation and contributions from everyone.
 
 
 * Allow to assign slot to 2D and 3D location indicators.
+* Allow observing start/stop event of `CameraAnimator`
+  You can observe start/stop event of `CameraAnimator` by using new `CameraAnimationsManager` APIs as shown below
+  ```
+  // Observe start event of any CameraAnimator owned by AnimationOwner.cameraAnimationsManager
+  mapView.camera
+    .onCameraAnimatorStarted(with: [.cameraAnimationsManager]) { cameraAnimator in
+      // Handle camera animation started here.
+    }
+    .store(in: &cancelables)
+  // Observe stop events of any CameraAnimator owned by AnimationOwner.cameraAnimationsManager, either when the animator has finished animating or it is interrupted
+  mapView.camera
+    .onCameraAnimatorStopped { (animator, isCancelled) in
+      // Handle camera animation stopped here.
+    }
+    .store(in: &cancelables)
+  ```
+  You can also observe directly on an instance of `CameraAnimator` when using low-level camera APIs to create a custom animator
+  ```
+  // Declare an animator that changes the map's bearing
+  let bearingAnimator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
+    transition.bearing.toValue = -45
+  }
+  bearingAnimator.onStarted.observe {
+    // Bearing animator has started.
+  }.store(in: &cancelables)
+  ```
 * Allow to add slots at runtime.
 * Expose API to interact with styile imports using Declarative Styling and regular imperative API.
 * Expose `StyleImport` for declarative styling as `MapStyleContent`.

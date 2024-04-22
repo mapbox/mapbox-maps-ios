@@ -14,8 +14,6 @@ public final class BasicCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
         impl.animationType
     }
 
-    internal weak var delegate: CameraAnimatorDelegate?
-
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     public var transition: CameraTransition? {
         impl.transition
@@ -49,9 +47,33 @@ public final class BasicCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
         set { impl.fractionComplete = newValue }
     }
 
-    internal init(impl: BasicCameraAnimatorProtocol) {
+    var onCameraAnimatorStatusChanged: Signal<CameraAnimatorStatus> {
+        impl.onCameraAnimatorStatusChanged
+    }
+
+    /// Emits a signal when this animator has started.
+    public var onStarted: Signal<Void> {
+        onCameraAnimatorStatusChanged
+            .filter { $0 == .started }
+            .map { _ in }
+    }
+
+    /// Emits a signal when this animator has finished.
+    public var onFinished: Signal<Void> {
+        onCameraAnimatorStatusChanged
+            .filter { $0 == .stopped(reason: .finished) }
+            .map { _ in }
+    }
+
+    /// Emits a signal when this animator is cancelled.
+    public var onCancelled: Signal<Void> {
+        onCameraAnimatorStatusChanged
+            .filter { $0 == .stopped(reason: .cancelled) }
+            .map { _ in }
+    }
+
+    init(impl: BasicCameraAnimatorProtocol) {
         self.impl = impl
-        impl.delegate = self
     }
 
     /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused"
@@ -99,15 +121,5 @@ public final class BasicCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
 
     internal func update() {
         impl.update()
-    }
-}
-
-extension BasicCameraAnimator: BasicCameraAnimatorDelegate {
-    internal func basicCameraAnimatorDidStartRunning(_ animator: BasicCameraAnimatorProtocol) {
-        delegate?.cameraAnimatorDidStartRunning(self)
-    }
-
-    internal func basicCameraAnimatorDidStopRunning(_ animator: BasicCameraAnimatorProtocol) {
-        delegate?.cameraAnimatorDidStopRunning(self)
     }
 }

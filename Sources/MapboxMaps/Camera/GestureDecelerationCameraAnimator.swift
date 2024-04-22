@@ -16,13 +16,17 @@ internal final class GestureDecelerationCameraAnimator: CameraAnimatorProtocol {
     private let dateProvider: DateProvider
     private var completionBlocks = [AnimationCompletion]()
 
+    var onCameraAnimatorStatusChanged: Signal<CameraAnimatorStatus> { cameraAnimatorStatusSignal.signal }
+    private let cameraAnimatorStatusSignal = SignalSubject<CameraAnimatorStatus>()
+
     private var internalState = InternalState.initial {
         didSet {
             switch (oldValue, internalState) {
             case (.initial, .running):
-                delegate?.cameraAnimatorDidStartRunning(self)
-            case (.running, .final):
-                delegate?.cameraAnimatorDidStopRunning(self)
+                cameraAnimatorStatusSignal.send(.started)
+            case (.running, .final(let position)):
+                let isCancelled = position != .end
+                cameraAnimatorStatusSignal.send(.stopped(reason: isCancelled ? .cancelled : .finished))
             default:
                 // this matches cases where…
                 // * oldValue and internalState are the same
@@ -47,8 +51,6 @@ internal final class GestureDecelerationCameraAnimator: CameraAnimatorProtocol {
     internal let owner: AnimationOwner
 
     internal let animationType: AnimationType
-
-    internal weak var delegate: CameraAnimatorDelegate?
 
     internal init(location: CGPoint,
                   velocity: CGPoint,

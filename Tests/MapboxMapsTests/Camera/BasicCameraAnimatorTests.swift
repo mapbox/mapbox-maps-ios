@@ -6,18 +6,14 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
     var impl: MockBasicCameraAnimator!
     var animator: BasicCameraAnimator!
-    var delegate: MockCameraAnimatorDelegate!
 
     override func setUp() {
         super.setUp()
         impl = MockBasicCameraAnimator()
         animator = BasicCameraAnimator(impl: impl)
-        delegate = MockCameraAnimatorDelegate()
-        animator.delegate = delegate
     }
 
     override func tearDown() {
-        delegate = nil
         animator = nil
         impl = nil
         super.tearDown()
@@ -63,6 +59,24 @@ final class BasicCameraAnimatorTests: XCTestCase {
         impl.isReversed = .random()
 
         XCTAssertEqual(animator.isReversed, impl.isReversed)
+    }
+
+    func testOnCameraAnimatorStatusChanged() {
+        var expectedStatus: CameraAnimatorStatus?
+        let cancelable = animator.onCameraAnimatorStatusChanged.observe { status in
+            expectedStatus = status
+        }
+
+        impl.$onCameraAnimatorStatusChanged.send(.started)
+        XCTAssertEqual(expectedStatus, .started)
+
+        impl.$onCameraAnimatorStatusChanged.send(.stopped(reason: .finished))
+        XCTAssertEqual(expectedStatus, .stopped(reason: .finished))
+
+        expectedStatus = nil
+        cancelable.cancel()
+        impl.$onCameraAnimatorStatusChanged.send(.stopped(reason: .finished))
+        XCTAssertNil(expectedStatus)
     }
 
     func testPausesOnCompletion() {
@@ -157,17 +171,41 @@ final class BasicCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(impl.updateStub.invocations.count, 1)
     }
 
-    func testBasicCameraAnimatorDidStartRunning() {
-        animator.basicCameraAnimatorDidStartRunning(impl)
+    func testOnStarted() {
+        var isStarted = false
+        let token = animator.onStarted.observe {
+            isStarted = true
+        }
 
-        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
-        XCTAssertIdentical(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters, animator)
+        impl.$onCameraAnimatorStatusChanged.send(.started)
+        XCTAssertTrue(isStarted)
     }
 
-    func testBasicCameraAnimatorDidStopRunning() {
-        animator.basicCameraAnimatorDidStopRunning(impl)
+    func testOnFinished() {
+        var isFinished = false
+        var cancelables = Set<AnyCancelable>()
+        animator.onFinished.observe {
+            isFinished = true
+        }.store(in: &cancelables)
+        animator.onCancelled.observe {
+            XCTFail("animator is not cancelled")
+        }.store(in: &cancelables)
 
-        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
-        XCTAssertIdentical(delegate.cameraAnimatorDidStopRunningStub.invocations.first?.parameters, animator)
+        impl.$onCameraAnimatorStatusChanged.send(.stopped(reason: .finished))
+        XCTAssertTrue(isFinished)
+    }
+
+    func testOnCancelled() {
+        var isCancelled = false
+        var cancelables = Set<AnyCancelable>()
+        animator.onFinished.observe {
+            XCTFail("animator is not finished")
+        }.store(in: &cancelables)
+        animator.onCancelled.observe {
+            isCancelled = true
+        }.store(in: &cancelables)
+
+        impl.$onCameraAnimatorStatusChanged.send(.stopped(reason: .cancelled))
+        XCTAssertTrue(isCancelled)
     }
 }

@@ -417,4 +417,15 @@ final class CameraAnimationsManagerImplTests: XCTestCase {
         XCTAssertIdentical(runner.addStub.invocations.first?.parameters, returnedAnimator)
         XCTAssertIdentical(animator, returnedAnimator)
     }
+
+    func testAddCameraAnimatorStatusObserver() {
+        let observer = CameraAnimatorStatusObserver(owners: [], onStarted: nil, onStopped: nil)
+
+        let cancelable = impl.add(cameraAnimatorStatusObserver: observer)
+        XCTAssertIdentical(runner.addCameraAnimatorStatusObserverStub.invocations[0].parameters, observer)
+        XCTAssertTrue(runner.removeCameraAnimatorStatusObserverStub.invocations.isEmpty)
+
+        cancelable.cancel()
+        XCTAssertIdentical(runner.removeCameraAnimatorStatusObserverStub.invocations[0].parameters, observer)
+    }
 }

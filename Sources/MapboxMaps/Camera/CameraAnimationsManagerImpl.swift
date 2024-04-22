@@ -52,6 +52,7 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
                                   duration: TimeInterval,
                                   curve: TimingCurve,
                                   owner: AnimationOwner) -> SimpleCameraAnimatorProtocol
+    func add(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver) -> AnyCancelable
 }
 
 internal final class CameraAnimationsManagerImpl: CameraAnimationsManagerProtocol {
@@ -236,5 +237,12 @@ internal final class CameraAnimationsManagerImpl: CameraAnimationsManagerProtoco
             owner: owner)
         runner.add(animator)
         return animator
+    }
+
+    func add(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver) -> AnyCancelable {
+        runner.add(cameraAnimatorStatusObserver: observer)
+        return AnyCancelable { [weak runner] in
+            runner?.remove(cameraAnimatorStatusObserver: observer)
+        }
     }
 }

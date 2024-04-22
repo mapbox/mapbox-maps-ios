@@ -19,6 +19,8 @@
 - ``CameraTransition``
 - ``FlyToCameraAnimator``
 - ``AnimationCompletion``
+- ``OnCameraAnimatorStarted``
+- ``OnCameraAnimatorStopped``
 - ``AnimationOwner``
 - ``TimingCurve``
 

@@ -174,4 +174,24 @@ public final class CameraAnimationsManager {
             animationOwner: animationOwner,
             animations: animations)
     }
+
+    /// Adds an observer when a ``CameraAnimator`` has started with the given `owner`.
+    ///
+    /// - Parameters
+    ///     - owners: The list of ``AnimationOwner``s that own the starting camera animator. The default is an empty list, which observes all animation owners.
+    ///     - handler: The handler to be invoked with a ``CameraAnimator`` as the argument when this animator is starting.
+    public func onCameraAnimatorStarted(with owners: [AnimationOwner] = [], handler: @escaping OnCameraAnimatorStarted) -> AnyCancelable {
+        let observer = CameraAnimatorStatusObserver(owners: owners, onStarted: handler)
+        return impl.add(cameraAnimatorStatusObserver: observer)
+    }
+
+    /// Adds an observer when a ``CameraAnimator`` has stopped with the given `owner`.
+    ///
+    /// - Parameters
+    ///     - owners: The list of ``AnimationOwner``s that own the stopping camera animator. The default is an empty list, which observes all animation owners.
+    ///     - handler: The handler to be invoked with a ``CameraAnimator`` as the argument when this animator is stopping.
+    public func onCameraAnimatorStopped(owners: [AnimationOwner] = [], handler: @escaping OnCameraAnimatorStopped) -> AnyCancelable {
+        let observer = CameraAnimatorStatusObserver(owners: owners, onStopped: handler)
+        return impl.add(cameraAnimatorStatusObserver: observer)
+    }
 }

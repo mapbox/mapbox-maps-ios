@@ -8,6 +8,7 @@ typealias CoreMapSnapshotOptions = MapboxCoreMaps_Private.MapSnapshotOptions
 typealias CoreMapSnapshot = MapboxCoreMaps_Private.MapSnapshot
 typealias CoreViewAnnotationOptions = MapboxCoreMaps_Private.ViewAnnotationOptions
 typealias CoreLayerPosition = MapboxCoreMaps_Private.LayerPosition
+typealias CoreImportPosition = MapboxCoreMaps_Private.ImportPosition
 typealias CoreTracing = MapboxCoreMaps_Private.Tracing
 typealias CoreAnnotatedFeature = MapboxCoreMaps_Private.AnnotatedFeature
 typealias CoreAnnotatedLayerFeature = MapboxCoreMaps_Private.AnnotatedLayerFeature

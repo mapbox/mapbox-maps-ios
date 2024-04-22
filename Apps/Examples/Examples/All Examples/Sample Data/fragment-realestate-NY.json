@@ -1,18 +1,4 @@
 {
-    "imports": [
-        {
-            "id": "standard",
-            "url": "mapbox://styles/mapbox/standard",
-            "config": {
-                "font": "Montserrat",
-                "lightPreset": "dusk",
-                "showPointOfInterestLabels": true,
-                "showTransitLabels": false,
-                "showPlaceLabels": true,
-                "showRoadLabels": false
-            }
-        }
-    ],
     "version": 8,
     "sprite": "mapbox://sprites/examples/clkiip5x600b501pb4al5g7wv/du1h5vs55f48z8rgjod0dggl9",
     "projection": { "name": "globe" },
@@ -31,26 +17,6 @@
         }
     },
     "layers": [
-        {
-            "id": "water",
-            "type": "fill",
-            "slot": "bottom",
-            "source": "water_source",
-            "source-layer": "water",
-            "layout": { },
-            "paint": {
-                "fill-emissive-strength": 1,
-                "fill-color": [
-                    "interpolate",
-                    [ "linear" ],
-                    [ "measure-light", "brightness" ],
-                    0.1,
-                    "hsl(250, 50%, 40%)",
-                    0.4,
-                    "hsl(250, 50%, 80%)"
-                ]
-            }
-        },
         {
             "id": "subway-lines",
             "type": "line",

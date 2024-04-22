@@ -1375,3 +1375,20 @@ Func MapContentBuilder.buildOptional(_:) has parameter 0 type change from (Mapbo
 Func MapContentBuilder.buildOptional(_:) has return type change from MapboxMaps.MapContent to MapboxMaps.OptionalMapContent<T> 
 AssociatedType MapContent.Body has been added as a protocol requirement 
 Var MapContent.body has been added as a protocol requirement 
+
+// Style Import API
+Constructor StyleImportConfiguration.init(importId:config:) has been removed
+Constructor MapStyle.init(json:importConfigurations:) has been removed 
+Constructor MapStyle.init(uri:importConfigurations:) has been removed 
+Func StyleImportConfiguration.==(_:_:) has been removed
+Var StyleImportConfiguration.config has been removed
+Var StyleImportConfiguration.importId has been removed
+Func StyleImportConfiguration.standard(importId:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has been renamed to Func standard(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:)
+Constructor MapStyle.init(json:importConfigurations:) has parameter 1 type change from [MapboxMaps.StyleImportConfiguration] to [Swift.String : MapboxMaps.StyleImportConfiguration]
+Constructor MapStyle.init(uri:importConfigurations:) has parameter 1 type change from [MapboxMaps.StyleImportConfiguration] to [Swift.String : MapboxMaps.StyleImportConfiguration]
+Func StyleImportConfiguration.standard(importId:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has parameter 0 type change from Swift.String? to MapboxMaps.StandardLightPreset?
+Func StyleImportConfiguration.standard(importId:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has parameter 1 type change from MapboxMaps.StandardLightPreset? to Swift.String?
+Func StyleImportConfiguration.standard(importId:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has parameter 2 type change from Swift.String? to Swift.Bool?
+Func StyleImportConfiguration.standard(importId:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has been removed
+Struct StyleImportConfiguration has removed conformance to Equatable
+Struct StyleImportConfiguration has been renamed to Struct StyleImport

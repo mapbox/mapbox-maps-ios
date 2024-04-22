@@ -21,6 +21,10 @@ final class MapContentNodeContext {
 
     var lastLayerId: String?
     var initialStyleLayers: [String] = []
+
+    var lastImportId: String?
+    var initialStyleImports: [String] = []
+
     var uniqueProperties = MapContentUniqueProperties()
 
     init(
@@ -38,6 +42,16 @@ final class MapContentNodeContext {
         }
 
         let lastStyleLayer = initialStyleLayers.last(where: style.styleManager.styleLayerExists)
+        return lastStyleLayer.map { .above($0) } ?? .at(0)
+    }
+
+    func resolveImportPosition() -> ImportPosition {
+        if let lastImportId {
+            return .above(lastImportId)
+        }
+
+        let currentImports = style.styleManager.getStyleImports().map(\.id)
+        let lastStyleLayer = initialStyleImports.last(where: currentImports.contains)
         return lastStyleLayer.map { .above($0) } ?? .at(0)
     }
 }

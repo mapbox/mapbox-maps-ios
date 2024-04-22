@@ -470,4 +470,53 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [expectation], timeout: 5)
     }
+
+    func testStyleImports() {
+        let expectation = self.expectation(description: "Wait for mapStyle to load")
+        expectation.expectedFulfillmentCount = 1
+        var showFirst = false
+
+        mapView.mapboxMap.mapStyle = .standard
+        mapView.mapboxMap.setMapStyleContent {
+            FillLayer(id: "first", source: "test-source")
+            if showFirst {
+                StyleImport(id: "import1", json: .emptyStyle)
+            } else {
+                StyleImport(id: "import2", json: .emptyStyle)
+            }
+            LineLayer(id: "second", source: "test-source")
+            StyleImport(id: "import3", json: .emptyStyle)
+        }
+
+        didFinishLoadingStyle = { mapView in
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.map(\.id), ["first", "second"])
+            XCTAssertEqual(mapView.mapboxMap.allImportIdentifiers, ["basemap", "import2", "import3"])
+            expectation.fulfill()
+        }
+
+        showFirst = true
+
+        mapView.mapboxMap.setMapStyleContent {
+            FillLayer(id: "first", source: "test-source")
+            StyleImport(id: "import3", json: .emptyStyle)
+            if showFirst {
+                StyleImport(id: "import1", json: .emptyStyle)
+            } else {
+                StyleImport(id: "import2", json: .emptyStyle)
+            }
+            LineLayer(id: "second", source: "test-source")
+        }
+
+        didFinishLoadingStyle = { mapView in
+            XCTAssertEqual(mapView.mapboxMap.allLayerIdentifiers.map(\.id), ["first", "second"])
+            XCTAssertEqual(mapView.mapboxMap.allImportIdentifiers, ["basemap", "import3", "import1"])
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 5)
+    }
+}
+
+private extension String {
+    static let emptyStyle = "{ \"layers\": [], \"sources\": {} }"
 }

@@ -36,7 +36,7 @@ final class MapStyleReconciler {
     ) {
         let oldMapStyle = _mapStyle
 
-        if _mapStyle?.loadMethod != style.loadMethod {
+        if _mapStyle?.data != style.data {
             _mapStyle = style
 
             let callbacks = RuntimeStylingCallbacks(
@@ -45,7 +45,7 @@ final class MapStyleReconciler {
                     /// can continue loading.
                     /// We can safely add new content via style DSL.
                     guard let self else { return }
-                    self.reconcileStyleImports(from: oldMapStyle?.importConfigurations)
+                    self.reconcileBasemapConfiguration(from: oldMapStyle?.configuration)
                     self._isStyleRootLoaded.value = true
                     if let transition {
                         self.styleManager.setStyleTransitionFor(transition.coreOptions)
@@ -67,7 +67,7 @@ final class MapStyleReconciler {
 
             self._isStyleRootLoaded.value = false
 
-            switch style.loadMethod {
+            switch style.data {
             case let .json(json):
                 styleManager.setStyleJSON(json, callbacks: callbacks)
             case let .uri(uri):
@@ -78,7 +78,7 @@ final class MapStyleReconciler {
         _mapStyle = style
 
         if _isStyleRootLoaded.value {
-            reconcileStyleImports(from: oldMapStyle?.importConfigurations)
+            reconcileBasemapConfiguration(from: oldMapStyle?.configuration)
         }
 
         if styleManager.isStyleLoaded() {
@@ -97,35 +97,34 @@ final class MapStyleReconciler {
         }
     }
 
-    private func reconcileStyleImports(from old: [StyleImportConfiguration]?) {
+    private func reconcileBasemapConfiguration(from old: JSONObject?) {
         guard let mapStyle else { return }
-        Self.reconcileStyleImports(
+        Self.reconcileBasemapConfiguration(
             from: old,
-            to: mapStyle.importConfigurations,
-            styleManager: styleManager)
+            to: mapStyle.configuration,
+            styleManager: styleManager
+        )
     }
 }
 
 extension MapStyleReconciler {
-    static func reconcileStyleImports(
-        from old: [StyleImportConfiguration]?,
-        to new: [StyleImportConfiguration],
+    static func reconcileBasemapConfiguration(
+        from old: JSONObject?,
+        to new: JSONObject?,
         styleManager: StyleManagerProtocol
     ) {
-        for importConfig in new {
-            let oldImportConfig = old?.first { $0.importId == importConfig.importId }
-            do {
-                for (key, value) in importConfig.config {
-                    guard let value, value != oldImportConfig?.config[key] else {
-                        continue
-                    }
-                    try handleExpected {
-                        styleManager.setStyleImportConfigPropertyForImportId(importConfig.importId, config: key, value: value.rawValue)
-                    }
+        guard let new else { return }
+        do {
+            for (key, value) in new {
+                guard let value, value != old?[key] else {
+                    continue
                 }
-            } catch {
-                Log.error(forMessage: "Failed updating import config properties, \(error)")
+                try handleExpected {
+                    styleManager.setStyleImportConfigPropertyForImportId("basemap", config: key, value: value.rawValue)
+                }
             }
+        } catch {
+            Log.error(forMessage: "Failed updating import config properties, \(error)")
         }
     }
 }

@@ -6,26 +6,17 @@ final class StandardStyleExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
     private var lightPreset = StandardLightPreset.night
     private var labelsSetting = true
+    private var showRealEstate = true
 
-    // The fragment-realestate-NY.json style imports standard style with "standard" import id.
-    // Here we specify import config to that style.
     private var mapStyle: MapStyle {
-        MapStyle(
-            uri: StyleURI(url: styleURL)!,
-            importConfigurations: [
-                .standard(
-                    importId: "standard",
-                    lightPreset: lightPreset,
-                    showPointOfInterestLabels: labelsSetting,
-                    showTransitLabels: labelsSetting,
-                    showPlaceLabels: labelsSetting,
-                    showRoadLabels: labelsSetting)
-            ]
+        .standard(
+            lightPreset: lightPreset,
+            showPointOfInterestLabels: labelsSetting,
+            showTransitLabels: labelsSetting,
+            showPlaceLabels: labelsSetting,
+            showRoadLabels: labelsSetting
         )
     }
-
-    // Load a style which imports Mapbox Standard as a basemap
-    private let styleURL = Bundle.main.url(forResource: "fragment-realestate-NY", withExtension: "json")!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +30,7 @@ final class StandardStyleExample: UIViewController, ExampleProtocol {
 
         // When the style has finished loading add a line layer representing the border between New York and New Jersey
         mapView.mapboxMap.onStyleLoaded.observe { [weak self] _ in
+            guard let self else { return }
 
             // Create and apply basic styling to the line layer, assign the layer to the "middle" slot
             var layer = LineLayer(id: "line-layer", source: "line-layer")
@@ -59,20 +51,23 @@ final class StandardStyleExample: UIViewController, ExampleProtocol {
             ])))
 
             do {
-                try self?.mapView.mapboxMap.addSource(source)
-                try self?.mapView.mapboxMap.addLayer(layer)
+                try mapView.mapboxMap.addSource(source)
+                try mapView.mapboxMap.addLayer(layer)
             } catch {
                 print(error)
             }
 
+            toggleRealEstate(isOn: showRealEstate)
+
             // The below line is used for internal testing purposes only.
-            self?.finish()
+            finish()
         }.store(in: &cancelables)
 
         // Add buttons to control the light presets and labels
         let lightButton = changeLightButton()
         let labelsButton = changeLabelsButton()
-        navigationItem.rightBarButtonItems = [lightButton, labelsButton]
+        let realEstateButton = changeRealEstateButton()
+        navigationItem.rightBarButtonItems = [lightButton, labelsButton, realEstateButton]
     }
 
     private func changeLightButton() -> UIBarButtonItem {
@@ -88,6 +83,14 @@ final class StandardStyleExample: UIViewController, ExampleProtocol {
             return UIBarButtonItem(image: UIImage(systemName: "signpost.right"), style: .plain, target: self, action: #selector(changeLabelsSetting))
         } else {
             return UIBarButtonItem(title: "star", style: .plain, target: self, action: #selector(changeLabelsSetting))
+        }
+    }
+
+    private func changeRealEstateButton() -> UIBarButtonItem {
+        if #available(iOS 13, *) {
+            return UIBarButtonItem(image: UIImage(systemName: "building.2.fill"), style: .plain, target: self, action: #selector(changeRealEstateSettings))
+        } else {
+            return UIBarButtonItem(title: "Build", style: .plain, target: self, action: #selector(changeLabelsSetting))
         }
     }
 
@@ -107,4 +110,24 @@ final class StandardStyleExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.mapStyle = mapStyle
     }
+
+    @objc private func changeRealEstateSettings() {
+        // When a user clicks show real estate button. Style import with real estate is added or deleted.
+        showRealEstate.toggle()
+        toggleRealEstate(isOn: showRealEstate)
+    }
+
+    private func toggleRealEstate(isOn: Bool) {
+        do {
+            if isOn {
+                try mapView.mapboxMap.addStyleImport(withId: "real-estate", uri: StyleURI(url: styleURL)!)
+            } else {
+                try mapView.mapboxMap.removeStyleImport(withId: "real-estate")
+            }
+        } catch {
+            print(error)
+        }
+    }
 }
+
+private let styleURL = Bundle.main.url(forResource: "fragment-realestate-NY", withExtension: "json")!

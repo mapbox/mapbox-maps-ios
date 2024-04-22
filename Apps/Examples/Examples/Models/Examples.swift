@@ -63,7 +63,7 @@ struct Examples {
         Example(title: "Display a map view",
                 description: "Create and display a map that uses the default Mapbox Standard style.",
                 type: BasicMapExample.self),
-        Example(title: "Work with the Standard style",
+        Example(title: "Standard Style",
                 description: "Use the Standard style and modify settings at runtime.",
                 type: StandardStyleExample.self),
         Example(title: "Debug Map",

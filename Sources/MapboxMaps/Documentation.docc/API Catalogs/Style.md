@@ -19,7 +19,6 @@
 - ``LightInfo``
 - ``LightType``
 - ``StandardLightPreset``
-- ``StyleImportConfiguration``
 - ``StyleProjection``
 - ``StyleProjectionName``
 - ``CancelError``
@@ -28,6 +27,8 @@
 ### Declarative Map Styling
 
 - ``MapStyleContent``
+- ``StyleImport``
+- ``ImportPosition``
 - ``TupleMapStyleContent``
 - ``EmptyMapStyleContent``
 - ``OptionalMapStyleContent``

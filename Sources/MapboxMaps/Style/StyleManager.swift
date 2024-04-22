@@ -568,19 +568,6 @@ public class StyleManager {
         return styleManager.getStyleImports()
     }
 
-    /// Removes an existing style import.
-    ///
-    ///  - Parameters:
-    ///   - importId: Identifier of the style import to remove.
-    ///
-    ///  - Throws:
-    ///   - An error describing why the operation was unsuccessful.
-    public func removeStyleImport(for importId: String) throws {
-        try handleExpected {
-            styleManager.removeStyleImport(forImportId: importId)
-        }
-    }
-
     /// Gets the style import schema.
     ///
     ///  - Parameters:
@@ -781,9 +768,14 @@ public class StyleManager {
 
     /// The ordered list of the current style layers' identifiers and types
     public var allLayerIdentifiers: [LayerInfo] {
-        return styleManager.getStyleLayers().map { info in
+        styleManager.getStyleLayers().map { info in
             LayerInfo(id: info.id, type: LayerType(rawValue: info.type))
         }
+    }
+
+    /// The ordered list of the current style imports' identifiers
+    var allImportIdentifiers: [String] {
+        styleManager.getStyleImports().map(\.id)
     }
 
     // MARK: - Layer Properties
@@ -1481,6 +1473,114 @@ public class StyleManager {
             return styleManager.invalidateStyleCustomRasterSourceRegion(forSourceId: sourceId, bounds: bounds)
         }
     }
+
+    /// Adds style import with specified id using pre-defined Mapbox Style, or custom style bundled with the application, or over the network.
+    ///
+    ///  - Parameters:
+    ///   - id: Identifier of the style import to move
+    ///   - uri: An instance of ``StyleURI`` pointing to a Mapbox Style URI (mapbox://styles/{user}/{style}), a full HTTPS URI, or a path to a local file.
+    ///   - config: Style import configuration to be applied on style load.
+    ///   - importPosition: Position at which import will be added in the imports stack. By default it will be added above everything.
+    ///
+    ///  - Throws:
+    ///   - An error describing why the operation was unsuccessful.
+    public func addStyleImport(withId id: String, uri: StyleURI, config: [String: Any]? = nil, importPosition: ImportPosition? = nil) throws {
+        try handleExpected {
+            return styleManager.addStyleImportFromURI(forImportId: id, uri: uri.rawValue, config: config, importPosition: importPosition?.corePosition)
+        }
+    }
+
+    /// Adds style import with specified id using style JSON string and configuration.
+    ///
+    ///  - Parameters:
+    ///   - id: Identifier of the style import to move
+    ///   - json: Style JSON conforming to [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/).
+    ///   - config: Style import configuration to be applied on style load.
+    ///   - importPosition: Position at which import will be added in the imports stack. By default it will be added above everything.
+    ///
+    ///  - Throws:
+    ///   - An error describing why the operation was unsuccessful.
+    public func addStyleImport(withId id: String, json: String, config: [String: Any]? = nil, importPosition: ImportPosition? = nil) throws {
+        try handleExpected {
+            return styleManager.addStyleImportFromJSON(forImportId: id, json: json, config: config, importPosition: importPosition?.corePosition)
+        }
+    }
+
+    /// Updates style import with specified id using pre-defined Mapbox Style, or custom style bundled with the application, or over the network.
+    ///
+    /// - Important: For performance reasons, if you only need to update only configuration,  use ``StyleManager/setStyleImportConfigProperties(for:configs:)`` or ``StyleManager/setStyleImportConfigProperty(for:config:value:)```
+    ///
+    ///  - Parameters:
+    ///   - id: Identifier of the style import to move
+    ///   - uri: An instance of ``StyleURI`` pointing to a Mapbox Style URI (mapbox://styles/{user}/{style}), a full HTTPS URI, or a path to a local file.
+    ///   - config: Style import configuration to be applied on style load.
+    ///
+    ///  - Throws:
+    ///   - An error describing why the operation was unsuccessful.
+    public func updateStyleImport(withId id: String, uri: StyleURI, config: [String: Any]? = nil) throws {
+        try handleExpected {
+            return styleManager.updateStyleImportWithURI(forImportId: id, uri: uri.rawValue, config: config)
+        }
+    }
+
+    /// Updates style import with specified id using style JSON string and configuration.
+    ///
+    /// - Important: For performance reasons, if you only need to update only configuration,  use ``StyleManager/setStyleImportConfigProperties(for:configs:)`` or ``StyleManager/setStyleImportConfigProperty(for:config:value:)```
+    ///
+    ///  - Parameters:
+    ///   - id: Identifier of the style import to move
+    ///   - json: Style JSON conforming to [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/).
+    ///   - config: Style import configuration to be applied on style load.
+    ///
+    ///  - Throws:
+    ///   - An error describing why the operation was unsuccessful.
+    public func updateStyleImport(withId id: String, json: String, config: [String: Any]? = nil) throws {
+        try handleExpected {
+            return styleManager.updateStyleImportWithJSON(forImportId: id, json: json, config: config)
+        }
+    }
+
+    /// Move an existing style import to specified position in imports stack.
+    ///
+    ///  - Parameters:
+    ///   - id: Identifier of the style import to move
+    ///   - position: Position in the imports stack.
+    ///
+    ///  - Throws:
+    ///   - An error describing why the operation was unsuccessful.
+    public func moveStyleImport(withId id: String, to position: ImportPosition) throws {
+        try handleExpected {
+            return styleManager.moveStyleImport(forImportId: id, importPosition: position.corePosition)
+        }
+    }
+
+    /// Removes an existing style import.
+    ///
+    ///  - Parameters:
+    ///   - id: Identifier of the style import to remove.
+    ///
+    ///  - Throws:
+    ///   - An error describing why the operation was unsuccessful.
+    public func removeStyleImport(withId id: String) throws {
+        try handleExpected {
+            return styleManager.removeStyleImport(forImportId: id)
+        }
+    }
+
+    /// Removes an existing style import.
+    ///
+    ///  - Parameters:
+    ///   - importId: Identifier of the style import to remove.
+    ///
+    ///  - Throws:
+    ///   - An error describing why the operation was unsuccessful.
+    @available(*, deprecated, renamed: "removeStyleImport(withId:)", message: "Please use the removeStyleImport(withId:) version.")
+    public func removeStyleImport(for importId: String) throws {
+        try handleExpected {
+            styleManager.removeStyleImport(forImportId: importId)
+        }
+    }
+
 }
 
 extension StyleManagerProtocol {

@@ -59,6 +59,7 @@ private extension MapContentNodeContext {
     func update(mapContent: any MapContent, root: MapContentNode) {
         let oldProperties = uniqueProperties
         lastLayerId = nil
+        lastImportId = nil
         uniqueProperties = MapContentUniqueProperties()
 
         mapContent.update(root)
@@ -78,6 +79,7 @@ private extension MapContentNodeContext {
         /// Position must take into account only non-persistent layers, which was not added in runtime
         isEqualContent = { _, _ in false }
         initialStyleLayers = getInitialStyleLayers() ?? []
+        initialStyleImports = style.styleManager.getStyleImports().map(\.id)
         mapContent.update(root)
         isEqualContent = arePropertiesEqual
 

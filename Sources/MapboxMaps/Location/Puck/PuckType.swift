@@ -78,6 +78,9 @@ public struct Puck2DConfiguration: Equatable {
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
     public var slot: Slot?
 
+    /// Defines relative position of the puck layer.
+    public var layerPosition: LayerPosition?
+
     /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, opacity and accuracy ring visibility.
     /// - Parameters:
     ///   - topImage: The image to use as the top layer for the location indicator.
@@ -116,14 +119,17 @@ public struct Puck2DConfiguration: Equatable {
     ///   - accuracyRingColor:The color of the accuracy ring.
     ///   - accuracyRingBorderColor: The color of the accuracy ring border.
     ///   - opacity: The opacity of the entire location indicator.
-    public init(topImage: UIImage? = nil,
-                bearingImage: UIImage? = nil,
-                shadowImage: UIImage? = nil,
-                scale: Value<Double>? = nil,
-                showsAccuracyRing: Bool = false,
-                accuracyRingColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
-                accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
-                opacity: Double = 1) {
+    public init(
+        topImage: UIImage? = nil,
+        bearingImage: UIImage? = nil,
+        shadowImage: UIImage? = nil,
+        scale: Value<Double>? = nil,
+        showsAccuracyRing: Bool = false,
+        accuracyRingColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
+        accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
+        opacity: Double = 1,
+        layerPosition: LayerPosition? = nil
+    ) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
@@ -132,6 +138,7 @@ public struct Puck2DConfiguration: Equatable {
         self.accuracyRingColor = accuracyRingColor
         self.accuracyRingBorderColor = accuracyRingBorderColor
         self.opacity = opacity
+        self.layerPosition = layerPosition
     }
 
     /// Create a Puck2DConfiguration instance with or without an arrow bearing image. Default without the arrow bearing image.
@@ -183,24 +190,30 @@ public struct Puck3DConfiguration: Equatable {
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
     public var slot: Slot?
 
+    /// Defines relative position of the puck layer.
+    public var layerPosition: LayerPosition?
+
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
     /// - Parameters:
     ///   - model: The `gltf` model to use for the puck.
     ///   - modelScale: The amount to scale the model by.
     ///   - modelRotation: The rotation of the model in euler angles `[lon, lat, z]`.
     ///   - modelOpacity: The opacity of the model used as the location puck
+    ///   - layerPosition: Defines relative position of the puck layer.
     public init(
         model: Model,
         modelScale: Value<[Double]>? = nil,
         modelRotation: Value<[Double]>? = nil,
-        modelOpacity: Value<Double>? = nil
+        modelOpacity: Value<Double>? = nil,
+        layerPosition: LayerPosition? = nil
     ) {
         self.init(
             model: model,
             modelScale: modelScale,
             modelRotation: modelRotation,
             modelOpacity: modelOpacity,
-            modelCastShadows: nil)
+            modelCastShadows: nil,
+            layerPosition: layerPosition)
     }
 
     /// Initialize a `Puck3DConfiguration` with a model, scale, rotation and an parameter to control shadow casting.
@@ -212,15 +225,19 @@ public struct Puck3DConfiguration: Equatable {
     ///   - modelCastShadows: Enable/disable shadow casting for the puck model
     ///   - modelReceiveShadows: Enable/disable shadow receiving for the puck model
     ///   - modelEmissiveStrength: Strength of the light emission.
+    ///   - layerPosition: Defines relative position of the puck layer.
     @_documentation(visibility: public)
-    @_spi(Experimental) public init(model: Model,
-                                    modelScale: Value<[Double]>? = nil,
-                                    modelRotation: Value<[Double]>? = nil,
-                                    modelOpacity: Value<Double>? = nil,
-                                    modelCastShadows: Value<Bool>? = nil,
-                                    modelReceiveShadows: Value<Bool>? = nil,
-                                    modelScaleMode: Value<ModelScaleMode>? = nil,
-                                    modelEmissiveStrength: Value<Double> = .constant(1)) {
+    @_spi(Experimental) public init(
+        model: Model,
+        modelScale: Value<[Double]>? = nil,
+        modelRotation: Value<[Double]>? = nil,
+        modelOpacity: Value<Double>? = nil,
+        modelCastShadows: Value<Bool>? = nil,
+        modelReceiveShadows: Value<Bool>? = nil,
+        modelScaleMode: Value<ModelScaleMode>? = nil,
+        modelEmissiveStrength: Value<Double> = .constant(1),
+        layerPosition: LayerPosition? = nil
+    ) {
         self.model = model
         self.modelScale = modelScale
         self.modelRotation = modelRotation
@@ -229,6 +246,7 @@ public struct Puck3DConfiguration: Equatable {
         self.modelReceiveShadows = modelReceiveShadows
         self.modelScaleMode = modelScaleMode ?? .constant(.viewport)
         self.modelEmissiveStrength = modelEmissiveStrength
+        self.layerPosition = layerPosition
     }
 }
 

@@ -1392,3 +1392,8 @@ Func StyleImportConfiguration.standard(importId:lightPreset:font:showPointOfInte
 Func StyleImportConfiguration.standard(importId:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has been removed
 Struct StyleImportConfiguration has removed conformance to Equatable
 Struct StyleImportConfiguration has been renamed to Struct StyleImport
+
+// Add layer position to puck
+Constructor Puck3DConfiguration.init(model:modelScale:modelRotation:modelOpacity:modelCastShadows:modelReceiveShadows:modelScaleMode:modelEmissiveStrength:) has been removed
+Constructor Puck2DConfiguration.init(topImage:bearingImage:shadowImage:scale:showsAccuracyRing:accuracyRingColor:accuracyRingBorderColor:opacity:) has been removed
+Constructor Puck3DConfiguration.init(model:modelScale:modelRotation:modelOpacity:) has been removed

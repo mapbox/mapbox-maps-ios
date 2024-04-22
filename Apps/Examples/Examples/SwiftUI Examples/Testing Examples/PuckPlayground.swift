@@ -24,30 +24,31 @@ struct PuckPlayground: View {
     @State private var slot: Slot?
     @State private var puck3dSettings = Puck3DSettings()
     @State private var puck2dSettings = Puck2DSettings()
-    @State private var mapStyle = MapStyle.standard(lightPreset: .day)
+    @State private var lightPreset: StandardLightPreset = .day
     @State private var settingsHeight = 0.0
 
     var body: some View {
         Map(initialViewport: .followPuck(zoom: 18, bearing: .heading, pitch: 60)) {
-            switch puckType {
-            case .d2:
+            if case .d2 = puckType {
                 Puck2D(bearing: bearingType)
                     .pulsing(puck2dSettings.pulsing.asPuckPulsing)
                     .showsAccuracyRing(puck2dSettings.accuracyRing)
                     .opacity(opacity)
                     .topImage(puck2dSettings.topImage.asPuckTopImage)
                     .slot(slot)
-            case .d3:
+            }
+
+            TestLayer(id: "layer", radius: 3, color: .black, coordinate: .apple, slot: .top)
+
+            if case .d3 = puckType {
                 Puck3D(model: puck3dSettings.modelType.model, bearing: bearingType)
                     .modelScale(puck3dSettings.modelScale)
                     .modelOpacity(opacity)
                     .modelEmissiveStrength(puck3dSettings.emission)
                     .slot(slot)
-            case .none:
-                EmptyMapContent()
             }
         }
-        .mapStyle(mapStyle)
+        .mapStyle(.standard(lightPreset: lightPreset))
         .debugOptions(.padding)
         .additionalSafeAreaInsets(sidePanel ? .trailing : .bottom, settingsHeight)
         .ignoresSafeArea()
@@ -55,15 +56,6 @@ struct PuckPlayground: View {
             settingsBody
                 .frame(maxWidth: sidePanel ? 300 : .infinity)
                 .onChangeOfSize { settingsHeight = sidePanel ? $0.width : $0.height }
-        }
-        .safeOverlay(alignment: .trailing) {
-            MapStyleSelectorButton(mapStyle: $mapStyle)
-                .padding(.trailing, sidePanel ? 300 : 0)
-        }
-        .onChange(of: puckType) { newValue in
-            if puckType == .d3 { // Switch to dusk mode to see model light emission
-                mapStyle = .standard(lightPreset: .dusk)
-            }
         }
     }
 
@@ -75,6 +67,7 @@ struct PuckPlayground: View {
     private var settingsBody: some View {
         VStack(alignment: .leading) {
             RadioButtonSettingView(title: "Puck Type", value: $puckType)
+            lightPresetSettings
 
             switch puckType {
             case .d2:
@@ -110,6 +103,17 @@ struct PuckPlayground: View {
                 ForEach([Slot.bottom, .middle, .top, nil], id: \.self) { t in
                     Text(t?.rawValue ?? "nil").tag(t)
                 }
+            }.pickerStyle(.segmented)
+        }
+    }
+
+    @ViewBuilder
+    private var lightPresetSettings: some View {
+        HStack {
+            Text("Light")
+            Picker("Light", selection: $lightPreset) {
+                Text("Day").tag(StandardLightPreset.day)
+                Text("Dusk").tag(StandardLightPreset.dusk)
             }.pickerStyle(.segmented)
         }
     }
@@ -237,5 +241,29 @@ private extension Model {
 struct PuckPlayground_Preview: PreviewProvider {
     static var previews: some View {
         PuckPlayground()
+    }
+}
+
+@available(iOS 13.0, *)
+private struct TestLayer: MapStyleContent {
+    var id: String
+    var radius: LocationDistance
+    var color: UIColor
+    var coordinate: CLLocationCoordinate2D
+    var slot: Slot?
+
+    var body: some MapStyleContent {
+        let sourceId = "\(id)-source"
+        FillLayer(id: id, source: sourceId)
+            .fillColor(color)
+            .fillOpacity(0.4)
+            .slot(slot)
+        LineLayer(id: "\(id)-border", source: sourceId)
+            .lineColor(color.darker)
+            .lineOpacity(0.4)
+            .lineWidth(2)
+            .slot(slot)
+        GeoJSONSource(id: sourceId)
+            .data(.geometry(.polygon(Polygon(center: coordinate, radius: radius * 100, vertices: 60))))
     }
 }

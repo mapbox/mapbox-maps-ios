@@ -586,7 +586,7 @@ final class MapContentReconcilerTests: XCTestCase {
             .init(id: "circle-test", layerPosition: .at(0))
         ])
         XCTAssertEqual(locationManager.options, LocationOptions(
-            puckType: .puck3D(Puck3DConfiguration(model: Model())),
+            puckType: .puck3D(Puck3DConfiguration(model: Model(), layerPosition: .above("circle-test"))),
             puckBearing: .heading,
             puckBearingEnabled: false
         ))
@@ -612,7 +612,7 @@ final class MapContentReconcilerTests: XCTestCase {
             .init(id: "circle-test", layerPosition: .at(0))
         ])
         XCTAssertEqual(locationManager.options, LocationOptions(
-            puckType: .puck3D(Puck3DConfiguration(model: Model())),
+            puckType: .puck3D(Puck3DConfiguration(model: Model(), layerPosition: .above("circle-test"))),
             puckBearing: .heading,
             puckBearingEnabled: false
         ))
@@ -641,7 +641,7 @@ final class MapContentReconcilerTests: XCTestCase {
             .init(id: "circle-test", layerPosition: .at(0))
         ])
         XCTAssertEqual(locationManager.options, LocationOptions(
-            puckType: .puck3D(Puck3DConfiguration(model: Model())),
+            puckType: .puck3D(Puck3DConfiguration(model: Model(), layerPosition: .above("circle-test"))),
             puckBearing: .heading,
             puckBearingEnabled: false
         ))
@@ -679,7 +679,7 @@ final class MapContentReconcilerTests: XCTestCase {
             .init(id: "circle-test", layerPosition: .at(0))
         ])
         XCTAssertEqual(locationManager.options, LocationOptions(
-            puckType: .puck3D(Puck3DConfiguration(model: Model())),
+            puckType: .puck3D(Puck3DConfiguration(model: Model(), layerPosition: .above("circle-test"))),
             puckBearing: .heading,
             puckBearingEnabled: false
         ))

@@ -101,6 +101,6 @@ public struct Puck2D: MapContent, PrimitiveMapContent {
             puckBearing: bearing ?? .heading,
             puckBearingEnabled: bearing != nil
         )
-        node.mount(MountedUniqueProperty(keyPath: \.location, value: locationOptions))
+        node.mount(MountedPuck(locationOptions: locationOptions))
     }
 }

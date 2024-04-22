@@ -5,8 +5,12 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 ### Experimental API breaking changes ⚠️
-* `StyleImportConfiguration` now accepts only the configuration JSONObject without `importId`. And has `JSONObject` as `rawValue`
-* `MapStyle` now accepts `importConfigurations` as a map where the key is `importId` instead of an array
+* `TransitionOptions` is now a Swift struct rather than an Objective-C class.
+* Experimental `MapStyle` no longer conforms to Equatable.
+* Experimental protocol `MapContent` now has associated generic type and body requirement.
+* Experimental `MapContentBuilder` methods signatures have changed to work with generic `MapContent`.
+* `StyleImportConfiguration` was removed from public API
+* `MapStyle` now accepts single `configuration` as `JSONObject`
 * `StyleImportConfiguration.standard` is no more exposed, use `MapStyle.standard()` to provide configuration for Standard style
 
 
@@ -41,16 +45,11 @@ Mapbox welcomes participation and contributions from everyone.
 * Expose API to interact with styile imports using Declarative Styling and regular imperative API.
 * Expose `StyleImport` for declarative styling as `MapStyleContent`.
 * Expose `removeStyleImport`, `moveStyleImport`, `updateStyleImport`, `addStyleImport` methods on `StyleManager`
+* Allow to assign layerPosition to 2D and 3D location indicators in imperative API.
+* Make Puck2D and Puck3D to be positioned according to relative layer positon in declarative API instead of always top-most position.
 * Add codesign for XCFrameworks.
 
 ## 11.3.0 - 10 April, 2024
-
-### Potentially breaking changes ⚠️
-
-* Experimental `MapStyle` no longer conforms to Equatable.
-* `TransitionOptions` is now a Swift struct rather than an Objective-C class.
-* Experimental protocol `MapContent` now has associated generic type and body requirement.
-* Experimental `MapContentBuilder` methods signatures have changed to work with generic `MapContent`.
 
 ### Features ✨ and improvements 🏁
 

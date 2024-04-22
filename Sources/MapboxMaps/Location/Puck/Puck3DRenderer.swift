@@ -93,13 +93,17 @@ final class Puck3DRenderer: PuckRenderer {
         do {
             // create the layer if needed
             if !style.layerExists(withId: Self.layerID) {
-                try style.addPersistentLayer(modelLayer, layerPosition: nil)
+                try style.addPersistentLayer(modelLayer, layerPosition: newConfiguration.layerPosition)
             } else {
                 var properties = try modelLayer.allStyleProperties()
                 properties.removeValue(forKey: "id")
                 properties.removeValue(forKey: "type")
                 properties.removeValue(forKey: "source")
                 try style.setLayerProperties(for: Self.layerID, properties: properties)
+            }
+
+            if oldState?.configuration.layerPosition != newConfiguration.layerPosition {
+                try style.moveLayer(withId: Self.layerID, to: newConfiguration.layerPosition ?? .default)
             }
         } catch {
             Log.error(forMessage: "Failed to update Puck3D Layer properties, \(error)")

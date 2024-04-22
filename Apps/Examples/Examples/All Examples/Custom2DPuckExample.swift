@@ -176,6 +176,7 @@ final class Custom2DPuckExample: UIViewController, ExampleProtocol {
         addCustomizePuckButton()
 
         // Granularly configure the location puck with a `Puck2DConfiguration`
+        puckConfiguration.layerPosition = .default
         mapView.location.options.puckType = .puck2D(puckConfiguration)
         mapView.location.options.puckBearing = .heading
         mapView.location.options.puckBearingEnabled = true
@@ -264,6 +265,7 @@ final class Custom2DPuckExample: UIViewController, ExampleProtocol {
         puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: showsBearing.isVisible)
         puckConfiguration.showsAccuracyRing = showsAccuracyRing.isVisible
         puckConfiguration.topImage = puckImage.image
+        puckConfiguration.layerPosition = .default
         if !puckImage.usesDefaultShadowImage {
             puckConfiguration.shadowImage = nil
         }

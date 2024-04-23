@@ -78,7 +78,8 @@ internal final class CameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
     func add(_ animator: CameraAnimatorProtocol) {
         allCameraAnimators.add(animator)
 
-        animator.onCameraAnimatorStatusChanged.observe { [weak self] status in
+        animator.onCameraAnimatorStatusChanged.observe { [weak self, weak animator] status in
+            guard let animator else { return }
             switch status {
             case .started:
                 self?.cameraAnimatorDidStartRunning(animator)

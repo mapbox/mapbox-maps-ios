@@ -204,9 +204,9 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
     func testOnStarted() {
         var isStarted = false
-        let token = flyToCameraAnimator.onStarted.observe {
+        flyToCameraAnimator.onStarted.observe {
             isStarted = true
-        }
+        }.store(in: &cancelables)
 
         flyToCameraAnimator.startAnimation()
         XCTAssertTrue(isStarted)
@@ -231,7 +231,6 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
     func testOnCancelled() {
         var isCancelled = false
-        var cancelables = Set<AnyCancelable>()
         flyToCameraAnimator.onFinished.observe {
             XCTFail("animator is not finished")
         }.store(in: &cancelables)

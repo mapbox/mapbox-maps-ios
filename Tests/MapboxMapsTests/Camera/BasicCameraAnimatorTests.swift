@@ -173,9 +173,10 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
     func testOnStarted() {
         var isStarted = false
-        let token = animator.onStarted.observe {
+        var cancelables = Set<AnyCancelable>()
+        animator.onStarted.observe {
             isStarted = true
-        }
+        }.store(in: &cancelables)
 
         impl.$onCameraAnimatorStatusChanged.send(.started)
         XCTAssertTrue(isStarted)

@@ -1398,6 +1398,12 @@ Constructor Puck3DConfiguration.init(model:modelScale:modelRotation:modelOpacity
 Constructor Puck2DConfiguration.init(topImage:bearingImage:shadowImage:scale:showsAccuracyRing:accuracyRingColor:accuracyRingBorderColor:opacity:) has been removed
 Constructor Puck3DConfiguration.init(model:modelScale:modelRotation:modelOpacity:) has been removed
 
+// Remove layerPosition from annotations and layers in DSL
+Func CircleAnnotationGroup.layerPosition(_:) has been removed 
+Func PointAnnotationGroup.layerPosition(_:) has been removed 
+Func PolygonAnnotationGroup.layerPosition(_:) has been removed 
+Func PolylineAnnotationGroup.layerPosition(_:) has been removed 
+
 // Update Annotations and Puck3D properties syntax
 Renamed Decls
 Func PointAnnotation.iconOffset(_:) has been renamed to Func iconOffset(x:y:)

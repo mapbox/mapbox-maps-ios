@@ -360,4 +360,12 @@ public struct HillshadeLayer: Layer, Equatable {
     }
 }
 
+@available(iOS 13.0, *)
+@_spi(Experimental)
+extension HillshadeLayer: MapStyleContent, PrimitiveMapContent {
+    func visit(_ node: MapContentNode) {
+        node.mount(MountedLayer(layer: self))
+    }
+}
+
 // End of generated file.

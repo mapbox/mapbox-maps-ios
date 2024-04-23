@@ -4,19 +4,16 @@ import os.log
 struct MountedAnnotationGroup<M: MapContentAnnotationManager>: MapContentMountedComponent {
     private let annotations: [(AnyHashable, M.AnnotationType)]
     private let layerId: String
-    private let customLayerPosition: LayerPosition?
     private let clusterOptions: ClusterOptions?
     private let updateProperties: (M) -> Void
 
     init(
         layerId: String,
-        customLayerPosition: LayerPosition?,
         clusterOptions: ClusterOptions?,
         annotations: [(AnyHashable, M.AnnotationType)],
         updateProperties: @escaping (M) -> Void
     ) {
         self.layerId = layerId
-        self.customLayerPosition = customLayerPosition
         self.clusterOptions = clusterOptions
         self.annotations = annotations
         self.updateProperties = updateProperties
@@ -29,10 +26,9 @@ struct MountedAnnotationGroup<M: MapContentAnnotationManager>: MapContentMounted
 
         os_log(.debug, log: .contentDSL, "Annotation add %s", layerId)
 
-        let layerPosition = customLayerPosition ?? context.resolveLayerPosition()
         let manager = M.make(
             layerId: layerId,
-            layerPosition: layerPosition,
+            layerPosition: context.resolveLayerPosition(),
             clusterOptions: clusterOptions,
             using: orchestrator
         )
@@ -61,15 +57,13 @@ struct MountedAnnotationGroup<M: MapContentAnnotationManager>: MapContentMounted
 
         manager.isSwiftUI = true
         updateProperties(manager)
-        manager.layerPosition = customLayerPosition ?? context.resolveLayerPosition()
+        manager.layerPosition = context.resolveLayerPosition()
         manager.set(newAnnotations: annotations)
 
         return true
     }
 
     func updateMetadata(with context: MapContentNodeContext) {
-        if customLayerPosition == nil {
-            context.lastLayerId = layerId
-        }
+        context.lastLayerId = layerId
     }
 }

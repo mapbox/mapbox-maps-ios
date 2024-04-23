@@ -357,21 +357,11 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.onClusterLongPress, action))
     }
 
-    private var layerPosition: LayerPosition?
-
-    /// Defines relative position of the layers drawing the annotations managed by the current group.
-    ///
-    /// - NOTE: Layer position isn't updatable. Only the first value passed to this function set will take effect.
-    @_documentation(visibility: public)
-    public func layerPosition(_ newValue: LayerPosition) -> Self {
-        with(self, setter(\.layerPosition, newValue))
-    }
-
     private var layerId: String?
 
     /// Specifies identifier for underlying implementation layer.
     ///
-    /// Use the identifier in ``layerPosition(_:)``, or to create view annotations bound the annotations from the group.
+    /// Use the identifier to create view annotations bound the annotations from the group.
     /// For more information, see the ``MapViewAnnotation/init(layerId:featureId:content:)``.
     @_documentation(visibility: public)
     public func layerId(_ layerId: String) -> Self {
@@ -384,7 +374,6 @@ extension PointAnnotationGroup: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         let group = MountedAnnotationGroup(
             layerId: layerId ?? node.id.stringId,
-            customLayerPosition: layerPosition,
             clusterOptions: clusterOptions,
             annotations: annotations,
             updateProperties: updateProperties

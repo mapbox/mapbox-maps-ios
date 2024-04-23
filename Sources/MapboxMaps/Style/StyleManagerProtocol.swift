@@ -45,6 +45,7 @@ internal protocol StyleManagerProtocol {
 
     func styleLayerExists(forLayerId layerId: String) -> Bool
     func getStyleLayers() -> [MapboxCoreMaps.StyleObjectInfo]
+    func getStyleSlots() -> [String]
 
     func getStyleLayerProperty(forLayerId layerId: String, property: String) -> MapboxCoreMaps.StylePropertyValue
 

@@ -766,6 +766,12 @@ public class StyleManager {
         return styleManager.styleLayerExists(forLayerId: id)
     }
 
+    /// The ordered list of the current style slots identifiers
+    @_spi(Experimental)
+    public var allSlotIdentifiers: [Slot] {
+        styleManager.getStyleSlots().compactMap(Slot.init)
+    }
+
     /// The ordered list of the current style layers' identifiers and types
     public var allLayerIdentifiers: [LayerInfo] {
         styleManager.getStyleLayers().map { info in

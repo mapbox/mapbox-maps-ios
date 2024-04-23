@@ -77,6 +77,11 @@ class MockStyleManager: StyleManagerProtocol {
         getStyleLayersStub.call()
     }
 
+    let getStyleSlotsStub = Stub<Void, [String]>(defaultReturnValue: [])
+    func getStyleSlots() -> [String] {
+        getStyleSlotsStub.call()
+    }
+
     typealias GetStyleLayerPropertyParameters = (layerID: String, property: String)
     let getStyleLayerPropertyStub = Stub<GetStyleLayerPropertyParameters, StylePropertyValue>(
         defaultReturnValue: StylePropertyValue(value: "foo", kind: .undefined)

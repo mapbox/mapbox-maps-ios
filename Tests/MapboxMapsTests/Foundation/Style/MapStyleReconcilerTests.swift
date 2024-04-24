@@ -10,7 +10,7 @@ final class MapStyleReconcilerTests: XCTestCase {
         super.setUp()
         styleManager = MockStyleManager()
         sourceManager = MockStyleSourceManager()
-        styleManager.isStyleLoadedStub.defaultReturnValue = true
+        styleManager.isStyleLoadingFinishedStub.defaultReturnValue = true
         me = MapStyleReconciler(styleManager: styleManager)
     }
 
@@ -28,7 +28,7 @@ final class MapStyleReconcilerTests: XCTestCase {
         case error
     }
     private func simulateLoad(callbacks: RuntimeStylingCallbacks, result: LoadResult) {
-        styleManager.isStyleLoadedStub.defaultReturnValue = result == .success
+        styleManager.isStyleLoadingFinishedStub.defaultReturnValue = result == .success
         switch result {
         case .cancel:
             callbacks.cancelled?()
@@ -50,7 +50,7 @@ final class MapStyleReconcilerTests: XCTestCase {
 
     func testLoadsJSONStyle() throws {
         styleManager.setStyleJSONStub.defaultSideEffect = { _ in
-            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+            self.styleManager.isStyleLoadingFinishedStub.defaultReturnValue = false
         }
 
         let json = """
@@ -76,7 +76,7 @@ final class MapStyleReconcilerTests: XCTestCase {
 
     func testLoadsURIStyle() throws {
         styleManager.setStyleURIStub.defaultSideEffect = { _ in
-            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+            self.styleManager.isStyleLoadingFinishedStub.defaultReturnValue = false
         }
 
         me.mapStyle = .init(uri: .streets, configuration: JSONObject(rawValue: ["bar": "baz"])!)
@@ -100,7 +100,7 @@ final class MapStyleReconcilerTests: XCTestCase {
     func testDoubleLoad() throws {
         var callbacks: RuntimeStylingCallbacks?
         styleManager.setStyleURIStub.defaultSideEffect = { invoc in
-            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+            self.styleManager.isStyleLoadingFinishedStub.defaultReturnValue = false
             if let callbacks {
                 self.simulateLoad(callbacks: callbacks, result: .cancel)
             }
@@ -129,7 +129,7 @@ final class MapStyleReconcilerTests: XCTestCase {
     func testLoadStyleSuccess() throws {
         var callbacks: RuntimeStylingCallbacks?
         styleManager.setStyleURIStub.defaultSideEffect = { invoc in
-            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+            self.styleManager.isStyleLoadingFinishedStub.defaultReturnValue = false
             callbacks = invoc.parameters.callbacks
         }
 
@@ -160,7 +160,7 @@ final class MapStyleReconcilerTests: XCTestCase {
     func testLoadStyleError() throws {
         var callbacks: RuntimeStylingCallbacks?
         styleManager.setStyleURIStub.defaultSideEffect = { invoc in
-            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+            self.styleManager.isStyleLoadingFinishedStub.defaultReturnValue = false
             callbacks = invoc.parameters.callbacks
         }
 

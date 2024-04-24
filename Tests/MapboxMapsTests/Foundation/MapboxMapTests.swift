@@ -7,6 +7,7 @@ final class MapboxMapTests: XCTestCase {
     var mapClient: MockMapClient!
     var mapInitOptions: MapInitOptions!
     var events: MapEvents!
+    var styleManager: MockStyleManager!
     var mapboxMap: MapboxMap!
 
     // We don't store fooSubject strongly to test that MapEvents stores the subjects it created.
@@ -27,12 +28,13 @@ final class MapboxMapTests: XCTestCase {
             }
             return s
         })
+        styleManager = MockStyleManager()
         mapClient = MockMapClient()
         mapClient.getMetalViewStub.defaultReturnValue = MetalView(frame: CGRect(origin: .zero, size: size), device: nil)
         mapInitOptions = MapInitOptions(mapOptions: MapOptions(size: size))
 
         let map = CoreMap(client: mapClient, mapOptions: mapInitOptions.mapOptions)
-        mapboxMap = MapboxMap(map: map, events: events)
+        mapboxMap = MapboxMap(map: map, styleManager: styleManager, events: events)
     }
 
     override func tearDown() {
@@ -40,6 +42,7 @@ final class MapboxMapTests: XCTestCase {
         mapInitOptions = nil
         mapClient = nil
         events = nil
+        styleManager = nil
         fooGenericSubject = nil
         super.tearDown()
     }
@@ -341,15 +344,30 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(mapboxMap.__testingMap.getCenterAltitudeMode(), .sea)
     }
 
-    func testLoadStyleHandlerIsInvokedExactlyOnce() throws {
-        let completionIsCalledOnce = expectation(description: "loadStyle completion should be called once")
+    func testLoadStyle() throws {
+        let darkExpectation = expectation(description: "loadStyle completion should be called once")
+        let lightExpectation = expectation(description: "loadStyle completion should be called once")
 
-        mapboxMap.loadStyle(.dark) { _ in
-            completionIsCalledOnce.fulfill()
+        mapboxMap.loadStyle(.dark) { error in
+            XCTAssert(error is CancelError)
+            darkExpectation.fulfill()
         }
-        let interval = EventTimeInterval(begin: .init(), end: .init())
-        events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
-        events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
+
+        mapboxMap.loadStyle(.light) { error in
+            XCTAssertNil(error)
+            lightExpectation.fulfill()
+        }
+
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 2)
+        let invParamsDark = try XCTUnwrap(styleManager.setStyleURIStub.invocations.first).parameters
+        let invParamsLight = try XCTUnwrap(styleManager.setStyleURIStub.invocations.last).parameters
+
+        XCTAssertEqual(invParamsDark.value, StyleURI.dark.rawValue)
+        XCTAssertEqual(invParamsLight.value, StyleURI.light.rawValue)
+
+        // simulate the sequential loads
+        invParamsDark.callbacks.cancelled?()
+        invParamsLight.callbacks.completed?()
 
         waitForExpectations(timeout: 10)
     }

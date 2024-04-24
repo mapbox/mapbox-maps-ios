@@ -184,6 +184,11 @@ class MockStyleManager: StyleManagerProtocol {
         isStyleLoadedStub.call()
     }
 
+    let isStyleLoadingFinishedStub = Stub<Void, Bool>(defaultReturnValue: false)
+    func isStyleLoadingFinished() -> Bool {
+        isStyleLoadingFinishedStub.call()
+    }
+
     // MARK: Style Imports
 
     let getStyleImportsStub = Stub<Void, [MapboxCoreMaps.StyleObjectInfo]>(defaultReturnValue: [])

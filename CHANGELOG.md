@@ -87,6 +87,7 @@ mapView.mapboxMap.setMapStyleContent {
 * Allow to assign layerPosition to 2D and 3D location indicators in imperative API.
 * Make Puck2D and Puck3D to be positioned according to relative layer positon in declarative API instead of always top-most position.
 * Add codesign for XCFrameworks.
+* `MapboxMap.loadStyle()` and `Snapshotter.loadStyle()` now correctly call the `completion` closure.
 
 
 ## 11.3.0 - 10 April, 2024

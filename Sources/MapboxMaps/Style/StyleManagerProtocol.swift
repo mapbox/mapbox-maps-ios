@@ -60,7 +60,11 @@ internal protocol StyleManagerProtocol {
     func getStyleImage(forImageId imageId: String) -> CoreMapsImage?
     func hasStyleImage(forImageId imageId: String) -> Bool
 
+    /// This means the style is finished successfully (all sources and resources loaded).
     func isStyleLoaded() -> Bool
+
+    /// This means the style is finished loading despite it's success or failure.
+    func isStyleLoadingFinished() -> Bool
 
     func addStyleLayer(
         forProperties properties: Any,
@@ -224,26 +228,18 @@ extension CoreStyleManager: StyleManagerProtocol {
     }
 
     private func load(style: String, isJson: Bool, callbacks: RuntimeStylingCallbacks) {
-
-        var errorToken: Cancelable?
-        errorToken = subscribe(forMapLoadingError: { error in
-            if error.type == .style {
-                errorToken?.cancel()
-                callbacks.error?(StyleError(message: error.message))
-            }
-        })
         let options = CoreRuntimeStylingOptions(
             sourcesCallback: { _ in callbacks.sources?() },
             layersCallback: { _ in callbacks.layers?() },
             imagesCallback: { _ in callbacks.images?() },
             completedCallback: { _ in
-                errorToken?.cancel()
                 callbacks.completed?() },
             canceledCallback: { _ in
-                errorToken?.cancel()
                 callbacks.cancelled?()
             },
-            errorCallback: nil)
+            errorCallback: { _, error in
+                callbacks.error?(StyleError(message: error.message))
+            })
         if isJson {
             setStyleJSONForJson(style, stylingOptions: options)
         } else {

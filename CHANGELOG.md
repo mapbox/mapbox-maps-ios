@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.4.0-beta.1 - 24 April, 2024
+
+⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️
+* In v11.4.0-beta.1, setting a `RasterLayer`’s `rasterColor` property with an expression will block the layer from rendering. This issue will be resolved in v11.4.0-rc.1.
+
 ### Experimental API breaking changes ⚠️
 
 In this release, we introduce the new [Declarative Styling API](https://docs.tilestream.net/ios/maps/api/latest/documentation/mapboxmaps/declarative-map-styling) for UIKit and SwiftUI. This change is based on `MapContent` introduced for SwiftUI; therefore, it has been restructured. The changes are compatible; however, in some rare cases, you may need to adjust your code.
@@ -80,12 +85,12 @@ mapView.mapboxMap.setMapStyleContent {
     // Bearing animator has started.
   }.store(in: &cancelables)
   ```
-* Allow to add slots at runtime.
-* Expose API to interact with styile imports using Declarative Styling and regular imperative API.
+* Allow adding slots at runtime.
+* Expose API to interact with style imports using Declarative Styling and regular imperative API.
 * Expose `StyleImport` for declarative styling as `MapStyleContent`.
 * Expose `removeStyleImport`, `moveStyleImport`, `updateStyleImport`, `addStyleImport` methods on `StyleManager`
-* Allow to assign layerPosition to 2D and 3D location indicators in imperative API.
-* Make Puck2D and Puck3D to be positioned according to relative layer positon in declarative API instead of always top-most position.
+* Allow assigning layerPosition to 2D and 3D location indicators in imperative API.
+* Make Puck2D and Puck3D to be positioned according to relative layer position in declarative API instead of always top-most position.
 * Add codesign for XCFrameworks.
 * `MapboxMap.loadStyle()` and `Snapshotter.loadStyle()` now correctly call the `completion` closure.
 

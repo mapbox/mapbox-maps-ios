@@ -147,6 +147,7 @@ public final class OrnamentsManager {
                 to: CameraOptions(bearing: 0),
                 duration: 0.3,
                 curve: .easeOut,
+                animationOwner: .compass,
                 completion: nil)
         }
         view.addSubview(compassView)

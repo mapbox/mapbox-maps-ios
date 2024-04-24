@@ -175,23 +175,30 @@ public final class CameraAnimationsManager {
             animations: animations)
     }
 
-    /// Adds an observer when a ``CameraAnimator`` has started with the given `owner`.
-    ///
-    /// - Parameters
-    ///     - owners: The list of ``AnimationOwner``s that own the starting camera animator. The default is an empty list, which observes all animation owners.
-    ///     - handler: The handler to be invoked with a ``CameraAnimator`` as the argument when this animator is starting.
-    public func onCameraAnimatorStarted(with owners: [AnimationOwner] = [], handler: @escaping OnCameraAnimatorStarted) -> AnyCancelable {
-        let observer = CameraAnimatorStatusObserver(owners: owners, onStarted: handler)
-        return impl.add(cameraAnimatorStatusObserver: observer)
+    /// A stream that  emits an event  when a ``CameraAnimator`` has started
+    public var onCameraAnimatorStarted: Signal<CameraAnimator> {
+        impl.onCameraAnimatorStatusChanged
+            .compactMap { (animator, status) in
+                guard status == .started else { return nil }
+                return animator
+            }
     }
 
-    /// Adds an observer when a ``CameraAnimator`` has stopped with the given `owner`.
-    ///
-    /// - Parameters
-    ///     - owners: The list of ``AnimationOwner``s that own the stopping camera animator. The default is an empty list, which observes all animation owners.
-    ///     - handler: The handler to be invoked with a ``CameraAnimator`` as the argument when this animator is stopping.
-    public func onCameraAnimatorStopped(owners: [AnimationOwner] = [], handler: @escaping OnCameraAnimatorStopped) -> AnyCancelable {
-        let observer = CameraAnimatorStatusObserver(owners: owners, onStopped: handler)
-        return impl.add(cameraAnimatorStatusObserver: observer)
+    /// A stream that  emits an event  when a ``CameraAnimator`` has finished.
+    public var onCameraAnimatorFinished: Signal<CameraAnimator> {
+        impl.onCameraAnimatorStatusChanged
+            .compactMap { (animator, status) in
+                guard status == .stopped(reason: .finished) else { return nil }
+                return animator
+            }
+    }
+
+    /// A stream that  emits an event  when a ``CameraAnimator`` has cancelled.
+    public var onCameraAnimatorCancelled: Signal<CameraAnimator> {
+        impl.onCameraAnimatorStatusChanged
+            .compactMap { (animator, status) in
+                guard status == .stopped(reason: .cancelled) else { return nil }
+                return animator
+            }
     }
 }

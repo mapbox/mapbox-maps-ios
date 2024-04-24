@@ -8,8 +8,7 @@ internal protocol CameraAnimatorsRunnerProtocol: AnyObject {
     func cancelAnimations(withOwners owners: [AnimationOwner])
     func cancelAnimations(withOwners owners: [AnimationOwner], andTypes: [AnimationType])
     func add(_ animator: CameraAnimatorProtocol)
-    func add(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver)
-    func remove(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver)
+    var onCameraAnimatorStatusChanged: Signal<CameraAnimatorStatusPayload> { get }
 }
 
 internal final class CameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
@@ -26,7 +25,8 @@ internal final class CameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
         }
     }
 
-    private var cameraAnimatorStatusObservers = WeakSet<CameraAnimatorStatusObserver>()
+    private var cameraAnimatorStatusSignal = SignalSubject<CameraAnimatorStatusPayload>()
+    var onCameraAnimatorStatusChanged: Signal<CameraAnimatorStatusPayload> { cameraAnimatorStatusSignal.signal }
 
     /// See ``CameraAnimationsManager/cameraAnimators``.
     internal var cameraAnimators: [CameraAnimator] {
@@ -94,14 +94,6 @@ internal final class CameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
             animator.stopAnimation()
         }
     }
-
-    func add(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver) {
-        cameraAnimatorStatusObservers.add(observer)
-    }
-
-    func remove(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver) {
-        cameraAnimatorStatusObservers.remove(observer)
-    }
 }
 
 extension CameraAnimatorsRunner {
@@ -121,9 +113,7 @@ extension CameraAnimatorsRunner {
             runningCameraAnimators.append(cameraAnimator)
             mapboxMap.beginAnimation()
         }
-        for observer in cameraAnimatorStatusObservers.allObjects where observer.owners.isEmpty || observer.owners.contains(cameraAnimator.owner) {
-            observer.onStarted?(cameraAnimator)
-        }
+        cameraAnimatorStatusSignal.send((cameraAnimator, .started))
     }
 
     /// When an animator stops running, `CameraAnimationsRunner` releases its strong reference to
@@ -137,9 +127,7 @@ extension CameraAnimatorsRunner {
             runningCameraAnimators.removeAll { $0 === cameraAnimator }
             mapboxMap.endAnimation()
         }
-        for observer in cameraAnimatorStatusObservers.allObjects where observer.owners.isEmpty || observer.owners.contains(cameraAnimator.owner) {
-            observer.onStopped?(cameraAnimator, reason == .cancelled)
-        }
+        cameraAnimatorStatusSignal.send((cameraAnimator, .stopped(reason: reason)))
     }
 
     /// When an animator is paused, `CameraAnimationsRunner` releases its strong reference to
@@ -153,5 +141,6 @@ extension CameraAnimatorsRunner {
             runningCameraAnimators.removeAll { $0 === cameraAnimator }
             mapboxMap.endAnimation()
         }
+        cameraAnimatorStatusSignal.send((cameraAnimator, .paused))
     }
 }

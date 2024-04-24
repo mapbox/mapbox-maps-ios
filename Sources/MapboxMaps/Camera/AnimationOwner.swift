@@ -11,6 +11,8 @@ public struct AnimationOwner: RawRepresentable, Equatable {
 
     public static let unspecified = AnimationOwner(rawValue: "com.mapbox.maps.unspecified")
 
+    public static let compass = AnimationOwner(rawValue: "com.mapbox.maps.ornaments.compass")
+
     internal static let cameraAnimationsManager = AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager")
 
     internal static let defaultViewportTransition = AnimationOwner(rawValue: "com.mapbox.maps.viewport.defaultTransition")

@@ -10,23 +10,12 @@ enum CameraAnimatorStatus: Equatable {
     }
 }
 
-final class CameraAnimatorStatusObserver {
-    let owners: [AnimationOwner]
-    let onStarted: OnCameraAnimatorStarted?
-    let onStopped: OnCameraAnimatorStopped?
+typealias CameraAnimatorStatusPayload = (CameraAnimator, CameraAnimatorStatus)
 
-    init(
-        owners: [AnimationOwner],
-        onStarted: OnCameraAnimatorStarted? = nil,
-        onStopped: OnCameraAnimatorStopped? = nil
-    ) {
-        self.owners = owners
-        self.onStarted = onStarted
-        self.onStopped = onStopped
+extension Signal where Payload == any CameraAnimator {
+
+    /// Creates new Signal from upstream filtering out ``CameraAnimator`` that is not owned by the given ``AnimationOwner``.
+    public func owned(by owner: AnimationOwner) -> Self {
+        filter { $0.owner == owner }
     }
 }
-
-/// A closure to handle event when a camera animator has started.
-public typealias OnCameraAnimatorStarted = (CameraAnimator) -> Void
-/// A closure to handle event when a camera animator has stopped.
-public typealias OnCameraAnimatorStopped = (CameraAnimator, _ isCancelled: Bool) -> Void

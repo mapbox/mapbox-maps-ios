@@ -5,6 +5,7 @@ import UIKit
 final class CameraAnimatorsRunnerTests: XCTestCase {
     var mapboxMap: MockMapboxMap!
     var cameraAnimatorsRunner: CameraAnimatorsRunner!
+    var cancelables: Set<AnyCancelable> = []
 
     override func setUp() {
         super.setUp()
@@ -17,6 +18,7 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
     override func tearDown() {
         cameraAnimatorsRunner = nil
         mapboxMap = nil
+        cancelables = []
         super.tearDown()
     }
 
@@ -306,31 +308,17 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
         cameraAnimatorsRunner.isEnabled = true
         cameraAnimatorsRunner.add(mockCameraAnimator)
 
-        let observedExpectation = self.expectation(description: "animator status observer should be notified")
-        observedExpectation.expectedFulfillmentCount = 2
-        observedExpectation.assertForOverFulfill = true
-        let observer1 = CameraAnimatorStatusObserver(owners: []) { animator in
-            XCTAssertIdentical(mockCameraAnimator, animator)
-            observedExpectation.fulfill()
-        } onStopped: { animator, isCancelled in
-            XCTAssertIdentical(mockCameraAnimator, animator)
-            XCTAssertFalse(isCancelled)
-            observedExpectation.fulfill()
-        }
-        cameraAnimatorsRunner.add(cameraAnimatorStatusObserver: observer1)
-
-        let notObservedExpectation = self.expectation(description: "animator status observer should not be notified about animator of different owner")
-        notObservedExpectation.isInverted = true
-        let observer2 = CameraAnimatorStatusObserver(owners: [.cameraAnimationsManager]) { _ in
-            notObservedExpectation.fulfill()
-        } onStopped: { _, _ in
-            notObservedExpectation.fulfill()
-        }
-        cameraAnimatorsRunner.add(cameraAnimatorStatusObserver: observer2)
+        var animatorStatus: CameraAnimatorStatus!
+        cameraAnimatorsRunner.onCameraAnimatorStatusChanged
+            .observe { (animator, status) in
+                XCTAssertIdentical(animator, mockCameraAnimator)
+                animatorStatus = status
+            }
+            .store(in: &cancelables)
 
         mockCameraAnimator.$onCameraAnimatorStatusChanged.send(.started)
+        XCTAssertEqual(animatorStatus, .started)
         mockCameraAnimator.$onCameraAnimatorStatusChanged.send(.stopped(reason: .finished))
-
-        waitForExpectations(timeout: 0.3)
+        XCTAssertEqual(animatorStatus, .stopped(reason: .finished))
     }
 }

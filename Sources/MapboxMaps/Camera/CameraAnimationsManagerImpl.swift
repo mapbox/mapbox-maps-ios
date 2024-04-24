@@ -18,6 +18,7 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
     func ease(to: CameraOptions,
               duration: TimeInterval,
               curve: UIView.AnimationCurve,
+              animationOwner: AnimationOwner,
               completion: AnimationCompletion?) -> Cancelable
 
     func decelerate(location: CGPoint,
@@ -52,13 +53,15 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
                                   duration: TimeInterval,
                                   curve: TimingCurve,
                                   owner: AnimationOwner) -> SimpleCameraAnimatorProtocol
-    func add(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver) -> AnyCancelable
+    var onCameraAnimatorStatusChanged: Signal<CameraAnimatorStatusPayload> { get }
 }
 
 internal final class CameraAnimationsManagerImpl: CameraAnimationsManagerProtocol {
 
     private let factory: CameraAnimatorsFactoryProtocol
     private let runner: CameraAnimatorsRunnerProtocol
+
+    var onCameraAnimatorStatusChanged: Signal<CameraAnimatorStatusPayload> { runner.onCameraAnimatorStatusChanged }
 
     /// See ``CameraAnimationsManager/cameraAnimators``.
     internal var cameraAnimators: [CameraAnimator] {
@@ -104,15 +107,18 @@ internal final class CameraAnimationsManagerImpl: CameraAnimationsManagerProtoco
 
     /// See ``CameraAnimationsManager/ease(to:duration:curve:completion:)``.
     @discardableResult
-    internal func ease(to: CameraOptions,
-                       duration: TimeInterval,
-                       curve: UIView.AnimationCurve,
-                       completion: AnimationCompletion?) -> Cancelable {
-        runner.cancelAnimations(withOwners: [.cameraAnimationsManager])
+    func ease(
+        to: CameraOptions,
+        duration: TimeInterval,
+        curve: UIView.AnimationCurve,
+        animationOwner: AnimationOwner,
+        completion: AnimationCompletion?
+    ) -> Cancelable {
+        runner.cancelAnimations(withOwners: [animationOwner])
         let animatorImpl = factory.makeBasicCameraAnimator(
             duration: duration,
             curve: curve,
-            animationOwner: .cameraAnimationsManager,
+            animationOwner: animationOwner,
             animations: { (transition) in
                 transition.center.toValue = to.center
                 transition.padding.toValue = to.padding
@@ -238,11 +244,18 @@ internal final class CameraAnimationsManagerImpl: CameraAnimationsManagerProtoco
         runner.add(animator)
         return animator
     }
+}
 
-    func add(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver) -> AnyCancelable {
-        runner.add(cameraAnimatorStatusObserver: observer)
-        return AnyCancelable { [weak runner] in
-            runner?.remove(cameraAnimatorStatusObserver: observer)
-        }
+extension CameraAnimationsManagerProtocol {
+
+    /// See ``CameraAnimationsManager/ease(to:duration:curve:completion:)``.
+    @discardableResult
+    func ease(
+        to: CameraOptions,
+        duration: TimeInterval,
+        curve: UIView.AnimationCurve,
+        completion: AnimationCompletion?
+    ) -> Cancelable {
+        ease(to: to, duration: duration, curve: curve, animationOwner: .cameraAnimationsManager, completion: completion)
     }
 }

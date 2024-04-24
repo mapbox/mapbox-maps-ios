@@ -56,13 +56,16 @@ mapView.mapboxMap.setMapStyleContent {
   ```swift
   // Observe start event of any CameraAnimator owned by AnimationOwner.cameraAnimationsManager
   mapView.camera
-    .onCameraAnimatorStarted(with: [.cameraAnimationsManager]) { cameraAnimator in
+    .onCameraAnimatorStarted
+    .owned(by: .cameraAnimationsManager)
+    .observe { cameraAnimator in
       // Handle camera animation started here.
     }
     .store(in: &cancelables)
-  // Observe stop events of any CameraAnimator owned by AnimationOwner.cameraAnimationsManager, either when the animator has finished animating or it is interrupted
+  // Observe finished events of any CameraAnimator
   mapView.camera
-    .onCameraAnimatorStopped { (animator, isCancelled) in
+    .onCameraAnimatorFinished
+    .observe { animator in
       // Handle camera animation stopped here.
     }
     .store(in: &cancelables)

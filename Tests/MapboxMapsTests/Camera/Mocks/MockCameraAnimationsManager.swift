@@ -4,6 +4,7 @@ import UIKit
 final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
 
     @Stubbed var cameraAnimators: [CameraAnimator] = []
+    @TestSignal var onCameraAnimatorStatusChanged: Signal<CameraAnimatorStatusPayload>
 
     let cancelAnimationsStub = Stub<Void, Void>()
     func cancelAnimations() {
@@ -35,21 +36,24 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
     }
 
    struct EaseToParams {
-        var to: CameraOptions
-        var duration: TimeInterval
-        var curve: UIView.AnimationCurve
-        var completion: AnimationCompletion?
+       let to: CameraOptions
+       let duration: TimeInterval
+       let curve: UIView.AnimationCurve
+       let animationOwner: AnimationOwner
+       let completion: AnimationCompletion?
     }
     let easeToStub = Stub<EaseToParams, Cancelable>(defaultReturnValue: MockCancelable())
     func ease(to: CameraOptions,
               duration: TimeInterval,
               curve: UIView.AnimationCurve,
+              animationOwner: AnimationOwner,
               completion: AnimationCompletion?) -> Cancelable {
         easeToStub.call(
             with: EaseToParams(
                 to: to,
                 duration: duration,
                 curve: curve,
+                animationOwner: animationOwner,
                 completion: completion))
     }
 
@@ -176,10 +180,5 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
             duration: duration,
             curve: curve,
             owner: owner))
-    }
-
-    let addCameraAnimatorStatusObserverStub = Stub<CameraAnimatorStatusObserver, AnyCancelable>(defaultReturnValue: .empty)
-    func add(cameraAnimatorStatusObserver observer: CameraAnimatorStatusObserver) -> AnyCancelable {
-        addCameraAnimatorStatusObserverStub.call(with: observer)
     }
 }

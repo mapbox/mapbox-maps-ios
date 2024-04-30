@@ -81,7 +81,7 @@ final class MapStyleReconciler {
             reconcileBasemapConfiguration(from: oldMapStyle?.configuration)
         }
 
-        if styleManager.isStyleLoadingFinished() {
+        if styleManager.isStyleLoaded() {
             completion?(nil)
         } else {
             // The style with the same uri is already loading, save completion for future execution.

@@ -181,15 +181,11 @@ public final class MapboxMap: StyleManager {
         __map.destroyRenderer()
     }
 
-    convenience init(map: CoreMap, events: MapEvents) {
-        self.init(map: map, styleManager: map, events: events)
-    }
-
-    init(map: CoreMap, styleManager: StyleManagerProtocol, events: MapEvents) {
+    init(map: CoreMap, events: MapEvents) {
         self.__map = map
         self.events = events
 
-        super.init(with: styleManager, sourceManager: StyleSourceManager(styleManager: map))
+        super.init(with: map, sourceManager: StyleSourceManager(styleManager: map))
 
         __map.createRenderer()
         _isDefaultCameraInitialized.proxied = onCameraChanged.map { _ in true }
@@ -206,18 +202,17 @@ public final class MapboxMap: StyleManager {
 
     // MARK: - Style loading
 
-    /// Loads a style from a ``StyleURI``.
+    /// Loads a `style` from a StyleURI, calling a completion closure when the
+    /// style is fully loaded or there has been an error during load.
     ///
-    /// The completion function is called when the style has finished loading. When the style loads, there may be several scenarios:
-    ///  - If the style fails to load due to network issues, several reload attempts will be made, and the callback will be triggered only when the process reaches its terminal state - either successful or failed.
-    /// -  If a new style loading is requested (with a different style URI or JSON) while the previous one is still in progress, the previous one gets cancelled. The previous state receives a ``CancelError`` in the callback.
-    /// -  When the main style document is loaded, the style is considered to have loaded successfully, even if some parts of the style aren't fully loaded.
-    /// -  If the main document fails to load, the callback receives a ``StyleError``.
+    /// If style loading started while the other style is already loading, the latter's loading `completion`
+    /// will receive a ``CancelError``. If a style is failed to load, `completion` will receive a ``StyleError``.
     ///
     /// - Parameters:
     ///   - styleURI: StyleURI to load
     ///   - transition: Options for the style transition.
-    ///   - completion: Closure called when the style has been loaded successfully or failed.
+    ///   - completion: Closure called when the style has been fully loaded.
+    ///     If style has failed to load a `MapLoadingError` is provided to the closure.
     public func loadStyle(_ styleURI: StyleURI,
                           transition: TransitionOptions? = nil,
                           completion: ((Error?) -> Void)? = nil) {
@@ -238,18 +233,17 @@ public final class MapboxMap: StyleManager {
         loadStyle(styleURI, completion: completion)
     }
 
-    /// Loads a style from a JSON string.
+    /// Loads a `style` from a JSON string, calling a completion closure when the
+    /// style is fully loaded or there has been an error during load.
     ///
-    /// The completion function is called when the style has finished loading. When the style loads, there may be several scenarios:
-    ///  - If the style fails to load due to network issues, several reload attempts will be made, and the callback will be triggered only when the process reaches its terminal state - either successful or failed.
-    /// -  If a new style loading is requested (with a different style URI or JSON) while the previous one is still in progress, the previous one gets cancelled. The previous state receives a ``CancelError`` in the callback.
-    /// -  When the main style document is loaded, the style is considered to have loaded successfully, even if some parts of the style aren't fully loaded.
-    /// -  If the main document fails to load, the callback receives a ``StyleError``.
+    /// If style loading started while the other style is already loading, the latter's loading `completion`
+    /// will receive a ``CancelError``. If a style is failed to load, `completion` will receive a ``StyleError``.
     ///
     /// - Parameters:
     ///   - JSON: Style JSON string
     ///   - transition: Options for the style transition.
-    ///   - completion: Closure called when the style has been loaded successfully or failed.
+    ///   - completion: Closure called when the style has been fully loaded.
+    ///     If style has failed to load a `MapLoadingError` is provided to the closure.
     public func loadStyle(_ JSON: String,
                           transition: TransitionOptions? = nil,
                           completion: ((Error?) -> Void)? = nil) {

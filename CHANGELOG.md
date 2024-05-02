@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 11.4.0-beta.2 - 2 May, 2024
 
 * Bump core maps version to 11.4.0-beta.2 and common sdk to 24.4.0-beta.2.
+* `MapboxMap.loadStyle()` and `Snapshotter.loadStyle()` behaviour is rolled back to pre 11.4.0-beta.1 state.
 
 ## 11.4.0-beta.1 - 24 April, 2024
 
@@ -96,7 +97,7 @@ mapView.mapboxMap.setMapStyleContent {
 * Allow assigning layerPosition to 2D and 3D location indicators in imperative API.
 * Make Puck2D and Puck3D to be positioned according to relative layer position in declarative API instead of always top-most position.
 * Add codesign for XCFrameworks.
-
+* `MapboxMap.loadStyle()` and `Snapshotter.loadStyle()` now correctly call the `completion` closure.
 
 ## 11.3.0 - 10 April, 2024
 

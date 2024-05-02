@@ -4,6 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.4.0-beta.2 - 2 May, 2024
+
+* Bump core maps version to 11.4.0-beta.2 and common sdk to 24.4.0-beta.2.
+
 ## 11.4.0-beta.1 - 24 April, 2024
 
 ⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️

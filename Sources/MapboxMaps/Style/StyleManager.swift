@@ -511,13 +511,11 @@ public class StyleManager {
         set { styleReconciler.mapStyle = MapStyle(json: newValue) }
     }
 
-    /// Loads a style from a ``MapStyle`` specification.
+    /// Loads ``MapStyle``, calling a completion closure when the
+    /// style is fully loaded or there has been an error during load.
     ///
-    /// The completion function is called when the style has finished loading. When the style loads, there may be several scenarios:
-    ///  - If the style fails to load due to network issues, several reload attempts will be made, and the callback will be triggered only when the process reaches its terminal state - either successful or failed.
-    /// -  If a new style loading is requested (with a different style URI or JSON) while the previous one is still in progress, the previous one gets cancelled. The previous state receives a ``CancelError`` in the callback.
-    /// -  When the main style document is loaded, the style is considered to have loaded successfully, even if some parts of the style aren't fully loaded.
-    /// -  If the main document fails to load, the callback receives a ``StyleError``.
+    /// If style loading started while the other style is already loading, the latter's loading `completion`
+    /// will receive a ``CancelError``. If a style is failed to load, `completion` will receive a ``StyleError``.
     ///
     /// - Parameters:
     ///   - mapStyle: A style to load.

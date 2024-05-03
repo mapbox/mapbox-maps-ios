@@ -113,26 +113,25 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         }
 
         layer.fillExtrusionHeight = .expression(
-            Exp(.interpolate) {
-                Exp(.linear)
-                Exp(.zoom)
-                15
-                0
-                15.05
-                Exp(.get) {
-                    "height"
-                }
+            Exp(.get) {
+                "height"
             }
         )
 
         layer.fillExtrusionBase = .expression(
+            Exp(.get) {
+                "min_height"
+            }
+        )
+
+        layer.fillExtrusionVerticalScale = .expression(
             Exp(.interpolate) {
                 Exp(.linear)
                 Exp(.zoom)
                 15
                 0
                 15.05
-                Exp(.get) { "min_height"}
+                1
             }
         )
 

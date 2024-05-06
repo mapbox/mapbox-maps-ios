@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Added camera(for:) deprecation for several methods. Added an `CameraForExample` camera(for:) usage
+
+## 11.4.0-beta.3 - 6 May, 2024
+
+* Bump common sdk to 24.4.0-beta.3.
+
 ## 11.4.0-beta.2 - 2 May, 2024
 
 * Bump core maps version to 11.4.0-beta.2 and common sdk to 24.4.0-beta.2.

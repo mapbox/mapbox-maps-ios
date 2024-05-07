@@ -68,9 +68,10 @@ Atmosphere()
 Category     | Types supported                           
 ------------ | ------------------------------------- 
 `Source`     | ``VectorSource``, ``RasterSource``, ``RasterDemSource``, ``GeoJSONSource``, ``ImageSource``, ``Model``, ``CustomGeometrySource`` (partial), ``CustomRasterSource`` (partial)
-`Layer`      | ``FillLayer``, ``LineLayer``, ``SymbolLayer``, ``CircleLayer``, ``HeatmapLayer``, ``FillExtrusionLayer``, ``RasterLayer``, ``HillshadeLayer``, ``BackgroundLayer``, ``LocationIndicatorLayer``, ``SkyLayer``, ``ModelLayer``, ``CustomLayer`` (partial)
+`Layer`      | ``FillLayer``, ``LineLayer``, ``SymbolLayer``, ``CircleLayer``, ``HeatmapLayer``, ``FillExtrusionLayer``, ``RasterLayer``, ``HillshadeLayer``, ``BackgroundLayer``, ``LocationIndicatorLayer``, ``SkyLayer``, ``ModelLayer``, ``SlotLayer``, ``CustomLayer`` (partial)
 `Lights`     | ``FlatLight``, ``AmbientLight``, ``DirectionalLight``
 `Map properties` | ``Projection``, ``Atmosphere``, ``Terrain``, ``TransitionOptions-struct``
+`Fragments` | ``StyleImport``
 
 ### Adding Style Primitives Conditionally 
 
@@ -129,6 +130,8 @@ You can create your own primitives in addition to Mapbox style primitives. Defin
 
 For example, the code below creates a `CarModelPrimitive` which manages all you need to display a sport care Model on your map: the ``GeoJSONSource`` for the data, the ``Model`` to display, and the ``ModelLayer`` used to position the model. Add your `CarModelPrimitive` to your style body just like Mapbox style primitives. 
 
+> Warning: We recommend not using @State or @Binding as part of your custom primitives. @State will only work as part of root view that contain ``Map``. @Binding may work in your components, but it will break content recalculation logic and will lead to worse performance. 
+
 ```swift
 struct CarModelPrimitive: MapStyleContent {
     var body: some MapStyleContent {
@@ -159,6 +162,106 @@ Map {
 }
 ```
 
+### Content positioning
+
+Our aim was to establish a single source of truth for all content displayed on the map through our declarative approach. Moreover, we invested significant efforts in automating the heavy lifting of manual layer positioning, seamlessly incorporating it into the declarative description.
+
+Essentially, this means that all layers defined in the declarative description will be positioned on the map relative to each other, following a similar pattern as [SwiftUI's ZStack](https://developer.apple.com/documentation/swiftui/zstack).
+
+```swift
+let coordinate = CLLocationCoordinate2D(latitude: 60.167488, longitude: 24.942747)
+
+var body: some View {
+    Map(initialViewport: .camera(center: .init(latitude: 27.2, longitude: -26.9), zoom: 1.53, bearing: 0, pitch: 0)) {
+        MapViewAnnotation(coordinate: coordinate) {
+            Circle()
+                .fill(.purple)
+                .frame(width: 40, height: 40)
+        }
+
+        PolygonAnnotation(polygon: Polygon(center: coordinate, radius: 8 * 100, vertices: 60))
+            .fillColor(StyleColor(.yellow))
+
+
+        GeoJSONSource(id: "source")
+            .data(.geometry(.polygon(Polygon(center: coordinate, radius: 4 * 100, vertices: 60))))
+
+        FillLayer(id: "fill-id", source: "source")
+            .fillColor(.green)
+            .fillOpacity(0.7)
+    }
+}
+```
+
+Referring back to the example above, the order of layers will be: [default map style layers] -> [yellow polygon] -> [green polygon]. It's worth noting that MapViewAnnotation doesn't participate in layer ordering and will always be displayed above any layers.
+
+In contrast to the imperative API, we intentionally removed the ability to set layer positions using the `.position` modifier for `MapStyleContent`. This emphasizes that the order of layer declarations should precisely reflect the actual layer ordering. As a result, in the declarative API you cannot add runtime layers between style layers already in the Style.
+
+So, despite the elegance of declarative ordering, there are scenarios where it falls short:
+
+1. Placing layers between style layers that were not added at runtime.
+2. Interoperability with traditional imperative APIs.
+3. Slots API.
+
+To address these scenarios, we introduced ``SlotLayer``, which slightly disrupts the elegance of declarative ordering but provides a crucial mechanism and single entry point for more advanced layer ordering cases. This ensures that the impact of this disruption to ordering remains minimal.
+
+The following example demonstrates how ``SlotLayer`` allows the addition of runtime slots, facilitating interactions with imperative APIs and dividing existing slots into more granular groups.
+
+```swift
+mapView.mapboxMap.mapStyle = .standard
+mapView.mapboxMap.setMapStyleContent {
+    GeoJSONSource(id: "square-data")
+        .data(.feature(Feature(geometry: square)))
+
+    /// The MapStyleContent defines the desired layers positions.
+    /// ... bottom layers ...
+    /// "middle" slot
+    ///    - "annotation-placeholder" slot
+    ///    - "polygon" layer
+    /// ... top layers layers ...
+    SlotLayer(id: "annotation-placeholder")
+        .slot(.middle)
+    FillLayer(id: "square", source: "square-data")
+        .fillColor(.systemPink)
+        .fillOpacity(0.8)
+        .slot(.middle)
+}
+
+/// The annotation uses slot `annotation-placeholder` so it will be rendered below the polygon:
+/// ... bottom layers ...
+/// "middle" slot
+///    - triangle annotation
+///    - "annotation-placeholder" slot
+///    - "square" layer
+/// ... top layers layers ...
+/// If any other layers or annotations are added to the `annotation-placeholder` slot, they will appear above the triangle annotation, but below the square layer.
+let manager = mapView.annotations.makePolygonAnnotationManager()
+manager.slot = "annotation-placeholder"
+manager.annotations = [
+    PolygonAnnotation(polygon: triangle).fillColor(StyleColor(.yellow))
+]
+
+```
+
+Another important feature of ``SlotLayer`` is that it's the only ``MapStyleContent`` component with a .position modifier, allowing developers to set a custom ``LayerPosition``. This effectively resolves the scenario where a developer needs to insert a runtime-added layer between style layers that are part of the Style JSON. 
+Please note that setting both `.slot()` and `.position()` for ``SlotLayer`` is incorrect and `slot` will always have priority over the `position`.
+
+```swift
+Map {
+    SlotLayer(id: "below-roads")
+        .position(.below("roads"))
+
+    GeoJSONSource(id: "square-data")
+        .data(.feature(Feature(geometry: square)))
+
+    FillLayer(id: "square", source: "square-data")
+        .fillColor(.systemPink)
+        .slot(Slot(rawValue: "below-roads")
+}
+.mapStyle(.streets)
+```
+
+In the example above ``FillLayer`` will be added below "roads" layer from Mapbox Streets style.
 
 ### Performance Optimizations 
 

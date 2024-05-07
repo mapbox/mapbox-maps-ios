@@ -308,55 +308,25 @@ struct Examples {
 }
 
 extension Examples {
-    static let all: [[String : Any]] = [
-        [
-            "title": "Getting started",
-            "examples": gettingStartedExamples
-        ],
-        [
-            "title": "3D and Fill Extrusions",
-            "examples": threeDExamples
-        ],
-        [
-            "title": "Annotations",
-            "examples": annotationExamples
-        ],
-        [
-            "title": "Camera",
-            "examples": cameraExamples
-        ],
-        [
-            "title": "Lab",
-            "examples": labExamples
-        ],
-        [
-            "title": "Location",
-            "examples": locationExamples
-        ],
-        [
-            "title": "Offline",
-            "examples": offlineExamples
-        ],
-        [
-            "title": "Snapshot",
-            "examples": snapshotExamples
-        ],
-        [
-            "title": "Style",
-            "examples": styleExamples
-        ],
-        [
-            "title": "User Interaction",
-            "examples": userInteractionExamples
-        ],
-        [
-            "title": "Accessibility",
-            "examples": accessibilityExamples
-        ],
-        [   "title": "Globe and Atmosphere",
-            "examples": globeAndAtmosphere
-        ]
-    ]
+    struct Category {
+        let title: String
+        let examples: [Example]
+    }
+
+    static let all: [Category] = .init {
+        Category(title: "Getting started", examples: gettingStartedExamples)
+        Category(title: "3D and Fill Extrusions", examples: threeDExamples)
+        Category(title: "Annotations", examples: annotationExamples)
+        Category(title: "Camera", examples: cameraExamples)
+        Category(title: "Lab", examples: labExamples)
+        Category(title: "Location", examples: locationExamples)
+        Category(title: "Offline", examples: offlineExamples)
+        Category(title: "Snapshot", examples: snapshotExamples)
+        Category(title: "Style", examples: styleExamples)
+        Category(title: "User Interaction", examples: userInteractionExamples)
+        Category(title: "Accessibility", examples: accessibilityExamples)
+        Category(title: "Globe and Atmosphere", examples: globeAndAtmosphere)
+    }
 }
 
 extension Array {

@@ -1,6 +1,5 @@
 import UIKit
 @_spi(Experimental) import MapboxMaps
-import SwiftUI
 
 @available(iOS 13.0, *)
 final class CameraForExample: UIViewController, ExampleProtocol {
@@ -19,7 +18,6 @@ final class CameraForExample: UIViewController, ExampleProtocol {
         addPolygons()
 
         setCamera(immediately: true, onMapLoaded: true)
-        finish()
     }
 
     private func setCamera(immediately: Bool, onMapLoaded: Bool) {
@@ -27,12 +25,13 @@ final class CameraForExample: UIViewController, ExampleProtocol {
             setCamera(coordinates: selectedPlace, mapPadding: .zero, coordinatesPadding: .zero)
         }
 
-        if onMapLoaded {
-            mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
-                guard let self else { return }
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
+            guard let self else { return }
+            if onMapLoaded {
                 setCamera(coordinates: selectedPlace, mapPadding: .zero, coordinatesPadding: .zero)
-            }.store(in: &cancelables)
-        }
+            }
+            finish() // for testing purposes
+        }.store(in: &cancelables)
     }
 
     private func setCamera(
@@ -95,7 +94,9 @@ final class CameraForExample: UIViewController, ExampleProtocol {
         bottomSheet.layer.opacity = 0.8
         bottomSheet.backgroundColor = .white
         bottomSheet.selectedPlace = selectedPlace
-        bottomSheet.onSelectionChanged = setCamera(coordinates:mapPadding:coordinatesPadding:)
+        bottomSheet.onSelectionChanged = { [weak self] cordinates, mapPadding, coordinatesPadding in
+            self?.setCamera(coordinates: cordinates, mapPadding: mapPadding, coordinatesPadding: coordinatesPadding)
+        }
 
         view.addSubview(bottomSheet)
     }

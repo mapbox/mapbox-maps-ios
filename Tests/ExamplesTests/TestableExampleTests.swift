@@ -3,7 +3,7 @@ import ObjectiveC.runtime
 @testable import Examples
 import MapboxMaps
 
-class TestableExampleTests: XCTestCase {
+final class TestableExampleTests: XCTestCase {
     private var example: Example?
     private weak var weakExampleViewController: UIViewController?
     private weak var weakMapView: MapView?

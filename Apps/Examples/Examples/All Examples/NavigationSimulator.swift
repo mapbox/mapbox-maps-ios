@@ -38,10 +38,14 @@ final class NavigationSimulator {
         isStarted = true
 
         viewport.transition(to: followPuckViewPortState) { _ in
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-                if !self.routePointsToTravel.isEmpty {
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+                guard let self else {
+                    return timer.invalidate()
+                }
+
+                if !routePointsToTravel.isEmpty {
                     let nextPoint = self.routePointsToTravel.removeFirst()
-                    self.currentLocation = nextPoint
+                    currentLocation = nextPoint
                 } else {
                     // Journey completed.
                     timer.invalidate()

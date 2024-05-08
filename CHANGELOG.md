@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Added camera(for:) deprecation for several methods. Added an `CameraForExample` camera(for:) usage
+* Expose experimental `RasterParticleLayer` which is suitable for displaying precipitation or wind on the map
 * Expose the list of added `ViewAnnotation`
 
 ## 11.4.0-beta.3 - 6 May, 2024

@@ -3,10 +3,10 @@ import CarPlay
 #endif
 import UIKit
 
-@available(iOS 13.0, *)
 extension UIWindow {
 
     /// The `UIScene` containing this window.
+    @available(iOS 13.0, *)
     internal var parentScene: UIScene? {
 #if canImport(CarPlay)
         switch self {
@@ -17,6 +17,14 @@ extension UIWindow {
         }
 #else
         return windowScene
+#endif
+    }
+
+    var isCarPlay: Bool {
+#if canImport(CarPlay)
+        return self is CPWindow
+#else
+        return false
 #endif
     }
 }

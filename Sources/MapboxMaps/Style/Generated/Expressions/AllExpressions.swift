@@ -224,6 +224,9 @@ public extension Expression {
         /// Returns a random value in the specified range (first two input numbers) based on a supplied seed (third input). The seed can be an expression or a constant number or string value.
         public static let random = Operator(rawValue: "random")
 
+        /// Returns the length of the particle velocity vector. Can only be used in the `raster-particle-color` property.
+        public static let rasterParticleSpeed = Operator(rawValue: "raster-particle-speed")
+
         /// Returns the raster value of a pixel computed via `raster-color-mix`. Can only be used in the `raster-color` property.
         public static let rasterValue = Operator(rawValue: "raster-value")
 

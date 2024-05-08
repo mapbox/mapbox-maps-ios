@@ -55,7 +55,7 @@ public final class ViewAnnotationManager {
     private let mapboxMap: MapboxMapProtocol
     private var displayLink: Signal<Void>
     // internal for tests
-    var objectAnnotations = [String: ViewAnnotation]()
+    private var objectAnnotations = [String: ViewAnnotation]()
 
     // deprecated properties
     private var viewsById: [String: UIView] = [:]
@@ -73,8 +73,13 @@ public final class ViewAnnotationManager {
     }
     private var _validatesViews = true
 
+    /// The list of view annotations added to the manager.
+    public var allAnnotations: [ViewAnnotation] {
+        Array(objectAnnotations.values)
+    }
+
     /// The complete list of annotations associated with the receiver.
-    @available(*, deprecated, message: "Use ViewAnnotation")
+    @available(*, deprecated, renamed: "allAnnotations", message: "Please use allAnnotations instead, or directly access ViewAnnotation itself")
     public var annotations: [UIView: ViewAnnotationOptions] {
         idsByView.compactMapValues { [mapboxMap] id in
             try? mapboxMap.options(forViewAnnotationWithId: id)

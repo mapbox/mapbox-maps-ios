@@ -719,7 +719,7 @@ final class StyleManagerTests: XCTestCase {
     func testRemoveStyleImport() {
         let importId = UUID().uuidString
 
-        try? style.removeStyleImport(for: importId)
+        try? style.removeStyleImport(withId: importId)
         XCTAssertEqual(styleManager.removeStyleImportStub.invocations.count, 1)
         XCTAssertEqual(styleManager.removeStyleImportStub.invocations.first?.parameters.importId, importId)
     }

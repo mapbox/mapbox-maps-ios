@@ -28,6 +28,9 @@ public struct LayerType: ExpressibleByStringLiteral, RawRepresentable, Codable, 
     /// Raster map textures such as satellite imagery.
     public static let raster: LayerType = "raster"
 
+    /// Layer repsenting particles on the map.
+    public static let rasterParticle: LayerType = "raster-particle"
+
     /// Client-side hillshading visualization based on DEM data.
     /// Currently, the implementation only supports Mapbox Terrain RGB and Mapzen Terrarium tiles.
     public static let hillshade: LayerType = "hillshade"

@@ -27,7 +27,7 @@ Puck 2D/3D | ✅
 Map Events | ✅
 Gesture Configuration | ✅
 Ornaments Configuration | ✅
-Style API | 🚧 | Use ``MapReader`` to access Style API via ``MapProxy/map``. 
+Style API | ✅
 Custom Camera Animations | 🚧
 
 ### Getting started
@@ -90,6 +90,35 @@ extension MapStyle {
 ```
 
 Please consult the ``MapStyle`` documentation to find more information about style loading.
+
+### Declarative Map Styling
+
+With the advent of Declarative Map Styling, it's now feasible to reuse ``MapStyleContent`` components within SwiftUI, offering a robust and exhaustive method to delineate map content comprehensively in one place.
+
+The following example illustrates the utilization of both ``MapStyleContent``, which can also be utilized outside of SwiftUI, and SwiftUI-specific ``MapContent`` within a singular declarative ``Map`` description:
+
+```swift
+Map(initialViewport: .camera(center: .init(latitude: 27.2, longitude: -26.9), zoom: 1.53, bearing: 0, pitch: 0)) {
+    MapViewAnnotation(coordinate: .apple) {
+        Circle()
+            .fill(.purple)
+            .frame(width: 40, height: 40)
+    }
+
+     PolygonAnnotation(polygon: Polygon(center: .apple, radius: 8 * 100, vertices: 60))
+        .fillColor(StyleColor(.yellow))
+
+
+    GeoJSONSource(id: "source")
+        .data(.geometry(.polygon(Polygon(center: .apple, radius: 4 * 100, vertices: 60))))
+
+    FillLayer(id: "fill-id", source: "source")
+        .fillColor(.green)
+        .fillOpacity(0.7)
+}
+```
+
+Within SwiftUI, all ``MapStyleContent`` elements will be retained during style reloads and appropriately re-added. This ensures that the sole source of truth for map content lies within the declaration itself. SwiftUI's ``MapContent`` serves as an extension of the Declarative Map Styling approach previously introduced for the UIKit API. Therefore, it's advisable to peruse the <doc:Declarative-Map-Styling> guide to become acquainted with the underlying concepts of this declarative styling paradigm.
 
 ### Using Viewport to manage camera
 

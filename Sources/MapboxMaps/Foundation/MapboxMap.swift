@@ -474,6 +474,38 @@ public final class MapboxMap: StyleManager {
     ///   - maxZoom: The maximum zoom level to allow when the camera would transition to the specified bounds.
     ///   - offset: The center of the given bounds relative to the map's center, measured in points.
     /// - Returns: A `CameraOptions` that fits the provided constraints
+    /// - Important:
+    ///  The equivalent of the following deprecated call, where `point1` and `point2` are the most southwestern and northeastern points:
+    ///  ```swift
+    ///     let coordinatesPadding = UIEdgeInsets(allEdges: 4)
+    ///
+    ///     mapView.mapboxMap.camera(
+    ///         for: CoordinateBounds(southwest: point1, northeast: point2),
+    ///         padding: coordinatesPadding,
+    ///         bearing: 10,
+    ///         pitch: 8
+    ///     )
+    ///  ```
+    ///  Would be the following call that allows you to properly set map padding using initial camera options.
+    ///  Where `point1` and `point2` are part of the polygon defined by points 1-4 and are are the most southwestern and northeastern points of this polygon.
+    ///  ```swift
+    ///     let coordinatesPadding = UIEdgeInsets(allEdges: 4)
+    ///
+    ///     let initialCameraOptions = CameraOptions(
+    ///         padding: .zero,
+    ///         bearing: 10,
+    ///         pitch: 8
+    ///     )
+    ///
+    ///    mapView.mapboxMap.camera(
+    ///         for: [point1, point2, point3, point4],
+    ///         camera: initialCameraOptions,
+    ///         coordinatesPadding: coordinatesPadding,
+    ///         maxZoom: nil,
+    ///         offset: nil
+    ///    )
+    ///  ```
+    @available(*, deprecated, renamed: "camera(for:camera:coordinatesPadding:maxZoom:offset:)", message: "Use camera(for:camera:coordinatesPadding:maxZoom:offset:) instead.")
     public func camera(for coordinateBounds: CoordinateBounds, // swiftlint:disable:this function_parameter_count
                        padding: UIEdgeInsets?,
                        bearing: Double?,
@@ -502,7 +534,37 @@ public final class MapboxMap: StyleManager {
     ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
     ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
     /// - Returns: A `CameraOptions` that fits the provided constraints
-    @available(*, deprecated, message: "Use ``camera(for:camera:coordinatesPadding:maxZoom:offset:)`` instead.")
+    /// - Important:
+    ///  The equivalent of the following deprecated call:
+    ///  ```swift
+    ///     let coordinatesPadding = UIEdgeInsets(allEdges: 4)
+    ///
+    ///     mapView.mapboxMap.camera(
+    ///         for: coordinates,
+    ///         padding: coordinatesPadding,
+    ///         bearing: 10,
+    ///         pitch: 8
+    ///     )
+    ///  ```
+    ///  Would be the following call that allows you to properly set map padding using initial camera options.
+    ///  ```swift
+    ///     let coordinatesPadding = UIEdgeInsets(allEdges: 4)
+    ///
+    ///     let initialCameraOptions = CameraOptions(
+    ///         padding: .zero,
+    ///         bearing: 10,
+    ///         pitch: 8
+    ///     )
+    ///
+    ///    mapView.mapboxMap.camera(
+    ///         for: coordinates,
+    ///         camera: initialCameraOptions,
+    ///         coordinatesPadding: coordinatesPadding,
+    ///         maxZoom: nil,
+    ///         offset: nil
+    ///    )
+    ///  ```
+    @available(*, deprecated, renamed: "camera(for:camera:coordinatesPadding:maxZoom:offset:)", message: "Use camera(for:camera:coordinatesPadding:maxZoom:offset:) instead.")
     public func camera(for coordinates: [CLLocationCoordinate2D],
                        padding: UIEdgeInsets?,
                        bearing: Double?,
@@ -589,6 +651,34 @@ public final class MapboxMap: StyleManager {
     ///   - bearing: The new bearing to be used by the camera.
     ///   - pitch: The new pitch to be used by the camera.
     /// - Returns: A `CameraOptions` that fits the provided constraints
+    ///
+    /// - Important:
+    ///  The equivalent of the following deprecated call:
+    ///  ```swift
+    ///     mapView.mapboxMap.camera(
+    ///         for: .polygon(Polygon([..])),
+    ///         padding: coordinatesPadding,
+    ///         bearing: 10,
+    ///         pitch: 8
+    ///     )
+    ///  ```
+    ///  Would be the following call that allows you to properly set map padding using initial camera options.
+    ///  ```swift
+    ///     let initialCameraOptions = CameraOptions(
+    ///         padding: .zero,
+    ///         bearing: 10,
+    ///         pitch: 8
+    ///     )
+    ///
+    ///    mapView.mapboxMap.camera(
+    ///         for: Polygon([..]).coordinates.flatMap { $0 },
+    ///         camera: initialCameraOptions,
+    ///         coordinatesPadding: coordinatesPadding,
+    ///         maxZoom: nil,
+    ///         offset: nil
+    ///    )
+    ///  ```
+    @available(*, deprecated, renamed: "camera(for:camera:coordinatesPadding:maxZoom:offset:)", message: "Use camera(for:camera:coordinatesPadding:maxZoom:offset:) method instead.")
     public func camera(for geometry: Geometry,
                        padding: UIEdgeInsets,
                        bearing: CGFloat?,

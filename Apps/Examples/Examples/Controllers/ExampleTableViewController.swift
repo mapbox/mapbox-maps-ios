@@ -33,8 +33,7 @@ final class ExampleTableViewController: UITableViewController {
         if let exampleTitleToStart = UserDefaults.standard.value(forKey: startingExampleTitleKey) as? String, shouldReopenLastExample {
 
             let initialExample = allExamples
-                .compactMap({ $0["examples"] as? [Example] })
-                .flatMap({ $0 })
+                .flatMap(\.examples)
                 .first(where: { $0.title == exampleTitleToStart })
             if let initialExample = initialExample {
                 open(example: initialExample, animated: false)
@@ -87,7 +86,7 @@ extension ExampleTableViewController {
             return nil
         }
 
-        return allExamples[section]["title"] as? String
+        return allExamples[section].title
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -95,7 +94,7 @@ extension ExampleTableViewController {
           return filteredExamples.count
         }
 
-        let examples = allExamples[section]["examples"] as! [Example]
+        let examples = allExamples[section].examples
         return examples.count
     }
 
@@ -106,7 +105,7 @@ extension ExampleTableViewController {
         if isFiltering {
           example = filteredExamples[indexPath.row]
         } else {
-            let examples = allExamples[indexPath.section]["examples"] as! [Example]
+            let examples = allExamples[indexPath.section].examples
           example = examples[indexPath.row]
         }
 
@@ -130,7 +129,7 @@ extension ExampleTableViewController {
         if isFiltering {
           example = filteredExamples[indexPath.row]
         } else {
-            let examples = allExamples[indexPath.section]["examples"] as! [Example]
+            let examples = allExamples[indexPath.section].examples
           example = examples[indexPath.row]
         }
 
@@ -138,7 +137,7 @@ extension ExampleTableViewController {
     }
 
     func filterContentForSearchText(_ searchText: String) {
-        let flatExamples = allExamples.flatMap { $0["examples"] as! [Example] }
+        let flatExamples = allExamples.flatMap(\.examples)
         if searchText.isEmpty {
             filteredExamples = flatExamples
         } else {

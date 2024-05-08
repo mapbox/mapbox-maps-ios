@@ -22,6 +22,7 @@ final class MapContentReconciler {
     private let context: MapContentNodeContext
     private var root: MapContentNode
     private var loadingToken: AnyCancelable?
+    private var sendTelemetryOncePerStyle = Once()
 
     init(styleManager: StyleManagerProtocol, sourceManager: StyleSourceManagerProtocol, styleIsLoaded: Signal<Bool>) {
         self.context = MapContentNodeContext(
@@ -44,13 +45,23 @@ final class MapContentReconciler {
         defer { trace?.end() }
 
         context.update(mapContent: content, root: root)
+        triggerTelemetryIfNeeded(for: root)
     }
 
     private func reloadStyle(with content: any MapContent) {
         let trace = OSLog.platform.beginInterval("MapContent update on style reload")
         defer { trace?.end() }
+        sendTelemetryOncePerStyle.reset()
 
         context.reload(mapContent: content, root: root)
+        triggerTelemetryIfNeeded(for: root)
+    }
+
+    /// Increment telemetry counter once per StyleDSL usage on the single style
+    func triggerTelemetryIfNeeded(for node: MapContentNode) {
+        guard sendTelemetryOncePerStyle.continueOnce(), !node.childrenIsEmpty else { return }
+        Log.info(forMessage: "triggerTelemetryIfNeeded")
+        sendTelemetry(\.styleDSL)
     }
 }
 

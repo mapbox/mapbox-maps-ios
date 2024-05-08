@@ -16,6 +16,7 @@
 - ``LineLayer``
 - ``LocationIndicatorLayer``
 - ``RasterLayer``
+- ``RasterParticleLayer``
 - ``SkyLayer``
 - ``SymbolLayer``
 - ``ModelLayer``

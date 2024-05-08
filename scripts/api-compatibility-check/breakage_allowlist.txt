@@ -1416,3 +1416,14 @@ Func PointAnnotation.iconTextFitPadding(_:) has parameter 0 type change from [Sw
 Func PointAnnotation.textOffset(_:) has parameter 0 type change from [Swift.Double] to Swift.Double
 Func Puck3D.modelRotation(_:) has parameter 0 type change from [Swift.Double] to Swift.Double
 Func Puck3D.modelScale(_:) has parameter 0 type change from [Swift.Double] to Swift.Double
+
+// Extend ArrayBuilder
+Func ArrayBuilder.buildBlock(_:) has return type change from [T?] to [T] 
+Func ArrayBuilder.buildEither(first:) has parameter 0 type change from [T?] to [T] 
+Func ArrayBuilder.buildEither(first:) has return type change from [T?] to [T] 
+Func ArrayBuilder.buildEither(second:) has parameter 0 type change from [T?] to [T] 
+Func ArrayBuilder.buildEither(second:) has return type change from [T?] to [T] 
+Func ArrayBuilder.buildBlock(_:) has been renamed to Func buildBlock()
+Func ArrayBuilder.buildExpression(_:) has return type change from [T?] to [T] 
+Func ArrayBuilder.buildOptional(_:) has parameter 0 type change from [T?]? to [T]? 
+Func ArrayBuilder.buildOptional(_:) has return type change from [T?] to [T]

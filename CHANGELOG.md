@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Added camera(for:) deprecation for several methods. Added an `CameraForExample` camera(for:) usage
+* Expose the list of added `ViewAnnotation`
 
 ## 11.4.0-beta.3 - 6 May, 2024
 

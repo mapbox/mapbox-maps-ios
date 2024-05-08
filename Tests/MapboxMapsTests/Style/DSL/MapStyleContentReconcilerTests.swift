@@ -575,8 +575,8 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertEqual(sourceManager.addSourceStub.invocations.map(\.parameters.source.id), ["route"])
         let addedSource = try XCTUnwrap(sourceManager.addSourceStub.invocations.last?.parameters.source) as? GeoJSONSource
         XCTAssertEqual(addedSource?.data, .string("foo"))
-        XCTAssertEqual(viewAnnotationsManager.objectAnnotations.count, 1)
-        verifyAnnotationOptions(viewAnnotationsManager.objectAnnotations.values.first, component.mapViewAnnotation)
+        XCTAssertEqual(viewAnnotationsManager.allAnnotations.count, 1)
+        verifyAnnotationOptions(viewAnnotationsManager.allAnnotations.first, component.mapViewAnnotation)
         XCTAssertEqual(circleAnnotationManager.annotations, [
             CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
             CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
@@ -598,8 +598,8 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertEqual(styleManager.addStyleLayerStub.invocations.last?.parameters.layerId, "condition-false")
         XCTAssertEqual(styleManager.removeStyleLayerStub.invocations.count, 1)
         XCTAssertEqual(styleManager.removeStyleLayerStub.invocations.last?.parameters, "condition-true")
-        XCTAssertEqual(viewAnnotationsManager.objectAnnotations.count, 1)
-        verifyAnnotationOptions(viewAnnotationsManager.objectAnnotations.values.first, component.mapViewAnnotation)
+        XCTAssertEqual(viewAnnotationsManager.allAnnotations.count, 1)
+        verifyAnnotationOptions(viewAnnotationsManager.allAnnotations.first, component.mapViewAnnotation)
         XCTAssertEqual(circleAnnotationManager.annotations, [
             CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
             CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
@@ -625,8 +625,8 @@ final class MapContentReconcilerTests: XCTestCase {
 
         XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 1)
         XCTAssertEqual(sourceManager.updateGeoJSONSourceStub.invocations.count, 0)
-        XCTAssertEqual(viewAnnotationsManager.objectAnnotations.count, 1)
-        verifyAnnotationOptions(viewAnnotationsManager.objectAnnotations.values.first, component.mapViewAnnotation)
+        XCTAssertEqual(viewAnnotationsManager.allAnnotations.count, 1)
+        verifyAnnotationOptions(viewAnnotationsManager.allAnnotations.first, component.mapViewAnnotation)
         XCTAssertEqual(circleAnnotationManager.annotations, [
             CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
             CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
@@ -661,8 +661,8 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertEqual(styleManager.addStyleLayerStub.invocations.count, 4)
         XCTAssertEqual(styleManager.getStyleLayerPropertiesStub.invocations.count, 0)
         XCTAssertEqual(styleManager.removeStyleLayerStub.invocations.count, 1)
-        XCTAssertEqual(viewAnnotationsManager.objectAnnotations.count, 1)
-        verifyAnnotationOptions(viewAnnotationsManager.objectAnnotations.values.first, component.mapViewAnnotation)
+        XCTAssertEqual(viewAnnotationsManager.allAnnotations.count, 1)
+        verifyAnnotationOptions(viewAnnotationsManager.allAnnotations.first, component.mapViewAnnotation)
         XCTAssertEqual(circleAnnotationManager.annotations, [
             CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
             CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
@@ -690,7 +690,7 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertEqual(styleManager.removeStyleLayerStub.invocations.count, 4)
         XCTAssertEqual(sourceManager.removeSourceUncheckedStub.invocations.count, 1)
         XCTAssertEqual(sourceManager.removeSourceUncheckedStub.invocations.last?.parameters, "route")
-        XCTAssertEqual(viewAnnotationsManager.objectAnnotations.count, 0)
+        XCTAssertEqual(viewAnnotationsManager.allAnnotations.count, 0)
         XCTAssertEqual(orchestratorImpl.removeAnnotationManagerStub.invocations.map(\.parameters), [
             "circle-test",
             "circle-test",

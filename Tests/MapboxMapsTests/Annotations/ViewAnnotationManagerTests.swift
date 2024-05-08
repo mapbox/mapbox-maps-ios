@@ -114,7 +114,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
         XCTAssertEqual(Set(mapboxMap.removeViewAnnotationStub.invocations.map(\.parameters)), Set(viewIds))
         XCTAssertTrue(container.subviews.isEmpty)
-        XCTAssertTrue(manager.objectAnnotations.isEmpty)
+        XCTAssertTrue(manager.allAnnotations.isEmpty)
     }
 
     func testRemoveAllObjectAnnotations() {
@@ -123,16 +123,17 @@ final class ViewAnnotationManagerTests: XCTestCase {
         manager.add(va1)
         manager.add(va2)
 
-        XCTAssertFalse(manager.objectAnnotations.isEmpty)
+        XCTAssertFalse(manager.allAnnotations.isEmpty)
         manager.removeAll()
 
-        XCTAssertTrue(manager.objectAnnotations.isEmpty)
+        XCTAssertTrue(manager.allAnnotations.isEmpty)
     }
 
     func testRemoveAllNoAnnotationViews() {
         manager.removeAll()
 
         XCTAssertTrue(mapboxMap.removeViewAnnotationStub.invocations.isEmpty)
+        XCTAssertTrue(manager.allAnnotations.isEmpty)
     }
 
     @available(*, deprecated)

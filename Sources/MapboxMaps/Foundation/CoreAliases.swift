@@ -1,4 +1,5 @@
 @_implementationOnly import MapboxCoreMaps_Private
+@_implementationOnly import MapboxCommon_Private
 
 typealias CoreCameraOptions = MapboxCoreMaps_Private.CameraOptions
 typealias CoreCameraState = MapboxCoreMaps_Private.CameraState
@@ -32,3 +33,4 @@ typealias CoreObservable = MapboxCoreMaps_Private.Observable
 typealias CoreViewAnnotationPositionsUpdateListener = MapboxCoreMaps_Private.ViewAnnotationPositionsUpdateListener
 typealias CoreMapSnapshotter = MapboxCoreMaps_Private.MapSnapshotter
 typealias CorePerformanceSamplerOptions = MapboxCoreMaps_Private.PerformanceSamplerOptions
+typealias TelemetryCounter = MapboxCommon_Private.FeatureTelemetryCounter

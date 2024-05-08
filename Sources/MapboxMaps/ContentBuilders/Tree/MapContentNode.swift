@@ -25,6 +25,8 @@ final class MapContentNode: Identifiable {
         self.context = context
     }
 
+    var childrenIsEmpty: Bool { children.isEmpty }
+
     func withChildrenNodes(_ closure: (() -> MapContentNode) -> Void) {
         var idx = 0
 

@@ -631,6 +631,8 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         }
     }
 
+    private(set) var didMoveToCarPlayWindow = false
+
     open override func didMoveToWindow() {
         super.didMoveToWindow()
 
@@ -640,6 +642,11 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         guard let window = window else {
             cameraAnimatorsRunner.isEnabled = false
             return
+        }
+
+        if window.isCarPlay, !didMoveToCarPlayWindow {
+            didMoveToCarPlayWindow = true
+            sendTelemetry(\.carPlay)
         }
 
         displayLink = dependencyProvider.makeDisplayLink(

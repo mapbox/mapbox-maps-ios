@@ -228,7 +228,7 @@ final class StyleColorTests: XCTestCase {
             let data = try JSONEncoder().encode([color])
 
             // Double quotes are added to the expected value to make it a JSON string
-            XCTAssertEqual(data, #"["\#(expectedColorString)"]"#.data(using: .utf8))
+            XCTAssertEqual(data, Data(#"["\#(expectedColorString)"]"#.utf8))
         }
     }
 
@@ -261,7 +261,7 @@ final class StyleColorTests: XCTestCase {
             // wrapping in an array since iOS 12 and lower only support
             // Array and Dictionary as the top level JSON values
             // Double quotes are added to make it a JSON string
-            let rgbaJSONString = #"["\#(colorString)"]"#.data(using: .utf8)!
+            let rgbaJSONString = Data(#"["\#(colorString)"]"#.utf8)
 
             let color = try JSONDecoder().decode([StyleColor].self, from: rgbaJSONString)
 

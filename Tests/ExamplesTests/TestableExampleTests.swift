@@ -9,7 +9,7 @@ final class TestableExampleTests: XCTestCase {
     private weak var weakMapView: MapView?
     private var exampleControllerRemovedExpectation: XCTestExpectation?
 
-    override class var defaultTestSuite: XCTestSuite {
+    override static var defaultTestSuite: XCTestSuite {
         let newTestSuite = XCTestSuite(forTestCaseClass: TestableExampleTests.self)
 
         guard let method = class_getInstanceMethod(Self.self, #selector(runExample)) else {

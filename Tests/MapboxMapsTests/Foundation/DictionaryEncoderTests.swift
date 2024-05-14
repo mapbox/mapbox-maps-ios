@@ -11,7 +11,7 @@ final class DictionaryEncoderTests: XCTestCase {
             float: 123.456, double: 12345.6789,
             bool: true,
             date: Date(timeIntervalSinceReferenceDate: 123456.789),
-            data: "test".data(using: String.Encoding.utf8)!,
+            data: Data("test".utf8),
             url: URL(string: "dummy-mapbox.com")
         )
 

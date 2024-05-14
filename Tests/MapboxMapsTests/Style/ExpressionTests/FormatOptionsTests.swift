@@ -51,13 +51,13 @@ final class FormatOptionsTests: XCTestCase {
     }
 
     func testDecodeWithValue() throws {
-        let formatOptionsData = """
+        let formatOptionsData = Data("""
             {
                 "font-scale": 1,
                 "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
                 "text-color": "rgba(0,0,0,0)"
             }
-            """.data(using: .utf8)
+            """.utf8)
 
         let formatOptions = try JSONDecoder().decode(FormatOptions.self, from: try XCTUnwrap(formatOptionsData))
         XCTAssertEqual(formatOptions.fontScale?.asConstant, 1)
@@ -112,15 +112,15 @@ final class FormatOptionsTests: XCTestCase {
 
         let encoded = try DictionaryEncoder().encode(formatOptions)
         XCTAssertEqual(
-            String(data: try JSONSerialization.data(withJSONObject: encoded["font-scale"] as Any), encoding: .utf8),
+            String(decoding: try JSONSerialization.data(withJSONObject: encoded["font-scale"] as Any), as: UTF8.self),
             #"["case",[">=",["to-number",["get","point_count"]],4],1,2]"#
         )
         XCTAssertEqual(
-            String(data: try JSONSerialization.data(withJSONObject: encoded["text-font"] as Any), encoding: .utf8),
+            String(decoding: try JSONSerialization.data(withJSONObject: encoded["text-font"] as Any), as: UTF8.self),
             #"["case",[">=",["to-number",["get","point_count"]],4],["Open Sans Semibold"],["Arial Unicode MS Bold"]]"#
         )
         XCTAssertEqual(
-            String(data: try JSONSerialization.data(withJSONObject: encoded["text-color"] as Any), encoding: .utf8),
+            String(decoding: try JSONSerialization.data(withJSONObject: encoded["text-color"] as Any), as: UTF8.self),
             ##"["case",[">=",["to-number",["get","point_count"]],4],"#ffffff","#000000"]"##
         )
     }

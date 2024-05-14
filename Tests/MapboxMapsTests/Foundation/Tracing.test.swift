@@ -6,13 +6,13 @@ import os
 final class TracingTests: XCTestCase {
     static var defaultTracing: TracingBackendType?
 
-    override class func setUp() {
+    override static func setUp() {
         super.setUp()
 
         defaultTracing = CoreTracing.getBackendType()
     }
 
-    override class func tearDown() {
+    override static func tearDown() {
         super.tearDown()
 
         // Restore CoreMaps default tracing to prevent side-effects

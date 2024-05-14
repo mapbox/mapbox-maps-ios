@@ -2,7 +2,7 @@ import XCTest
 
 final class ExamplesUITests: XCTestCase {
 
-    override class func setUp() {
+    override static func setUp() {
         // This is the setUp() class method.
         // XCTest calls it before calling the first test method.
         // Set up any overall initial state here.

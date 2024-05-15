@@ -4,10 +4,13 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-* Added camera(for:) deprecation for several methods. Added  `CameraForExample` showcasing camera(for:) usage
+## 11.4.0-rc.2 - 15 May, 2024
+
+* Bump core maps version to 11.4.0-rc.2 and common sdk to 24.4.0-rc.2
 
 ## 11.4.0-rc.1 - 8 May, 2024
 
+* Added camera(for:) deprecation for several methods. Added  `CameraForExample` showcasing camera(for:) usageq
 * Expose experimental `RasterParticleLayer` which is suitable for displaying precipitation or wind on the map
 * Expose the list of added `ViewAnnotation`
 * Bump core maps version to 11.4.0-rc.1 and common sdk to 24.4.0-rc.1.

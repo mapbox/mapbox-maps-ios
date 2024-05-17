@@ -59,8 +59,7 @@ final class MapContentReconciler {
 
     /// Increment telemetry counter once per StyleDSL usage on the single style
     func triggerTelemetryIfNeeded(for node: MapContentNode) {
-        guard sendTelemetryOncePerStyle.continueOnce(), !node.childrenIsEmpty else { return }
-        Log.info(forMessage: "triggerTelemetryIfNeeded")
+        guard !node.childrenIsEmpty, sendTelemetryOncePerStyle.continueOnce() else { return }
         sendTelemetry(\.styleDSL)
     }
 }

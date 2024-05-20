@@ -7,8 +7,6 @@ logging.basicConfig(level=logging.INFO)
 
 def main():
     parser = argparse.ArgumentParser(description='Upload documentation.')
-    parser.add_argument('--jazzy-docs', required=True,
-                        type=dir_path, help='Path to jazzy docs')
     parser.add_argument('--docc-docs', default=None,
                         type=dir_path, help='Path to DocC docs')
     parser.add_argument('--version', default=None, required=True,
@@ -33,16 +31,6 @@ def main():
         shutil.copytree(args.docc_docs, Path(repo.working_dir) / args.version, dirs_exist_ok=True)
         repo.index.add([args.version])
         repo.index.commit(f"Add DocC documentation for {args.version} version")
-
-        if not args.dry_run:
-            repo.remote().push()
-
-    if args.jazzy_docs and args.jazzy_docs.exists() and args.jazzy_docs.is_dir():
-        print(f"Copy jazzy docs from {args.jazzy_docs} to {repo.working_dir}/{args.version}-jazzy")
-        shutil.copytree(args.jazzy_docs, Path(repo.working_dir) / f"{args.version}-jazzy", dirs_exist_ok=True)
-        repo.index.add([f"{args.version}-jazzy"])
-
-        repo.index.commit(f"Add jazzy documentation for {args.version} version")
 
         if not args.dry_run:
             repo.remote().push()

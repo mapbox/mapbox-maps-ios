@@ -28,7 +28,7 @@ Describe the changes in this PR here.
  - [ ] Write tests for all new functionality. Put tests in correct [Test Plan](https://github.com/mapbox/mapbox-maps-ios/tree/main/Tests/TestPlans) (Unit, Integration, All)
    - [ ] If tests were not written, please explain why.
  - [ ] Add documentation comments for any added or updated public APIs.
- - [ ] Add any new public, top-level symbols to the Jazzy config's `custom_categories` (scripts/doc-generation/.jazzy.yaml)
+ - [ ] Add any new public, top-level symbols to the DocC custom catatlog (Sources/MapboxMaps/Documentation.docc/API Catalogs)
  - [ ] Add a changelog entry to to bottom of the relevant section (typically the `## main` heading near the top).
  - [ ] Update the guides (internal access only), README.md, and DEVELOPING.md if their contents are impacted by these changes.
  - [ ] If this PR is a `v10.[version]` release branch fix / enhancement, merge it to `main` first and then port to `v10.[version]` release branch.

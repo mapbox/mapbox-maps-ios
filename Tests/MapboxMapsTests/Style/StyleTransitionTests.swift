@@ -16,7 +16,7 @@ class StyleTransitionTests: XCTestCase {
     func testEncodeHasCorrectConversion() {
         let transition = StyleTransition(duration: 1.0, delay: 0.5)
         let encodedTransition = try! JSONEncoder().encode(transition)
-        let dataString = String(data: encodedTransition, encoding: .utf8)
+        let dataString = String(decoding: encodedTransition, as: UTF8.self)
 
         XCTAssertEqual(dataString, jsonString)
     }

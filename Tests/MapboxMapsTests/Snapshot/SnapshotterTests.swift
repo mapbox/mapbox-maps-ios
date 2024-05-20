@@ -237,7 +237,6 @@ final class SnapshotterTests: XCTestCase {
             XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
         }
 
-        // swiftlint:disable opening_brace
         let eventInvocations = [
             { try verifyInvocation(eventType: .mapLoaded) },
             { try verifyInvocation(eventType: .mapLoadingError) },
@@ -254,7 +253,6 @@ final class SnapshotterTests: XCTestCase {
             { try verifyInvocation(eventType: .cameraChanged) },
             { try verifyInvocation(eventType: .resourceRequest) }
         ]
-        // swiftlint:enable opening_brace
         try eventInvocations.randomElement()!()
     }
 
@@ -299,7 +297,6 @@ final class SnapshotterTests: XCTestCase {
             XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
         }
 
-        // swiftlint:disable opening_brace
         let eventInvocations = [
             { try verifyInvocation(eventType: .mapLoaded) },
             { try verifyInvocation(eventType: .mapLoadingError) },
@@ -316,7 +313,6 @@ final class SnapshotterTests: XCTestCase {
             { try verifyInvocation(eventType: .cameraChanged) },
             { try verifyInvocation(eventType: .resourceRequest) }
         ]
-        // swiftlint:enable opening_brace
         try eventInvocations.randomElement()!()
     }
 }

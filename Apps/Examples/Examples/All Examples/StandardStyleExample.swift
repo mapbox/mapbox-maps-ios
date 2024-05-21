@@ -32,7 +32,7 @@ final class StandardStyleExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.onStyleLoaded.observe { [weak self] _ in
             guard let self else { return }
 
-            // Create and apply basic styling to the line layer, assign the layer to the "middle" slot
+            // Create and apply basic styling to the line layer, assign the layer to the "bottom" slot
             var layer = LineLayer(id: "line-layer", source: "line-layer")
             layer.lineColor = .constant(StyleColor.init(UIColor.orange))
             layer.lineWidth = .constant(8)

@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.4.0 - 22 May, 2024
+
+* Live performance metrics collection. Mapbox Maps SDK v11.4.0 collects certain performance and feature usage counters so we can better benchmark the MapboxMaps library and invest in its performance. The performance counters have been carefully designed so that user-level metrics and identifiers are not collected.
+* Bump core maps version to 11.4.0 and common sdk to 24.0.0
+
 ## 11.4.0-rc.2 - 15 May, 2024
 
 * Bump core maps version to 11.4.0-rc.2 and common sdk to 24.4.0-rc.2

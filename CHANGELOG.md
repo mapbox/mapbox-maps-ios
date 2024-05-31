@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+# 10.18.1 - May 30, 2024
+
+* Update MapboxCommpon to 23.10.1
+
 # 10.18.0 - May 23, 2024
 
 * Update MapboxCoreMaps to 10.18.0 and MapboxCommon to 23.10.0

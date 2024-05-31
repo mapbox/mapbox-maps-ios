@@ -69,7 +69,6 @@
 		74A2313C27EDCE7F0065FB7D /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313B27EDCE7F0065FB7D /* AnnotationView.swift */; };
 		74A2313E27EE1C640065FB7D /* ViewAnnotationWithPointAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */; };
 		74D0803A28A13916008EB69C /* BasicLocationPulsingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0803928A13916008EB69C /* BasicLocationPulsingExample.swift */; };
-		955B69EF299AAE6700FD4A19 /* RasterColorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */; };
 		95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */; };
 		A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E58332654593500D8B946 /* SwitchStylesExample.swift */; };
 		A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E584B26555A3400D8B946 /* PointClusteringExample.swift */; };
@@ -110,8 +109,6 @@
 		CADCF73C258499200065C51B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4EED252F7E88007636F1 /* AppDelegate.swift */; };
 		CADCF743258499570065C51B /* BasicMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF742258499570065C51B /* BasicMapExample.swift */; };
 		CAF9A9812583E49B007EF9EC /* TestableExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */; };
-		FE2755D52A12230B00EEC95F /* Fingertips in Frameworks */ = {isa = PBXBuildFile; productRef = FE2755D42A12230B00EEC95F /* Fingertips */; };
-		FE99952B2A1E05200068AB12 /* Lights3DExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE99952A2A1E05200068AB12 /* Lights3DExample.swift */; };
 		FEA410F02A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410EF2A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift */; };
 		FEA410F22A263109002F1816 /* DashboardCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410F12A263109002F1816 /* DashboardCarPlaySceneDelegate.swift */; };
 		FEA410F42A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410F32A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift */; };
@@ -234,7 +231,6 @@
 		74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationWithPointAnnotationExample.swift; sourceTree = "<group>"; };
 		74A2313F27EE243B0065FB7D /* annotations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = annotations.json; sourceTree = "<group>"; };
 		74D0803928A13916008EB69C /* BasicLocationPulsingExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicLocationPulsingExample.swift; sourceTree = "<group>"; };
-		955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterColorExample.swift; sourceTree = "<group>"; };
 		95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
 		A41E58332654593500D8B946 /* SwitchStylesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchStylesExample.swift; sourceTree = "<group>"; };
 		A41E584B26555A3400D8B946 /* PointClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointClusteringExample.swift; sourceTree = "<group>"; };
@@ -259,7 +255,6 @@
 		CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorsExample.swift; sourceTree = "<group>"; };
 		CADCF742258499570065C51B /* BasicMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicMapExample.swift; sourceTree = "<group>"; };
 		CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExampleTests.swift; sourceTree = "<group>"; };
-		FE99952A2A1E05200068AB12 /* Lights3DExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lights3DExample.swift; sourceTree = "<group>"; };
 		FE355DAD2A275377003AC5DF /* Examples_CarPlay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Examples_CarPlay.entitlements; sourceTree = "<group>"; };
 		FE355DAF2A275DB4003AC5DF /* Examples.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Examples.xcconfig; sourceTree = "<group>"; };
 		FEA410EF2A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCarPlaySceneDelegage.swift; sourceTree = "<group>"; };

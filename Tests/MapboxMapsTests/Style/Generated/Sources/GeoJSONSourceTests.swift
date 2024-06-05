@@ -14,6 +14,7 @@ final class GeoJSONSourceTests: XCTestCase {
         source.cluster = Bool.testSourceValue()
         source.clusterRadius = Double.testSourceValue()
         source.clusterMaxZoom = Double.testSourceValue()
+        source.clusterMinPoints = Double.testSourceValue()
         source.clusterProperties = [String: Expression].testSourceValue()
         source.lineMetrics = Bool.testSourceValue()
         source.generateId = Bool.testSourceValue()
@@ -44,6 +45,7 @@ final class GeoJSONSourceTests: XCTestCase {
             XCTAssert(decodedSource.cluster == Bool.testSourceValue())
             XCTAssert(decodedSource.clusterRadius == Double.testSourceValue())
             XCTAssert(decodedSource.clusterMaxZoom == Double.testSourceValue())
+            XCTAssert(decodedSource.clusterMinPoints == Double.testSourceValue())
             XCTAssert(decodedSource.clusterProperties == [String: Expression].testSourceValue())
             XCTAssert(decodedSource.lineMetrics == Bool.testSourceValue())
             XCTAssert(decodedSource.generateId == Bool.testSourceValue())
@@ -58,10 +60,12 @@ final class GeoJSONSourceTests: XCTestCase {
     func testSetPropertyValueWithFunction() {
         let source = GeoJSONSource(id: "test-source")
             .data(GeoJSONSourceData.testSourceValue())
+            .clusterMinPoints(Double.testSourceValue())
             .prefetchZoomDelta(Double.testSourceValue())
             .tileCacheBudget(TileCacheBudgetSize.testSourceValue())
 
         XCTAssertEqual(source.data, GeoJSONSourceData.testSourceValue())
+        XCTAssertEqual(source.clusterMinPoints, Double.testSourceValue())
         XCTAssertEqual(source.prefetchZoomDelta, Double.testSourceValue())
         XCTAssertEqual(source.tileCacheBudget, TileCacheBudgetSize.testSourceValue())
     }

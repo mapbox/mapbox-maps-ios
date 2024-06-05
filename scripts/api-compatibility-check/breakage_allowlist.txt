@@ -1427,3 +1427,6 @@ Func ArrayBuilder.buildBlock(_:) has been renamed to Func buildBlock()
 Func ArrayBuilder.buildExpression(_:) has return type change from [T?] to [T] 
 Func ArrayBuilder.buildOptional(_:) has parameter 0 type change from [T?]? to [T]? 
 Func ArrayBuilder.buildOptional(_:) has return type change from [T?] to [T]
+
+// Expose clusterMinPoints
+Constructor ClusterOptions.init(circleRadius:circleColor:textColor:textSize:textField:clusterRadius:clusterMaxZoom:clusterProperties:) has been removed

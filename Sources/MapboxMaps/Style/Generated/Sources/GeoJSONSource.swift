@@ -37,6 +37,9 @@ public struct GeoJSONSource: Source {
     /// Max zoom on which to cluster points if clustering is enabled. Defaults to one zoom less than maxzoom (so that last zoom features are not clustered). Clusters are re-evaluated at integer zoom levels so setting clusterMaxZoom to 14 means the clusters will be displayed until z15.
     public var clusterMaxZoom: Double?
 
+    /// Minimum number of points necessary to form a cluster if clustering is enabled. Defaults to `2`.
+    public var clusterMinPoints: Double?
+
     /// An object defining custom properties on the generated clusters if clustering is enabled, aggregating values from clustered points. Has the form `{"property_name": [operator, map_expression]}`. `operator` is any expression function that accepts at least 2 operands (e.g. `"+"` or `"max"`) — it accumulates the property value from clusters/points the cluster contains; `map_expression` produces the value of a single point.
     ///
     /// Example: `{"sum": ["+", ["get", "scalerank"]]}`.
@@ -78,6 +81,7 @@ extension GeoJSONSource {
         case cluster = "cluster"
         case clusterRadius = "clusterRadius"
         case clusterMaxZoom = "clusterMaxZoom"
+        case clusterMinPoints = "clusterMinPoints"
         case clusterProperties = "clusterProperties"
         case lineMetrics = "lineMetrics"
         case generateId = "generateId"
@@ -115,6 +119,7 @@ extension GeoJSONSource {
         try container.encodeIfPresent(cluster, forKey: .cluster)
         try container.encodeIfPresent(clusterRadius, forKey: .clusterRadius)
         try container.encodeIfPresent(clusterMaxZoom, forKey: .clusterMaxZoom)
+        try container.encodeIfPresent(clusterMinPoints, forKey: .clusterMinPoints)
         try container.encodeIfPresent(clusterProperties, forKey: .clusterProperties)
         try container.encodeIfPresent(lineMetrics, forKey: .lineMetrics)
         try container.encodeIfPresent(generateId, forKey: .generateId)
@@ -130,6 +135,12 @@ extension GeoJSONSource {
     @_documentation(visibility: public)
     public func data(_ newValue: GeoJSONSourceData) -> Self {
         with(self, setter(\.data, newValue))
+    }
+
+    /// Minimum number of points necessary to form a cluster if clustering is enabled. Defaults to `2`.
+    @_documentation(visibility: public)
+    public func clusterMinPoints(_ newValue: Double) -> Self {
+        with(self, setter(\.clusterMinPoints, newValue))
     }
 
     /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom. The default delta is 4.

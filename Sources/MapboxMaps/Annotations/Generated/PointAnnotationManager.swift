@@ -132,6 +132,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 source.clusterRadius = clusterOptions.clusterRadius
                 source.clusterProperties = clusterOptions.clusterProperties
                 source.clusterMaxZoom = clusterOptions.clusterMaxZoom
+                source.clusterMinPoints = clusterOptions.clusterMinPoints
             }
 
             try style.addSource(source)

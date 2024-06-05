@@ -15,6 +15,7 @@ public final class FollowPuckViewportState {
 
     private let impl: CameraViewportState
     private let optionsSubject: CurrentValueSignalSubject<FollowPuckViewportStateOptions>
+    private let mapboxMap: MapboxMapProtocol
 
     internal init(options: FollowPuckViewportStateOptions,
                   mapboxMap: MapboxMapProtocol,
@@ -22,6 +23,7 @@ public final class FollowPuckViewportState {
                   safeAreaPadding: Signal<UIEdgeInsets?>) {
         let optionsSubject = CurrentValueSignalSubject(options)
         self.optionsSubject = optionsSubject
+        self.mapboxMap = mapboxMap
 
         let resultCamera = Signal
             .combineLatest(optionsSubject.signal.skipRepeats(), onPuckRender.map(\.followPuckState).skipRepeats())
@@ -48,6 +50,7 @@ extension FollowPuckViewportState: ViewportState {
     /// :nodoc:
     /// See ``ViewportState/startUpdatingCamera()``.
     public func startUpdatingCamera() {
+        mapboxMap.beginAnimation()
         impl.startUpdatingCamera()
     }
 
@@ -55,6 +58,7 @@ extension FollowPuckViewportState: ViewportState {
     /// See ``ViewportState/stopUpdatingCamera()``.
     public func stopUpdatingCamera() {
         impl.stopUpdatingCamera()
+        mapboxMap.endAnimation()
     }
 }
 

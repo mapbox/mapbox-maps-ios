@@ -3,6 +3,7 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
+* Improve stability of symbol placement when using `FollowPuckViewportState`.
 
 ## 11.4.0 - 22 May, 2024
 

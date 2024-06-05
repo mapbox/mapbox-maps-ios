@@ -90,4 +90,12 @@ final class FollowPuckViewportStateTest: XCTestCase {
         $onPuckRender.send(puck)
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
     }
+
+    func testAnimationInProgressFlag() throws {
+        state.startUpdatingCamera()
+        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+
+        state.stopUpdatingCamera()
+        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+    }
 }

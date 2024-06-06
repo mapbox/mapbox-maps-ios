@@ -63,7 +63,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testCircleEmissiveStrength() throws {
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         manager.circleEmissiveStrength = value
         XCTAssertEqual(manager.circleEmissiveStrength, value)
 
@@ -89,7 +89,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testCirclePitchAlignment() throws {
         // Test that the setter and getter work
-        let value = CirclePitchAlignment.random()
+        let value = CirclePitchAlignment.testConstantValue()
         manager.circlePitchAlignment = value
         XCTAssertEqual(manager.circlePitchAlignment, value)
 
@@ -115,7 +115,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testCirclePitchScale() throws {
         // Test that the setter and getter work
-        let value = CirclePitchScale.random()
+        let value = CirclePitchScale.testConstantValue()
         manager.circlePitchScale = value
         XCTAssertEqual(manager.circlePitchScale, value)
 
@@ -141,7 +141,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testCircleTranslate() throws {
         // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let value = [0.0, 0.0]
         manager.circleTranslate = value
         XCTAssertEqual(manager.circleTranslate, value)
 
@@ -169,7 +169,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testCircleTranslateAnchor() throws {
         // Test that the setter and getter work
-        let value = CircleTranslateAnchor.random()
+        let value = CircleTranslateAnchor.testConstantValue()
         manager.circleTranslateAnchor = value
         XCTAssertEqual(manager.circleTranslateAnchor, value)
 
@@ -195,7 +195,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testSlot() throws {
         // Test that the setter and getter work
-        let value = String.randomASCII(withLength: .random(in: 0...100))
+        let value = UUID().uuidString
         manager.slot = value
         XCTAssertEqual(manager.slot, value)
 
@@ -219,7 +219,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleSortKey() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: -100000...100000)
+        let value = 0.0
         annotation.circleSortKey = value
         XCTAssertEqual(annotation.circleSortKey, value)
 
@@ -255,7 +255,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleBlur() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: -100000...100000)
+        let value = 0.0
         annotation.circleBlur = value
         XCTAssertEqual(annotation.circleBlur, value)
 
@@ -291,7 +291,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleColor() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor.random()
+        let value = StyleColor(red: 255, green: 0, blue: 255)
         annotation.circleColor = value
         XCTAssertEqual(annotation.circleColor, value)
 
@@ -327,7 +327,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleOpacity() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: 0...1)
+        let value = 0.5
         annotation.circleOpacity = value
         XCTAssertEqual(annotation.circleOpacity, value)
 
@@ -363,7 +363,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleRadius() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         annotation.circleRadius = value
         XCTAssertEqual(annotation.circleRadius, value)
 
@@ -399,7 +399,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleStrokeColor() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor.random()
+        let value = StyleColor(red: 255, green: 0, blue: 255)
         annotation.circleStrokeColor = value
         XCTAssertEqual(annotation.circleStrokeColor, value)
 
@@ -435,7 +435,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleStrokeOpacity() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: 0...1)
+        let value = 0.5
         annotation.circleStrokeOpacity = value
         XCTAssertEqual(annotation.circleStrokeOpacity, value)
 
@@ -471,7 +471,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleStrokeWidth() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         annotation.circleStrokeWidth = value
         XCTAssertEqual(annotation.circleStrokeWidth, value)
 

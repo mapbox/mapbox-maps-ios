@@ -81,10 +81,10 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             XCTAssertEqual(frame.origin.y, expectedOrigin.y)
         }
 
-        let width = CGFloat.random(in: 20...100)
-        let height = CGFloat.random(in: 20...100)
-        let offsetX = CGFloat.random(in: -100...100)
-        let offsetY = CGFloat.random(in: -100...100)
+        let width: CGFloat = 80
+        let height: CGFloat = 40
+        let offsetX: CGFloat = -30
+        let offsetY: CGFloat = 50
 
         var sut = ViewAnnotationOptions(
             annotatedFeature: .layerFeature(layerId: "foo"),

@@ -44,7 +44,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
     func testMakePointAnnotationManagers() {
         //given
         let annotationManagerId = UUID().uuidString
-        let clusterOptions: ClusterOptions? = .random(ClusterOptions())
+        let clusterOptions: ClusterOptions? = ClusterOptions()
 
         //when
         let manager = impl.makePointAnnotationManager(

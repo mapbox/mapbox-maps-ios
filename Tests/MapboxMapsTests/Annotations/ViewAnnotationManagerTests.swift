@@ -118,8 +118,14 @@ final class ViewAnnotationManagerTests: XCTestCase {
     }
 
     func testRemoveAllObjectAnnotations() {
-        let va1 = ViewAnnotation(annotatedFeature: .geometry(Point(.random())), view: UIView())
-        let va2 = ViewAnnotation(annotatedFeature: .geometry(Point(.random())), view: UIView())
+        let va1 = ViewAnnotation(
+            annotatedFeature: .geometry(Point(CLLocationCoordinate2D(latitude: -34, longitude: -25))),
+            view: UIView()
+        )
+        let va2 = ViewAnnotation(
+            annotatedFeature: .geometry(Point(CLLocationCoordinate2D(latitude: 83, longitude: 120))),
+            view: UIView()
+        )
         manager.add(va1)
         manager.add(va2)
 
@@ -366,11 +372,14 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertNil(manager.camera(forAnnotations: ["dummy"]))
 
         // Annotations that have been added and are valid.
-        let points = Array.random(withLength: 10, generator: CLLocationCoordinate2D.random)
+        let points = Array.random(
+            withLength: 10,
+            generator: { CLLocationCoordinate2D(latitude: 24, longitude: 84) }
+        )
         let boundingBox = try XCTUnwrap(BoundingBox(from: points))
 
         for (index, point) in points.enumerated() {
-            let options = ViewAnnotationOptions(geometry: Point(point).geometry, width: .random(in: 40...100), height: .random(in: 40...100))
+            let options = ViewAnnotationOptions(geometry: Point(point).geometry, width: 60, height: 80)
             try manager.add(UIView(), id: "\(index)", options: options)
             mapboxMap.optionsForViewAnnotationWithIdStub.returnValueQueue.insert(options, at: 0)
         }
@@ -379,17 +388,16 @@ final class ViewAnnotationManagerTests: XCTestCase {
             let camera = MapboxMaps.CameraOptions(
                 center: invocation.parameters.coordinateBounds.center,
                 padding: invocation.parameters.padding,
-                zoom: .random(in: 0...5),
+                zoom: 3,
                 bearing: invocation.parameters.bearing,
                 pitch: CGFloat(invocation.parameters.pitch ?? 0)
             )
             mapboxMap?.cameraForCoordinateBoundsStub.defaultReturnValue = camera
         }
 
-        let padding = UIEdgeInsets.random()
-        let bearing = CGFloat.random(in: -180...180)
-        let pitch = CGFloat.random(in: 0...90)
-        _ = manager.camera(forAnnotations: ["0", "1", "2", "3"], padding: padding, bearing: bearing, pitch: pitch)
+        let bearing = 160.0
+        let pitch = 30.0
+        _ = manager.camera(forAnnotations: ["0", "1", "2", "3"], padding: .zero, bearing: bearing, pitch: pitch)
 
         let parameters = try XCTUnwrap(mapboxMap.cameraForCoordinateBoundsStub.invocations.last).parameters
         XCTAssertEqual(parameters.bearing, bearing)

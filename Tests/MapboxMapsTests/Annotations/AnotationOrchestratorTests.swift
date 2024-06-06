@@ -23,8 +23,8 @@ final class AnnotationOrchestratorTests: XCTestCase {
     func testPointAnnotationnManagerInit() throws {
         //given
         let id = "managerId"
-        let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
-        let clusterOptions: ClusterOptions? = .random(.init())
+        let layerPosition: LayerPosition? = .at(38)
+        let clusterOptions: ClusterOptions? = .init()
 
         //when
         _ = annotationOrchestrator.makePointAnnotationManager(id: id, layerPosition: layerPosition, clusterOptions: clusterOptions)
@@ -40,7 +40,7 @@ final class AnnotationOrchestratorTests: XCTestCase {
     func testPolygonAnnotationManagerInit() throws {
         //given
         let id = "managerId"
-        let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
+        let layerPosition: LayerPosition? = .at(81)
 
         //when
         _ = annotationOrchestrator.makePolygonAnnotationManager(id: id, layerPosition: layerPosition) as AnnotationManagerInternal
@@ -55,7 +55,7 @@ final class AnnotationOrchestratorTests: XCTestCase {
     func testPolylineAnnotationManagerInit() throws {
         //given
         let id = "managerId"
-        let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
+        let layerPosition: LayerPosition? = .at(48)
 
         //when
         _ = annotationOrchestrator.makePolylineAnnotationManager(id: id, layerPosition: layerPosition)
@@ -70,7 +70,7 @@ final class AnnotationOrchestratorTests: XCTestCase {
     func testCircleAnnotationManagerInit() throws {
         //given
         let id = "managerId"
-        let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
+        let layerPosition: LayerPosition? = .at(91)
 
         //when
         _ = annotationOrchestrator.makeCircleAnnotationManager(id: id, layerPosition: layerPosition)

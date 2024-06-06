@@ -249,7 +249,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetLineCap() {
-        let value = LineCap.random()
+        let value = LineCap.testConstantValue()
         manager.lineCap = value
         XCTAssertEqual(manager.lineCap, value)
 
@@ -261,8 +261,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testLineCapAnnotationPropertiesAddedWithoutDuplicate() {
-        let newLineCapProperty = LineCap.random()
-        let secondLineCapProperty = LineCap.random()
+        let newLineCapProperty = LineCap.testConstantValue()
+        let secondLineCapProperty = LineCap.testConstantValue()
 
         manager.lineCap = newLineCapProperty
         $displayLink.send()
@@ -279,20 +279,20 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-            annotation.lineJoin = LineJoin.random()
-            annotation.lineSortKey = Double.random(in: -100000...100000)
-            annotation.lineBlur = Double.random(in: 0...100000)
-            annotation.lineBorderColor = StyleColor.random()
-            annotation.lineBorderWidth = Double.random(in: 0...100000)
-            annotation.lineColor = StyleColor.random()
-            annotation.lineGapWidth = Double.random(in: 0...100000)
-            annotation.lineOffset = Double.random(in: -100000...100000)
-            annotation.lineOpacity = Double.random(in: 0...1)
-            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.lineWidth = Double.random(in: 0...100000)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
             annotations.append(annotation)
         }
-        let newLineCapProperty = LineCap.random()
+        let newLineCapProperty = LineCap.testConstantValue()
 
         manager.annotations = annotations
         manager.lineCap = newLineCapProperty
@@ -304,7 +304,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetToNilLineCap() {
-        let newLineCapProperty = LineCap.random()
+        let newLineCapProperty = LineCap.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cap").value as! String
         manager.lineCap = newLineCapProperty
         $displayLink.send()
@@ -323,7 +323,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetLineMiterLimit() {
-        let value = Double.random(in: -100000...100000)
+        let value = 0.0
         manager.lineMiterLimit = value
         XCTAssertEqual(manager.lineMiterLimit, value)
 
@@ -335,8 +335,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testLineMiterLimitAnnotationPropertiesAddedWithoutDuplicate() {
-        let newLineMiterLimitProperty = Double.random(in: -100000...100000)
-        let secondLineMiterLimitProperty = Double.random(in: -100000...100000)
+        let newLineMiterLimitProperty = 0.0
+        let secondLineMiterLimitProperty = 0.0
 
         manager.lineMiterLimit = newLineMiterLimitProperty
         $displayLink.send()
@@ -353,20 +353,20 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-            annotation.lineJoin = LineJoin.random()
-            annotation.lineSortKey = Double.random(in: -100000...100000)
-            annotation.lineBlur = Double.random(in: 0...100000)
-            annotation.lineBorderColor = StyleColor.random()
-            annotation.lineBorderWidth = Double.random(in: 0...100000)
-            annotation.lineColor = StyleColor.random()
-            annotation.lineGapWidth = Double.random(in: 0...100000)
-            annotation.lineOffset = Double.random(in: -100000...100000)
-            annotation.lineOpacity = Double.random(in: 0...1)
-            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.lineWidth = Double.random(in: 0...100000)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
             annotations.append(annotation)
         }
-        let newLineMiterLimitProperty = Double.random(in: -100000...100000)
+        let newLineMiterLimitProperty = 0.0
 
         manager.annotations = annotations
         manager.lineMiterLimit = newLineMiterLimitProperty
@@ -378,7 +378,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetToNilLineMiterLimit() {
-        let newLineMiterLimitProperty = Double.random(in: -100000...100000)
+        let newLineMiterLimitProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-miter-limit").value as! Double
         manager.lineMiterLimit = newLineMiterLimitProperty
         $displayLink.send()
@@ -397,7 +397,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetLineRoundLimit() {
-        let value = Double.random(in: -100000...100000)
+        let value = 0.0
         manager.lineRoundLimit = value
         XCTAssertEqual(manager.lineRoundLimit, value)
 
@@ -409,8 +409,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testLineRoundLimitAnnotationPropertiesAddedWithoutDuplicate() {
-        let newLineRoundLimitProperty = Double.random(in: -100000...100000)
-        let secondLineRoundLimitProperty = Double.random(in: -100000...100000)
+        let newLineRoundLimitProperty = 0.0
+        let secondLineRoundLimitProperty = 0.0
 
         manager.lineRoundLimit = newLineRoundLimitProperty
         $displayLink.send()
@@ -427,20 +427,20 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-            annotation.lineJoin = LineJoin.random()
-            annotation.lineSortKey = Double.random(in: -100000...100000)
-            annotation.lineBlur = Double.random(in: 0...100000)
-            annotation.lineBorderColor = StyleColor.random()
-            annotation.lineBorderWidth = Double.random(in: 0...100000)
-            annotation.lineColor = StyleColor.random()
-            annotation.lineGapWidth = Double.random(in: 0...100000)
-            annotation.lineOffset = Double.random(in: -100000...100000)
-            annotation.lineOpacity = Double.random(in: 0...1)
-            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.lineWidth = Double.random(in: 0...100000)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
             annotations.append(annotation)
         }
-        let newLineRoundLimitProperty = Double.random(in: -100000...100000)
+        let newLineRoundLimitProperty = 0.0
 
         manager.annotations = annotations
         manager.lineRoundLimit = newLineRoundLimitProperty
@@ -452,7 +452,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetToNilLineRoundLimit() {
-        let newLineRoundLimitProperty = Double.random(in: -100000...100000)
+        let newLineRoundLimitProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-round-limit").value as! Double
         manager.lineRoundLimit = newLineRoundLimitProperty
         $displayLink.send()
@@ -471,7 +471,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetLineDasharray() {
-        let value = Array.random(withLength: .random(in: 0...10), generator: { Double.random(in: -100000...100000) })
+        let value = Array.random(withLength: .random(in: 0...10), generator: { 0.0 })
         manager.lineDasharray = value
         XCTAssertEqual(manager.lineDasharray, value)
 
@@ -483,8 +483,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testLineDasharrayAnnotationPropertiesAddedWithoutDuplicate() {
-        let newLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { Double.random(in: -100000...100000) })
-        let secondLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { Double.random(in: -100000...100000) })
+        let newLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { 0.0 })
+        let secondLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { 0.0 })
 
         manager.lineDasharray = newLineDasharrayProperty
         $displayLink.send()
@@ -501,20 +501,20 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-            annotation.lineJoin = LineJoin.random()
-            annotation.lineSortKey = Double.random(in: -100000...100000)
-            annotation.lineBlur = Double.random(in: 0...100000)
-            annotation.lineBorderColor = StyleColor.random()
-            annotation.lineBorderWidth = Double.random(in: 0...100000)
-            annotation.lineColor = StyleColor.random()
-            annotation.lineGapWidth = Double.random(in: 0...100000)
-            annotation.lineOffset = Double.random(in: -100000...100000)
-            annotation.lineOpacity = Double.random(in: 0...1)
-            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.lineWidth = Double.random(in: 0...100000)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
             annotations.append(annotation)
         }
-        let newLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { Double.random(in: -100000...100000) })
+        let newLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { 0.0 })
 
         manager.annotations = annotations
         manager.lineDasharray = newLineDasharrayProperty
@@ -526,7 +526,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetToNilLineDasharray() {
-        let newLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { Double.random(in: -100000...100000) })
+        let newLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { 0.0 })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-dasharray").value as! [Double]
         manager.lineDasharray = newLineDasharrayProperty
         $displayLink.send()
@@ -545,7 +545,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetLineDepthOcclusionFactor() {
-        let value = Double.random(in: 0...1)
+        let value = 0.5
         manager.lineDepthOcclusionFactor = value
         XCTAssertEqual(manager.lineDepthOcclusionFactor, value)
 
@@ -557,8 +557,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testLineDepthOcclusionFactorAnnotationPropertiesAddedWithoutDuplicate() {
-        let newLineDepthOcclusionFactorProperty = Double.random(in: 0...1)
-        let secondLineDepthOcclusionFactorProperty = Double.random(in: 0...1)
+        let newLineDepthOcclusionFactorProperty = 0.5
+        let secondLineDepthOcclusionFactorProperty = 0.5
 
         manager.lineDepthOcclusionFactor = newLineDepthOcclusionFactorProperty
         $displayLink.send()
@@ -575,20 +575,20 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-            annotation.lineJoin = LineJoin.random()
-            annotation.lineSortKey = Double.random(in: -100000...100000)
-            annotation.lineBlur = Double.random(in: 0...100000)
-            annotation.lineBorderColor = StyleColor.random()
-            annotation.lineBorderWidth = Double.random(in: 0...100000)
-            annotation.lineColor = StyleColor.random()
-            annotation.lineGapWidth = Double.random(in: 0...100000)
-            annotation.lineOffset = Double.random(in: -100000...100000)
-            annotation.lineOpacity = Double.random(in: 0...1)
-            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.lineWidth = Double.random(in: 0...100000)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
             annotations.append(annotation)
         }
-        let newLineDepthOcclusionFactorProperty = Double.random(in: 0...1)
+        let newLineDepthOcclusionFactorProperty = 0.5
 
         manager.annotations = annotations
         manager.lineDepthOcclusionFactor = newLineDepthOcclusionFactorProperty
@@ -600,7 +600,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetToNilLineDepthOcclusionFactor() {
-        let newLineDepthOcclusionFactorProperty = Double.random(in: 0...1)
+        let newLineDepthOcclusionFactorProperty = 0.5
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-depth-occlusion-factor").value as! Double
         manager.lineDepthOcclusionFactor = newLineDepthOcclusionFactorProperty
         $displayLink.send()
@@ -619,7 +619,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetLineEmissiveStrength() {
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         manager.lineEmissiveStrength = value
         XCTAssertEqual(manager.lineEmissiveStrength, value)
 
@@ -631,8 +631,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testLineEmissiveStrengthAnnotationPropertiesAddedWithoutDuplicate() {
-        let newLineEmissiveStrengthProperty = Double.random(in: 0...100000)
-        let secondLineEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let newLineEmissiveStrengthProperty = 50000.0
+        let secondLineEmissiveStrengthProperty = 50000.0
 
         manager.lineEmissiveStrength = newLineEmissiveStrengthProperty
         $displayLink.send()
@@ -649,20 +649,20 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-            annotation.lineJoin = LineJoin.random()
-            annotation.lineSortKey = Double.random(in: -100000...100000)
-            annotation.lineBlur = Double.random(in: 0...100000)
-            annotation.lineBorderColor = StyleColor.random()
-            annotation.lineBorderWidth = Double.random(in: 0...100000)
-            annotation.lineColor = StyleColor.random()
-            annotation.lineGapWidth = Double.random(in: 0...100000)
-            annotation.lineOffset = Double.random(in: -100000...100000)
-            annotation.lineOpacity = Double.random(in: 0...1)
-            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.lineWidth = Double.random(in: 0...100000)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
             annotations.append(annotation)
         }
-        let newLineEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let newLineEmissiveStrengthProperty = 50000.0
 
         manager.annotations = annotations
         manager.lineEmissiveStrength = newLineEmissiveStrengthProperty
@@ -674,7 +674,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetToNilLineEmissiveStrength() {
-        let newLineEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let newLineEmissiveStrengthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-emissive-strength").value as! Double
         manager.lineEmissiveStrength = newLineEmissiveStrengthProperty
         $displayLink.send()
@@ -693,7 +693,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetLineTranslate() {
-        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let value = [0.0, 0.0]
         manager.lineTranslate = value
         XCTAssertEqual(manager.lineTranslate, value)
 
@@ -705,8 +705,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testLineTranslateAnnotationPropertiesAddedWithoutDuplicate() {
-        let newLineTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let secondLineTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let newLineTranslateProperty = [0.0, 0.0]
+        let secondLineTranslateProperty = [0.0, 0.0]
 
         manager.lineTranslate = newLineTranslateProperty
         $displayLink.send()
@@ -723,20 +723,20 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-            annotation.lineJoin = LineJoin.random()
-            annotation.lineSortKey = Double.random(in: -100000...100000)
-            annotation.lineBlur = Double.random(in: 0...100000)
-            annotation.lineBorderColor = StyleColor.random()
-            annotation.lineBorderWidth = Double.random(in: 0...100000)
-            annotation.lineColor = StyleColor.random()
-            annotation.lineGapWidth = Double.random(in: 0...100000)
-            annotation.lineOffset = Double.random(in: -100000...100000)
-            annotation.lineOpacity = Double.random(in: 0...1)
-            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.lineWidth = Double.random(in: 0...100000)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
             annotations.append(annotation)
         }
-        let newLineTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let newLineTranslateProperty = [0.0, 0.0]
 
         manager.annotations = annotations
         manager.lineTranslate = newLineTranslateProperty
@@ -748,7 +748,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetToNilLineTranslate() {
-        let newLineTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let newLineTranslateProperty = [0.0, 0.0]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate").value as! [Double]
         manager.lineTranslate = newLineTranslateProperty
         $displayLink.send()
@@ -767,7 +767,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetLineTranslateAnchor() {
-        let value = LineTranslateAnchor.random()
+        let value = LineTranslateAnchor.testConstantValue()
         manager.lineTranslateAnchor = value
         XCTAssertEqual(manager.lineTranslateAnchor, value)
 
@@ -779,8 +779,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testLineTranslateAnchorAnnotationPropertiesAddedWithoutDuplicate() {
-        let newLineTranslateAnchorProperty = LineTranslateAnchor.random()
-        let secondLineTranslateAnchorProperty = LineTranslateAnchor.random()
+        let newLineTranslateAnchorProperty = LineTranslateAnchor.testConstantValue()
+        let secondLineTranslateAnchorProperty = LineTranslateAnchor.testConstantValue()
 
         manager.lineTranslateAnchor = newLineTranslateAnchorProperty
         $displayLink.send()
@@ -797,20 +797,20 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-            annotation.lineJoin = LineJoin.random()
-            annotation.lineSortKey = Double.random(in: -100000...100000)
-            annotation.lineBlur = Double.random(in: 0...100000)
-            annotation.lineBorderColor = StyleColor.random()
-            annotation.lineBorderWidth = Double.random(in: 0...100000)
-            annotation.lineColor = StyleColor.random()
-            annotation.lineGapWidth = Double.random(in: 0...100000)
-            annotation.lineOffset = Double.random(in: -100000...100000)
-            annotation.lineOpacity = Double.random(in: 0...1)
-            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.lineWidth = Double.random(in: 0...100000)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
             annotations.append(annotation)
         }
-        let newLineTranslateAnchorProperty = LineTranslateAnchor.random()
+        let newLineTranslateAnchorProperty = LineTranslateAnchor.testConstantValue()
 
         manager.annotations = annotations
         manager.lineTranslateAnchor = newLineTranslateAnchorProperty
@@ -822,7 +822,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetToNilLineTranslateAnchor() {
-        let newLineTranslateAnchorProperty = LineTranslateAnchor.random()
+        let newLineTranslateAnchorProperty = LineTranslateAnchor.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String
         manager.lineTranslateAnchor = newLineTranslateAnchorProperty
         $displayLink.send()
@@ -841,7 +841,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetLineTrimOffset() {
-        let value = [Double.random(in: 0...1), Double.random(in: 0...1)].sorted()
+        let value = [0.5, 0.5].sorted()
         manager.lineTrimOffset = value
         XCTAssertEqual(manager.lineTrimOffset, value)
 
@@ -853,8 +853,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testLineTrimOffsetAnnotationPropertiesAddedWithoutDuplicate() {
-        let newLineTrimOffsetProperty = [Double.random(in: 0...1), Double.random(in: 0...1)].sorted()
-        let secondLineTrimOffsetProperty = [Double.random(in: 0...1), Double.random(in: 0...1)].sorted()
+        let newLineTrimOffsetProperty = [0.5, 0.5].sorted()
+        let secondLineTrimOffsetProperty = [0.5, 0.5].sorted()
 
         manager.lineTrimOffset = newLineTrimOffsetProperty
         $displayLink.send()
@@ -871,20 +871,20 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-            annotation.lineJoin = LineJoin.random()
-            annotation.lineSortKey = Double.random(in: -100000...100000)
-            annotation.lineBlur = Double.random(in: 0...100000)
-            annotation.lineBorderColor = StyleColor.random()
-            annotation.lineBorderWidth = Double.random(in: 0...100000)
-            annotation.lineColor = StyleColor.random()
-            annotation.lineGapWidth = Double.random(in: 0...100000)
-            annotation.lineOffset = Double.random(in: -100000...100000)
-            annotation.lineOpacity = Double.random(in: 0...1)
-            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.lineWidth = Double.random(in: 0...100000)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
             annotations.append(annotation)
         }
-        let newLineTrimOffsetProperty = [Double.random(in: 0...1), Double.random(in: 0...1)].sorted()
+        let newLineTrimOffsetProperty = [0.5, 0.5].sorted()
 
         manager.annotations = annotations
         manager.lineTrimOffset = newLineTrimOffsetProperty
@@ -896,7 +896,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetToNilLineTrimOffset() {
-        let newLineTrimOffsetProperty = [Double.random(in: 0...1), Double.random(in: 0...1)].sorted()
+        let newLineTrimOffsetProperty = [0.5, 0.5].sorted()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-trim-offset").value as! [Double]
         manager.lineTrimOffset = newLineTrimOffsetProperty
         $displayLink.send()
@@ -915,7 +915,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetSlot() {
-        let value = String.randomASCII(withLength: .random(in: 0...100))
+        let value = UUID().uuidString
         manager.slot = value
         XCTAssertEqual(manager.slot, value)
 
@@ -927,8 +927,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSlotAnnotationPropertiesAddedWithoutDuplicate() {
-        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
-        let secondSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let newSlotProperty = UUID().uuidString
+        let secondSlotProperty = UUID().uuidString
 
         manager.slot = newSlotProperty
         $displayLink.send()
@@ -945,20 +945,20 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-            annotation.lineJoin = LineJoin.random()
-            annotation.lineSortKey = Double.random(in: -100000...100000)
-            annotation.lineBlur = Double.random(in: 0...100000)
-            annotation.lineBorderColor = StyleColor.random()
-            annotation.lineBorderWidth = Double.random(in: 0...100000)
-            annotation.lineColor = StyleColor.random()
-            annotation.lineGapWidth = Double.random(in: 0...100000)
-            annotation.lineOffset = Double.random(in: -100000...100000)
-            annotation.lineOpacity = Double.random(in: 0...1)
-            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.lineWidth = Double.random(in: 0...100000)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
             annotations.append(annotation)
         }
-        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let newSlotProperty = UUID().uuidString
 
         manager.annotations = annotations
         manager.slot = newSlotProperty
@@ -970,7 +970,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetToNilSlot() {
-        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let newSlotProperty = UUID().uuidString
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "slot").value as! String
         manager.slot = newSlotProperty
         $displayLink.send()
@@ -1052,10 +1052,10 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)
 
         mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
-        mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
+        mapboxMap.coordinateForPointStub.defaultReturnValue = .init(latitude: 0, longitude: 0)
         mapboxMap.cameraState.zoom = 1
 
-        manager.handleDragChange(with: .random(), context: .zero)
+        manager.handleDragChange(with: .zero, context: .zero)
 
         $displayLink.send()
 

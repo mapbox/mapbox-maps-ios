@@ -42,7 +42,7 @@ final class AnnotationManagerFactoryTests: XCTestCase {
     // test return values for factory
     func testReturnedPointAnnotationManager() {
         let id = "managerId"
-        let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
+        let layerPosition: LayerPosition = .at(50)
         let clusterOptions = ClusterOptions()
 
         //when
@@ -55,7 +55,7 @@ final class AnnotationManagerFactoryTests: XCTestCase {
 
     func testReturnedPolygonAnnotationManager() {
         let id = "managerId"
-        let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
+        let layerPosition: LayerPosition? = .at(81)
 
         //when
         let manager = factory.makePolygonAnnotationManager(id: id, layerPosition: layerPosition)
@@ -67,7 +67,7 @@ final class AnnotationManagerFactoryTests: XCTestCase {
 
     func testReturnedPolylineAnnotationManager() {
         let id = "managerId"
-        let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
+        let layerPosition: LayerPosition? = .at(56)
 
         //when
         let manager = factory.makePolylineAnnotationManager(id: id, layerPosition: layerPosition)
@@ -80,7 +80,7 @@ final class AnnotationManagerFactoryTests: XCTestCase {
     func testReturnedCircleAnnotationManager() {
         //given
         let id = "managerId"
-        let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
+        let layerPosition: LayerPosition? = .at(18)
 
         //when
         let manager = factory.makeCircleAnnotationManager(id: id, layerPosition: layerPosition)

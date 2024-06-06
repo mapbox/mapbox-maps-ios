@@ -285,7 +285,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetFillAntialias() {
-        let value = Bool.random()
+        let value = true
         manager.fillAntialias = value
         XCTAssertEqual(manager.fillAntialias, value)
 
@@ -297,8 +297,8 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testFillAntialiasAnnotationPropertiesAddedWithoutDuplicate() {
-        let newFillAntialiasProperty = Bool.random()
-        let secondFillAntialiasProperty = Bool.random()
+        let newFillAntialiasProperty = true
+        let secondFillAntialiasProperty = true
 
         manager.fillAntialias = newFillAntialiasProperty
         $displayLink.send()
@@ -321,14 +321,14 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
             var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
-            annotation.fillSortKey = Double.random(in: -100000...100000)
-            annotation.fillColor = StyleColor.random()
-            annotation.fillOpacity = Double.random(in: 0...1)
-            annotation.fillOutlineColor = StyleColor.random()
-            annotation.fillPattern = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.fillSortKey = 0.0
+            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillOpacity = 0.5
+            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillPattern = UUID().uuidString
             annotations.append(annotation)
         }
-        let newFillAntialiasProperty = Bool.random()
+        let newFillAntialiasProperty = true
 
         manager.annotations = annotations
         manager.fillAntialias = newFillAntialiasProperty
@@ -340,7 +340,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetToNilFillAntialias() {
-        let newFillAntialiasProperty = Bool.random()
+        let newFillAntialiasProperty = true
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! Bool
         manager.fillAntialias = newFillAntialiasProperty
         $displayLink.send()
@@ -359,7 +359,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetFillEmissiveStrength() {
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         manager.fillEmissiveStrength = value
         XCTAssertEqual(manager.fillEmissiveStrength, value)
 
@@ -371,8 +371,8 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testFillEmissiveStrengthAnnotationPropertiesAddedWithoutDuplicate() {
-        let newFillEmissiveStrengthProperty = Double.random(in: 0...100000)
-        let secondFillEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let newFillEmissiveStrengthProperty = 50000.0
+        let secondFillEmissiveStrengthProperty = 50000.0
 
         manager.fillEmissiveStrength = newFillEmissiveStrengthProperty
         $displayLink.send()
@@ -395,14 +395,14 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
             var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
-            annotation.fillSortKey = Double.random(in: -100000...100000)
-            annotation.fillColor = StyleColor.random()
-            annotation.fillOpacity = Double.random(in: 0...1)
-            annotation.fillOutlineColor = StyleColor.random()
-            annotation.fillPattern = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.fillSortKey = 0.0
+            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillOpacity = 0.5
+            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillPattern = UUID().uuidString
             annotations.append(annotation)
         }
-        let newFillEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let newFillEmissiveStrengthProperty = 50000.0
 
         manager.annotations = annotations
         manager.fillEmissiveStrength = newFillEmissiveStrengthProperty
@@ -414,7 +414,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetToNilFillEmissiveStrength() {
-        let newFillEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let newFillEmissiveStrengthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-emissive-strength").value as! Double
         manager.fillEmissiveStrength = newFillEmissiveStrengthProperty
         $displayLink.send()
@@ -433,7 +433,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetFillTranslate() {
-        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let value = [0.0, 0.0]
         manager.fillTranslate = value
         XCTAssertEqual(manager.fillTranslate, value)
 
@@ -445,8 +445,8 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testFillTranslateAnnotationPropertiesAddedWithoutDuplicate() {
-        let newFillTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let secondFillTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let newFillTranslateProperty = [0.0, 0.0]
+        let secondFillTranslateProperty = [0.0, 0.0]
 
         manager.fillTranslate = newFillTranslateProperty
         $displayLink.send()
@@ -469,14 +469,14 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
             var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
-            annotation.fillSortKey = Double.random(in: -100000...100000)
-            annotation.fillColor = StyleColor.random()
-            annotation.fillOpacity = Double.random(in: 0...1)
-            annotation.fillOutlineColor = StyleColor.random()
-            annotation.fillPattern = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.fillSortKey = 0.0
+            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillOpacity = 0.5
+            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillPattern = UUID().uuidString
             annotations.append(annotation)
         }
-        let newFillTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let newFillTranslateProperty = [0.0, 0.0]
 
         manager.annotations = annotations
         manager.fillTranslate = newFillTranslateProperty
@@ -488,7 +488,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetToNilFillTranslate() {
-        let newFillTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let newFillTranslateProperty = [0.0, 0.0]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate").value as! [Double]
         manager.fillTranslate = newFillTranslateProperty
         $displayLink.send()
@@ -507,7 +507,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetFillTranslateAnchor() {
-        let value = FillTranslateAnchor.random()
+        let value = FillTranslateAnchor.testConstantValue()
         manager.fillTranslateAnchor = value
         XCTAssertEqual(manager.fillTranslateAnchor, value)
 
@@ -519,8 +519,8 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testFillTranslateAnchorAnnotationPropertiesAddedWithoutDuplicate() {
-        let newFillTranslateAnchorProperty = FillTranslateAnchor.random()
-        let secondFillTranslateAnchorProperty = FillTranslateAnchor.random()
+        let newFillTranslateAnchorProperty = FillTranslateAnchor.testConstantValue()
+        let secondFillTranslateAnchorProperty = FillTranslateAnchor.testConstantValue()
 
         manager.fillTranslateAnchor = newFillTranslateAnchorProperty
         $displayLink.send()
@@ -543,14 +543,14 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
             var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
-            annotation.fillSortKey = Double.random(in: -100000...100000)
-            annotation.fillColor = StyleColor.random()
-            annotation.fillOpacity = Double.random(in: 0...1)
-            annotation.fillOutlineColor = StyleColor.random()
-            annotation.fillPattern = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.fillSortKey = 0.0
+            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillOpacity = 0.5
+            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillPattern = UUID().uuidString
             annotations.append(annotation)
         }
-        let newFillTranslateAnchorProperty = FillTranslateAnchor.random()
+        let newFillTranslateAnchorProperty = FillTranslateAnchor.testConstantValue()
 
         manager.annotations = annotations
         manager.fillTranslateAnchor = newFillTranslateAnchorProperty
@@ -562,7 +562,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetToNilFillTranslateAnchor() {
-        let newFillTranslateAnchorProperty = FillTranslateAnchor.random()
+        let newFillTranslateAnchorProperty = FillTranslateAnchor.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String
         manager.fillTranslateAnchor = newFillTranslateAnchorProperty
         $displayLink.send()
@@ -581,7 +581,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetSlot() {
-        let value = String.randomASCII(withLength: .random(in: 0...100))
+        let value = UUID().uuidString
         manager.slot = value
         XCTAssertEqual(manager.slot, value)
 
@@ -593,8 +593,8 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSlotAnnotationPropertiesAddedWithoutDuplicate() {
-        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
-        let secondSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let newSlotProperty = UUID().uuidString
+        let secondSlotProperty = UUID().uuidString
 
         manager.slot = newSlotProperty
         $displayLink.send()
@@ -617,14 +617,14 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
             var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
-            annotation.fillSortKey = Double.random(in: -100000...100000)
-            annotation.fillColor = StyleColor.random()
-            annotation.fillOpacity = Double.random(in: 0...1)
-            annotation.fillOutlineColor = StyleColor.random()
-            annotation.fillPattern = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.fillSortKey = 0.0
+            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillOpacity = 0.5
+            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillPattern = UUID().uuidString
             annotations.append(annotation)
         }
-        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let newSlotProperty = UUID().uuidString
 
         manager.annotations = annotations
         manager.slot = newSlotProperty
@@ -636,7 +636,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetToNilSlot() {
-        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let newSlotProperty = UUID().uuidString
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "slot").value as! String
         manager.slot = newSlotProperty
         $displayLink.send()
@@ -659,7 +659,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     func testGetAnnotations() {
         let annotations = Array.random(withLength: 10) {
             PolygonAnnotation(
-                polygon: .init(outerRing: Ring(coordinates: .random(withLength: 5, generator: LocationCoordinate2D.random))),
+                polygon: .init(outerRing: Ring(coordinates: .random(withLength: 5, generator: { CLLocationCoordinate2D(latitude: 0, longitude: 0) }))),
                 isSelected: false,
                 isDraggable: true)
         }
@@ -733,10 +733,10 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)
 
         mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
-        mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
+        mapboxMap.coordinateForPointStub.defaultReturnValue = .init(latitude: 0, longitude: 0)
         mapboxMap.cameraState.zoom = 1
 
-        manager.handleDragChange(with: .random(), context: .zero)
+        manager.handleDragChange(with: .zero, context: .zero)
 
         $displayLink.send()
 

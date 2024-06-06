@@ -243,7 +243,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetCircleEmissiveStrength() {
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         manager.circleEmissiveStrength = value
         XCTAssertEqual(manager.circleEmissiveStrength, value)
 
@@ -255,8 +255,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testCircleEmissiveStrengthAnnotationPropertiesAddedWithoutDuplicate() {
-        let newCircleEmissiveStrengthProperty = Double.random(in: 0...100000)
-        let secondCircleEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let newCircleEmissiveStrengthProperty = 50000.0
+        let secondCircleEmissiveStrengthProperty = 50000.0
 
         manager.circleEmissiveStrength = newCircleEmissiveStrengthProperty
         $displayLink.send()
@@ -272,17 +272,17 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.circleSortKey = Double.random(in: -100000...100000)
-            annotation.circleBlur = Double.random(in: -100000...100000)
-            annotation.circleColor = StyleColor.random()
-            annotation.circleOpacity = Double.random(in: 0...1)
-            annotation.circleRadius = Double.random(in: 0...100000)
-            annotation.circleStrokeColor = StyleColor.random()
-            annotation.circleStrokeOpacity = Double.random(in: 0...1)
-            annotation.circleStrokeWidth = Double.random(in: 0...100000)
+            annotation.circleSortKey = 0.0
+            annotation.circleBlur = 0.0
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleOpacity = 0.5
+            annotation.circleRadius = 50000.0
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeOpacity = 0.5
+            annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)
         }
-        let newCircleEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let newCircleEmissiveStrengthProperty = 50000.0
 
         manager.annotations = annotations
         manager.circleEmissiveStrength = newCircleEmissiveStrengthProperty
@@ -294,7 +294,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetToNilCircleEmissiveStrength() {
-        let newCircleEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let newCircleEmissiveStrengthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-emissive-strength").value as! Double
         manager.circleEmissiveStrength = newCircleEmissiveStrengthProperty
         $displayLink.send()
@@ -313,7 +313,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetCirclePitchAlignment() {
-        let value = CirclePitchAlignment.random()
+        let value = CirclePitchAlignment.testConstantValue()
         manager.circlePitchAlignment = value
         XCTAssertEqual(manager.circlePitchAlignment, value)
 
@@ -325,8 +325,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testCirclePitchAlignmentAnnotationPropertiesAddedWithoutDuplicate() {
-        let newCirclePitchAlignmentProperty = CirclePitchAlignment.random()
-        let secondCirclePitchAlignmentProperty = CirclePitchAlignment.random()
+        let newCirclePitchAlignmentProperty = CirclePitchAlignment.testConstantValue()
+        let secondCirclePitchAlignmentProperty = CirclePitchAlignment.testConstantValue()
 
         manager.circlePitchAlignment = newCirclePitchAlignmentProperty
         $displayLink.send()
@@ -342,17 +342,17 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.circleSortKey = Double.random(in: -100000...100000)
-            annotation.circleBlur = Double.random(in: -100000...100000)
-            annotation.circleColor = StyleColor.random()
-            annotation.circleOpacity = Double.random(in: 0...1)
-            annotation.circleRadius = Double.random(in: 0...100000)
-            annotation.circleStrokeColor = StyleColor.random()
-            annotation.circleStrokeOpacity = Double.random(in: 0...1)
-            annotation.circleStrokeWidth = Double.random(in: 0...100000)
+            annotation.circleSortKey = 0.0
+            annotation.circleBlur = 0.0
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleOpacity = 0.5
+            annotation.circleRadius = 50000.0
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeOpacity = 0.5
+            annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)
         }
-        let newCirclePitchAlignmentProperty = CirclePitchAlignment.random()
+        let newCirclePitchAlignmentProperty = CirclePitchAlignment.testConstantValue()
 
         manager.annotations = annotations
         manager.circlePitchAlignment = newCirclePitchAlignmentProperty
@@ -364,7 +364,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetToNilCirclePitchAlignment() {
-        let newCirclePitchAlignmentProperty = CirclePitchAlignment.random()
+        let newCirclePitchAlignmentProperty = CirclePitchAlignment.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String
         manager.circlePitchAlignment = newCirclePitchAlignmentProperty
         $displayLink.send()
@@ -383,7 +383,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetCirclePitchScale() {
-        let value = CirclePitchScale.random()
+        let value = CirclePitchScale.testConstantValue()
         manager.circlePitchScale = value
         XCTAssertEqual(manager.circlePitchScale, value)
 
@@ -395,8 +395,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testCirclePitchScaleAnnotationPropertiesAddedWithoutDuplicate() {
-        let newCirclePitchScaleProperty = CirclePitchScale.random()
-        let secondCirclePitchScaleProperty = CirclePitchScale.random()
+        let newCirclePitchScaleProperty = CirclePitchScale.testConstantValue()
+        let secondCirclePitchScaleProperty = CirclePitchScale.testConstantValue()
 
         manager.circlePitchScale = newCirclePitchScaleProperty
         $displayLink.send()
@@ -412,17 +412,17 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.circleSortKey = Double.random(in: -100000...100000)
-            annotation.circleBlur = Double.random(in: -100000...100000)
-            annotation.circleColor = StyleColor.random()
-            annotation.circleOpacity = Double.random(in: 0...1)
-            annotation.circleRadius = Double.random(in: 0...100000)
-            annotation.circleStrokeColor = StyleColor.random()
-            annotation.circleStrokeOpacity = Double.random(in: 0...1)
-            annotation.circleStrokeWidth = Double.random(in: 0...100000)
+            annotation.circleSortKey = 0.0
+            annotation.circleBlur = 0.0
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleOpacity = 0.5
+            annotation.circleRadius = 50000.0
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeOpacity = 0.5
+            annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)
         }
-        let newCirclePitchScaleProperty = CirclePitchScale.random()
+        let newCirclePitchScaleProperty = CirclePitchScale.testConstantValue()
 
         manager.annotations = annotations
         manager.circlePitchScale = newCirclePitchScaleProperty
@@ -434,7 +434,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetToNilCirclePitchScale() {
-        let newCirclePitchScaleProperty = CirclePitchScale.random()
+        let newCirclePitchScaleProperty = CirclePitchScale.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-scale").value as! String
         manager.circlePitchScale = newCirclePitchScaleProperty
         $displayLink.send()
@@ -453,7 +453,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetCircleTranslate() {
-        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let value = [0.0, 0.0]
         manager.circleTranslate = value
         XCTAssertEqual(manager.circleTranslate, value)
 
@@ -465,8 +465,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testCircleTranslateAnnotationPropertiesAddedWithoutDuplicate() {
-        let newCircleTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let secondCircleTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let newCircleTranslateProperty = [0.0, 0.0]
+        let secondCircleTranslateProperty = [0.0, 0.0]
 
         manager.circleTranslate = newCircleTranslateProperty
         $displayLink.send()
@@ -482,17 +482,17 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.circleSortKey = Double.random(in: -100000...100000)
-            annotation.circleBlur = Double.random(in: -100000...100000)
-            annotation.circleColor = StyleColor.random()
-            annotation.circleOpacity = Double.random(in: 0...1)
-            annotation.circleRadius = Double.random(in: 0...100000)
-            annotation.circleStrokeColor = StyleColor.random()
-            annotation.circleStrokeOpacity = Double.random(in: 0...1)
-            annotation.circleStrokeWidth = Double.random(in: 0...100000)
+            annotation.circleSortKey = 0.0
+            annotation.circleBlur = 0.0
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleOpacity = 0.5
+            annotation.circleRadius = 50000.0
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeOpacity = 0.5
+            annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)
         }
-        let newCircleTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let newCircleTranslateProperty = [0.0, 0.0]
 
         manager.annotations = annotations
         manager.circleTranslate = newCircleTranslateProperty
@@ -504,7 +504,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetToNilCircleTranslate() {
-        let newCircleTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let newCircleTranslateProperty = [0.0, 0.0]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate").value as! [Double]
         manager.circleTranslate = newCircleTranslateProperty
         $displayLink.send()
@@ -523,7 +523,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetCircleTranslateAnchor() {
-        let value = CircleTranslateAnchor.random()
+        let value = CircleTranslateAnchor.testConstantValue()
         manager.circleTranslateAnchor = value
         XCTAssertEqual(manager.circleTranslateAnchor, value)
 
@@ -535,8 +535,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testCircleTranslateAnchorAnnotationPropertiesAddedWithoutDuplicate() {
-        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.random()
-        let secondCircleTranslateAnchorProperty = CircleTranslateAnchor.random()
+        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.testConstantValue()
+        let secondCircleTranslateAnchorProperty = CircleTranslateAnchor.testConstantValue()
 
         manager.circleTranslateAnchor = newCircleTranslateAnchorProperty
         $displayLink.send()
@@ -552,17 +552,17 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.circleSortKey = Double.random(in: -100000...100000)
-            annotation.circleBlur = Double.random(in: -100000...100000)
-            annotation.circleColor = StyleColor.random()
-            annotation.circleOpacity = Double.random(in: 0...1)
-            annotation.circleRadius = Double.random(in: 0...100000)
-            annotation.circleStrokeColor = StyleColor.random()
-            annotation.circleStrokeOpacity = Double.random(in: 0...1)
-            annotation.circleStrokeWidth = Double.random(in: 0...100000)
+            annotation.circleSortKey = 0.0
+            annotation.circleBlur = 0.0
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleOpacity = 0.5
+            annotation.circleRadius = 50000.0
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeOpacity = 0.5
+            annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)
         }
-        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.random()
+        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.testConstantValue()
 
         manager.annotations = annotations
         manager.circleTranslateAnchor = newCircleTranslateAnchorProperty
@@ -574,7 +574,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetToNilCircleTranslateAnchor() {
-        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.random()
+        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String
         manager.circleTranslateAnchor = newCircleTranslateAnchorProperty
         $displayLink.send()
@@ -593,7 +593,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetSlot() {
-        let value = String.randomASCII(withLength: .random(in: 0...100))
+        let value = UUID().uuidString
         manager.slot = value
         XCTAssertEqual(manager.slot, value)
 
@@ -605,8 +605,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSlotAnnotationPropertiesAddedWithoutDuplicate() {
-        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
-        let secondSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let newSlotProperty = UUID().uuidString
+        let secondSlotProperty = UUID().uuidString
 
         manager.slot = newSlotProperty
         $displayLink.send()
@@ -622,17 +622,17 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.circleSortKey = Double.random(in: -100000...100000)
-            annotation.circleBlur = Double.random(in: -100000...100000)
-            annotation.circleColor = StyleColor.random()
-            annotation.circleOpacity = Double.random(in: 0...1)
-            annotation.circleRadius = Double.random(in: 0...100000)
-            annotation.circleStrokeColor = StyleColor.random()
-            annotation.circleStrokeOpacity = Double.random(in: 0...1)
-            annotation.circleStrokeWidth = Double.random(in: 0...100000)
+            annotation.circleSortKey = 0.0
+            annotation.circleBlur = 0.0
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleOpacity = 0.5
+            annotation.circleRadius = 50000.0
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeOpacity = 0.5
+            annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)
         }
-        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let newSlotProperty = UUID().uuidString
 
         manager.annotations = annotations
         manager.slot = newSlotProperty
@@ -644,7 +644,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetToNilSlot() {
-        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let newSlotProperty = UUID().uuidString
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "slot").value as! String
         manager.slot = newSlotProperty
         $displayLink.send()
@@ -666,7 +666,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testGetAnnotations() {
         let annotations = Array.random(withLength: 10) {
-            CircleAnnotation(centerCoordinate: .random(), isSelected: false, isDraggable: true)
+            CircleAnnotation(centerCoordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
         }
         manager.annotations = annotations
 
@@ -678,7 +678,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testHandleDragBeginIsDraggableFalse() throws {
         manager.annotations = [
-            CircleAnnotation(id: "circle1", centerCoordinate: .random(), isSelected: false, isDraggable: false)
+            CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: false)
         ]
 
         style.addSourceStub.reset()
@@ -700,7 +700,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testDrag() throws {
-        let annotation = CircleAnnotation(id: "circle1", centerCoordinate: .random(), isSelected: false, isDraggable: true)
+        let annotation = CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
         manager.annotations = [annotation]
 
         style.addSourceStub.reset()
@@ -726,10 +726,10 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)
 
         mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
-        mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
+        mapboxMap.coordinateForPointStub.defaultReturnValue = .init(latitude: 0, longitude: 0)
         mapboxMap.cameraState.zoom = 1
 
-        manager.handleDragChange(with: .random(), context: .zero)
+        manager.handleDragChange(with: .zero, context: .zero)
 
         $displayLink.send()
 
@@ -825,7 +825,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testDoesNotUpdateDragSourceWhenNoDragged() {
-        let annotation = CircleAnnotation(id: "circle1", centerCoordinate: .random(), isSelected: false, isDraggable: true)
+        let annotation = CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
         manager.annotations = [annotation]
         $displayLink.send()
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)

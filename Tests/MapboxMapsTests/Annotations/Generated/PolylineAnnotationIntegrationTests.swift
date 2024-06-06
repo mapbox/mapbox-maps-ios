@@ -64,7 +64,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineCap() throws {
         // Test that the setter and getter work
-        let value = LineCap.random()
+        let value = LineCap.testConstantValue()
         manager.lineCap = value
         XCTAssertEqual(manager.lineCap, value)
 
@@ -90,7 +90,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineMiterLimit() throws {
         // Test that the setter and getter work
-        let value = Double.random(in: -100000...100000)
+        let value = 0.0
         manager.lineMiterLimit = value
         XCTAssertEqual(manager.lineMiterLimit, value)
 
@@ -116,7 +116,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineRoundLimit() throws {
         // Test that the setter and getter work
-        let value = Double.random(in: -100000...100000)
+        let value = 0.0
         manager.lineRoundLimit = value
         XCTAssertEqual(manager.lineRoundLimit, value)
 
@@ -142,7 +142,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineDasharray() throws {
         // Test that the setter and getter work
-        let value = Array.random(withLength: .random(in: 0...10), generator: { Double.random(in: -100000...100000) })
+        let value = Array.random(withLength: .random(in: 0...10), generator: { 0.0 })
         manager.lineDasharray = value
         XCTAssertEqual(manager.lineDasharray, value)
 
@@ -170,7 +170,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineDepthOcclusionFactor() throws {
         // Test that the setter and getter work
-        let value = Double.random(in: 0...1)
+        let value = 0.5
         manager.lineDepthOcclusionFactor = value
         XCTAssertEqual(manager.lineDepthOcclusionFactor, value)
 
@@ -196,7 +196,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineEmissiveStrength() throws {
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         manager.lineEmissiveStrength = value
         XCTAssertEqual(manager.lineEmissiveStrength, value)
 
@@ -222,7 +222,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineTranslate() throws {
         // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let value = [0.0, 0.0]
         manager.lineTranslate = value
         XCTAssertEqual(manager.lineTranslate, value)
 
@@ -250,7 +250,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineTranslateAnchor() throws {
         // Test that the setter and getter work
-        let value = LineTranslateAnchor.random()
+        let value = LineTranslateAnchor.testConstantValue()
         manager.lineTranslateAnchor = value
         XCTAssertEqual(manager.lineTranslateAnchor, value)
 
@@ -276,7 +276,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineTrimOffset() throws {
         // Test that the setter and getter work
-        let value = [Double.random(in: 0...1), Double.random(in: 0...1)].sorted()
+        let value = [0.5, 0.5].sorted()
         manager.lineTrimOffset = value
         XCTAssertEqual(manager.lineTrimOffset, value)
 
@@ -304,7 +304,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testSlot() throws {
         // Test that the setter and getter work
-        let value = String.randomASCII(withLength: .random(in: 0...100))
+        let value = UUID().uuidString
         manager.slot = value
         XCTAssertEqual(manager.slot, value)
 
@@ -329,7 +329,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = LineJoin.random()
+        let value = LineJoin.testConstantValue()
         annotation.lineJoin = value
         XCTAssertEqual(annotation.lineJoin, value)
 
@@ -366,7 +366,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: -100000...100000)
+        let value = 0.0
         annotation.lineSortKey = value
         XCTAssertEqual(annotation.lineSortKey, value)
 
@@ -403,7 +403,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         annotation.lineBlur = value
         XCTAssertEqual(annotation.lineBlur, value)
 
@@ -440,7 +440,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor.random()
+        let value = StyleColor(red: 255, green: 0, blue: 255)
         annotation.lineBorderColor = value
         XCTAssertEqual(annotation.lineBorderColor, value)
 
@@ -477,7 +477,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         annotation.lineBorderWidth = value
         XCTAssertEqual(annotation.lineBorderWidth, value)
 
@@ -514,7 +514,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor.random()
+        let value = StyleColor(red: 255, green: 0, blue: 255)
         annotation.lineColor = value
         XCTAssertEqual(annotation.lineColor, value)
 
@@ -551,7 +551,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         annotation.lineGapWidth = value
         XCTAssertEqual(annotation.lineGapWidth, value)
 
@@ -588,7 +588,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: -100000...100000)
+        let value = 0.0
         annotation.lineOffset = value
         XCTAssertEqual(annotation.lineOffset, value)
 
@@ -625,7 +625,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: 0...1)
+        let value = 0.5
         annotation.lineOpacity = value
         XCTAssertEqual(annotation.lineOpacity, value)
 
@@ -662,7 +662,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = String.randomASCII(withLength: .random(in: 0...100))
+        let value = UUID().uuidString
         annotation.linePattern = value
         XCTAssertEqual(annotation.linePattern, value)
 
@@ -699,7 +699,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         annotation.lineWidth = value
         XCTAssertEqual(annotation.lineWidth, value)
 

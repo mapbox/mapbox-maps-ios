@@ -22,7 +22,9 @@ final class AnnotationImagesManagerTests: XCTestCase {
 
     func testAnnotationImagesAddedToStyleIfNotExist() throws {
         // given
-        let imageID = UUID().uuidString, sdf = Bool.random(), contentInsets = UIEdgeInsets.random()
+        let imageID = UUID().uuidString
+        let sdf = true
+        let contentInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
 
         // when
         sut.addImage(UIImage(), id: imageID, sdf: sdf, contentInsets: contentInsets)
@@ -42,10 +44,12 @@ final class AnnotationImagesManagerTests: XCTestCase {
 
     func testAnnotationImagesRemovedFromStyleIfOwned() throws {
         // given
-        let imageIDs = Array.random(withLength: 10) { UUID().uuidString }
-        for imageID in imageIDs {
-            sut.addImage(UIImage(), id: imageID, sdf: .random(), contentInsets: .random())
+        for _ in 0...10 {
+            sut.addImage(UIImage(), id: UUID().uuidString, sdf: true, contentInsets: .zero)
         }
+        let imageId = "image-id"
+        sut.addImage(UIImage(), id: imageId, sdf: false, contentInsets: .zero)
+
         mockStyle.imageExistsStub.defaultReturnValue = true
 
         // when
@@ -54,10 +58,9 @@ final class AnnotationImagesManagerTests: XCTestCase {
         XCTAssertTrue(mockStyle.removeImageStub.invocations.isEmpty)
 
         // when
-        let imageToRemove = try XCTUnwrap(imageIDs.randomElement())
-        sut.removeImage(imageToRemove)
+        sut.removeImage(imageId)
         // then
-        XCTAssertEqual(try XCTUnwrap(mockStyle.removeImageStub.invocations.last?.parameters), imageToRemove)
+        XCTAssertEqual(try XCTUnwrap(mockStyle.removeImageStub.invocations.last?.parameters), imageId)
     }
 
     func testAnnotationImagesRemovedFromStyleIfNoConsumers() throws {
@@ -65,30 +68,31 @@ final class AnnotationImagesManagerTests: XCTestCase {
         let consumer = MockAnnotationImagesConsumer()
         sut.register(imagesConsumer: consumer)
 
-        let imageIDs = Array.random(withLength: 10) { UUID().uuidString }
-        for imageID in imageIDs {
-            sut.addImage(UIImage(), id: imageID, sdf: .random(), contentInsets: .random())
+        for _ in 0...10 {
+            sut.addImage(UIImage(), id: UUID().uuidString, sdf: false, contentInsets: .zero)
         }
+        let imageId = "image-id"
+        sut.addImage(UIImage(), id: imageId, sdf: false, contentInsets: .zero)
+
         mockStyle.imageExistsStub.defaultReturnValue = true
 
         // when
-        let imageToRemove = try XCTUnwrap(imageIDs.randomElement())
         consumer.isUsingStyleImageStub.defaultReturnValue = true
-        sut.removeImage(imageToRemove)
+        sut.removeImage(imageId)
         // then
         XCTAssertTrue(mockStyle.removeImageStub.invocations.isEmpty)
 
         // when
         consumer.isUsingStyleImageStub.defaultReturnValue = false
-        sut.removeImage(imageToRemove)
+        sut.removeImage(imageId)
         // then
-        XCTAssertEqual(try XCTUnwrap(mockStyle.removeImageStub.invocations.last?.parameters), imageToRemove)
+        XCTAssertEqual(try XCTUnwrap(mockStyle.removeImageStub.invocations.last?.parameters), imageId)
 
         // when
         sut.unregister(imagesConsumer: consumer)
-        sut.removeImage(imageToRemove)
+        sut.removeImage(imageId)
         // then
-        XCTAssertEqual(try XCTUnwrap(mockStyle.removeImageStub.invocations.last?.parameters), imageToRemove)
+        XCTAssertEqual(try XCTUnwrap(mockStyle.removeImageStub.invocations.last?.parameters), imageId)
     }
 }
 

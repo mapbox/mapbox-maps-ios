@@ -70,7 +70,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testFillAntialias() throws {
         // Test that the setter and getter work
-        let value = Bool.random()
+        let value = true
         manager.fillAntialias = value
         XCTAssertEqual(manager.fillAntialias, value)
 
@@ -96,7 +96,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testFillEmissiveStrength() throws {
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = 50000.0
         manager.fillEmissiveStrength = value
         XCTAssertEqual(manager.fillEmissiveStrength, value)
 
@@ -122,7 +122,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testFillTranslate() throws {
         // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        let value = [0.0, 0.0]
         manager.fillTranslate = value
         XCTAssertEqual(manager.fillTranslate, value)
 
@@ -150,7 +150,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testFillTranslateAnchor() throws {
         // Test that the setter and getter work
-        let value = FillTranslateAnchor.random()
+        let value = FillTranslateAnchor.testConstantValue()
         manager.fillTranslateAnchor = value
         XCTAssertEqual(manager.fillTranslateAnchor, value)
 
@@ -176,7 +176,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testSlot() throws {
         // Test that the setter and getter work
-        let value = String.randomASCII(withLength: .random(in: 0...100))
+        let value = UUID().uuidString
         manager.slot = value
         XCTAssertEqual(manager.slot, value)
 
@@ -207,7 +207,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: -100000...100000)
+        let value = 0.0
         annotation.fillSortKey = value
         XCTAssertEqual(annotation.fillSortKey, value)
 
@@ -250,7 +250,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor.random()
+        let value = StyleColor(red: 255, green: 0, blue: 255)
         annotation.fillColor = value
         XCTAssertEqual(annotation.fillColor, value)
 
@@ -293,7 +293,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = Double.random(in: 0...1)
+        let value = 0.5
         annotation.fillOpacity = value
         XCTAssertEqual(annotation.fillOpacity, value)
 
@@ -336,7 +336,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor.random()
+        let value = StyleColor(red: 255, green: 0, blue: 255)
         annotation.fillOutlineColor = value
         XCTAssertEqual(annotation.fillOutlineColor, value)
 
@@ -379,7 +379,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = String.randomASCII(withLength: .random(in: 0...100))
+        let value = UUID().uuidString
         annotation.fillPattern = value
         XCTAssertEqual(annotation.fillPattern, value)
 

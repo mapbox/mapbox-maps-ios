@@ -38,7 +38,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        owner = .random()
+        owner = .init(rawValue: UUID().uuidString)
         mapboxMap = MockMapboxMap()
         mapboxMap.cameraState = initialCameraState
         mapboxMap.cameraBounds = .default

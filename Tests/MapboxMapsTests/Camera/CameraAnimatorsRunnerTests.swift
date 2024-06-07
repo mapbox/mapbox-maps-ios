@@ -23,9 +23,9 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
     }
 
     func testCameraAnimators() {
-        let animators = [MockCameraAnimator].random(
-            withLength: 10,
-            generator: MockCameraAnimator.init)
+        let animators = [
+            MockCameraAnimator(), MockCameraAnimator(), MockCameraAnimator(), MockCameraAnimator()
+        ]
 
         for animator in animators {
             cameraAnimatorsRunner.add(animator)
@@ -68,8 +68,8 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
 
     func testCancelAnimations() {
         let animator = MockCameraAnimator()
-        animator.state = .random()
-        animator.owner = .random()
+        animator.state = .inactive
+        animator.owner = .init(rawValue: UUID().uuidString)
         cameraAnimatorsRunner.add(animator)
 
         cameraAnimatorsRunner.cancelAnimations()
@@ -80,8 +80,8 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
 
     func testCancelAnimationsWhenDisabled() {
         let animator = MockCameraAnimator()
-        animator.state = .random()
-        animator.owner = .random()
+        animator.state = .active
+        animator.owner = .init(rawValue: UUID().uuidString)
         cameraAnimatorsRunner.add(animator)
 
         cameraAnimatorsRunner.isEnabled = false
@@ -93,8 +93,8 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
     func testCancelAnimationsWithEmptyOwnersArray() {
         let animators = [MockCameraAnimator].random(withLength: 10) {
             let animator = MockCameraAnimator()
-            animator.state = .random()
-            animator.owner = .random()
+            animator.state = .stopped
+            animator.owner = .init(rawValue: UUID().uuidString)
             return animator
         }
 
@@ -111,11 +111,11 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
     }
 
     func testCancelAnimationsWithSingleOwner() {
-        let owner = AnimationOwner.random()
+        let owner = AnimationOwner.init(rawValue: UUID().uuidString)
 
         let animators = [MockCameraAnimator].random(withLength: 10) {
             let animator = MockCameraAnimator()
-            animator.state = .random()
+            animator.state = .inactive
             animator.owner = owner
             return animator
         }
@@ -138,17 +138,17 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
     }
 
     func testCancelAnimationsWithMultipleOwners() {
-        let owner1 = AnimationOwner.random()
-        let owner2 = AnimationOwner.random()
+        let owner1 = AnimationOwner.init(rawValue: UUID().uuidString)
+        let owner2 = AnimationOwner.init(rawValue: UUID().uuidString)
 
         let animators: [MockCameraAnimator] = .random(withLength: 5) {
             let animator = MockCameraAnimator()
-            animator.state = .random()
+            animator.state = .active
             animator.owner = owner1
             return animator
         } + .random(withLength: 6) {
             let animator = MockCameraAnimator()
-            animator.state = .random()
+            animator.state = .stopped
             animator.owner = owner2
             return animator
         }
@@ -177,7 +177,7 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
 
         let makeAnimator = { (owner: AnimationOwner, animationType: AnimationType) -> MockCameraAnimator in
             let decelerationAnimator = MockCameraAnimator()
-            decelerationAnimator.state = .random()
+            decelerationAnimator.state = .active
             decelerationAnimator.animationType = animationType
             decelerationAnimator.owner = owner
             return decelerationAnimator
@@ -206,7 +206,7 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
 
         let makeAnimator = { (owner: AnimationOwner, animationType: AnimationType) -> MockCameraAnimator in
             let decelerationAnimator = MockCameraAnimator()
-            decelerationAnimator.state = .random()
+            decelerationAnimator.state = .stopped
             decelerationAnimator.animationType = animationType
             decelerationAnimator.owner = owner
             return decelerationAnimator

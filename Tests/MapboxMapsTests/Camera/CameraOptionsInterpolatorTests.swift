@@ -20,7 +20,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
             uiEdgeInsetsInterpolator: uiEdgeInsetsInterpolator,
             doubleInterpolator: doubleInterpolator,
             directionInterpolator: directionInterpolator)
-        fraction = .random(in: 0...1)
+        fraction = 0.6
     }
 
     override func tearDown() {
@@ -57,13 +57,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
 
     func testFromNilToNonNil() {
         let from = CameraOptions()
-        let to = CameraOptions(
-            center: .random(),
-            padding: .random(),
-            anchor: .random(),
-            zoom: .random(in: 0...20),
-            bearing: .random(in: 0..<360),
-            pitch: .random(in: 0...80))
+        let to = CameraOptions.testConstantValue()
 
         let result = cameraOptionsInterpolator.interpolate(
             from: from,
@@ -84,13 +78,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
     }
 
     func testFromNonNilToNil() {
-        let from = CameraOptions(
-            center: .random(),
-            padding: .random(),
-            anchor: .random(),
-            zoom: .random(in: 0...20),
-            bearing: .random(in: 0..<360),
-            pitch: .random(in: 0...80))
+        let from = CameraOptions.testConstantValue()
         let to = CameraOptions()
 
         let result = cameraOptionsInterpolator.interpolate(
@@ -112,26 +100,18 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
     }
 
     func testFromNonNilToNonNil() {
-        let from = CameraOptions(
-            center: .random(),
-            padding: .random(),
-            anchor: .random(),
-            zoom: .random(in: 0...20),
-            bearing: .random(in: 0..<360),
-            pitch: .random(in: 0...80))
+        let from = CameraOptions.testConstantValue()
         let to = CameraOptions(
-            center: .random(),
-            padding: .random(),
-            anchor: .random(),
-            zoom: .random(in: 0...20),
-            bearing: .random(in: 0..<360),
-            pitch: .random(in: 0...80))
-        coordinateInterpolator.interpolateStub.defaultReturnValue = .random()
-        uiEdgeInsetsInterpolator.interpolateStub.defaultReturnValue = .random()
-        doubleInterpolator.interpolateStub.returnValueQueue = .random(
-            withLength: 2,
-            generator: { .random(in: -100...100) })
-        directionInterpolator.interpolateStub.defaultReturnValue = .random(in: 0..<360)
+            center: .init(latitude: 29, longitude: 55),
+            padding: .init(top: 8, left: 23, bottom: 49, right: 9),
+            anchor: .init(x: -28, y: -44),
+            zoom: 19,
+            bearing: 193,
+            pitch: 75)
+        coordinateInterpolator.interpolateStub.defaultReturnValue = .init(latitude: 0, longitude: 0)
+        uiEdgeInsetsInterpolator.interpolateStub.defaultReturnValue = .init(top: 0, left: 0, bottom: 0, right: 0)
+        doubleInterpolator.interpolateStub.returnValueQueue = [-50, 50]
+        directionInterpolator.interpolateStub.defaultReturnValue = 65
 
         let result = cameraOptionsInterpolator.interpolate(
             from: from,

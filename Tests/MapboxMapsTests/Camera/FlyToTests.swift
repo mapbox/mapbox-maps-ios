@@ -66,17 +66,24 @@ internal class FlyToTests: XCTestCase {
 
         let epsilon: CLLocationDegrees = 0.0001
 
-        for _ in 0..<10 {
+        let iterations = 0..<10
+        let latitudeRange = -85..<85
+        let longitudeRange = 0..<180
+        let destLongitudeRange = 180..<360
+        let latitudeStep = Double(latitudeRange.count) / Double(iterations.count)
+        let longitudeStep = Double(longitudeRange.count) / Double(iterations.count)
+        let destLongitudeStep = Double(destLongitudeRange.count) / Double(iterations.count)
 
+        for iteration in iterations {
             // Longitude increases easterly for this test.
             let sourceCoord = CLLocationCoordinate2D(
-                latitude: CLLocationDegrees.random(in: -85..<85),
-                longitude: CLLocationDegrees.random(in: 0..<180)
+                latitude: Double(latitudeRange.lowerBound) + (Double(iteration) * latitudeStep),
+                longitude: Double(longitudeRange.lowerBound) + (Double(iteration) * longitudeStep)
             )
 
             let destCoord = CLLocationCoordinate2D(
-                latitude: CLLocationDegrees.random(in: -85..<85),
-                longitude: CLLocationDegrees.random(in: 180..<360)
+                latitude: Double(latitudeRange.lowerBound) + (Double(iteration) * latitudeStep),
+                longitude: Double(destLongitudeRange.lowerBound) + (Double(iteration) * destLongitudeStep)
             )
 
             let source = CameraState(

@@ -39,7 +39,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     override func setUp() {
         super.setUp()
         propertyAnimator = MockPropertyAnimator()
-        owner = .random()
+        owner = .init(rawValue: UUID().uuidString)
         cameraView = MockCameraView()
         mapboxMap = MockMapboxMap()
         mainQueue = MockMainQueue()
@@ -115,8 +115,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
         animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
-        let randomInterval: TimeInterval = .random(in: 0...10)
-        animator.startAnimation(afterDelay: randomInterval)
+        animator.startAnimation(afterDelay: 3)
 
         XCTAssertEqual(self.propertyAnimator.startAnimationStub.invocations.count, 1)
         XCTAssertEqual(self.propertyAnimator.addAnimationsStub.invocations.count, 1)
@@ -139,8 +138,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
         let completion = Stub<UIViewAnimatingPosition, Void>()
         animator.addCompletion(completion.call(with:))
 
-        let randomInterval: TimeInterval = .random(in: 1...10)
-        animator.startAnimation(afterDelay: randomInterval)
+        animator.startAnimation(afterDelay: 5)
 
         animator.stopAnimation()
 
@@ -240,7 +238,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     func testStopAndStartAnimationAfterDelay() {
         animator.stopAnimation()
 
-        animator.startAnimation(afterDelay: .random(in: 0...10))
+        animator.startAnimation(afterDelay: 1)
 
         XCTAssertEqual(propertyAnimator.startAnimationAfterDelayStub.invocations.count, 0)
         XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 0)
@@ -257,7 +255,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
         propertyAnimator.addAnimationsStub.reset()
         propertyAnimator.addCompletionStub.reset()
 
-        animator.startAnimation(afterDelay: .random(in: 0...10))
+        animator.startAnimation(afterDelay: 2)
 
         XCTAssertEqual(propertyAnimator.startAnimationAfterDelayStub.invocations.count, 0)
         XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 0)

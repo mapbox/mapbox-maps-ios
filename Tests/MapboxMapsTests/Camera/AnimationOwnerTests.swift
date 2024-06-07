@@ -4,7 +4,7 @@ import XCTest
 final class AnimationOwnerTests: XCTestCase {
 
     func testInitialization() {
-        let rawValue = String.randomASCII(withLength: .random(in: 0...10))
+        let rawValue = UUID().uuidString
 
         let owner = AnimationOwner(rawValue: rawValue)
 

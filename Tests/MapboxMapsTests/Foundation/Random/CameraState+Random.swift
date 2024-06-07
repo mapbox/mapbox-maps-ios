@@ -2,6 +2,16 @@ import MapboxMaps
 import UIKit
 
 extension CameraState {
+    static func testConstantValue() -> Self {
+        return CameraState(
+            center: .init(latitude: 10, longitude: 10),
+            padding: .init(top: 40, left: 29, bottom: 98, right: 83),
+            zoom: 71,
+            bearing: 93,
+            pitch: 45)
+
+    }
+
     static func random() -> Self {
         return CameraState(
             center: .random(),

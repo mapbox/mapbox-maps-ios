@@ -20,7 +20,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         location = .zero
         velocity = CGPoint(x: 2000, y: -2000)
         decelerationFactor = 0.7
-        owner = .random()
+        owner = .init(rawValue: UUID().uuidString)
         locationChangeHandler = MockLocationChangeHandler()
         mainQueue = MockMainQueue()
         dateProvider = MockDateProvider()

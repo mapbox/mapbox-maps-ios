@@ -20,7 +20,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
     }
 
     func testOwner() {
-        impl.owner = .random()
+        impl.owner = .init(rawValue: UUID().uuidString)
 
         XCTAssertEqual(animator.owner, impl.owner)
     }
@@ -32,31 +32,45 @@ final class BasicCameraAnimatorTests: XCTestCase {
     }
 
     func testTransition() {
-        impl.transition = .random(CameraTransition(cameraState: .random(), initialAnchor: .random()))
+        impl.transition = CameraTransition(
+            cameraState: CameraState(
+                center: .init(latitude: 34, longitude: 82),
+                padding: .init(top: 38, left: 28, bottom: 64, right: 29),
+                zoom: 17,
+                bearing: 348,
+                pitch: 50
+            ),
+            initialAnchor: .init(x: -27, y: -83)
+        )
 
         XCTAssertEqual(animator.transition, impl.transition)
     }
 
     func testState() {
-        impl.state = .random()
-
-        XCTAssertEqual(animator.state, impl.state)
+        let states: [UIViewAnimatingState] = [.active, .inactive, .stopped]
+        for state in states {
+            impl.state = state
+            XCTAssertEqual(impl.state, state)
+            XCTAssertEqual(animator.state, impl.state)
+        }
     }
 
     func testIsRunning() {
-        impl.isRunning = .random()
+        impl.isRunning = true
+        XCTAssertEqual(true, impl.isRunning)
+        XCTAssertEqual(animator.isRunning, impl.isRunning)
 
+        impl.isRunning = false
+        XCTAssertEqual(false, impl.isRunning)
         XCTAssertEqual(animator.isRunning, impl.isRunning)
     }
 
     func testIsReversed() {
-        let value = Bool.random()
+        animator.isReversed = true
 
-        animator.isReversed = value
+        XCTAssertEqual(impl.$isReversed.setStub.invocations.map(\.parameters), [true])
 
-        XCTAssertEqual(impl.$isReversed.setStub.invocations.map(\.parameters), [value])
-
-        impl.isReversed = .random()
+        impl.isReversed = false
 
         XCTAssertEqual(animator.isReversed, impl.isReversed)
     }
@@ -80,25 +94,21 @@ final class BasicCameraAnimatorTests: XCTestCase {
     }
 
     func testPausesOnCompletion() {
-        let value = Bool.random()
+        animator.pausesOnCompletion = true
 
-        animator.pausesOnCompletion = value
+        XCTAssertEqual(impl.$pausesOnCompletion.setStub.invocations.map(\.parameters), [true])
 
-        XCTAssertEqual(impl.$pausesOnCompletion.setStub.invocations.map(\.parameters), [value])
-
-        impl.pausesOnCompletion = .random()
+        impl.pausesOnCompletion = false
 
         XCTAssertEqual(animator.pausesOnCompletion, impl.pausesOnCompletion)
     }
 
     func testFractionComplete() {
-        let value = Double.random(in: 0...1)
+        animator.fractionComplete = 0.75
 
-        animator.fractionComplete = value
+        XCTAssertEqual(impl.$fractionComplete.setStub.invocations.map(\.parameters), [0.75])
 
-        XCTAssertEqual(impl.$fractionComplete.setStub.invocations.map(\.parameters), [value])
-
-        impl.fractionComplete = .random(in: 0...1)
+        impl.fractionComplete = 0.33
 
         XCTAssertEqual(animator.fractionComplete, impl.fractionComplete)
     }
@@ -110,11 +120,9 @@ final class BasicCameraAnimatorTests: XCTestCase {
     }
 
     func testStartAnimationAfterDelay() {
-        let delay = TimeInterval.random(in: 0...10)
+        animator.startAnimation(afterDelay: 3)
 
-        animator.startAnimation(afterDelay: delay)
-
-        XCTAssertEqual(impl.startAnimationAfterDelayStub.invocations.map(\.parameters), [delay])
+        XCTAssertEqual(impl.startAnimationAfterDelayStub.invocations.map(\.parameters), [3])
     }
 
     func testPauseAnimation() {
@@ -139,7 +147,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
             return
         }
 
-        let position = UIViewAnimatingPosition.random()
+        let position = UIViewAnimatingPosition.end
 
         impl.addCompletionStub.invocations[0].parameters(position)
 
@@ -147,8 +155,8 @@ final class BasicCameraAnimatorTests: XCTestCase {
     }
 
     func testContinueAnimation() {
-        let timingParameters: UITimingCurveProvider? = .random(MockTimingCurveProvider())
-        let durationFactor = Double.random(in: 0...10)
+        let timingParameters: UITimingCurveProvider? = MockTimingCurveProvider()
+        let durationFactor = 2.0
 
         animator.continueAnimation(
             withTimingParameters: timingParameters,

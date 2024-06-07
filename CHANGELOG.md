@@ -7,6 +7,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Expose `clusterMinPoints` property for `GeoJSONSource` and for `ClusterOptions`
 
+* Root properties (`Atmosphere`, `Lights`, `Projection`, `Terrain`, `Transition`) are now revertible for all styles. 
+
 ## 11.4.0 - 22 May, 2024
 
 * Live performance metrics collection. Mapbox Maps SDK v11.4.0 collects certain performance and feature usage counters so we can better benchmark the MapboxMaps library and invest in its performance. The performance counters have been carefully designed so that user-level metrics and identifiers are not collected.

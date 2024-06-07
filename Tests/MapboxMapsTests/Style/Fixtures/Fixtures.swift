@@ -18,6 +18,18 @@ internal extension StyleColor {
     }
 }
 
+internal extension StyleTransition {
+    static func testConstantValue() -> StyleTransition {
+        return StyleTransition(duration: 2.0, delay: 2.0)
+    }
+}
+
+internal extension TransitionOptions {
+    static func testConstantValue() -> TransitionOptions {
+        return TransitionOptions(duration: 2.0, delay: 1.0, enablePlacementTransitions: false)
+    }
+}
+
 internal extension String {
     static func testSourceValue() -> String {
         return "test-string"

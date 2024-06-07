@@ -3,7 +3,7 @@ import os
 
 /// The style properties that can be applied once in the whole style.
 /// If multiple properties are applied, the last wins.
-struct MapContentUniqueProperties {
+struct MapContentUniqueProperties: Decodable {
     struct Lights: Encodable, Equatable {
         var flat: FlatLight?
         var directional: DirectionalLight?
@@ -17,7 +17,7 @@ struct MapContentUniqueProperties {
     var location: LocationOptions?
     var lights = Lights()
 
-    private func update<T: Equatable & Encodable>(_ label: String, old: T?, new: T?, setter: (Any) -> Expected<NSNull, NSString>) {
+    private func update<T: Equatable & Encodable>(_ label: String, old: T?, new: T?, initial: T?, setter: (Any) -> Expected<NSNull, NSString>) {
         guard old != new else { return }
         wrapStyleDSLError {
             let value: Any
@@ -25,8 +25,8 @@ struct MapContentUniqueProperties {
                 os_log(.debug, log: .contentDSL, "set %s", label)
                 value = try new.toJSON()
             } else {
-                os_log(.debug, log: .contentDSL, "remove %s", label)
-                value = NSNull()
+                os_log(.debug, log: .contentDSL, "set back to initial %s", label)
+                value = try initial.toJSON()
             }
             try handleExpected {
                 setter(value)
@@ -34,12 +34,12 @@ struct MapContentUniqueProperties {
         }
     }
 
-    func update(from old: Self, style: StyleManagerProtocol, locationManager: LocationManager?) {
-        update("atmosphere", old: old.atmosphere, new: atmosphere, setter: style.setStyleAtmosphereForProperties(_:))
-        update("projection", old: old.projection, new: projection, setter: style.setStyleProjectionForProperties(_:))
-        update("terrain", old: old.terrain, new: terrain, setter: style.setStyleTerrainForProperties(_:))
+    func update(from old: Self, style: StyleManagerProtocol, initial: Self?, locationManager: LocationManager?) {
+        update("atmosphere", old: old.atmosphere, new: atmosphere, initial: initial?.atmosphere, setter: style.setStyleAtmosphereForProperties(_:))
+        update("projection", old: old.projection, new: projection, initial: initial?.projection, setter: style.setStyleProjectionForProperties(_:))
+        update("terrain", old: old.terrain, new: terrain, initial: initial?.terrain, setter: style.setStyleTerrainForProperties(_:))
 
-        lights.update(from: old.lights, style: style)
+        lights.update(from: old.lights, style: style, initialLights: initial?.lights)
 
         if old.location != location {
             locationManager?.options = location ?? LocationOptions()
@@ -47,10 +47,41 @@ struct MapContentUniqueProperties {
 
         if old.transition != transition {
             wrapStyleDSLError {
-                if let transition {
-                    style.setStyleTransitionFor(transition.coreOptions)
-                } else {
-                    style.setStyleTransitionFor(TransitionOptions().coreOptions)
+                let transitionToSet: TransitionOptions = transition ?? initial?.transition ?? TransitionOptions()
+                style.setStyleTransitionFor(transitionToSet.coreOptions)
+            }
+        }
+    }
+}
+
+extension MapContentUniqueProperties {
+    enum CodingKeys: String, CodingKey {
+        case terrain
+        case atmosphere = "fog"
+        case projection
+        case lights = "lights"
+    }
+
+    /// Decode  from a StyleJSON
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.terrain = try container.decodeIfPresent(Terrain.self, forKey: .terrain)
+        self.atmosphere = try container.decodeIfPresent(Atmosphere.self, forKey: .atmosphere)
+        self.projection = try container.decodeIfPresent(StyleProjection.self, forKey: .projection)
+        if var lightContainer = try? container.nestedUnkeyedContainer(forKey: .lights) {
+            while !lightContainer.isAtEnd {
+                var lightInfoContainer = lightContainer
+                let lightInfo = try lightInfoContainer.decode(LightInfo.self)
+
+                switch lightInfo.type {
+                case .ambient:
+                    lights.ambient = try? lightContainer.decode(AmbientLight.self)
+                case .directional:
+                    lights.directional = try? lightContainer.decode(DirectionalLight.self)
+                case .flat:
+                    lights.flat = try? lightContainer.decode(FlatLight.self)
+                default:
+                    Log.warning(forMessage: "Incorrect light configuration. Specify both directional and ambient lights OR flat light.", category: "StyleDSL")
                 }
             }
         }
@@ -58,7 +89,7 @@ struct MapContentUniqueProperties {
 }
 
 private extension MapContentUniqueProperties.Lights {
-    func update(from old: Self, style: StyleManagerProtocol) {
+    func update(from old: Self, style: StyleManagerProtocol, initialLights: Self?) {
         if self != old {
             wrapStyleDSLError {
                 if let directional = directional, let ambient = ambient {
@@ -70,10 +101,24 @@ private extension MapContentUniqueProperties.Lights {
                     os_log(.debug, log: .contentDSL, "set flat light")
                     try style.setLights(flat)
                 } else {
-                    os_log(.debug, log: .contentDSL, "remove lights")
-                    try handleExpected { style.setStyleLightsForLights(NSNull()) }
+                    os_log(.debug, log: .contentDSL, "set initial lights")
+                    try setInitialLights(style: style, initialLights: initialLights)
                 }
             }
+        }
+    }
+
+    func setInitialLights(style: StyleManagerProtocol, initialLights: Self?) throws {
+        if let initialDirectional = initialLights?.directional,
+           let initialAmbient = initialLights?.ambient {
+            os_log(.debug, log: .contentDSL, "re-set initial 3d lights")
+            try style.setLights(ambient: initialAmbient, directional: initialDirectional)
+        } else if let initialFlat = initialLights?.flat {
+            os_log(.debug, log: .contentDSL, "re-set initial flat lights")
+            try style.setLights(initialFlat)
+        } else {
+            os_log(.debug, log: .contentDSL, "remove lights")
+            try handleExpected { style.setStyleLightsForLights(NSNull()) }
         }
     }
 }

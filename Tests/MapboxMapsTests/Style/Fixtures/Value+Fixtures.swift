@@ -66,3 +66,22 @@ internal extension Array where Element == TextWritingMode {
         return [.horizontal, .vertical]
     }
 }
+
+internal extension Value {
+    init?(stylePropertyValue: StylePropertyValue) {
+        switch (stylePropertyValue.kind, stylePropertyValue.value) {
+        case (.constant, let value as T):
+            self = .constant(value)
+        case (.expression, let expression):
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: expression)
+                let decodedStruct = try JSONDecoder().decode(Expression.self, from: jsonData)
+                self = .expression(decodedStruct)
+            } catch {
+                return nil
+            }
+        default:
+            return nil
+        }
+    }
+}

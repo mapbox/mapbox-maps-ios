@@ -510,38 +510,51 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTerrain() throws {
-        let sourceId = String.randomASCII(withLength: .random(in: 1...20))
-        let exaggeration = Double.random(in: 0...1000)
+        let sourceId = String.testConstantValue()
+        let exaggeration = Double.testConstantValue()
 
         let sourcePropertyName = "source"
         let exaggerationPropertyName = "exaggeration"
+        let exaggerationTransitionPropertyName = "exaggeration-transition"
+
+        mapView.mapboxMap.mapStyle = .standard
 
         var sourceTerrainProperty: Any = mapView.mapboxMap.terrainProperty(sourcePropertyName)
         var exaggerationTerrainProperty: Any = mapView.mapboxMap.terrainProperty(exaggerationPropertyName)
+        var exaggerationTransitionProperty: Any = mapView.mapboxMap.terrainProperty(exaggerationTransitionPropertyName)
 
         XCTAssertTrue(sourceTerrainProperty is NSNull)
         XCTAssertTrue(exaggerationTerrainProperty is NSNull)
+        XCTAssertTrue(exaggerationTransitionProperty is NSNull)
 
         var terrain = Terrain(sourceId: sourceId)
         terrain.exaggeration = .constant(exaggeration)
+        terrain.exaggerationTransition = StyleTransition(duration: 1, delay: 1)
 
         try mapView.mapboxMap.setTerrain(terrain)
 
         sourceTerrainProperty = mapView.mapboxMap.terrainProperty(sourcePropertyName)
         exaggerationTerrainProperty = mapView.mapboxMap.terrainProperty(exaggerationPropertyName)
+        guard let exaggerationTransitionPropertyStyleTransition = try? JSONDecoder().decode(StyleTransition.self, from: JSONSerialization.data(withJSONObject: mapView.mapboxMap.terrainProperty(exaggerationTransitionPropertyName).value, options: [])) else {
+            XCTFail("Failed to read Terrain exaggeration transition")
+            return
+        }
 
         XCTAssertEqual(sourceTerrainProperty as? String, sourceId)
         let exaggerationTerrainPropertyDouble = try XCTUnwrap(exaggerationTerrainProperty as? Double)
         // convert to float and back to double to work around precision mismatch
         XCTAssertEqual(exaggerationTerrainPropertyDouble, Double(Float(exaggeration)))
+        XCTAssertEqual(exaggerationTransitionPropertyStyleTransition, StyleTransition(duration: 1, delay: 1))
 
         mapView.mapboxMap.removeTerrain()
 
         sourceTerrainProperty = mapView.mapboxMap.terrainProperty(sourcePropertyName)
         exaggerationTerrainProperty = mapView.mapboxMap.terrainProperty(exaggerationPropertyName)
+        exaggerationTransitionProperty = mapView.mapboxMap.terrainProperty(exaggerationTransitionPropertyName)
 
         XCTAssertEqual(sourceTerrainProperty as? String, "")
         XCTAssertTrue(exaggerationTerrainProperty is NSNull)
+        XCTAssertTrue(exaggerationTransitionProperty is NSNull)
     }
 
     func testOnlyAddedDataIdReturned() {

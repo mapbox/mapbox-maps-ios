@@ -24,6 +24,7 @@ final class MapContentNodeContext {
 
     var lastImportId: String?
     var initialStyleImports: [String] = []
+    var initialUniqueProperties: MapContentUniqueProperties?
 
     var uniqueProperties = MapContentUniqueProperties()
 

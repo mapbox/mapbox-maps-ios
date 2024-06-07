@@ -29,7 +29,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
     // need to create a custom MapInitOptions to reference that TileStore.
     private lazy var mapInitOptions: MapInitOptions = {
         MapInitOptions(cameraOptions: CameraOptions(center: tokyoCoord, zoom: tokyoZoom),
-                       styleURI: .outdoors)
+                       styleURI: .satelliteStreets)
     }()
 
     private lazy var offlineManager: OfflineManager = {
@@ -83,10 +83,10 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
 
         // 1. Create style package with loadStylePack() call.
         let stylePackLoadOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
-                                                        metadata: ["tag": "my-outdoors-style-pack"])!
+                                                        metadata: ["tag": "my-satellite-style-pack"])!
 
         dispatchGroup.enter()
-        let stylePackDownload = offlineManager.loadStylePack(for: .outdoors, loadOptions: stylePackLoadOptions) { [weak self] progress in
+        let stylePackDownload = offlineManager.loadStylePack(for: .satelliteStreets, loadOptions: stylePackLoadOptions) { [weak self] progress in
             // These closures do not get called from the main thread. In this case
             // we're updating the UI, so it's important to dispatch to the main
             // queue.
@@ -118,17 +118,19 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
 
         // - - - - - - - -
 
-        // 2. Create an offline region with tiles for the outdoors style
-        let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
-                                                       zoomRange: 0...16, tilesets: nil)
+        // 2. Create an offline region with tiles for the satellite streets style.
+        // If you are using a raster tileset you may need to set a different pixelRatio. The default is UIScreen.main.scale.
+        let satelliteOptions = TilesetDescriptorOptions(styleURI: .satelliteStreets,
+                                                       zoomRange: 0...16,
+                                                       tilesets: nil)
 
-        let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
+        let satelliteDescriptor = offlineManager.createTilesetDescriptor(for: satelliteOptions)
 
         // Load the tile region
         let tileRegionLoadOptions = TileRegionLoadOptions(
             geometry: .point(Point(tokyoCoord)),
-            descriptors: [outdoorsDescriptor],
-            metadata: ["tag": "my-outdoors-tile-region"],
+            descriptors: [satelliteDescriptor],
+            metadata: ["tag": "my-satellite-tile-region"],
             acceptExpired: true)!
 
         // Use the the default TileStore to load this region. You can create
@@ -230,7 +232,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
         // Note this will not remove the downloaded style pack, instead, it will
         // just mark the resources as not a part of the existing style pack. The
         // resources still exists in the disk cache.
-        offlineManager.removeStylePack(for: .outdoors)
+        offlineManager.removeStylePack(for: .satelliteStreets)
     }
 
     // MARK: - State changes

@@ -5,7 +5,7 @@ import re
 
 
 def main(argv):
-    parser = argparse.ArgumentParser(description='Replace string in file.')
+    parser = argparse.ArgumentParser(description="Replace string in file.")
     parser.add_argument("--old", required=True)
     parser.add_argument("--new", required=True)
     parser.add_argument("file")
@@ -22,5 +22,6 @@ def main(argv):
     fin.write(data)
     fin.close()
 
+
 if __name__ == "__main__":
-   main(sys.argv[1:])
+    main(sys.argv[1:])

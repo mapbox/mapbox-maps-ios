@@ -115,7 +115,6 @@ public struct PolylineAnnotation: Annotation, Equatable {
         return feature
     }
 
-
     /// Create a polyline annotation with a `LineString` and an optional identifier.
     public init(id: String = UUID().uuidString, lineString: LineString, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id
@@ -247,7 +246,6 @@ public struct PolylineAnnotation: Annotation, Equatable {
     public func lineWidth(_ newValue: Double) -> Self {
         with(self, setter(\.lineWidth, newValue))
     }
-
 
     /// Adds a handler for tap gesture on current annotation.
     ///

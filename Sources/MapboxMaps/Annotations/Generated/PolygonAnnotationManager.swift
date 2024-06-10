@@ -240,7 +240,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Common layer properties
 
-
     /// Whether or not the fill should be antialiased.
     public var fillAntialias: Bool? {
         get {
@@ -281,7 +280,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    ///
     /// Slot for the underlying layer.
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
@@ -296,7 +294,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     }
 
     // MARK: - User interaction handling
-
 
     func handleTap(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
 
@@ -334,7 +331,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
             annotation.id == featureId && annotation.isDraggable
         }
 
-        func tryBeginDragging(_ annotations: inout [PolygonAnnotation], idx: Int) -> Bool  {
+        func tryBeginDragging(_ annotations: inout [PolygonAnnotation], idx: Int) -> Bool {
             var annotation = annotations[idx]
             // If no drag handler set, the dragging is allowed
             let dragAllowed = annotation.dragBeginHandler?(&annotation, context) ?? true
@@ -418,6 +415,5 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         }
     }
 }
-
 
 // End of generated file.

@@ -23,7 +23,6 @@ final class RasterParticleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
-
             layer.rasterParticleArrayBand = Value<String>.testConstantValue()
             layer.rasterParticleColor = Value<StyleColor>.testConstantValue()
             layer.rasterParticleCount = Value<Double>.testConstantValue()

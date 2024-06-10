@@ -70,7 +70,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     ///     - content: A builder closure that creates annotations.
     @_documentation(visibility: public)
     public init(@ArrayBuilder<PolylineAnnotation> content: @escaping () -> [PolylineAnnotation?])
-        where Data == Array<(Int, PolylineAnnotation)>, ID == Int {
+        where Data == [(Int, PolylineAnnotation)], ID == Int {
 
         let annotations = content()
             .enumerated()
@@ -157,7 +157,6 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 
     private var slot: String?
-    ///
     /// Slot for the underlying layer.
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
@@ -166,7 +165,6 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     public func slot(_ newValue: String) -> Self {
         with(self, setter(\.slot, newValue))
     }
-
 
     private var layerId: String?
 

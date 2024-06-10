@@ -24,7 +24,6 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
             layer.fillSortKey = Value<Double>.testConstantValue()
-
             layer.fillAntialias = Value<Bool>.testConstantValue()
             layer.fillColor = Value<StyleColor>.testConstantValue()
             layer.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)

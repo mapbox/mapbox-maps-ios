@@ -23,7 +23,6 @@ final class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
-
             layer.rasterArrayBand = Value<String>.testConstantValue()
             layer.rasterBrightnessMax = Value<Double>.testConstantValue()
             layer.rasterBrightnessMaxTransition = StyleTransition(duration: 10.0, delay: 10.0)

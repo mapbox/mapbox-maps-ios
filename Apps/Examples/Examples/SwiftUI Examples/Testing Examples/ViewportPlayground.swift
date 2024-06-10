@@ -1,5 +1,4 @@
 import SwiftUI
-import MapboxMaps
 @_spi(Experimental) import MapboxMaps
 
 @available(iOS 14.0, *)
@@ -73,19 +72,19 @@ struct ViewportPlayground: View {
         if let overview = viewport.overview {
             var geometryType = ""
             switch overview.geometry {
-            case .point(_):
+            case .point:
                 geometryType = "point"
-            case .lineString(_):
+            case .lineString:
                 geometryType = "lineString"
-            case .polygon(_):
+            case .polygon:
                 geometryType = "polygon"
-            case .multiPoint(_):
+            case .multiPoint:
                 geometryType = "multiPoint"
-            case .multiLineString(_):
+            case .multiLineString:
                 geometryType = "multiLineString"
-            case .multiPolygon(_):
+            case .multiPolygon:
                 geometryType = "multiPolygon"
-            case .geometryCollection(_):
+            case .geometryCollection:
                 geometryType = "geometryCollection"
             #if USING_TURF_WITH_LIBRARY_EVOLUTION
             @unknown default:
@@ -130,7 +129,7 @@ private struct ViewportMenu: View {
                 viewport = .styleDefault
             }
             Button(".camera()") {
-                viewport = .camera(center: CLLocationCoordinate2D(latitude: 41.8915, longitude:  -87.6087), zoom: 16.52, bearing: 290, pitch: 68.5)
+                viewport = .camera(center: CLLocationCoordinate2D(latitude: 41.8915, longitude: -87.6087), zoom: 16.52, bearing: 290, pitch: 68.5)
             }
             Button(".overview(.multiPoint())") {
                 viewport = viewport(for: parks, coordinatePadding: 20)
@@ -156,7 +155,7 @@ private struct ViewportMenu: View {
                 }
                 Button("[easeIn] .camera()") {
                     withViewportAnimation(.easeIn(duration: 1)) {
-                        viewport = .camera(center: CLLocationCoordinate2D(latitude: 41.8915, longitude:  -87.6087), zoom: 16.52, bearing: 290, pitch: 68.5)
+                        viewport = .camera(center: CLLocationCoordinate2D(latitude: 41.8915, longitude: -87.6087), zoom: 16.52, bearing: 290, pitch: 68.5)
                     }
                 }
                 Button("[fly] .overview(.multiPoint())") {
@@ -211,26 +210,26 @@ private let parks = MultiPoint([
 ])
 
 private let maineBoundaries = Polygon([[
-    CLLocationCoordinate2D(latitude:45.13745, longitude: -67.13734),
-    CLLocationCoordinate2D(latitude:44.8097, longitude: -66.96466),
-    CLLocationCoordinate2D(latitude:44.3252, longitude: -68.03252),
-    CLLocationCoordinate2D(latitude:43.98, longitude: -69.06),
-    CLLocationCoordinate2D(latitude:43.68405, longitude: -70.11617),
-    CLLocationCoordinate2D(latitude:43.09008, longitude: -70.64573),
-    CLLocationCoordinate2D(latitude:43.08003, longitude: -70.75102),
-    CLLocationCoordinate2D(latitude:43.21973, longitude: -70.79761),
-    CLLocationCoordinate2D(latitude:43.36789, longitude: -70.98176),
-    CLLocationCoordinate2D(latitude:43.46633, longitude: -70.94416),
-    CLLocationCoordinate2D(latitude:45.30524, longitude: -71.08482),
-    CLLocationCoordinate2D(latitude:45.46022, longitude: -70.66002),
-    CLLocationCoordinate2D(latitude:45.91479, longitude: -70.30495),
-    CLLocationCoordinate2D(latitude:46.69317, longitude: -70.00014),
-    CLLocationCoordinate2D(latitude:47.44777, longitude: -69.23708),
-    CLLocationCoordinate2D(latitude:47.18479, longitude: -68.90478),
-    CLLocationCoordinate2D(latitude:47.35462, longitude: -68.2343),
-    CLLocationCoordinate2D(latitude:47.06624, longitude: -67.79035),
-    CLLocationCoordinate2D(latitude:45.70258, longitude: -67.79141),
-    CLLocationCoordinate2D(latitude:45.13745, longitude: -67.13734)
+    CLLocationCoordinate2D(latitude: 45.13745, longitude: -67.13734),
+    CLLocationCoordinate2D(latitude: 44.8097, longitude: -66.96466),
+    CLLocationCoordinate2D(latitude: 44.3252, longitude: -68.03252),
+    CLLocationCoordinate2D(latitude: 43.98, longitude: -69.06),
+    CLLocationCoordinate2D(latitude: 43.68405, longitude: -70.11617),
+    CLLocationCoordinate2D(latitude: 43.09008, longitude: -70.64573),
+    CLLocationCoordinate2D(latitude: 43.08003, longitude: -70.75102),
+    CLLocationCoordinate2D(latitude: 43.21973, longitude: -70.79761),
+    CLLocationCoordinate2D(latitude: 43.36789, longitude: -70.98176),
+    CLLocationCoordinate2D(latitude: 43.46633, longitude: -70.94416),
+    CLLocationCoordinate2D(latitude: 45.30524, longitude: -71.08482),
+    CLLocationCoordinate2D(latitude: 45.46022, longitude: -70.66002),
+    CLLocationCoordinate2D(latitude: 45.91479, longitude: -70.30495),
+    CLLocationCoordinate2D(latitude: 46.69317, longitude: -70.00014),
+    CLLocationCoordinate2D(latitude: 47.44777, longitude: -69.23708),
+    CLLocationCoordinate2D(latitude: 47.18479, longitude: -68.90478),
+    CLLocationCoordinate2D(latitude: 47.35462, longitude: -68.2343),
+    CLLocationCoordinate2D(latitude: 47.06624, longitude: -67.79035),
+    CLLocationCoordinate2D(latitude: 45.70258, longitude: -67.79141),
+    CLLocationCoordinate2D(latitude: 45.13745, longitude: -67.13734)
 ]])
 
 @available(iOS 14.0, *)

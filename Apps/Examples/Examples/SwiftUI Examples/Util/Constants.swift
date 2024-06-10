@@ -19,7 +19,6 @@ extension CLLocationCoordinate2D {
     static let barcelona = CLLocationCoordinate2D(latitude: 41.3874, longitude: 2.168)
 }
 
-
 extension CameraBoundsOptions {
     static let world = CameraBoundsOptions(bounds: .world)
     static let iceland = CameraBoundsOptions(

@@ -84,9 +84,9 @@ extension RasterSource {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
-        if encoder.userInfo[.volatilePropertiesOnly] as? Bool == true  {
+        if encoder.userInfo[.volatilePropertiesOnly] as? Bool == true {
             try encodeVolatile(to: encoder, into: &container)
-        } else if encoder.userInfo[.nonVolatilePropertiesOnly] as? Bool == true  {
+        } else if encoder.userInfo[.nonVolatilePropertiesOnly] as? Bool == true {
             try encodeNonVolatile(to: encoder, into: &container)
         } else {
             try encodeVolatile(to: encoder, into: &container)

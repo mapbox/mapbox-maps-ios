@@ -39,12 +39,12 @@ private class Model: ObservableObject {
         var coordinate: CLLocationCoordinate2D
     }
     @Published
-    var queryResult: QueryResult? = nil
+    var queryResult: QueryResult?
 
     @Published
     var viewport: Viewport = .styleDefault
 
-    private var cancellable: Cancelable? = nil
+    private var cancellable: Cancelable?
 
     func mapTapped(_ context: MapContentGestureContext, map: MapboxMap?, bottomInset: CGFloat) {
         cancellable?.cancel()

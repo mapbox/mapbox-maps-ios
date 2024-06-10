@@ -112,7 +112,6 @@ public struct CircleAnnotation: Annotation, Equatable {
         return feature
     }
 
-
     /// Create a circle annotation with a `Point` and an optional identifier.
     public init(id: String = UUID().uuidString, point: Point, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id
@@ -220,7 +219,6 @@ public struct CircleAnnotation: Annotation, Equatable {
     public func circleStrokeWidth(_ newValue: Double) -> Self {
         with(self, setter(\.circleStrokeWidth, newValue))
     }
-
 
     /// Adds a handler for tap gesture on current annotation.
     ///

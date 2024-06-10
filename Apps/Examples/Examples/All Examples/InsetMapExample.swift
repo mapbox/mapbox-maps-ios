@@ -40,7 +40,7 @@ final class InsetMapExample: UIViewController, ExampleProtocol {
 
         // position the inset map in the bottom left corner
         insetMapView = MapView(
-            frame: CGRectMake(8, (view.frame.size.height - 250), 120, 120),
+            frame: CGRect(x: 8, y: (view.frame.size.height - 250), width: 120, height: 120),
             mapInitOptions: myInsetMapInitOptions
         )
 

@@ -100,7 +100,6 @@ extension String: Identifiable {
     public var id: String { self }
 }
 
-
 @available(iOS 13.0, *)
 extension View {
     func onChangeOfSize(perform action: @escaping (CGSize) -> Void) -> some View {

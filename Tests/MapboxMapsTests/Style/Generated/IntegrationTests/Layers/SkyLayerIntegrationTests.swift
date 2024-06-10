@@ -23,7 +23,6 @@ final class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
-
             layer.skyAtmosphereColor = Value<StyleColor>.testConstantValue()
             layer.skyAtmosphereHaloColor = Value<StyleColor>.testConstantValue()
             layer.skyAtmosphereSunIntensity = Value<Double>.testConstantValue()

@@ -113,7 +113,6 @@ struct DynamicStylingExample: View {
         }
     }
 
-
     @ViewBuilder
     private var settingsBody: some View {
         VStack(alignment: .leading) {

@@ -52,7 +52,6 @@ final class AnnotationView: UIView {
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.cornerRadius = 8
 
-
         let hStack = UIStackView(arrangedSubviews: [centerLabel, closeButton])
         hStack.spacing = 4
 

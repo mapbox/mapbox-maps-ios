@@ -109,7 +109,6 @@ public struct PolygonAnnotation: Annotation, Equatable {
         return feature
     }
 
-
     /// Create a polygon annotation with a `Polygon` and an optional identifier.
     public init(id: String = UUID().uuidString, polygon: Polygon, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id
@@ -181,7 +180,6 @@ public struct PolygonAnnotation: Annotation, Equatable {
     public func fillPattern(_ newValue: String) -> Self {
         with(self, setter(\.fillPattern, newValue))
     }
-
 
     /// Adds a handler for tap gesture on current annotation.
     ///

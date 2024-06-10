@@ -24,7 +24,6 @@ final class SlotLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
 
-
             // Add the layer
             do {
                 try mapView.mapboxMap.addLayer(layer)

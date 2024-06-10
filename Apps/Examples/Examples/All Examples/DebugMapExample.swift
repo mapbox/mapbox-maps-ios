@@ -203,7 +203,6 @@ private class DebugOptionCell: UITableViewCell {
         toggle.isOn = isOptionEnabled
     }
 
-
     func onToggled(_ handler: @escaping () -> Void) {
         onToggleHandler = handler
     }
@@ -238,13 +237,11 @@ private final class Setting {
 
 extension Setting.Option {
     var debugOption: MapViewDebugOptions? {
-        if case let .debug(option) = self { return option }
-        else { return nil }
+        if case let .debug(option) = self { return option } else { return nil }
     }
 
     var performanceOption: PerformanceStatisticsOptions? {
-        if case let .performance(option) = self { return option }
-        else { return nil }
+        if case let .performance(option) = self { return option } else { return nil }
     }
 }
 

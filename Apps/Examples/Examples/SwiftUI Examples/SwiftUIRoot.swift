@@ -53,7 +53,7 @@ struct SwiftUIRoot: View {
 }
 
 @available(iOS 14.0, *)
-struct ExampleLink<S, Destination>: View where S : StringProtocol, Destination: View {
+struct ExampleLink<S, Destination>: View where S: StringProtocol, Destination: View {
     var title: S
     var note: S?
     var destination: () -> Destination
@@ -91,7 +91,6 @@ private struct ToolbarContentWhenPresented<T: ToolbarContent>: ViewModifier {
     }
 }
 
-
 @available(iOS 14.0, *)
 struct SwiftUIWrapper: View {
     // A model for StandardStyleLocationsExample.
@@ -109,7 +108,6 @@ func createSwiftUIExamplesController() -> UIViewController {
     controller.modalPresentationStyle = .fullScreen
     return controller
 }
-
 
 @available(iOS 14.0, *)
 struct ExamplesNavigationView<Content>: View where Content: View {

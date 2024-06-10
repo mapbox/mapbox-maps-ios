@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-
 final class CircleAnnotationExample: UIViewController, ExampleProtocol {
     private lazy var mapView: MapView = MapView(frame: view.bounds)
 

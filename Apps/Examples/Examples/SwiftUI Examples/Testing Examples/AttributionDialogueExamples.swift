@@ -1,7 +1,6 @@
 import SwiftUI
 @_spi(Experimental) import MapboxMaps
 
-
 @available(iOS 15, *)
 struct AttributionEnvironmentURLOpen: View {
     @State private var alert: String?

@@ -240,7 +240,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Common layer properties
 
-
     /// The display of line endings.
     public var lineCap: LineCap? {
         get {
@@ -331,7 +330,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    ///
     /// Slot for the underlying layer.
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
@@ -346,7 +344,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     // MARK: - User interaction handling
-
 
     func handleTap(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
 
@@ -384,7 +381,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
             annotation.id == featureId && annotation.isDraggable
         }
 
-        func tryBeginDragging(_ annotations: inout [PolylineAnnotation], idx: Int) -> Bool  {
+        func tryBeginDragging(_ annotations: inout [PolylineAnnotation], idx: Int) -> Bool {
             var annotation = annotations[idx]
             // If no drag handler set, the dragging is allowed
             let dragAllowed = annotation.dragBeginHandler?(&annotation, context) ?? true
@@ -468,6 +465,5 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
     }
 }
-
 
 // End of generated file.

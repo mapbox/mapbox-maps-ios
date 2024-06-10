@@ -111,7 +111,7 @@ private final class BottomSheet: UIView {
     let titles = ["right coordinates padding", "left coordinates padding", "map padding", "place"]
     var titleLabels: [UILabel] = []
 
-    var onSelectionChanged: (([CLLocationCoordinate2D], UIEdgeInsets, UIEdgeInsets) -> Void)? = nil
+    var onSelectionChanged: (([CLLocationCoordinate2D], UIEdgeInsets, UIEdgeInsets) -> Void)?
     var selectedPlace: [CLLocationCoordinate2D]?
 
     override init(frame: CGRect) {
@@ -125,7 +125,7 @@ private final class BottomSheet: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        setupSegmentedControl(placesControl, selected: places.firstIndex(where: { $0.coordinates == selectedPlace } ) ?? 0)
+        setupSegmentedControl(placesControl, selected: places.firstIndex(where: { $0.coordinates == selectedPlace }) ?? 0)
         setupSegmentedControl(mapAllEdgesInset)
         setupSegmentedControl(leftCoordinatesInset)
         setupSegmentedControl(rightCoordinatesInsets)
@@ -190,7 +190,6 @@ private final class BottomSheet: UIView {
         }
     }
 }
-
 
 private extension Array where Element == CLLocationCoordinate2D {
     static let baltic: [CLLocationCoordinate2D] = [.helsinki, .vyborg, .saintPetersburg, .talinn, .helsinki]

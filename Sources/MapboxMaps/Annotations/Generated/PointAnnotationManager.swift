@@ -341,7 +341,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Common layer properties
 
-
     /// If true, the icon will be visible even if it collides with other previously drawn symbols.
     public var iconAllowOverlap: Bool? {
         get {
@@ -622,7 +621,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    ///
     /// Slot for the underlying layer.
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
@@ -723,7 +721,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             annotation.id == featureId && annotation.isDraggable
         }
 
-        func tryBeginDragging(_ annotations: inout [PointAnnotation], idx: Int) -> Bool  {
+        func tryBeginDragging(_ annotations: inout [PointAnnotation], idx: Int) -> Bool {
             var annotation = annotations[idx]
             // If no drag handler set, the dragging is allowed
             let dragAllowed = annotation.dragBeginHandler?(&annotation, context) ?? true

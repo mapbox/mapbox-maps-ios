@@ -69,7 +69,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     ///     - content: A builder closure that creates annotations.
     @_documentation(visibility: public)
     public init(@ArrayBuilder<PointAnnotation> content: @escaping () -> [PointAnnotation?])
-        where Data == Array<(Int, PointAnnotation)>, ID == Int {
+        where Data == [(Int, PointAnnotation)], ID == Int {
 
         let annotations = content()
             .enumerated()
@@ -311,7 +311,6 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     }
 
     private var slot: String?
-    ///
     /// Slot for the underlying layer.
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.

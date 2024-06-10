@@ -216,7 +216,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             taps.append(context)
             return true
         }
-        annotations[1].tapHandler = { context in
+        annotations[1].tapHandler = { _ in
             return false // skips handling
         }
         manager.delegate = self
@@ -3512,7 +3512,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             XCTAssertEqual(data.context.coordinate, context.coordinate)
 
             manager.handleDragChange(with: CGPoint(x: 10, y: 20), context: context)
-            manager.handleDragEnd(context:context)
+            manager.handleDragEnd(context: context)
             XCTAssertEqual(changeDragStub.invocations.count, 0)
             XCTAssertEqual(endDragStub.invocations.count, 0)
 
@@ -3539,7 +3539,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
             context.point.x += 1
             context.coordinate.latitude += 1
-            manager.handleDragEnd(context:context)
+            manager.handleDragEnd(context: context)
             XCTAssertEqual(endDragStub.invocations.count, 1)
             data = try XCTUnwrap(endDragStub.invocations.last).parameters
             XCTAssertEqual(data.annotation.id, annotation.id)

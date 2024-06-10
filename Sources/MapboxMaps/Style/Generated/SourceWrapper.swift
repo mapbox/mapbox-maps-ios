@@ -113,7 +113,7 @@ extension ImageSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
 extension GeoJSONSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: GeoJSONSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
-        if !isEqual(by: \.data, lhs: self, rhs:old) {
+        if !isEqual(by: \.data, lhs: self, rhs: old) {
             guard let data else { return }
             os_log(.debug, log: .contentDSL, "source update GeoJSON data %s", id)
             manager.updateGeoJSONSource(withId: id, data: data, dataId: nil)

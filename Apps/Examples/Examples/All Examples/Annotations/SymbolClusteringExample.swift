@@ -84,7 +84,6 @@ final class SymbolClusteringExample: UIViewController, ExampleProtocol {
         ]
         source.clusterProperties = clusterProperties
 
-
         let clusteredLayer = createClusteredLayer(source: source.id)
         let unclusteredLayer = createUnclusteredLayer(source: source.id)
 

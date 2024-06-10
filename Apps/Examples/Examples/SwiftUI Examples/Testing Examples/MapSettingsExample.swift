@@ -28,10 +28,10 @@ struct Settings {
 }
 
 @available(iOS 14.0, *)
-struct MapSettingsExample : View {
+struct MapSettingsExample: View {
     @State private var settingsOpened = false
     @State private var settings = Settings()
-    @State private var performanceStatistics: PerformanceStatistics? = nil
+    @State private var performanceStatistics: PerformanceStatistics?
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -83,7 +83,7 @@ struct MapSettingsExample : View {
 }
 
 @available(iOS 14.0, *)
-struct SettingsView : View {
+struct SettingsView: View {
     @Binding var settings: Settings
     #if os(visionOS)
     @Environment(\.dismiss) private var dismiss

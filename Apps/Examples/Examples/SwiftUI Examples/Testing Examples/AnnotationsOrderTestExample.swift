@@ -35,19 +35,19 @@ struct AnnotationsOrderTestExample: View {
             TestLayer(id: "black-layer", radius: 2, color: .black.darker, coordinate: .init(latitude: -10, longitude: 0))
         }
         .mapStyle(mapStyle)
-        .onLayerTapGesture("purple-layer") { feature, context in
+        .onLayerTapGesture("purple-layer") { _, context in
             tapMessage = gestureMessage("Purple layer", context: context)
             return true // handled, do not propagate to layers below or map
         }
-        .onLayerLongPressGesture("purple-layer") { feature, context in
+        .onLayerLongPressGesture("purple-layer") { _, context in
             longPressMessage = gestureMessage("Purple layer", context: context)
             return true // handled, do not propagate to layers below or map
         }
-        .onLayerTapGesture("black-layer") { feature, context in
+        .onLayerTapGesture("black-layer") { _, context in
             tapMessage = gestureMessage("Black layer", context: context)
             return true
         }
-        .onLayerTapGesture("yellow-layer") { feature, context in
+        .onLayerTapGesture("yellow-layer") { _, context in
             tapMessage = gestureMessage("Yellow layer", context: context)
             return true
         }
@@ -119,13 +119,13 @@ struct AnnotationsContent: MapContent {
                     .circleColor(StyleColor(isEven ? .systemOrange : .systemBlue))
                     .circleStrokeColor(StyleColor(.black))
                     .circleStrokeWidth(1)
-                    .onTapGesture { context in
+                    .onTapGesture { _ in
                         if isEven {
                             return true
                         }
                         return false // not handled, propagate to layers below the map
                     }
-                    .onLongPressGesture { context in
+                    .onLongPressGesture { _ in
                         if isEven {
                             return true
                         }
@@ -274,7 +274,6 @@ private struct ColorButton: View {
         .frame(width: 50, height: 50)
     }
 }
-
 
 private extension Polygon {
     static let cyan = Polygon([

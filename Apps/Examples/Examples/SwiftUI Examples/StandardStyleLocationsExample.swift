@@ -39,8 +39,8 @@ struct StandardStyleLocationsExample: View {
                 StandardStyleLocationsSettings()
                     .floating(RoundedRectangle(cornerRadius: 10))
                     .limitPaneWidth()
-                    .background(GeometryReader() { proxy in
-                        Color.clear.onAppear() { settingsHeight = proxy.size.height }
+                    .background(GeometryReader { proxy in
+                        Color.clear.onAppear { settingsHeight = proxy.size.height }
                     })
             }
 #endif

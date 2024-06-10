@@ -28,7 +28,6 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.lineMiterLimit = Value<Double>.testConstantValue()
             layer.lineRoundLimit = Value<Double>.testConstantValue()
             layer.lineSortKey = Value<Double>.testConstantValue()
-
             layer.lineBlur = Value<Double>.testConstantValue()
             layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineBorderColor = Value<StyleColor>.testConstantValue()

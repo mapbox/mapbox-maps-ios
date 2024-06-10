@@ -24,7 +24,6 @@ final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
             layer.fillExtrusionEdgeRadius = Value<Double>.testConstantValue()
-
             layer.fillExtrusionAmbientOcclusionGroundAttenuation = Value<Double>.testConstantValue()
             layer.fillExtrusionAmbientOcclusionGroundAttenuationTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionAmbientOcclusionGroundRadius = Value<Double>.testConstantValue()

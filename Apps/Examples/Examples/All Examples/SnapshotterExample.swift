@@ -56,7 +56,6 @@ final class SnapshotterExample: UIViewController, ExampleProtocol {
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-
         let size = CGSize(
             width: view.safeAreaLayoutGuide.layoutFrame.width,
             height: (view.safeAreaLayoutGuide.layoutFrame.height - stackView.spacing) / 2)

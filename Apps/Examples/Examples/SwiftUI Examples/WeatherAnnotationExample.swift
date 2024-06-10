@@ -38,7 +38,6 @@ struct WeatherAnnotationExample: View {
     }
 }
 
-
 @available(iOS 14.0, *)
 private struct WeatherIconView: View {
     var data: WeatherData

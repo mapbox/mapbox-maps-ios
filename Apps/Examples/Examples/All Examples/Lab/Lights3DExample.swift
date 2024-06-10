@@ -175,9 +175,9 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
         let interpolatedBlue = startBlue + CGFloat(interpolationFactor) * (endBlue - startBlue)
         let interpolatedAlpha = startAlpha + CGFloat(interpolationFactor) * (endAlpha - startAlpha)
 
-        return UIColor(red:   min(max(0, interpolatedRed), 1),
+        return UIColor(red: min(max(0, interpolatedRed), 1),
                        green: min(max(0, interpolatedGreen), 1),
-                       blue:  min(max(0, interpolatedBlue), 1),
+                       blue: min(max(0, interpolatedBlue), 1),
                        alpha: min(max(0, interpolatedAlpha), 1))
     }
 }

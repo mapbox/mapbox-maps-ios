@@ -240,7 +240,6 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Common layer properties
 
-
     /// Controls the intensity of light emitted on the source features.
     public var circleEmissiveStrength: Double? {
         get {
@@ -291,7 +290,6 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    ///
     /// Slot for the underlying layer.
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
@@ -306,7 +304,6 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     }
 
     // MARK: - User interaction handling
-
 
     func handleTap(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
 
@@ -344,7 +341,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
             annotation.id == featureId && annotation.isDraggable
         }
 
-        func tryBeginDragging(_ annotations: inout [CircleAnnotation], idx: Int) -> Bool  {
+        func tryBeginDragging(_ annotations: inout [CircleAnnotation], idx: Int) -> Bool {
             var annotation = annotations[idx]
             // If no drag handler set, the dragging is allowed
             let dragAllowed = annotation.dragBeginHandler?(&annotation, context) ?? true
@@ -428,6 +425,5 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         }
     }
 }
-
 
 // End of generated file.

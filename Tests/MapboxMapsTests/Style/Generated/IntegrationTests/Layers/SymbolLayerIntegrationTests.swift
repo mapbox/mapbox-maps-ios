@@ -62,7 +62,6 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.textTransform = Value<TextTransform>.testConstantValue()
             layer.textVariableAnchor = Value<[TextAnchor]>.testConstantValue()
             layer.textWritingMode = Value<[TextWritingMode]>.testConstantValue()
-
             layer.iconColor = Value<StyleColor>.testConstantValue()
             layer.iconColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconColorSaturation = Value<Double>.testConstantValue()

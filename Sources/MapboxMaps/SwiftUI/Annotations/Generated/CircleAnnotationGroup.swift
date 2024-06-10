@@ -71,7 +71,7 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     ///     - content: A builder closure that creates annotations.
     @_documentation(visibility: public)
     public init(@ArrayBuilder<CircleAnnotation> content: @escaping () -> [CircleAnnotation?])
-        where Data == Array<(Int, CircleAnnotation)>, ID == Int {
+        where Data == [(Int, CircleAnnotation)], ID == Int {
 
         let annotations = content()
             .enumerated()
@@ -126,7 +126,6 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     }
 
     private var slot: String?
-    ///
     /// Slot for the underlying layer.
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
@@ -135,7 +134,6 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     public func slot(_ newValue: String) -> Self {
         with(self, setter(\.slot, newValue))
     }
-
 
     private var layerId: String?
 

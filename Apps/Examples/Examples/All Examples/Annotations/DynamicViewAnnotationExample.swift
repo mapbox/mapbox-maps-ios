@@ -306,7 +306,6 @@ private final class Route {
     }
 }
 
-
 private final class ParkingAnnotationView: UIView {
     private let label = UILabel()
     private let icon = UIImageView()

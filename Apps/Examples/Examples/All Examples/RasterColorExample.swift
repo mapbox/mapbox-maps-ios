@@ -29,7 +29,6 @@ final class RasterColorExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
     }
 
-
     func setupExample() {
 
         var rasterSource = RasterSource(id: "raster-source-id")

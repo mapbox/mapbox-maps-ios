@@ -136,7 +136,6 @@ public struct PointAnnotation: Annotation, Equatable {
         return feature
     }
 
-
     /// Create a point annotation with a `Point` and an optional identifier.
     public init(id: String = UUID().uuidString, point: Point, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id

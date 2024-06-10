@@ -20,7 +20,7 @@ final class CarPlayViewController: UIViewController {
     lazy var mapView: MapView = {
         let mapOptions = MapOptions(pixelRatio: UIScreen.screens[1].nativeScale)
 
-        let mapInitOptions = MapInitOptions(mapOptions: mapOptions, cameraOptions:  CameraOptions(
+        let mapInitOptions = MapInitOptions(mapOptions: mapOptions, cameraOptions: CameraOptions(
             center: CLLocationCoordinate2D(
                 latitude: 59.31,
                 longitude: 18.06

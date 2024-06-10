@@ -212,7 +212,7 @@ final class FeatureStateExample: UIViewController, ExampleProtocol {
             switch result {
             case .failure(let error):
                 print("Could not retrieve feature state: \(error).")
-            case .success(_):
+            case .success:
                 print("Succesfully set feature state.")
             }
         }
@@ -231,7 +231,7 @@ final class FeatureStateExample: UIViewController, ExampleProtocol {
                 switch result {
                 case .failure(let error):
                     print("Could not retrieve feature state: \(error).")
-                case .success(_):
+                case .success:
                     print("Succesfully set feature state.")
                 }
             }

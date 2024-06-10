@@ -36,6 +36,7 @@ struct SwiftUIRoot: View {
                     ExampleLink("Annotation Order", destination: AnnotationsOrderTestExample())
 
                     ExampleLink("Attribution url via callback", note: "Works on iOS 13+", destination: AttributionManualURLOpen())
+                    ExampleLink("Raster particles", note: "Rendering of raster particles.", destination: RasterParticleExample())
                     if #available(iOS 15.0, *) {
                         ExampleLink("Attribution url open via environment", note: "Works on iOS 15+", destination: AttributionEnvironmentURLOpen())
                     }

@@ -37,14 +37,14 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         button.addTarget(self, action: #selector(lightColorButtonTapped(_:)), for: .touchUpInside)
         return button
     }()
-    
+
     private var ambientLight: AmbientLight = {
         var light = AmbientLight()
         light.color = .constant(StyleColor(.blue))
         light.intensity = .constant(0.9)
         return light
     }()
-    
+
     private var directionalLight: DirectionalLight = {
         var light = DirectionalLight()
         light.color = .constant(StyleColor(.white))

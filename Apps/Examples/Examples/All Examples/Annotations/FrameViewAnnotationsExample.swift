@@ -5,7 +5,7 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
     private enum Animator {
         case flyTo, easeTo, viewport
     }
-    
+
     private var cancelables = Set<AnyCancelable>()
     private var flyToButton: UIButton!
     private var easeToButton: UIButton!

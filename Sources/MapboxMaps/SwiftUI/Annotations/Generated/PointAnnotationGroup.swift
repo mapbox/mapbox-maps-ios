@@ -311,7 +311,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     }
 
     private var slot: String?
-    /// 
+    ///
     /// Slot for the underlying layer.
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.

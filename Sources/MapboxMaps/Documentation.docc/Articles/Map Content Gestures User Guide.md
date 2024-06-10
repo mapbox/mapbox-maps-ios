@@ -22,7 +22,7 @@ var body: some View {
                 .onTapGesture {
                     print("burger is tapped") // <- View annotation handle the gesture before the Map view.
                 }
-        }       
+        }
     }
 }
 ```
@@ -90,7 +90,7 @@ Long Press position | Printed message
 3 or 4 | `map is long-pressed`
 
 If the gesture handler returns `false`, the gesture handling continues with the annotations or layers below it. If the handler returns `true`, the propagation stops.
-In the example below, the circle annotation will handle only the first time, passing all the following taps to the polygon. 
+In the example below, the circle annotation will handle only the first time, passing all the following taps to the polygon.
 
 ```swift
 @State var circleTapHandled = false
@@ -113,7 +113,7 @@ var body: some View {
 }
 ```
 
-- Note:  Every gesture handler can receive the ``MapContentGestureContext`` that provides additional information about the gesture, such as point and the geographical coordinate. 
+- Note:  Every gesture handler can receive the ``MapContentGestureContext`` that provides additional information about the gesture, such as point and the geographical coordinate.
 
 ## Clustered Annotations
 

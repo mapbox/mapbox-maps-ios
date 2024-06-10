@@ -40,7 +40,7 @@ final class ResizeMapViewExample: UIViewController, ExampleProtocol {
 
     func mapStyleDidLoad() {
         os_log(.info, "MapView did load")
-        
+
         updateToolbarItems()
 
         // The below line is used for internal testing purposes only.

@@ -15,7 +15,7 @@ public struct CustomGeometrySource: Source {
     /// Settings for the custom geometry, including a fetchTileFunction callback
     public let options: CustomGeometrySourceOptions?
 
-    /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. 
+    /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache.
     /// - Note: Current implementation does not take into account resources allocated by the visible tiles.
     public var tileCacheBudget: TileCacheBudgetSize?
 

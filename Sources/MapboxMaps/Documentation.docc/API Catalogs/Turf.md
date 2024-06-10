@@ -41,4 +41,3 @@ Describes `turf-swift` dependency objects
 - ``Consumer``
 - ``Geometry-enum``
 - ``JSONValue``
-

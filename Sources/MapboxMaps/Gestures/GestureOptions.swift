@@ -75,7 +75,7 @@ public struct GestureOptions: Equatable {
 
     /// A constant factor that determines how quickly pan deceleration animations happen.
     /// Multiplied with the velocity vector once per millisecond during deceleration animations.
-    /// 
+    ///
     /// Defaults to `UIScrollView.DecelerationRate.normal.rawValue`
     public var panDecelerationFactor: CGFloat
 

@@ -69,4 +69,3 @@ final class CombineLocationExample: UIViewController, ExampleProtocol {
         finish()
     }
 }
-

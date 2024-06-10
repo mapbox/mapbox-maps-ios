@@ -1,6 +1,6 @@
 # Style
 
-In v10 SDK, the style API is directly aligned with the Mapbox Style Specification. `Sources`, `Layers`, `Light` all work in the exact same manner as in the Style Specification. 
+In v10 SDK, the style API is directly aligned with the Mapbox Style Specification. `Sources`, `Layers`, `Light` all work in the exact same manner as in the Style Specification.
 
 The `Style` object in the `MapViewController` is responsible for all run time styling related functionality.
 
@@ -8,14 +8,14 @@ The `Style` object in the `MapViewController` is responsible for all run time st
 Every `Source` and `Layer` declared in the Style Specification exists in v10 as a simple Swift struct. Furthermore, every property within those sources and layers is modeled using familiar swift types. This means that creating new sources and layers are easy!
 
 ##### GeoJSON Source Example
-For example, a simple GeoJSON source can be created by the following code. We can set properties on this source (with the help of the full power of Xcode's autocomplete) as we would expect too! 
+For example, a simple GeoJSON source can be created by the following code. We can set properties on this source (with the help of the full power of Xcode's autocomplete) as we would expect too!
 
 ```swift
 var myGeoJSONSource = GeoJSONSource()
 myGeoJSONSource.maxZoom = 14.0
 ```
 
-GeoJSON sources have a `data` property that can be set to either a `url` or inline geojson. The swift struct representing a GeoJSON source is modeled 1:1 with this expectation. 
+GeoJSON sources have a `data` property that can be set to either a `url` or inline geojson. The swift struct representing a GeoJSON source is modeled 1:1 with this expectation.
 
 The SDK uses [Turf-swift](https://github.com/mapbox/turf-swift) to model geojson. So crafting geojson at runtime becomes straightforward and is backed by the type-safety that Turf provides.
 
@@ -50,9 +50,9 @@ self.mapViewController.addLayer(myBackgroundLayer)
 
 ### What about Expressions?
 
-In the Background Layer example above, we set a constant value to the `backgroundColor` porperty of the layer. However, the `backgroundColor` property (and nearly all layout and paint properties) support expressions too! 
+In the Background Layer example above, we set a constant value to the `backgroundColor` porperty of the layer. However, the `backgroundColor` property (and nearly all layout and paint properties) support expressions too!
 
-Fortunately, the SDK is flexible enough to handle both expressions and constants. Moreover, expressions have been redesigned from the ground up in v10. Instead of using `NSExpression` to represent expressions, the new Expression DSL directly models expressions based on the Mapbox Style Specification. 
+Fortunately, the SDK is flexible enough to handle both expressions and constants. Moreover, expressions have been redesigned from the ground up in v10. Instead of using `NSExpression` to represent expressions, the new Expression DSL directly models expressions based on the Mapbox Style Specification.
 
 In v10, expressions now exist as simple, familiar and type-safe Swift structs. They are also backed by Swift function-builders to make the experience of writing an expression similar to the way SwiftUI works.
 

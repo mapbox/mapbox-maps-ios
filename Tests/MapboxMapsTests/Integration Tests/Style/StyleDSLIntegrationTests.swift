@@ -423,7 +423,7 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
         }
 
         didBecomeIdle = { mapView in
-            // warning is logged, but lights are not removed 
+            // warning is logged, but lights are not removed
             XCTAssertEqual(mapView.mapboxMap.allLightIdentifiers.count, 2)
             expectation.fulfill()
         }

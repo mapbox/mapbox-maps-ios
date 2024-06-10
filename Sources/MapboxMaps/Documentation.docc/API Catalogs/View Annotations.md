@@ -12,4 +12,3 @@
 - ``ViewAnnotationPositionDescriptor``
 - ``ViewAnnotationUpdateObserver``
 - ``ViewAnnotationAnchor``
-

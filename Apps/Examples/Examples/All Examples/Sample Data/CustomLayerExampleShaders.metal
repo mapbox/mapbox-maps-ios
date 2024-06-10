@@ -39,4 +39,3 @@ fragment float4 fragmentShader(RasterizerData in [[stage_in]])
     // Return the interpolated color.
     return in.color;
 }
-

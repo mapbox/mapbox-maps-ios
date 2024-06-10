@@ -14,7 +14,7 @@ final class NavigationSimulator {
     private var isStarted = false
     private let routeLength: LocationDistance
     private var routePointsToTravel: [LocationCoordinate2D]
-    
+
     private var direction: LocationDirection
     private var currentLocation: LocationCoordinate2D {
         didSet {

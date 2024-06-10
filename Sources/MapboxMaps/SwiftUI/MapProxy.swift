@@ -28,7 +28,7 @@ public struct MapProxy {
     public var location: LocationManager? { provider.mapView?.location }
 
     /// Captures the snapshot of the displayed Map.
-    /// 
+    ///
     /// - Parameters:
     ///   - includeOverlays: Whether to show ornaments (scale bar, compass, attribution, etc.) or any other custom subviews on the resulting image.
     @_documentation(visibility: public)

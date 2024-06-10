@@ -70,7 +70,7 @@ mapView.mapboxMap.addLayer(layer)
 
 Similar to the classic Mapbox styles, you can still use the layer position in ``StyleManager/addLayer(_:layerPosition:)`` method when importing the Standard Style. However, this method is only applicable to custom layers you have added yourself. If you add two layers to the same slot with a specified layer position the latter will define the order of the layers in that slot.
 
-Standard is aware of the map lighting configuration using the `measure-light` expression, which returns you an aggregated value of your light settings. This returns a value which ranges from 0 (darkest) to 1 (brightest). In darker lights, you make the individual layers light up by using the new `*-emissive-stength` expressions, which allow you to add emissive light to different layer types and for example keep texts legible in all light settings. If your custom layers seem too dark, try adjusting the emissive strength of these layers. 
+Standard is aware of the map lighting configuration using the `measure-light` expression, which returns you an aggregated value of your light settings. This returns a value which ranges from 0 (darkest) to 1 (brightest). In darker lights, you make the individual layers light up by using the new `*-emissive-stength` expressions, which allow you to add emissive light to different layer types and for example keep texts legible in all light settings. If your custom layers seem too dark, try adjusting the emissive strength of these layers.
 
 ### Customizing Standard
 
@@ -844,7 +844,7 @@ The `OverviewViewportStateOptions.padding` parameter is renamed to ``OverviewVie
 #### 3.11 Bearing updates are disabled by default.
 
 The default value for ``LocationOptions/puckBearingEnabled`` option has changed from `true` to `false`. That practially means that
-MapView wouldn't redraw on each device compass update and should significantly reduce CPU usage for applications that 
+MapView wouldn't redraw on each device compass update and should significantly reduce CPU usage for applications that
 only display user location without bearing/heading indication.
 If your application still need to rotate puck image according to device heading or location course, enable the option as:
 
@@ -876,7 +876,7 @@ If your application still need to rotate puck image according to device heading 
 - Map size is now synced to the size of the Metal view
 - The `easeTo/flyTo` APIs return non-optional cancelable token.
 - The following `GeoJsonSource` cluster APIs now return `Cancelable`: `getGeoJsonClusterLeaves`, `getGeoJsonClusterChildren`, `getGeoJsonClusterExpansionZoom`.
-- The `MapOptions/optimizeForTerrain` option was removed, whenever terrain is present layer order is now automatically adjusted for better performance. Previously, optimization was the default. 
+- The `MapOptions/optimizeForTerrain` option was removed, whenever terrain is present layer order is now automatically adjusted for better performance. Previously, optimization was the default.
 
 ## 7. Test Your App
 

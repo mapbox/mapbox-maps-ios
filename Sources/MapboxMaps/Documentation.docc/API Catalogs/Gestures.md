@@ -12,4 +12,3 @@
 - ``MapContentGestureContext``
 - ``AnnotationClusterGestureContext``
 - ``MapLayerGestureHandler``
-

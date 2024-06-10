@@ -4,7 +4,7 @@ Simplify runtime style manipulation with declarative syntax.
 
 ## Overview
 
-Starting from version `11.4.0-beta.1` of Mapbox Maps SDK you can now use a declarative approach to add or update style primitives such as Sources, Layers, Images, and Lights at runtime. This paradigm simplifies working with all Mapbox styles at runtime and works well in SwiftUI and UIKit applications. 
+Starting from version `11.4.0-beta.1` of Mapbox Maps SDK you can now use a declarative approach to add or update style primitives such as Sources, Layers, Images, and Lights at runtime. This paradigm simplifies working with all Mapbox styles at runtime and works well in SwiftUI and UIKit applications.
 
 ### Getting Started
 
@@ -24,7 +24,7 @@ let mapView = MapView()
 mapView.mapboxMap.setMapStyleContent {
     VectorSource(id: "traffic-source")
         .tiles(["..."])
-    
+
     LineLayer(id: "traffic-layer", source: "traffic-source")
         .lineColor(.red)
 }
@@ -44,13 +44,13 @@ Map {
 
 - Important: You don't need to observe any events to modify the map style. Changes will be automatically applied when the map style is loaded.
 
-### Map Style Primitives 
+### Map Style Primitives
 
-Style primitives are pieces of map content that can be added, updated, and removed at runtime. These primitives represent the data sources and visualization choices for your map. 
+Style primitives are pieces of map content that can be added, updated, and removed at runtime. These primitives represent the data sources and visualization choices for your map.
 
-#### Building Style Primitives  
+#### Building Style Primitives
 
-You can use a builder syntax to modify the properties of your style primitives when you add them to your map. If you update these properties the changes will be reflected on your map. 
+You can use a builder syntax to modify the properties of your style primitives when you add them to your map. If you update these properties the changes will be reflected on your map.
 
 ```swift
 // Create a atmosphere primitive and set properties for range, start intensity, and color
@@ -63,25 +63,25 @@ Atmosphere()
     .spaceColor(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!)
 ```
 
-#### Available Style Primitives 
+#### Available Style Primitives
 
-Category     | Types supported                           
------------- | ------------------------------------- 
+Category     | Types supported
+------------ | -------------------------------------
 `Source`     | ``VectorSource``, ``RasterSource``, ``RasterDemSource``, ``GeoJSONSource``, ``ImageSource``, ``Model``, ``CustomGeometrySource`` (partial), ``CustomRasterSource`` (partial)
 `Layer`      | ``FillLayer``, ``LineLayer``, ``SymbolLayer``, ``CircleLayer``, ``HeatmapLayer``, ``FillExtrusionLayer``, ``RasterLayer``, ``HillshadeLayer``, ``BackgroundLayer``, ``LocationIndicatorLayer``, ``SkyLayer``, ``ModelLayer``, ``SlotLayer``, ``CustomLayer`` (partial)
 `Lights`     | ``FlatLight``, ``AmbientLight``, ``DirectionalLight``
 `Map properties` | ``Projection``, ``Atmosphere``, ``Terrain``, ``TransitionOptions-struct``
 `Fragments` | ``StyleImport``
 
-### Adding Style Primitives Conditionally 
+### Adding Style Primitives Conditionally
 
-You can also use conditionals to add and remove map style primitives. In the example below, `useTerrain` is a variable controlled by your code, perhaps toggled when a user selects a button or changes a setting. When true, the Style Projection is set to Globe, terrain data is added to a RasterDem source and visualized with a Terrain map content. When toggled false, the terrain source and content are removed and the project is set to Mercator. Other content on the map is not affected by this change so updates are lightweight. 
+You can also use conditionals to add and remove map style primitives. In the example below, `useTerrain` is a variable controlled by your code, perhaps toggled when a user selects a button or changes a setting. When true, the Style Projection is set to Globe, terrain data is added to a RasterDem source and visualized with a Terrain map content. When toggled false, the terrain source and content are removed and the project is set to Mercator. Other content on the map is not affected by this change so updates are lightweight.
 
 @TabNavigator {
     @Tab("Swift UI") {
     ```swift
     @State var useTerrain = true
-    
+
     var body: some View {
         Map {
             if useTerrain {
@@ -101,11 +101,11 @@ You can also use conditionals to add and remove map style primitives. In the exa
     @Tab("UI Kit") {
     ```swift
     var useTerrain = true
-    
-    // To change your style content you should set new map primitives using 
-    // ``StyleManager/setMapStyleContent(content:)`` like below. 
-    // This will fully change the displayed style content, 
-    // so be sure to include all the content you want.  
+
+    // To change your style content you should set new map primitives using
+    // ``StyleManager/setMapStyleContent(content:)`` like below.
+    // This will fully change the displayed style content,
+    // so be sure to include all the content you want.
     func updateStyle(useTerrain: Bool) {
         mapView.mapboxMap.setMapStyleContent{
             if useTerrain {
@@ -128,9 +128,9 @@ You can also use conditionals to add and remove map style primitives. In the exa
 
 You can create your own primitives in addition to Mapbox style primitives. Defining your own primitives gives you greater control over when the content is updated, and allows for cleaner organization of your code. To create a primitive, declare a new struct which conforms to ``MapStyleContent`` and add your primitives to the `body` property.
 
-For example, the code below creates a `CarModelPrimitive` which manages all you need to display a sport care Model on your map: the ``GeoJSONSource`` for the data, the ``Model`` to display, and the ``ModelLayer`` used to position the model. Add your `CarModelPrimitive` to your style body just like Mapbox style primitives. 
+For example, the code below creates a `CarModelPrimitive` which manages all you need to display a sport care Model on your map: the ``GeoJSONSource`` for the data, the ``Model`` to display, and the ``ModelLayer`` used to position the model. Add your `CarModelPrimitive` to your style body just like Mapbox style primitives.
 
-> Warning: We recommend not using @State or @Binding as part of your custom primitives. @State will only work as part of root view that contain ``Map``. @Binding may work in your components, but it will break content recalculation logic and will lead to worse performance. 
+> Warning: We recommend not using @State or @Binding as part of your custom primitives. @State will only work as part of root view that contain ``Map``. @Binding may work in your components, but it will break content recalculation logic and will lead to worse performance.
 
 ```swift
 struct CarModelPrimitive: MapStyleContent {
@@ -153,12 +153,12 @@ struct CarModelPrimitive: MapStyleContent {
     }
 }
 
-... 
+...
 
 Map {
-    /// other map primitives 
+    /// other map primitives
     CarModelPrimitive()
-    /// other map primitives 
+    /// other map primitives
 }
 ```
 
@@ -243,7 +243,7 @@ manager.annotations = [
 
 ```
 
-Another important feature of ``SlotLayer`` is that it's the only ``MapStyleContent`` component with a .position modifier, allowing developers to set a custom ``LayerPosition``. This effectively resolves the scenario where a developer needs to insert a runtime-added layer between style layers that are part of the Style JSON. 
+Another important feature of ``SlotLayer`` is that it's the only ``MapStyleContent`` component with a .position modifier, allowing developers to set a custom ``LayerPosition``. This effectively resolves the scenario where a developer needs to insert a runtime-added layer between style layers that are part of the Style JSON.
 Please note that setting both `.slot()` and `.position()` for ``SlotLayer`` is incorrect and `slot` will always have priority over the `position`.
 
 ```swift
@@ -263,9 +263,9 @@ Map {
 
 In the example above ``FillLayer`` will be added below "roads" layer from Mapbox Streets style.
 
-### Performance Optimizations 
+### Performance Optimizations
 
-Custom style primitives can be used to optimize performance for resource-heavy tasks like loading a large GeoJson. For example, you may want to load a GeoJSON of point data only if a user selects a certain setting and only update it when explicitly desired. In this case, you can add a `showPoints` variable. When toggled to true, an instance of your custom `LazyGeoJSON` struct conforming to `MapStyleContent` is added. This approach means that the features you add (in this case three points) will only be assessed for changes if the `features` reference is changed. This prevents unnecessary computation when the underlying GeoJSON data has not changed. 
+Custom style primitives can be used to optimize performance for resource-heavy tasks like loading a large GeoJson. For example, you may want to load a GeoJSON of point data only if a user selects a certain setting and only update it when explicitly desired. In this case, you can add a `showPoints` variable. When toggled to true, an instance of your custom `LazyGeoJSON` struct conforming to `MapStyleContent` is added. This approach means that the features you add (in this case three points) will only be assessed for changes if the `features` reference is changed. This prevents unnecessary computation when the underlying GeoJSON data has not changed.
 
 @TabNavigator {
     @Tab("Swift UI") {
@@ -279,17 +279,17 @@ Custom style primitives can be used to optimize performance for resource-heavy t
             Feature(geometry: .point(Point(CLLocationCoordinate2D(latitude: 60.167488, longitude: 24.942747)))),
         ])
     }
-    
+
     var body: some View {
         Map {
             if showPoints {
                 LazyGeoJSON(id: "points", features: pinFeatures)
                 SymbolLayer(id: "pin", source: "points")
                     .iconImage("pin-icon")
-            } 
+            }
         }
     }
-    
+
     ...
 
     struct LazyGeoJSON: MapStyleContent {
@@ -308,7 +308,7 @@ Custom style primitives can be used to optimize performance for resource-heavy t
         let features: [Feature]
         init(_ features: [Feature]) { self.features = features }
     }
-    
+
     ```
     }
     @Tab("UI Kit") {
@@ -322,7 +322,7 @@ Custom style primitives can be used to optimize performance for resource-heavy t
             Feature(geometry: .point(Point(CLLocationCoordinate2D(latitude: 60.167488, longitude: 24.942747)))),
         ])
     }
-    
+
     func updateStyle(useTerrain: Bool) {
         mapView.mapboxMap.setMapStyleContent {
             if showPoints {

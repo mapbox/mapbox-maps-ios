@@ -1,6 +1,6 @@
 # Common SDK - Internal
 
-Mapbox SDK to share objects and utilities across SDKs. These are for internal use only. 
+Mapbox SDK to share objects and utilities across SDKs. These are for internal use only.
 
 ## Topics
 

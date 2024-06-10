@@ -5,8 +5,10 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 * Improve stability of symbol placement when using `FollowPuckViewportState`.
 * Expose `clusterMinPoints` property for `GeoJSONSource` and for `ClusterOptions`
-* Root properties (`Atmosphere`, `Lights`, `Projection`, `Terrain`, `Transition`) are now revertible for all styles. 
+* Root properties (`Atmosphere`, `Lights`, `Projection`, `Terrain`, `Transition`) are now revertible for all styles.
 * Introduce raster particles rendering example
+
+* Root properties (`Atmosphere`, `Lights`, `Projection`, `Terrain`, `Transition`) are now revertible for all styles.
 
 ## 11.4.0 - 22 May, 2024
 

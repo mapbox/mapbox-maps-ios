@@ -8,5 +8,3 @@
 - ``MapSnapshotOptions-swift.struct``
 - ``SnapshotOverlay``
 - ``SnapshotOverlayHandler``
-
-

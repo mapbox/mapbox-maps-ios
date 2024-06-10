@@ -1,6 +1,6 @@
 # Common SDK
 
-Mapbox SDK to share objects and utilities across SDKs. 
+Mapbox SDK to share objects and utilities across SDKs.
 
 ## Topics
 

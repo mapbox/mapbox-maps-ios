@@ -1,5 +1,5 @@
 ---
-name: Bug 
+name: Bug
 about: This template should be used for reporting bugs and defects.
 labels: 'bug :beetle:'
 assignees: ''

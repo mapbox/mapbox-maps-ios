@@ -83,7 +83,7 @@ final class DebugMapExample: UIViewController, ExampleProtocol {
 extension DebugMapExample: DebugOptionSettingsDelegate {
     func settingsDidChange(debugOptions: MapViewDebugOptions, performanceOptions: PerformanceStatisticsOptions?) {
         mapView.debugOptions = debugOptions
-        
+
         guard let performanceOptions else { return performanceStatisticsCancelable = nil }
         performanceStatisticsCancelable?.cancel()
         performanceStatisticsCancelable = mapView.mapboxMap.collectPerformanceStatistics(performanceOptions, callback: handle(statistics:))
@@ -139,11 +139,11 @@ final class SettingsViewController: UIViewController, UITableViewDataSource {
             .filter(\.isEnabled)
             .compactMap(\.option.debugOption)
             .reduce(MapViewDebugOptions()) { result, next in result.union(next) }
-        
+
         let performanceOptions = settings
             .filter(\.isEnabled)
             .compactMap(\.option.performanceOption)
-        
+
         delegate?.settingsDidChange(debugOptions: debugOptions, performanceOptions: performanceOptions.first)
         dismiss(animated: true, completion: nil)
     }
@@ -222,17 +222,17 @@ private final class Setting {
         case debug(MapViewDebugOptions)
         case performance(PerformanceStatisticsOptions)
     }
-    
+
     let option: Option
     let title: String
     private(set) var isEnabled: Bool
-    
+
     init(option: Option, title: String, isEnabled: Bool = false) {
         self.option = option
         self.title = title
         self.isEnabled = isEnabled
     }
-    
+
     func toggle() { isEnabled.toggle() }
 }
 
@@ -241,7 +241,7 @@ extension Setting.Option {
         if case let .debug(option) = self { return option }
         else { return nil }
     }
-    
+
     var performanceOption: PerformanceStatisticsOptions? {
         if case let .performance(option) = self { return option }
         else { return nil }
@@ -256,7 +256,7 @@ extension PerformanceStatistics {
             return "No information about topRenderedLayer."
         }
     }
-    
+
     fileprivate var renderingDurationStatisticsDescription: String {
         guard let drawCalls = cumulativeStatistics?.drawCalls else { return "Cumulative statistics haven't been collected." }
         return """

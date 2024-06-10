@@ -1399,10 +1399,10 @@ Constructor Puck2DConfiguration.init(topImage:bearingImage:shadowImage:scale:sho
 Constructor Puck3DConfiguration.init(model:modelScale:modelRotation:modelOpacity:) has been removed
 
 // Remove layerPosition from annotations and layers in DSL
-Func CircleAnnotationGroup.layerPosition(_:) has been removed 
-Func PointAnnotationGroup.layerPosition(_:) has been removed 
-Func PolygonAnnotationGroup.layerPosition(_:) has been removed 
-Func PolylineAnnotationGroup.layerPosition(_:) has been removed 
+Func CircleAnnotationGroup.layerPosition(_:) has been removed
+Func PointAnnotationGroup.layerPosition(_:) has been removed
+Func PolygonAnnotationGroup.layerPosition(_:) has been removed
+Func PolylineAnnotationGroup.layerPosition(_:) has been removed
 
 // Update Annotations and Puck3D properties syntax
 Renamed Decls
@@ -1418,14 +1418,14 @@ Func Puck3D.modelRotation(_:) has parameter 0 type change from [Swift.Double] to
 Func Puck3D.modelScale(_:) has parameter 0 type change from [Swift.Double] to Swift.Double
 
 // Extend ArrayBuilder
-Func ArrayBuilder.buildBlock(_:) has return type change from [T?] to [T] 
-Func ArrayBuilder.buildEither(first:) has parameter 0 type change from [T?] to [T] 
-Func ArrayBuilder.buildEither(first:) has return type change from [T?] to [T] 
-Func ArrayBuilder.buildEither(second:) has parameter 0 type change from [T?] to [T] 
-Func ArrayBuilder.buildEither(second:) has return type change from [T?] to [T] 
+Func ArrayBuilder.buildBlock(_:) has return type change from [T?] to [T]
+Func ArrayBuilder.buildEither(first:) has parameter 0 type change from [T?] to [T]
+Func ArrayBuilder.buildEither(first:) has return type change from [T?] to [T]
+Func ArrayBuilder.buildEither(second:) has parameter 0 type change from [T?] to [T]
+Func ArrayBuilder.buildEither(second:) has return type change from [T?] to [T]
 Func ArrayBuilder.buildBlock(_:) has been renamed to Func buildBlock()
-Func ArrayBuilder.buildExpression(_:) has return type change from [T?] to [T] 
-Func ArrayBuilder.buildOptional(_:) has parameter 0 type change from [T?]? to [T]? 
+Func ArrayBuilder.buildExpression(_:) has return type change from [T?] to [T]
+Func ArrayBuilder.buildOptional(_:) has parameter 0 type change from [T?]? to [T]?
 Func ArrayBuilder.buildOptional(_:) has return type change from [T?] to [T]
 
 // Expose clusterMinPoints

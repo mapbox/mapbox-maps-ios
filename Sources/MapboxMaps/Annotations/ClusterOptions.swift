@@ -64,7 +64,7 @@ public struct ClusterOptions: Equatable {
     /// }
     /// clusterProperties: ["sum": expression]
     /// ```
-    /// 
+    ///
     /// JSON syntax:
     /// `{"sum": [["+", ["accumulated"], ["get", "sum"]], ["get", "scalerank"]]}`
     var clusterProperties: [String: Expression]?

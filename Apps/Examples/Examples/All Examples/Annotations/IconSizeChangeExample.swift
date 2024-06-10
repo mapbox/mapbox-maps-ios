@@ -78,7 +78,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
             }
             return true
         }.store(in: &cancelables)
-        
+
         // Add a handler for on map, except taps on selected marker.
         mapView.gestures.onMapTap.observe { [weak self] context in
             self?.updateSelectedMarker(atPoint: context.point)

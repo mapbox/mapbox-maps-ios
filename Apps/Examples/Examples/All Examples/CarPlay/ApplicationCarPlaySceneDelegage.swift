@@ -3,7 +3,7 @@ import CarPlay
 @available(iOS 13.0, *)
 class ApplicationCarPlaySceneDelegage: NSObject, CPTemplateApplicationSceneDelegate {
     let applicationVC = CarPlayRootVC()
-    
+
     func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didConnect interfaceController: CPInterfaceController, to window: CPWindow) {
         window.rootViewController = applicationVC
         let mapTemplate = CPMapTemplate()
@@ -26,4 +26,3 @@ class ApplicationCarPlaySceneDelegage: NSObject, CPTemplateApplicationSceneDeleg
         applicationVC.updateCarPlayViewController(CarPlayViewController.shared)
     }
 }
-

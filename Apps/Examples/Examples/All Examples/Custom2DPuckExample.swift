@@ -5,7 +5,7 @@ final class Custom2DPuckExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
     private var mapView: MapView!
     private var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
-    
+
     private var showsPuck: PuckVisibility = .isVisible {
         didSet {
             updatePuckUI()

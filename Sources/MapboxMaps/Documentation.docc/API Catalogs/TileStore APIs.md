@@ -19,7 +19,7 @@
 - ``TileRegionLoadOptions``
 - ``TileRegionLoadProgress``
 <!--- Should we hide it? There are no fields available -->
-- ``TilesetDescriptor`` 
+- ``TilesetDescriptor``
 - ``TilesetDescriptorOptions``
 - ``CanonicalTileID``
 - ``TileStoreObserver``
@@ -41,4 +41,3 @@
 - ``StylePackError-enum``
 - ``StylePackLoadOptions``
 - ``StylePackLoadProgress``
-

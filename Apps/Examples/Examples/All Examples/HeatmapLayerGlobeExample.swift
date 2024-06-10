@@ -11,7 +11,7 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         // Center the map over the United States.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 50, longitude: -120)
         let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 1.0), styleURI: .dark)
-        
+
         // Set up map view
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.ornaments.options.scaleBar.visibility = .hidden

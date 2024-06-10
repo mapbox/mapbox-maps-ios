@@ -11,7 +11,7 @@ final class AnimateLayerExample: UIViewController, ExampleProtocol {
         // Set the map's center coordinate and zoom level
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.8, longitude: -96)
         let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate,
-                                                                  zoom: 2), 
+                                                                  zoom: 2),
                                      styleURI: .streets)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)

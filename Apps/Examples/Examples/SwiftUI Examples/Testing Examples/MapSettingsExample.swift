@@ -10,17 +10,17 @@ struct Settings {
     var ornamentSettings = OrnamentSettings()
     var debugOptions: MapViewDebugOptions = [.camera]
     var performance = PerformanceSettings()
-    
+
     struct OrnamentSettings {
         var isScaleBarVisible = true
         var isCompassVisible = true
     }
-    
+
     struct PerformanceSettings {
         var samplerOptions = PerformanceStatisticsOptions.SamplerOptions([.perFrame, .cumulative])
         var samplingDurationMillis: UInt32 = 5000
         var isStatisticsEnabled = false
-        
+
         var statisticsOptions: PerformanceStatisticsOptions {
             PerformanceStatisticsOptions(samplerOptions, samplingDurationMillis: Double(samplingDurationMillis))
         }
@@ -63,7 +63,7 @@ struct MapSettingsExample : View {
                         settingsOpened.toggle()
                     }
                 }
-            
+
             if settings.performance.isStatisticsEnabled, let stats = performanceStatistics {
                 VStack(alignment: .leading) {
                     Text(stats.topRenderedLayerDescription).font(.safeMonospaced)
@@ -156,7 +156,7 @@ struct SettingsView : View {
                     ("Cumulative", .cumulative)
                 ]
                 Toggle("Collect Statistics", isOn: $settings.performance.isStatisticsEnabled)
-                
+
                 if settings.performance.isStatisticsEnabled {
                     Stepper("Sampling Duration, \(settings.performance.samplingDurationMillis) ms", value: $settings.performance.samplingDurationMillis, step: 1000)
                     ForEach(samplerOptions, id: \.0) { option in
@@ -208,7 +208,7 @@ extension PerformanceStatistics {
             return "No information about topRenderedLayer."
         }
     }
-    
+
     fileprivate var renderingDurationStatisticsDescription: String {
         "Max rendering call duration: \(mapRenderDurationStatistics.maxMillis)ms.\nMedian rendering call duration: \(mapRenderDurationStatistics.medianMillis)ms"
     }

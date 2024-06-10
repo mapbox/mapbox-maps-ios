@@ -30,4 +30,3 @@ extension View {
 }
 
 private let deviceDidShake = Notification.Name(rawValue: "deviceDidShake")
-

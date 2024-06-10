@@ -7,7 +7,7 @@ import MapboxMaps
 @objc(InsetMapExample)
 final class InsetMapExample: UIViewController, ExampleProtocol {
     static let styleUri = StyleURI(rawValue: "mapbox://styles/mapbox/cj5l80zrp29942rmtg0zctjto")!
-    
+
     // create MapViews for the main map and the inset map
     private var mapView: MapView!
     private var insetMapView: MapView!
@@ -15,7 +15,7 @@ final class InsetMapExample: UIViewController, ExampleProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // set up the main map
         let cameraCenter = CLLocationCoordinate2D(latitude: 39.13954, longitude: -77.25637)
         let initOptions = MapInitOptions(
@@ -25,7 +25,7 @@ final class InsetMapExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: initOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.gestures.options.rotateEnabled = false
-        
+
         view.addSubview(mapView)
 
         mapView.mapboxMap.onCameraChanged.observe { [weak self] event in

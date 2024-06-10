@@ -387,7 +387,7 @@
 /* make logo bigger on larger screens
 /* @media screen and (min-width: 800px) {
   .shell-wrapper .shell-mb-logo {
-    background-size: 132px 42px; 
+    background-size: 132px 42px;
     width: 132px;
     height: 28px;
   }

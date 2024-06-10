@@ -181,4 +181,3 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
                        alpha: min(max(0, interpolatedAlpha), 1))
     }
 }
-

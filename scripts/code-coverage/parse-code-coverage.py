@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
     # Get project name (see https://stackoverflow.com/a/63352532)
     project = repo.remotes.origin.url.split('.git')[0].split('/')[-1]
-    branch  = repo.active_branch.name 
+    branch  = repo.active_branch.name
     sha     = repo.head.object.hexsha
     message = repo.head.object.message
 

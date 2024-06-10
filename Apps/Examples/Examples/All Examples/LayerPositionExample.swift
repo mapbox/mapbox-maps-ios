@@ -19,7 +19,7 @@ final class LayerPositionExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
-        
+
         try! mapView.mapboxMap.setProjection(StyleProjection(name: .mercator))
 
         // Allows the view controller to receive information about map events.

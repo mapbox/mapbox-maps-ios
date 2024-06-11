@@ -137,12 +137,6 @@ extension GeoJSONSource {
         with(self, setter(\.data, newValue))
     }
 
-    /// Minimum number of points necessary to form a cluster if clustering is enabled. Defaults to `2`.
-    @_documentation(visibility: public)
-    public func clusterMinPoints(_ newValue: Double) -> Self {
-        with(self, setter(\.clusterMinPoints, newValue))
-    }
-
     /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom. The default delta is 4.
     @_documentation(visibility: public)
     public func prefetchZoomDelta(_ newValue: Double) -> Self {

@@ -354,7 +354,6 @@ import UIKit
         with(self, setter(\.modelId, .expression(expression)))
     }
 
-
     /// Intensity of the ambient occlusion if present in the 3D model.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -376,7 +375,6 @@ import UIKit
         with(self, setter(\.modelAmbientOcclusionIntensity, .expression(expression)))
     }
 
-
     /// Enable/Disable shadow casting for this layer
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -390,7 +388,6 @@ import UIKit
     public func modelCastShadows(_ expression: Expression) -> Self {
         with(self, setter(\.modelCastShadows, .expression(expression)))
     }
-
 
     /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
     @_documentation(visibility: public)
@@ -420,7 +417,6 @@ import UIKit
         with(self, setter(\.modelColor, .expression(expression)))
     }
 
-
     /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -442,7 +438,6 @@ import UIKit
         with(self, setter(\.modelColorMixIntensity, .expression(expression)))
     }
 
-
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff  on pitched map views. The automatic cutoff range is calculated according to the minimum required zoom level of the source and layer. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -456,7 +451,6 @@ import UIKit
     public func modelCutoffFadeRange(_ expression: Expression) -> Self {
         with(self, setter(\.modelCutoffFadeRange, .expression(expression)))
     }
-
 
     /// Strength of the emission. There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. doors). Expressions that depend on measure-light are not supported when using GeoJSON or vector tile as the model layer source.
     @_documentation(visibility: public)
@@ -479,7 +473,6 @@ import UIKit
         with(self, setter(\.modelEmissiveStrength, .expression(expression)))
     }
 
-
     /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -500,7 +493,6 @@ import UIKit
     public func modelHeightBasedEmissiveStrengthMultiplier(_ expression: Expression) -> Self {
         with(self, setter(\.modelHeightBasedEmissiveStrengthMultiplier, .expression(expression)))
     }
-
 
     /// The opacity of the model layer.
     @_documentation(visibility: public)
@@ -523,7 +515,6 @@ import UIKit
         with(self, setter(\.modelOpacity, .expression(expression)))
     }
 
-
     /// Enable/Disable shadow receiving for this layer
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -537,7 +528,6 @@ import UIKit
     public func modelReceiveShadows(_ expression: Expression) -> Self {
         with(self, setter(\.modelReceiveShadows, .expression(expression)))
     }
-
 
     /// The rotation of the model in euler angles [lon, lat, z].
     @_documentation(visibility: public)
@@ -560,7 +550,6 @@ import UIKit
         with(self, setter(\.modelRotation, .expression(expression)))
     }
 
-
     /// Material roughness. Material is fully smooth for value 0, and fully rough for value 1. Affects only layers using batched-model source.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -581,7 +570,6 @@ import UIKit
     public func modelRoughness(_ expression: Expression) -> Self {
         with(self, setter(\.modelRoughness, .expression(expression)))
     }
-
 
     /// The scale of the model.
     @_documentation(visibility: public)
@@ -604,7 +592,6 @@ import UIKit
         with(self, setter(\.modelScale, .expression(expression)))
     }
 
-
     /// Defines scaling mode. Only applies to location-indicator type layers.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -618,7 +605,6 @@ import UIKit
     public func modelScaleMode(_ expression: Expression) -> Self {
         with(self, setter(\.modelScaleMode, .expression(expression)))
     }
-
 
     /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
     @_documentation(visibility: public)
@@ -640,7 +626,6 @@ import UIKit
     public func modelTranslation(_ expression: Expression) -> Self {
         with(self, setter(\.modelTranslation, .expression(expression)))
     }
-
 
     /// Defines rendering behavior of model in respect to other 3D scene objects.
     @_documentation(visibility: public)

@@ -245,7 +245,6 @@ public struct HillshadeLayer: Layer, Equatable {
         with(self, setter(\.hillshadeAccentColor, .expression(expression)))
     }
 
-
     /// Controls the intensity of light emitted on the source features.
     @_documentation(visibility: public)
     public func hillshadeEmissiveStrength(_ constant: Double) -> Self {
@@ -264,7 +263,6 @@ public struct HillshadeLayer: Layer, Equatable {
         with(self, setter(\.hillshadeEmissiveStrength, .expression(expression)))
     }
 
-
     /// Intensity of the hillshade
     @_documentation(visibility: public)
     public func hillshadeExaggeration(_ constant: Double) -> Self {
@@ -282,7 +280,6 @@ public struct HillshadeLayer: Layer, Equatable {
     public func hillshadeExaggeration(_ expression: Expression) -> Self {
         with(self, setter(\.hillshadeExaggeration, .expression(expression)))
     }
-
 
     /// The shading color of areas that faces towards the light source.
     @_documentation(visibility: public)
@@ -308,7 +305,6 @@ public struct HillshadeLayer: Layer, Equatable {
         with(self, setter(\.hillshadeHighlightColor, .expression(expression)))
     }
 
-
     /// Direction of light source when map is rotated.
     @_documentation(visibility: public)
     public func hillshadeIlluminationAnchor(_ constant: HillshadeIlluminationAnchor) -> Self {
@@ -321,7 +317,6 @@ public struct HillshadeLayer: Layer, Equatable {
         with(self, setter(\.hillshadeIlluminationAnchor, .expression(expression)))
     }
 
-
     /// The direction of the light source used to generate the hillshading with 0 as the top of the viewport if `hillshade-illumination-anchor` is set to `viewport` and due north if `hillshade-illumination-anchor` is set to `map` and no 3d lights enabled. If `hillshade-illumination-anchor` is set to `map` and 3d lights enabled, the direction from 3d lights is used instead.
     @_documentation(visibility: public)
     public func hillshadeIlluminationDirection(_ constant: Double) -> Self {
@@ -333,7 +328,6 @@ public struct HillshadeLayer: Layer, Equatable {
     public func hillshadeIlluminationDirection(_ expression: Expression) -> Self {
         with(self, setter(\.hillshadeIlluminationDirection, .expression(expression)))
     }
-
 
     /// The shading color of areas that face away from the light source.
     @_documentation(visibility: public)

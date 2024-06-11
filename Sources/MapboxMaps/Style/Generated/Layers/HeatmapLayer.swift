@@ -215,7 +215,6 @@ public struct HeatmapLayer: Layer, Equatable {
         with(self, setter(\.heatmapColor, .expression(expression)))
     }
 
-
     /// Similar to `heatmap-weight` but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.
     @_documentation(visibility: public)
     public func heatmapIntensity(_ constant: Double) -> Self {
@@ -233,7 +232,6 @@ public struct HeatmapLayer: Layer, Equatable {
     public func heatmapIntensity(_ expression: Expression) -> Self {
         with(self, setter(\.heatmapIntensity, .expression(expression)))
     }
-
 
     /// The global opacity at which the heatmap layer will be drawn.
     @_documentation(visibility: public)
@@ -253,7 +251,6 @@ public struct HeatmapLayer: Layer, Equatable {
         with(self, setter(\.heatmapOpacity, .expression(expression)))
     }
 
-
     /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
     @_documentation(visibility: public)
     public func heatmapRadius(_ constant: Double) -> Self {
@@ -271,7 +268,6 @@ public struct HeatmapLayer: Layer, Equatable {
     public func heatmapRadius(_ expression: Expression) -> Self {
         with(self, setter(\.heatmapRadius, .expression(expression)))
     }
-
 
     /// A measure of how much an individual point contributes to the heatmap. A value of 10 would be equivalent to having 10 points of weight 1 in the same spot. Especially useful when combined with clustering.
     @_documentation(visibility: public)

@@ -293,7 +293,6 @@ public struct CircleLayer: Layer, Equatable {
         with(self, setter(\.circleSortKey, .expression(expression)))
     }
 
-
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
     @_documentation(visibility: public)
     public func circleBlur(_ constant: Double) -> Self {
@@ -311,7 +310,6 @@ public struct CircleLayer: Layer, Equatable {
     public func circleBlur(_ expression: Expression) -> Self {
         with(self, setter(\.circleBlur, .expression(expression)))
     }
-
 
     /// The fill color of the circle.
     @_documentation(visibility: public)
@@ -337,7 +335,6 @@ public struct CircleLayer: Layer, Equatable {
         with(self, setter(\.circleColor, .expression(expression)))
     }
 
-
     /// Controls the intensity of light emitted on the source features.
     @_documentation(visibility: public)
     public func circleEmissiveStrength(_ constant: Double) -> Self {
@@ -355,7 +352,6 @@ public struct CircleLayer: Layer, Equatable {
     public func circleEmissiveStrength(_ expression: Expression) -> Self {
         with(self, setter(\.circleEmissiveStrength, .expression(expression)))
     }
-
 
     /// The opacity at which the circle will be drawn.
     @_documentation(visibility: public)
@@ -375,7 +371,6 @@ public struct CircleLayer: Layer, Equatable {
         with(self, setter(\.circleOpacity, .expression(expression)))
     }
 
-
     /// Orientation of circle when map is pitched.
     @_documentation(visibility: public)
     public func circlePitchAlignment(_ constant: CirclePitchAlignment) -> Self {
@@ -388,7 +383,6 @@ public struct CircleLayer: Layer, Equatable {
         with(self, setter(\.circlePitchAlignment, .expression(expression)))
     }
 
-
     /// Controls the scaling behavior of the circle when the map is pitched.
     @_documentation(visibility: public)
     public func circlePitchScale(_ constant: CirclePitchScale) -> Self {
@@ -400,7 +394,6 @@ public struct CircleLayer: Layer, Equatable {
     public func circlePitchScale(_ expression: Expression) -> Self {
         with(self, setter(\.circlePitchScale, .expression(expression)))
     }
-
 
     /// Circle radius.
     @_documentation(visibility: public)
@@ -419,7 +412,6 @@ public struct CircleLayer: Layer, Equatable {
     public func circleRadius(_ expression: Expression) -> Self {
         with(self, setter(\.circleRadius, .expression(expression)))
     }
-
 
     /// The stroke color of the circle.
     @_documentation(visibility: public)
@@ -445,7 +437,6 @@ public struct CircleLayer: Layer, Equatable {
         with(self, setter(\.circleStrokeColor, .expression(expression)))
     }
 
-
     /// The opacity of the circle's stroke.
     @_documentation(visibility: public)
     public func circleStrokeOpacity(_ constant: Double) -> Self {
@@ -463,7 +454,6 @@ public struct CircleLayer: Layer, Equatable {
     public func circleStrokeOpacity(_ expression: Expression) -> Self {
         with(self, setter(\.circleStrokeOpacity, .expression(expression)))
     }
-
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
     @_documentation(visibility: public)
@@ -483,7 +473,6 @@ public struct CircleLayer: Layer, Equatable {
         with(self, setter(\.circleStrokeWidth, .expression(expression)))
     }
 
-
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     @_documentation(visibility: public)
     public func circleTranslate(x: Double, y: Double) -> Self {
@@ -501,7 +490,6 @@ public struct CircleLayer: Layer, Equatable {
     public func circleTranslate(_ expression: Expression) -> Self {
         with(self, setter(\.circleTranslate, .expression(expression)))
     }
-
 
     /// Controls the frame of reference for `circle-translate`.
     @_documentation(visibility: public)

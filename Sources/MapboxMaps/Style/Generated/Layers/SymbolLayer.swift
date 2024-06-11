@@ -617,7 +617,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconAllowOverlap, .expression(expression)))
     }
 
-
     /// Part of the icon placed closest to the anchor.
     @_documentation(visibility: public)
     public func iconAnchor(_ constant: IconAnchor) -> Self {
@@ -629,7 +628,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconAnchor(_ expression: Expression) -> Self {
         with(self, setter(\.iconAnchor, .expression(expression)))
     }
-
 
     /// If true, other symbols can be visible even if they collide with the icon.
     @_documentation(visibility: public)
@@ -643,7 +641,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconIgnorePlacement, .expression(expression)))
     }
 
-
     /// Name of image in sprite to use for drawing an image background.
     @_documentation(visibility: public)
     public func iconImage(_ constant: String) -> Self {
@@ -655,7 +652,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconImage(_ expression: Expression) -> Self {
         with(self, setter(\.iconImage, .expression(expression)))
     }
-
 
     /// If true, the icon may be flipped to prevent it from being rendered upside-down.
     @_documentation(visibility: public)
@@ -669,7 +665,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconKeepUpright, .expression(expression)))
     }
 
-
     /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
     @_documentation(visibility: public)
     public func iconOffset(x: Double, y: Double) -> Self {
@@ -681,7 +676,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconOffset(_ expression: Expression) -> Self {
         with(self, setter(\.iconOffset, .expression(expression)))
     }
-
 
     /// If true, text will display without their corresponding icons when the icon collides with other symbols and the text does not.
     @_documentation(visibility: public)
@@ -695,7 +689,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconOptional, .expression(expression)))
     }
 
-
     /// Size of the additional area around the icon bounding box used for detecting symbol collisions.
     @_documentation(visibility: public)
     public func iconPadding(_ constant: Double) -> Self {
@@ -707,7 +700,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconPadding(_ expression: Expression) -> Self {
         with(self, setter(\.iconPadding, .expression(expression)))
     }
-
 
     /// Orientation of icon when map is pitched.
     @_documentation(visibility: public)
@@ -721,7 +713,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconPitchAlignment, .expression(expression)))
     }
 
-
     /// Rotates the icon clockwise.
     @_documentation(visibility: public)
     public func iconRotate(_ constant: Double) -> Self {
@@ -733,7 +724,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconRotate(_ expression: Expression) -> Self {
         with(self, setter(\.iconRotate, .expression(expression)))
     }
-
 
     /// In combination with `symbol-placement`, determines the rotation behavior of icons.
     @_documentation(visibility: public)
@@ -747,7 +737,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconRotationAlignment, .expression(expression)))
     }
 
-
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
     @_documentation(visibility: public)
     public func iconSize(_ constant: Double) -> Self {
@@ -759,7 +748,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconSize(_ expression: Expression) -> Self {
         with(self, setter(\.iconSize, .expression(expression)))
     }
-
 
     /// Scales the icon to fit around the associated text.
     @_documentation(visibility: public)
@@ -773,7 +761,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconTextFit, .expression(expression)))
     }
 
-
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
     @_documentation(visibility: public)
     public func iconTextFitPadding(_ padding: UIEdgeInsets) -> Self {
@@ -785,7 +772,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconTextFitPadding(_ expression: Expression) -> Self {
         with(self, setter(\.iconTextFitPadding, .expression(expression)))
     }
-
 
     /// If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Mapbox GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.
     @_documentation(visibility: public)
@@ -799,7 +785,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.symbolAvoidEdges, .expression(expression)))
     }
 
-
     /// Label placement relative to its geometry.
     @_documentation(visibility: public)
     public func symbolPlacement(_ constant: SymbolPlacement) -> Self {
@@ -811,7 +796,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func symbolPlacement(_ expression: Expression) -> Self {
         with(self, setter(\.symbolPlacement, .expression(expression)))
     }
-
 
     /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first. When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
     @_documentation(visibility: public)
@@ -825,7 +809,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.symbolSortKey, .expression(expression)))
     }
 
-
     /// Distance between two symbol anchors.
     @_documentation(visibility: public)
     public func symbolSpacing(_ constant: Double) -> Self {
@@ -837,7 +820,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func symbolSpacing(_ expression: Expression) -> Self {
         with(self, setter(\.symbolSpacing, .expression(expression)))
     }
-
 
     /// Position symbol on buildings (both fill extrusions and models) rooftops. In order to have minimal impact on performance, this is supported only when `fill-extrusion-height` is not zoom-dependent and remains unchanged. For fading in buildings when zooming in, fill-extrusion-vertical-scale should be used and symbols would raise with building rooftops. Symbols are sorted by elevation, except in cases when `viewport-y` sorting or `symbol-sort-key` are applied.
     @_documentation(visibility: public)
@@ -851,7 +833,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.symbolZElevate, .expression(expression)))
     }
 
-
     /// Determines whether overlapping symbols in the same layer are rendered in the order that they appear in the data source or by their y-position relative to the viewport. To control the order and prioritization of symbols otherwise, use `symbol-sort-key`.
     @_documentation(visibility: public)
     public func symbolZOrder(_ constant: SymbolZOrder) -> Self {
@@ -863,7 +844,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func symbolZOrder(_ expression: Expression) -> Self {
         with(self, setter(\.symbolZOrder, .expression(expression)))
     }
-
 
     /// If true, the text will be visible even if it collides with other previously drawn symbols.
     @_documentation(visibility: public)
@@ -877,7 +857,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textAllowOverlap, .expression(expression)))
     }
 
-
     /// Part of the text placed closest to the anchor.
     @_documentation(visibility: public)
     public func textAnchor(_ constant: TextAnchor) -> Self {
@@ -889,7 +868,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textAnchor(_ expression: Expression) -> Self {
         with(self, setter(\.textAnchor, .expression(expression)))
     }
-
 
     /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options. SDF images are not supported in formatted text and will be ignored.
     @_documentation(visibility: public)
@@ -903,7 +881,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textField, .expression(expression)))
     }
 
-
     /// Font stack to use for displaying text.
     @_documentation(visibility: public)
     public func textFont(_ constant: [String]) -> Self {
@@ -915,7 +892,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textFont(_ expression: Expression) -> Self {
         with(self, setter(\.textFont, .expression(expression)))
     }
-
 
     /// If true, other symbols can be visible even if they collide with the text.
     @_documentation(visibility: public)
@@ -929,7 +905,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textIgnorePlacement, .expression(expression)))
     }
 
-
     /// Text justification options.
     @_documentation(visibility: public)
     public func textJustify(_ constant: TextJustify) -> Self {
@@ -941,7 +916,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textJustify(_ expression: Expression) -> Self {
         with(self, setter(\.textJustify, .expression(expression)))
     }
-
 
     /// If true, the text may be flipped vertically to prevent it from being rendered upside-down.
     @_documentation(visibility: public)
@@ -955,7 +929,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textKeepUpright, .expression(expression)))
     }
 
-
     /// Text tracking amount.
     @_documentation(visibility: public)
     public func textLetterSpacing(_ constant: Double) -> Self {
@@ -967,7 +940,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textLetterSpacing(_ expression: Expression) -> Self {
         with(self, setter(\.textLetterSpacing, .expression(expression)))
     }
-
 
     /// Text leading value for multi-line text.
     @_documentation(visibility: public)
@@ -981,7 +953,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textLineHeight, .expression(expression)))
     }
 
-
     /// Maximum angle change between adjacent characters.
     @_documentation(visibility: public)
     public func textMaxAngle(_ constant: Double) -> Self {
@@ -993,7 +964,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textMaxAngle(_ expression: Expression) -> Self {
         with(self, setter(\.textMaxAngle, .expression(expression)))
     }
-
 
     /// The maximum line width for text wrapping.
     @_documentation(visibility: public)
@@ -1007,7 +977,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textMaxWidth, .expression(expression)))
     }
 
-
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
     @_documentation(visibility: public)
     public func textOffset(x: Double, y: Double) -> Self {
@@ -1019,7 +988,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textOffset(_ expression: Expression) -> Self {
         with(self, setter(\.textOffset, .expression(expression)))
     }
-
 
     /// If true, icons will display without their corresponding text when the text collides with other symbols and the icon does not.
     @_documentation(visibility: public)
@@ -1033,7 +1001,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textOptional, .expression(expression)))
     }
 
-
     /// Size of the additional area around the text bounding box used for detecting symbol collisions.
     @_documentation(visibility: public)
     public func textPadding(_ constant: Double) -> Self {
@@ -1045,7 +1012,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textPadding(_ expression: Expression) -> Self {
         with(self, setter(\.textPadding, .expression(expression)))
     }
-
 
     /// Orientation of text when map is pitched.
     @_documentation(visibility: public)
@@ -1059,7 +1025,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textPitchAlignment, .expression(expression)))
     }
 
-
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
     @_documentation(visibility: public)
     public func textRadialOffset(_ constant: Double) -> Self {
@@ -1071,7 +1036,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textRadialOffset(_ expression: Expression) -> Self {
         with(self, setter(\.textRadialOffset, .expression(expression)))
     }
-
 
     /// Rotates the text clockwise.
     @_documentation(visibility: public)
@@ -1085,7 +1049,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textRotate, .expression(expression)))
     }
 
-
     /// In combination with `symbol-placement`, determines the rotation behavior of the individual glyphs forming the text.
     @_documentation(visibility: public)
     public func textRotationAlignment(_ constant: TextRotationAlignment) -> Self {
@@ -1097,7 +1060,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textRotationAlignment(_ expression: Expression) -> Self {
         with(self, setter(\.textRotationAlignment, .expression(expression)))
     }
-
 
     /// Font size.
     @_documentation(visibility: public)
@@ -1111,7 +1073,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textSize, .expression(expression)))
     }
 
-
     /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
     @_documentation(visibility: public)
     public func textTransform(_ constant: TextTransform) -> Self {
@@ -1123,7 +1084,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textTransform(_ expression: Expression) -> Self {
         with(self, setter(\.textTransform, .expression(expression)))
     }
-
 
     /// To increase the chance of placing high-priority labels on the map, you can provide an array of `text-anchor` locations: the renderer will attempt to place the label at each location, in order, before moving onto the next label. Use `text-justify: auto` to choose justification based on anchor position. To apply an offset, use the `text-radial-offset` or the two-dimensional `text-offset`.
     @_documentation(visibility: public)
@@ -1137,7 +1097,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textVariableAnchor, .expression(expression)))
     }
 
-
     /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. For symbol with point placement, the order of elements in an array define priority order for the placement of an orientation variant. For symbol with line placement, the default text writing mode is either ['horizontal', 'vertical'] or ['vertical', 'horizontal'], the order doesn't affect the placement.
     @_documentation(visibility: public)
     public func textWritingMode(_ constant: [TextWritingMode]) -> Self {
@@ -1149,7 +1108,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textWritingMode(_ expression: Expression) -> Self {
         with(self, setter(\.textWritingMode, .expression(expression)))
     }
-
 
     /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     @_documentation(visibility: public)
@@ -1175,7 +1133,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconColor, .expression(expression)))
     }
 
-
     /// Controls saturation level of the symbol icon. With the default value of 1 the icon color is preserved while with a value of 0 it is fully desaturated and looks black and white.
     @_documentation(visibility: public)
     public func iconColorSaturation(_ constant: Double) -> Self {
@@ -1193,7 +1150,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconColorSaturation(_ expression: Expression) -> Self {
         with(self, setter(\.iconColorSaturation, .expression(expression)))
     }
-
 
     /// Controls the intensity of light emitted on the source features.
     @_documentation(visibility: public)
@@ -1213,7 +1169,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconEmissiveStrength, .expression(expression)))
     }
 
-
     /// Fade out the halo towards the outside.
     @_documentation(visibility: public)
     public func iconHaloBlur(_ constant: Double) -> Self {
@@ -1231,7 +1186,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconHaloBlur(_ expression: Expression) -> Self {
         with(self, setter(\.iconHaloBlur, .expression(expression)))
     }
-
 
     /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     @_documentation(visibility: public)
@@ -1257,7 +1211,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconHaloColor, .expression(expression)))
     }
 
-
     /// Distance of halo to the icon outline.
     @_documentation(visibility: public)
     public func iconHaloWidth(_ constant: Double) -> Self {
@@ -1275,7 +1228,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconHaloWidth(_ expression: Expression) -> Self {
         with(self, setter(\.iconHaloWidth, .expression(expression)))
     }
-
 
     /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
     @_documentation(visibility: public)
@@ -1295,7 +1247,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconImageCrossFade, .expression(expression)))
     }
 
-
     /// The opacity at which the icon will be drawn.
     @_documentation(visibility: public)
     public func iconOpacity(_ constant: Double) -> Self {
@@ -1313,7 +1264,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconOpacity(_ expression: Expression) -> Self {
         with(self, setter(\.iconOpacity, .expression(expression)))
     }
-
 
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     @_documentation(visibility: public)
@@ -1333,7 +1283,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconTranslate, .expression(expression)))
     }
 
-
     /// Controls the frame of reference for `icon-translate`.
     @_documentation(visibility: public)
     public func iconTranslateAnchor(_ constant: IconTranslateAnchor) -> Self {
@@ -1345,7 +1294,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func iconTranslateAnchor(_ expression: Expression) -> Self {
         with(self, setter(\.iconTranslateAnchor, .expression(expression)))
     }
-
 
     /// The color with which the text will be drawn.
     @_documentation(visibility: public)
@@ -1371,7 +1319,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textColor, .expression(expression)))
     }
 
-
     /// Controls the intensity of light emitted on the source features.
     @_documentation(visibility: public)
     public func textEmissiveStrength(_ constant: Double) -> Self {
@@ -1390,7 +1337,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textEmissiveStrength, .expression(expression)))
     }
 
-
     /// The halo's fadeout distance towards the outside.
     @_documentation(visibility: public)
     public func textHaloBlur(_ constant: Double) -> Self {
@@ -1408,7 +1354,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textHaloBlur(_ expression: Expression) -> Self {
         with(self, setter(\.textHaloBlur, .expression(expression)))
     }
-
 
     /// The color of the text's halo, which helps it stand out from backgrounds.
     @_documentation(visibility: public)
@@ -1434,7 +1379,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textHaloColor, .expression(expression)))
     }
 
-
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
     @_documentation(visibility: public)
     public func textHaloWidth(_ constant: Double) -> Self {
@@ -1452,7 +1396,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textHaloWidth(_ expression: Expression) -> Self {
         with(self, setter(\.textHaloWidth, .expression(expression)))
     }
-
 
     /// The opacity at which the text will be drawn.
     @_documentation(visibility: public)
@@ -1472,7 +1415,6 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.textOpacity, .expression(expression)))
     }
 
-
     /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     @_documentation(visibility: public)
     public func textTranslate(x: Double, y: Double) -> Self {
@@ -1490,7 +1432,6 @@ public struct SymbolLayer: Layer, Equatable {
     public func textTranslate(_ expression: Expression) -> Self {
         with(self, setter(\.textTranslate, .expression(expression)))
     }
-
 
     /// Controls the frame of reference for `text-translate`.
     @_documentation(visibility: public)

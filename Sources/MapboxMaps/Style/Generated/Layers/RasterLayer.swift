@@ -310,7 +310,6 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterArrayBand, .expression(expression)))
     }
 
-
     /// Increase or reduce the brightness of the image. The value is the maximum brightness.
     @_documentation(visibility: public)
     public func rasterBrightnessMax(_ constant: Double) -> Self {
@@ -328,7 +327,6 @@ public struct RasterLayer: Layer, Equatable {
     public func rasterBrightnessMax(_ expression: Expression) -> Self {
         with(self, setter(\.rasterBrightnessMax, .expression(expression)))
     }
-
 
     /// Increase or reduce the brightness of the image. The value is the minimum brightness.
     @_documentation(visibility: public)
@@ -348,7 +346,6 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterBrightnessMin, .expression(expression)))
     }
 
-
     /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
     @_documentation(visibility: public)
     public func rasterColor(_ constant: StyleColor) -> Self {
@@ -366,7 +363,6 @@ public struct RasterLayer: Layer, Equatable {
     public func rasterColor(_ expression: Expression) -> Self {
         with(self, setter(\.rasterColor, .expression(expression)))
     }
-
 
     /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r * src.r + mix.g * src.g + mix.b * src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is *not* multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
     @_documentation(visibility: public)
@@ -386,7 +382,6 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterColorMix, .expression(expression)))
     }
 
-
     /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
     @_documentation(visibility: public)
     public func rasterColorRange(min: Double, max: Double) -> Self {
@@ -405,7 +400,6 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterColorRange, .expression(expression)))
     }
 
-
     /// Increase or reduce the contrast of the image.
     @_documentation(visibility: public)
     public func rasterContrast(_ constant: Double) -> Self {
@@ -423,7 +417,6 @@ public struct RasterLayer: Layer, Equatable {
     public func rasterContrast(_ expression: Expression) -> Self {
         with(self, setter(\.rasterContrast, .expression(expression)))
     }
-
 
     /// Specifies an uniform elevation from the ground, in meters. Only supported with image sources.
     @_documentation(visibility: public)
@@ -446,7 +439,6 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterElevation, .expression(expression)))
     }
 
-
     /// Controls the intensity of light emitted on the source features.
     @_documentation(visibility: public)
     public func rasterEmissiveStrength(_ constant: Double) -> Self {
@@ -465,7 +457,6 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterEmissiveStrength, .expression(expression)))
     }
 
-
     /// Fade duration when a new tile is added.
     @_documentation(visibility: public)
     public func rasterFadeDuration(_ constant: Double) -> Self {
@@ -477,7 +468,6 @@ public struct RasterLayer: Layer, Equatable {
     public func rasterFadeDuration(_ expression: Expression) -> Self {
         with(self, setter(\.rasterFadeDuration, .expression(expression)))
     }
-
 
     /// Rotates hues around the color wheel.
     @_documentation(visibility: public)
@@ -497,7 +487,6 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterHueRotate, .expression(expression)))
     }
 
-
     /// The opacity at which the image will be drawn.
     @_documentation(visibility: public)
     public func rasterOpacity(_ constant: Double) -> Self {
@@ -516,7 +505,6 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterOpacity, .expression(expression)))
     }
 
-
     /// The resampling/interpolation method to use for overscaling, also known as texture magnification filter
     @_documentation(visibility: public)
     public func rasterResampling(_ constant: RasterResampling) -> Self {
@@ -528,7 +516,6 @@ public struct RasterLayer: Layer, Equatable {
     public func rasterResampling(_ expression: Expression) -> Self {
         with(self, setter(\.rasterResampling, .expression(expression)))
     }
-
 
     /// Increase or reduce the saturation of the image.
     @_documentation(visibility: public)

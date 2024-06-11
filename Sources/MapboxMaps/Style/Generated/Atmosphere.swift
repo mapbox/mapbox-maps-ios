@@ -103,7 +103,6 @@ extension Atmosphere {
         with(self, setter(\.color, .expression(expression)))
     }
 
-
     /// The color of the atmosphere region above the horizon, `high-color` extends further above the horizon than the `color` property and its spread can be controlled with `horizon-blend`. The opacity can be set to `0` to remove the high atmosphere color contribution.
     @_documentation(visibility: public)
     public func highColor(_ constant: StyleColor) -> Self {
@@ -128,7 +127,6 @@ extension Atmosphere {
         with(self, setter(\.highColor, .expression(expression)))
     }
 
-
     /// Horizon blend applies a smooth fade from the color of the atmosphere to the color of space. A value of zero leaves a sharp transition from atmosphere to space. Increasing the value blends the color of atmosphere into increasingly high angles of the sky.
     @_documentation(visibility: public)
     public func horizonBlend(_ constant: Double) -> Self {
@@ -147,7 +145,6 @@ extension Atmosphere {
         with(self, setter(\.horizonBlend, .expression(expression)))
     }
 
-
     /// The start and end distance range in which fog fades from fully transparent to fully opaque. The distance to the point at the center of the map is defined as zero, so that negative range values are closer to the camera, and positive values are farther away.
     @_documentation(visibility: public)
     public func range(start: Double, end: Double) -> Self {
@@ -165,7 +162,6 @@ extension Atmosphere {
     public func range(_ expression: Expression) -> Self {
         with(self, setter(\.range, .expression(expression)))
     }
-
 
     /// The color of the region above the horizon and after the end of the `horizon-blend` contribution. The opacity can be set to `0` to have a transparent background.
     @_documentation(visibility: public)
@@ -191,7 +187,6 @@ extension Atmosphere {
         with(self, setter(\.spaceColor, .expression(expression)))
     }
 
-
     /// A value controlling the star intensity where `0` will show no stars and `1` will show stars at their maximum intensity.
     @_documentation(visibility: public)
     public func starIntensity(_ constant: Double) -> Self {
@@ -209,7 +204,6 @@ extension Atmosphere {
     public func starIntensity(_ expression: Expression) -> Self {
         with(self, setter(\.starIntensity, .expression(expression)))
     }
-
 
     /// An array of two number values, specifying the vertical range, measured in meters, over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
     @_documentation(visibility: public)

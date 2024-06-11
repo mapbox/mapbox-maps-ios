@@ -110,7 +110,6 @@ extension DirectionalLight {
         with(self, setter(\.castShadows, .expression(expression)))
     }
 
-
     /// Color of the directional light.
     @_documentation(visibility: public)
     public func color(_ constant: StyleColor) -> Self {
@@ -135,7 +134,6 @@ extension DirectionalLight {
         with(self, setter(\.color, .expression(expression)))
     }
 
-
     /// Direction of the light source specified as [a azimuthal angle, p polar angle] where a indicates the azimuthal angle of the light relative to north (in degrees and proceeding clockwise), and p indicates polar angle of the light (from 0 degree, directly above, to 180 degree, directly below).
     @_documentation(visibility: public)
     public func direction(azimuthal: Double, polar: Double) -> Self {
@@ -154,7 +152,6 @@ extension DirectionalLight {
         with(self, setter(\.direction, .expression(expression)))
     }
 
-
     /// A multiplier for the color of the directional light.
     @_documentation(visibility: public)
     public func intensity(_ constant: Double) -> Self {
@@ -172,7 +169,6 @@ extension DirectionalLight {
     public func intensity(_ expression: Expression) -> Self {
         with(self, setter(\.intensity, .expression(expression)))
     }
-
 
     /// Determines the shadow strength, affecting the shadow receiver surfaces final color. Values near 0.0 reduce the shadow contribution to the final color. Values near to 1.0 make occluded surfaces receive almost no directional light. Designed to be used mostly for transitioning between values 0 and 1.
     @_documentation(visibility: public)

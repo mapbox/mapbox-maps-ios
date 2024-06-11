@@ -169,7 +169,6 @@ public struct BackgroundLayer: Layer, Equatable {
         with(self, setter(\.backgroundColor, .expression(expression)))
     }
 
-
     /// Controls the intensity of light emitted on the source features.
     @_documentation(visibility: public)
     public func backgroundEmissiveStrength(_ constant: Double) -> Self {
@@ -188,7 +187,6 @@ public struct BackgroundLayer: Layer, Equatable {
         with(self, setter(\.backgroundEmissiveStrength, .expression(expression)))
     }
 
-
     /// The opacity at which the background will be drawn.
     @_documentation(visibility: public)
     public func backgroundOpacity(_ constant: Double) -> Self {
@@ -206,7 +204,6 @@ public struct BackgroundLayer: Layer, Equatable {
     public func backgroundOpacity(_ expression: Expression) -> Self {
         with(self, setter(\.backgroundOpacity, .expression(expression)))
     }
-
 
     /// Name of image in sprite to use for drawing an image background. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     @_documentation(visibility: public)

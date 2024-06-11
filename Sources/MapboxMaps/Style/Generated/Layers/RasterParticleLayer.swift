@@ -237,7 +237,6 @@ import UIKit
         with(self, setter(\.rasterParticleArrayBand, .expression(expression)))
     }
 
-
     /// Defines a color map by which to colorize a raster particle layer, parameterized by the `["raster-particle-speed"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-particle-max-speed`.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -259,7 +258,6 @@ import UIKit
         with(self, setter(\.rasterParticleColor, .expression(expression)))
     }
 
-
     /// Defines the amount of particles per tile.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -273,7 +271,6 @@ import UIKit
     public func rasterParticleCount(_ expression: Expression) -> Self {
         with(self, setter(\.rasterParticleCount, .expression(expression)))
     }
-
 
     /// Defines defines the opacity coefficient applied to the faded particles in each frame. In practice, this property controls the length of the particle tail.
     @_documentation(visibility: public)
@@ -296,7 +293,6 @@ import UIKit
         with(self, setter(\.rasterParticleFadeOpacityFactor, .expression(expression)))
     }
 
-
     /// Defines the maximum speed for particles. Velocities with magnitudes equal to or exceeding this value are clamped to the max value.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -311,7 +307,6 @@ import UIKit
         with(self, setter(\.rasterParticleMaxSpeed, .expression(expression)))
     }
 
-
     /// Defines a coefficient for a time period at which particles will restart at a random position, to avoid degeneration (empty areas without particles).
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -325,7 +320,6 @@ import UIKit
     public func rasterParticleResetRateFactor(_ expression: Expression) -> Self {
         with(self, setter(\.rasterParticleResetRateFactor, .expression(expression)))
     }
-
 
     /// Defines a coefficient for the speed of particles’ motion.
     @_documentation(visibility: public)

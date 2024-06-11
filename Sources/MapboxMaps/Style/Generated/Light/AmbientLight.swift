@@ -92,7 +92,6 @@ extension AmbientLight {
         with(self, setter(\.color, .expression(expression)))
     }
 
-
     /// A multiplier for the color of the ambient light.
     @_documentation(visibility: public)
     public func intensity(_ constant: Double) -> Self {

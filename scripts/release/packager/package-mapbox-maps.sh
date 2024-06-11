@@ -54,7 +54,8 @@ rm -rf .xcode
 popd
 
 step 'Sign XCFrameworks'
-codesign --timestamp -v --sign "Apple Distribution: Mapbox, Inc. (GJZR2MEM28)" artifacts/*.xcframework
+SIGNEABLE_FRAMEWORKS=$(find artifacts -name '*.xcframework' -a -not -name 'MapboxCommon.xcframework')
+codesign --timestamp -v --sign "Apple Distribution: Mapbox, Inc. (GJZR2MEM28)" $SIGNEABLE_FRAMEWORKS
 
 step 'Add License and README to bundle'
 cp ../../../LICENSE.md artifacts/

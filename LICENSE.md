@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### MapboxCoreMaps,11.4.0,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### MapboxCoreMaps,11.5.0-beta.1,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Core Maps version 10.0

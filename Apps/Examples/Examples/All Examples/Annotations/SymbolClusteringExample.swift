@@ -75,7 +75,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         }
 
         // Add the expressions to the cluster as ClusterProperties so they can be accessed below
-        let clusterProperties: [String: Expression] = [
+        let clusterProperties: [String: MapboxMaps.Expression] = [
             "max": maxExpression,
             "in_e9": ine9Expression,
             "sum": sumExpression

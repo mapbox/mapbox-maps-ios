@@ -36,8 +36,8 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
 
     // Add an additional condition to the current filter
     // to filter based on ["pitch"] and ["distance-from-center"]
-    func updateFilter(currentFilter: Expression) -> Expression {
-        let updatedFilter = Exp(.all) {
+    func updateFilter(currentFilter: MapboxMaps.Expression) -> MapboxMaps.Expression {
+        Exp(.all) {
             currentFilter
             Exp(.switchCase) {
                 // Always show the symbol when pitch <= 60
@@ -57,7 +57,6 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
                 false
             }
         }
-        return updatedFilter
     }
 
     func setPitchDistanceFilter() {

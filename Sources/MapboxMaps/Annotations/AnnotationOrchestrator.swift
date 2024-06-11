@@ -73,9 +73,11 @@ public final class AnnotationOrchestrator {
     /// `removeAnnotationManager(withId:)` had been called. `AnnotationOrchestrator`
     ///  keeps a strong reference to any `PointAnnotationManager` until it is removed.
     /// - Parameters:
-    ///   - id: Optional string identifier for this manager.
-    ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
-    ///   - clusterOptions: Optionally set the `ClusterOptions` to cluster the Point Annotations
+    ///  - id: Optional string identifier for this manager.
+    ///  - layerPosition: Optionally set the `LayerPosition` of the layer managed.
+    ///  - clusterOptions: Optionally set the `ClusterOptions` to cluster the Point Annotations
+    ///  - onClusterTap: Closure that will be executed after the long press gesture processsed.
+    ///  - onClusterLongPress: Closure that will be executed after the tap gesture will be processed on the map
     /// - Returns: An instance of `PointAnnotationManager`
     public func makePointAnnotationManager(
         id: String = String(UUID().uuidString.prefix(5)),

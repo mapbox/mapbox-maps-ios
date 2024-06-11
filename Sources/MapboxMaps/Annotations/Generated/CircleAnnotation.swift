@@ -123,7 +123,9 @@ public struct CircleAnnotation: Annotation, Equatable {
     /// Create a circle annotation with a center coordinate and an optional identifier
     /// - Parameters:
     ///   - id: Optional identifier for this annotation
-    ///   - coordinate: Coordinate where this circle annotation should be centered
+    ///   - centerCoordinate: Coordinate where this circle annotation should be centered
+    ///   - isDraggable: Determines whether annotation can be manually moved around map
+    ///   - isSelected: Passes the annotation's selection state
     public init(id: String = UUID().uuidString, centerCoordinate: CLLocationCoordinate2D, isSelected: Bool = false, isDraggable: Bool = false) {
         let point = Point(centerCoordinate)
         self.init(id: id, point: point, isSelected: isSelected, isDraggable: isDraggable)

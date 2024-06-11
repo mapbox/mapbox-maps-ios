@@ -38,7 +38,7 @@ public protocol ViewAnnotationUpdateObserver: AnyObject {
     ///
     /// Use `isHidden` property to determine whether a view is visible or not.
     /// - Parameters:
-    ///   - annotationsViews: The annotation vies whose visibility changed.
+    ///   - annotationViews: The annotation vies whose visibility changed.
     func visibilityDidChange(for annotationViews: [UIView])
 }
 
@@ -81,9 +81,10 @@ public final class ViewAnnotationManager {
     /// The complete list of annotations associated with the receiver.
     @available(*, deprecated, renamed: "allAnnotations", message: "Please use allAnnotations instead, or directly access ViewAnnotation itself")
     public var annotations: [UIView: ViewAnnotationOptions] {
-        idsByView.compactMapValues { [mapboxMap] id in
+        let values = idsByView.compactMapValues { [mapboxMap] id in
             try? mapboxMap.options(forViewAnnotationWithId: id)
         }
+        return values
     }
 
     internal init(containerView: UIView, mapboxMap: MapboxMapProtocol, displayLink: Signal<Void>) {
@@ -320,7 +321,7 @@ public final class ViewAnnotationManager {
     /// If an annotation has multiple ``ViewAnnotation/variableAnchors``, the last picked anchor configuration
     /// will we used for bounding box calculation. If annotation is not yet rendered, the first first confit from the list will be used.
     ///
-    /// - Parameter ids: The list of annotations ids to be framed.
+    /// - Parameter annotations: The list of annotations ids to be framed.
     /// - Parameter padding: See ``CameraOptions-swift.struct/padding``.
     /// - Parameter bearing: See ``CameraOptions-swift.struct/bearing``.
     /// - Parameter pitch: See ``CameraOptions-swift.struct/pitch``.
@@ -348,7 +349,7 @@ public final class ViewAnnotationManager {
     ///
     /// - Important: This API isn't supported by Globe projection.
     ///
-    /// - Parameter ids: The list of annotations ids to be framed.
+    /// - Parameter identifiers: The list of annotations ids to be framed.
     /// - Parameter padding: See ``CameraOptions-swift.struct/padding``.
     /// - Parameter bearing: See ``CameraOptions-swift.struct/bearing``.
     /// - Parameter pitch: See ``CameraOptions-swift.struct/pitch``.
@@ -359,6 +360,7 @@ public final class ViewAnnotationManager {
         bearing: CGFloat? = nil,
         pitch: CGFloat? = nil
     ) -> CameraOptions? {
+
         let corners: [CoordinateBoundsCorner] = identifiers.compactMap {
             guard
                 let options = try? mapboxMap.options(forViewAnnotationWithId: $0),

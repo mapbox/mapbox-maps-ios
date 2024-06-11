@@ -25,7 +25,6 @@ public protocol ViewportTransition: AnyObject {
     ///   - toState: The target state for the transition.
     ///   - completion:A block that must be invoked when the transition is complete. Must be invoked
     ///                on the main queue.
-    ///   - success: A flag to indicate whether the transition was successful.
     /// - Returns: a `Cancelable` that can be used to terminate the transition. If
     ///            `Cancelable/cancel()` is invoked, the transition must immediately stop
     ///            updating the camera and cancel any animations that it started.

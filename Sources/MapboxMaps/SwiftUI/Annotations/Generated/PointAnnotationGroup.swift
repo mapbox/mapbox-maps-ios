@@ -337,7 +337,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
     ///
     /// - Parameters:
-    ///   - handler: A handler for tap gesture on cluster.
+    ///   - action: A handler for tap gesture on cluster.
     @_documentation(visibility: public)
     public func onClusterTapGesture(perform action: @escaping (AnnotationClusterGestureContext) -> Void) -> Self {
         with(self, setter(\.onClusterTap, action))
@@ -350,7 +350,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
     ///
     /// - Parameters:
-    ///   - handler: A handler for long press gesture on cluster.
+    ///   - action: A handler for long press gesture on cluster.
     @_documentation(visibility: public)
     public func onClusterLongPressGesture(perform action: @escaping (AnnotationClusterGestureContext) -> Void) -> Self {
         with(self, setter(\.onClusterLongPress, action))

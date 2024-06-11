@@ -784,7 +784,7 @@ public final class MapboxMap: StyleManager {
     ///
     /// This API isn't supported by Globe projection.
     ///
-    /// - Parameter point: The point to convert. Must exist in the coordinate space
+    /// - Parameter points: The points to convert. Must exist in the coordinate space
     ///     of the `MapView`
     /// - Returns: A `CLLocationCoordinate` that represents the geographic location
     ///     of the point.
@@ -892,8 +892,8 @@ public final class MapboxMap: StyleManager {
     /// should be called after `beginGesture` and before `endGesture`.
     ///
     /// - Parameters:
-    ///   - fromPoint: The point from which the map is dragged.
-    ///   - toPoint: The point to which the map is dragged.
+    ///   - from: The point from which the map is dragged.
+    ///   - to: The point to which the map is dragged.
     ///
     /// - Returns:
     ///     The camera options object showing end point.
@@ -1245,7 +1245,7 @@ extension MapboxMap {
     /// the returned `Cancelable` object.
     ///
     /// - Parameters:
-    ///   - eventType: The event type to listen to.
+    ///   - event: The event type to listen to.
     ///   - handler: The closure to execute when the event occurs.
     ///
     /// - Returns: A `Cancelable` object that you can use to stop listening for
@@ -1260,7 +1260,7 @@ extension MapboxMap {
     /// Listen to multiple occurrences of a Map event.
     ///
     /// - Parameters:
-    ///   - eventType: The event type to listen to.
+    ///   - event: The event type to listen to.
     ///   - handler: The closure to execute when the event occurs.
     ///
     /// - Returns: A `Cancelable` object that you can use to stop listening for

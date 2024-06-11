@@ -1,7 +1,6 @@
 import MapboxCoreMaps
 
-/// Specifies the position at which a layer will be added when using
-/// `Style.addLayer`.
+/// Specifies the position at which a layer will be added when using `Style.addLayer`.
 public enum LayerPosition: Equatable, Codable {
     /// Default behavior; add to the top of the layers stack.
     case `default`

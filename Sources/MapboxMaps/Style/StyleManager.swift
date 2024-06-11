@@ -169,8 +169,7 @@ public class StyleManager {
      This function is useful if you do not know the concrete type of the layer
      you are fetching, or don't need to know for your situation.
 
-     - Parameter layerID: The id of the layer to be fetched
-
+     - Parameter id: The id of the layer to be fetched
      - Returns: The fully formed `layer` object.
      - Throws: Type conversion errors
      */
@@ -238,7 +237,6 @@ public class StyleManager {
     /**
      Adds a `source` to the map
      - Parameter source: The source to add to the map.
-     - Parameter identifier: A unique source identifier.
      - Parameter dataId: An optional data ID to filter ``MapboxMap/onSourceDataLoaded`` to only the specified data source. Applies only to ``GeoJSONSource``s.
 
      - Throws: ``StyleError`` if there is a problem adding the `source`.
@@ -665,8 +663,8 @@ public class StyleManager {
     /// Moves a style layer with given `layerId` to the new position.
     ///
     /// - Parameters:
-    ///   - layerId: Style layer id
-    ///   - layerPosition: Position to move the layer in the stack of layers on the map. Defaults to the top layer.
+    ///   - id: Style layer id
+    ///   - position: Position to move the layer in the stack of layers on the map. Defaults to the top layer.
     ///
     /// - Throws:
     ///     `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
@@ -1135,7 +1133,7 @@ public class StyleManager {
 
     /// Gets the value of a style light property.
     ///
-    /// - Parameter light: The unique identifier of the style light in lights list.
+    /// - Parameter lightId: The unique identifier of the style light in lights list.
     /// - Parameter property: The style light property name.
     public func lightProperty(for lightId: String, property: String) -> Any {
         styleManager.getStyleLightProperty(forId: lightId, property: property).value
@@ -1143,7 +1141,7 @@ public class StyleManager {
 
     /// Gets the value of a style light property.
     ///
-    /// - Parameter light: The unique identifier of the style light in lights list.
+    /// - Parameter lightId: The unique identifier of the style light in lights list.
     /// - Parameter property: The style light property name.
     public func lightPropertyValue(for lightId: String, property: String) -> StylePropertyValue {
         styleManager.getStyleLightProperty(forId: lightId, property: property)
@@ -1165,7 +1163,7 @@ public class StyleManager {
 
     /// Sets the value of a style light property in lights list.
     ///
-    /// - Parameter id: The unique identifier of the style light in lights list.
+    /// - Parameter lightId: The unique identifier of the style light in lights list.
     /// - Parameter property: The style light property name.
     /// - Parameter value: The style light property value.
     /// - throws: An error describing why the operation is unsuccessful.
@@ -1282,6 +1280,7 @@ public class StyleManager {
     /// - See Also [style-spec/fog](https://docs.mapbox.com/mapbox-gl-js/style-spec/fog/)
     ///
     /// - Parameter property: Style atmosphere property name.
+    /// - Parameter value: Style atmosphere property value.
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.

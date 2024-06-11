@@ -21,7 +21,7 @@ public struct MapGestureHandlers {
     /// - Parameters:
     ///   - onBegin: Called when a gesture has begun.
     ///   - onEnd: Called when a gesture has ended.  The second argument informs whether there will be a deceleration animation. Use `onAnimationEnd` to handle the animation end.
-    ///   - onAnimationEnd: Called when deceleration animation triggered due to a gesture has ended.
+    ///   - onEndAnimation: Called when deceleration animation triggered due to a gesture has ended.
     @_documentation(visibility: public)
     public init(
         onBegin: ((GestureType) -> Void)? = nil,

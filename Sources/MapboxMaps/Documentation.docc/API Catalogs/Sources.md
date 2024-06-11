@@ -1,4 +1,4 @@
-#  Sources
+# Sources
 
 ## Topics
 

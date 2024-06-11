@@ -43,6 +43,7 @@ public final class MapInitOptions: NSObject {
     ///   - styleURI: Style URI for the map to load. Defaults to `.streets`, but
     ///         can be `nil`.
     ///   - styleJSON: Style JSON in String representation. Has precedence over ``styleURI``.
+    ///   - antialiasingSampleCount: Sample count to control multisample anti-aliasing (MSAA) option for rendering.
     public init(
         mapOptions: MapOptions = MapOptions(),
         cameraOptions: CameraOptions? = nil,

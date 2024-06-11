@@ -17,7 +17,7 @@ public class AnyCancelable: Cancelable {
     /// Creates AnyCancelable with the canceler object.
     ///
     ///  - Parameters:
-    ///     - closure: The `Cancelable` token to be cancelled.
+    ///     - canceler: The `Cancelable` token to be cancelled.
     public convenience init<C: Cancelable>(_ canceler: C) {
         self.init(canceler.cancel)
     }

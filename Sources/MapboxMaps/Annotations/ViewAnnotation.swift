@@ -218,7 +218,7 @@ public final class ViewAnnotation {
     /// - Parameters:
     ///   - layerId: Layer identifier which renders the feature.
     ///   - featureId: Feature identifier. If not specified, the annotation will appear on any feature from that layer.
-    ///   - content: The view to place on the map.
+    ///   - view: The view to place on the map.
     public convenience init(layerId: String, featureId: String? = nil, view: UIView) {
         self.init(
             annotatedFeature: .layerFeature(layerId: layerId, featureId: featureId),

@@ -6,7 +6,7 @@ import json
 
 acceptedTopSectionTitles = [
     "Essentials",
-    "Style",
+    "Styling",
     "Annotations",
     "Advanced",
     "Other",

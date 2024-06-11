@@ -237,7 +237,7 @@ extension TileStore: TileStoreProtocol {
     /// On successful tile region removal, the given callback is invoked with the removed tile region.
     /// Otherwise, the given callback is invoked with an error.
     /// - Parameter id: The tile region identifier.
-    /// - Parameter callback A callback to be invoked when a tile region was removed.
+    /// - Parameter completion: A callback to be invoked when a tile region was removed.
     public func removeRegion(forId id: String, completion: @escaping (Result<TileRegion, Error>) -> Void) {
         __removeTileRegion(forId: id, callback: tileStoreClosureAdapter(for: completion, type: TileRegion.self))
     }

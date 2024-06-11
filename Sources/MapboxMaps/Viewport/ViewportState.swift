@@ -41,7 +41,6 @@ public protocol ViewportState: AnyObject {
     ///   - handler: A closure that is invoked by the state whenever its camera changes. Returns
     ///              `true` to stay subscribed and `false` to unsubscribe. `handler` must be
     ///              invoked on the main queue.
-    ///   - camera: The `ViewportState`'s most recent camera.
     /// - Returns: A `Cancelable` that the caller can use to unsubscribe.
     func observeDataSource(with handler: @escaping (_ camera: CameraOptions) -> Bool) -> Cancelable
 

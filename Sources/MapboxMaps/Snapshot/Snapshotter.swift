@@ -360,7 +360,7 @@ extension Snapshotter {
     /// the returned `Cancelable` object.
     ///
     /// - Parameters:
-    ///   - eventType: The event type to listen to.
+    ///   - event: The event type to listen to.
     ///   - handler: The closure to execute when the event occurs.
     ///
     /// - Returns: A `Cancelable` object that you can use to stop listening for
@@ -375,7 +375,7 @@ extension Snapshotter {
     /// Listen to multiple occurrences of a Map event.
     ///
     /// - Parameters:
-    ///   - eventType: The event type to listen to.
+    ///   - event: The event type to listen to.
     ///   - handler: The closure to execute when the event occurs.
     ///
     /// - Returns: A `Cancelable` object that you can use to stop listening for

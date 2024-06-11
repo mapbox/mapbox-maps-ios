@@ -148,6 +148,8 @@ public struct PointAnnotation: Annotation, Equatable {
     /// - Parameters:
     ///   - id: Optional identifier for this annotation
     ///   - coordinate: Coordinate where this annotation should be rendered
+    ///   - isDraggable: Determines whether annotation can be manually moved around map
+    ///   - isSelected: Passes the annotation's selection state
     public init(id: String = UUID().uuidString, coordinate: CLLocationCoordinate2D, isSelected: Bool = false, isDraggable: Bool = false) {
         let point = Point(coordinate)
         self.init(id: id, point: point, isSelected: isSelected, isDraggable: isDraggable)

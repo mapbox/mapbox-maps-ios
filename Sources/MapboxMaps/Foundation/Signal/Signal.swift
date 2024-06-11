@@ -39,7 +39,7 @@ extension Signal {
     /// - Note: The created signal is analogous to the `Combine.Just`.
     ///
     /// - Parameters:
-    ///   - just: A payload.
+    ///   - constant: A payload.
     public init(just constant: Payload) {
         self.init { handler in
             handler(constant)

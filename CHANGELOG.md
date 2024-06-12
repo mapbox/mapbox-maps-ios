@@ -2,9 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-# main
+# 10.18.2 - June 12, 2024
 
 * Update Turf to 2.8.0
+* Add support for building with Xcode 16 beta
 
 # 10.18.1 - May 30, 2024
 

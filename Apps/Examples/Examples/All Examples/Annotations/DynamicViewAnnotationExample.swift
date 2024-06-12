@@ -226,7 +226,7 @@ private final class Route {
         guard !displayed, let mapView else { return }
         displayed = true
 
-        func colorExpression(normal: String, selected: String) -> Expression {
+        func colorExpression(normal: String, selected: String) -> MapboxMaps.Expression {
             Exp(.switchCase) {
                 Exp(.boolean) {
                     Exp(.featureState) { "selected" }

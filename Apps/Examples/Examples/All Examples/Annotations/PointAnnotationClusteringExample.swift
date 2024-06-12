@@ -103,7 +103,7 @@ final class PointAnnotationClusteringExample: UIViewController, ExampleProtocol 
         }
 
         // Create a cluster property to add to each cluster
-        let clusterProperties: [String: Expression] = [
+        let clusterProperties: [String: MapboxMaps.Expression] = [
             "sum": sumExpression
         ]
 

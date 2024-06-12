@@ -36,7 +36,7 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
 
     // Add an additional condition to the current filter
     // to filter based on ["pitch"] and ["distance-from-center"]
-    func updateFilter(currentFilter: Expression) -> Expression {
+    func updateFilter(currentFilter: MapboxMaps.Expression) -> MapboxMaps.Expression {
         let updatedFilter = Exp(.all) {
             currentFilter
             Exp(.switchCase) {

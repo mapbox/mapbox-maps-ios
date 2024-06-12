@@ -14,7 +14,7 @@ This application makes use of the following third party libraries:
 ### turf-swift, https://github.com/mapbox/turf-swift
 
 ```
-Copyright © 2014–2023, Mapbox
+Copyright © 2014–2024, Mapbox
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above

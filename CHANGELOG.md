@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+# main
+
+* Update Turf to 2.8.0
+
 # 10.18.1 - May 30, 2024
 
 * Update MapboxCommpon to 23.10.1

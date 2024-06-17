@@ -116,6 +116,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var iconAllowOverlap: Bool?
     /// If true, the icon will be visible even if it collides with other previously drawn symbols.
+    /// Default value: false.
     @_documentation(visibility: public)
     public func iconAllowOverlap(_ newValue: Bool) -> Self {
         with(self, setter(\.iconAllowOverlap, newValue))
@@ -123,6 +124,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var iconIgnorePlacement: Bool?
     /// If true, other symbols can be visible even if they collide with the icon.
+    /// Default value: false.
     @_documentation(visibility: public)
     public func iconIgnorePlacement(_ newValue: Bool) -> Self {
         with(self, setter(\.iconIgnorePlacement, newValue))
@@ -130,6 +132,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var iconKeepUpright: Bool?
     /// If true, the icon may be flipped to prevent it from being rendered upside-down.
+    /// Default value: false.
     @_documentation(visibility: public)
     public func iconKeepUpright(_ newValue: Bool) -> Self {
         with(self, setter(\.iconKeepUpright, newValue))
@@ -137,6 +140,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var iconOptional: Bool?
     /// If true, text will display without their corresponding icons when the icon collides with other symbols and the text does not.
+    /// Default value: false.
     @_documentation(visibility: public)
     public func iconOptional(_ newValue: Bool) -> Self {
         with(self, setter(\.iconOptional, newValue))
@@ -144,6 +148,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var iconPadding: Double?
     /// Size of the additional area around the icon bounding box used for detecting symbol collisions.
+    /// Default value: 2. Minimum value: 0.
     @_documentation(visibility: public)
     public func iconPadding(_ newValue: Double) -> Self {
         with(self, setter(\.iconPadding, newValue))
@@ -151,6 +156,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var iconPitchAlignment: IconPitchAlignment?
     /// Orientation of icon when map is pitched.
+    /// Default value: "auto".
     @_documentation(visibility: public)
     public func iconPitchAlignment(_ newValue: IconPitchAlignment) -> Self {
         with(self, setter(\.iconPitchAlignment, newValue))
@@ -158,6 +164,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var iconRotationAlignment: IconRotationAlignment?
     /// In combination with `symbol-placement`, determines the rotation behavior of icons.
+    /// Default value: "auto".
     @_documentation(visibility: public)
     public func iconRotationAlignment(_ newValue: IconRotationAlignment) -> Self {
         with(self, setter(\.iconRotationAlignment, newValue))
@@ -165,6 +172,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var symbolAvoidEdges: Bool?
     /// If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Mapbox GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.
+    /// Default value: false.
     @_documentation(visibility: public)
     public func symbolAvoidEdges(_ newValue: Bool) -> Self {
         with(self, setter(\.symbolAvoidEdges, newValue))
@@ -172,6 +180,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var symbolPlacement: SymbolPlacement?
     /// Label placement relative to its geometry.
+    /// Default value: "point".
     @_documentation(visibility: public)
     public func symbolPlacement(_ newValue: SymbolPlacement) -> Self {
         with(self, setter(\.symbolPlacement, newValue))
@@ -179,6 +188,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var symbolSpacing: Double?
     /// Distance between two symbol anchors.
+    /// Default value: 250. Minimum value: 1.
     @_documentation(visibility: public)
     public func symbolSpacing(_ newValue: Double) -> Self {
         with(self, setter(\.symbolSpacing, newValue))
@@ -186,6 +196,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var symbolZElevate: Bool?
     /// Position symbol on buildings (both fill extrusions and models) rooftops. In order to have minimal impact on performance, this is supported only when `fill-extrusion-height` is not zoom-dependent and remains unchanged. For fading in buildings when zooming in, fill-extrusion-vertical-scale should be used and symbols would raise with building rooftops. Symbols are sorted by elevation, except in cases when `viewport-y` sorting or `symbol-sort-key` are applied.
+    /// Default value: false.
     @_documentation(visibility: public)
     public func symbolZElevate(_ newValue: Bool) -> Self {
         with(self, setter(\.symbolZElevate, newValue))
@@ -193,6 +204,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var symbolZOrder: SymbolZOrder?
     /// Determines whether overlapping symbols in the same layer are rendered in the order that they appear in the data source or by their y-position relative to the viewport. To control the order and prioritization of symbols otherwise, use `symbol-sort-key`.
+    /// Default value: "auto".
     @_documentation(visibility: public)
     public func symbolZOrder(_ newValue: SymbolZOrder) -> Self {
         with(self, setter(\.symbolZOrder, newValue))
@@ -200,6 +212,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var textAllowOverlap: Bool?
     /// If true, the text will be visible even if it collides with other previously drawn symbols.
+    /// Default value: false.
     @_documentation(visibility: public)
     public func textAllowOverlap(_ newValue: Bool) -> Self {
         with(self, setter(\.textAllowOverlap, newValue))
@@ -214,6 +227,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var textIgnorePlacement: Bool?
     /// If true, other symbols can be visible even if they collide with the text.
+    /// Default value: false.
     @_documentation(visibility: public)
     public func textIgnorePlacement(_ newValue: Bool) -> Self {
         with(self, setter(\.textIgnorePlacement, newValue))
@@ -221,6 +235,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var textKeepUpright: Bool?
     /// If true, the text may be flipped vertically to prevent it from being rendered upside-down.
+    /// Default value: true.
     @_documentation(visibility: public)
     public func textKeepUpright(_ newValue: Bool) -> Self {
         with(self, setter(\.textKeepUpright, newValue))
@@ -228,6 +243,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var textMaxAngle: Double?
     /// Maximum angle change between adjacent characters.
+    /// Default value: 45.
     @_documentation(visibility: public)
     public func textMaxAngle(_ newValue: Double) -> Self {
         with(self, setter(\.textMaxAngle, newValue))
@@ -235,6 +251,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var textOptional: Bool?
     /// If true, icons will display without their corresponding text when the text collides with other symbols and the icon does not.
+    /// Default value: false.
     @_documentation(visibility: public)
     public func textOptional(_ newValue: Bool) -> Self {
         with(self, setter(\.textOptional, newValue))
@@ -242,6 +259,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var textPadding: Double?
     /// Size of the additional area around the text bounding box used for detecting symbol collisions.
+    /// Default value: 2. Minimum value: 0.
     @_documentation(visibility: public)
     public func textPadding(_ newValue: Double) -> Self {
         with(self, setter(\.textPadding, newValue))
@@ -249,6 +267,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var textPitchAlignment: TextPitchAlignment?
     /// Orientation of text when map is pitched.
+    /// Default value: "auto".
     @_documentation(visibility: public)
     public func textPitchAlignment(_ newValue: TextPitchAlignment) -> Self {
         with(self, setter(\.textPitchAlignment, newValue))
@@ -256,6 +275,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var textRotationAlignment: TextRotationAlignment?
     /// In combination with `symbol-placement`, determines the rotation behavior of the individual glyphs forming the text.
+    /// Default value: "auto".
     @_documentation(visibility: public)
     public func textRotationAlignment(_ newValue: TextRotationAlignment) -> Self {
         with(self, setter(\.textRotationAlignment, newValue))
@@ -277,6 +297,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var iconColorSaturation: Double?
     /// Controls saturation level of the symbol icon. With the default value of 1 the icon color is preserved while with a value of 0 it is fully desaturated and looks black and white.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func iconColorSaturation(_ newValue: Double) -> Self {
         with(self, setter(\.iconColorSaturation, newValue))
@@ -284,6 +305,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var iconTranslate: [Double]?
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
+    /// Default value: [0,0].
     @_documentation(visibility: public)
     public func iconTranslate(_ newValue: [Double]) -> Self {
         with(self, setter(\.iconTranslate, newValue))
@@ -291,6 +313,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var iconTranslateAnchor: IconTranslateAnchor?
     /// Controls the frame of reference for `icon-translate`.
+    /// Default value: "map".
     @_documentation(visibility: public)
     public func iconTranslateAnchor(_ newValue: IconTranslateAnchor) -> Self {
         with(self, setter(\.iconTranslateAnchor, newValue))
@@ -298,6 +321,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var textTranslate: [Double]?
     /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
+    /// Default value: [0,0].
     @_documentation(visibility: public)
     public func textTranslate(_ newValue: [Double]) -> Self {
         with(self, setter(\.textTranslate, newValue))
@@ -305,6 +329,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var textTranslateAnchor: TextTranslateAnchor?
     /// Controls the frame of reference for `text-translate`.
+    /// Default value: "map".
     @_documentation(visibility: public)
     public func textTranslateAnchor(_ newValue: TextTranslateAnchor) -> Self {
         with(self, setter(\.textTranslateAnchor, newValue))

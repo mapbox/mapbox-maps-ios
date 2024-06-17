@@ -43,66 +43,78 @@ public struct CircleLayer: Layer, Equatable {
     public var circleSortKey: Value<Double>?
 
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Default value: 0.
     public var circleBlur: Value<Double>?
 
     /// Transition options for `circleBlur`.
     public var circleBlurTransition: StyleTransition?
 
     /// The fill color of the circle.
+    /// Default value: "#000000".
     public var circleColor: Value<StyleColor>?
 
     /// Transition options for `circleColor`.
     public var circleColorTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features.
+    /// Default value: 0. Minimum value: 0.
     public var circleEmissiveStrength: Value<Double>?
 
     /// Transition options for `circleEmissiveStrength`.
     public var circleEmissiveStrengthTransition: StyleTransition?
 
     /// The opacity at which the circle will be drawn.
+    /// Default value: 1. Value range: [0, 1]
     public var circleOpacity: Value<Double>?
 
     /// Transition options for `circleOpacity`.
     public var circleOpacityTransition: StyleTransition?
 
     /// Orientation of circle when map is pitched.
+    /// Default value: "viewport".
     public var circlePitchAlignment: Value<CirclePitchAlignment>?
 
     /// Controls the scaling behavior of the circle when the map is pitched.
+    /// Default value: "map".
     public var circlePitchScale: Value<CirclePitchScale>?
 
     /// Circle radius.
+    /// Default value: 5. Minimum value: 0.
     public var circleRadius: Value<Double>?
 
     /// Transition options for `circleRadius`.
     public var circleRadiusTransition: StyleTransition?
 
     /// The stroke color of the circle.
+    /// Default value: "#000000".
     public var circleStrokeColor: Value<StyleColor>?
 
     /// Transition options for `circleStrokeColor`.
     public var circleStrokeColorTransition: StyleTransition?
 
     /// The opacity of the circle's stroke.
+    /// Default value: 1. Value range: [0, 1]
     public var circleStrokeOpacity: Value<Double>?
 
     /// Transition options for `circleStrokeOpacity`.
     public var circleStrokeOpacityTransition: StyleTransition?
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
+    /// Default value: 0. Minimum value: 0.
     public var circleStrokeWidth: Value<Double>?
 
     /// Transition options for `circleStrokeWidth`.
     public var circleStrokeWidthTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+    /// Default value: [0,0].
     public var circleTranslate: Value<[Double]>?
 
     /// Transition options for `circleTranslate`.
     public var circleTranslateTransition: StyleTransition?
 
     /// Controls the frame of reference for `circle-translate`.
+    /// Default value: "map".
     public var circleTranslateAnchor: Value<CircleTranslateAnchor>?
 
     public init(id: String, source: String) {
@@ -294,6 +306,7 @@ public struct CircleLayer: Layer, Equatable {
     }
 
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Default value: 0.
     @_documentation(visibility: public)
     public func circleBlur(_ constant: Double) -> Self {
         with(self, setter(\.circleBlur, .constant(constant)))
@@ -306,18 +319,21 @@ public struct CircleLayer: Layer, Equatable {
     }
 
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Default value: 0.
     @_documentation(visibility: public)
     public func circleBlur(_ expression: Expression) -> Self {
         with(self, setter(\.circleBlur, .expression(expression)))
     }
 
     /// The fill color of the circle.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func circleColor(_ constant: StyleColor) -> Self {
         with(self, setter(\.circleColor, .constant(constant)))
     }
 
     /// The fill color of the circle.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func circleColor(_ color: UIColor) -> Self {
         with(self, setter(\.circleColor, .constant(StyleColor(color))))
@@ -330,12 +346,14 @@ public struct CircleLayer: Layer, Equatable {
     }
 
     /// The fill color of the circle.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func circleColor(_ expression: Expression) -> Self {
         with(self, setter(\.circleColor, .expression(expression)))
     }
 
     /// Controls the intensity of light emitted on the source features.
+    /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     public func circleEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.circleEmissiveStrength, .constant(constant)))
@@ -348,12 +366,14 @@ public struct CircleLayer: Layer, Equatable {
     }
 
     /// Controls the intensity of light emitted on the source features.
+    /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     public func circleEmissiveStrength(_ expression: Expression) -> Self {
         with(self, setter(\.circleEmissiveStrength, .expression(expression)))
     }
 
     /// The opacity at which the circle will be drawn.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func circleOpacity(_ constant: Double) -> Self {
         with(self, setter(\.circleOpacity, .constant(constant)))
@@ -366,36 +386,42 @@ public struct CircleLayer: Layer, Equatable {
     }
 
     /// The opacity at which the circle will be drawn.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func circleOpacity(_ expression: Expression) -> Self {
         with(self, setter(\.circleOpacity, .expression(expression)))
     }
 
     /// Orientation of circle when map is pitched.
+    /// Default value: "viewport".
     @_documentation(visibility: public)
     public func circlePitchAlignment(_ constant: CirclePitchAlignment) -> Self {
         with(self, setter(\.circlePitchAlignment, .constant(constant)))
     }
 
     /// Orientation of circle when map is pitched.
+    /// Default value: "viewport".
     @_documentation(visibility: public)
     public func circlePitchAlignment(_ expression: Expression) -> Self {
         with(self, setter(\.circlePitchAlignment, .expression(expression)))
     }
 
     /// Controls the scaling behavior of the circle when the map is pitched.
+    /// Default value: "map".
     @_documentation(visibility: public)
     public func circlePitchScale(_ constant: CirclePitchScale) -> Self {
         with(self, setter(\.circlePitchScale, .constant(constant)))
     }
 
     /// Controls the scaling behavior of the circle when the map is pitched.
+    /// Default value: "map".
     @_documentation(visibility: public)
     public func circlePitchScale(_ expression: Expression) -> Self {
         with(self, setter(\.circlePitchScale, .expression(expression)))
     }
 
     /// Circle radius.
+    /// Default value: 5. Minimum value: 0.
     @_documentation(visibility: public)
     public func circleRadius(_ constant: Double) -> Self {
         with(self, setter(\.circleRadius, .constant(constant)))
@@ -408,18 +434,21 @@ public struct CircleLayer: Layer, Equatable {
     }
 
     /// Circle radius.
+    /// Default value: 5. Minimum value: 0.
     @_documentation(visibility: public)
     public func circleRadius(_ expression: Expression) -> Self {
         with(self, setter(\.circleRadius, .expression(expression)))
     }
 
     /// The stroke color of the circle.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func circleStrokeColor(_ constant: StyleColor) -> Self {
         with(self, setter(\.circleStrokeColor, .constant(constant)))
     }
 
     /// The stroke color of the circle.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func circleStrokeColor(_ color: UIColor) -> Self {
         with(self, setter(\.circleStrokeColor, .constant(StyleColor(color))))
@@ -432,12 +461,14 @@ public struct CircleLayer: Layer, Equatable {
     }
 
     /// The stroke color of the circle.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func circleStrokeColor(_ expression: Expression) -> Self {
         with(self, setter(\.circleStrokeColor, .expression(expression)))
     }
 
     /// The opacity of the circle's stroke.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func circleStrokeOpacity(_ constant: Double) -> Self {
         with(self, setter(\.circleStrokeOpacity, .constant(constant)))
@@ -450,12 +481,14 @@ public struct CircleLayer: Layer, Equatable {
     }
 
     /// The opacity of the circle's stroke.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func circleStrokeOpacity(_ expression: Expression) -> Self {
         with(self, setter(\.circleStrokeOpacity, .expression(expression)))
     }
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
+    /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     public func circleStrokeWidth(_ constant: Double) -> Self {
         with(self, setter(\.circleStrokeWidth, .constant(constant)))
@@ -468,12 +501,14 @@ public struct CircleLayer: Layer, Equatable {
     }
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
+    /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     public func circleStrokeWidth(_ expression: Expression) -> Self {
         with(self, setter(\.circleStrokeWidth, .expression(expression)))
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+    /// Default value: [0,0].
     @_documentation(visibility: public)
     public func circleTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.circleTranslate, .constant([x, y])))
@@ -486,18 +521,21 @@ public struct CircleLayer: Layer, Equatable {
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+    /// Default value: [0,0].
     @_documentation(visibility: public)
     public func circleTranslate(_ expression: Expression) -> Self {
         with(self, setter(\.circleTranslate, .expression(expression)))
     }
 
     /// Controls the frame of reference for `circle-translate`.
+    /// Default value: "map".
     @_documentation(visibility: public)
     public func circleTranslateAnchor(_ constant: CircleTranslateAnchor) -> Self {
         with(self, setter(\.circleTranslateAnchor, .constant(constant)))
     }
 
     /// Controls the frame of reference for `circle-translate`.
+    /// Default value: "map".
     @_documentation(visibility: public)
     public func circleTranslateAnchor(_ expression: Expression) -> Self {
         with(self, setter(\.circleTranslateAnchor, .expression(expression)))

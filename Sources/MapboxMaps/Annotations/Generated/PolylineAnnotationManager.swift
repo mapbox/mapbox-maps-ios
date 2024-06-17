@@ -241,6 +241,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     // MARK: - Common layer properties
 
     /// The display of line endings.
+    /// Default value: "butt".
     public var lineCap: LineCap? {
         get {
             return layerProperties["line-cap"].flatMap { $0 as? String }.flatMap(LineCap.init(rawValue:))
@@ -251,6 +252,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Used to automatically convert miter joins to bevel joins for sharp angles.
+    /// Default value: 2.
     public var lineMiterLimit: Double? {
         get {
             return layerProperties["line-miter-limit"] as? Double
@@ -261,6 +263,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Used to automatically convert round joins to miter joins for shallow angles.
+    /// Default value: 1.05.
     public var lineRoundLimit: Double? {
         get {
             return layerProperties["line-round-limit"] as? Double
@@ -271,6 +274,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+    /// Minimum value: 0.
     public var lineDasharray: [Double]? {
         get {
             return layerProperties["line-dasharray"] as? [Double]
@@ -281,6 +285,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
+    /// Default value: 1. Value range: [0, 1]
     public var lineDepthOcclusionFactor: Double? {
         get {
             return layerProperties["line-depth-occlusion-factor"] as? Double
@@ -291,6 +296,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Controls the intensity of light emitted on the source features.
+    /// Default value: 0. Minimum value: 0.
     public var lineEmissiveStrength: Double? {
         get {
             return layerProperties["line-emissive-strength"] as? Double
@@ -301,6 +307,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+    /// Default value: [0,0].
     public var lineTranslate: [Double]? {
         get {
             return layerProperties["line-translate"] as? [Double]
@@ -311,6 +318,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Controls the frame of reference for `line-translate`.
+    /// Default value: "map".
     public var lineTranslateAnchor: LineTranslateAnchor? {
         get {
             return layerProperties["line-translate-anchor"].flatMap { $0 as? String }.flatMap(LineTranslateAnchor.init(rawValue:))
@@ -321,6 +329,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
+    /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
     public var lineTrimOffset: [Double]? {
         get {
             return layerProperties["line-trim-offset"] as? [Double]

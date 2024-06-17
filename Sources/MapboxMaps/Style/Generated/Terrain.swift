@@ -13,6 +13,7 @@ public struct Terrain: Codable, Equatable {
     }
 
     /// Exaggerates the elevation of the terrain by multiplying the data from the DEM with this value.
+    /// Default value: 1. Value range: [0, 1000]
     public var exaggeration: Value<Double>?
 
     /// Transition options for `Exaggeration`.
@@ -29,6 +30,7 @@ public struct Terrain: Codable, Equatable {
 @_documentation(visibility: public)
 extension Terrain {
     /// Exaggerates the elevation of the terrain by multiplying the data from the DEM with this value.
+    /// Default value: 1. Value range: [0, 1000]
     @_documentation(visibility: public)
     public func exaggeration(_ constant: Double) -> Self {
         with(self, setter(\.exaggeration, .constant(constant)))
@@ -41,6 +43,7 @@ extension Terrain {
     }
 
     /// Exaggerates the elevation of the terrain by multiplying the data from the DEM with this value.
+    /// Default value: 1. Value range: [0, 1000]
     @_documentation(visibility: public)
     public func exaggeration(_ expression: Expression) -> Self {
         with(self, setter(\.exaggeration, .expression(expression)))

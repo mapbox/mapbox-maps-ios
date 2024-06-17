@@ -26,18 +26,21 @@ public struct BackgroundLayer: Layer, Equatable {
     public var visibility: Value<Visibility>
 
     /// The color with which the background will be drawn.
+    /// Default value: "#000000".
     public var backgroundColor: Value<StyleColor>?
 
     /// Transition options for `backgroundColor`.
     public var backgroundColorTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features.
+    /// Default value: 0. Minimum value: 0.
     public var backgroundEmissiveStrength: Value<Double>?
 
     /// Transition options for `backgroundEmissiveStrength`.
     public var backgroundEmissiveStrengthTransition: StyleTransition?
 
     /// The opacity at which the background will be drawn.
+    /// Default value: 1. Value range: [0, 1]
     public var backgroundOpacity: Value<Double>?
 
     /// Transition options for `backgroundOpacity`.
@@ -146,12 +149,14 @@ public struct BackgroundLayer: Layer, Equatable {
     }
 
     /// The color with which the background will be drawn.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func backgroundColor(_ constant: StyleColor) -> Self {
         with(self, setter(\.backgroundColor, .constant(constant)))
     }
 
     /// The color with which the background will be drawn.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func backgroundColor(_ color: UIColor) -> Self {
         with(self, setter(\.backgroundColor, .constant(StyleColor(color))))
@@ -164,12 +169,14 @@ public struct BackgroundLayer: Layer, Equatable {
     }
 
     /// The color with which the background will be drawn.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func backgroundColor(_ expression: Expression) -> Self {
         with(self, setter(\.backgroundColor, .expression(expression)))
     }
 
     /// Controls the intensity of light emitted on the source features.
+    /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     public func backgroundEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.backgroundEmissiveStrength, .constant(constant)))
@@ -182,12 +189,14 @@ public struct BackgroundLayer: Layer, Equatable {
     }
 
     /// Controls the intensity of light emitted on the source features.
+    /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     public func backgroundEmissiveStrength(_ expression: Expression) -> Self {
         with(self, setter(\.backgroundEmissiveStrength, .expression(expression)))
     }
 
     /// The opacity at which the background will be drawn.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func backgroundOpacity(_ constant: Double) -> Self {
         with(self, setter(\.backgroundOpacity, .constant(constant)))
@@ -200,6 +209,7 @@ public struct BackgroundLayer: Layer, Equatable {
     }
 
     /// The opacity at which the background will be drawn.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func backgroundOpacity(_ expression: Expression) -> Self {
         with(self, setter(\.backgroundOpacity, .expression(expression)))

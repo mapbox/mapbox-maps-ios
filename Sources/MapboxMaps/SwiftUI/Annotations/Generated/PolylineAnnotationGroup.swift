@@ -95,6 +95,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     private var lineCap: LineCap?
     /// The display of line endings.
+    /// Default value: "butt".
     @_documentation(visibility: public)
     public func lineCap(_ newValue: LineCap) -> Self {
         with(self, setter(\.lineCap, newValue))
@@ -102,6 +103,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     private var lineMiterLimit: Double?
     /// Used to automatically convert miter joins to bevel joins for sharp angles.
+    /// Default value: 2.
     @_documentation(visibility: public)
     public func lineMiterLimit(_ newValue: Double) -> Self {
         with(self, setter(\.lineMiterLimit, newValue))
@@ -109,6 +111,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     private var lineRoundLimit: Double?
     /// Used to automatically convert round joins to miter joins for shallow angles.
+    /// Default value: 1.05.
     @_documentation(visibility: public)
     public func lineRoundLimit(_ newValue: Double) -> Self {
         with(self, setter(\.lineRoundLimit, newValue))
@@ -116,6 +119,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     private var lineDasharray: [Double]?
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+    /// Minimum value: 0.
     @_documentation(visibility: public)
     public func lineDasharray(_ newValue: [Double]) -> Self {
         with(self, setter(\.lineDasharray, newValue))
@@ -123,6 +127,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     private var lineDepthOcclusionFactor: Double?
     /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func lineDepthOcclusionFactor(_ newValue: Double) -> Self {
         with(self, setter(\.lineDepthOcclusionFactor, newValue))
@@ -130,6 +135,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     private var lineEmissiveStrength: Double?
     /// Controls the intensity of light emitted on the source features.
+    /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     public func lineEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.lineEmissiveStrength, newValue))
@@ -137,6 +143,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     private var lineTranslate: [Double]?
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+    /// Default value: [0,0].
     @_documentation(visibility: public)
     public func lineTranslate(_ newValue: [Double]) -> Self {
         with(self, setter(\.lineTranslate, newValue))
@@ -144,6 +151,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     private var lineTranslateAnchor: LineTranslateAnchor?
     /// Controls the frame of reference for `line-translate`.
+    /// Default value: "map".
     @_documentation(visibility: public)
     public func lineTranslateAnchor(_ newValue: LineTranslateAnchor) -> Self {
         with(self, setter(\.lineTranslateAnchor, newValue))
@@ -151,6 +159,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     private var lineTrimOffset: [Double]?
     /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
+    /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
     @_documentation(visibility: public)
     public func lineTrimOffset(_ newValue: [Double]) -> Self {
         with(self, setter(\.lineTrimOffset, newValue))

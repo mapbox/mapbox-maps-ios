@@ -87,6 +87,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
 
     private var fillAntialias: Bool?
     /// Whether or not the fill should be antialiased.
+    /// Default value: true.
     @_documentation(visibility: public)
     public func fillAntialias(_ newValue: Bool) -> Self {
         with(self, setter(\.fillAntialias, newValue))
@@ -94,6 +95,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
 
     private var fillEmissiveStrength: Double?
     /// Controls the intensity of light emitted on the source features.
+    /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     public func fillEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.fillEmissiveStrength, newValue))
@@ -101,6 +103,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
 
     private var fillTranslate: [Double]?
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+    /// Default value: [0,0].
     @_documentation(visibility: public)
     public func fillTranslate(_ newValue: [Double]) -> Self {
         with(self, setter(\.fillTranslate, newValue))
@@ -108,6 +111,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
 
     private var fillTranslateAnchor: FillTranslateAnchor?
     /// Controls the frame of reference for `fill-translate`.
+    /// Default value: "map".
     @_documentation(visibility: public)
     public func fillTranslateAnchor(_ newValue: FillTranslateAnchor) -> Self {
         with(self, setter(\.fillTranslateAnchor, newValue))

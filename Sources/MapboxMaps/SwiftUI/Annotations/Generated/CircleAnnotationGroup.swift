@@ -92,6 +92,7 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
 
     private var circleEmissiveStrength: Double?
     /// Controls the intensity of light emitted on the source features.
+    /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     public func circleEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.circleEmissiveStrength, newValue))
@@ -99,6 +100,7 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
 
     private var circlePitchAlignment: CirclePitchAlignment?
     /// Orientation of circle when map is pitched.
+    /// Default value: "viewport".
     @_documentation(visibility: public)
     public func circlePitchAlignment(_ newValue: CirclePitchAlignment) -> Self {
         with(self, setter(\.circlePitchAlignment, newValue))
@@ -106,6 +108,7 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
 
     private var circlePitchScale: CirclePitchScale?
     /// Controls the scaling behavior of the circle when the map is pitched.
+    /// Default value: "map".
     @_documentation(visibility: public)
     public func circlePitchScale(_ newValue: CirclePitchScale) -> Self {
         with(self, setter(\.circlePitchScale, newValue))
@@ -113,6 +116,7 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
 
     private var circleTranslate: [Double]?
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+    /// Default value: [0,0].
     @_documentation(visibility: public)
     public func circleTranslate(_ newValue: [Double]) -> Self {
         with(self, setter(\.circleTranslate, newValue))
@@ -120,6 +124,7 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
 
     private var circleTranslateAnchor: CircleTranslateAnchor?
     /// Controls the frame of reference for `circle-translate`.
+    /// Default value: "map".
     @_documentation(visibility: public)
     public func circleTranslateAnchor(_ newValue: CircleTranslateAnchor) -> Self {
         with(self, setter(\.circleTranslateAnchor, newValue))

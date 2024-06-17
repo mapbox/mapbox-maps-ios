@@ -58,10 +58,12 @@ import UIKit
     public var rasterParticleColor: Value<StyleColor>?
 
     /// Defines the amount of particles per tile.
+    /// Default value: 512. Minimum value: 1.
     @_documentation(visibility: public)
     public var rasterParticleCount: Value<Double>?
 
     /// Defines defines the opacity coefficient applied to the faded particles in each frame. In practice, this property controls the length of the particle tail.
+    /// Default value: 0.98. Value range: [0, 1]
     @_documentation(visibility: public)
     public var rasterParticleFadeOpacityFactor: Value<Double>?
 
@@ -70,14 +72,17 @@ import UIKit
     public var rasterParticleFadeOpacityFactorTransition: StyleTransition?
 
     /// Defines the maximum speed for particles. Velocities with magnitudes equal to or exceeding this value are clamped to the max value.
+    /// Default value: 1. Minimum value: 1.
     @_documentation(visibility: public)
     public var rasterParticleMaxSpeed: Value<Double>?
 
     /// Defines a coefficient for a time period at which particles will restart at a random position, to avoid degeneration (empty areas without particles).
+    /// Default value: 0.8. Value range: [0, 1]
     @_documentation(visibility: public)
     public var rasterParticleResetRateFactor: Value<Double>?
 
     /// Defines a coefficient for the speed of particles’ motion.
+    /// Default value: 0.2. Value range: [0, 1]
     @_documentation(visibility: public)
     public var rasterParticleSpeedFactor: Value<Double>?
 
@@ -259,6 +264,7 @@ import UIKit
     }
 
     /// Defines the amount of particles per tile.
+    /// Default value: 512. Minimum value: 1.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterParticleCount(_ constant: Double) -> Self {
@@ -266,6 +272,7 @@ import UIKit
     }
 
     /// Defines the amount of particles per tile.
+    /// Default value: 512. Minimum value: 1.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterParticleCount(_ expression: Expression) -> Self {
@@ -273,6 +280,7 @@ import UIKit
     }
 
     /// Defines defines the opacity coefficient applied to the faded particles in each frame. In practice, this property controls the length of the particle tail.
+    /// Default value: 0.98. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterParticleFadeOpacityFactor(_ constant: Double) -> Self {
@@ -287,6 +295,7 @@ import UIKit
     }
 
     /// Defines defines the opacity coefficient applied to the faded particles in each frame. In practice, this property controls the length of the particle tail.
+    /// Default value: 0.98. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterParticleFadeOpacityFactor(_ expression: Expression) -> Self {
@@ -294,6 +303,7 @@ import UIKit
     }
 
     /// Defines the maximum speed for particles. Velocities with magnitudes equal to or exceeding this value are clamped to the max value.
+    /// Default value: 1. Minimum value: 1.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterParticleMaxSpeed(_ constant: Double) -> Self {
@@ -301,6 +311,7 @@ import UIKit
     }
 
     /// Defines the maximum speed for particles. Velocities with magnitudes equal to or exceeding this value are clamped to the max value.
+    /// Default value: 1. Minimum value: 1.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterParticleMaxSpeed(_ expression: Expression) -> Self {
@@ -308,6 +319,7 @@ import UIKit
     }
 
     /// Defines a coefficient for a time period at which particles will restart at a random position, to avoid degeneration (empty areas without particles).
+    /// Default value: 0.8. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterParticleResetRateFactor(_ constant: Double) -> Self {
@@ -315,6 +327,7 @@ import UIKit
     }
 
     /// Defines a coefficient for a time period at which particles will restart at a random position, to avoid degeneration (empty areas without particles).
+    /// Default value: 0.8. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterParticleResetRateFactor(_ expression: Expression) -> Self {
@@ -322,6 +335,7 @@ import UIKit
     }
 
     /// Defines a coefficient for the speed of particles’ motion.
+    /// Default value: 0.2. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterParticleSpeedFactor(_ constant: Double) -> Self {
@@ -336,6 +350,7 @@ import UIKit
     }
 
     /// Defines a coefficient for the speed of particles’ motion.
+    /// Default value: 0.2. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterParticleSpeedFactor(_ expression: Expression) -> Self {

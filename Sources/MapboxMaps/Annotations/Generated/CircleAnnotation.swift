@@ -137,24 +137,31 @@ public struct CircleAnnotation: Annotation, Equatable {
     public var circleSortKey: Double?
 
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Default value: 0.
     public var circleBlur: Double?
 
     /// The fill color of the circle.
+    /// Default value: "#000000".
     public var circleColor: StyleColor?
 
     /// The opacity at which the circle will be drawn.
+    /// Default value: 1. Value range: [0, 1]
     public var circleOpacity: Double?
 
     /// Circle radius.
+    /// Default value: 5. Minimum value: 0.
     public var circleRadius: Double?
 
     /// The stroke color of the circle.
+    /// Default value: "#000000".
     public var circleStrokeColor: StyleColor?
 
     /// The opacity of the circle's stroke.
+    /// Default value: 1. Value range: [0, 1]
     public var circleStrokeOpacity: Double?
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
+    /// Default value: 0. Minimum value: 0.
     public var circleStrokeWidth: Double?
 
 }
@@ -169,54 +176,63 @@ public struct CircleAnnotation: Annotation, Equatable {
     }
 
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Default value: 0.
     @_documentation(visibility: public)
     public func circleBlur(_ newValue: Double) -> Self {
         with(self, setter(\.circleBlur, newValue))
     }
 
     /// The fill color of the circle.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func circleColor(_ color: UIColor) -> Self {
         circleColor(StyleColor(color))
     }
 
     /// The fill color of the circle.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func circleColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.circleColor, newValue))
     }
 
     /// The opacity at which the circle will be drawn.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func circleOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.circleOpacity, newValue))
     }
 
     /// Circle radius.
+    /// Default value: 5. Minimum value: 0.
     @_documentation(visibility: public)
     public func circleRadius(_ newValue: Double) -> Self {
         with(self, setter(\.circleRadius, newValue))
     }
 
     /// The stroke color of the circle.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func circleStrokeColor(_ color: UIColor) -> Self {
         circleStrokeColor(StyleColor(color))
     }
 
     /// The stroke color of the circle.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func circleStrokeColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.circleStrokeColor, newValue))
     }
 
     /// The opacity of the circle's stroke.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func circleStrokeOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.circleStrokeOpacity, newValue))
     }
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
+    /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     public func circleStrokeWidth(_ newValue: Double) -> Self {
         with(self, setter(\.circleStrokeWidth, newValue))

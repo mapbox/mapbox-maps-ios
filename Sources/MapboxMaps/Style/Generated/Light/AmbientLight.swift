@@ -13,12 +13,14 @@ public struct AmbientLight: Codable, StyleEncodable, Equatable {
     public let type: LightType = .ambient
 
     /// Color of the ambient light.
+    /// Default value: "#ffffff".
     public var color: Value<StyleColor>?
 
     /// Transition property for `color`
     public var colorTransition: StyleTransition?
 
     /// A multiplier for the color of the ambient light.
+    /// Default value: 0.5. Value range: [0, 1]
     public var intensity: Value<Double>?
 
     /// Transition property for `intensity`
@@ -69,12 +71,14 @@ public struct AmbientLight: Codable, StyleEncodable, Equatable {
 
 extension AmbientLight {
     /// Color of the ambient light.
+    /// Default value: "#ffffff".
     @_documentation(visibility: public)
     public func color(_ constant: StyleColor) -> Self {
         with(self, setter(\.color, .constant(constant)))
     }
 
     /// Color of the ambient light.
+    /// Default value: "#ffffff".
     @_documentation(visibility: public)
     public func color(_ color: UIColor) -> Self {
         with(self, setter(\.color, .constant(StyleColor(color))))
@@ -87,12 +91,14 @@ extension AmbientLight {
     }
 
     /// Color of the ambient light.
+    /// Default value: "#ffffff".
     @_documentation(visibility: public)
     public func color(_ expression: Expression) -> Self {
         with(self, setter(\.color, .expression(expression)))
     }
 
     /// A multiplier for the color of the ambient light.
+    /// Default value: 0.5. Value range: [0, 1]
     @_documentation(visibility: public)
     public func intensity(_ constant: Double) -> Self {
         with(self, setter(\.intensity, .constant(constant)))
@@ -105,6 +111,7 @@ extension AmbientLight {
     }
 
     /// A multiplier for the color of the ambient light.
+    /// Default value: 0.5. Value range: [0, 1]
     @_documentation(visibility: public)
     public func intensity(_ expression: Expression) -> Self {
         with(self, setter(\.intensity, .expression(expression)))

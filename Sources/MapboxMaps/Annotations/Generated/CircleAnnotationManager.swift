@@ -241,6 +241,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     // MARK: - Common layer properties
 
     /// Controls the intensity of light emitted on the source features.
+    /// Default value: 0. Minimum value: 0.
     public var circleEmissiveStrength: Double? {
         get {
             return layerProperties["circle-emissive-strength"] as? Double
@@ -251,6 +252,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Orientation of circle when map is pitched.
+    /// Default value: "viewport".
     public var circlePitchAlignment: CirclePitchAlignment? {
         get {
             return layerProperties["circle-pitch-alignment"].flatMap { $0 as? String }.flatMap(CirclePitchAlignment.init(rawValue:))
@@ -261,6 +263,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Controls the scaling behavior of the circle when the map is pitched.
+    /// Default value: "map".
     public var circlePitchScale: CirclePitchScale? {
         get {
             return layerProperties["circle-pitch-scale"].flatMap { $0 as? String }.flatMap(CirclePitchScale.init(rawValue:))
@@ -271,6 +274,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+    /// Default value: [0,0].
     public var circleTranslate: [Double]? {
         get {
             return layerProperties["circle-translate"] as? [Double]
@@ -281,6 +285,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Controls the frame of reference for `circle-translate`.
+    /// Default value: "map".
     public var circleTranslateAnchor: CircleTranslateAnchor? {
         get {
             return layerProperties["circle-translate-anchor"].flatMap { $0 as? String }.flatMap(CircleTranslateAnchor.init(rawValue:))

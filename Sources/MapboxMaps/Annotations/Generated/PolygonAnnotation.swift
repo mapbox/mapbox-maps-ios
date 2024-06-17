@@ -123,9 +123,11 @@ public struct PolygonAnnotation: Annotation, Equatable {
     public var fillSortKey: Double?
 
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+    /// Default value: "#000000".
     public var fillColor: StyleColor?
 
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
+    /// Default value: 1. Value range: [0, 1]
     public var fillOpacity: Double?
 
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
@@ -146,18 +148,21 @@ public struct PolygonAnnotation: Annotation, Equatable {
     }
 
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func fillColor(_ color: UIColor) -> Self {
         fillColor(StyleColor(color))
     }
 
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+    /// Default value: "#000000".
     @_documentation(visibility: public)
     public func fillColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.fillColor, newValue))
     }
 
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func fillOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.fillOpacity, newValue))

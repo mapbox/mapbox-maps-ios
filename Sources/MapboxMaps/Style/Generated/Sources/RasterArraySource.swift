@@ -21,18 +21,22 @@ import Foundation
     public var tiles: [String]?
 
     /// An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL.
+    /// Default value: [-180,-85.051129,180,85.051129].
     @_documentation(visibility: public)
     public private(set) var bounds: [Double]?
 
     /// Minimum zoom level for which tiles are available, as in the TileJSON spec.
+    /// Default value: 0.
     @_documentation(visibility: public)
     public var minzoom: Double?
 
     /// Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels.
+    /// Default value: 22.
     @_documentation(visibility: public)
     public var maxzoom: Double?
 
     /// The minimum visual size to display tiles for this layer. Only configurable for raster layers.
+    /// Default value: 512.
     @_documentation(visibility: public)
     public private(set) var tileSize: Double?
 
@@ -118,12 +122,14 @@ extension RasterArraySource {
     }
 
     /// Minimum zoom level for which tiles are available, as in the TileJSON spec.
+    /// Default value: 0.
     @_documentation(visibility: public)
     public func minzoom(_ newValue: Double) -> Self {
         with(self, setter(\.minzoom, newValue))
     }
 
     /// Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels.
+    /// Default value: 22.
     @_documentation(visibility: public)
     public func maxzoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxzoom, newValue))

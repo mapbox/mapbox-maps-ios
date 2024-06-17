@@ -13,27 +13,32 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
     public let type: LightType = .directional
 
     /// Enable/Disable shadow casting for this light
+    /// Default value: false.
     public var castShadows: Value<Bool>?
 
     /// Color of the directional light.
+    /// Default value: "#ffffff".
     public var color: Value<StyleColor>?
 
     /// Transition property for `color`
     public var colorTransition: StyleTransition?
 
     /// Direction of the light source specified as [a azimuthal angle, p polar angle] where a indicates the azimuthal angle of the light relative to north (in degrees and proceeding clockwise), and p indicates polar angle of the light (from 0 degree, directly above, to 180 degree, directly below).
+    /// Default value: [210,30]. Minimum value: [0,0]. Maximum value: [360,90].
     public var direction: Value<[Double]>?
 
     /// Transition property for `direction`
     public var directionTransition: StyleTransition?
 
     /// A multiplier for the color of the directional light.
+    /// Default value: 0.5. Value range: [0, 1]
     public var intensity: Value<Double>?
 
     /// Transition property for `intensity`
     public var intensityTransition: StyleTransition?
 
     /// Determines the shadow strength, affecting the shadow receiver surfaces final color. Values near 0.0 reduce the shadow contribution to the final color. Values near to 1.0 make occluded surfaces receive almost no directional light. Designed to be used mostly for transitioning between values 0 and 1.
+    /// Default value: 1. Value range: [0, 1]
     public var shadowIntensity: Value<Double>?
 
     /// Transition property for `shadowIntensity`
@@ -99,24 +104,28 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
 
 extension DirectionalLight {
     /// Enable/Disable shadow casting for this light
+    /// Default value: false.
     @_documentation(visibility: public)
     public func castShadows(_ constant: Bool) -> Self {
         with(self, setter(\.castShadows, .constant(constant)))
     }
 
     /// Enable/Disable shadow casting for this light
+    /// Default value: false.
     @_documentation(visibility: public)
     public func castShadows(_ expression: Expression) -> Self {
         with(self, setter(\.castShadows, .expression(expression)))
     }
 
     /// Color of the directional light.
+    /// Default value: "#ffffff".
     @_documentation(visibility: public)
     public func color(_ constant: StyleColor) -> Self {
         with(self, setter(\.color, .constant(constant)))
     }
 
     /// Color of the directional light.
+    /// Default value: "#ffffff".
     @_documentation(visibility: public)
     public func color(_ color: UIColor) -> Self {
         with(self, setter(\.color, .constant(StyleColor(color))))
@@ -129,12 +138,14 @@ extension DirectionalLight {
     }
 
     /// Color of the directional light.
+    /// Default value: "#ffffff".
     @_documentation(visibility: public)
     public func color(_ expression: Expression) -> Self {
         with(self, setter(\.color, .expression(expression)))
     }
 
     /// Direction of the light source specified as [a azimuthal angle, p polar angle] where a indicates the azimuthal angle of the light relative to north (in degrees and proceeding clockwise), and p indicates polar angle of the light (from 0 degree, directly above, to 180 degree, directly below).
+    /// Default value: [210,30]. Minimum value: [0,0]. Maximum value: [360,90].
     @_documentation(visibility: public)
     public func direction(azimuthal: Double, polar: Double) -> Self {
         with(self, setter(\.direction, .constant([azimuthal, polar])))
@@ -147,12 +158,14 @@ extension DirectionalLight {
     }
 
     /// Direction of the light source specified as [a azimuthal angle, p polar angle] where a indicates the azimuthal angle of the light relative to north (in degrees and proceeding clockwise), and p indicates polar angle of the light (from 0 degree, directly above, to 180 degree, directly below).
+    /// Default value: [210,30]. Minimum value: [0,0]. Maximum value: [360,90].
     @_documentation(visibility: public)
     public func direction(_ expression: Expression) -> Self {
         with(self, setter(\.direction, .expression(expression)))
     }
 
     /// A multiplier for the color of the directional light.
+    /// Default value: 0.5. Value range: [0, 1]
     @_documentation(visibility: public)
     public func intensity(_ constant: Double) -> Self {
         with(self, setter(\.intensity, .constant(constant)))
@@ -165,12 +178,14 @@ extension DirectionalLight {
     }
 
     /// A multiplier for the color of the directional light.
+    /// Default value: 0.5. Value range: [0, 1]
     @_documentation(visibility: public)
     public func intensity(_ expression: Expression) -> Self {
         with(self, setter(\.intensity, .expression(expression)))
     }
 
     /// Determines the shadow strength, affecting the shadow receiver surfaces final color. Values near 0.0 reduce the shadow contribution to the final color. Values near to 1.0 make occluded surfaces receive almost no directional light. Designed to be used mostly for transitioning between values 0 and 1.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func shadowIntensity(_ constant: Double) -> Self {
         with(self, setter(\.shadowIntensity, .constant(constant)))
@@ -183,6 +198,7 @@ extension DirectionalLight {
     }
 
     /// Determines the shadow strength, affecting the shadow receiver surfaces final color. Values near 0.0 reduce the shadow contribution to the final color. Values near to 1.0 make occluded surfaces receive almost no directional light. Designed to be used mostly for transitioning between values 0 and 1.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public func shadowIntensity(_ expression: Expression) -> Self {
         with(self, setter(\.shadowIntensity, .expression(expression)))

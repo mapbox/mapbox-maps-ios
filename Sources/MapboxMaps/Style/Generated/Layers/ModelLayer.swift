@@ -48,10 +48,12 @@ import UIKit
     public var visibility: Value<Visibility>
 
     /// Model to render.
+    /// Default value: "".
     @_documentation(visibility: public)
     public var modelId: Value<String>?
 
     /// Intensity of the ambient occlusion if present in the 3D model.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public var modelAmbientOcclusionIntensity: Value<Double>?
 
@@ -60,10 +62,12 @@ import UIKit
     public var modelAmbientOcclusionIntensityTransition: StyleTransition?
 
     /// Enable/Disable shadow casting for this layer
+    /// Default value: true.
     @_documentation(visibility: public)
     public var modelCastShadows: Value<Bool>?
 
     /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
+    /// Default value: "#ffffff".
     @_documentation(visibility: public)
     public var modelColor: Value<StyleColor>?
 
@@ -72,6 +76,7 @@ import UIKit
     public var modelColorTransition: StyleTransition?
 
     /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.
+    /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     public var modelColorMixIntensity: Value<Double>?
 
@@ -80,10 +85,12 @@ import UIKit
     public var modelColorMixIntensityTransition: StyleTransition?
 
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff  on pitched map views. The automatic cutoff range is calculated according to the minimum required zoom level of the source and layer. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
+    /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     public var modelCutoffFadeRange: Value<Double>?
 
     /// Strength of the emission. There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. doors). Expressions that depend on measure-light are not supported when using GeoJSON or vector tile as the model layer source.
+    /// Default value: 0. Value range: [0, 5]
     @_documentation(visibility: public)
     public var modelEmissiveStrength: Value<Double>?
 
@@ -92,6 +99,7 @@ import UIKit
     public var modelEmissiveStrengthTransition: StyleTransition?
 
     /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
+    /// Default value: [1,1,1,1,0].
     @_documentation(visibility: public)
     public var modelHeightBasedEmissiveStrengthMultiplier: Value<[Double]>?
 
@@ -100,6 +108,7 @@ import UIKit
     public var modelHeightBasedEmissiveStrengthMultiplierTransition: StyleTransition?
 
     /// The opacity of the model layer.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public var modelOpacity: Value<Double>?
 
@@ -108,10 +117,12 @@ import UIKit
     public var modelOpacityTransition: StyleTransition?
 
     /// Enable/Disable shadow receiving for this layer
+    /// Default value: true.
     @_documentation(visibility: public)
     public var modelReceiveShadows: Value<Bool>?
 
     /// The rotation of the model in euler angles [lon, lat, z].
+    /// Default value: [0,0,0].
     @_documentation(visibility: public)
     public var modelRotation: Value<[Double]>?
 
@@ -120,6 +131,7 @@ import UIKit
     public var modelRotationTransition: StyleTransition?
 
     /// Material roughness. Material is fully smooth for value 0, and fully rough for value 1. Affects only layers using batched-model source.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     public var modelRoughness: Value<Double>?
 
@@ -128,6 +140,7 @@ import UIKit
     public var modelRoughnessTransition: StyleTransition?
 
     /// The scale of the model.
+    /// Default value: [1,1,1].
     @_documentation(visibility: public)
     public var modelScale: Value<[Double]>?
 
@@ -136,10 +149,12 @@ import UIKit
     public var modelScaleTransition: StyleTransition?
 
     /// Defines scaling mode. Only applies to location-indicator type layers.
+    /// Default value: "map".
     @_documentation(visibility: public)
     public var modelScaleMode: Value<ModelScaleMode>?
 
     /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
+    /// Default value: [0,0,0].
     @_documentation(visibility: public)
     public var modelTranslation: Value<[Double]>?
 
@@ -148,6 +163,7 @@ import UIKit
     public var modelTranslationTransition: StyleTransition?
 
     /// Defines rendering behavior of model in respect to other 3D scene objects.
+    /// Default value: "common-3d".
     @_documentation(visibility: public)
     public var modelType: Value<ModelType>?
 
@@ -341,6 +357,7 @@ import UIKit
     }
 
     /// Model to render.
+    /// Default value: "".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelId(_ constant: String) -> Self {
@@ -348,6 +365,7 @@ import UIKit
     }
 
     /// Model to render.
+    /// Default value: "".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelId(_ expression: Expression) -> Self {
@@ -355,6 +373,7 @@ import UIKit
     }
 
     /// Intensity of the ambient occlusion if present in the 3D model.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelAmbientOcclusionIntensity(_ constant: Double) -> Self {
@@ -369,6 +388,7 @@ import UIKit
     }
 
     /// Intensity of the ambient occlusion if present in the 3D model.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelAmbientOcclusionIntensity(_ expression: Expression) -> Self {
@@ -376,6 +396,7 @@ import UIKit
     }
 
     /// Enable/Disable shadow casting for this layer
+    /// Default value: true.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelCastShadows(_ constant: Bool) -> Self {
@@ -383,6 +404,7 @@ import UIKit
     }
 
     /// Enable/Disable shadow casting for this layer
+    /// Default value: true.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelCastShadows(_ expression: Expression) -> Self {
@@ -390,6 +412,7 @@ import UIKit
     }
 
     /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
+    /// Default value: "#ffffff".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelColor(_ constant: StyleColor) -> Self {
@@ -397,6 +420,7 @@ import UIKit
     }
 
     /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
+    /// Default value: "#ffffff".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelColor(_ color: UIColor) -> Self {
@@ -411,6 +435,7 @@ import UIKit
     }
 
     /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
+    /// Default value: "#ffffff".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelColor(_ expression: Expression) -> Self {
@@ -418,6 +443,7 @@ import UIKit
     }
 
     /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.
+    /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelColorMixIntensity(_ constant: Double) -> Self {
@@ -432,6 +458,7 @@ import UIKit
     }
 
     /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.
+    /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelColorMixIntensity(_ expression: Expression) -> Self {
@@ -439,6 +466,7 @@ import UIKit
     }
 
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff  on pitched map views. The automatic cutoff range is calculated according to the minimum required zoom level of the source and layer. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
+    /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelCutoffFadeRange(_ constant: Double) -> Self {
@@ -446,6 +474,7 @@ import UIKit
     }
 
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff  on pitched map views. The automatic cutoff range is calculated according to the minimum required zoom level of the source and layer. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
+    /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelCutoffFadeRange(_ expression: Expression) -> Self {
@@ -453,6 +482,7 @@ import UIKit
     }
 
     /// Strength of the emission. There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. doors). Expressions that depend on measure-light are not supported when using GeoJSON or vector tile as the model layer source.
+    /// Default value: 0. Value range: [0, 5]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelEmissiveStrength(_ constant: Double) -> Self {
@@ -467,6 +497,7 @@ import UIKit
     }
 
     /// Strength of the emission. There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. doors). Expressions that depend on measure-light are not supported when using GeoJSON or vector tile as the model layer source.
+    /// Default value: 0. Value range: [0, 5]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelEmissiveStrength(_ expression: Expression) -> Self {
@@ -474,6 +505,7 @@ import UIKit
     }
 
     /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
+    /// Default value: [1,1,1,1,0].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelHeightBasedEmissiveStrengthMultiplier(gradientBegin: Double, gradientEnd: Double, valueAtBegin: Double, valueAtEnd: Double, gradientCurvePower: Double) -> Self {
@@ -488,6 +520,7 @@ import UIKit
     }
 
     /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
+    /// Default value: [1,1,1,1,0].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelHeightBasedEmissiveStrengthMultiplier(_ expression: Expression) -> Self {
@@ -495,6 +528,7 @@ import UIKit
     }
 
     /// The opacity of the model layer.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelOpacity(_ constant: Double) -> Self {
@@ -509,6 +543,7 @@ import UIKit
     }
 
     /// The opacity of the model layer.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelOpacity(_ expression: Expression) -> Self {
@@ -516,6 +551,7 @@ import UIKit
     }
 
     /// Enable/Disable shadow receiving for this layer
+    /// Default value: true.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelReceiveShadows(_ constant: Bool) -> Self {
@@ -523,6 +559,7 @@ import UIKit
     }
 
     /// Enable/Disable shadow receiving for this layer
+    /// Default value: true.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelReceiveShadows(_ expression: Expression) -> Self {
@@ -530,6 +567,7 @@ import UIKit
     }
 
     /// The rotation of the model in euler angles [lon, lat, z].
+    /// Default value: [0,0,0].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelRotation(x: Double, y: Double, z: Double) -> Self {
@@ -544,6 +582,7 @@ import UIKit
     }
 
     /// The rotation of the model in euler angles [lon, lat, z].
+    /// Default value: [0,0,0].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelRotation(_ expression: Expression) -> Self {
@@ -551,6 +590,7 @@ import UIKit
     }
 
     /// Material roughness. Material is fully smooth for value 0, and fully rough for value 1. Affects only layers using batched-model source.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelRoughness(_ constant: Double) -> Self {
@@ -565,6 +605,7 @@ import UIKit
     }
 
     /// Material roughness. Material is fully smooth for value 0, and fully rough for value 1. Affects only layers using batched-model source.
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelRoughness(_ expression: Expression) -> Self {
@@ -572,6 +613,7 @@ import UIKit
     }
 
     /// The scale of the model.
+    /// Default value: [1,1,1].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelScale(x: Double, y: Double, z: Double) -> Self {
@@ -586,6 +628,7 @@ import UIKit
     }
 
     /// The scale of the model.
+    /// Default value: [1,1,1].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelScale(_ expression: Expression) -> Self {
@@ -593,6 +636,7 @@ import UIKit
     }
 
     /// Defines scaling mode. Only applies to location-indicator type layers.
+    /// Default value: "map".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelScaleMode(_ constant: ModelScaleMode) -> Self {
@@ -600,6 +644,7 @@ import UIKit
     }
 
     /// Defines scaling mode. Only applies to location-indicator type layers.
+    /// Default value: "map".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelScaleMode(_ expression: Expression) -> Self {
@@ -607,6 +652,7 @@ import UIKit
     }
 
     /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
+    /// Default value: [0,0,0].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelTranslation(x: Double, y: Double, z: Double) -> Self {
@@ -621,6 +667,7 @@ import UIKit
     }
 
     /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
+    /// Default value: [0,0,0].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelTranslation(_ expression: Expression) -> Self {
@@ -628,6 +675,7 @@ import UIKit
     }
 
     /// Defines rendering behavior of model in respect to other 3D scene objects.
+    /// Default value: "common-3d".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelType(_ constant: ModelType) -> Self {
@@ -635,6 +683,7 @@ import UIKit
     }
 
     /// Defines rendering behavior of model in respect to other 3D scene objects.
+    /// Default value: "common-3d".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelType(_ expression: Expression) -> Self {

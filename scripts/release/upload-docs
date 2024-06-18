@@ -25,6 +25,12 @@ def main():
         default=False,
         help="Do not upload docs to GitHub",
     )
+    parser.add_argument(
+        "--extra-commit",
+        action="store_true",
+        default=False,
+        help="Push an extra empty commit to trigger CI"
+    )
     args = parser.parse_args()
 
     tmpdirname = tempfile.mkdtemp()
@@ -57,6 +63,14 @@ def main():
         )
         repo.index.add([args.version])
         repo.index.commit(f"Add DocC documentation for {args.version} version")
+
+        if not args.dry_run:
+            repo.remote().push()
+
+    # commits containing docs could break CI triggers due large number of files,
+    # adding an extra empty commit makes sure that CI pipelines are triggered.
+    if args.extra_commit:
+        repo.index.commit("Trigger CI")
 
         if not args.dry_run:
             repo.remote().push()

@@ -5,6 +5,7 @@ final class CustomRasterSourceExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var cancelables: Set<AnyCancelable> = []
     private var timer: Timer?
+    private var requiredTile: CanonicalTileID?
 
     private enum ID {
         static let customRasterSource = "custom-raster-source"
@@ -32,19 +33,20 @@ final class CustomRasterSourceExample: UIViewController, ExampleProtocol {
 
     private func setupExample() {
         let rasterSourceOptions = CustomRasterSourceOptions(
-            fetchTileFunction: { [weak self] tileID in
+            tileStatusChangedFunction: { [weak self] tileID, status in
                 guard let self else { return }
-
-                try! self.mapView.mapboxMap.setCustomRasterSourceTileData(
-                    forSourceId: ID.customRasterSource,
-                    tileId: tileID,
-                    image: rasterImages[currentImageIndex])
+                if status == CustomRasterSourceTileStatus.required {
+                    requiredTile = tileID
+                    try! self.mapView.mapboxMap.setCustomRasterSourceTileData(
+                        forSourceId: ID.customRasterSource,
+                        tiles: [CustomRasterSourceTileData(tileId: tileID, image: rasterImages[self.currentImageIndex])])
+                }
             },
-            cancelTileFunction: { _ in },
             minZoom: 0,
             maxZoom: 0,
             tileSize: 256 // Image for raster tile must be of same dimensions as tile size of the source.
         )
+
         let customRasterSource = CustomRasterSource(id: ID.customRasterSource, options: rasterSourceOptions)
 
         do {
@@ -99,8 +101,9 @@ final class CustomRasterSourceExample: UIViewController, ExampleProtocol {
                 currentImageIndex = 0
             }
             self.currentImageIndex = currentImageIndex
-
-            try! self.mapView.mapboxMap.invalidateCustomRasterSourceRegion(forSourceId: ID.customRasterSource, bounds: .world)
+            try! self.mapView.mapboxMap.setCustomRasterSourceTileData(
+                forSourceId: ID.customRasterSource,
+                tiles: [CustomRasterSourceTileData(tileId: requiredTile!, image: rasterImages[self.currentImageIndex])])
         }
     }
 }

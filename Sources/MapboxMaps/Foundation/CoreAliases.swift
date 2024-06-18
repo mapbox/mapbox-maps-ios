@@ -20,6 +20,7 @@ typealias CoreScreenBox = MapboxCoreMaps_Private.ScreenBox
 typealias CoreEdgeInsets = MapboxCoreMaps_Private.EdgeInsets
 typealias CoreTileCoverOptions = MapboxCoreMaps_Private.TileCoverOptions
 typealias CoreMapsImage = MapboxCoreMaps_Private.Image
+typealias CoreCustomRasterSourceTileData = MapboxCoreMaps_Private.CustomRasterSourceTileData
 typealias CoreStyleManager = MapboxCoreMaps_Private.StyleManager
 typealias CoreGeoJSONSourceData = MapboxCoreMaps_Private.GeoJSONSourceData
 typealias CoreMapRecorderOptions = MapboxCoreMaps_Private.MapRecorderOptions

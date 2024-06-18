@@ -179,16 +179,7 @@ internal protocol StyleManagerProtocol {
 
     func setStyleCustomRasterSourceTileDataForSourceId(
         _ sourceId: String,
-        tileId: CanonicalTileID,
-        image: CoreMapsImage?) -> Expected<NSNull, NSString>
-
-    func invalidateStyleCustomRasterSourceTile(
-        forSourceId: String,
-        tileId: CanonicalTileID) -> Expected<NSNull, NSString>
-
-    func invalidateStyleCustomRasterSourceRegion(
-        forSourceId: String,
-        bounds: CoordinateBounds) -> Expected<NSNull, NSString>
+        tiles: [CoreCustomRasterSourceTileData]) -> Expected<NSNull, NSString>
 
     func __setStyleGeoJSONSourceDataForSourceId(
         _ sourceId: String,

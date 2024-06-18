@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* The CustomRasterSource API has been updated. It no longer includes a cache and now provides notifications about alternative tiles that can be used when the ideal ones are unavailable.
+
 ## 11.5.0-beta.1 - 11 June, 2024
 
 * Improve stability of symbol placement when using `FollowPuckViewportState`.

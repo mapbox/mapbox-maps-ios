@@ -13,7 +13,7 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
         mapView.mapboxMap.styleURI = .standard
 
         didFinishLoadingStyle = { mapView in
-            var source = CustomRasterSource(id: "test-source", options: CustomRasterSourceOptions(fetchTileFunction: { _ in }, cancelTileFunction: { _ in }))
+            var source = CustomRasterSource(id: "test-source", options: CustomRasterSourceOptions(tileStatusChangedFunction: { _, _ in }))
             source.tileCacheBudget = .testSourceValue(.megabytes(7))
 
             // Add source

@@ -4,7 +4,7 @@ import XCTest
 final class CustomSourcesSourceTests: XCTestCase {
 
     func testRasterEncodingAndDecoding() {
-        let testCustomRasterSourceOptions = CustomRasterSourceOptions(fetchTileFunction: { _ in }, cancelTileFunction: { _ in })
+        let testCustomRasterSourceOptions = CustomRasterSourceOptions(tileStatusChangedFunction: { _, _ in })
 
         var source = CustomRasterSource(id: "test-source", options: testCustomRasterSourceOptions)
         source.tileCacheBudget = TileCacheBudgetSize.testSourceValue(TileCacheBudgetSize.megabytes(7))

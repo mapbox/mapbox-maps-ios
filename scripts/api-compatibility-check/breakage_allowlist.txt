@@ -1430,3 +1430,10 @@ Func ArrayBuilder.buildOptional(_:) has return type change from [T?] to [T]
 
 // Expose clusterMinPoints
 Constructor ClusterOptions.init(circleRadius:circleColor:textColor:textSize:textField:clusterRadius:clusterMaxZoom:clusterProperties:) has been removed
+
+
+// Update CustomRasterSource API
+Func StyleManager.invalidateCustomRasterSourceRegion(forSourceId:bounds:) has been removed
+Func StyleManager.invalidateCustomRasterSourceTile(forSourceId:tileId:) has been removed
+Func StyleManager.setCustomRasterSourceTileData(forSourceId:tileId:image:) has been renamed to Func setCustomRasterSourceTileData(forSourceId:tiles:)
+Func StyleManager.setCustomRasterSourceTileData(forSourceId:tileId:image:) has parameter 1 type change from MapboxCoreMaps.CanonicalTileID to [MapboxCoreMaps.CustomRasterSourceTileData]

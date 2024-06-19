@@ -7,11 +7,9 @@ Mapbox welcomes participation and contributions from everyone.
 ## 11.5.0-rc.1 - 19 June, 2024
 
 * The CustomRasterSource API has been updated. It no longer includes a cache and now provides notifications about alternative tiles that can be used when the ideal ones are unavailable.
-* Update default values in the documentation
 * Expose text-occlusion-opacity, icon-occlusion-opacity, line-occlusion-opacity, model-front-cutoff, lineZOffset as experimental.
 * Add min/max/default values for most of the style properties.
-* Adopt Examples app and MapboxMaps for Xcode 16
-* Dynamic ViewAnnotations now possible to attach to not yet add layer and they will be rendered when the layer is added, which unblocks more flexible use cases.
+* Fix compilation of Examples and MapboxMaps in Xcode 16
 
 ## 11.5.0-beta.1 - 11 June, 2024
 

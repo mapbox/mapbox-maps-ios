@@ -58,6 +58,10 @@ public struct LineLayer: Layer, Equatable {
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var lineSortKey: Value<Double>?
 
+    /// Vertical offset from ground, in meters. Defaults to 0. Not supported for globe projection at the moment.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineZOffset: Value<Double>?
+
     /// Blur applied to the line, in pixels.
     /// Default value: 0. Minimum value: 0.
     public var lineBlur: Value<Double>?
@@ -113,6 +117,15 @@ public struct LineLayer: Layer, Equatable {
 
     /// A gradient used to color a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
     public var lineGradient: Value<StyleColor>?
+
+    /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
+    /// Default value: 0. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineOcclusionOpacity: Value<Double>?
+
+    /// Transition options for `lineOcclusionOpacity`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineOcclusionOpacityTransition: StyleTransition?
 
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
     /// Default value: 0.
@@ -188,6 +201,8 @@ public struct LineLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(lineGapWidth, forKey: .lineGapWidth)
         try paintContainer.encodeIfPresent(lineGapWidthTransition, forKey: .lineGapWidthTransition)
         try paintContainer.encodeIfPresent(lineGradient, forKey: .lineGradient)
+        try paintContainer.encodeIfPresent(lineOcclusionOpacity, forKey: .lineOcclusionOpacity)
+        try paintContainer.encodeIfPresent(lineOcclusionOpacityTransition, forKey: .lineOcclusionOpacityTransition)
         try paintContainer.encodeIfPresent(lineOffset, forKey: .lineOffset)
         try paintContainer.encodeIfPresent(lineOffsetTransition, forKey: .lineOffsetTransition)
         try paintContainer.encodeIfPresent(lineOpacity, forKey: .lineOpacity)
@@ -207,6 +222,7 @@ public struct LineLayer: Layer, Equatable {
         try layoutContainer.encodeIfPresent(lineMiterLimit, forKey: .lineMiterLimit)
         try layoutContainer.encodeIfPresent(lineRoundLimit, forKey: .lineRoundLimit)
         try layoutContainer.encodeIfPresent(lineSortKey, forKey: .lineSortKey)
+        try layoutContainer.encodeIfPresent(lineZOffset, forKey: .lineZOffset)
     }
 
     public init(from decoder: Decoder) throws {
@@ -237,6 +253,8 @@ public struct LineLayer: Layer, Equatable {
             lineGapWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineGapWidth)
             lineGapWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineGapWidthTransition)
             lineGradient = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineGradient)
+            lineOcclusionOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineOcclusionOpacity)
+            lineOcclusionOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineOcclusionOpacityTransition)
             lineOffset = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineOffset)
             lineOffsetTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineOffsetTransition)
             lineOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineOpacity)
@@ -258,6 +276,7 @@ public struct LineLayer: Layer, Equatable {
             lineMiterLimit = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineMiterLimit)
             lineRoundLimit = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineRoundLimit)
             lineSortKey = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineSortKey)
+            lineZOffset = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineZOffset)
         }
         visibility = visibilityEncoded ?? .constant(.visible)
     }
@@ -281,6 +300,7 @@ public struct LineLayer: Layer, Equatable {
         case lineMiterLimit = "line-miter-limit"
         case lineRoundLimit = "line-round-limit"
         case lineSortKey = "line-sort-key"
+        case lineZOffset = "line-z-offset"
         case visibility = "visibility"
     }
 
@@ -301,6 +321,8 @@ public struct LineLayer: Layer, Equatable {
         case lineGapWidth = "line-gap-width"
         case lineGapWidthTransition = "line-gap-width-transition"
         case lineGradient = "line-gradient"
+        case lineOcclusionOpacity = "line-occlusion-opacity"
+        case lineOcclusionOpacityTransition = "line-occlusion-opacity-transition"
         case lineOffset = "line-offset"
         case lineOffsetTransition = "line-offset-transition"
         case lineOpacity = "line-opacity"
@@ -425,6 +447,20 @@ public struct LineLayer: Layer, Equatable {
     @_documentation(visibility: public)
     public func lineSortKey(_ expression: Expression) -> Self {
         with(self, setter(\.lineSortKey, .expression(expression)))
+    }
+
+    /// Vertical offset from ground, in meters. Defaults to 0. Not supported for globe projection at the moment.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineZOffset(_ constant: Double) -> Self {
+        with(self, setter(\.lineZOffset, .constant(constant)))
+    }
+
+    /// Vertical offset from ground, in meters. Defaults to 0. Not supported for globe projection at the moment.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineZOffset(_ expression: Expression) -> Self {
+        with(self, setter(\.lineZOffset, .expression(expression)))
     }
 
     /// Blur applied to the line, in pixels.
@@ -611,6 +647,29 @@ public struct LineLayer: Layer, Equatable {
     @_documentation(visibility: public)
     public func lineGradient(_ expression: Expression) -> Self {
         with(self, setter(\.lineGradient, .expression(expression)))
+    }
+
+    /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
+    /// Default value: 0. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineOcclusionOpacity(_ constant: Double) -> Self {
+        with(self, setter(\.lineOcclusionOpacity, .constant(constant)))
+    }
+
+    /// Transition property for `lineOcclusionOpacity`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineOcclusionOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.lineOcclusionOpacityTransition, transition))
+    }
+
+    /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
+    /// Default value: 0. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineOcclusionOpacity(_ expression: Expression) -> Self {
+        with(self, setter(\.lineOcclusionOpacity, .expression(expression)))
     }
 
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.

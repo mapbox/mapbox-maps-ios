@@ -685,6 +685,32 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.iconColorSaturation, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-saturation").value as! NSNumber).doubleValue))
     }
 
+    func testIconOcclusionOpacity() throws {
+        // Test that the setter and getter work
+        let value = 0.5
+        manager.iconOcclusionOpacity = value
+        XCTAssertEqual(manager.iconOcclusionOpacity, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.iconOcclusionOpacity {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.iconOcclusionOpacity = nil
+        XCTAssertNil(manager.iconOcclusionOpacity)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.iconOcclusionOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-occlusion-opacity").value as! NSNumber).doubleValue))
+    }
+
     func testIconTranslate() throws {
         // Test that the setter and getter work
         let value = [0.0, 0.0]
@@ -737,6 +763,32 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
         XCTAssertEqual(layer.iconTranslateAnchor, .constant(IconTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String)))
+    }
+
+    func testTextOcclusionOpacity() throws {
+        // Test that the setter and getter work
+        let value = 0.5
+        manager.textOcclusionOpacity = value
+        XCTAssertEqual(manager.textOcclusionOpacity, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.textOcclusionOpacity {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.textOcclusionOpacity = nil
+        XCTAssertNil(manager.textOcclusionOpacity)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.textOcclusionOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-occlusion-opacity").value as! NSNumber).doubleValue))
     }
 
     func testTextTranslate() throws {

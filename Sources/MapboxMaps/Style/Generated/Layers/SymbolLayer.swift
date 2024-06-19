@@ -251,6 +251,15 @@ public struct SymbolLayer: Layer, Equatable {
     /// Transition options for `iconImageCrossFade`.
     public var iconImageCrossFadeTransition: StyleTransition?
 
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Not supported on globe zoom levels.
+    /// Default value: 1. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var iconOcclusionOpacity: Value<Double>?
+
+    /// Transition options for `iconOcclusionOpacity`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var iconOcclusionOpacityTransition: StyleTransition?
+
     /// The opacity at which the icon will be drawn.
     /// Default value: 1. Value range: [0, 1]
     public var iconOpacity: Value<Double>?
@@ -304,6 +313,15 @@ public struct SymbolLayer: Layer, Equatable {
     /// Transition options for `textHaloWidth`.
     public var textHaloWidthTransition: StyleTransition?
 
+    /// The opacity at which the text will be drawn in case of being depth occluded. Not supported on globe zoom levels.
+    /// Default value: 1. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var textOcclusionOpacity: Value<Double>?
+
+    /// Transition options for `textOcclusionOpacity`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var textOcclusionOpacityTransition: StyleTransition?
+
     /// The opacity at which the text will be drawn.
     /// Default value: 1. Value range: [0, 1]
     public var textOpacity: Value<Double>?
@@ -355,6 +373,8 @@ public struct SymbolLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(iconHaloWidthTransition, forKey: .iconHaloWidthTransition)
         try paintContainer.encodeIfPresent(iconImageCrossFade, forKey: .iconImageCrossFade)
         try paintContainer.encodeIfPresent(iconImageCrossFadeTransition, forKey: .iconImageCrossFadeTransition)
+        try paintContainer.encodeIfPresent(iconOcclusionOpacity, forKey: .iconOcclusionOpacity)
+        try paintContainer.encodeIfPresent(iconOcclusionOpacityTransition, forKey: .iconOcclusionOpacityTransition)
         try paintContainer.encodeIfPresent(iconOpacity, forKey: .iconOpacity)
         try paintContainer.encodeIfPresent(iconOpacityTransition, forKey: .iconOpacityTransition)
         try paintContainer.encodeIfPresent(iconTranslate, forKey: .iconTranslate)
@@ -370,6 +390,8 @@ public struct SymbolLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(textHaloColorTransition, forKey: .textHaloColorTransition)
         try paintContainer.encodeIfPresent(textHaloWidth, forKey: .textHaloWidth)
         try paintContainer.encodeIfPresent(textHaloWidthTransition, forKey: .textHaloWidthTransition)
+        try paintContainer.encodeIfPresent(textOcclusionOpacity, forKey: .textOcclusionOpacity)
+        try paintContainer.encodeIfPresent(textOcclusionOpacityTransition, forKey: .textOcclusionOpacityTransition)
         try paintContainer.encodeIfPresent(textOpacity, forKey: .textOpacity)
         try paintContainer.encodeIfPresent(textOpacityTransition, forKey: .textOpacityTransition)
         try paintContainer.encodeIfPresent(textTranslate, forKey: .textTranslate)
@@ -448,6 +470,8 @@ public struct SymbolLayer: Layer, Equatable {
             iconHaloWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconHaloWidthTransition)
             iconImageCrossFade = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconImageCrossFade)
             iconImageCrossFadeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconImageCrossFadeTransition)
+            iconOcclusionOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconOcclusionOpacity)
+            iconOcclusionOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconOcclusionOpacityTransition)
             iconOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconOpacity)
             iconOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconOpacityTransition)
             iconTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .iconTranslate)
@@ -463,6 +487,8 @@ public struct SymbolLayer: Layer, Equatable {
             textHaloColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textHaloColorTransition)
             textHaloWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textHaloWidth)
             textHaloWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textHaloWidthTransition)
+            textOcclusionOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textOcclusionOpacity)
+            textOcclusionOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textOcclusionOpacityTransition)
             textOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textOpacity)
             textOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textOpacityTransition)
             textTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .textTranslate)
@@ -593,6 +619,8 @@ public struct SymbolLayer: Layer, Equatable {
         case iconHaloWidthTransition = "icon-halo-width-transition"
         case iconImageCrossFade = "icon-image-cross-fade"
         case iconImageCrossFadeTransition = "icon-image-cross-fade-transition"
+        case iconOcclusionOpacity = "icon-occlusion-opacity"
+        case iconOcclusionOpacityTransition = "icon-occlusion-opacity-transition"
         case iconOpacity = "icon-opacity"
         case iconOpacityTransition = "icon-opacity-transition"
         case iconTranslate = "icon-translate"
@@ -608,6 +636,8 @@ public struct SymbolLayer: Layer, Equatable {
         case textHaloColorTransition = "text-halo-color-transition"
         case textHaloWidth = "text-halo-width"
         case textHaloWidthTransition = "text-halo-width-transition"
+        case textOcclusionOpacity = "text-occlusion-opacity"
+        case textOcclusionOpacityTransition = "text-occlusion-opacity-transition"
         case textOpacity = "text-opacity"
         case textOpacityTransition = "text-opacity-transition"
         case textTranslate = "text-translate"
@@ -1392,6 +1422,29 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconImageCrossFade, .expression(expression)))
     }
 
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Not supported on globe zoom levels.
+    /// Default value: 1. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func iconOcclusionOpacity(_ constant: Double) -> Self {
+        with(self, setter(\.iconOcclusionOpacity, .constant(constant)))
+    }
+
+    /// Transition property for `iconOcclusionOpacity`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func iconOcclusionOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.iconOcclusionOpacityTransition, transition))
+    }
+
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Not supported on globe zoom levels.
+    /// Default value: 1. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func iconOcclusionOpacity(_ expression: Expression) -> Self {
+        with(self, setter(\.iconOcclusionOpacity, .expression(expression)))
+    }
+
     /// The opacity at which the icon will be drawn.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
@@ -1558,6 +1611,29 @@ public struct SymbolLayer: Layer, Equatable {
     @_documentation(visibility: public)
     public func textHaloWidth(_ expression: Expression) -> Self {
         with(self, setter(\.textHaloWidth, .expression(expression)))
+    }
+
+    /// The opacity at which the text will be drawn in case of being depth occluded. Not supported on globe zoom levels.
+    /// Default value: 1. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func textOcclusionOpacity(_ constant: Double) -> Self {
+        with(self, setter(\.textOcclusionOpacity, .constant(constant)))
+    }
+
+    /// Transition property for `textOcclusionOpacity`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func textOcclusionOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.textOcclusionOpacityTransition, transition))
+    }
+
+    /// The opacity at which the text will be drawn in case of being depth occluded. Not supported on globe zoom levels.
+    /// Default value: 1. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func textOcclusionOpacity(_ expression: Expression) -> Self {
+        with(self, setter(\.textOcclusionOpacity, .expression(expression)))
     }
 
     /// The opacity at which the text will be drawn.

@@ -102,8 +102,10 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         assign(manager, \.textVariableAnchor, value: textVariableAnchor)
         assign(manager, \.textWritingMode, value: textWritingMode)
         assign(manager, \.iconColorSaturation, value: iconColorSaturation)
+        assign(manager, \.iconOcclusionOpacity, value: iconOcclusionOpacity)
         assign(manager, \.iconTranslate, value: iconTranslate)
         assign(manager, \.iconTranslateAnchor, value: iconTranslateAnchor)
+        assign(manager, \.textOcclusionOpacity, value: textOcclusionOpacity)
         assign(manager, \.textTranslate, value: textTranslate)
         assign(manager, \.textTranslateAnchor, value: textTranslateAnchor)
         assign(manager, \.slot, value: slot)
@@ -303,6 +305,14 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.iconColorSaturation, newValue))
     }
 
+    private var iconOcclusionOpacity: Double?
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Not supported on globe zoom levels.
+    /// Default value: 1. Value range: [0, 1]
+    @_documentation(visibility: public)
+    public func iconOcclusionOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.iconOcclusionOpacity, newValue))
+    }
+
     private var iconTranslate: [Double]?
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     /// Default value: [0,0].
@@ -317,6 +327,14 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     @_documentation(visibility: public)
     public func iconTranslateAnchor(_ newValue: IconTranslateAnchor) -> Self {
         with(self, setter(\.iconTranslateAnchor, newValue))
+    }
+
+    private var textOcclusionOpacity: Double?
+    /// The opacity at which the text will be drawn in case of being depth occluded. Not supported on globe zoom levels.
+    /// Default value: 1. Value range: [0, 1]
+    @_documentation(visibility: public)
+    public func textOcclusionOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.textOcclusionOpacity, newValue))
     }
 
     private var textTranslate: [Double]?

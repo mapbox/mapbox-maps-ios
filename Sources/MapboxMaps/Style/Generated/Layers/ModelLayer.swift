@@ -98,6 +98,11 @@ import UIKit
     @_documentation(visibility: public)
     public var modelEmissiveStrengthTransition: StyleTransition?
 
+    /// An array for configuring the fade-out effect for the front cutoff of content on pitched map views. It contains three values: start, range and final opacity. The start parameter defines the point at which the fade-out effect begins, with smaller values causing the effect to start earlier. The range parameter specifies how long the fade-out effect will last. A value of 0.0 for range makes content disappear immediately without a fade-out effect. The final opacity determines content opacity at the end of the fade-out effect. A value of 1.0 for final opacity means that the cutoff is completely disabled.
+    /// Default value: [0,0,1]. Minimum value: [0,0,0]. Maximum value: [1,1,1].
+    @_documentation(visibility: public)
+    public var modelFrontCutoff: Value<[Double]>?
+
     /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
     /// Default value: [1,1,1,1,0].
     @_documentation(visibility: public)
@@ -197,6 +202,7 @@ import UIKit
         try paintContainer.encodeIfPresent(modelCutoffFadeRange, forKey: .modelCutoffFadeRange)
         try paintContainer.encodeIfPresent(modelEmissiveStrength, forKey: .modelEmissiveStrength)
         try paintContainer.encodeIfPresent(modelEmissiveStrengthTransition, forKey: .modelEmissiveStrengthTransition)
+        try paintContainer.encodeIfPresent(modelFrontCutoff, forKey: .modelFrontCutoff)
         try paintContainer.encodeIfPresent(modelHeightBasedEmissiveStrengthMultiplier, forKey: .modelHeightBasedEmissiveStrengthMultiplier)
         try paintContainer.encodeIfPresent(modelHeightBasedEmissiveStrengthMultiplierTransition, forKey: .modelHeightBasedEmissiveStrengthMultiplierTransition)
         try paintContainer.encodeIfPresent(modelOpacity, forKey: .modelOpacity)
@@ -240,6 +246,7 @@ import UIKit
             modelCutoffFadeRange = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelCutoffFadeRange)
             modelEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelEmissiveStrength)
             modelEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelEmissiveStrengthTransition)
+            modelFrontCutoff = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelFrontCutoff)
             modelHeightBasedEmissiveStrengthMultiplier = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelHeightBasedEmissiveStrengthMultiplier)
             modelHeightBasedEmissiveStrengthMultiplierTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelHeightBasedEmissiveStrengthMultiplierTransition)
             modelOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelOpacity)
@@ -294,6 +301,7 @@ import UIKit
         case modelCutoffFadeRange = "model-cutoff-fade-range"
         case modelEmissiveStrength = "model-emissive-strength"
         case modelEmissiveStrengthTransition = "model-emissive-strength-transition"
+        case modelFrontCutoff = "model-front-cutoff"
         case modelHeightBasedEmissiveStrengthMultiplier = "model-height-based-emissive-strength-multiplier"
         case modelHeightBasedEmissiveStrengthMultiplierTransition = "model-height-based-emissive-strength-multiplier-transition"
         case modelOpacity = "model-opacity"
@@ -502,6 +510,22 @@ import UIKit
     @_spi(Experimental)
     public func modelEmissiveStrength(_ expression: Expression) -> Self {
         with(self, setter(\.modelEmissiveStrength, .expression(expression)))
+    }
+
+    /// An array for configuring the fade-out effect for the front cutoff of content on pitched map views. It contains three values: start, range and final opacity. The start parameter defines the point at which the fade-out effect begins, with smaller values causing the effect to start earlier. The range parameter specifies how long the fade-out effect will last. A value of 0.0 for range makes content disappear immediately without a fade-out effect. The final opacity determines content opacity at the end of the fade-out effect. A value of 1.0 for final opacity means that the cutoff is completely disabled.
+    /// Default value: [0,0,1]. Minimum value: [0,0,0]. Maximum value: [1,1,1].
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelFrontCutoff(start: Double, range: Double, end: Double) -> Self {
+        with(self, setter(\.modelFrontCutoff, .constant([start, range, end])))
+    }
+
+    /// An array for configuring the fade-out effect for the front cutoff of content on pitched map views. It contains three values: start, range and final opacity. The start parameter defines the point at which the fade-out effect begins, with smaller values causing the effect to start earlier. The range parameter specifies how long the fade-out effect will last. A value of 0.0 for range makes content disappear immediately without a fade-out effect. The final opacity determines content opacity at the end of the fade-out effect. A value of 1.0 for final opacity means that the cutoff is completely disabled.
+    /// Default value: [0,0,1]. Minimum value: [0,0,0]. Maximum value: [1,1,1].
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelFrontCutoff(_ expression: Expression) -> Self {
+        with(self, setter(\.modelFrontCutoff, .expression(expression)))
     }
 
     /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).

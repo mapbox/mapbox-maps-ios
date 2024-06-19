@@ -21,5 +21,8 @@
 - ``CustomGeometrySourceOptions``
 - ``CustomRasterSource``
 - ``CustomRasterSourceOptions``
+- ``CustomRasterSourceTileStatusChangedCallback``
+- ``CustomRasterSourceTileData``
+- ``CustomRasterSourceTileStatus``
 - ``TileFunctionCallback``
 - ``TileCacheBudgetSize``

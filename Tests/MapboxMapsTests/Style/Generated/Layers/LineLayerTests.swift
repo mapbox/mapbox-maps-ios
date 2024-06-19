@@ -57,6 +57,7 @@ final class LineLayerTests: XCTestCase {
         layer.lineMiterLimit = Value<Double>.testConstantValue()
         layer.lineRoundLimit = Value<Double>.testConstantValue()
         layer.lineSortKey = Value<Double>.testConstantValue()
+        layer.lineZOffset = Value<Double>.testConstantValue()
 
         var data: Data?
         do {
@@ -78,6 +79,7 @@ final class LineLayerTests: XCTestCase {
             XCTAssertEqual(layer.lineMiterLimit, Value<Double>.testConstantValue())
             XCTAssertEqual(layer.lineRoundLimit, Value<Double>.testConstantValue())
             XCTAssertEqual(layer.lineSortKey, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.lineZOffset, Value<Double>.testConstantValue())
         } catch {
             XCTFail("Failed to decode LineLayer")
         }
@@ -101,6 +103,8 @@ final class LineLayerTests: XCTestCase {
        layer.lineGapWidth = Value<Double>.testConstantValue()
        layer.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineGradient = Value<StyleColor>.testConstantValue()
+       layer.lineOcclusionOpacity = Value<Double>.testConstantValue()
+       layer.lineOcclusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineOffset = Value<Double>.testConstantValue()
        layer.lineOffsetTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineOpacity = Value<Double>.testConstantValue()
@@ -137,6 +141,7 @@ final class LineLayerTests: XCTestCase {
            XCTAssertEqual(layer.lineEmissiveStrength, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.lineGapWidth, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.lineGradient, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.lineOcclusionOpacity, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.lineOffset, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.lineOpacity, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.linePattern, Value<ResolvedImage>.testConstantValue())
@@ -162,6 +167,7 @@ final class LineLayerTests: XCTestCase {
             .lineMiterLimit(Double.testConstantValue())
             .lineRoundLimit(Double.testConstantValue())
             .lineSortKey(Double.testConstantValue())
+            .lineZOffset(Double.testConstantValue())
             .lineBlur(Double.testConstantValue())
             .lineBorderColor(StyleColor.testConstantValue())
             .lineBorderWidth(Double.testConstantValue())
@@ -171,6 +177,7 @@ final class LineLayerTests: XCTestCase {
             .lineEmissiveStrength(Double.testConstantValue())
             .lineGapWidth(Double.testConstantValue())
             .lineGradient(StyleColor.testConstantValue())
+            .lineOcclusionOpacity(Double.testConstantValue())
             .lineOffset(Double.testConstantValue())
             .lineOpacity(Double.testConstantValue())
             .linePattern(String.testConstantValue())
@@ -190,6 +197,7 @@ final class LineLayerTests: XCTestCase {
         XCTAssertEqual(layer.lineMiterLimit, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineRoundLimit, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineSortKey, Value.constant(Double.testConstantValue()))
+        XCTAssertEqual(layer.lineZOffset, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineBlur, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineBorderColor, Value.constant(StyleColor.testConstantValue()))
         XCTAssertEqual(layer.lineBorderWidth, Value.constant(Double.testConstantValue()))
@@ -199,6 +207,7 @@ final class LineLayerTests: XCTestCase {
         XCTAssertEqual(layer.lineEmissiveStrength, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineGapWidth, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineGradient, Value.constant(StyleColor.testConstantValue()))
+        XCTAssertEqual(layer.lineOcclusionOpacity, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineOffset, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineOpacity, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.linePattern, Value<ResolvedImage>.constant(.name(String.testConstantValue())))

@@ -34,6 +34,21 @@ final class PolylineAnnotationTests: XCTestCase {
         XCTAssertEqual(lineSortKey, annotation.lineSortKey)
     }
 
+    func testLineZOffset() {
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+        annotation.lineZOffset =  Double.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(lineZOffset) = layerProperties["line-z-offset"] else {
+            return XCTFail("Layer property line-z-offset should be set to a number.")
+        }
+        XCTAssertEqual(lineZOffset, annotation.lineZOffset)
+    }
+
     func testLineBlur() {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)

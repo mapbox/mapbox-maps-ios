@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -28,6 +28,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.lineMiterLimit = Value<Double>.testConstantValue()
             layer.lineRoundLimit = Value<Double>.testConstantValue()
             layer.lineSortKey = Value<Double>.testConstantValue()
+            layer.lineZOffset = Value<Double>.testConstantValue()
             layer.lineBlur = Value<Double>.testConstantValue()
             layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineBorderColor = Value<StyleColor>.testConstantValue()
@@ -43,6 +44,8 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.lineGapWidth = Value<Double>.testConstantValue()
             layer.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineGradient = Value<StyleColor>.testConstantValue()
+            layer.lineOcclusionOpacity = Value<Double>.testConstantValue()
+            layer.lineOcclusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineOffset = Value<Double>.testConstantValue()
             layer.lineOffsetTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineOpacity = Value<Double>.testConstantValue()

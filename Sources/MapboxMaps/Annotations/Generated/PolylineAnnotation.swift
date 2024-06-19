@@ -90,6 +90,7 @@ public struct PolylineAnnotation: Annotation, Equatable {
         var properties: [String: Any] = [:]
         properties["line-join"] = lineJoin?.rawValue
         properties["line-sort-key"] = lineSortKey
+        properties["line-z-offset"] = lineZOffset
         properties["line-blur"] = lineBlur
         properties["line-border-color"] = lineBorderColor?.rawValue
         properties["line-border-width"] = lineBorderWidth
@@ -137,6 +138,9 @@ public struct PolylineAnnotation: Annotation, Equatable {
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var lineSortKey: Double?
+
+    /// Vertical offset from ground, in meters. Defaults to 0. Not supported for globe projection at the moment.
+    public var lineZOffset: Double?
 
     /// Blur applied to the line, in pixels.
     /// Default value: 0. Minimum value: 0.
@@ -189,6 +193,12 @@ public struct PolylineAnnotation: Annotation, Equatable {
     @_documentation(visibility: public)
     public func lineSortKey(_ newValue: Double) -> Self {
         with(self, setter(\.lineSortKey, newValue))
+    }
+
+    /// Vertical offset from ground, in meters. Defaults to 0. Not supported for globe projection at the moment.
+    @_documentation(visibility: public)
+    public func lineZOffset(_ newValue: Double) -> Self {
+        with(self, setter(\.lineZOffset, newValue))
     }
 
     /// Blur applied to the line, in pixels.

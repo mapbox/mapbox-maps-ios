@@ -85,6 +85,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
         assign(manager, \.lineDasharray, value: lineDasharray)
         assign(manager, \.lineDepthOcclusionFactor, value: lineDepthOcclusionFactor)
         assign(manager, \.lineEmissiveStrength, value: lineEmissiveStrength)
+        assign(manager, \.lineOcclusionOpacity, value: lineOcclusionOpacity)
         assign(manager, \.lineTranslate, value: lineTranslate)
         assign(manager, \.lineTranslateAnchor, value: lineTranslateAnchor)
         assign(manager, \.lineTrimOffset, value: lineTrimOffset)
@@ -139,6 +140,14 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     @_documentation(visibility: public)
     public func lineEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.lineEmissiveStrength, newValue))
+    }
+
+    private var lineOcclusionOpacity: Double?
+    /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
+    /// Default value: 0. Value range: [0, 1]
+    @_documentation(visibility: public)
+    public func lineOcclusionOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.lineOcclusionOpacity, newValue))
     }
 
     private var lineTranslate: [Double]?

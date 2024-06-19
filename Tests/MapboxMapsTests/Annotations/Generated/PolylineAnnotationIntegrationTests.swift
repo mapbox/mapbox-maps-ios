@@ -220,6 +220,32 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.lineEmissiveStrength, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-emissive-strength").value as! NSNumber).doubleValue))
     }
 
+    func testLineOcclusionOpacity() throws {
+        // Test that the setter and getter work
+        let value = 0.5
+        manager.lineOcclusionOpacity = value
+        XCTAssertEqual(manager.lineOcclusionOpacity, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        if case .constant(let actualValue) = layer.lineOcclusionOpacity {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.lineOcclusionOpacity = nil
+        XCTAssertNil(manager.lineOcclusionOpacity)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineOcclusionOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-occlusion-opacity").value as! NSNumber).doubleValue))
+    }
+
     func testLineTranslate() throws {
         // Test that the setter and getter work
         let value = [0.0, 0.0]
@@ -397,6 +423,43 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineSortKey, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-sort-key").value as! NSNumber).doubleValue))
+    }
+
+    func testLineZOffset() throws {
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+        // Test that the setter and getter work
+        let value = 0.0
+        annotation.lineZOffset = value
+        XCTAssertEqual(annotation.lineZOffset, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineZOffset, .expression(Exp(.number) {
+                Exp(.get) {
+                    "line-z-offset"
+                    Exp(.objectExpression) {
+                        Exp(.get) {
+                            "layerProperties"
+                        }
+                    }
+                }
+            }))
+
+        // Test that the property can be reset to nil
+        annotation.lineZOffset = nil
+        XCTAssertNil(annotation.lineZOffset)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineZOffset, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-z-offset").value as! NSNumber).doubleValue))
     }
 
     func testLineBlur() throws {

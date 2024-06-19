@@ -602,6 +602,17 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Not supported on globe zoom levels.
+    /// Default value: 1. Value range: [0, 1]
+    public var iconOcclusionOpacity: Double? {
+        get {
+            return layerProperties["icon-occlusion-opacity"] as? Double
+        }
+        set {
+            layerProperties["icon-occlusion-opacity"] = newValue
+        }
+    }
+
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     /// Default value: [0,0].
     public var iconTranslate: [Double]? {
@@ -621,6 +632,17 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
         set {
             layerProperties["icon-translate-anchor"] = newValue?.rawValue
+        }
+    }
+
+    /// The opacity at which the text will be drawn in case of being depth occluded. Not supported on globe zoom levels.
+    /// Default value: 1. Value range: [0, 1]
+    public var textOcclusionOpacity: Double? {
+        get {
+            return layerProperties["text-occlusion-opacity"] as? Double
+        }
+        set {
+            layerProperties["text-occlusion-opacity"] = newValue
         }
     }
 

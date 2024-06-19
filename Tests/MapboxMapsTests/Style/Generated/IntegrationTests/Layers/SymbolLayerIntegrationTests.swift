@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -76,6 +76,8 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.iconHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconImageCrossFade = Value<Double>.testConstantValue()
             layer.iconImageCrossFadeTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.iconOcclusionOpacity = Value<Double>.testConstantValue()
+            layer.iconOcclusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconOpacity = Value<Double>.testConstantValue()
             layer.iconOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -90,6 +92,8 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.textHaloColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textHaloWidth = Value<Double>.testConstantValue()
             layer.textHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.textOcclusionOpacity = Value<Double>.testConstantValue()
+            layer.textOcclusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textOpacity = Value<Double>.testConstantValue()
             layer.textOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)

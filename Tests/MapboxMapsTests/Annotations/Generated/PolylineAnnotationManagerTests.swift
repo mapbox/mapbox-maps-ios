@@ -281,6 +281,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.testConstantValue()
             annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
             annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
             annotation.lineBorderWidth = 50000.0
@@ -355,6 +356,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.testConstantValue()
             annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
             annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
             annotation.lineBorderWidth = 50000.0
@@ -429,6 +431,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.testConstantValue()
             annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
             annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
             annotation.lineBorderWidth = 50000.0
@@ -503,6 +506,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.testConstantValue()
             annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
             annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
             annotation.lineBorderWidth = 50000.0
@@ -577,6 +581,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.testConstantValue()
             annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
             annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
             annotation.lineBorderWidth = 50000.0
@@ -651,6 +656,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.testConstantValue()
             annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
             annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
             annotation.lineBorderWidth = 50000.0
@@ -685,6 +691,81 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineEmissiveStrength)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-emissive-strength"] as! Double, defaultValue)
+    }
+
+    func testInitialLineOcclusionOpacity() {
+        let initialValue = manager.lineOcclusionOpacity
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineOcclusionOpacity() {
+        let value = 0.5
+        manager.lineOcclusionOpacity = value
+        XCTAssertEqual(manager.lineOcclusionOpacity, value)
+
+        // test layer and source synced and properties added
+        $displayLink.send()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-occlusion-opacity"] as! Double, value)
+    }
+
+    func testLineOcclusionOpacityAnnotationPropertiesAddedWithoutDuplicate() {
+        let newLineOcclusionOpacityProperty = 0.5
+        let secondLineOcclusionOpacityProperty = 0.5
+
+        manager.lineOcclusionOpacity = newLineOcclusionOpacityProperty
+        $displayLink.send()
+        manager.lineOcclusionOpacity = secondLineOcclusionOpacityProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-occlusion-opacity"] as! Double, secondLineOcclusionOpacityProperty)
+    }
+
+    func testNewLineOcclusionOpacityPropertyMergedWithAnnotationProperties() {
+        var annotations = [PolylineAnnotation]()
+        for _ in 0...5 {
+            let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
+            annotations.append(annotation)
+        }
+        let newLineOcclusionOpacityProperty = 0.5
+
+        manager.annotations = annotations
+        manager.lineOcclusionOpacity = newLineOcclusionOpacityProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-occlusion-opacity"])
+    }
+
+    func testSetToNilLineOcclusionOpacity() {
+        let newLineOcclusionOpacityProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-occlusion-opacity").value as! Double
+        manager.lineOcclusionOpacity = newLineOcclusionOpacityProperty
+        $displayLink.send()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-occlusion-opacity"])
+
+        manager.lineOcclusionOpacity = nil
+        $displayLink.send()
+        XCTAssertNil(manager.lineOcclusionOpacity)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-occlusion-opacity"] as! Double, defaultValue)
     }
 
     func testInitialLineTranslate() {
@@ -725,6 +806,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.testConstantValue()
             annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
             annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
             annotation.lineBorderWidth = 50000.0
@@ -799,6 +881,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.testConstantValue()
             annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
             annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
             annotation.lineBorderWidth = 50000.0
@@ -873,6 +956,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.testConstantValue()
             annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
             annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
             annotation.lineBorderWidth = 50000.0
@@ -947,6 +1031,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.testConstantValue()
             annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
             annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
             annotation.lineBorderWidth = 50000.0

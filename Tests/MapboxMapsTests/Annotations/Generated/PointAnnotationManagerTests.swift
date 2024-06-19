@@ -2536,6 +2536,100 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-saturation"] as! Double, defaultValue)
     }
 
+    func testInitialIconOcclusionOpacity() {
+        let initialValue = manager.iconOcclusionOpacity
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconOcclusionOpacity() {
+        let value = 0.5
+        manager.iconOcclusionOpacity = value
+        XCTAssertEqual(manager.iconOcclusionOpacity, value)
+
+        // test layer and source synced and properties added
+        $displayLink.send()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-occlusion-opacity"] as! Double, value)
+    }
+
+    func testIconOcclusionOpacityAnnotationPropertiesAddedWithoutDuplicate() {
+        let newIconOcclusionOpacityProperty = 0.5
+        let secondIconOcclusionOpacityProperty = 0.5
+
+        manager.iconOcclusionOpacity = newIconOcclusionOpacityProperty
+        $displayLink.send()
+        manager.iconOcclusionOpacity = secondIconOcclusionOpacityProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-occlusion-opacity"] as! Double, secondIconOcclusionOpacityProperty)
+    }
+
+    func testNewIconOcclusionOpacityPropertyMergedWithAnnotationProperties() {
+        var annotations = [PointAnnotation]()
+        for _ in 0...5 {
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+            annotation.iconAnchor = IconAnchor.testConstantValue()
+            annotation.iconImage = UUID().uuidString
+            annotation.iconOffset = [0.0, 0.0]
+            annotation.iconRotate = 0.0
+            annotation.iconSize = 50000.0
+            annotation.iconTextFit = IconTextFit.testConstantValue()
+            annotation.iconTextFitPadding = [0.0, 0.0, 0.0, 0.0]
+            annotation.symbolSortKey = 0.0
+            annotation.textAnchor = TextAnchor.testConstantValue()
+            annotation.textField = UUID().uuidString
+            annotation.textJustify = TextJustify.testConstantValue()
+            annotation.textLetterSpacing = 0.0
+            annotation.textLineHeight = 0.0
+            annotation.textMaxWidth = 50000.0
+            annotation.textOffset = [0.0, 0.0]
+            annotation.textRadialOffset = 0.0
+            annotation.textRotate = 0.0
+            annotation.textSize = 50000.0
+            annotation.textTransform = TextTransform.testConstantValue()
+            annotation.iconColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.iconEmissiveStrength = 50000.0
+            annotation.iconHaloBlur = 50000.0
+            annotation.iconHaloColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.iconHaloWidth = 50000.0
+            annotation.iconImageCrossFade = 0.5
+            annotation.iconOpacity = 0.5
+            annotation.textColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.textEmissiveStrength = 50000.0
+            annotation.textHaloBlur = 50000.0
+            annotation.textHaloColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.textHaloWidth = 50000.0
+            annotation.textOpacity = 0.5
+            annotations.append(annotation)
+        }
+        let newIconOcclusionOpacityProperty = 0.5
+
+        manager.annotations = annotations
+        manager.iconOcclusionOpacity = newIconOcclusionOpacityProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-occlusion-opacity"])
+    }
+
+    func testSetToNilIconOcclusionOpacity() {
+        let newIconOcclusionOpacityProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-occlusion-opacity").value as! Double
+        manager.iconOcclusionOpacity = newIconOcclusionOpacityProperty
+        $displayLink.send()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-occlusion-opacity"])
+
+        manager.iconOcclusionOpacity = nil
+        $displayLink.send()
+        XCTAssertNil(manager.iconOcclusionOpacity)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-occlusion-opacity"] as! Double, defaultValue)
+    }
+
     func testInitialIconTranslate() {
         let initialValue = manager.iconTranslate
         XCTAssertNil(initialValue)
@@ -2722,6 +2816,100 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconTranslateAnchor)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"] as! String, defaultValue)
+    }
+
+    func testInitialTextOcclusionOpacity() {
+        let initialValue = manager.textOcclusionOpacity
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextOcclusionOpacity() {
+        let value = 0.5
+        manager.textOcclusionOpacity = value
+        XCTAssertEqual(manager.textOcclusionOpacity, value)
+
+        // test layer and source synced and properties added
+        $displayLink.send()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-occlusion-opacity"] as! Double, value)
+    }
+
+    func testTextOcclusionOpacityAnnotationPropertiesAddedWithoutDuplicate() {
+        let newTextOcclusionOpacityProperty = 0.5
+        let secondTextOcclusionOpacityProperty = 0.5
+
+        manager.textOcclusionOpacity = newTextOcclusionOpacityProperty
+        $displayLink.send()
+        manager.textOcclusionOpacity = secondTextOcclusionOpacityProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-occlusion-opacity"] as! Double, secondTextOcclusionOpacityProperty)
+    }
+
+    func testNewTextOcclusionOpacityPropertyMergedWithAnnotationProperties() {
+        var annotations = [PointAnnotation]()
+        for _ in 0...5 {
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+            annotation.iconAnchor = IconAnchor.testConstantValue()
+            annotation.iconImage = UUID().uuidString
+            annotation.iconOffset = [0.0, 0.0]
+            annotation.iconRotate = 0.0
+            annotation.iconSize = 50000.0
+            annotation.iconTextFit = IconTextFit.testConstantValue()
+            annotation.iconTextFitPadding = [0.0, 0.0, 0.0, 0.0]
+            annotation.symbolSortKey = 0.0
+            annotation.textAnchor = TextAnchor.testConstantValue()
+            annotation.textField = UUID().uuidString
+            annotation.textJustify = TextJustify.testConstantValue()
+            annotation.textLetterSpacing = 0.0
+            annotation.textLineHeight = 0.0
+            annotation.textMaxWidth = 50000.0
+            annotation.textOffset = [0.0, 0.0]
+            annotation.textRadialOffset = 0.0
+            annotation.textRotate = 0.0
+            annotation.textSize = 50000.0
+            annotation.textTransform = TextTransform.testConstantValue()
+            annotation.iconColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.iconEmissiveStrength = 50000.0
+            annotation.iconHaloBlur = 50000.0
+            annotation.iconHaloColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.iconHaloWidth = 50000.0
+            annotation.iconImageCrossFade = 0.5
+            annotation.iconOpacity = 0.5
+            annotation.textColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.textEmissiveStrength = 50000.0
+            annotation.textHaloBlur = 50000.0
+            annotation.textHaloColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.textHaloWidth = 50000.0
+            annotation.textOpacity = 0.5
+            annotations.append(annotation)
+        }
+        let newTextOcclusionOpacityProperty = 0.5
+
+        manager.annotations = annotations
+        manager.textOcclusionOpacity = newTextOcclusionOpacityProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-occlusion-opacity"])
+    }
+
+    func testSetToNilTextOcclusionOpacity() {
+        let newTextOcclusionOpacityProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-occlusion-opacity").value as! Double
+        manager.textOcclusionOpacity = newTextOcclusionOpacityProperty
+        $displayLink.send()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-occlusion-opacity"])
+
+        manager.textOcclusionOpacity = nil
+        $displayLink.send()
+        XCTAssertNil(manager.textOcclusionOpacity)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-occlusion-opacity"] as! Double, defaultValue)
     }
 
     func testInitialTextTranslate() {

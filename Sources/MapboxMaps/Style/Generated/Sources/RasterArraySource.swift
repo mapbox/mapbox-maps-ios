@@ -12,11 +12,11 @@ import Foundation
     @_documentation(visibility: public)
     public let id: String
 
-    /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`.
+    /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`. Required if `tiles` is not provided.
     @_documentation(visibility: public)
     public var url: String?
 
-    /// An array of one or more tile source URLs, as in the TileJSON spec.
+    /// An array of one or more tile source URLs, as in the TileJSON spec. Required if `url` is not provided.
     @_documentation(visibility: public)
     public var tiles: [String]?
 
@@ -109,13 +109,13 @@ extension RasterArraySource {
 @_spi(Experimental)
 extension RasterArraySource {
 
-    /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`.
+    /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`. Required if `tiles` is not provided.
     @_documentation(visibility: public)
     public func url(_ newValue: String) -> Self {
         with(self, setter(\.url, newValue))
     }
 
-    /// An array of one or more tile source URLs, as in the TileJSON spec.
+    /// An array of one or more tile source URLs, as in the TileJSON spec. Required if `url` is not provided.
     @_documentation(visibility: public)
     public func tiles(_ newValue: [String]) -> Self {
         with(self, setter(\.tiles, newValue))

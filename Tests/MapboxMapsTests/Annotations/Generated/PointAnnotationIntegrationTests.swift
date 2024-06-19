@@ -661,7 +661,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testIconColorSaturation() throws {
         // Test that the setter and getter work
-        let value = 0.5
+        let value = 0.0
         manager.iconColorSaturation = value
         XCTAssertEqual(manager.iconColorSaturation, value)
 

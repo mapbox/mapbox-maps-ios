@@ -2448,7 +2448,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetIconColorSaturation() {
-        let value = 0.5
+        let value = 0.0
         manager.iconColorSaturation = value
         XCTAssertEqual(manager.iconColorSaturation, value)
 
@@ -2460,8 +2460,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testIconColorSaturationAnnotationPropertiesAddedWithoutDuplicate() {
-        let newIconColorSaturationProperty = 0.5
-        let secondIconColorSaturationProperty = 0.5
+        let newIconColorSaturationProperty = 0.0
+        let secondIconColorSaturationProperty = 0.0
 
         manager.iconColorSaturation = newIconColorSaturationProperty
         $displayLink.send()
@@ -2511,7 +2511,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textOpacity = 0.5
             annotations.append(annotation)
         }
-        let newIconColorSaturationProperty = 0.5
+        let newIconColorSaturationProperty = 0.0
 
         manager.annotations = annotations
         manager.iconColorSaturation = newIconColorSaturationProperty
@@ -2523,7 +2523,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetToNilIconColorSaturation() {
-        let newIconColorSaturationProperty = 0.5
+        let newIconColorSaturationProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-saturation").value as! Double
         manager.iconColorSaturation = newIconColorSaturationProperty
         $displayLink.send()

@@ -47,7 +47,7 @@ import UIKit
     @_documentation(visibility: public)
     public var visibility: Value<Visibility>
 
-    /// Model to render.
+    /// Model to render. It can be either a string referencing an element to the models root property or an internal or external URL
     /// Default value: "".
     @_documentation(visibility: public)
     public var modelId: Value<String>?
@@ -356,7 +356,7 @@ import UIKit
         with(self, setter(\.maxZoom, newValue))
     }
 
-    /// Model to render.
+    /// Model to render. It can be either a string referencing an element to the models root property or an internal or external URL
     /// Default value: "".
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -364,7 +364,7 @@ import UIKit
         with(self, setter(\.modelId, .constant(constant)))
     }
 
-    /// Model to render.
+    /// Model to render. It can be either a string referencing an element to the models root property or an internal or external URL
     /// Default value: "".
     @_documentation(visibility: public)
     @_spi(Experimental)

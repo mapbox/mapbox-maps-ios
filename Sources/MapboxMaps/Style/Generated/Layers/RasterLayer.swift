@@ -39,7 +39,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>
 
-    /// Displayed band of raster array source layer
+    /// Displayed band of raster array source layer. Defaults to the first band if not set.
     @_documentation(visibility: public)
     @_spi(Experimental) public var rasterArrayBand: Value<String>?
 
@@ -67,8 +67,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Transition options for `rasterColorMix`.
     public var rasterColorMixTransition: StyleTransition?
 
-    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
-    /// Default value: [0,1].
+    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`. For `rasterarray` sources, if `raster-color-range` is unspecified, the source's stated data range is used.
     public var rasterColorRange: Value<[Double]>?
 
     /// Transition options for `rasterColorRange`.
@@ -81,7 +80,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Transition options for `rasterContrast`.
     public var rasterContrastTransition: StyleTransition?
 
-    /// Specifies an uniform elevation from the ground, in meters. Only supported with image sources.
+    /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental) public var rasterElevation: Value<Double>?
@@ -308,14 +307,14 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.maxZoom, newValue))
     }
 
-    /// Displayed band of raster array source layer
+    /// Displayed band of raster array source layer. Defaults to the first band if not set.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterArrayBand(_ constant: String) -> Self {
         with(self, setter(\.rasterArrayBand, .constant(constant)))
     }
 
-    /// Displayed band of raster array source layer
+    /// Displayed band of raster array source layer. Defaults to the first band if not set.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func rasterArrayBand(_ expression: Expression) -> Self {
@@ -400,8 +399,7 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterColorMix, .expression(expression)))
     }
 
-    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
-    /// Default value: [0,1].
+    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`. For `rasterarray` sources, if `raster-color-range` is unspecified, the source's stated data range is used.
     @_documentation(visibility: public)
     public func rasterColorRange(min: Double, max: Double) -> Self {
         with(self, setter(\.rasterColorRange, .constant([min, max])))
@@ -413,8 +411,7 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterColorRangeTransition, transition))
     }
 
-    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
-    /// Default value: [0,1].
+    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`. For `rasterarray` sources, if `raster-color-range` is unspecified, the source's stated data range is used.
     @_documentation(visibility: public)
     public func rasterColorRange(_ expression: Expression) -> Self {
         with(self, setter(\.rasterColorRange, .expression(expression)))
@@ -440,7 +437,7 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterContrast, .expression(expression)))
     }
 
-    /// Specifies an uniform elevation from the ground, in meters. Only supported with image sources.
+    /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -455,7 +452,7 @@ public struct RasterLayer: Layer, Equatable {
         with(self, setter(\.rasterElevationTransition, transition))
     }
 
-    /// Specifies an uniform elevation from the ground, in meters. Only supported with image sources.
+    /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)

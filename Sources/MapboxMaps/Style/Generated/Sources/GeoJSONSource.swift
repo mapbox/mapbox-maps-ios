@@ -43,7 +43,6 @@ public struct GeoJSONSource: Source {
     public var clusterMaxZoom: Double?
 
     /// Minimum number of points necessary to form a cluster if clustering is enabled. Defaults to `2`.
-    /// Default value: 2.
     public var clusterMinPoints: Double?
 
     /// An object defining custom properties on the generated clusters if clustering is enabled, aggregating values from clustered points. Has the form `{"property_name": [operator, map_expression]}`. `operator` is any expression function that accepts at least 2 operands (e.g. `"+"` or `"max"`) — it accumulates the property value from clusters/points the cluster contains; `map_expression` produces the value of a single point.
@@ -58,7 +57,7 @@ public struct GeoJSONSource: Source {
     /// Default value: false.
     public var lineMetrics: Bool?
 
-    /// Whether to generate ids for the geojson features. When enabled, the `feature.id` property will be auto assigned based on its index in the `features` array, over-writing any previous values.
+    /// Whether to generate ids for the GeoJSON features. When enabled, the `feature.id` property will be auto assigned based on its index in the `features` array, over-writing any previous values.
     /// Default value: false.
     public var generateId: Bool?
 

@@ -9,10 +9,10 @@ public struct RasterDemSource: Source {
     public let type: SourceType
     public let id: String
 
-    /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`.
+    /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`. Required if `tiles` is not provided.
     public var url: String?
 
-    /// An array of one or more tile source URLs, as in the TileJSON spec.
+    /// An array of one or more tile source URLs, as in the TileJSON spec. Required if `url` is not provided.
     public var tiles: [String]?
 
     /// An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL.
@@ -132,13 +132,13 @@ extension RasterDemSource {
 @_spi(Experimental)
 extension RasterDemSource {
 
-    /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`.
+    /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`. Required if `tiles` is not provided.
     @_documentation(visibility: public)
     public func url(_ newValue: String) -> Self {
         with(self, setter(\.url, newValue))
     }
 
-    /// An array of one or more tile source URLs, as in the TileJSON spec.
+    /// An array of one or more tile source URLs, as in the TileJSON spec. Required if `url` is not provided.
     @_documentation(visibility: public)
     public func tiles(_ newValue: [String]) -> Self {
         with(self, setter(\.tiles, newValue))

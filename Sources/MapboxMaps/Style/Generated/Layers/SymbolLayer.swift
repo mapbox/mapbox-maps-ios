@@ -209,8 +209,8 @@ public struct SymbolLayer: Layer, Equatable {
     /// Transition options for `iconColor`.
     public var iconColorTransition: StyleTransition?
 
-    /// Controls saturation level of the symbol icon. With the default value of 1 the icon color is preserved while with a value of 0 it is fully desaturated and looks black and white.
-    /// Default value: 1. Value range: [0, 1]
+    /// Increase or reduce the saturation of the symbol icon.
+    /// Default value: 0. Value range: [-1, 1]
     public var iconColorSaturation: Value<Double>?
 
     /// Transition options for `iconColorSaturation`.
@@ -1265,8 +1265,8 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconColor, .expression(expression)))
     }
 
-    /// Controls saturation level of the symbol icon. With the default value of 1 the icon color is preserved while with a value of 0 it is fully desaturated and looks black and white.
-    /// Default value: 1. Value range: [0, 1]
+    /// Increase or reduce the saturation of the symbol icon.
+    /// Default value: 0. Value range: [-1, 1]
     @_documentation(visibility: public)
     public func iconColorSaturation(_ constant: Double) -> Self {
         with(self, setter(\.iconColorSaturation, .constant(constant)))
@@ -1278,8 +1278,8 @@ public struct SymbolLayer: Layer, Equatable {
         with(self, setter(\.iconColorSaturationTransition, transition))
     }
 
-    /// Controls saturation level of the symbol icon. With the default value of 1 the icon color is preserved while with a value of 0 it is fully desaturated and looks black and white.
-    /// Default value: 1. Value range: [0, 1]
+    /// Increase or reduce the saturation of the symbol icon.
+    /// Default value: 0. Value range: [-1, 1]
     @_documentation(visibility: public)
     public func iconColorSaturation(_ expression: Expression) -> Self {
         with(self, setter(\.iconColorSaturation, .expression(expression)))

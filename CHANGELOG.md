@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.5.0-rc.1 - 19 June, 2024
+
 * The CustomRasterSource API has been updated. It no longer includes a cache and now provides notifications about alternative tiles that can be used when the ideal ones are unavailable.
 * Update default values in the documentation
 * Expose text-occlusion-opacity, icon-occlusion-opacity, line-occlusion-opacity, model-front-cutoff, lineZOffset as experimental.

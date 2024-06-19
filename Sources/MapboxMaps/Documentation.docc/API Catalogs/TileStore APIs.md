@@ -33,6 +33,8 @@
 - ``TileRegionEstimateProgress``
 - ``TileRegionEstimateResult``
 - ``TileRegionEstimateProgressCallback``
+- ``CacheClearingError``
+- ``CacheClearingErrorType``
 
 ### Style pack
 

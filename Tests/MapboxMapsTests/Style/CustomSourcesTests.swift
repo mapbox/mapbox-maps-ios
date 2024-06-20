@@ -7,7 +7,6 @@ final class CustomSourcesSourceTests: XCTestCase {
         let testCustomRasterSourceOptions = CustomRasterSourceOptions(tileStatusChangedFunction: { _, _ in })
 
         var source = CustomRasterSource(id: "test-source", options: testCustomRasterSourceOptions)
-        source.tileCacheBudget = TileCacheBudgetSize.testSourceValue(TileCacheBudgetSize.megabytes(7))
 
         var data: Data?
         do {
@@ -25,7 +24,6 @@ final class CustomSourcesSourceTests: XCTestCase {
             let decodedSource = try JSONDecoder().decode(CustomRasterSource.self, from: validData)
             XCTAssert(decodedSource.type == SourceType.customRaster)
             XCTAssert(decodedSource.id == "test-source")
-            XCTAssert(decodedSource.tileCacheBudget == TileCacheBudgetSize.testSourceValue(TileCacheBudgetSize.megabytes(7)))
             XCTAssertNil(decodedSource.options)
         } catch {
             XCTFail("Failed to decode CustomRasterSource.")

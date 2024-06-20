@@ -1437,3 +1437,4 @@ Func StyleManager.invalidateCustomRasterSourceRegion(forSourceId:bounds:) has be
 Func StyleManager.invalidateCustomRasterSourceTile(forSourceId:tileId:) has been removed
 Func StyleManager.setCustomRasterSourceTileData(forSourceId:tileId:image:) has been renamed to Func setCustomRasterSourceTileData(forSourceId:tiles:)
 Func StyleManager.setCustomRasterSourceTileData(forSourceId:tileId:image:) has parameter 1 type change from MapboxCoreMaps.CanonicalTileID to [MapboxCoreMaps.CustomRasterSourceTileData]
+Var CustomRasterSource.tileCacheBudget has been removed

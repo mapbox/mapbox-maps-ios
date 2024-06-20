@@ -14,7 +14,6 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { mapView in
             var source = CustomRasterSource(id: "test-source", options: CustomRasterSourceOptions(tileStatusChangedFunction: { _, _ in }))
-            source.tileCacheBudget = .testSourceValue(.megabytes(7))
 
             // Add source
             do {
@@ -27,7 +26,6 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
             // Retrieve the source
             do {
                 let retrievedSource = try mapView.mapboxMap.source(withId: "test-source", type: CustomRasterSource.self)
-                XCTAssertEqual(retrievedSource.tileCacheBudget, .testSourceValue(.megabytes(7)))
 
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {

@@ -48,7 +48,7 @@ extension LineJoin {
     }
 
     static func random() -> LineJoin {
-        let allCases: [LineJoin] = [.bevel, .round, .miter]
+        let allCases: [LineJoin] = [.bevel, .round, .miter, .none]
         return allCases.randomElement()!
     }
 }

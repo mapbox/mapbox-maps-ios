@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 11.5.1 - 5 July, 2024
+
+* Update CoreMaps to the 11.5.1 version.
+
 ## 11.5.0 - 3 July, 2024
 
 * Use new `LineJoin.none` in conjunction with an image as a `linePattern` value to display repeated series of images along a line(e.g. dotted route line).

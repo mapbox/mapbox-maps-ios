@@ -1,5 +1,5 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
+set -x
 set -euo pipefail
 
 function step { >&2 echo -e "\033[1m\033[36m* $@\033[0m"; }
@@ -11,6 +11,8 @@ LINK_TYPE=${2}
 SCHEME=${3:-"$PRODUCT"}
 PROJECT=${4:-"$PRODUCT.xcodeproj"}
 DSYM_NAMES=${5:-$PRODUCT}
+MAPS_SDK_VERSION_FILE_PATH=${6}
+OUTPUT_DIR=${7}
 
 if [ "$LINK_TYPE" = "dynamic" ]; then
     MACH_O_TYPE=mh_dylib
@@ -70,7 +72,7 @@ inject_build_info() {
   plutil -insert "MBXBuildInfo.Git Branch" -string "$(git rev-parse --abbrev-ref HEAD)" "$plist_path"
   plutil -insert "MBXBuildInfo.Swift version" -string "$(swift --version 2>&1 | grep -o "version .*" | cut -d ' ' -f2)" "$plist_path"
   plutil -insert "MBXBuildInfo.Xcode version" -string "$(xcodebuild -version | head -n 1 | cut -d ' ' -f2)" "$plist_path"
-  plutil -insert "MBXBuildInfo.SDK version" -string "$(jq -r .version ../../../../Sources/MapboxMaps/MapboxMaps.json)" "$plist_path"
+  plutil -insert "MBXBuildInfo.SDK version" -string "$(jq -r .version "$MAPS_SDK_VERSION_FILE_PATH")" "$plist_path"
 
   if [[ -n "${CIRCLE_BUILD_NUM:-}" ]]; then
     echo "Injecting CI build info into info.plist"
@@ -78,7 +80,7 @@ inject_build_info() {
   fi
 }
 
-BUILD_XCFRAMEWORK_COMMAND="xcodebuild -create-xcframework -output '$PRODUCT.xcframework'"
+BUILD_XCFRAMEWORK_COMMAND="xcodebuild -create-xcframework -output "$OUTPUT_DIR/$PRODUCT.xcframework""
 
 BREAK=$'\n\t'
 DEBUG_BREAK=$'\n\t\t'

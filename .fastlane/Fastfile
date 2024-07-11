@@ -22,8 +22,19 @@ platform :ios do
     match(type: "appstore")
   end
 
+  private_lane :api_key_if_needed do
+    # We recommend to have api key on local machines to improve sign-in experience
+    # While on the CI we will use api key components for the authentication
+    # You can setup the api key by following the guide: https://github.com/mapbox/apple-internal/blob/master/guides/Modern%20authentification.md
+    file_path = ENV['APP_STORE_CONNECT_API_KEY_PATH']
+
+    if file_path.nil? || !File.exist?(file_path)
+      app_store_connect_api_key
+    end
+  end
+
   lane :build_examples_tests do
-    app_store_connect_api_key
+    api_key_if_needed
     setup_circle_ci
     sync_code_signing
     update_code_signing_settings(
@@ -32,7 +43,7 @@ platform :ios do
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["mapbox.ExamplesUITests.xctrunner"],
       targets: ["ExamplesUITests"],
-      code_sign_identity: "Apple Development: Machiney McMachineface",
+      code_sign_identity: "Apple Development: Created via API",
     )
     update_code_signing_settings(
       use_automatic_signing: false,
@@ -40,7 +51,7 @@ platform :ios do
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
       targets: ["Examples"],
-      code_sign_identity: "Apple Development: Machiney McMachineface",
+      code_sign_identity: "Apple Development: Created via API",
     )
     run_tests(
       workspace: 'Apps/Apps.xcworkspace',
@@ -85,7 +96,7 @@ platform :ios do
   end
 
   lane :beta do
-    app_store_connect_api_key # Generate API Token
+    api_key_if_needed # Generate API Token
     increment_build_number(
       build_number: latest_testflight_build_number + 1,
       xcodeproj: 'Apps/Examples/Examples.xcodeproj'
@@ -104,7 +115,7 @@ platform :ios do
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
       targets: ["Examples"],
-      code_sign_identity: "Apple Development: Machiney McMachineface",
+      code_sign_identity: "Apple Development: Created via API",
       entitlements_file_path: "Examples/Examples_CarPlay.entitlements"
     )
     sync_code_signing(type: "appstore")
@@ -123,7 +134,7 @@ platform :ios do
 
   lane :build_tests do
     sh("cd .. && xcodegen")
-    app_store_connect_api_key # Generate API Token
+    api_key_if_needed # Generate API Token
     setup_circle_ci
     sync_code_signing(app_identifier: "com.mapbox.MapboxMapsTestHost")
     update_code_signing_settings(
@@ -132,7 +143,7 @@ platform :ios do
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.MapboxMapsTestHost"],
       targets: ["MapboxTestHost"],
-      code_sign_identity: "Apple Development: Machiney McMachineface",
+      code_sign_identity: "Apple Development: Created via API",
     )
     run_tests(
       project: 'MapboxMaps.xcodeproj',

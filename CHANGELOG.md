@@ -3,6 +3,23 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
+
+* Deprecate `MapView.presentsWithTransaction` and `Map.presentsWithTransaction` in favor of `MapView.presentationTransactionMode` and `Map.presentationTransactionMode`. The new default `PresentationTransactionMode.automatic` updates the `presentsWithTransaction` automatically when need to optimize performance. If you used the `MapView.presentsWithTransaction` with View Annotations, now you can safely remove this option:
+
+```swift
+Map {
+  MapViewAnnotation(...)
+}
+.presentsWithTransaction(true) // Remove this
+```
+
+In case you need to preserve the old default behavior use `presentationTransactionMode = .async`:
+
+```swift
+mapView.presentationTransactionMode = .async // UIKit
+Map().presentationTransactionMode(.async) // SwiftUI
+```
+
 ## 11.5.1 - 5 July, 2024
 
 * Update CoreMaps to the 11.5.1 version.

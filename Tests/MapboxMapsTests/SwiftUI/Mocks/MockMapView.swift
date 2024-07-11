@@ -27,7 +27,7 @@ struct MockMapView {
             ornaments: ornaments,
             debugOptions: [],
             isOpaque: false,
-            presentsWithTransaction: false,
+            presentationTransactionMode: .automatic,
             frameRate: Map.FrameRate(),
             makeViewportTransition: makeViewportTransitionStub.call(with:),
             makeViewportState: { [makeViewportStateStub] viewport, layoutDirection in

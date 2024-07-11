@@ -17,7 +17,7 @@ struct MapDependencies {
     var frameRate = Map.FrameRate()
     var debugOptions = MapViewDebugOptions()
     var isOpaque = true
-    var presentsWithTransaction = false
+    var presentationTransactionMode: PresentationTransactionMode = .automatic
     var additionalSafeArea = SwiftUI.EdgeInsets()
     var viewportOptions = ViewportOptions(transitionsToIdleUponUserInteraction: true, usesSafeAreaInsetsAsPadding: true)
     var performanceStatisticsParameters: Map.PerformanceStatisticsParameters?

@@ -94,7 +94,7 @@ final class MapBasicCoordinator {
         assign(&mapView, \.debugOptions, value: deps.debugOptions)
         assign(&mapView, \.isOpaque, value: deps.isOpaque)
         assign(&mapView, \.frameRate, value: deps.frameRate)
-        assign(&mapView, \.presentsWithTransaction, value: deps.presentsWithTransaction)
+        assign(&mapView, \.presentationTransactionMode, value: deps.presentationTransactionMode)
         assign(&mapView, \.viewportManager.options, value: deps.viewportOptions)
 
         cameraChangeHandlers = deps.cameraChangeHandlers

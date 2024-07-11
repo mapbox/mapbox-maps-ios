@@ -58,14 +58,28 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
     /// If, however, the `MapView` is overlaid with a `UIKit` element which must
     /// be pinned to a particular lat-long, then setting this to `true` will
     /// result in better synchronization and less jitter.
+    @available(*, deprecated, message: "Use presentationTransactionMode instead")
     public var presentsWithTransaction: Bool {
-        get {
-            return metalView?.presentsWithTransaction ?? false
-        }
-        set {
-            metalView?.presentsWithTransaction = newValue
-        }
+        get { mapPresentation.presentsWithTransaction }
+        set { mapPresentation.presentsWithTransaction = newValue }
     }
+
+    /// Defines the map presentation mode.
+    ///
+    /// This setting determines whether the underlying `CAMetalLayer` presents its content using a CoreAnimation transaction, controlling `CAMetalLayer.presentsWithTransaction` property.
+    ///
+    /// By default, the value is ``PresentationTransactionMode/automatic``,  meaning the mode will be switched between async and sync depending on the map content, such as view annotations.
+    ///
+    /// If you use a custom View displayed on top of the map that should appear at specific map coordinates, set presentation mode to ``PresentationTransactionMode/sync`` to avoid jitter.
+    /// However, setting ``PresentationTransactionMode/async`` mode can result in faster rendering in some cases.
+    ///
+    /// For more information please refer to `CAMetalLayer.presentsWithTransaction` and ``PresentationTransactionMode``.
+    public var presentationTransactionMode: PresentationTransactionMode {
+        get { mapPresentation.mode }
+        set { mapPresentation.mode = newValue }
+    }
+
+    private let mapPresentation = MapPresentation()
 
     open override var isOpaque: Bool {
         didSet {
@@ -409,6 +423,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
             containerView: viewAnnotationContainerView,
             mapboxMap: mapboxMap,
             displayLink: displayLinkSignalSubject.signal)
+        mapPresentation.displaysAnnotations = viewAnnotations.displaysAnnotations.signal
 
         let safeAreaSignal = safeAreaSignalSubject.signal.skipRepeats()
 
@@ -716,8 +731,8 @@ extension MapView: DelegatingMapClientDelegate {
         metalView.contentMode = .center
         metalView.isOpaque = isOpaque
         metalView.layer.isOpaque = isOpaque
-        metalView.presentsWithTransaction = false
         metalView.sampleCount = antialiasingSampleCount
+        mapPresentation.metalView = metalView
 
         // MapView should clip bounds to hide MTKView oversizing during the expand resizing animations
         clipsToBounds = true

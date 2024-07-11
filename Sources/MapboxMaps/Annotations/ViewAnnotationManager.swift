@@ -50,11 +50,11 @@ public protocol ViewAnnotationUpdateObserver: AnyObject {
 /// View annotations are invariant to map camera transformations however such properties as size, visibility etc
 /// could be controlled by the user using update operation.
 public final class ViewAnnotationManager {
-
     private let containerView: UIView
     private let mapboxMap: MapboxMapProtocol
     private var displayLink: Signal<Void>
-    // internal for tests
+    private(set) var displaysAnnotations = CurrentValueSignalSubject<Bool>(false)
+
     private var objectAnnotations = [String: ViewAnnotation]()
 
     // deprecated properties
@@ -375,6 +375,7 @@ public final class ViewAnnotationManager {
     // MARK: - Private functions
 
     private func placeAnnotations(positions: [ViewAnnotationPositionDescriptor]) {
+        displaysAnnotations.value = !positions.isEmpty
         // Iterate through and update all view annotations
         // First update the position of the views based on the placement info from GL-Native
         // Then hide the views which are off screen

@@ -50,7 +50,6 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.presentsWithTransaction = true
         view.addSubview(mapView)
 
         updateModeButton()

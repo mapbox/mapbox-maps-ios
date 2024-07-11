@@ -14,3 +14,4 @@
 - ``GlyphsRasterizationMode``
 - ``NorthOrientation``
 - ``ViewportMode``
+- ``PresentationTransactionMode``

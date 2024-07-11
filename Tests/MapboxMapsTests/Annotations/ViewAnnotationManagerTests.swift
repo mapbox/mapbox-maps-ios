@@ -286,6 +286,25 @@ final class ViewAnnotationManagerTests: XCTestCase {
     }
 
     @available(*, deprecated)
+    func testDisplaysAnnotationProperty() {
+        XCTAssertEqual(manager.displaysAnnotations.value, false)
+        let annotationViewA = addTestAnnotationView(id: "test-id")
+
+        XCTAssertEqual(manager.displaysAnnotations.value, false)
+
+        mapboxMap.simulateAnnotationPositionsUpdate([ViewAnnotationPositionDescriptor(
+            identifier: "test-id",
+            frame: CGRect(x: 150, y: 200, width: 100, height: 50)
+        )])
+
+        XCTAssertEqual(manager.displaysAnnotations.value, true)
+
+        mapboxMap.simulateAnnotationPositionsUpdate([])
+
+        XCTAssertEqual(manager.displaysAnnotations.value, false)
+    }
+
+    @available(*, deprecated)
     func testViewAnnotationUpdateDoesNotUnhideHiddenViews() throws {
         let annotationView = addTestAnnotationView()
 

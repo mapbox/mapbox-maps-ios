@@ -297,14 +297,24 @@ public extension Map {
             self, \.mapDependencies.frameRate, FrameRate(range: range, preferred: preferred))
     }
 
-    /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`
-    /// presents its content using a CoreAnimation transaction
+    /// Defines the map presentation mode.
     ///
-    /// See ``MapView/presentsWithTransaction``.
+    /// This setting determines whether the underlying `CAMetalLayer` presents its content using a CoreAnimation transaction, controlling `CAMetalLayer.presentsWithTransaction` property.
+    ///
+    /// By default, the value is ``PresentationTransactionMode/automatic``,  meaning the mode will be switched between async and sync depending on the map content, such as view annotations.
+    ///
+    /// If you use a custom View displayed on top of the map that should appear at specific map coordinates, set presentation mode to ``PresentationTransactionMode/sync`` to avoid jitter.
+    /// However, setting ``PresentationTransactionMode/async`` mode can result in faster rendering in some cases.
+    ///
+    /// For more information please refer to `CAMetalLayer.presentsWithTransaction` and ``PresentationTransactionMode``.
     @_documentation(visibility: public)
-    func presentsWithTransaction(_ value: Bool) -> Self {
-        copyAssigned(self, \.mapDependencies.presentsWithTransaction, value)
+    func presentationTransactionMode(_ value: PresentationTransactionMode) -> Self {
+        copyAssigned(self, \.mapDependencies.presentationTransactionMode, value)
     }
+
+    /// :nodoc:
+    @available(*, unavailable, message: "Transaction mode is managed automatically, see presentationTransactionMode")
+    func presentsWithTransaction(_: Bool) {}
 
     /// Indicates whether the ``Viewport`` should idle when map receives pan touch input.
     ///

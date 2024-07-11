@@ -14,7 +14,7 @@ struct MapViewFacade {
     @MutableRef
     var isOpaque: Bool
     @MutableRef
-    var presentsWithTransaction: Bool
+    var presentationTransactionMode: PresentationTransactionMode
     @MutableRef
     var frameRate: Map.FrameRate
 
@@ -32,7 +32,7 @@ extension MapViewFacade {
         ornaments = mapView.ornaments
         _debugOptions = MutableRef(root: mapView, keyPath: \.debugOptions)
         _isOpaque = MutableRef(root: mapView, keyPath: \.isOpaque)
-        _presentsWithTransaction = MutableRef(root: mapView, keyPath: \.presentsWithTransaction)
+        _presentationTransactionMode = MutableRef(root: mapView, keyPath: \.presentationTransactionMode)
         _frameRate = MutableRef(get: mapView.getFrameRate, set: mapView.set(frameRate:))
 
         makeViewportTransition = { animation in

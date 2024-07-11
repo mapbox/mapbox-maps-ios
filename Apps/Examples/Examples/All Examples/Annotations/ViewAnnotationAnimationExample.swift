@@ -24,8 +24,6 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 11))
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
-        // prevents view annotations being unsynchronized with map movements
-        mapView.presentsWithTransaction = true
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

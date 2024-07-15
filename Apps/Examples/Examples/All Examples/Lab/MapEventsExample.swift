@@ -257,6 +257,17 @@ extension CanonicalTileID {
     }
 }
 
+extension CustomRasterSourceTileStatus {
+    var log: String {
+        switch self {
+        case .required: return "required"
+        case .optional: return "optional"
+        case .notNeeded: return "notNeeded"
+        default: return "unknown"
+        }
+    }
+}
+
 extension StyleDataLoadedType: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {

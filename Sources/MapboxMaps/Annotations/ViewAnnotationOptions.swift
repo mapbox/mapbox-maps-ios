@@ -178,6 +178,7 @@ extension CoreViewAnnotationOptions {
                   height: swiftValue.height as NSNumber?,
                   allowOverlap: swiftValue.allowOverlap as NSNumber?,
                   allowOverlapWithPuck: swiftValue.allowOverlapWithPuck as NSNumber?,
+                  allowZElevate: nil,
                   visible: swiftValue.visible as NSNumber?,
                   variableAnchors: swiftValue.variableAnchors,
                   selected: swiftValue.selected as NSNumber?,

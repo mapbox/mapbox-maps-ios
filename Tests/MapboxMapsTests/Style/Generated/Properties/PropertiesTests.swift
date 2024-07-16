@@ -565,4 +565,23 @@ extension TextWritingMode {
         return allCases.randomElement()!
     }
 }
+
+// MARK: CLIP_LAYER_TYPES
+
+extension Value where T == ClipLayerTypes {
+    static func testConstantValue() -> Value<ClipLayerTypes> {
+        return .constant(ClipLayerTypes.testConstantValue())
+    }
+}
+
+extension ClipLayerTypes {
+    static func testConstantValue() -> ClipLayerTypes {
+        return .model
+    }
+
+    static func random() -> ClipLayerTypes {
+        let allCases: [ClipLayerTypes] = [.model, .symbol]
+        return allCases.randomElement()!
+    }
+}
 // End of generated file.

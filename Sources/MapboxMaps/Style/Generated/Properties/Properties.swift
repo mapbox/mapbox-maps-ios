@@ -616,4 +616,22 @@ public struct TextWritingMode: RawRepresentable, Codable, Hashable {
 
 }
 
+// MARK: CLIP_LAYER_TYPES
+
+/// Layer types that will also be removed if fallen below this clip layer.
+public struct ClipLayerTypes: RawRepresentable, Codable, Hashable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// If present the clip layer would remove all 3d model layers below it. Currently only instanced models (e.g. trees) are removed.
+    public static let model = ClipLayerTypes(rawValue: "model")
+
+    /// If present the clip layer would remove all symbol layers below it.
+    public static let symbol = ClipLayerTypes(rawValue: "symbol")
+
+}
+
 // End of generated file.

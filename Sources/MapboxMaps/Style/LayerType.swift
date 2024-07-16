@@ -22,6 +22,9 @@ public struct LayerType: ExpressibleByStringLiteral, RawRepresentable, Codable, 
     /// A heatmap.
     public static let heatmap: LayerType = "heatmap"
 
+    /// A clip layer.
+    public static let clip: LayerType = "clip"
+
     /// An extruded (3D) polygon.
     public static let fillExtrusion: LayerType = "fill-extrusion"
 

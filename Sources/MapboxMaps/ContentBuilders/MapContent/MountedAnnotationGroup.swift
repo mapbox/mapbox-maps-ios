@@ -1,17 +1,17 @@
 import os.log
 
 @available(iOS 13.0, *)
-struct MountedAnnotationGroup<M: MapContentAnnotationManager>: MapContentMountedComponent {
-    private let annotations: [(AnyHashable, M.AnnotationType)]
+struct MountedAnnotationGroup<Manager: AnnotationManagerInternal>: MapContentMountedComponent {
+    private let annotations: [(AnyHashable, Manager.Traits.AnnotationType)]
     private let layerId: String
     private let clusterOptions: ClusterOptions?
-    private let updateProperties: (M) -> Void
+    private let updateProperties: (Manager) -> Void
 
     init(
         layerId: String,
         clusterOptions: ClusterOptions?,
-        annotations: [(AnyHashable, M.AnnotationType)],
-        updateProperties: @escaping (M) -> Void
+        annotations: [(AnyHashable, Manager.Traits.AnnotationType)],
+        updateProperties: @escaping (Manager) -> Void
     ) {
         self.layerId = layerId
         self.clusterOptions = clusterOptions
@@ -26,15 +26,9 @@ struct MountedAnnotationGroup<M: MapContentAnnotationManager>: MapContentMounted
 
         os_log(.debug, log: .contentDSL, "Annotation add %s", layerId)
 
-        let manager = M.make(
-            layerId: layerId,
-            layerPosition: context.resolveLayerPosition(),
-            clusterOptions: clusterOptions,
-            using: orchestrator
-        )
-        manager.isSwiftUI = true
-        updateProperties(manager)
-        manager.set(newAnnotations: annotations)
+        let manager: Manager = orchestrator.make(AnnotationManagerParams(id: layerId, layerPosition: context.resolveLayerPosition(), clusterOptions: clusterOptions))
+
+        update(manager: manager, context: context)
     }
 
     func unmount(with context: MapContentNodeContext) throws {
@@ -49,18 +43,22 @@ struct MountedAnnotationGroup<M: MapContentAnnotationManager>: MapContentMounted
         }
 
         guard let orchestrator = context.content?.layerAnnotations.value,
-              let manager = orchestrator.annotationManagersById[layerId] as? M else {
+              let manager = orchestrator.annotationManagersById[layerId] as? Manager else {
             return false
         }
 
         os_log(.debug, log: .contentDSL, "Annotation update %s", layerId)
 
-        manager.isSwiftUI = true
-        updateProperties(manager)
-        manager.layerPosition = context.resolveLayerPosition()
-        manager.set(newAnnotations: annotations)
+        update(manager: manager, context: context)
 
         return true
+    }
+
+    private func update(manager: Manager, context: MapContentNodeContext) {
+        manager.impl.isSwiftUI = true
+        updateProperties(manager)
+        manager.impl.layerPosition = context.resolveLayerPosition()
+        manager.impl.set(newAnnotations: annotations)
     }
 
     func updateMetadata(with context: MapContentNodeContext) {

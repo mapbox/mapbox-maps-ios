@@ -12,6 +12,24 @@ public protocol Annotation {
     var userInfo: [String: Any]? { get set }
 }
 
+protocol AnnotationInternal {
+    associatedtype GeometryType: GeometryConvertible
+
+    var id: String { get set }
+    var layerProperties: [String: Any] { get }
+    var feature: Feature { get }
+    var isSelected: Bool { get set }
+    var isDraggable: Bool { get set }
+    var _geometry: GeometryType { get set }
+
+    var tapHandler: ((MapContentGestureContext) -> Bool)? { get set }
+    var longPressHandler: ((MapContentGestureContext) -> Bool)? { get set }
+
+    var dragBeginHandler: ((inout Self, MapContentGestureContext) -> Bool)? { get set }
+    var dragChangeHandler: ((inout Self, MapContentGestureContext) -> Void)? { get set }
+    var dragEndHandler: ((inout Self, MapContentGestureContext) -> Void)? { get set }
+}
+
 extension Array where Element: Annotation {
     /// Deduplicates annotations.
     mutating func removeDuplicates() {

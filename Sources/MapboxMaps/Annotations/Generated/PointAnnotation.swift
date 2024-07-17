@@ -1,18 +1,23 @@
 // This file is generated.
 import UIKit
 
-public struct PointAnnotation: Annotation, Equatable {
+public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
 
     /// Identifier for this annotation
     internal(set) public var id: String
 
     /// The geometry backing this annotation
     public var geometry: Geometry {
-        return .point(point)
+        .point(point)
     }
 
-    /// The point backing this annotation
+    /// The Point backing this annotation
     public var point: Point
+
+    var _geometry: Point {
+        get { point }
+        set { point = newValue }
+    }
 
     /// Toggles the annotation's selection state.
     /// If the annotation is deselected, it becomes selected.
@@ -586,7 +591,7 @@ extension PointAnnotation {
 }
 
 @available(iOS 13.0, *)
-extension PointAnnotation: MapContent, PrimitiveMapContent, MapContentAnnotation {
+extension PointAnnotation: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         PointAnnotationGroup { self }.visit(node)
     }

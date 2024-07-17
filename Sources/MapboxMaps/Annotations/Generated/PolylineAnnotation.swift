@@ -1,18 +1,23 @@
 // This file is generated.
 import UIKit
 
-public struct PolylineAnnotation: Annotation, Equatable {
+public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
 
     /// Identifier for this annotation
     internal(set) public var id: String
 
     /// The geometry backing this annotation
     public var geometry: Geometry {
-        return .lineString(lineString)
+        .lineString(lineString)
     }
 
-    /// The line string backing this annotation
+    /// The LineString backing this annotation
     public var lineString: LineString
+
+    var _geometry: LineString {
+        get { lineString }
+        set { lineString = newValue }
+    }
 
     /// Toggles the annotation's selection state.
     /// If the annotation is deselected, it becomes selected.
@@ -307,7 +312,7 @@ extension PolylineAnnotation {
 }
 
 @available(iOS 13.0, *)
-extension PolylineAnnotation: MapContent, PrimitiveMapContent, MapContentAnnotation {
+extension PolylineAnnotation: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         PolylineAnnotationGroup { self }.visit(node)
     }

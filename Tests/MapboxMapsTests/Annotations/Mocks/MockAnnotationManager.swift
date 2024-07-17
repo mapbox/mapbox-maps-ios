@@ -1,17 +1,11 @@
 import XCTest
 @testable import MapboxMaps
 
-internal final class MockAnnotationManager: AnnotationManagerInternal {
+internal final class MockAnnotationManager: AnnotationManagerImplProtocol {
 
     @Stubbed var id: String = ""
 
-    @Stubbed var sourceId: String = ""
-
-    @Stubbed var layerId: String = ""
-
     @Stubbed var allLayerIds: [String] = []
-
-    @Stubbed var slot: String?
 
     let destroyStub = Stub<Void, Void>()
     func destroy() {

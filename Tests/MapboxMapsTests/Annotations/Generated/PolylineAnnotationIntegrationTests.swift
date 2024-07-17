@@ -24,7 +24,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testSourceAndLayerRemovedUponDestroy() {
-        manager.destroy()
+        manager.impl.destroy()
 
         XCTAssertFalse(mapView.mapboxMap.allLayerIdentifiers.map { $0.id }.contains(manager.layerId))
         XCTAssertFalse(mapView.mapboxMap.allSourceIdentifiers.map { $0.id }.contains(manager.sourceId))
@@ -69,7 +69,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineCap, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineCap {
             XCTAssertEqual(actualValue, value)
@@ -83,7 +83,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineCap, .constant(LineCap(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cap").value as! String)))
     }
@@ -95,7 +95,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineMiterLimit, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineMiterLimit {
             XCTAssertEqual(actualValue, value, accuracy: 0.1)
@@ -109,7 +109,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineMiterLimit, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-miter-limit").value as! NSNumber).doubleValue))
     }
@@ -121,7 +121,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineRoundLimit, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineRoundLimit {
             XCTAssertEqual(actualValue, value, accuracy: 0.1)
@@ -135,7 +135,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineRoundLimit, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-round-limit").value as! NSNumber).doubleValue))
     }
@@ -147,7 +147,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineDasharray, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineDasharray {
             for (actual, expected) in zip(actualValue, value) {
@@ -163,7 +163,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineDasharray, .constant(StyleManager.layerPropertyDefaultValue(for: .line, property: "line-dasharray").value as! [Double]))
     }
@@ -175,7 +175,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineDepthOcclusionFactor, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineDepthOcclusionFactor {
             XCTAssertEqual(actualValue, value, accuracy: 0.1)
@@ -189,7 +189,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineDepthOcclusionFactor, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-depth-occlusion-factor").value as! NSNumber).doubleValue))
     }
@@ -201,7 +201,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineEmissiveStrength, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineEmissiveStrength {
             XCTAssertEqual(actualValue, value, accuracy: 0.1)
@@ -215,7 +215,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineEmissiveStrength, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-emissive-strength").value as! NSNumber).doubleValue))
     }
@@ -227,7 +227,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineOcclusionOpacity, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineOcclusionOpacity {
             XCTAssertEqual(actualValue, value, accuracy: 0.1)
@@ -241,7 +241,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineOcclusionOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-occlusion-opacity").value as! NSNumber).doubleValue))
     }
@@ -253,7 +253,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineTranslate, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineTranslate {
             for (actual, expected) in zip(actualValue, value) {
@@ -269,7 +269,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineTranslate, .constant(StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate").value as! [Double]))
     }
@@ -281,7 +281,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineTranslateAnchor, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineTranslateAnchor {
             XCTAssertEqual(actualValue, value)
@@ -295,7 +295,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineTranslateAnchor, .constant(LineTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String)))
     }
@@ -307,7 +307,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineTrimColor, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineTrimColor {
             XCTAssertEqual(actualValue, value)
@@ -321,7 +321,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineTrimColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-trim-color").value as! [Any], options: []))))
     }
@@ -333,7 +333,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineTrimFadeRange, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineTrimFadeRange {
             for (actual, expected) in zip(actualValue, value) {
@@ -349,7 +349,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineTrimFadeRange, .constant(StyleManager.layerPropertyDefaultValue(for: .line, property: "line-trim-fade-range").value as! [Double]))
     }
@@ -361,7 +361,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.lineTrimOffset, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         if case .constant(let actualValue) = layer.lineTrimOffset {
             for (actual, expected) in zip(actualValue, value) {
@@ -377,7 +377,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineTrimOffset, .constant(StyleManager.layerPropertyDefaultValue(for: .line, property: "line-trim-offset").value as! [Double]))
     }
@@ -389,7 +389,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(manager.slot, value)
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         let actualValue = layer.slot?.rawValue ?? ""
         XCTAssertEqual(actualValue, value)
@@ -400,7 +400,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.slot, nil)
     }
@@ -416,7 +416,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineJoin, .expression(Exp(.toString) {
                 Exp(.get) {
@@ -437,7 +437,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineJoin, .constant(LineJoin(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-join").value as! String)))
     }
@@ -453,7 +453,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineSortKey, .expression(Exp(.number) {
                 Exp(.get) {
@@ -474,7 +474,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineSortKey, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-sort-key").value as! NSNumber).doubleValue))
     }
@@ -490,7 +490,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineZOffset, .expression(Exp(.number) {
                 Exp(.get) {
@@ -511,7 +511,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineZOffset, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-z-offset").value as! NSNumber).doubleValue))
     }
@@ -527,7 +527,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineBlur, .expression(Exp(.number) {
                 Exp(.get) {
@@ -548,7 +548,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineBlur, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-blur").value as! NSNumber).doubleValue))
     }
@@ -564,7 +564,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineBorderColor, .expression(Exp(.toColor) {
                 Exp(.get) {
@@ -585,7 +585,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineBorderColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-border-color").value as! [Any], options: []))))
     }
@@ -601,7 +601,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineBorderWidth, .expression(Exp(.number) {
                 Exp(.get) {
@@ -622,7 +622,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineBorderWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-border-width").value as! NSNumber).doubleValue))
     }
@@ -638,7 +638,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineColor, .expression(Exp(.toColor) {
                 Exp(.get) {
@@ -659,7 +659,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-color").value as! [Any], options: []))))
     }
@@ -675,7 +675,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineGapWidth, .expression(Exp(.number) {
                 Exp(.get) {
@@ -696,7 +696,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineGapWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-gap-width").value as! NSNumber).doubleValue))
     }
@@ -712,7 +712,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineOffset, .expression(Exp(.number) {
                 Exp(.get) {
@@ -733,7 +733,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineOffset, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-offset").value as! NSNumber).doubleValue))
     }
@@ -749,7 +749,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineOpacity, .expression(Exp(.number) {
                 Exp(.get) {
@@ -770,7 +770,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-opacity").value as! NSNumber).doubleValue))
     }
@@ -786,7 +786,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.linePattern, .expression(Exp(.image) {
                 Exp(.get) {
@@ -807,7 +807,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.linePattern, .constant(.name(StyleManager.layerPropertyDefaultValue(for: .line, property: "line-pattern").value as! String)))
     }
@@ -823,7 +823,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations = [annotation]
 
         // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineWidth, .expression(Exp(.number) {
                 Exp(.get) {
@@ -844,7 +844,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
+        manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-width").value as! NSNumber).doubleValue))
     }

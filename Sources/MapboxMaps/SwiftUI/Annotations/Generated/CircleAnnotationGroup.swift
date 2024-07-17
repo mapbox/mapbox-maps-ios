@@ -153,16 +153,4 @@ extension CircleAnnotationGroup: MapContent, PrimitiveMapContent {
     }
 }
 
-@available(iOS 13.0, *)
-extension CircleAnnotationManager: MapContentAnnotationManager {
-    static func make(
-        layerId: String,
-        layerPosition: LayerPosition?,
-        clusterOptions: ClusterOptions? = nil,
-        using orchestrator: AnnotationOrchestrator
-    ) -> Self {
-        orchestrator.makeCircleAnnotationManager(id: layerId, layerPosition: layerPosition) as! Self
-    }
-}
-
 // End of generated file.

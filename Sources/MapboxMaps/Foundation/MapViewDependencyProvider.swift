@@ -12,7 +12,7 @@ protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
                             mapFeatureQueryable: MapFeatureQueryable,
-                            annotations: AnnotationOrchestratorImplProtocol,
+                            annotationManagersByLayerId: Ref<[String: AnnotationManagerImplProtocol]>,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
     // swiftlint:disable:next function_parameter_count
     func makeViewportManagerImpl(mapboxMap: MapboxMapProtocol,
@@ -22,13 +22,6 @@ protocol MapViewDependencyProviderProtocol: AnyObject {
                                  anyTouchGestureRecognizer: UIGestureRecognizer,
                                  doubleTapGestureRecognizer: UIGestureRecognizer,
                                  doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportManagerImplProtocol
-    func makeAnnotationOrchestratorImpl(
-        in view: UIView,
-        mapboxMap: MapboxMapProtocol,
-        mapFeatureQueryable: MapFeatureQueryable,
-        style: StyleProtocol,
-        displayLink: Signal<Void>
-    ) -> AnnotationOrchestratorImplProtocol
 
     func makeEventsManager() -> EventsManagerProtocol
 }
@@ -185,7 +178,7 @@ final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
         view: UIView,
         mapboxMap: MapboxMapProtocol,
         mapFeatureQueryable: MapFeatureQueryable,
-        annotations: AnnotationOrchestratorImplProtocol,
+        annotationManagersByLayerId: Ref<[String: AnnotationManagerImplProtocol]>,
         cameraAnimationsManager: CameraAnimationsManagerProtocol
     ) -> GestureManager {
         let singleTap = makeSingleTapGestureHandler(
@@ -196,7 +189,7 @@ final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
         view.addGestureRecognizer(longPress.recognizer)
 
         let mapContentGestureManager = MapContentGestureManager(
-            annotations: annotations,
+            annotationManagersByLayerId: annotationManagersByLayerId,
             mapboxMap: mapboxMap,
             mapFeatureQueryable: mapFeatureQueryable,
             onTap: singleTap.onTap,
@@ -233,26 +226,6 @@ final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
                 cameraAnimationsManager: cameraAnimationsManager),
             mapboxMap: mapboxMap,
             mapContentGestureManager: mapContentGestureManager)
-    }
-
-    func makeAnnotationOrchestratorImpl(
-        in view: UIView,
-        mapboxMap: MapboxMapProtocol,
-        mapFeatureQueryable: MapFeatureQueryable,
-        style: StyleProtocol,
-        displayLink: Signal<Void>
-    ) -> AnnotationOrchestratorImplProtocol {
-        let offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
-        let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
-        let offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
-        let factory = AnnotationManagerFactory(
-            style: style,
-            displayLink: displayLink,
-            offsetPointCalculator: offsetPointCalculator,
-            offsetPolygonCalculator: offsetPolygonCalculator,
-            offsetLineStringCalculator: offsetLineStringCalculator,
-            mapFeatureQueryable: mapFeatureQueryable)
-        return AnnotationOrchestratorImpl(factory: factory)
     }
 
     // swiftlint:disable:next function_parameter_count

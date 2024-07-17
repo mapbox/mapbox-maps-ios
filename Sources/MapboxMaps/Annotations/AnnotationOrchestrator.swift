@@ -18,20 +18,37 @@ public protocol AnnotationManager: AnyObject {
     var slot: String? { get set }
 }
 
+struct AnnotationManagerParams {
+    let id: String
+    let layerPosition: LayerPosition?
+    let clusterOptions: ClusterOptions?
+}
+
+struct AnnotationManagerDeps {
+    let map: MapboxMapProtocol
+    let style: StyleProtocol
+    let queryable: MapFeatureQueryable
+    let imagesManager: AnnotationImagesManagerProtocol
+    let displayLink: Signal<Void>
+
+    func makeOffsetCalculator<T: OffsetGeometryCalculator>() -> T {
+        return T.init(mapboxMap: map)
+    }
+
+    static func from(mapboxMap map: MapboxMap, displayLink: Signal<Void>) -> AnnotationManagerDeps {
+        AnnotationManagerDeps(
+            map: map,
+            style: map,
+            queryable: map,
+            imagesManager: AnnotationImagesManager(style: map),
+            displayLink: displayLink)
+    }
+}
+
 protocol AnnotationManagerInternal: AnnotationManager {
-    var allLayerIds: [String] { get }
-
-    func destroy()
-
-    func handleTap(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool
-
-    func handleLongPress(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool
-
-    func handleDragBegin(with featureId: String, context: MapContentGestureContext) -> Bool
-
-    func handleDragChange(with translation: CGPoint, context: MapContentGestureContext)
-
-    func handleDragEnd(context: MapContentGestureContext)
+    associatedtype Traits: AnnotationManagerTraits
+    var impl: AnnotationManagerImpl<Traits> { get }
+    init(params: AnnotationManagerParams, deps: AnnotationManagerDeps)
 }
 
 struct AnnotationGestureHandlers<T: Annotation> {
@@ -58,14 +75,27 @@ public protocol AnnotationInteractionDelegate: AnyObject {
 
 /// `AnnotationOrchestrator` provides a way to create annotation managers of different types.
 public final class AnnotationOrchestrator {
-    private let impl: AnnotationOrchestratorImplProtocol
+    private let deps: AnnotationManagerDeps
 
-    init(impl: AnnotationOrchestratorImplProtocol) {
-        self.impl = impl
+    init(deps: AnnotationManagerDeps) {
+        self.deps = deps
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
-    public var annotationManagersById: [String: AnnotationManager] { impl.annotationManagersById }
+    private(set) public var annotationManagersById = [String: AnnotationManager]()
+
+    // TODO: Remove the following after migration to interactions.
+    @MutableRef
+    private(set) var managersByLayerId =  [String: AnnotationManagerImplProtocol]()
+    private var annotationManagersImplsById = [String: AnnotationManagerImplProtocol]() {
+        didSet {
+            // calculate (layerId, manager) pairs
+            let pairs = annotationManagersImplsById.values.flatMap { manager in
+                manager.allLayerIds.map { ($0, manager) }
+            }
+            self.managersByLayerId = Dictionary(uniqueKeysWithValues: pairs)
+        }
+    }
 
     /// Creates a `PointAnnotationManager` which is used to manage a collection of
     /// `PointAnnotation`s. Annotations persist across style changes. If an annotation manager with
@@ -86,8 +116,10 @@ public final class AnnotationOrchestrator {
         onClusterTap: ((AnnotationClusterGestureContext) -> Void)? = nil,
         onClusterLongPress: ((AnnotationClusterGestureContext) -> Void)? = nil
     ) -> PointAnnotationManager {
-        // swiftlint:disable:next force_cast
-        return impl.makePointAnnotationManager(id: id, layerPosition: layerPosition, clusterOptions: clusterOptions) as! PointAnnotationManager
+        let manager: PointAnnotationManager = make(AnnotationManagerParams(id: id, layerPosition: layerPosition, clusterOptions: clusterOptions), function: #function)
+        manager.onClusterTap = onClusterTap
+        manager.onClusterLongPress = onClusterLongPress
+        return manager
     }
 
     /// Creates a `PolygonAnnotationManager` which is used to manage a collection of
@@ -101,8 +133,7 @@ public final class AnnotationOrchestrator {
     /// - Returns: An instance of `PolygonAnnotationManager`
     public func makePolygonAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                              layerPosition: LayerPosition? = nil) -> PolygonAnnotationManager {
-        // swiftlint:disable:next force_cast
-        return impl.makePolygonAnnotationManager(id: id, layerPosition: layerPosition) as! PolygonAnnotationManager
+        make(AnnotationManagerParams(id: id, layerPosition: layerPosition, clusterOptions: nil), function: #function)
     }
 
     /// Creates a `PolylineAnnotationManager` which is used to manage a collection of
@@ -116,8 +147,7 @@ public final class AnnotationOrchestrator {
     /// - Returns: An instance of `PolylineAnnotationManager`
     public func makePolylineAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                               layerPosition: LayerPosition? = nil) -> PolylineAnnotationManager {
-        // swiftlint:disable:next force_cast
-        return impl.makePolylineAnnotationManager(id: id, layerPosition: layerPosition) as! PolylineAnnotationManager
+        make(AnnotationManagerParams(id: id, layerPosition: layerPosition, clusterOptions: nil), function: #function)
     }
 
     /// Creates a `CircleAnnotationManager` which is used to manage a collection of
@@ -131,14 +161,32 @@ public final class AnnotationOrchestrator {
     /// - Returns: An instance of `CircleAnnotationManager`
     public func makeCircleAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                             layerPosition: LayerPosition? = nil) -> CircleAnnotationManager {
-        // swiftlint:disable:next force_cast
-        return impl.makeCircleAnnotationManager(id: id, layerPosition: layerPosition) as! CircleAnnotationManager
+        make(AnnotationManagerParams(id: id, layerPosition: layerPosition, clusterOptions: nil), function: #function)
+    }
+
+    func make<Manager: AnnotationManagerInternal>(_ params: AnnotationManagerParams, function: StaticString = #function) -> Manager {
+        removeAnnotationManager(withId: params.id, warnIfRemoved: true, function: #function)
+        let annotationManager = Manager(params: params, deps: deps)
+        annotationManagersById[params.id] = annotationManager
+        annotationManagersImplsById[params.id] = annotationManager.impl
+        return annotationManager
     }
 
     /// Removes an annotation manager, this will remove the underlying layer and source from the style.
     /// A removed annotation manager will not be able to reuse anymore, you will need to create new annotation manger to add annotations.
     /// - Parameter id: Identifer of annotation manager to remove
     public func removeAnnotationManager(withId id: String) {
-        impl.removeAnnotationManager(withId: id)
+        removeAnnotationManager(withId: id, warnIfRemoved: false, function: #function)
+    }
+
+    private func removeAnnotationManager(withId id: String, warnIfRemoved: Bool, function: StaticString = #function) {
+        let manager = annotationManagersById.removeValue(forKey: id)
+        annotationManagersImplsById.removeValue(forKey: id)?.destroy()
+
+        if let manager, warnIfRemoved {
+            Log.warning(
+                forMessage: "\(type(of: manager)) with id \(id) was removed implicitly when invoking \(function) with the same id.",
+                category: "Annotations")
+        }
     }
 }

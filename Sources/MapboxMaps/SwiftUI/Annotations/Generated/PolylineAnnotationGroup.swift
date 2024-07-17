@@ -212,16 +212,4 @@ extension PolylineAnnotationGroup: MapContent, PrimitiveMapContent {
     }
 }
 
-@available(iOS 13.0, *)
-extension PolylineAnnotationManager: MapContentAnnotationManager {
-    static func make(
-        layerId: String,
-        layerPosition: LayerPosition?,
-        clusterOptions: ClusterOptions? = nil,
-        using orchestrator: AnnotationOrchestrator
-    ) -> Self {
-        orchestrator.makePolylineAnnotationManager(id: layerId, layerPosition: layerPosition) as! Self
-    }
-}
-
 // End of generated file.

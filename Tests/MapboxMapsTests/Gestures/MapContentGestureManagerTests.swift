@@ -5,7 +5,6 @@ import XCTest
 
 class MapContentGestureManagerTests: XCTestCase {
     var me: MapContentGestureManager!
-    var annotations: MockAnnotationOrchestatorImpl!
     var mapboxMap: MockMapboxMap!
     var featureQueryable: MockMapFeatureQueryable!
     @TestSignal var onTap: Signal<CGPoint>
@@ -18,12 +17,13 @@ class MapContentGestureManagerTests: XCTestCase {
     var layerHandledTap = true
     var layerHandledLongPress = true
 
+    @MutableRef var annotationManagersByLayerId = [String: AnnotationManagerImplProtocol]()
+
     override func setUp() {
-        annotations = MockAnnotationOrchestatorImpl()
         mapboxMap = MockMapboxMap()
         featureQueryable = MockMapFeatureQueryable()
         me = MapContentGestureManager(
-            annotations: annotations,
+            annotationManagersByLayerId: $annotationManagersByLayerId,
             mapboxMap: mapboxMap,
             mapFeatureQueryable: featureQueryable,
             onTap: onTap,
@@ -49,7 +49,7 @@ class MapContentGestureManagerTests: XCTestCase {
         tokens.removeAll()
         mapTaps.removeAll()
         mapLongPresses.removeAll()
-        annotations = nil
+        annotationManagersByLayerId = [:]
         mapboxMap = nil
         featureQueryable = nil
         me = nil
@@ -155,10 +155,9 @@ class MapContentGestureManagerTests: XCTestCase {
 
     func testAnnotationTap() throws {
         let manager = MockAnnotationManager()
-        let managersByLayerId = [
+        annotationManagersByLayerId = [
             "annotation-layer": manager
         ]
-        annotations.$managersByLayerId.getStub.defaultReturnValue = managersByLayerId
 
         manager.handleTapStub.defaultReturnValue = true // handles the tap
 
@@ -195,10 +194,9 @@ class MapContentGestureManagerTests: XCTestCase {
 
     func testAnnotationLongPress() throws {
         let manager = MockAnnotationManager()
-        let managersByLayerId = [
+        annotationManagersByLayerId =  [
             "annotation-layer": manager
         ]
-        annotations.$managersByLayerId.getStub.defaultReturnValue = managersByLayerId
 
         manager.handleLongPressStub.defaultReturnValue = true // handles the long-press
 
@@ -235,10 +233,9 @@ class MapContentGestureManagerTests: XCTestCase {
 
     func testAnnotationDrag() throws {
         let manager = MockAnnotationManager()
-        let managersByLayerId = [
+        annotationManagersByLayerId = [
             "annotation-layer": manager
         ]
-        annotations.$managersByLayerId.getStub.defaultReturnValue = managersByLayerId
 
         manager.handleDragBeginStub.defaultReturnValue = true // handles the drag
 

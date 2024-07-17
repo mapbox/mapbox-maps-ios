@@ -374,23 +374,15 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
             cameraAnimatorsRunner: cameraAnimatorsRunner)
         camera = CameraAnimationsManager(impl: internalCamera)
 
-        let annotationsImpl = dependencyProvider.makeAnnotationOrchestratorImpl(
-            in: self,
-            mapboxMap: mapboxMap,
-            mapFeatureQueryable: mapboxMap,
-            style: mapboxMap,
-            displayLink: displayLinkSignalSubject.signal
-        )
-
         annotations = AnnotationOrchestrator(
-            impl: annotationsImpl
-        )
+            deps: .from(mapboxMap: mapboxMap, displayLink: displayLinkSignalSubject.signal))
+
         // Initialize/Configure gesture manager
         gestures = dependencyProvider.makeGestureManager(
             view: self,
             mapboxMap: mapboxMap,
             mapFeatureQueryable: mapboxMap,
-            annotations: annotationsImpl,
+            annotationManagersByLayerId: annotations.$managersByLayerId,
             cameraAnimationsManager: internalCamera)
 
         // Initialize the attribution manager

@@ -141,16 +141,4 @@ extension PolygonAnnotationGroup: MapContent, PrimitiveMapContent {
     }
 }
 
-@available(iOS 13.0, *)
-extension PolygonAnnotationManager: MapContentAnnotationManager {
-    static func make(
-        layerId: String,
-        layerPosition: LayerPosition?,
-        clusterOptions: ClusterOptions? = nil,
-        using orchestrator: AnnotationOrchestrator
-    ) -> Self {
-        orchestrator.makePolygonAnnotationManager(id: layerId, layerPosition: layerPosition) as! Self
-    }
-}
-
 // End of generated file.

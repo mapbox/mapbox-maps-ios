@@ -1,18 +1,23 @@
 // This file is generated.
 import UIKit
 
-public struct CircleAnnotation: Annotation, Equatable {
+public struct CircleAnnotation: Annotation, Equatable, AnnotationInternal {
 
     /// Identifier for this annotation
     internal(set) public var id: String
 
     /// The geometry backing this annotation
     public var geometry: Geometry {
-        return .point(point)
+        .point(point)
     }
 
-    /// The point backing this annotation
+    /// The Point backing this annotation
     public var point: Point
+
+    var _geometry: Point {
+        get { point }
+        set { point = newValue }
+    }
 
     /// Toggles the annotation's selection state.
     /// If the annotation is deselected, it becomes selected.
@@ -272,7 +277,7 @@ extension CircleAnnotation {
 }
 
 @available(iOS 13.0, *)
-extension CircleAnnotation: MapContent, PrimitiveMapContent, MapContentAnnotation {
+extension CircleAnnotation: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         CircleAnnotationGroup { self }.visit(node)
     }

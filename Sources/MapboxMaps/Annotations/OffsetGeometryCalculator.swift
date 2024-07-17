@@ -1,9 +1,10 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-internal protocol OffsetGeometryCalculator {
+protocol OffsetGeometryCalculator {
     associatedtype GeometryType: GeometryConvertible
     func geometry(for translation: CGPoint, from geometry: GeometryType) -> GeometryType?
+    init(mapboxMap: MapboxMapProtocol)
 }
 
 internal struct OffsetPointCalculator: OffsetGeometryCalculator {

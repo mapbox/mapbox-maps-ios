@@ -1,18 +1,23 @@
 // This file is generated.
 import UIKit
 
-public struct PolygonAnnotation: Annotation, Equatable {
+public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
 
     /// Identifier for this annotation
     internal(set) public var id: String
 
     /// The geometry backing this annotation
     public var geometry: Geometry {
-        return .polygon(polygon)
+        .polygon(polygon)
     }
 
-    /// The polygon backing this annotation
+    /// The Polygon backing this annotation
     public var polygon: Polygon
+
+    var _geometry: Polygon {
+        get { polygon }
+        set { polygon = newValue }
+    }
 
     /// Toggles the annotation's selection state.
     /// If the annotation is deselected, it becomes selected.
@@ -223,7 +228,7 @@ extension PolygonAnnotation {
 }
 
 @available(iOS 13.0, *)
-extension PolygonAnnotation: MapContent, PrimitiveMapContent, MapContentAnnotation {
+extension PolygonAnnotation: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         PolygonAnnotationGroup { self }.visit(node)
     }

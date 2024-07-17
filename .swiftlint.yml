@@ -15,6 +15,7 @@ disabled_rules:
   - todo
   - trailing_comma
   - type_name
+  - type_body_length
 custom_rules:
   trojan_source:
     regex: "[\u202A\u202B\u202D\u202E\u2066\u2067\u2068\u202C\u2069]"

@@ -14,14 +14,14 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
 
     private typealias LayerTapGestureParams = (QueriedFeature, MapContentGestureContext)
     private typealias LayerSubscribersStore = ClosureHandlersStore<LayerTapGestureParams, Bool>
-    private typealias ManagerHandlerBlock = (AnnotationManagerInternal) -> (String, Feature, MapContentGestureContext) -> Bool
+    private typealias ManagerHandlerBlock = (AnnotationManagerImplProtocol) -> (String, Feature, MapContentGestureContext) -> Bool
 
     private struct DragState {
         var point: CGPoint
-        let manager: AnnotationManagerInternal
+        let manager: AnnotationManagerImplProtocol
     }
 
-    private let annotations: AnnotationOrchestratorImplProtocol
+    private let annotations: Ref<[String: AnnotationManagerImplProtocol]>
     private let mapboxMap: MapboxMapProtocol
     private let mapFeatureQueryable: MapFeatureQueryable
 
@@ -34,13 +34,13 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
     private var layerLongPressSubscribers = [String: LayerSubscribersStore]()
 
     init(
-        annotations: AnnotationOrchestratorImplProtocol,
+        annotationManagersByLayerId: Ref<[String: AnnotationManagerImplProtocol]>,
         mapboxMap: MapboxMapProtocol,
         mapFeatureQueryable: MapFeatureQueryable,
         onTap: Signal<CGPoint>,
         onLongPress: Signal<(CGPoint, UIGestureRecognizer.State)>
     ) {
-            self.annotations = annotations
+            self.annotations = annotationManagersByLayerId
             self.mapboxMap = mapboxMap
             self.mapFeatureQueryable = mapFeatureQueryable
             onTap
@@ -146,7 +146,7 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
         }
 
         for (layerId, queriedFeature) in queriedFeatures {
-            if let manager = annotations.managersByLayerId[layerId], let featureId = queriedFeature.feature.stringId {
+            if let manager = annotations.value[layerId], let featureId = queriedFeature.feature.stringId {
                 if manager.handleDragBegin(with: featureId, context: context) {
                     dragState = DragState(point: context.point, manager: manager)
                     return
@@ -161,7 +161,7 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
         context: MapContentGestureContext
     ) -> Bool {
         let (layerId, queriedFeature) = queriedFeature
-        if let manager = annotations.managersByLayerId[layerId],
+        if let manager = annotations.value[layerId],
             handledUsing(manager)(layerId, queriedFeature.feature, context) {
             return true
         }
@@ -187,7 +187,7 @@ final class MapContentGestureManager: MapContentGestureManagerProtocol {
         subscribers: KeyPath<MapContentGestureManager, [String: LayerSubscribersStore]>? = nil,
         handler: @escaping ([(String, QueriedFeature)], MapContentGestureContext) -> Void
     ) {
-        var layerIds = Array(annotations.managersByLayerId.keys)
+        var layerIds = Array(annotations.value.keys)
         if let subscribers { layerIds += self[keyPath: subscribers].keys }
         queryToken = mapFeatureQueryable.queryRenderedFeatures(point: context.point, layerIds: layerIds) { queriedFeatures in
             handler(queriedFeatures, context)

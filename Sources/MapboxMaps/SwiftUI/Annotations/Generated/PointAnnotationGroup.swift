@@ -386,16 +386,4 @@ extension PointAnnotationGroup: MapContent, PrimitiveMapContent {
     }
 }
 
-@available(iOS 13.0, *)
-extension PointAnnotationManager: MapContentAnnotationManager {
-    static func make(
-        layerId: String,
-        layerPosition: LayerPosition?,
-        clusterOptions: ClusterOptions? = nil,
-        using orchestrator: AnnotationOrchestrator
-    ) -> Self {
-        orchestrator.makePointAnnotationManager(id: layerId, layerPosition: layerPosition, clusterOptions: clusterOptions) as! Self
-    }
-}
-
 // End of generated file.

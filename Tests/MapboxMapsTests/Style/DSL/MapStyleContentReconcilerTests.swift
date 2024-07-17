@@ -6,34 +6,25 @@ final class MapContentReconcilerTests: XCTestCase {
     var me: MapContentReconciler!
     var styleManager: MockStyleManager!
     var sourceManager: MockStyleSourceManager!
-    var style: MockStyle!
+    var harness: AnnotationManagerTestingHarness!
+    var style: MockStyle { harness.style }
     var annotationsOrchestrator: AnnotationOrchestrator!
-    var orchestratorImpl: MockAnnotationOrchestatorImpl!
     var viewAnnotationsManager: ViewAnnotationManager!
     var locationManager: LocationManager!
-    var circleAnnotationManager: CircleAnnotationManager!
 
     @TestPublished var styleIsLoaded = true
 
     override func setUp() {
         styleManager = MockStyleManager()
         sourceManager = MockStyleSourceManager()
-        style = MockStyle()
-        orchestratorImpl = MockAnnotationOrchestatorImpl()
-        annotationsOrchestrator = AnnotationOrchestrator(impl: orchestratorImpl)
+        harness = AnnotationManagerTestingHarness()
+        annotationsOrchestrator = AnnotationOrchestrator(deps: harness.makeDeps())
         viewAnnotationsManager = ViewAnnotationManager(containerView: UIView(), mapboxMap: MockMapboxMap(), displayLink: Signal(just: ()))
         locationManager = LocationManager(
             interfaceOrientationView: Ref({ nil }),
             displayLink: Signal(just: ()),
             styleManager: style,
             mapboxMap: MockMapboxMap()
-        )
-        circleAnnotationManager = CircleAnnotationManager(
-            id: "test",
-            style: style,
-            layerPosition: .default,
-            displayLink: Signal { _ in .empty },
-            offsetCalculator: OffsetPointCalculator(mapboxMap: MockMapboxMap())
         )
         styleIsLoaded = true
 
@@ -51,6 +42,10 @@ final class MapContentReconcilerTests: XCTestCase {
         me = nil
         sourceManager = nil
         styleManager = nil
+        harness = nil
+        annotationsOrchestrator = nil
+
+        super.tearDown()
     }
 
     private func setContent(@MapContentBuilder content: () -> some MapContent) {
@@ -565,7 +560,6 @@ final class MapContentReconcilerTests: XCTestCase {
     func testComponent() throws {
         sourceManager.sourceExistsStub.defaultReturnValue = true
         styleManager.styleLayerExistsStub.defaultReturnValue = true
-        orchestratorImpl.makeCircleAnnotationManagerStub.defaultReturnValue = circleAnnotationManager
         let route1 = MapContentFixture.Route(json: "foo")
         var component = MapContentFixture(id: "foo", route: route1, condition: true)
 
@@ -577,14 +571,15 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertEqual(addedSource?.data, .string("foo"))
         XCTAssertEqual(viewAnnotationsManager.allAnnotations.count, 1)
         verifyAnnotationOptions(viewAnnotationsManager.allAnnotations.first, component.mapViewAnnotation)
-        XCTAssertEqual(circleAnnotationManager.annotations, [
+
+        let manager = try XCTUnwrap( annotationsOrchestrator.annotationManagersById["circle-test"] as? CircleAnnotationManager)
+
+        XCTAssertEqual(manager.annotations, [
             CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
             CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
         ])
-        XCTAssertEqual(orchestratorImpl.removeAnnotationManagerStub.invocations.map(\.parameters), [])
-        XCTAssertEqual(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.map(\.parameters), [
-            .init(id: "circle-test", layerPosition: .at(0))
-        ])
+        XCTAssertEqual(manager.impl.layerPosition, .at(0))
+
         XCTAssertEqual(locationManager.options, LocationOptions(
             puckType: .puck3D(Puck3DConfiguration(model: Model(), layerPosition: .above("circle-test"))),
             puckBearing: .heading,
@@ -600,16 +595,13 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertEqual(styleManager.removeStyleLayerStub.invocations.last?.parameters, "condition-true")
         XCTAssertEqual(viewAnnotationsManager.allAnnotations.count, 1)
         verifyAnnotationOptions(viewAnnotationsManager.allAnnotations.first, component.mapViewAnnotation)
-        XCTAssertEqual(circleAnnotationManager.annotations, [
+
+        let manager2 = try XCTUnwrap( annotationsOrchestrator.annotationManagersById["circle-test"] as? CircleAnnotationManager)
+        XCTAssertIdentical(manager, manager2)
+
+        XCTAssertEqual(manager2.annotations, [
             CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
             CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
-        ])
-        XCTAssertEqual(orchestratorImpl.removeAnnotationManagerStub.invocations.map(\.parameters), [
-            "circle-test"
-        ])
-        XCTAssertEqual(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.map(\.parameters), [
-            .init(id: "circle-test", layerPosition: .at(0)),
-            .init(id: "circle-test", layerPosition: .at(0))
         ])
         XCTAssertEqual(locationManager.options, LocationOptions(
             puckType: .puck3D(Puck3DConfiguration(model: Model(), layerPosition: .above("circle-test"))),
@@ -627,31 +619,13 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertEqual(sourceManager.updateGeoJSONSourceStub.invocations.count, 0)
         XCTAssertEqual(viewAnnotationsManager.allAnnotations.count, 1)
         verifyAnnotationOptions(viewAnnotationsManager.allAnnotations.first, component.mapViewAnnotation)
-        XCTAssertEqual(circleAnnotationManager.annotations, [
-            CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
-            CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
-        ])
-        XCTAssertEqual(orchestratorImpl.removeAnnotationManagerStub.invocations.map(\.parameters), [
-            "circle-test",
-            "circle-test"
-        ])
-        XCTAssertEqual(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.map(\.parameters), [
-            .init(id: "circle-test", layerPosition: .at(0)),
-            .init(id: "circle-test", layerPosition: .at(0)),
-            .init(id: "circle-test", layerPosition: .at(0))
-        ])
-        XCTAssertEqual(locationManager.options, LocationOptions(
-            puckType: .puck3D(Puck3DConfiguration(model: Model(), layerPosition: .above("circle-test"))),
-            puckBearing: .heading,
-            puckBearingEnabled: false
-        ))
 
         let route2 = MapContentFixture.Route(json: "bar")
         style.styleRootLoaded.toggle()
         style.styleRootLoaded.toggle()
         component = MapContentFixture(id: "foo", route: route2, optional: "optional", condition: false)
 
-        setContent { component}
+        setContent { component }
 
         XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 1)
         XCTAssertEqual(sourceManager.updateGeoJSONSourceStub.invocations.count, 1)
@@ -663,21 +637,16 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertEqual(styleManager.removeStyleLayerStub.invocations.count, 1)
         XCTAssertEqual(viewAnnotationsManager.allAnnotations.count, 1)
         verifyAnnotationOptions(viewAnnotationsManager.allAnnotations.first, component.mapViewAnnotation)
-        XCTAssertEqual(circleAnnotationManager.annotations, [
-            CircleAnnotation(id: "1", point: Point(LocationCoordinate2D(latitude: 10, longitude: 10))),
-            CircleAnnotation(id: "2", point: Point(LocationCoordinate2D(latitude: 20, longitude: 20)))
-        ])
-        XCTAssertEqual(orchestratorImpl.removeAnnotationManagerStub.invocations.map(\.parameters), [
-            "circle-test",
-            "circle-test",
-            "circle-test"
-        ])
-        XCTAssertEqual(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.map(\.parameters), [
-            .init(id: "circle-test", layerPosition: .at(0)),
-            .init(id: "circle-test", layerPosition: .at(0)),
-            .init(id: "circle-test", layerPosition: .at(0)),
-            .init(id: "circle-test", layerPosition: .at(0))
-        ])
+
+        let manager3 = try XCTUnwrap( annotationsOrchestrator.annotationManagersById["circle-test"] as? CircleAnnotationManager)
+        XCTAssertIdentical(manager2, manager3)
+
+        XCTAssertEqual(locationManager.options, LocationOptions(
+            puckType: .puck3D(Puck3DConfiguration(model: Model(), layerPosition: .above("circle-test"))),
+            puckBearing: .heading,
+            puckBearingEnabled: false
+        ))
+
         XCTAssertEqual(locationManager.options, LocationOptions(
             puckType: .puck3D(Puck3DConfiguration(model: Model(), layerPosition: .above("circle-test"))),
             puckBearing: .heading,
@@ -691,18 +660,8 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertEqual(sourceManager.removeSourceUncheckedStub.invocations.count, 1)
         XCTAssertEqual(sourceManager.removeSourceUncheckedStub.invocations.last?.parameters, "route")
         XCTAssertEqual(viewAnnotationsManager.allAnnotations.count, 0)
-        XCTAssertEqual(orchestratorImpl.removeAnnotationManagerStub.invocations.map(\.parameters), [
-            "circle-test",
-            "circle-test",
-            "circle-test",
-            "circle-test"
-        ])
-        XCTAssertEqual(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.map(\.parameters), [
-            .init(id: "circle-test", layerPosition: .at(0)),
-            .init(id: "circle-test", layerPosition: .at(0)),
-            .init(id: "circle-test", layerPosition: .at(0)),
-            .init(id: "circle-test", layerPosition: .at(0))
-        ])
+
+        XCTAssertEqual(annotationsOrchestrator.annotationManagersById.count, 0)
         XCTAssertEqual(locationManager.options, LocationOptions())
 
     }

@@ -35,6 +35,9 @@ public struct ViewAnnotationOptions: Equatable {
     /// When `false`, the annotation won't be shown on top of the Puck.
     public var allowOverlapWithPuck: Bool?
 
+    /// When `true`, the annotation will respect Z-axis elevation and be rendered on top of elevated objects.
+    public var allowZElevate: Bool?
+
     /// Specifies if this view annotation is visible or not.
     ///
     /// Note: If this property is not specified explicitly when creating / updating view annotation, visibility will be
@@ -178,7 +181,7 @@ extension CoreViewAnnotationOptions {
                   height: swiftValue.height as NSNumber?,
                   allowOverlap: swiftValue.allowOverlap as NSNumber?,
                   allowOverlapWithPuck: swiftValue.allowOverlapWithPuck as NSNumber?,
-                  allowZElevate: nil,
+                  allowZElevate: swiftValue.allowZElevate as NSNumber?,
                   visible: swiftValue.visible as NSNumber?,
                   variableAnchors: swiftValue.variableAnchors,
                   selected: swiftValue.selected as NSNumber?,

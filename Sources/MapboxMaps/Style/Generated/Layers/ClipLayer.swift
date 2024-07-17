@@ -4,46 +4,57 @@ import UIKit
 /// Layer that removes 3D content from map.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-clip)
-public struct ClipLayer: Layer, Equatable {
+@_documentation(visibility: public)
+@_spi(Experimental) public struct ClipLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol
     /// Unique layer name
+    @_documentation(visibility: public)
     public var id: String
 
     /// Rendering type of this layer.
+    @_documentation(visibility: public)
     public let type: LayerType
 
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
+    @_documentation(visibility: public)
     public var filter: Expression?
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+    @_documentation(visibility: public)
     public var source: String?
 
     /// Layer to use from a vector tile source.
     ///
     /// Required for vector tile sources.
     /// Prohibited for all other source types, including GeoJSON sources.
+    @_documentation(visibility: public)
     public var sourceLayer: String?
 
     /// The slot this layer is assigned to. If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+    @_documentation(visibility: public)
     public var slot: Slot?
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+    @_documentation(visibility: public)
     public var minZoom: Double?
 
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+    @_documentation(visibility: public)
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
+    @_documentation(visibility: public)
     public var visibility: Value<Visibility>
 
     /// Layer types that will also be removed if fallen below this clip layer.
     /// Default value: [].
     @_documentation(visibility: public)
-    @_spi(Experimental) public var clipLayerTypes: Value<[ClipLayerTypes]>?
+    public var clipLayerTypes: Value<[ClipLayerTypes]>?
 
+    @_documentation(visibility: public)
     public init(id: String, source: String) {
         self.source = source
         self.id = id
@@ -61,7 +72,6 @@ public struct ClipLayer: Layer, Equatable {
         try container.encodeIfPresent(slot, forKey: .slot)
         try container.encodeIfPresent(minZoom, forKey: .minZoom)
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
-
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encode(visibility, forKey: .visibility)

@@ -147,6 +147,11 @@ extension CustomGeometrySource: UpdatableSource, MapStyleContent, PrimitiveMapCo
 extension CustomRasterSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: CustomRasterSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
+        var props = [String: Any]()
+        encodeUpdate(\.tileCacheBudget, old: old, new: self, container: &props, key: CustomRasterSource.CodingKeys.tileCacheBudget.rawValue)
+        if !props.isEmpty {
+            try manager.setSourceProperties(for: id, properties: props)
+        }
     }
 
     func visit(_ node: MapContentNode) {

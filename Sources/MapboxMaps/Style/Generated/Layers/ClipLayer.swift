@@ -19,7 +19,7 @@ import UIKit
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     @_documentation(visibility: public)
-    public var filter: Expression?
+    public var filter: Exp?
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
@@ -82,7 +82,7 @@ import UIKit
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
-        filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
+        filter = try container.decodeIfPresent(Exp.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
         slot = try container.decodeIfPresent(Slot.self, forKey: .slot)
@@ -121,7 +121,7 @@ import UIKit
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     @_documentation(visibility: public)
-    public func filter(_ newValue: Expression) -> Self {
+    public func filter(_ newValue: Exp) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
@@ -172,7 +172,7 @@ import UIKit
     /// Default value: [].
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func clipLayerTypes(_ expression: Expression) -> Self {
+    public func clipLayerTypes(_ expression: Exp) -> Self {
         with(self, setter(\.clipLayerTypes, .expression(expression)))
     }
 }

@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️
+* `ClipLayer` property `clipLayerTypes` is not updated in runtime expected fix will land in 11.6.0-rc.1
+
 * Introduce new `ViewAnnotation.allowZElevate` and `MapViewAnnotation.allowZElevate` property that allows View annotation to be elevated when positioned on top of buildings.
 * Deprecate `MapView.presentsWithTransaction` and `Map.presentsWithTransaction` in favor of `MapView.presentationTransactionMode` and `Map.presentationTransactionMode`. The new default `PresentationTransactionMode.automatic` updates the `presentsWithTransaction` automatically when need to optimize performance. If you used the `MapView.presentsWithTransaction` with View Annotations, now you can safely remove this option:
 ```swift
@@ -25,6 +28,7 @@ CustomRasterSourceOptions(tileStatusChangedFunction: { tileID, status in }) // B
 CustomRasterSourceOptions(clientCallback: CustomRasterSourceClient.fromCustomRasterSourceTileStatusChangedCallback { tileID, status in }) // Now
 ```
 * MapboxMaps XCFramework structure now properly constructed for `maccatalyst` platform and code signing issues was eliminated.
+* Introduce new `ClipLayer` that allow to hide 3D models or symbols in the defined area
 
 ## 11.5.1 - 5 July, 2024
 

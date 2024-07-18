@@ -4,7 +4,9 @@ import XCTest
 final class CustomSourcesSourceTests: XCTestCase {
 
     func testRasterEncodingAndDecoding() {
-        let testCustomRasterSourceOptions = CustomRasterSourceOptions(tileStatusChangedFunction: { _, _ in })
+        let testCustomRasterSourceOptions = CustomRasterSourceOptions(
+            clientCallback: CustomRasterSourceClient.fromCustomRasterSourceTileStatusChangedCallback { _, _ in }
+        )
 
         var source = CustomRasterSource(id: "test-source", options: testCustomRasterSourceOptions)
 

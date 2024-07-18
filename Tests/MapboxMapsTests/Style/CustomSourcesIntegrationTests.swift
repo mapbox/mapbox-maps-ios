@@ -12,8 +12,12 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
 
         mapView.mapboxMap.styleURI = .standard
 
+        let rasterOptions = CustomRasterSourceOptions(
+            clientCallback: CustomRasterSourceClient.fromCustomRasterSourceTileStatusChangedCallback { _, _ in }
+        )
+
         didFinishLoadingStyle = { mapView in
-            var source = CustomRasterSource(id: "test-source", options: CustomRasterSourceOptions(tileStatusChangedFunction: { _, _ in }))
+            var source = CustomRasterSource(id: "test-source", options: rasterOptions)
 
             // Add source
             do {

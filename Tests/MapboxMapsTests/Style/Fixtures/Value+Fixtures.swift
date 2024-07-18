@@ -49,6 +49,12 @@ internal extension Value where T == [TextAnchor] {
     }
 }
 
+internal extension Value where T == [ClipLayerTypes] {
+    static func testConstantValue() -> Value<[ClipLayerTypes]> {
+        return .constant([.model, .symbol])
+    }
+}
+
 internal extension Value where T == [TextWritingMode] {
     static func testConstantValue() -> Value<[TextWritingMode]> {
         return .constant([.horizontal, .vertical])
@@ -64,6 +70,12 @@ internal extension Array where Element == TextAnchor {
 internal extension Array where Element == TextWritingMode {
     static func testConstantValue() -> [TextWritingMode] {
         return [.horizontal, .vertical]
+    }
+}
+
+internal extension Array where Element == ClipLayerTypes {
+    static func testConstantValue() -> [ClipLayerTypes] {
+        return [.model, .symbol]
     }
 }
 

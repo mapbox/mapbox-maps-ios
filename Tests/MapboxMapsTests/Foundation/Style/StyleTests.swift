@@ -433,7 +433,9 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testStyleCanAddCustomRasterSource() {
-        let options = CustomRasterSourceOptions(tileStatusChangedFunction: { _, _ in })
+        let options = CustomRasterSourceOptions(
+            clientCallback: CustomRasterSourceClient.fromCustomRasterSourceTileStatusChangedCallback { _, _ in }
+        )
 
         styleManager.addStyleCustomRasterSourceStub.defaultReturnValue = Expected(value: NSNull())
         XCTAssertNoThrow(try style.addCustomRasterSource(

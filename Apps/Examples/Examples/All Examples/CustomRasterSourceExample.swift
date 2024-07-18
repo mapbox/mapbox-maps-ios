@@ -3,36 +3,31 @@ import os
 @_spi(Experimental) import MapboxMaps
 
 final class CustomRasterSourceExample: UIViewController, ExampleProtocol {
-   private var mapView: MapView!
-   private var cancelables: Set<AnyCancelable> = []
-   private var timer: Timer?
-   private var requiredTile: CanonicalTileID?
+    private var mapView: MapView!
+    private var cancelables: Set<AnyCancelable> = []
+    private var requiredTiles: [CanonicalTileID] = []
 
-   private enum ID {
-       static let customRasterSource = "custom-raster-source"
-       static let rasterLayer = "customRaster"
-   }
+    private enum ID {
+        static let customRasterSource = "custom-raster-source"
+        static let rasterLayer = "customRaster"
+    }
 
-   deinit {
-       timer?.invalidate()
-   }
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-   override func viewDidLoad() {
-       super.viewDidLoad()
+        mapView = MapView(frame: view.bounds, mapInitOptions: .init(cameraOptions: CameraOptions(center: .helsinki, zoom: 2)))
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(mapView)
 
-       mapView = MapView(frame: view.bounds, mapInitOptions: .init(cameraOptions: CameraOptions(center: .helsinki, zoom: 2)))
-       mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-       view.addSubview(mapView)
+        mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
+            self?.setupExample()
+            // The below line is used for internal testing purposes only.
+            self?.finish()
+        }
+        .store(in: &cancelables)
+    }
 
-       mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
-           self?.setupExample()
-           // The below line is used for internal testing purposes only.
-           self?.finish()
-       }
-       .store(in: &cancelables)
-   }
-
-   private func setupExample() {
+    private func setupExample() {
         let rasterSourceClient = CustomRasterSourceClient.fromCustomRasterSourceTileStatusChangedCallback { [weak self] (tileID, status) in
             os_log(.info, "Tile status changed: tileId={%@}, status=%@", tileID.log, status.log)
             guard let self else { return }
@@ -84,33 +79,28 @@ final class CustomRasterSourceExample: UIViewController, ExampleProtocol {
         }
     }
 
-   // MARK: Raster Images
+    private func refreshTiles() {
+        let rasterImage = nextImage()
+        let tiles = requiredTiles
+            .map { CustomRasterSourceTileData(tileId: $0, image: rasterImage) }
+        try! mapView.mapboxMap.setCustomRasterSourceTileData(forSourceId: ID.customRasterSource, tiles: tiles)
+    }
 
-   private var currentImageIndex = 0
-   private let rasterImages: [UIImage] = [
-       UIImage(named: "RasterSource/wind_0")!,
-       UIImage(named: "RasterSource/wind_1")!,
-       UIImage(named: "RasterSource/wind_2")!,
-       UIImage(named: "RasterSource/wind_3")!,
-   ]
+    // MARK: Raster Images
 
-   private func scheduleNextRasterImage() {
-       guard timer == nil else {
-           timer?.invalidate()
-           return timer = nil
-       }
+    private var currentImageIndex = 0
+    private let rasterImages: [UIImage] = [
+        UIImage(named: "RasterSource/wind_0")!,
+        UIImage(named: "RasterSource/wind_1")!,
+        UIImage(named: "RasterSource/wind_2")!,
+        UIImage(named: "RasterSource/wind_3")!,
+    ]
 
-       timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
-           guard let self else { return }
-
-           var currentImageIndex = self.currentImageIndex + 1
-           if currentImageIndex >= self.rasterImages.endIndex {
-               currentImageIndex = 0
-           }
-           self.currentImageIndex = currentImageIndex
-           try! self.mapView.mapboxMap.setCustomRasterSourceTileData(
-               forSourceId: ID.customRasterSource,
-               tiles: [CustomRasterSourceTileData(tileId: requiredTile!, image: rasterImages[self.currentImageIndex])])
-       }
-   }
+    private func nextImage() -> UIImage {
+        var currentImageIndex = self.currentImageIndex + 1
+        if currentImageIndex >= self.rasterImages.endIndex {
+            currentImageIndex = 0
+        }
+        return rasterImages[currentImageIndex]
+    }
 }

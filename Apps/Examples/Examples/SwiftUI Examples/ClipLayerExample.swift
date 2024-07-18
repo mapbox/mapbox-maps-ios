@@ -18,6 +18,7 @@ struct ClipLayerExample: View {
                 .fillColor(.blue)
                 .slot(.bottom)
 
+            /// There is a known issue that `clipLayerTypes` is not updated in runtime
             ClipLayer(id: "clip-layer-id", source: "source-id")
                 .clipLayerTypes(settings.clipLayerTypes)
         }

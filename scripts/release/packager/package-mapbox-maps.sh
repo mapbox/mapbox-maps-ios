@@ -102,7 +102,7 @@ step 'Building MapboxMaps.xcframework'
 rm -rf .xcode
 
 step 'Sign XCFrameworks'
-codesign --timestamp -v --sign "Apple Distribution: Mapbox, Inc. (GJZR2MEM28)" "artifacts/Turf.xcframework" "artifacts/MapboxCoreMaps.xcframework" "artifacts/MapboxMaps.xcframework"
+codesign --timestamp -v --sign "Apple Distribution: Mapbox, Inc. (GJZR2MEM28)" "artifacts/Turf.xcframework" "artifacts/MapboxMaps.xcframework"
  
 step 'Add License and README to bundle'
 cp "$LICENSE_PATH" artifacts/LICENSE.md

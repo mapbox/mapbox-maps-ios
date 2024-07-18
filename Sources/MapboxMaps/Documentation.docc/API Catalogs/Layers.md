@@ -28,3 +28,5 @@
 - ``Slot``
 - ``SlotLayer``
 - ``LayerAtPosition``
+- ``ClipLayer``
+- ``ClipLayerTypes``

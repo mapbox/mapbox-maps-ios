@@ -24,5 +24,8 @@
 - ``CustomRasterSourceTileStatusChangedCallback``
 - ``CustomRasterSourceTileData``
 - ``CustomRasterSourceTileStatus``
+- ``CustomRasterSourceClient``
+- ``CustomRasterSourceTileRenderer``
+- ``CustomRasterSourceClientType``
 - ``TileFunctionCallback``
 - ``TileCacheBudgetSize``

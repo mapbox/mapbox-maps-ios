@@ -29,12 +29,13 @@ public struct MapViewAnnotation {
         var anchorCoordinate: ((CLLocationCoordinate2D) -> Void)?
     }
     var annotatedFeature: AnnotatedFeature
-    var allowOverlap: Bool = false
-    var visible: Bool = true
-    var allowHitTesting: Bool = true
-    var selected: Bool = false
-    var allowOverlapWithPuck: Bool = false
-    var ignoreCameraPadding: Bool = false
+    var allowOverlap = false
+    var visible = true
+    var allowHitTesting = true
+    var selected = false
+    var allowOverlapWithPuck = false
+    var allowZElevate: Bool?
+    var ignoreCameraPadding = false
     var variableAnchors: [ViewAnnotationAnchorConfig] = .center
     var actions = Actions()
     var content: AnyView
@@ -102,6 +103,17 @@ public struct MapViewAnnotation {
     @_documentation(visibility: public)
     public func allowOverlapWithPuck(_ allowOverlapWithPuck: Bool) -> MapViewAnnotation {
         with(self, setter(\.allowOverlapWithPuck, allowOverlapWithPuck))
+    }
+
+    /// When true, position annotation on buildings' (both fill extrusions and models) rooftops.
+    ///
+    /// By default, the effective value is `false`. If annotation is associated with a symbol layer ``SymbolLayer`` and the
+    ///  ``ViewAnnotation/allowZElevate`` is `nil`, the effective value will be taken from ``SymbolLayer/symbolZElevate``.
+    ///
+    /// See also: [`symbol-z-elevate`](https://docs.mapbox.com/style-spec/reference/layers/#layout-symbol-symbol-z-elevate).
+    @_documentation(visibility: public)
+    public func allowZElevate(_ allowZElevate: Bool?) -> MapViewAnnotation {
+        with(self, setter(\.allowZElevate, allowZElevate))
     }
 
     /// When `false`, the annotation will be displayed even if it go beyond camera padding.

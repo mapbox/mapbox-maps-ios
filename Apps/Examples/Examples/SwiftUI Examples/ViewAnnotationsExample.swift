@@ -6,6 +6,7 @@ import Turf
 struct ViewAnnotationsExample: View {
     @State private var taps: [Tap] = []
     @State private var allowOverlap: Bool = false
+    @State private var allowZElevate: Bool = false
     @State private var ignoreAllSafeArea: Bool = true
     @State private var selected = false
     @State private var etaAnnotationAnchor = ViewAnnotationAnchor.center
@@ -38,6 +39,7 @@ struct ViewAnnotationsExample: View {
                         taps.removeAll(where: { $0.id == tap.id })
                     }
                 }
+                .allowZElevate(allowZElevate)
                 .allowOverlap(allowOverlap)
                 // Allow bottom, top, left, right positions of anchor.
                 .variableAnchors(
@@ -74,6 +76,7 @@ struct ViewAnnotationsExample: View {
                         tailSize: 5.0)
             }
             .allowOverlap(allowOverlap)
+            .allowZElevate(allowZElevate)
             .variableAnchors(.all) // Allow all directions for anchor
             .onAnchorChanged { self.etaAnnotationAnchor = $0.anchor }
             .selected(true)
@@ -88,6 +91,7 @@ struct ViewAnnotationsExample: View {
             VStack(alignment: .leading) {
                 Text("Tap to add annotations")
                 Toggle("Allow overlap", isOn: $allowOverlap)
+                Toggle("Allow Z elevation", isOn: $allowZElevate)
                 Toggle("Ignore all safe area", isOn: $ignoreAllSafeArea)
             }
             .padding(.horizontal, 10)

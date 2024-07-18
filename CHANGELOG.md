@@ -4,6 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Introduce new `ViewAnnotation.allowZElevate` and `MapViewAnnotation.allowZElevate` property that allows View annotation to be elevated when positioned on top of buildings.
 * Deprecate `MapView.presentsWithTransaction` and `Map.presentsWithTransaction` in favor of `MapView.presentationTransactionMode` and `Map.presentationTransactionMode`. The new default `PresentationTransactionMode.automatic` updates the `presentsWithTransaction` automatically when need to optimize performance. If you used the `MapView.presentsWithTransaction` with View Annotations, now you can safely remove this option:
 
 ```swift

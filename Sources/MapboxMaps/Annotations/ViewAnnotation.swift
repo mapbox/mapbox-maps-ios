@@ -76,6 +76,17 @@ public final class ViewAnnotation {
         set { setProperty(\.allowOverlapWithPuck, value: newValue, oldValue: allowOverlapWithPuck) }
     }
 
+    /// When true, position annotation on buildings' (both fill extrusions and models) rooftops.
+    ///
+    /// By default, the effective value is `false`. If annotation is associated with a symbol layer ``SymbolLayer`` and the
+    ///  ``ViewAnnotation/allowZElevate`` is `nil`, the effective value will be taken from ``SymbolLayer/symbolZElevate``.
+    ///
+    /// See also: [`symbol-z-elevate`](https://docs.mapbox.com/style-spec/reference/layers/#layout-symbol-symbol-z-elevate).
+    public var allowZElevate: Bool? {
+        get { options.allowZElevate }
+        set { setProperty(\.allowZElevate, value: newValue, oldValue: allowZElevate) }
+    }
+
     /// When `false`, the annotation will be displayed even if it go beyond camera padding.
     ///
     /// The camera padding is set via ``MapboxMap/setCamera(to:)``.
@@ -299,7 +310,7 @@ public final class ViewAnnotation {
         return options[keyPath: keyPath]!
     }
 
-    func setProperty<Value: Equatable>(_ keyPath: WritableKeyPath<ViewAnnotationOptions, Value?>, value: Value, oldValue: Value?) {
+    func setProperty<Value: Equatable>(_ keyPath: WritableKeyPath<ViewAnnotationOptions, Value?>, value: Value?, oldValue: Value?) {
         if value == oldValue {
             return
         }

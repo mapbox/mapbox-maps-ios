@@ -47,6 +47,7 @@ final class MountedViewAnnotation: MapContentMountedComponent {
             weakViewAnnotation?.annotatedFeature = mapViewAnnotation.annotatedFeature
             weakViewAnnotation?.allowOverlap = mapViewAnnotation.allowOverlap
             weakViewAnnotation?.allowOverlapWithPuck = mapViewAnnotation.allowOverlapWithPuck
+            weakViewAnnotation?.allowZElevate = mapViewAnnotation.allowZElevate
             weakViewAnnotation?.ignoreCameraPadding = mapViewAnnotation.ignoreCameraPadding
             weakViewAnnotation?.visible = mapViewAnnotation.visible
             weakViewAnnotation?.selected = mapViewAnnotation.selected

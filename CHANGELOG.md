@@ -6,7 +6,6 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Introduce new `ViewAnnotation.allowZElevate` and `MapViewAnnotation.allowZElevate` property that allows View annotation to be elevated when positioned on top of buildings.
 * Deprecate `MapView.presentsWithTransaction` and `Map.presentsWithTransaction` in favor of `MapView.presentationTransactionMode` and `Map.presentationTransactionMode`. The new default `PresentationTransactionMode.automatic` updates the `presentsWithTransaction` automatically when need to optimize performance. If you used the `MapView.presentsWithTransaction` with View Annotations, now you can safely remove this option:
-
 ```swift
 Map {
   MapViewAnnotation(...)
@@ -20,6 +19,12 @@ In case you need to preserve the old default behavior use `presentationTransacti
 mapView.presentationTransactionMode = .async // UIKit
 Map().presentationTransactionMode(.async) // SwiftUI
 ```
+* `CustomRasterSource` API updated, now `CustomRasterSourceOptions` accepts protocol `CustomRasterSourceClient`. To achieve behaviour similar to previous releases one may construct instance of `CustomRasterSourceClient` as shown below:
+```swift
+CustomRasterSourceOptions(tileStatusChangedFunction: { tileID, status in }) // Before
+CustomRasterSourceOptions(clientCallback: CustomRasterSourceClient.fromCustomRasterSourceTileStatusChangedCallback { tileID, status in }) // Now
+```
+* MapboxMaps XCFramework structure now properly constructed for `maccatalyst` platform and code signing issues was eliminated.
 
 ## 11.5.1 - 5 July, 2024
 

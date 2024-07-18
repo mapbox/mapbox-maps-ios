@@ -4,8 +4,8 @@
 
 ### Expressions
 
-- ``Expression``
 - ``Exp``
+- ``Expression``
 - ``FormatOptions``
 - ``NumberFormatOptions``
 - ``CollatorOptions``

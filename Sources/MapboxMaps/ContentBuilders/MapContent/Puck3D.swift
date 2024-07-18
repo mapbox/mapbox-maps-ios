@@ -73,37 +73,37 @@ public struct Puck3D: MapContent, PrimitiveMapContent {
 
     /// The scale of the model.
     @_documentation(visibility: public)
-    public func modelScale(_ modelScale: Expression) -> Puck3D {
+    public func modelScale(_ modelScale: Exp) -> Puck3D {
         copyAssigned(self, \.configuration.modelScale, .expression(modelScale))
     }
 
     /// The rotation of the model in euler angles [lon, lat, z].
     @_documentation(visibility: public)
-    public func modelRotation(_ modelRotation: Expression) -> Puck3D {
+    public func modelRotation(_ modelRotation: Exp) -> Puck3D {
         copyAssigned(self, \.configuration.modelRotation, .expression(modelRotation))
     }
 
     /// The opacity of the model used as the location puck
     @_documentation(visibility: public)
-    public func modelOpacity(_ modelOpacity: Expression) -> Puck3D {
+    public func modelOpacity(_ modelOpacity: Exp) -> Puck3D {
         copyAssigned(self, \.configuration.modelOpacity, .expression(modelOpacity))
     }
 
     /// Enable/disable shadow casting for the puck model
     @_documentation(visibility: public)
-    public func modelCastShadows(_ modelCastShadows: Expression) -> Puck3D {
+    public func modelCastShadows(_ modelCastShadows: Exp) -> Puck3D {
         copyAssigned(self, \.configuration.modelCastShadows, .expression(modelCastShadows))
     }
 
     /// Enable/disable shadow receiving for the puck model
     @_documentation(visibility: public)
-    public func modelReceiveShadows(_ modelReceiveShadows: Expression) -> Puck3D {
+    public func modelReceiveShadows(_ modelReceiveShadows: Exp) -> Puck3D {
         copyAssigned(self, \.configuration.modelReceiveShadows, .expression(modelReceiveShadows))
     }
 
     /// Defines scaling mode. Only applies to location-indicator type layers. Defaults to ``ModelScaleMode/viewport``.
     @_documentation(visibility: public)
-    public func modelScaleMode(_ modelScaleMode: Expression) -> Puck3D {
+    public func modelScaleMode(_ modelScaleMode: Exp) -> Puck3D {
         copyAssigned(self, \.configuration.modelScaleMode, .expression(modelScaleMode))
     }
 
@@ -113,7 +113,7 @@ public struct Puck3D: MapContent, PrimitiveMapContent {
     ///
     /// Default value is 1.
     @_documentation(visibility: public)
-    public func modelEmissiveStrength(_ modelEmissiveStrength: Expression) -> Puck3D {
+    public func modelEmissiveStrength(_ modelEmissiveStrength: Exp) -> Puck3D {
         copyAssigned(self, \.configuration.modelEmissiveStrength, .expression(modelEmissiveStrength))
     }
 

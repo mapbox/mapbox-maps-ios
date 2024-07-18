@@ -7,7 +7,7 @@ import UIKit
 @resultBuilder
 public struct ExpressionArgumentBuilder {
     /// :nodoc:
-    public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> [Expression.Argument] {
+    public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> [Exp.Argument] {
         return arguments.flatMap { $0.expressionArguments }
     }
 }
@@ -16,13 +16,13 @@ public struct ExpressionArgumentBuilder {
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 public protocol ExpressionArgumentConvertible {
     /// :nodoc:
-    var expressionArguments: [Expression.Argument] { get }
+    var expressionArguments: [Exp.Argument] { get }
 }
 
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension Int: ExpressionArgumentConvertible {
-    public var expressionArguments: [Expression.Argument] {
+    public var expressionArguments: [Exp.Argument] {
         return [.number(Double(self))]
     }
 }
@@ -30,7 +30,7 @@ extension Int: ExpressionArgumentConvertible {
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension UInt: ExpressionArgumentConvertible {
-    public var expressionArguments: [Expression.Argument] {
+    public var expressionArguments: [Exp.Argument] {
         return [.number(Double(self))]
     }
 }
@@ -38,7 +38,7 @@ extension UInt: ExpressionArgumentConvertible {
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension Double: ExpressionArgumentConvertible {
-    public var expressionArguments: [Expression.Argument] {
+    public var expressionArguments: [Exp.Argument] {
         return [.number(Double(self))]
     }
 }
@@ -46,7 +46,7 @@ extension Double: ExpressionArgumentConvertible {
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension String: ExpressionArgumentConvertible {
-    public var expressionArguments: [Expression.Argument] {
+    public var expressionArguments: [Exp.Argument] {
         return [.string(self)]
     }
 }
@@ -54,7 +54,7 @@ extension String: ExpressionArgumentConvertible {
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension Bool: ExpressionArgumentConvertible {
-    public var expressionArguments: [Expression.Argument] {
+    public var expressionArguments: [Exp.Argument] {
         return [.boolean(self)]
     }
 }
@@ -62,7 +62,7 @@ extension Bool: ExpressionArgumentConvertible {
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension Array: ExpressionArgumentConvertible {
-    public var expressionArguments: [Expression.Argument] {
+    public var expressionArguments: [Exp.Argument] {
         if let validStringArray = self as? [String] {
             return [.stringArray(validStringArray)]
         } else if let validNumberArray = self as? [Double] {
@@ -76,8 +76,8 @@ extension Array: ExpressionArgumentConvertible {
 
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
-extension Expression: ExpressionArgumentConvertible {
-    public var expressionArguments: [Expression.Argument] {
+extension Exp: ExpressionArgumentConvertible {
+    public var expressionArguments: [Exp.Argument] {
         return [.expression(self)]
     }
 }
@@ -86,8 +86,8 @@ extension Expression: ExpressionArgumentConvertible {
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension Dictionary: ExpressionArgumentConvertible where Key == Double,
                                                     Value: ExpressionArgumentConvertible {
-    public var expressionArguments: [Expression.Argument] {
-        var arguments = [Expression.Argument]()
+    public var expressionArguments: [Exp.Argument] {
+        var arguments = [Exp.Argument]()
         for key in Array(keys).sorted(by: <) {
             guard key >= 0, let value = self[key] else {
                 fatalError("Invalid stops dictionary.")
@@ -101,7 +101,7 @@ extension Dictionary: ExpressionArgumentConvertible where Key == Double,
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension UIColor: ExpressionArgumentConvertible {
-    public var expressionArguments: [Expression.Argument] {
+    public var expressionArguments: [Exp.Argument] {
         return [.string(StyleColor(self).rawValue)]
     }
 }
@@ -109,7 +109,7 @@ extension UIColor: ExpressionArgumentConvertible {
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension GeoJSONObject: ExpressionArgumentConvertible {
-    public var expressionArguments: [Expression.Argument] {
+    public var expressionArguments: [Exp.Argument] {
         return [.geoJSONObject(self)]
     }
 }

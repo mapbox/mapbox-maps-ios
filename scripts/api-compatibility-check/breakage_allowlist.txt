@@ -1442,3 +1442,290 @@ Var CustomRasterSource.tileCacheBudget has been removed
 
 // Introduce PresentationTransactionMode
 Func Map.presentsWithTransaction(_:) has been removed
+
+// Swap Exp with Expression and deprecate the latter
+TypeAlias Exp has been removed
+Accessor CircleLayer.filter.Get() has return type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor CircleLayer.filter.Set() has parameter 0 type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor FillExtrusionLayer.filter.Get() has return type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor FillExtrusionLayer.filter.Set() has parameter 0 type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor FillLayer.filter.Get() has return type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor FillLayer.filter.Set() has parameter 0 type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor GeoJSONSource.clusterProperties.Get() has return type change from [Swift.String : MapboxMaps.Expression]? to [Swift.String : MapboxMaps.Exp]?
+Accessor GeoJSONSource.clusterProperties.Set() has parameter 0 type change from [Swift.String : MapboxMaps.Expression]? to [Swift.String : MapboxMaps.Exp]?
+Accessor HeatmapLayer.filter.Get() has return type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor HeatmapLayer.filter.Set() has parameter 0 type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor HillshadeLayer.filter.Get() has return type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor HillshadeLayer.filter.Set() has parameter 0 type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor LineLayer.filter.Get() has return type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor LineLayer.filter.Set() has parameter 0 type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor ModelLayer.filter.Get() has return type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor ModelLayer.filter.Set() has parameter 0 type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor RasterLayer.filter.Get() has return type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor RasterLayer.filter.Set() has parameter 0 type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor RasterParticleLayer.filter.Get() has return type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor RasterParticleLayer.filter.Set() has parameter 0 type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor RenderedQueryOptions.filter.Get() has return type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor SymbolLayer.filter.Get() has return type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Accessor SymbolLayer.filter.Set() has parameter 0 type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Constructor ClusterOptions.init(circleRadius:circleColor:textColor:textSize:textField:clusterRadius:clusterMaxZoom:clusterMinPoints:clusterProperties:) has parameter 8 type change from [Swift.String : MapboxMaps.Expression]? to [Swift.String : MapboxMaps.Exp]?
+Constructor RenderedQueryOptions.init(layerIds:filter:) has parameter 1 type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+EnumElement Value.expression has declared type change from <T where T : Swift.Decodable, T : Swift.Encodable> (MapboxMaps.Value<T>.Type) -> (MapboxMaps.Expression) -> MapboxMaps.Value<T> to <T where T : Swift.Decodable, T : Swift.Encodable> (MapboxMaps.Value<T>.Type) -> (MapboxMaps.Exp) -> MapboxMaps.Value<T>
+Func AmbientLight.color(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func AmbientLight.intensity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Atmosphere.color(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Atmosphere.highColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Atmosphere.horizonBlend(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Atmosphere.range(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Atmosphere.spaceColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Atmosphere.starIntensity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Atmosphere.verticalRange(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func BackgroundLayer.backgroundColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func BackgroundLayer.backgroundEmissiveStrength(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func BackgroundLayer.backgroundOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func BackgroundLayer.backgroundPattern(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circleBlur(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circleColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circleEmissiveStrength(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circleOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circlePitchAlignment(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circlePitchScale(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circleRadius(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circleSortKey(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circleStrokeColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circleStrokeOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circleStrokeWidth(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circleTranslate(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.circleTranslateAnchor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func CircleLayer.filter(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func DirectionalLight.castShadows(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func DirectionalLight.color(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func DirectionalLight.direction(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func DirectionalLight.intensity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func DirectionalLight.shadowIntensity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionAmbientOcclusionGroundAttenuation(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionAmbientOcclusionGroundRadius(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionAmbientOcclusionIntensity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionAmbientOcclusionRadius(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionAmbientOcclusionWallRadius(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionBase(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionCutoffFadeRange(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionEdgeRadius(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionEmissiveStrength(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionFloodLightColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionFloodLightGroundAttenuation(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionFloodLightGroundRadius(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionFloodLightIntensity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionFloodLightWallRadius(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionHeight(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionPattern(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionRoundedRoof(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionTranslate(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionTranslateAnchor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionVerticalGradient(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.fillExtrusionVerticalScale(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillExtrusionLayer.filter(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillLayer.fillAntialias(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillLayer.fillColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillLayer.fillEmissiveStrength(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillLayer.fillOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillLayer.fillOutlineColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillLayer.fillPattern(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillLayer.fillSortKey(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillLayer.fillTranslate(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillLayer.fillTranslateAnchor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FillLayer.filter(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FlatLight.anchor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FlatLight.color(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FlatLight.intensity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func FlatLight.position(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HeatmapLayer.filter(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HeatmapLayer.heatmapColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HeatmapLayer.heatmapIntensity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HeatmapLayer.heatmapOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HeatmapLayer.heatmapRadius(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HeatmapLayer.heatmapWeight(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HillshadeLayer.filter(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HillshadeLayer.hillshadeAccentColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HillshadeLayer.hillshadeEmissiveStrength(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HillshadeLayer.hillshadeExaggeration(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HillshadeLayer.hillshadeHighlightColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HillshadeLayer.hillshadeIlluminationAnchor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HillshadeLayer.hillshadeIlluminationDirection(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func HillshadeLayer.hillshadeShadowColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.filter(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineBlur(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineBorderColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineBorderWidth(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineCap(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineDashArray(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineDepthOcclusionFactor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineEmissiveStrength(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineGapWidth(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineGradient(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineJoin(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineMiterLimit(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineOcclusionOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineOffset(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.linePattern(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineRoundLimit(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineSortKey(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineTranslate(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineTranslateAnchor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineTrimOffset(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineWidth(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LineLayer.lineZOffset(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.accuracyRadius(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.accuracyRadiusBorderColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.accuracyRadiusColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.bearing(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.bearingImage(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.bearingImageSize(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.emphasisCircleColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.emphasisCircleRadius(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.imagePitchDisplacement(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.location(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.locationIndicatorOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.perspectiveCompensation(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.shadowImage(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.shadowImageSize(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.topImage(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func LocationIndicatorLayer.topImageSize(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.filter(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelAmbientOcclusionIntensity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelCastShadows(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelColorMixIntensity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelCutoffFadeRange(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelEmissiveStrength(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelFrontCutoff(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelHeightBasedEmissiveStrengthMultiplier(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelId(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelReceiveShadows(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelRotation(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelRoughness(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelScale(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelScaleMode(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelTranslation(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func ModelLayer.modelType(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Puck2D.scale(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Puck3D.modelCastShadows(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Puck3D.modelEmissiveStrength(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Puck3D.modelOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Puck3D.modelReceiveShadows(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Puck3D.modelRotation(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Puck3D.modelScale(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Puck3D.modelScaleMode(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.filter(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterArrayBand(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterBrightnessMax(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterBrightnessMin(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterColorMix(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterColorRange(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterContrast(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterElevation(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterEmissiveStrength(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterFadeDuration(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterHueRotate(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterResampling(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterLayer.rasterSaturation(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterParticleLayer.filter(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterParticleLayer.rasterParticleArrayBand(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterParticleLayer.rasterParticleColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterParticleLayer.rasterParticleCount(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterParticleLayer.rasterParticleFadeOpacityFactor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterParticleLayer.rasterParticleMaxSpeed(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterParticleLayer.rasterParticleResetRateFactor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func RasterParticleLayer.rasterParticleSpeedFactor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SkyLayer.skyAtmosphereColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SkyLayer.skyAtmosphereHaloColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SkyLayer.skyAtmosphereSun(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SkyLayer.skyAtmosphereSunIntensity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SkyLayer.skyGradient(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SkyLayer.skyGradientCenter(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SkyLayer.skyGradientRadius(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SkyLayer.skyOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SkyLayer.skyType(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.filter(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconAllowOverlap(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconAnchor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconColorSaturation(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconEmissiveStrength(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconHaloBlur(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconHaloColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconHaloWidth(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconIgnorePlacement(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconImage(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconImageCrossFade(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconKeepUpright(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconOcclusionOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconOffset(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconOptional(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconPadding(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconPitchAlignment(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconRotate(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconRotationAlignment(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconSize(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconTextFit(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconTextFitPadding(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconTranslate(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.iconTranslateAnchor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.symbolAvoidEdges(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.symbolPlacement(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.symbolSortKey(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.symbolSpacing(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.symbolZElevate(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.symbolZOrder(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textAllowOverlap(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textAnchor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textEmissiveStrength(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textField(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textFont(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textHaloBlur(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textHaloColor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textHaloWidth(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textIgnorePlacement(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textJustify(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textKeepUpright(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textLetterSpacing(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textLineHeight(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textMaxAngle(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textMaxWidth(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textOcclusionOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textOffset(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textOpacity(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textOptional(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textPadding(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textPitchAlignment(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textRadialOffset(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textRotate(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textRotationAlignment(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textSize(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textTransform(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textTranslate(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textTranslateAnchor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textVariableAnchor(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func SymbolLayer.textWritingMode(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Func Terrain.exaggeration(_:) has parameter 0 type change from MapboxMaps.Expression to MapboxMaps.Exp
+Var CircleLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Var FillExtrusionLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Var FillLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Var GeoJSONSource.clusterProperties has declared type change from [Swift.String : MapboxMaps.Expression]? to [Swift.String : MapboxMaps.Exp]?
+Var HeatmapLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Var HillshadeLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Var LineLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Var ModelLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Var RasterLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Var RasterParticleLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Var RenderedQueryOptions.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+Var SymbolLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?

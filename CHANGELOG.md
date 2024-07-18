@@ -27,6 +27,7 @@ Map().presentationTransactionMode(.async) // SwiftUI
 ## 11.5.0 - 3 July, 2024
 
 * Use new `LineJoin.none` in conjunction with an image as a `linePattern` value to display repeated series of images along a line(e.g. dotted route line).
+* Deprecate `Expression` in favor of `Exp` to avoid name clash with `Foundation.Expression`.
 
 ## 11.5.0-rc.1 - 19 June, 2024
 

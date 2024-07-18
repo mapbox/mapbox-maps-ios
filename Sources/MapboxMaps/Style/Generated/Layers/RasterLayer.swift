@@ -15,7 +15,7 @@ public struct RasterLayer: Layer, Equatable {
 
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
-    public var filter: Expression?
+    public var filter: Exp?
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
@@ -177,7 +177,7 @@ public struct RasterLayer: Layer, Equatable {
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
-        filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
+        filter = try container.decodeIfPresent(Exp.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
         slot = try container.decodeIfPresent(Slot.self, forKey: .slot)
@@ -268,7 +268,7 @@ public struct RasterLayer: Layer, Equatable {
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     @_documentation(visibility: public)
-    public func filter(_ newValue: Expression) -> Self {
+    public func filter(_ newValue: Exp) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
@@ -317,7 +317,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Displayed band of raster array source layer. Defaults to the first band if not set.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func rasterArrayBand(_ expression: Expression) -> Self {
+    public func rasterArrayBand(_ expression: Exp) -> Self {
         with(self, setter(\.rasterArrayBand, .expression(expression)))
     }
 
@@ -337,7 +337,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Increase or reduce the brightness of the image. The value is the maximum brightness.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func rasterBrightnessMax(_ expression: Expression) -> Self {
+    public func rasterBrightnessMax(_ expression: Exp) -> Self {
         with(self, setter(\.rasterBrightnessMax, .expression(expression)))
     }
 
@@ -357,7 +357,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Increase or reduce the brightness of the image. The value is the minimum brightness.
     /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func rasterBrightnessMin(_ expression: Expression) -> Self {
+    public func rasterBrightnessMin(_ expression: Exp) -> Self {
         with(self, setter(\.rasterBrightnessMin, .expression(expression)))
     }
 
@@ -375,7 +375,7 @@ public struct RasterLayer: Layer, Equatable {
 
     /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
     @_documentation(visibility: public)
-    public func rasterColor(_ expression: Expression) -> Self {
+    public func rasterColor(_ expression: Exp) -> Self {
         with(self, setter(\.rasterColor, .expression(expression)))
     }
 
@@ -395,7 +395,7 @@ public struct RasterLayer: Layer, Equatable {
     /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r - src.r + mix.g - src.g + mix.b - src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is -not- multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
     /// Default value: [0.2126,0.7152,0.0722,0].
     @_documentation(visibility: public)
-    public func rasterColorMix(_ expression: Expression) -> Self {
+    public func rasterColorMix(_ expression: Exp) -> Self {
         with(self, setter(\.rasterColorMix, .expression(expression)))
     }
 
@@ -413,7 +413,7 @@ public struct RasterLayer: Layer, Equatable {
 
     /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`. For `rasterarray` sources, if `raster-color-range` is unspecified, the source's stated data range is used.
     @_documentation(visibility: public)
-    public func rasterColorRange(_ expression: Expression) -> Self {
+    public func rasterColorRange(_ expression: Exp) -> Self {
         with(self, setter(\.rasterColorRange, .expression(expression)))
     }
 
@@ -433,7 +433,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Increase or reduce the contrast of the image.
     /// Default value: 0. Value range: [-1, 1]
     @_documentation(visibility: public)
-    public func rasterContrast(_ expression: Expression) -> Self {
+    public func rasterContrast(_ expression: Exp) -> Self {
         with(self, setter(\.rasterContrast, .expression(expression)))
     }
 
@@ -456,7 +456,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func rasterElevation(_ expression: Expression) -> Self {
+    public func rasterElevation(_ expression: Exp) -> Self {
         with(self, setter(\.rasterElevation, .expression(expression)))
     }
 
@@ -476,7 +476,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
-    public func rasterEmissiveStrength(_ expression: Expression) -> Self {
+    public func rasterEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.rasterEmissiveStrength, .expression(expression)))
     }
 
@@ -490,7 +490,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Fade duration when a new tile is added.
     /// Default value: 300. Minimum value: 0.
     @_documentation(visibility: public)
-    public func rasterFadeDuration(_ expression: Expression) -> Self {
+    public func rasterFadeDuration(_ expression: Exp) -> Self {
         with(self, setter(\.rasterFadeDuration, .expression(expression)))
     }
 
@@ -510,7 +510,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Rotates hues around the color wheel.
     /// Default value: 0.
     @_documentation(visibility: public)
-    public func rasterHueRotate(_ expression: Expression) -> Self {
+    public func rasterHueRotate(_ expression: Exp) -> Self {
         with(self, setter(\.rasterHueRotate, .expression(expression)))
     }
 
@@ -530,7 +530,7 @@ public struct RasterLayer: Layer, Equatable {
     /// The opacity at which the image will be drawn.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func rasterOpacity(_ expression: Expression) -> Self {
+    public func rasterOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.rasterOpacity, .expression(expression)))
     }
 
@@ -544,7 +544,7 @@ public struct RasterLayer: Layer, Equatable {
     /// The resampling/interpolation method to use for overscaling, also known as texture magnification filter
     /// Default value: "linear".
     @_documentation(visibility: public)
-    public func rasterResampling(_ expression: Expression) -> Self {
+    public func rasterResampling(_ expression: Exp) -> Self {
         with(self, setter(\.rasterResampling, .expression(expression)))
     }
 
@@ -564,7 +564,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Increase or reduce the saturation of the image.
     /// Default value: 0. Value range: [-1, 1]
     @_documentation(visibility: public)
-    public func rasterSaturation(_ expression: Expression) -> Self {
+    public func rasterSaturation(_ expression: Exp) -> Self {
         with(self, setter(\.rasterSaturation, .expression(expression)))
     }
 }

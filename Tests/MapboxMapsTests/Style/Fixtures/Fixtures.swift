@@ -40,9 +40,9 @@ internal extension String {
     }
 }
 
-internal extension Expression {
-    static func testConstantValue() -> Expression {
-        return Expression(.all)
+internal extension Exp {
+    static func testConstantValue() -> Exp {
+        return Exp(.all)
     }
 }
 
@@ -66,8 +66,8 @@ internal extension Array where Element == Double {
     }
 }
 
-internal extension Dictionary where Key == String, Value == Expression {
-    static func testSourceValue() -> [String: Expression] {
+internal extension Dictionary where Key == String, Value == Exp {
+    static func testSourceValue() -> [String: Exp] {
         let exp = Exp(.sum) {
             10
             12

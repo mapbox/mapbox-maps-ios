@@ -170,29 +170,29 @@ final class Puck2DRenderer: PuckRenderer {
             let minPuckRadiusInPoints = 11.0
             let minPuckRadiusInMeters = minPuckRadiusInPoints * Projection.metersPerPoint(for: newState.coordinate.latitude, zoom: cutoffZoomLevel)
             newLayerPaintProperties[.accuracyRadius] = [
-                Expression.Operator.interpolate.rawValue,
-                [Expression.Operator.linear.rawValue],
-                [Expression.Operator.zoom.rawValue],
+                Exp.Operator.interpolate.rawValue,
+                [Exp.Operator.linear.rawValue],
+                [Exp.Operator.zoom.rawValue],
                 cutoffZoomLevel,
                 minPuckRadiusInMeters,
                 cutoffZoomLevel + 1,
                 horizontalAccuracy
             ] as [Any]
             newLayerPaintProperties[.accuracyRadiusColor] = [
-                Expression.Operator.step.rawValue,
-                [Expression.Operator.zoom.rawValue],
+                Exp.Operator.step.rawValue,
+                [Exp.Operator.zoom.rawValue],
                 StyleColor(UIColor.clear).rawValue,
                 cutoffZoomLevel,
                 StyleColor(newConfiguration.accuracyRingColor).rawValue] as [Any]
             newLayerPaintProperties[.accuracyRadiusBorderColor] = [
-                Expression.Operator.step.rawValue,
-                [Expression.Operator.zoom.rawValue],
+                Exp.Operator.step.rawValue,
+                [Exp.Operator.zoom.rawValue],
                 StyleColor(UIColor.clear).rawValue,
                 cutoffZoomLevel,
                 StyleColor(newConfiguration.accuracyRingBorderColor).rawValue] as [Any]
             newLayerPaintProperties[.emphasisCircleColor] = [
-                Expression.Operator.step.rawValue,
-                [Expression.Operator.zoom.rawValue],
+                Exp.Operator.step.rawValue,
+                [Exp.Operator.zoom.rawValue],
                 StyleColor(newConfiguration.accuracyRingColor).rawValue,
                 cutoffZoomLevel,
                 StyleColor(UIColor.clear).rawValue] as [Any]

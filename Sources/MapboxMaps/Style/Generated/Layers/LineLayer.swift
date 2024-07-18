@@ -15,7 +15,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
-    public var filter: Expression?
+    public var filter: Exp?
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
@@ -229,7 +229,7 @@ public struct LineLayer: Layer, Equatable {
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
-        filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
+        filter = try container.decodeIfPresent(Exp.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
         slot = try container.decodeIfPresent(Slot.self, forKey: .slot)
@@ -342,7 +342,7 @@ public struct LineLayer: Layer, Equatable {
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     @_documentation(visibility: public)
-    public func filter(_ newValue: Expression) -> Self {
+    public func filter(_ newValue: Exp) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
@@ -391,7 +391,7 @@ public struct LineLayer: Layer, Equatable {
     /// The display of line endings.
     /// Default value: "butt".
     @_documentation(visibility: public)
-    public func lineCap(_ expression: Expression) -> Self {
+    public func lineCap(_ expression: Exp) -> Self {
         with(self, setter(\.lineCap, .expression(expression)))
     }
 
@@ -405,7 +405,7 @@ public struct LineLayer: Layer, Equatable {
     /// The display of lines when joining.
     /// Default value: "miter".
     @_documentation(visibility: public)
-    public func lineJoin(_ expression: Expression) -> Self {
+    public func lineJoin(_ expression: Exp) -> Self {
         with(self, setter(\.lineJoin, .expression(expression)))
     }
 
@@ -419,7 +419,7 @@ public struct LineLayer: Layer, Equatable {
     /// Used to automatically convert miter joins to bevel joins for sharp angles.
     /// Default value: 2.
     @_documentation(visibility: public)
-    public func lineMiterLimit(_ expression: Expression) -> Self {
+    public func lineMiterLimit(_ expression: Exp) -> Self {
         with(self, setter(\.lineMiterLimit, .expression(expression)))
     }
 
@@ -433,7 +433,7 @@ public struct LineLayer: Layer, Equatable {
     /// Used to automatically convert round joins to miter joins for shallow angles.
     /// Default value: 1.05.
     @_documentation(visibility: public)
-    public func lineRoundLimit(_ expression: Expression) -> Self {
+    public func lineRoundLimit(_ expression: Exp) -> Self {
         with(self, setter(\.lineRoundLimit, .expression(expression)))
     }
 
@@ -445,7 +445,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     @_documentation(visibility: public)
-    public func lineSortKey(_ expression: Expression) -> Self {
+    public func lineSortKey(_ expression: Exp) -> Self {
         with(self, setter(\.lineSortKey, .expression(expression)))
     }
 
@@ -459,7 +459,7 @@ public struct LineLayer: Layer, Equatable {
     /// Vertical offset from ground, in meters. Defaults to 0. Not supported for globe projection at the moment.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func lineZOffset(_ expression: Expression) -> Self {
+    public func lineZOffset(_ expression: Exp) -> Self {
         with(self, setter(\.lineZOffset, .expression(expression)))
     }
 
@@ -479,7 +479,7 @@ public struct LineLayer: Layer, Equatable {
     /// Blur applied to the line, in pixels.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
-    public func lineBlur(_ expression: Expression) -> Self {
+    public func lineBlur(_ expression: Exp) -> Self {
         with(self, setter(\.lineBlur, .expression(expression)))
     }
 
@@ -506,7 +506,7 @@ public struct LineLayer: Layer, Equatable {
     /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
     /// Default value: "rgba(0, 0, 0, 0)".
     @_documentation(visibility: public)
-    public func lineBorderColor(_ expression: Expression) -> Self {
+    public func lineBorderColor(_ expression: Exp) -> Self {
         with(self, setter(\.lineBorderColor, .expression(expression)))
     }
 
@@ -526,7 +526,7 @@ public struct LineLayer: Layer, Equatable {
     /// The width of the line border. A value of zero means no border.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
-    public func lineBorderWidth(_ expression: Expression) -> Self {
+    public func lineBorderWidth(_ expression: Exp) -> Self {
         with(self, setter(\.lineBorderWidth, .expression(expression)))
     }
 
@@ -553,7 +553,7 @@ public struct LineLayer: Layer, Equatable {
     /// The color with which the line will be drawn.
     /// Default value: "#000000".
     @_documentation(visibility: public)
-    public func lineColor(_ expression: Expression) -> Self {
+    public func lineColor(_ expression: Exp) -> Self {
         with(self, setter(\.lineColor, .expression(expression)))
     }
 
@@ -567,7 +567,7 @@ public struct LineLayer: Layer, Equatable {
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     /// Minimum value: 0.
     @_documentation(visibility: public)
-    public func lineDashArray(_ expression: Expression) -> Self {
+    public func lineDashArray(_ expression: Exp) -> Self {
         with(self, setter(\.lineDasharray, .expression(expression)))
     }
 
@@ -587,7 +587,7 @@ public struct LineLayer: Layer, Equatable {
     /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func lineDepthOcclusionFactor(_ expression: Expression) -> Self {
+    public func lineDepthOcclusionFactor(_ expression: Exp) -> Self {
         with(self, setter(\.lineDepthOcclusionFactor, .expression(expression)))
     }
 
@@ -607,7 +607,7 @@ public struct LineLayer: Layer, Equatable {
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
-    public func lineEmissiveStrength(_ expression: Expression) -> Self {
+    public func lineEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.lineEmissiveStrength, .expression(expression)))
     }
 
@@ -627,7 +627,7 @@ public struct LineLayer: Layer, Equatable {
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
-    public func lineGapWidth(_ expression: Expression) -> Self {
+    public func lineGapWidth(_ expression: Exp) -> Self {
         with(self, setter(\.lineGapWidth, .expression(expression)))
     }
 
@@ -645,7 +645,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// A gradient used to color a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
     @_documentation(visibility: public)
-    public func lineGradient(_ expression: Expression) -> Self {
+    public func lineGradient(_ expression: Exp) -> Self {
         with(self, setter(\.lineGradient, .expression(expression)))
     }
 
@@ -668,7 +668,7 @@ public struct LineLayer: Layer, Equatable {
     /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func lineOcclusionOpacity(_ expression: Expression) -> Self {
+    public func lineOcclusionOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.lineOcclusionOpacity, .expression(expression)))
     }
 
@@ -688,7 +688,7 @@ public struct LineLayer: Layer, Equatable {
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
     /// Default value: 0.
     @_documentation(visibility: public)
-    public func lineOffset(_ expression: Expression) -> Self {
+    public func lineOffset(_ expression: Exp) -> Self {
         with(self, setter(\.lineOffset, .expression(expression)))
     }
 
@@ -708,7 +708,7 @@ public struct LineLayer: Layer, Equatable {
     /// The opacity at which the line will be drawn.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func lineOpacity(_ expression: Expression) -> Self {
+    public func lineOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.lineOpacity, .expression(expression)))
     }
 
@@ -720,7 +720,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     @_documentation(visibility: public)
-    public func linePattern(_ expression: Expression) -> Self {
+    public func linePattern(_ expression: Exp) -> Self {
         with(self, setter(\.linePattern, .expression(expression)))
     }
 
@@ -740,7 +740,7 @@ public struct LineLayer: Layer, Equatable {
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     /// Default value: [0,0].
     @_documentation(visibility: public)
-    public func lineTranslate(_ expression: Expression) -> Self {
+    public func lineTranslate(_ expression: Exp) -> Self {
         with(self, setter(\.lineTranslate, .expression(expression)))
     }
 
@@ -754,7 +754,7 @@ public struct LineLayer: Layer, Equatable {
     /// Controls the frame of reference for `line-translate`.
     /// Default value: "map".
     @_documentation(visibility: public)
-    public func lineTranslateAnchor(_ expression: Expression) -> Self {
+    public func lineTranslateAnchor(_ expression: Exp) -> Self {
         with(self, setter(\.lineTranslateAnchor, .expression(expression)))
     }
 
@@ -768,7 +768,7 @@ public struct LineLayer: Layer, Equatable {
     /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
     @_documentation(visibility: public)
-    public func lineTrimOffset(_ expression: Expression) -> Self {
+    public func lineTrimOffset(_ expression: Exp) -> Self {
         with(self, setter(\.lineTrimOffset, .expression(expression)))
     }
 
@@ -788,7 +788,7 @@ public struct LineLayer: Layer, Equatable {
     /// Stroke thickness.
     /// Default value: 1. Minimum value: 0.
     @_documentation(visibility: public)
-    public func lineWidth(_ expression: Expression) -> Self {
+    public func lineWidth(_ expression: Exp) -> Self {
         with(self, setter(\.lineWidth, .expression(expression)))
     }
 }

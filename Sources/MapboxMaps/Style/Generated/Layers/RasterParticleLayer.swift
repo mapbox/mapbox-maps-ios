@@ -19,7 +19,7 @@ import UIKit
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     @_documentation(visibility: public)
-    public var filter: Expression?
+    public var filter: Exp?
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
@@ -128,7 +128,7 @@ import UIKit
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
-        filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
+        filter = try container.decodeIfPresent(Exp.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
         slot = try container.decodeIfPresent(Slot.self, forKey: .slot)
@@ -189,7 +189,7 @@ import UIKit
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     @_documentation(visibility: public)
-    public func filter(_ newValue: Expression) -> Self {
+    public func filter(_ newValue: Exp) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
@@ -238,7 +238,7 @@ import UIKit
     /// Displayed band of raster array source layer
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func rasterParticleArrayBand(_ expression: Expression) -> Self {
+    public func rasterParticleArrayBand(_ expression: Exp) -> Self {
         with(self, setter(\.rasterParticleArrayBand, .expression(expression)))
     }
 
@@ -259,7 +259,7 @@ import UIKit
     /// Defines a color map by which to colorize a raster particle layer, parameterized by the `["raster-particle-speed"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-particle-max-speed`.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func rasterParticleColor(_ expression: Expression) -> Self {
+    public func rasterParticleColor(_ expression: Exp) -> Self {
         with(self, setter(\.rasterParticleColor, .expression(expression)))
     }
 
@@ -275,7 +275,7 @@ import UIKit
     /// Default value: 512. Minimum value: 1.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func rasterParticleCount(_ expression: Expression) -> Self {
+    public func rasterParticleCount(_ expression: Exp) -> Self {
         with(self, setter(\.rasterParticleCount, .expression(expression)))
     }
 
@@ -298,7 +298,7 @@ import UIKit
     /// Default value: 0.98. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func rasterParticleFadeOpacityFactor(_ expression: Expression) -> Self {
+    public func rasterParticleFadeOpacityFactor(_ expression: Exp) -> Self {
         with(self, setter(\.rasterParticleFadeOpacityFactor, .expression(expression)))
     }
 
@@ -314,7 +314,7 @@ import UIKit
     /// Default value: 1. Minimum value: 1.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func rasterParticleMaxSpeed(_ expression: Expression) -> Self {
+    public func rasterParticleMaxSpeed(_ expression: Exp) -> Self {
         with(self, setter(\.rasterParticleMaxSpeed, .expression(expression)))
     }
 
@@ -330,7 +330,7 @@ import UIKit
     /// Default value: 0.8. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func rasterParticleResetRateFactor(_ expression: Expression) -> Self {
+    public func rasterParticleResetRateFactor(_ expression: Exp) -> Self {
         with(self, setter(\.rasterParticleResetRateFactor, .expression(expression)))
     }
 
@@ -353,7 +353,7 @@ import UIKit
     /// Default value: 0.2. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func rasterParticleSpeedFactor(_ expression: Expression) -> Self {
+    public func rasterParticleSpeedFactor(_ expression: Exp) -> Self {
         with(self, setter(\.rasterParticleSpeedFactor, .expression(expression)))
     }
 }

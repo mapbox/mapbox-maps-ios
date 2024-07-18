@@ -101,12 +101,12 @@ public struct StyleColor: Codable, Equatable, RawRepresentable, ExpressibleByStr
 
     // MARK: - Expression
 
-    /// Creates a `StyleColor` from an `Expression`. Returns nil if
+    /// Creates a `StyleColor` from an `Exp`. Returns nil if
     /// the expression operator is not `rgb`, `rgba`, `hsl` or `hsla`, if the expression does not
     /// have four number-type arguments(for `rgba` and `hsla`) or three number-type arguments(for `rgb` and `hsl`),
     /// or if the arguments are out of the supported ranges.
     /// - Parameter expression: An rgb(a) or hsl(a)  expression.
-    internal init?(expression: Expression) {
+    internal init?(expression: Exp) {
         guard case 3..<5 = expression.arguments.count,
               case .number(let component0) = expression.arguments[0],
               case .number(let component1) = expression.arguments[1],
@@ -156,7 +156,7 @@ public struct StyleColor: Codable, Equatable, RawRepresentable, ExpressibleByStr
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let optionalColor: StyleColor?
-        if let expression = try? container.decode(Expression.self) {
+        if let expression = try? container.decode(Exp.self) {
             optionalColor = StyleColor(expression: expression)
         } else if let string = try? container.decode(String.self) {
             optionalColor = StyleColor(rawValue: string)

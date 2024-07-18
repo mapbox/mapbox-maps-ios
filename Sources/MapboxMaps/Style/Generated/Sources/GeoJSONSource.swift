@@ -51,7 +51,7 @@ public struct GeoJSONSource: Source {
     ///
     /// For more advanced use cases, in place of `operator`, you can use a custom reduce expression that references a special `["accumulated"]` value, e.g.:
     /// `{"sum": [["+", ["accumulated"], ["get", "sum"]], ["get", "scalerank"]]}`
-    public var clusterProperties: [String: Expression]?
+    public var clusterProperties: [String: Exp]?
 
     /// Whether to calculate line distance metrics. This is required for line layers that specify `line-gradient` values.
     /// Default value: false.

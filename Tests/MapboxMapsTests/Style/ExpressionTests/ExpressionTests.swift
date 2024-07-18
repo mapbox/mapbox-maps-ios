@@ -48,7 +48,7 @@ final class ExpressionTests: XCTestCase {
         XCTAssertNotNil(data)
 
         do {
-            let decodedExpression = try JSONDecoder().decode(Expression.self, from: data!)
+            let decodedExpression = try JSONDecoder().decode(Exp.self, from: data!)
             XCTAssertEqual(decodedExpression.operator, .format)
             XCTAssertEqual(decodedExpression.arguments.first, .option(.format(FormatOptions())))
         } catch {
@@ -61,7 +61,7 @@ final class ExpressionTests: XCTestCase {
         let data = jsonString.data(using: .utf8)!
 
         do {
-            let actual = try JSONDecoder().decode(Expression.self, from: data)
+            let actual = try JSONDecoder().decode(Exp.self, from: data)
 
             XCTAssertEqual(actual, Exp(.array) {
                 "number"
@@ -75,7 +75,7 @@ final class ExpressionTests: XCTestCase {
         let jsonString = #"[]"#
         let data = jsonString.data(using: .utf8)!
 
-        XCTAssertThrowsError(try JSONDecoder().decode(Expression.self, from: data))
+        XCTAssertThrowsError(try JSONDecoder().decode(Exp.self, from: data))
     }
 
     func testGeoJSONObjectExpression() throws {
@@ -113,16 +113,16 @@ final class ExpressionTests: XCTestCase {
     }
 
     func testDistanceFromCenterExpression() {
-        let expression = Expression(.distanceFromCenter) {
-            Expression(.literal) { 1.0 }
+        let expression = Exp(.distanceFromCenter) {
+            Exp(.literal) { 1.0 }
         }
 
         XCTAssertEqual(expression.description, "[distance-from-center, [literal, 1.0]]")
     }
 
     func testPitchExpression() {
-        let expression = Expression(.pitch) {
-            Expression(.literal) { 20.0 }
+        let expression = Exp(.pitch) {
+            Exp(.literal) { 20.0 }
         }
 
         XCTAssertEqual(expression.description, "[pitch, [literal, 20.0]]")
@@ -174,7 +174,7 @@ final class ExpressionTests: XCTestCase {
         XCTAssertNotNil(expressionData)
 
         do {
-            let decodedExpression = try JSONDecoder().decode(Expression.self, from: expressionData!)
+            let decodedExpression = try JSONDecoder().decode(Exp.self, from: expressionData!)
             let matchingExpression = Exp {
                 Exp(.sum) {
                     Exp(.accumulated)
@@ -211,7 +211,7 @@ final class ExpressionTests: XCTestCase {
         XCTAssertNotNil(expressionData)
 
         do {
-            let decodedExpression = try JSONDecoder().decode(Expression.self, from: expressionData!)
+            let decodedExpression = try JSONDecoder().decode(Exp.self, from: expressionData!)
             let matchingExpression = Exp(.interpolate) {
                 Exp(.linear)
                 Exp(.zoom)
@@ -243,10 +243,10 @@ final class ExpressionTests: XCTestCase {
     }
 
     func testAccessExpressionArgumentsForOperatorlessExpression() throws {
-        let expectedExpressionArguments: [Expression.Argument] = [Expression.Argument.expression(Exp(.sum) {
+        let expectedExpressionArguments: [Exp.Argument] = [Exp.Argument.expression(Exp(.sum) {
             Exp(.accumulated)
             Exp(.get) { "sum" }
-        }), Expression.Argument.expression(Exp(.get) { "scalerank" })]
+        }), Exp.Argument.expression(Exp(.get) { "scalerank" })]
 
         let sumExpression = Exp {
             Exp(.sum) {

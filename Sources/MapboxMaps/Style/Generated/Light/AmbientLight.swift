@@ -93,7 +93,7 @@ extension AmbientLight {
     /// Color of the ambient light.
     /// Default value: "#ffffff".
     @_documentation(visibility: public)
-    public func color(_ expression: Expression) -> Self {
+    public func color(_ expression: Exp) -> Self {
         with(self, setter(\.color, .expression(expression)))
     }
 
@@ -113,7 +113,7 @@ extension AmbientLight {
     /// A multiplier for the color of the ambient light.
     /// Default value: 0.5. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func intensity(_ expression: Expression) -> Self {
+    public func intensity(_ expression: Exp) -> Self {
         with(self, setter(\.intensity, .expression(expression)))
     }
 }

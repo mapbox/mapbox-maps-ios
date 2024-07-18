@@ -117,7 +117,7 @@ final class HillshadeLayerTests: XCTestCase {
 
     func testSetPropertyValueWithFunction() {
         let layer = HillshadeLayer(id: "test-id", source: "source")
-            .filter(Expression.testConstantValue())
+            .filter(Exp.testConstantValue())
             .source(String.testConstantValue())
             .sourceLayer(String.testConstantValue())
             .slot(Slot.testConstantValue())
@@ -131,7 +131,7 @@ final class HillshadeLayerTests: XCTestCase {
             .hillshadeIlluminationDirection(Double.testConstantValue())
             .hillshadeShadowColor(StyleColor.testConstantValue())
 
-        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.filter, Exp.testConstantValue())
         XCTAssertEqual(layer.source, String.testConstantValue())
         XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
         XCTAssertEqual(layer.slot, Slot.testConstantValue())

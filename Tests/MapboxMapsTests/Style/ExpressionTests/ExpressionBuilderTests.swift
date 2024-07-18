@@ -11,9 +11,9 @@ internal class ExpressionBuilderTests: XCTestCase {
 
         let args = stopsDictionary.expressionArguments
 
-        if case Expression.Argument.number(let number1) = args[0],
-           case Expression.Argument.number(let number2) = args[2],
-           case Expression.Argument.number(let number3) = args[4] {
+        if case Exp.Argument.number(let number1) = args[0],
+           case Exp.Argument.number(let number2) = args[2],
+           case Exp.Argument.number(let number3) = args[4] {
 
             if number1 > number2 || number2 > number3 {
                 XCTFail("Stops dictionaries should always be sorted in ascending order of keys")

@@ -142,7 +142,7 @@ final class ModelLayerTests: XCTestCase {
 
     func testSetPropertyValueWithFunction() {
         let layer = ModelLayer(id: "test-id", source: "source")
-            .filter(Expression.testConstantValue())
+            .filter(Exp.testConstantValue())
             .source(String.testConstantValue())
             .sourceLayer(String.testConstantValue())
             .slot(Slot.testConstantValue())
@@ -166,7 +166,7 @@ final class ModelLayerTests: XCTestCase {
             .modelTranslation(x: 0, y: 1, z: 2)
             .modelType(ModelType.testConstantValue())
 
-        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.filter, Exp.testConstantValue())
         XCTAssertEqual(layer.source, String.testConstantValue())
         XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
         XCTAssertEqual(layer.slot, Slot.testConstantValue())

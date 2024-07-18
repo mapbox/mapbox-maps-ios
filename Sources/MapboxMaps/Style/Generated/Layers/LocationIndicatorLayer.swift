@@ -286,7 +286,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Name of image in sprite to use as the middle of the location indicator.
     @_documentation(visibility: public)
-    public func bearingImage(_ expression: Expression) -> Self {
+    public func bearingImage(_ expression: Exp) -> Self {
         with(self, setter(\.bearingImage, .expression(expression)))
     }
 
@@ -298,7 +298,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Name of image in sprite to use as the background of the location indicator.
     @_documentation(visibility: public)
-    public func shadowImage(_ expression: Expression) -> Self {
+    public func shadowImage(_ expression: Exp) -> Self {
         with(self, setter(\.shadowImage, .expression(expression)))
     }
 
@@ -310,7 +310,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Name of image in sprite to use as the top of the location indicator.
     @_documentation(visibility: public)
-    public func topImage(_ expression: Expression) -> Self {
+    public func topImage(_ expression: Exp) -> Self {
         with(self, setter(\.topImage, .expression(expression)))
     }
 
@@ -330,7 +330,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The accuracy, in meters, of the position source used to retrieve the position of the location indicator.
     /// Default value: 0.
     @_documentation(visibility: public)
-    public func accuracyRadius(_ expression: Expression) -> Self {
+    public func accuracyRadius(_ expression: Exp) -> Self {
         with(self, setter(\.accuracyRadius, .expression(expression)))
     }
 
@@ -357,7 +357,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The color for drawing the accuracy radius border. To adjust transparency, set the alpha component of the color accordingly.
     /// Default value: "#ffffff".
     @_documentation(visibility: public)
-    public func accuracyRadiusBorderColor(_ expression: Expression) -> Self {
+    public func accuracyRadiusBorderColor(_ expression: Exp) -> Self {
         with(self, setter(\.accuracyRadiusBorderColor, .expression(expression)))
     }
 
@@ -384,7 +384,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The color for drawing the accuracy radius, as a circle. To adjust transparency, set the alpha component of the color accordingly.
     /// Default value: "#ffffff".
     @_documentation(visibility: public)
-    public func accuracyRadiusColor(_ expression: Expression) -> Self {
+    public func accuracyRadiusColor(_ expression: Exp) -> Self {
         with(self, setter(\.accuracyRadiusColor, .expression(expression)))
     }
 
@@ -404,7 +404,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The bearing of the location indicator.
     /// Default value: 0.
     @_documentation(visibility: public)
-    public func bearing(_ expression: Expression) -> Self {
+    public func bearing(_ expression: Exp) -> Self {
         with(self, setter(\.bearing, .expression(expression)))
     }
 
@@ -424,7 +424,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The size of the bearing image, as a scale factor applied to the size of the specified image.
     /// Default value: 1.
     @_documentation(visibility: public)
-    public func bearingImageSize(_ expression: Expression) -> Self {
+    public func bearingImageSize(_ expression: Exp) -> Self {
         with(self, setter(\.bearingImageSize, .expression(expression)))
     }
 
@@ -451,7 +451,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The color of the circle emphasizing the indicator. To adjust transparency, set the alpha component of the color accordingly.
     /// Default value: "#ffffff".
     @_documentation(visibility: public)
-    public func emphasisCircleColor(_ expression: Expression) -> Self {
+    public func emphasisCircleColor(_ expression: Exp) -> Self {
         with(self, setter(\.emphasisCircleColor, .expression(expression)))
     }
 
@@ -471,7 +471,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The radius, in pixel, of the circle emphasizing the indicator, drawn between the accuracy radius and the indicator shadow.
     /// Default value: 0.
     @_documentation(visibility: public)
-    public func emphasisCircleRadius(_ expression: Expression) -> Self {
+    public func emphasisCircleRadius(_ expression: Exp) -> Self {
         with(self, setter(\.emphasisCircleRadius, .expression(expression)))
     }
 
@@ -485,7 +485,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The displacement off the center of the top image and the shadow image when the pitch of the map is greater than 0. This helps producing a three-dimensional appearence.
     /// Default value: "0".
     @_documentation(visibility: public)
-    public func imagePitchDisplacement(_ expression: Expression) -> Self {
+    public func imagePitchDisplacement(_ expression: Exp) -> Self {
         with(self, setter(\.imagePitchDisplacement, .expression(expression)))
     }
 
@@ -505,7 +505,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// An array of [latitude, longitude, altitude] position of the location indicator.
     /// Default value: [0,0,0].
     @_documentation(visibility: public)
-    public func location(_ expression: Expression) -> Self {
+    public func location(_ expression: Exp) -> Self {
         with(self, setter(\.location, .expression(expression)))
     }
 
@@ -525,7 +525,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The opacity of the entire location indicator layer.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func locationIndicatorOpacity(_ expression: Expression) -> Self {
+    public func locationIndicatorOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.locationIndicatorOpacity, .expression(expression)))
     }
 
@@ -539,7 +539,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The amount of the perspective compensation, between 0 and 1. A value of 1 produces a location indicator of constant width across the screen. A value of 0 makes it scale naturally according to the viewing projection.
     /// Default value: "0.85".
     @_documentation(visibility: public)
-    public func perspectiveCompensation(_ expression: Expression) -> Self {
+    public func perspectiveCompensation(_ expression: Exp) -> Self {
         with(self, setter(\.perspectiveCompensation, .expression(expression)))
     }
 
@@ -559,7 +559,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The size of the shadow image, as a scale factor applied to the size of the specified image.
     /// Default value: 1.
     @_documentation(visibility: public)
-    public func shadowImageSize(_ expression: Expression) -> Self {
+    public func shadowImageSize(_ expression: Exp) -> Self {
         with(self, setter(\.shadowImageSize, .expression(expression)))
     }
 
@@ -579,7 +579,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// The size of the top image, as a scale factor applied to the size of the specified image.
     /// Default value: 1.
     @_documentation(visibility: public)
-    public func topImageSize(_ expression: Expression) -> Self {
+    public func topImageSize(_ expression: Exp) -> Self {
         with(self, setter(\.topImageSize, .expression(expression)))
     }
 }

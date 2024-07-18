@@ -240,7 +240,7 @@ final class SymbolLayerTests: XCTestCase {
 
     func testSetPropertyValueWithFunction() {
         let layer = SymbolLayer(id: "test-id", source: "source")
-            .filter(Expression.testConstantValue())
+            .filter(Exp.testConstantValue())
             .source(String.testConstantValue())
             .sourceLayer(String.testConstantValue())
             .slot(Slot.testConstantValue())
@@ -309,7 +309,7 @@ final class SymbolLayerTests: XCTestCase {
             .textTranslate(x: 0, y: 1)
             .textTranslateAnchor(TextTranslateAnchor.testConstantValue())
 
-        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.filter, Exp.testConstantValue())
         XCTAssertEqual(layer.source, String.testConstantValue())
         XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
         XCTAssertEqual(layer.slot, Slot.testConstantValue())

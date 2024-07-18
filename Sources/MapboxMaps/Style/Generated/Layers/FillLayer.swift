@@ -15,7 +15,7 @@ public struct FillLayer: Layer, Equatable {
 
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
-    public var filter: Expression?
+    public var filter: Exp?
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
@@ -129,7 +129,7 @@ public struct FillLayer: Layer, Equatable {
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
-        filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
+        filter = try container.decodeIfPresent(Exp.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
         slot = try container.decodeIfPresent(Slot.self, forKey: .slot)
@@ -200,7 +200,7 @@ public struct FillLayer: Layer, Equatable {
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     @_documentation(visibility: public)
-    public func filter(_ newValue: Expression) -> Self {
+    public func filter(_ newValue: Exp) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
@@ -247,7 +247,7 @@ public struct FillLayer: Layer, Equatable {
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     @_documentation(visibility: public)
-    public func fillSortKey(_ expression: Expression) -> Self {
+    public func fillSortKey(_ expression: Exp) -> Self {
         with(self, setter(\.fillSortKey, .expression(expression)))
     }
 
@@ -261,7 +261,7 @@ public struct FillLayer: Layer, Equatable {
     /// Whether or not the fill should be antialiased.
     /// Default value: true.
     @_documentation(visibility: public)
-    public func fillAntialias(_ expression: Expression) -> Self {
+    public func fillAntialias(_ expression: Exp) -> Self {
         with(self, setter(\.fillAntialias, .expression(expression)))
     }
 
@@ -288,7 +288,7 @@ public struct FillLayer: Layer, Equatable {
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
     /// Default value: "#000000".
     @_documentation(visibility: public)
-    public func fillColor(_ expression: Expression) -> Self {
+    public func fillColor(_ expression: Exp) -> Self {
         with(self, setter(\.fillColor, .expression(expression)))
     }
 
@@ -308,7 +308,7 @@ public struct FillLayer: Layer, Equatable {
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
-    public func fillEmissiveStrength(_ expression: Expression) -> Self {
+    public func fillEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.fillEmissiveStrength, .expression(expression)))
     }
 
@@ -328,7 +328,7 @@ public struct FillLayer: Layer, Equatable {
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func fillOpacity(_ expression: Expression) -> Self {
+    public func fillOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.fillOpacity, .expression(expression)))
     }
 
@@ -352,7 +352,7 @@ public struct FillLayer: Layer, Equatable {
 
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
     @_documentation(visibility: public)
-    public func fillOutlineColor(_ expression: Expression) -> Self {
+    public func fillOutlineColor(_ expression: Exp) -> Self {
         with(self, setter(\.fillOutlineColor, .expression(expression)))
     }
 
@@ -364,7 +364,7 @@ public struct FillLayer: Layer, Equatable {
 
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     @_documentation(visibility: public)
-    public func fillPattern(_ expression: Expression) -> Self {
+    public func fillPattern(_ expression: Exp) -> Self {
         with(self, setter(\.fillPattern, .expression(expression)))
     }
 
@@ -384,7 +384,7 @@ public struct FillLayer: Layer, Equatable {
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     /// Default value: [0,0].
     @_documentation(visibility: public)
-    public func fillTranslate(_ expression: Expression) -> Self {
+    public func fillTranslate(_ expression: Exp) -> Self {
         with(self, setter(\.fillTranslate, .expression(expression)))
     }
 
@@ -398,7 +398,7 @@ public struct FillLayer: Layer, Equatable {
     /// Controls the frame of reference for `fill-translate`.
     /// Default value: "map".
     @_documentation(visibility: public)
-    public func fillTranslateAnchor(_ expression: Expression) -> Self {
+    public func fillTranslateAnchor(_ expression: Exp) -> Self {
         with(self, setter(\.fillTranslateAnchor, .expression(expression)))
     }
 }

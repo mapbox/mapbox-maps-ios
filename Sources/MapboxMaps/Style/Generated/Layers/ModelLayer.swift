@@ -17,7 +17,7 @@ import UIKit
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     @_documentation(visibility: public)
-    public var filter: Expression?
+    public var filter: Exp?
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
@@ -228,7 +228,7 @@ import UIKit
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
-        filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
+        filter = try container.decodeIfPresent(Exp.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
         slot = try container.decodeIfPresent(Slot.self, forKey: .slot)
@@ -325,7 +325,7 @@ import UIKit
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     @_documentation(visibility: public)
-    public func filter(_ newValue: Expression) -> Self {
+    public func filter(_ newValue: Exp) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
@@ -376,7 +376,7 @@ import UIKit
     /// Default value: "".
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelId(_ expression: Expression) -> Self {
+    public func modelId(_ expression: Exp) -> Self {
         with(self, setter(\.modelId, .expression(expression)))
     }
 
@@ -399,7 +399,7 @@ import UIKit
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelAmbientOcclusionIntensity(_ expression: Expression) -> Self {
+    public func modelAmbientOcclusionIntensity(_ expression: Exp) -> Self {
         with(self, setter(\.modelAmbientOcclusionIntensity, .expression(expression)))
     }
 
@@ -415,7 +415,7 @@ import UIKit
     /// Default value: true.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelCastShadows(_ expression: Expression) -> Self {
+    public func modelCastShadows(_ expression: Exp) -> Self {
         with(self, setter(\.modelCastShadows, .expression(expression)))
     }
 
@@ -446,7 +446,7 @@ import UIKit
     /// Default value: "#ffffff".
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelColor(_ expression: Expression) -> Self {
+    public func modelColor(_ expression: Exp) -> Self {
         with(self, setter(\.modelColor, .expression(expression)))
     }
 
@@ -469,7 +469,7 @@ import UIKit
     /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelColorMixIntensity(_ expression: Expression) -> Self {
+    public func modelColorMixIntensity(_ expression: Exp) -> Self {
         with(self, setter(\.modelColorMixIntensity, .expression(expression)))
     }
 
@@ -485,7 +485,7 @@ import UIKit
     /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelCutoffFadeRange(_ expression: Expression) -> Self {
+    public func modelCutoffFadeRange(_ expression: Exp) -> Self {
         with(self, setter(\.modelCutoffFadeRange, .expression(expression)))
     }
 
@@ -508,7 +508,7 @@ import UIKit
     /// Default value: 0. Value range: [0, 5]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelEmissiveStrength(_ expression: Expression) -> Self {
+    public func modelEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.modelEmissiveStrength, .expression(expression)))
     }
 
@@ -524,7 +524,7 @@ import UIKit
     /// Default value: [0,0,1]. Minimum value: [0,0,0]. Maximum value: [1,1,1].
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelFrontCutoff(_ expression: Expression) -> Self {
+    public func modelFrontCutoff(_ expression: Exp) -> Self {
         with(self, setter(\.modelFrontCutoff, .expression(expression)))
     }
 
@@ -547,7 +547,7 @@ import UIKit
     /// Default value: [1,1,1,1,0].
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelHeightBasedEmissiveStrengthMultiplier(_ expression: Expression) -> Self {
+    public func modelHeightBasedEmissiveStrengthMultiplier(_ expression: Exp) -> Self {
         with(self, setter(\.modelHeightBasedEmissiveStrengthMultiplier, .expression(expression)))
     }
 
@@ -570,7 +570,7 @@ import UIKit
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelOpacity(_ expression: Expression) -> Self {
+    public func modelOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.modelOpacity, .expression(expression)))
     }
 
@@ -586,7 +586,7 @@ import UIKit
     /// Default value: true.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelReceiveShadows(_ expression: Expression) -> Self {
+    public func modelReceiveShadows(_ expression: Exp) -> Self {
         with(self, setter(\.modelReceiveShadows, .expression(expression)))
     }
 
@@ -609,7 +609,7 @@ import UIKit
     /// Default value: [0,0,0].
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelRotation(_ expression: Expression) -> Self {
+    public func modelRotation(_ expression: Exp) -> Self {
         with(self, setter(\.modelRotation, .expression(expression)))
     }
 
@@ -632,7 +632,7 @@ import UIKit
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelRoughness(_ expression: Expression) -> Self {
+    public func modelRoughness(_ expression: Exp) -> Self {
         with(self, setter(\.modelRoughness, .expression(expression)))
     }
 
@@ -655,7 +655,7 @@ import UIKit
     /// Default value: [1,1,1].
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelScale(_ expression: Expression) -> Self {
+    public func modelScale(_ expression: Exp) -> Self {
         with(self, setter(\.modelScale, .expression(expression)))
     }
 
@@ -671,7 +671,7 @@ import UIKit
     /// Default value: "map".
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelScaleMode(_ expression: Expression) -> Self {
+    public func modelScaleMode(_ expression: Exp) -> Self {
         with(self, setter(\.modelScaleMode, .expression(expression)))
     }
 
@@ -694,7 +694,7 @@ import UIKit
     /// Default value: [0,0,0].
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelTranslation(_ expression: Expression) -> Self {
+    public func modelTranslation(_ expression: Exp) -> Self {
         with(self, setter(\.modelTranslation, .expression(expression)))
     }
 
@@ -710,7 +710,7 @@ import UIKit
     /// Default value: "common-3d".
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func modelType(_ expression: Expression) -> Self {
+    public func modelType(_ expression: Exp) -> Self {
         with(self, setter(\.modelType, .expression(expression)))
     }
 }

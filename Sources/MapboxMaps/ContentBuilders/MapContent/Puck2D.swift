@@ -56,7 +56,7 @@ public struct Puck2D: MapContent, PrimitiveMapContent {
 
     /// The size of the images, as a scale factor applied to the size of the specified image.
     @_documentation(visibility: public)
-    public func scale(_ scale: Expression) -> Puck2D {
+    public func scale(_ scale: Exp) -> Puck2D {
         self.scale(.expression(scale))
     }
 

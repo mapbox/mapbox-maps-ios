@@ -15,7 +15,7 @@ public struct HeatmapLayer: Layer, Equatable {
 
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
-    public var filter: Expression?
+    public var filter: Exp?
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
@@ -104,7 +104,7 @@ public struct HeatmapLayer: Layer, Equatable {
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
-        filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
+        filter = try container.decodeIfPresent(Exp.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
         slot = try container.decodeIfPresent(Slot.self, forKey: .slot)
@@ -163,7 +163,7 @@ public struct HeatmapLayer: Layer, Equatable {
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     @_documentation(visibility: public)
-    public func filter(_ newValue: Expression) -> Self {
+    public func filter(_ newValue: Exp) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
@@ -219,7 +219,7 @@ public struct HeatmapLayer: Layer, Equatable {
     /// Defines the color of each pixel based on its density value in a heatmap. Should be an expression that uses `["heatmap-density"]` as input.
     /// Default value: ["interpolate",["linear"],["heatmap-density"],0,"rgba(0, 0, 255, 0)",0.1,"royalblue",0.3,"cyan",0.5,"lime",0.7,"yellow",1,"red"].
     @_documentation(visibility: public)
-    public func heatmapColor(_ expression: Expression) -> Self {
+    public func heatmapColor(_ expression: Exp) -> Self {
         with(self, setter(\.heatmapColor, .expression(expression)))
     }
 
@@ -239,7 +239,7 @@ public struct HeatmapLayer: Layer, Equatable {
     /// Similar to `heatmap-weight` but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.
     /// Default value: 1. Minimum value: 0.
     @_documentation(visibility: public)
-    public func heatmapIntensity(_ expression: Expression) -> Self {
+    public func heatmapIntensity(_ expression: Exp) -> Self {
         with(self, setter(\.heatmapIntensity, .expression(expression)))
     }
 
@@ -259,7 +259,7 @@ public struct HeatmapLayer: Layer, Equatable {
     /// The global opacity at which the heatmap layer will be drawn.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func heatmapOpacity(_ expression: Expression) -> Self {
+    public func heatmapOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.heatmapOpacity, .expression(expression)))
     }
 
@@ -279,7 +279,7 @@ public struct HeatmapLayer: Layer, Equatable {
     /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
     /// Default value: 30. Minimum value: 1.
     @_documentation(visibility: public)
-    public func heatmapRadius(_ expression: Expression) -> Self {
+    public func heatmapRadius(_ expression: Exp) -> Self {
         with(self, setter(\.heatmapRadius, .expression(expression)))
     }
 
@@ -293,7 +293,7 @@ public struct HeatmapLayer: Layer, Equatable {
     /// A measure of how much an individual point contributes to the heatmap. A value of 10 would be equivalent to having 10 points of weight 1 in the same spot. Especially useful when combined with clustering.
     /// Default value: 1. Minimum value: 0.
     @_documentation(visibility: public)
-    public func heatmapWeight(_ expression: Expression) -> Self {
+    public func heatmapWeight(_ expression: Exp) -> Self {
         with(self, setter(\.heatmapWeight, .expression(expression)))
     }
 }

@@ -156,7 +156,7 @@ final class LineLayerTests: XCTestCase {
 
     func testSetPropertyValueWithFunction() {
         let layer = LineLayer(id: "test-id", source: "source")
-            .filter(Expression.testConstantValue())
+            .filter(Exp.testConstantValue())
             .source(String.testConstantValue())
             .sourceLayer(String.testConstantValue())
             .slot(Slot.testConstantValue())
@@ -186,7 +186,7 @@ final class LineLayerTests: XCTestCase {
             .lineTrimOffset(start: 0, end: 1)
             .lineWidth(Double.testConstantValue())
 
-        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.filter, Exp.testConstantValue())
         XCTAssertEqual(layer.source, String.testConstantValue())
         XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
         XCTAssertEqual(layer.slot, Slot.testConstantValue())

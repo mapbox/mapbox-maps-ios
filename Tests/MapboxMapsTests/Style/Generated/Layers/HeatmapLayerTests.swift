@@ -111,7 +111,7 @@ final class HeatmapLayerTests: XCTestCase {
 
     func testSetPropertyValueWithFunction() {
         let layer = HeatmapLayer(id: "test-id", source: "source")
-            .filter(Expression.testConstantValue())
+            .filter(Exp.testConstantValue())
             .source(String.testConstantValue())
             .sourceLayer(String.testConstantValue())
             .slot(Slot.testConstantValue())
@@ -123,7 +123,7 @@ final class HeatmapLayerTests: XCTestCase {
             .heatmapRadius(Double.testConstantValue())
             .heatmapWeight(Double.testConstantValue())
 
-        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.filter, Exp.testConstantValue())
         XCTAssertEqual(layer.source, String.testConstantValue())
         XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
         XCTAssertEqual(layer.slot, Slot.testConstantValue())

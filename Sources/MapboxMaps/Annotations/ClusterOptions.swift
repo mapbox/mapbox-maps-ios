@@ -40,7 +40,7 @@ public struct ClusterOptions: Equatable {
     /// least 2 operands (e.g. `"+"` or `"max"`) — it accumulates the property value from clusters/points the
     /// cluster contains; `map_expression` produces the value of a single point. Example:
     ///
-    /// ``Expression`` syntax:
+    /// ``Exp`` syntax:
     /// ```
     /// let expression = Exp(.sum) {
     ///     Exp(.get) { "scalerank" }
@@ -53,7 +53,7 @@ public struct ClusterOptions: Equatable {
     ///
     /// For more advanced use cases, in place of `operator`, you can use a custom reduce expression that references a special `["accumulated"]` value. Example:
     ///
-    /// ``Expression`` syntax:
+    /// ``Exp`` syntax:
     /// ```
     /// let expression = Exp {
     ///     Exp(.sum) {
@@ -67,7 +67,7 @@ public struct ClusterOptions: Equatable {
     ///
     /// JSON syntax:
     /// `{"sum": [["+", ["accumulated"], ["get", "sum"]], ["get", "scalerank"]]}`
-    var clusterProperties: [String: Expression]?
+    var clusterProperties: [String: Exp]?
 
     /// Define a set of cluster options to determine how to cluster annotations.
     /// Providing clusterOptions when initializing a ``PointAnnotationManager``
@@ -80,7 +80,7 @@ public struct ClusterOptions: Equatable {
                 clusterRadius: Double = 50,
                 clusterMaxZoom: Double = 14,
                 clusterMinPoints: Double = 2,
-                clusterProperties: [String: Expression]? = nil) {
+                clusterProperties: [String: Exp]? = nil) {
         self.circleRadius = circleRadius
         self.circleColor = circleColor
         self.textColor = textColor

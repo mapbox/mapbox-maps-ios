@@ -45,7 +45,7 @@ extension Terrain {
     /// Exaggerates the elevation of the terrain by multiplying the data from the DEM with this value.
     /// Default value: 1. Value range: [0, 1000]
     @_documentation(visibility: public)
-    public func exaggeration(_ expression: Expression) -> Self {
+    public func exaggeration(_ expression: Exp) -> Self {
         with(self, setter(\.exaggeration, .expression(expression)))
     }
 }

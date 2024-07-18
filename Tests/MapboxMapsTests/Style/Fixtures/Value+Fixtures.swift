@@ -75,7 +75,7 @@ internal extension Value {
         case (.expression, let expression):
             do {
                 let jsonData = try JSONSerialization.data(withJSONObject: expression)
-                let decodedStruct = try JSONDecoder().decode(Expression.self, from: jsonData)
+                let decodedStruct = try JSONDecoder().decode(Exp.self, from: jsonData)
                 self = .expression(decodedStruct)
             } catch {
                 return nil

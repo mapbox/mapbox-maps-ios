@@ -161,7 +161,7 @@ final class FillExtrusionLayerTests: XCTestCase {
 
     func testSetPropertyValueWithFunction() {
         let layer = FillExtrusionLayer(id: "test-id", source: "source")
-            .filter(Expression.testConstantValue())
+            .filter(Exp.testConstantValue())
             .source(String.testConstantValue())
             .sourceLayer(String.testConstantValue())
             .slot(Slot.testConstantValue())
@@ -191,7 +191,7 @@ final class FillExtrusionLayerTests: XCTestCase {
             .fillExtrusionVerticalGradient(Bool.testConstantValue())
             .fillExtrusionVerticalScale(Double.testConstantValue())
 
-        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.filter, Exp.testConstantValue())
         XCTAssertEqual(layer.source, String.testConstantValue())
         XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
         XCTAssertEqual(layer.slot, Slot.testConstantValue())

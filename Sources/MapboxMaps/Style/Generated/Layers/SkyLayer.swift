@@ -190,7 +190,7 @@ public struct SkyLayer: Layer, Equatable {
     /// A color used to tweak the main atmospheric scattering coefficients. Using white applies the default coefficients giving the natural blue color to the atmosphere. This color affects how heavily the corresponding wavelength is represented during scattering. The alpha channel describes the density of the atmosphere, with 1 maximum density and 0 no density.
     /// Default value: "white".
     @_documentation(visibility: public)
-    public func skyAtmosphereColor(_ expression: Expression) -> Self {
+    public func skyAtmosphereColor(_ expression: Exp) -> Self {
         with(self, setter(\.skyAtmosphereColor, .expression(expression)))
     }
 
@@ -211,7 +211,7 @@ public struct SkyLayer: Layer, Equatable {
     /// A color applied to the atmosphere sun halo. The alpha channel describes how strongly the sun halo is represented in an atmosphere sky layer.
     /// Default value: "white".
     @_documentation(visibility: public)
-    public func skyAtmosphereHaloColor(_ expression: Expression) -> Self {
+    public func skyAtmosphereHaloColor(_ expression: Exp) -> Self {
         with(self, setter(\.skyAtmosphereHaloColor, .expression(expression)))
     }
 
@@ -225,7 +225,7 @@ public struct SkyLayer: Layer, Equatable {
     /// Position of the sun center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the sun relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the sun, where 0 degree is directly above, at zenith, and 90 degree at the horizon. When this property is ommitted, the sun center is directly inherited from the light position.
     /// Minimum value: [0,0]. Maximum value: [360,180].
     @_documentation(visibility: public)
-    public func skyAtmosphereSun(_ expression: Expression) -> Self {
+    public func skyAtmosphereSun(_ expression: Exp) -> Self {
         with(self, setter(\.skyAtmosphereSun, .expression(expression)))
     }
 
@@ -239,7 +239,7 @@ public struct SkyLayer: Layer, Equatable {
     /// Intensity of the sun as a light source in the atmosphere (on a scale from 0 to a 100). Setting higher values will brighten up the sky.
     /// Default value: 10. Value range: [0, 100]
     @_documentation(visibility: public)
-    public func skyAtmosphereSunIntensity(_ expression: Expression) -> Self {
+    public func skyAtmosphereSunIntensity(_ expression: Exp) -> Self {
         with(self, setter(\.skyAtmosphereSunIntensity, .expression(expression)))
     }
 
@@ -260,7 +260,7 @@ public struct SkyLayer: Layer, Equatable {
     /// Defines a radial color gradient with which to color the sky. The color values can be interpolated with an expression using `sky-radial-progress`. The range [0, 1] for the interpolant covers a radial distance (in degrees) of [0, `sky-gradient-radius`] centered at the position specified by `sky-gradient-center`.
     /// Default value: ["interpolate",["linear"],["sky-radial-progress"],0.8,"#87ceeb",1,"white"].
     @_documentation(visibility: public)
-    public func skyGradient(_ expression: Expression) -> Self {
+    public func skyGradient(_ expression: Exp) -> Self {
         with(self, setter(\.skyGradient, .expression(expression)))
     }
 
@@ -274,7 +274,7 @@ public struct SkyLayer: Layer, Equatable {
     /// Position of the gradient center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the gradient center relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the gradient center, where 0 degree is directly above, at zenith, and 90 degree at the horizon.
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [360,180].
     @_documentation(visibility: public)
-    public func skyGradientCenter(_ expression: Expression) -> Self {
+    public func skyGradientCenter(_ expression: Exp) -> Self {
         with(self, setter(\.skyGradientCenter, .expression(expression)))
     }
 
@@ -288,7 +288,7 @@ public struct SkyLayer: Layer, Equatable {
     /// The angular distance (measured in degrees) from `sky-gradient-center` up to which the gradient extends. A value of 180 causes the gradient to wrap around to the opposite direction from `sky-gradient-center`.
     /// Default value: 90. Value range: [0, 180]
     @_documentation(visibility: public)
-    public func skyGradientRadius(_ expression: Expression) -> Self {
+    public func skyGradientRadius(_ expression: Exp) -> Self {
         with(self, setter(\.skyGradientRadius, .expression(expression)))
     }
 
@@ -308,7 +308,7 @@ public struct SkyLayer: Layer, Equatable {
     /// The opacity of the entire sky layer.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func skyOpacity(_ expression: Expression) -> Self {
+    public func skyOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.skyOpacity, .expression(expression)))
     }
 
@@ -322,7 +322,7 @@ public struct SkyLayer: Layer, Equatable {
     /// The type of the sky
     /// Default value: "atmosphere".
     @_documentation(visibility: public)
-    public func skyType(_ expression: Expression) -> Self {
+    public func skyType(_ expression: Exp) -> Self {
         with(self, setter(\.skyType, .expression(expression)))
     }
 }

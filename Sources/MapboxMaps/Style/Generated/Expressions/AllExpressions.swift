@@ -1,7 +1,7 @@
 // This file is generated.
 import Foundation
 
-public extension Expression {
+public extension Exp {
     struct Operator: RawRepresentable, Codable, Equatable {
 
         /// For two inputs, returns the result of subtracting the second input from the first. For a single input, returns the result of subtracting it from 0.

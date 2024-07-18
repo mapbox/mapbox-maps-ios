@@ -144,7 +144,7 @@ struct AnnotationsExample: View {
         }
 
         // Create a cluster property to add to each cluster
-        let clusterProperties: [String: MapboxMaps.Expression] = [
+        let clusterProperties: [String: Exp] = [
             "sum": sumExpression
         ]
 

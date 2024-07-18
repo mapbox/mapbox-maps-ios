@@ -1,6 +1,6 @@
 import Foundation
 
-extension Expression {
+extension Exp {
 
     public enum Option: Codable, Equatable {
         case format(FormatOptions)
@@ -60,7 +60,7 @@ public struct FormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
         case textColor = "text-color"
     }
 
-    public var expressionArguments: [Expression.Argument] {
+    public var expressionArguments: [Exp.Argument] {
         return [.option(.format(self))]
     }
 
@@ -87,7 +87,7 @@ public struct NumberFormatOptions: Codable, Equatable, ExpressionArgumentConvert
     /// Maximum number of fractional digits to include.
     public var maxFractionDigits: Int?
 
-    public var expressionArguments: [Expression.Argument] {
+    public var expressionArguments: [Exp.Argument] {
         return [.option(.numberFormat(self))]
     }
 
@@ -124,7 +124,7 @@ public struct CollatorOptions: Codable, Equatable, ExpressionArgumentConvertible
         case diacriticSensitive = "diacritic-sensitive"
     }
 
-    public var expressionArguments: [Expression.Argument] {
+    public var expressionArguments: [Exp.Argument] {
         return [.option(.collator(self))]
     }
 

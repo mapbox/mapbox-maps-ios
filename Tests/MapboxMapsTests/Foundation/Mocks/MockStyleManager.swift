@@ -787,7 +787,7 @@ struct NonEncodableLayer: Layer {
     var id: String = "dummy-non-encodable-layer-id"
     var visibility: Value<Visibility> = .constant(.visible)
     var type: LayerType = .random()
-    var filter: Expression?
+    var filter: Exp?
     var source: String?
     var sourceLayer: String?
     var minZoom: Double?

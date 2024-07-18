@@ -15,7 +15,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
 
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
-    public var filter: Expression?
+    public var filter: Exp?
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
@@ -269,7 +269,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
-        filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
+        filter = try container.decodeIfPresent(Exp.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
         slot = try container.decodeIfPresent(Slot.self, forKey: .slot)
@@ -392,7 +392,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     @_documentation(visibility: public)
-    public func filter(_ newValue: Expression) -> Self {
+    public func filter(_ newValue: Exp) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
@@ -443,7 +443,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func fillExtrusionEdgeRadius(_ expression: Expression) -> Self {
+    public func fillExtrusionEdgeRadius(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionEdgeRadius, .expression(expression)))
     }
 
@@ -466,7 +466,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Default value: 0.69. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func fillExtrusionAmbientOcclusionGroundAttenuation(_ expression: Expression) -> Self {
+    public func fillExtrusionAmbientOcclusionGroundAttenuation(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionAmbientOcclusionGroundAttenuation, .expression(expression)))
     }
 
@@ -489,7 +489,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Default value: 3. Minimum value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func fillExtrusionAmbientOcclusionGroundRadius(_ expression: Expression) -> Self {
+    public func fillExtrusionAmbientOcclusionGroundRadius(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionAmbientOcclusionGroundRadius, .expression(expression)))
     }
 
@@ -509,7 +509,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Controls the intensity of shading near ground and concave angles between walls. Default value 0.0 disables ambient occlusion and values around 0.3 provide the most plausible results for buildings.
     /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func fillExtrusionAmbientOcclusionIntensity(_ expression: Expression) -> Self {
+    public func fillExtrusionAmbientOcclusionIntensity(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionAmbientOcclusionIntensity, .expression(expression)))
     }
 
@@ -529,7 +529,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with legacy light. When 3D lights are enabled `fill-extrusion-ambient-occlusion-wall-radius` and `fill-extrusion-ambient-occlusion-ground-radius` are used instead.
     /// Default value: 3. Minimum value: 0.
     @_documentation(visibility: public)
-    public func fillExtrusionAmbientOcclusionRadius(_ expression: Expression) -> Self {
+    public func fillExtrusionAmbientOcclusionRadius(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionAmbientOcclusionRadius, .expression(expression)))
     }
 
@@ -552,7 +552,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Default value: 3. Minimum value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func fillExtrusionAmbientOcclusionWallRadius(_ expression: Expression) -> Self {
+    public func fillExtrusionAmbientOcclusionWallRadius(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionAmbientOcclusionWallRadius, .expression(expression)))
     }
 
@@ -572,7 +572,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// The height with which to extrude the base of this layer. Must be less than or equal to `fill-extrusion-height`.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
-    public func fillExtrusionBase(_ expression: Expression) -> Self {
+    public func fillExtrusionBase(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionBase, .expression(expression)))
     }
 
@@ -599,7 +599,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root `light` settings. If this color is specified as `rgba` with an alpha component, the alpha component will be ignored; use `fill-extrusion-opacity` to set layer opacity.
     /// Default value: "#000000".
     @_documentation(visibility: public)
-    public func fillExtrusionColor(_ expression: Expression) -> Self {
+    public func fillExtrusionColor(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionColor, .expression(expression)))
     }
 
@@ -613,7 +613,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff on pitched map views. Fade out is implemented by scaling down and removing buildings in the fade range in a staggered fashion. Opacity is not changed. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
     /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func fillExtrusionCutoffFadeRange(_ expression: Expression) -> Self {
+    public func fillExtrusionCutoffFadeRange(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionCutoffFadeRange, .expression(expression)))
     }
 
@@ -633,7 +633,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
-    public func fillExtrusionEmissiveStrength(_ expression: Expression) -> Self {
+    public func fillExtrusionEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionEmissiveStrength, .expression(expression)))
     }
 
@@ -664,7 +664,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Default value: "#ffffff".
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func fillExtrusionFloodLightColor(_ expression: Expression) -> Self {
+    public func fillExtrusionFloodLightColor(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionFloodLightColor, .expression(expression)))
     }
 
@@ -687,7 +687,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Default value: 0.69. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func fillExtrusionFloodLightGroundAttenuation(_ expression: Expression) -> Self {
+    public func fillExtrusionFloodLightGroundAttenuation(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionFloodLightGroundAttenuation, .expression(expression)))
     }
 
@@ -710,7 +710,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Default value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func fillExtrusionFloodLightGroundRadius(_ expression: Expression) -> Self {
+    public func fillExtrusionFloodLightGroundRadius(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionFloodLightGroundRadius, .expression(expression)))
     }
 
@@ -733,7 +733,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func fillExtrusionFloodLightIntensity(_ expression: Expression) -> Self {
+    public func fillExtrusionFloodLightIntensity(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionFloodLightIntensity, .expression(expression)))
     }
 
@@ -756,7 +756,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func fillExtrusionFloodLightWallRadius(_ expression: Expression) -> Self {
+    public func fillExtrusionFloodLightWallRadius(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionFloodLightWallRadius, .expression(expression)))
     }
 
@@ -776,7 +776,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// The height with which to extrude this layer.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
-    public func fillExtrusionHeight(_ expression: Expression) -> Self {
+    public func fillExtrusionHeight(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionHeight, .expression(expression)))
     }
 
@@ -796,7 +796,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// The opacity of the entire fill extrusion layer. This is rendered on a per-layer, not per-feature, basis, and data-driven styling is not available.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
-    public func fillExtrusionOpacity(_ expression: Expression) -> Self {
+    public func fillExtrusionOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionOpacity, .expression(expression)))
     }
 
@@ -808,7 +808,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
 
     /// Name of image in sprite to use for drawing images on extruded fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     @_documentation(visibility: public)
-    public func fillExtrusionPattern(_ expression: Expression) -> Self {
+    public func fillExtrusionPattern(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionPattern, .expression(expression)))
     }
 
@@ -824,7 +824,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Default value: true.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func fillExtrusionRoundedRoof(_ expression: Expression) -> Self {
+    public func fillExtrusionRoundedRoof(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionRoundedRoof, .expression(expression)))
     }
 
@@ -844,7 +844,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
     /// Default value: [0,0].
     @_documentation(visibility: public)
-    public func fillExtrusionTranslate(_ expression: Expression) -> Self {
+    public func fillExtrusionTranslate(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionTranslate, .expression(expression)))
     }
 
@@ -858,7 +858,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Controls the frame of reference for `fill-extrusion-translate`.
     /// Default value: "map".
     @_documentation(visibility: public)
-    public func fillExtrusionTranslateAnchor(_ expression: Expression) -> Self {
+    public func fillExtrusionTranslateAnchor(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionTranslateAnchor, .expression(expression)))
     }
 
@@ -872,7 +872,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Whether to apply a vertical gradient to the sides of a fill-extrusion layer. If true, sides will be shaded slightly darker farther down.
     /// Default value: true.
     @_documentation(visibility: public)
-    public func fillExtrusionVerticalGradient(_ expression: Expression) -> Self {
+    public func fillExtrusionVerticalGradient(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionVerticalGradient, .expression(expression)))
     }
 
@@ -895,7 +895,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Default value: 1. Minimum value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func fillExtrusionVerticalScale(_ expression: Expression) -> Self {
+    public func fillExtrusionVerticalScale(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionVerticalScale, .expression(expression)))
     }
 }

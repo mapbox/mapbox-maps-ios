@@ -18,7 +18,6 @@ Maps rendering SDK also known as GL-Native. These are for internal use only.
 - ``MBMSourceDataLoadedTypeToString(_:)``
 - ``MBMStyleDataLoadedTypeToString(_:)``
 - ``MBMTileStoreUsageModeToString(_:)``
-- ``MBXTileStoreAmbientCacheTypeToString(_:)``
 
 <!-- type aliases -->
 - ``CameraChangedCallback``
@@ -39,4 +38,3 @@ Maps rendering SDK also known as GL-Native. These are for internal use only.
 - ``TransitionOptions-class``
 
 <!-- enums-->
-- ``TileStoreAmbientCacheType``

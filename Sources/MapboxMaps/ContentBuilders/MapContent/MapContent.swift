@@ -3,8 +3,6 @@ import os.log
 /// A protocol used to create any type of ``Map`` content, such as annotations, location indicator, layers, sources, lights, and more.
 ///
 /// Implement this protocol to create higher level content components. Any type of ``MapStyleContent`` can be used as `MapContent`.
-@_spi(Experimental)
-@_documentation(visibility: public)
 @available(iOS 13.0, *)
 public protocol MapContent {
     /// Represents the composite type of the body content.
@@ -16,7 +14,6 @@ public protocol MapContent {
 }
 
 @available(iOS 13.0, *)
-@_spi(Experimental)
 public struct TupleMapContent<T>: MapContent, PrimitiveMapContent {
     var _visit: (MapContentNode) -> Void
 
@@ -34,7 +31,6 @@ public struct TupleMapContent<T>: MapContent, PrimitiveMapContent {
     }
 }
 
-@_spi(Experimental)
 @available(iOS 13.0, *)
 public struct ConditionalMapContent<F: MapContent, S: MapContent>: MapContent, PrimitiveMapContent {
     private enum Storage {
@@ -65,7 +61,6 @@ public struct ConditionalMapContent<F: MapContent, S: MapContent>: MapContent, P
     }
 }
 
-@_spi(Experimental)
 @available(iOS 13.0, *)
 public struct EmptyMapContent: MapContent, PrimitiveMapContent {
     public init() {}
@@ -75,7 +70,6 @@ public struct EmptyMapContent: MapContent, PrimitiveMapContent {
     }
 }
 
-@_spi(Experimental)
 @available(iOS 13.0, *)
 public struct OptionalMapContent<T: MapContent>: MapContent, PrimitiveMapContent {
     var content: T?

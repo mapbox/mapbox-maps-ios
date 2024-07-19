@@ -1,4 +1,4 @@
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 import SwiftUI
 
 @available(iOS 14.0, *)

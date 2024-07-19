@@ -57,8 +57,6 @@ import MapboxCoreMaps
 /// ```
 ///
 /// The style reloads only when the actual ``StyleURI`` or JSON (when loaded with ``MapStyle/init(json:configuration:)`` is changed. To observe the result of the style load you can subscribe to ``MapboxMap/onStyleLoaded`` or ``Snapshotter/onStyleLoaded`` events, or use use ``StyleManager/load(mapStyle:transition:completion:)`` method.
-@_documentation(visibility: public)
-@_spi(Experimental)
 public struct MapStyle: Equatable {
     enum Data: Equatable {
         case uri(StyleURI)
@@ -77,7 +75,6 @@ public struct MapStyle: Equatable {
     ///   - json: A Mapbox Style JSON string.
     ///   - configuration: Style import configuration to be applied on style load.
     ///                    Providing `nil` configuration will make no effect and previous configuration will stay in place.  In order to change previous value, you should explicitly override it with the new value.
-    @_documentation(visibility: public)
     public init(json: String, configuration: JSONObject? = nil) {
         self.data = .json(json)
         self.configuration = configuration
@@ -91,45 +88,36 @@ public struct MapStyle: Equatable {
     ///   - uri: An instance of ``StyleURI`` pointing to a Mapbox Style URI (mapbox://styles/{user}/{style}), a full HTTPS URI, or a path to a local file.
     ///   - configuration: Style import configuration to be applied on style load.
     ///                    Providing `nil` configuration will make no effect and previous configuration will stay in place. In order to change previous value, you should explicitly override it with the new value.
-    @_documentation(visibility: public)
     public init(uri: StyleURI, configuration: JSONObject? = nil) {
         self.data = .uri(uri)
         self.configuration = configuration
     }
 
     /// [Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) is a general-purpose style with 3D visualization.
-    @_documentation(visibility: public)
     public static var standard: MapStyle { MapStyle(uri: .standard) }
 
     /// [Mapbox Streets](https://www.mapbox.com/maps/streets) is a general-purpose style with detailed road and transit networks.
-    @_documentation(visibility: public)
     public static var streets: MapStyle { MapStyle(uri: .streets) }
 
     /// [Mapbox Outdoors](https://www.mapbox.com/maps/outdoors) is a general-purpose style tailored to outdoor activities.
-    @_documentation(visibility: public)
     public static var outdoors: MapStyle { MapStyle(uri: .outdoors) }
 
     /// [Mapbox Light](https://www.mapbox.com/maps/light) is a subtle, light-colored backdrop for data visualizations.
-    @_documentation(visibility: public)
     public static var light: MapStyle { MapStyle(uri: .light) }
 
     /// [Mapbox Dark](https://www.mapbox.com/maps/dark) is a subtle, dark-colored backdrop for data visualizations.
-    @_documentation(visibility: public)
     public static var dark: MapStyle { MapStyle(uri: .dark) }
 
     /// The Mapbox Satellite style is a base-map of high-resolution satellite and aerial imagery.
-    @_documentation(visibility: public)
     public static var satellite: MapStyle { MapStyle(uri: .satellite) }
 
     /// The [Mapbox Satellite Streets](https://www.mapbox.com/maps/satellite) style combines
     /// the high-resolution satellite and aerial imagery of Mapbox Satellite with unobtrusive labels
     /// and translucent roads from Mapbox Streets.
-    @_documentation(visibility: public)
     public static var satelliteStreets: MapStyle { MapStyle(uri: .satelliteStreets) }
 
     /// Empty map style. Allows to load map without any predefined sources or layers.
     /// Allows to construct the whole style in runtime by composition of  `StyleImport`.
-    @_documentation(visibility: public)
     public static var empty: MapStyle { MapStyle(json: "{ \"layers\": [], \"sources\": {} }") }
 
     /// [Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) is a general-purpose style with 3D visualization.
@@ -143,7 +131,6 @@ public struct MapStyle: Equatable {
     ///   - showTransitLabels: Shows or hides all transit icons and text. Default value is `true`.
     ///   - showPlaceLabels: Shows and hides place label layers, such as house numbers. Default value is `true`.
     ///   - showRoadLabels: Shows and hides all road labels, including road shields. Default value is `true`.
-    @_documentation(visibility: public)
     public static func standard(
         lightPreset: StandardLightPreset?,
         font: String? = nil,

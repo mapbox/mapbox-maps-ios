@@ -293,260 +293,223 @@ public struct PointAnnotation: Annotation, Equatable {
 }
 
 @_documentation(visibility: public)
-@_spi(Experimental) extension PointAnnotation {
+extension PointAnnotation {
 
     /// Part of the icon placed closest to the anchor.
     /// Default value: "center".
-    @_documentation(visibility: public)
     public func iconAnchor(_ newValue: IconAnchor) -> Self {
         with(self, setter(\.iconAnchor, newValue))
     }
 
     /// Name of image in sprite to use for drawing an image background.
-    @_documentation(visibility: public)
     public func iconImage(_ newValue: String) -> Self {
         with(self, setter(\.iconImage, newValue))
     }
 
     /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
     /// Default value: [0,0].
-    @_documentation(visibility: public)
     public func iconOffset(x: Double, y: Double) -> Self {
         with(self, setter(\.iconOffset, [x, y]))
     }
 
     /// Rotates the icon clockwise.
     /// Default value: 0.
-    @_documentation(visibility: public)
     public func iconRotate(_ newValue: Double) -> Self {
         with(self, setter(\.iconRotate, newValue))
     }
 
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
     /// Default value: 1. Minimum value: 0.
-    @_documentation(visibility: public)
     public func iconSize(_ newValue: Double) -> Self {
         with(self, setter(\.iconSize, newValue))
     }
 
     /// Scales the icon to fit around the associated text.
     /// Default value: "none".
-    @_documentation(visibility: public)
     public func iconTextFit(_ newValue: IconTextFit) -> Self {
         with(self, setter(\.iconTextFit, newValue))
     }
 
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
     /// Default value: [0,0,0,0].
-    @_documentation(visibility: public)
     public func iconTextFitPadding(_ padding: UIEdgeInsets) -> Self {
         with(self, setter(\.iconTextFitPadding, [padding.top, padding.right, padding.bottom, padding.left]))
     }
 
     /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first. When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
-    @_documentation(visibility: public)
     public func symbolSortKey(_ newValue: Double) -> Self {
         with(self, setter(\.symbolSortKey, newValue))
     }
 
     /// Part of the text placed closest to the anchor.
     /// Default value: "center".
-    @_documentation(visibility: public)
     public func textAnchor(_ newValue: TextAnchor) -> Self {
         with(self, setter(\.textAnchor, newValue))
     }
 
     /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options. SDF images are not supported in formatted text and will be ignored.
     /// Default value: "".
-    @_documentation(visibility: public)
     public func textField(_ newValue: String) -> Self {
         with(self, setter(\.textField, newValue))
     }
 
     /// Text justification options.
     /// Default value: "center".
-    @_documentation(visibility: public)
     public func textJustify(_ newValue: TextJustify) -> Self {
         with(self, setter(\.textJustify, newValue))
     }
 
     /// Text tracking amount.
     /// Default value: 0.
-    @_documentation(visibility: public)
     public func textLetterSpacing(_ newValue: Double) -> Self {
         with(self, setter(\.textLetterSpacing, newValue))
     }
 
     /// Text leading value for multi-line text.
     /// Default value: 1.2.
-    @_documentation(visibility: public)
     public func textLineHeight(_ newValue: Double) -> Self {
         with(self, setter(\.textLineHeight, newValue))
     }
 
     /// The maximum line width for text wrapping.
     /// Default value: 10. Minimum value: 0.
-    @_documentation(visibility: public)
     public func textMaxWidth(_ newValue: Double) -> Self {
         with(self, setter(\.textMaxWidth, newValue))
     }
 
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
     /// Default value: [0,0].
-    @_documentation(visibility: public)
     public func textOffset(x: Double, y: Double) -> Self {
         with(self, setter(\.textOffset, [x, y]))
     }
 
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
     /// Default value: 0.
-    @_documentation(visibility: public)
     public func textRadialOffset(_ newValue: Double) -> Self {
         with(self, setter(\.textRadialOffset, newValue))
     }
 
     /// Rotates the text clockwise.
     /// Default value: 0.
-    @_documentation(visibility: public)
     public func textRotate(_ newValue: Double) -> Self {
         with(self, setter(\.textRotate, newValue))
     }
 
     /// Font size.
     /// Default value: 16. Minimum value: 0.
-    @_documentation(visibility: public)
     public func textSize(_ newValue: Double) -> Self {
         with(self, setter(\.textSize, newValue))
     }
 
     /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
     /// Default value: "none".
-    @_documentation(visibility: public)
     public func textTransform(_ newValue: TextTransform) -> Self {
         with(self, setter(\.textTransform, newValue))
     }
 
     /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func iconColor(_ color: UIColor) -> Self {
         iconColor(StyleColor(color))
     }
 
     /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func iconColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.iconColor, newValue))
     }
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 1. Minimum value: 0.
-    @_documentation(visibility: public)
     public func iconEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.iconEmissiveStrength, newValue))
     }
 
     /// Fade out the halo towards the outside.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func iconHaloBlur(_ newValue: Double) -> Self {
         with(self, setter(\.iconHaloBlur, newValue))
     }
 
     /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "rgba(0, 0, 0, 0)".
-    @_documentation(visibility: public)
     public func iconHaloColor(_ color: UIColor) -> Self {
         iconHaloColor(StyleColor(color))
     }
 
     /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "rgba(0, 0, 0, 0)".
-    @_documentation(visibility: public)
     public func iconHaloColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.iconHaloColor, newValue))
     }
 
     /// Distance of halo to the icon outline.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func iconHaloWidth(_ newValue: Double) -> Self {
         with(self, setter(\.iconHaloWidth, newValue))
     }
 
     /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
     /// Default value: 0. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func iconImageCrossFade(_ newValue: Double) -> Self {
         with(self, setter(\.iconImageCrossFade, newValue))
     }
 
     /// The opacity at which the icon will be drawn.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func iconOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.iconOpacity, newValue))
     }
 
     /// The color with which the text will be drawn.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func textColor(_ color: UIColor) -> Self {
         textColor(StyleColor(color))
     }
 
     /// The color with which the text will be drawn.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func textColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.textColor, newValue))
     }
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 1. Minimum value: 0.
-    @_documentation(visibility: public)
     public func textEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.textEmissiveStrength, newValue))
     }
 
     /// The halo's fadeout distance towards the outside.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func textHaloBlur(_ newValue: Double) -> Self {
         with(self, setter(\.textHaloBlur, newValue))
     }
 
     /// The color of the text's halo, which helps it stand out from backgrounds.
     /// Default value: "rgba(0, 0, 0, 0)".
-    @_documentation(visibility: public)
     public func textHaloColor(_ color: UIColor) -> Self {
         textHaloColor(StyleColor(color))
     }
 
     /// The color of the text's halo, which helps it stand out from backgrounds.
     /// Default value: "rgba(0, 0, 0, 0)".
-    @_documentation(visibility: public)
     public func textHaloColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.textHaloColor, newValue))
     }
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func textHaloWidth(_ newValue: Double) -> Self {
         with(self, setter(\.textHaloWidth, newValue))
     }
 
     /// The opacity at which the text will be drawn.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func textOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.textOpacity, newValue))
     }
 
     /// Sets icon image.
-    @_documentation(visibility: public)
     public func image(_ image: Image?) -> Self {
         with(self, setter(\.image, image))
     }
@@ -563,7 +526,6 @@ public struct PointAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for tap gesture.
-    @_documentation(visibility: public)
     public func onTapGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
         with(self, setter(\.tapHandler, handler))
     }
@@ -572,7 +534,6 @@ public struct PointAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for tap gesture.
-    @_documentation(visibility: public)
     public func onTapGesture(handler: @escaping () -> Void) -> Self {
         onTapGesture { _ in
             handler()
@@ -586,7 +547,6 @@ public struct PointAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for long press gesture.
-    @_documentation(visibility: public)
     public func onLongPressGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
         with(self, setter(\.longPressHandler, handler))
     }
@@ -595,7 +555,6 @@ public struct PointAnnotation: Annotation, Equatable {
     ///
     /// - Parameters:
     ///   - handler: A handler for long press gesture.
-    @_documentation(visibility: public)
     public func onLongPressGesture(handler: @escaping () -> Void) -> Self {
         onLongPressGesture { _ in
             handler()
@@ -604,7 +563,6 @@ public struct PointAnnotation: Annotation, Equatable {
     }
 }
 
-@_spi(Experimental)
 @available(iOS 13.0, *)
 extension PointAnnotation: MapContent, PrimitiveMapContent, MapContentAnnotation {
     func visit(_ node: MapContentNode) {

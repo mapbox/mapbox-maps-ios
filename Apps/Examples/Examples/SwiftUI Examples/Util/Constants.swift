@@ -1,5 +1,5 @@
 import CoreLocation
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 extension CLLocationCoordinate2D {
     static let apple = CLLocationCoordinate2D(latitude: 37.3326, longitude: -122.0304)

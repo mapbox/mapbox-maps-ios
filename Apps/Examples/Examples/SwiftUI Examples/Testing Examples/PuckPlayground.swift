@@ -1,5 +1,5 @@
 import SwiftUI
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 @available(iOS 14.0, *)
 struct PuckPlayground: View {

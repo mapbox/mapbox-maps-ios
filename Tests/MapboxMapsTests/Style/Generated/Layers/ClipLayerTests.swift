@@ -100,7 +100,7 @@ final class ClipLayerTests: XCTestCase {
 
     func testSetPropertyValueWithFunction() {
         let layer = ClipLayer(id: "test-id", source: "source")
-            .filter(Expression.testConstantValue())
+            .filter(Exp.testConstantValue())
             .source(String.testConstantValue())
             .sourceLayer(String.testConstantValue())
             .slot(Slot.testConstantValue())
@@ -108,7 +108,7 @@ final class ClipLayerTests: XCTestCase {
             .maxZoom(Double.testConstantValue())
             .clipLayerTypes([ClipLayerTypes].testConstantValue())
 
-        XCTAssertEqual(layer.filter, Expression.testConstantValue())
+        XCTAssertEqual(layer.filter, Exp.testConstantValue())
         XCTAssertEqual(layer.source, String.testConstantValue())
         XCTAssertEqual(layer.sourceLayer, String.testConstantValue())
         XCTAssertEqual(layer.slot, Slot.testConstantValue())

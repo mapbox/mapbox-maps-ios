@@ -1,5 +1,5 @@
 import SwiftUI
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 private struct WeatherData: Identifiable, Equatable {
     let id = UUID().uuidString

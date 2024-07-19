@@ -116,18 +116,15 @@ import UIKit
     }
 }
 
-@_documentation(visibility: public)
-@_spi(Experimental) extension ClipLayer {
+extension ClipLayer {
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
-    @_documentation(visibility: public)
     public func filter(_ newValue: Exp) -> Self {
         with(self, setter(\.filter, newValue))
     }
 
     /// Name of a source description to be used for this layer.
     /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
-    @_documentation(visibility: public)
     public func source(_ newValue: String) -> Self {
         with(self, setter(\.source, newValue))
     }
@@ -136,26 +133,22 @@ import UIKit
     ///
     /// Required for vector tile sources.
     /// Prohibited for all other source types, including GeoJSON sources.
-    @_documentation(visibility: public)
     public func sourceLayer(_ newValue: String) -> Self {
         with(self, setter(\.sourceLayer, newValue))
     }
 
     /// The slot this layer is assigned to.
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
-    @_documentation(visibility: public)
     public func slot(_ newValue: Slot?) -> Self {
         with(self, setter(\.slot, newValue))
     }
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
-    @_documentation(visibility: public)
     public func minZoom(_ newValue: Double) -> Self {
         with(self, setter(\.minZoom, newValue))
     }
 
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
-    @_documentation(visibility: public)
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
     }

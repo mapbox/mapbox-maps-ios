@@ -105,38 +105,31 @@ extension RasterArraySource {
     }
 }
 
-@_documentation(visibility: public)
-@_spi(Experimental)
 extension RasterArraySource {
 
     /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`. Required if `tiles` is not provided.
-    @_documentation(visibility: public)
     public func url(_ newValue: String) -> Self {
         with(self, setter(\.url, newValue))
     }
 
     /// An array of one or more tile source URLs, as in the TileJSON spec. Required if `url` is not provided.
-    @_documentation(visibility: public)
     public func tiles(_ newValue: [String]) -> Self {
         with(self, setter(\.tiles, newValue))
     }
 
     /// Minimum zoom level for which tiles are available, as in the TileJSON spec.
     /// Default value: 0.
-    @_documentation(visibility: public)
     public func minzoom(_ newValue: Double) -> Self {
         with(self, setter(\.minzoom, newValue))
     }
 
     /// Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels.
     /// Default value: 22.
-    @_documentation(visibility: public)
     public func maxzoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxzoom, newValue))
     }
 
     /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.
-    @_documentation(visibility: public)
     public func tileCacheBudget(_ newValue: TileCacheBudgetSize) -> Self {
         with(self, setter(\.tileCacheBudget, newValue))
     }

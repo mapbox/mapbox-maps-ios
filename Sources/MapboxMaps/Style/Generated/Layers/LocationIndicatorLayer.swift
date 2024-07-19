@@ -256,24 +256,20 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     }
 }
 
-@_documentation(visibility: public)
-@_spi(Experimental) extension LocationIndicatorLayer {
+extension LocationIndicatorLayer {
 
     /// The slot this layer is assigned to.
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
-    @_documentation(visibility: public)
     public func slot(_ newValue: Slot?) -> Self {
         with(self, setter(\.slot, newValue))
     }
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
-    @_documentation(visibility: public)
     public func minZoom(_ newValue: Double) -> Self {
         with(self, setter(\.minZoom, newValue))
     }
 
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
-    @_documentation(visibility: public)
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
     }

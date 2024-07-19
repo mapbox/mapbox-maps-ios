@@ -135,25 +135,20 @@ extension GeoJSONSource {
     }
 }
 
-@_documentation(visibility: public)
-@_spi(Experimental)
 extension GeoJSONSource {
 
     /// A URL to a GeoJSON file, or inline GeoJSON.
-    @_documentation(visibility: public)
     public func data(_ newValue: GeoJSONSourceData) -> Self {
         with(self, setter(\.data, newValue))
     }
 
     /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom.
     /// Default value: 4.
-    @_documentation(visibility: public)
     public func prefetchZoomDelta(_ newValue: Double) -> Self {
         with(self, setter(\.prefetchZoomDelta, newValue))
     }
 
     /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.
-    @_documentation(visibility: public)
     public func tileCacheBudget(_ newValue: TileCacheBudgetSize) -> Self {
         with(self, setter(\.tileCacheBudget, newValue))
     }

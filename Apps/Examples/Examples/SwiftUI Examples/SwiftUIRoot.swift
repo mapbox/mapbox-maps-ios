@@ -1,6 +1,6 @@
 import SwiftUI
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 @available(iOS 14.0, *)
 struct SwiftUIRoot: View {
     var body: some View {

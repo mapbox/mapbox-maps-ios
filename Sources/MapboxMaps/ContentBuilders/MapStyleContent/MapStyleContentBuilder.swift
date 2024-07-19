@@ -2,8 +2,6 @@
 ///
 /// See more information in the <doc:Declarative-Map-Styling>.
 @available(iOS 13.0, *)
-@_spi(Experimental)
-@_documentation(visibility: public)
 @resultBuilder
 public struct MapStyleContentBuilder {
     /// Builds an expression within the map style content builder.

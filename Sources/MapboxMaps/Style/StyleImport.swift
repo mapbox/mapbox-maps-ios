@@ -29,8 +29,6 @@
 ///              Therefore, any layers defined inside the import won't be accessible from API. More information in [v11 Migration Guide](https://docs.mapbox.com/ios/maps/guides/migrate-to-v11/#211-style-imports)
 ///
 /// More information [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/imports)
-@_documentation(visibility: public)
-@_spi(Experimental)
 public struct StyleImport {
     let id: String?
     let style: MapStyle
@@ -43,7 +41,6 @@ public struct StyleImport {
     ///   - id: Import id string, will be automatically generated if not explicitly specified.
     ///   - json: A Mapbox Style JSON string.
     ///   - configuration: Style import configurations to be applied on style load.
-    @_documentation(visibility: public)
     public init(
         id: String? = nil,
         json: String,
@@ -61,7 +58,6 @@ public struct StyleImport {
     ///   - id: Import id string, will be automatically generated if not explicitly specified.
     ///   - uri: An instance of ``StyleURI`` pointing to a Mapbox Style URI (mapbox://styles/{user}/{style}), a full HTTPS URI, or a path to a local file.
     ///   - configuration: Style import configuration to be applied on style load.
-    @_documentation(visibility: public)
     public init(
         id: String? = nil,
         uri: StyleURI,
@@ -76,7 +72,6 @@ public struct StyleImport {
     /// - Parameters:
     ///   - id: Import id string, will be automatically generated if not explicitly specified.
     ///   - style: ``MapStyle`` instance containing the URI to style or JSON comforming to [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/).
-    @_documentation(visibility: public)
     public init(id: String? = nil, style: MapStyle) {
         self.id = id
         self.style = style

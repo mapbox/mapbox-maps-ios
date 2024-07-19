@@ -27,7 +27,6 @@ public struct StyleImage: Equatable {
     }
 }
 
-@_spi(Experimental)
 @available(iOS 13.0, *)
 extension StyleImage: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
@@ -35,7 +34,6 @@ extension StyleImage: MapStyleContent, PrimitiveMapContent {
     }
 }
 
-@_spi(Experimental)
 extension StyleImage {
     /// Initialize a StyleImage from an existing UIImage
     init?(named name: String, sdf: Bool = false, contentInsets: UIEdgeInsets = .zero) {
@@ -44,25 +42,16 @@ extension StyleImage {
     }
 }
 
-#if swift(>=5.8)
-@_documentation(visibility: public)
-#endif
-@_spi(Experimental) extension StyleImage {
+extension StyleImage {
 
     /// Option to treat whether image is SDF(signed distance field) or not.
     /// Setting this to `true` allows template images to be recolored. The
     /// default value is `false`.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     public func sdf(_ newValue: Bool) -> Self {
         with(self, setter(\.sdf, newValue))
     }
 
     /// The distances the edges of content are inset from the image
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
     public func contentInsets(_ newValue: UIEdgeInsets) -> Self {
         with(self, setter(\.contentInsets, newValue))
     }

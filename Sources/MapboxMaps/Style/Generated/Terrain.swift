@@ -50,7 +50,6 @@ extension Terrain {
     }
 }
 
-@_spi(Experimental)
 @available(iOS 13.0, *)
 extension Terrain: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {

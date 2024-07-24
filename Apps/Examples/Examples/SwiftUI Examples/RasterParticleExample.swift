@@ -4,8 +4,8 @@ import SwiftUI
 @available(iOS 14.0, *)
 struct RasterParticleExample: View {
     @State var mapStyle = MapStyle.dark
-    @State var rasterParticleCount: Double = 1024
-    @State var rasterParticleFadeOpacityFactor = 0.98
+    @State var rasterParticleCount: Double = 2048
+    @State var rasterParticleFadeOpacityFactor = 0.8
     @State var resetRateFactor = 0.4
     @State var speedFactor = 0.4
 
@@ -13,7 +13,7 @@ struct RasterParticleExample: View {
         Map(initialViewport: .camera(zoom: 1)) {
             /// That account will only be used for single examples like this so there won't be any value in it getting abused.
             RasterArraySource(id: "wind-mrt-source")
-                .url("https://api.mapbox.com/v4/rasterarrayexamples.gfs-winds.json?access_token=pk.eyJ1IjoicmFzdGVyYXJyYXlleGFtcGxlcyIsImEiOiJjbHd1d3Yxamswa2xlMmxvbTZxNjhyOGF3In0.5n1Lkr1c4_GHEGX7wOSw-Q")
+                .url("mapbox://rasterarrayexamples.gfs-winds")
 
             RasterParticleLayer(id: "layer_particles", source: "wind-mrt-source")
                 .sourceLayer("10winds")
@@ -32,7 +32,7 @@ struct RasterParticleExample: View {
         }
         .safeOverlay(alignment: .bottom) {
             VStack(alignment: .center) {
-                SliderSettingView(title: "Particle Count", value: $rasterParticleCount, range: 1...1024, step: 1)
+                SliderSettingView(title: "Particle Count", value: $rasterParticleCount, range: 1...4096, step: 1)
                 SliderSettingView(title: "Opacity Factor", value: $rasterParticleFadeOpacityFactor, range: 0...1, step: 0.01)
                 SliderSettingView(title: "Reset Rate", value: $resetRateFactor, range: 0...1, step: 0.01)
                 SliderSettingView(title: "Speed Factor", value: $speedFactor, range: 0...1, step: 0.01)

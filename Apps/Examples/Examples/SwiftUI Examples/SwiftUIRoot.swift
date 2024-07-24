@@ -14,6 +14,7 @@ struct SwiftUIRoot: View {
                     ExampleLink("Dynamic Styling Example", note: "Use dynamic styling at runtime", destination: DynamicStylingExample())
                     ExampleLink("Simple Map", note: "Camera observing, automatic dark mode support.", destination: SimpleMapExample())
                     ExampleLink("Snapshot Map", note: "Make a snapshot of the map.", destination: SnapshotMapExample())
+                    ExampleLink("Override Location", note: "Override LocationProvider using Combine", destination: LocationOverrideExample())
                 } header: { Text("Getting started") }
 
                 Section {

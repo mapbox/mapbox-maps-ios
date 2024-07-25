@@ -11,7 +11,6 @@ struct RasterParticleExample: View {
 
     var body: some View {
         Map(initialViewport: .camera(zoom: 1)) {
-            /// That account will only be used for single examples like this so there won't be any value in it getting abused.
             RasterArraySource(id: "wind-mrt-source")
                 .url("mapbox://rasterarrayexamples.gfs-winds")
 

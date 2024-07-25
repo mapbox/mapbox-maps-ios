@@ -57,11 +57,11 @@ struct MapStyleSelectorButton: View {
     var styles: [(String, MapStyle)] = [
         ("Standard (day)", .standard(lightPreset: .day)),
         ("Standard (dusk)", .standard(lightPreset: .dusk)),
+        ("Standard Satellite", .standardSatellite(lightPreset: .day)),
         ("Streets", .streets),
         ("Outdoors", .outdoors),
         ("Dark", .dark),
         ("Light", .light),
-        ("Satellite", .satellite),
         ("Satellite Streets", .satelliteStreets),
         ("Custom", MapStyle(uri: .customStyle)),
     ]

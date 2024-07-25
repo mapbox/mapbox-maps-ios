@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "fingertips",
-      "kind" : "remoteSourceControl",
-      "location" : "git@github.com:mapbox/Fingertips.git",
-      "state" : {
-        "revision" : "828349081181608bf67abe53f5881728a14a0f78",
-        "version" : "0.6.0"
-      }
-    },
-    {
       "identity" : "mapbox-common-ios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mapbox/mapbox-common-ios.git",

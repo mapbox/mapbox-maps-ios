@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Expose new Standard Satellite style. Add new parameters to the Standard Style.
+* Fix bug where updating MapStyle didn't update the configuration properties.
+
 ## 11.6.0-beta.1 - 19 July, 2024
 
 ⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️

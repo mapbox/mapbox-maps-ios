@@ -1729,3 +1729,9 @@ Var RasterLayer.filter has declared type change from MapboxMaps.Expression? to M
 Var RasterParticleLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
 Var RenderedQueryOptions.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
 Var SymbolLayer.filter has declared type change from MapboxMaps.Expression? to MapboxMaps.Exp?
+
+// Support for new Standard properties
+Func MapStyle.standard(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has been renamed to Func standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:)
+Func MapStyle.standard(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has parameter 0 type change from MapboxMaps.StandardLightPreset? to MapboxMaps.StandardTheme?
+Func MapStyle.standard(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has parameter 1 type change from Swift.String? to MapboxMaps.StandardLightPreset?
+Func MapStyle.standard(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has parameter 2 type change from Swift.Bool? to Swift.String?

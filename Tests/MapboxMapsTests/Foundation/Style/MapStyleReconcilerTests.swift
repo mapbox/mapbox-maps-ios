@@ -210,6 +210,26 @@ final class MapStyleReconcilerTests: XCTestCase {
         XCTAssertEqual(inv.last?.parameters.value as? String, "v-2")
     }
 
+    func testReconcileWhenLoadedNewStyle() throws {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+        }
+        me.mapStyle = MapStyle(uri: .outdoors, configuration: JSONObject(rawValue: ["k-1": "v-1", "a": "b"])!)
+
+        self.styleManager.setStyleImportConfigPropertyForImportIdStub.reset()
+
+        me.mapStyle = MapStyle(uri: .standard, configuration: JSONObject(rawValue: ["k-1": "v-1", "k-2": "v-2"])!)
+
+        let inv = styleManager.setStyleImportConfigPropertyForImportIdStub.invocations
+        XCTAssertEqual(inv.count, 2)
+        let k1Params = try XCTUnwrap(inv.first(where: { $0.parameters.config == "k-1"})).parameters
+        let k2Params = try XCTUnwrap(inv.first(where: { $0.parameters.config == "k-2"})).parameters
+        XCTAssertEqual(k1Params.importId, "basemap")
+        XCTAssertEqual(k2Params.importId, "basemap")
+        XCTAssertEqual(k1Params.value as? String, "v-1")
+        XCTAssertEqual(k2Params.value as? String, "v-2")
+    }
+
     func testStyleImportsReconcileFromNil() {
             MapStyleReconciler.reconcileBasemapConfiguration(
             from: nil,

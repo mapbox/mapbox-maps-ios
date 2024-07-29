@@ -45,7 +45,7 @@ final class MapStyleReconciler {
                     /// can continue loading.
                     /// We can safely add new content via style DSL.
                     guard let self else { return }
-                    self.reconcileBasemapConfiguration(from: oldMapStyle?.configuration)
+                    self.reconcileBasemapConfiguration(from: nil)
                     self._isStyleRootLoaded.value = true
                     if let transition {
                         self.styleManager.setStyleTransitionFor(transition.coreOptions)

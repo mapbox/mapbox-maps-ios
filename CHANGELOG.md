@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 11.5.2 - 29 July, 2024
+
+* Update CoreMaps to the 11.5.3 version to fix crash on iOS simulators when using symbols with occlusion.
+
 ## 11.5.1 - 5 July, 2024
 
 * Update CoreMaps to the 11.5.1 version.

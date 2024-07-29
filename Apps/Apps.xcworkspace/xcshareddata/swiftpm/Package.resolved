@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mapbox/mapbox-core-maps-ios.git",
       "state" : {
-        "revision" : "33c88427d47dc075aa1bff8e088570110a19ed1a",
-        "version" : "11.5.1"
+        "revision" : "cf7e79b45888b1eab218c387268226cdbf2651be",
+        "version" : "11.5.3"
       }
     },
     {

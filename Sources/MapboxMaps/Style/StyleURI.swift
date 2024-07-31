@@ -53,7 +53,7 @@ public struct StyleURI: Hashable, RawRepresentable {
     public static let satelliteStreets = StyleURI(rawValue: "mapbox://styles/mapbox/satellite-streets-v12")!
 
     /// Mapbox Standard is a general-purpose style with 3D visualization.
-    public static let standard = StyleURI(rawValue: "mapbox://styles/mapbox-map-design/standard-rc")!
+    public static let standard = StyleURI(rawValue: "mapbox://styles/mapbox/standard")!
 
     /// Mapbox Standard Satellite
     public static let standardSatellite = StyleURI(rawValue: "mapbox://styles/mapbox/standard-satellite")!

@@ -1,5 +1,5 @@
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 /// This example shows how to use a slot from the Standard style and use another custom slot added at runtime
 /// to split the former into two parts.

@@ -488,40 +488,34 @@ extension FillExtrusionLayer {
 
     /// Controls the intensity of shading near ground and concave angles between walls. Default value 0.0 disables ambient occlusion and values around 0.3 provide the most plausible results for buildings.
     /// Default value: 0. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func fillExtrusionAmbientOcclusionIntensity(_ constant: Double) -> Self {
         with(self, setter(\.fillExtrusionAmbientOcclusionIntensity, .constant(constant)))
     }
 
     /// Transition property for `fillExtrusionAmbientOcclusionIntensity`
-    @_documentation(visibility: public)
     public func fillExtrusionAmbientOcclusionIntensityTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillExtrusionAmbientOcclusionIntensityTransition, transition))
     }
 
     /// Controls the intensity of shading near ground and concave angles between walls. Default value 0.0 disables ambient occlusion and values around 0.3 provide the most plausible results for buildings.
     /// Default value: 0. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func fillExtrusionAmbientOcclusionIntensity(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionAmbientOcclusionIntensity, .expression(expression)))
     }
 
     /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with legacy light. When 3D lights are enabled `fill-extrusion-ambient-occlusion-wall-radius` and `fill-extrusion-ambient-occlusion-ground-radius` are used instead.
     /// Default value: 3. Minimum value: 0.
-    @_documentation(visibility: public)
     public func fillExtrusionAmbientOcclusionRadius(_ constant: Double) -> Self {
         with(self, setter(\.fillExtrusionAmbientOcclusionRadius, .constant(constant)))
     }
 
     /// Transition property for `fillExtrusionAmbientOcclusionRadius`
-    @_documentation(visibility: public)
     public func fillExtrusionAmbientOcclusionRadiusTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillExtrusionAmbientOcclusionRadiusTransition, transition))
     }
 
     /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with legacy light. When 3D lights are enabled `fill-extrusion-ambient-occlusion-wall-radius` and `fill-extrusion-ambient-occlusion-ground-radius` are used instead.
     /// Default value: 3. Minimum value: 0.
-    @_documentation(visibility: public)
     public func fillExtrusionAmbientOcclusionRadius(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionAmbientOcclusionRadius, .expression(expression)))
     }
@@ -551,81 +545,69 @@ extension FillExtrusionLayer {
 
     /// The height with which to extrude the base of this layer. Must be less than or equal to `fill-extrusion-height`.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func fillExtrusionBase(_ constant: Double) -> Self {
         with(self, setter(\.fillExtrusionBase, .constant(constant)))
     }
 
     /// Transition property for `fillExtrusionBase`
-    @_documentation(visibility: public)
     public func fillExtrusionBaseTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillExtrusionBaseTransition, transition))
     }
 
     /// The height with which to extrude the base of this layer. Must be less than or equal to `fill-extrusion-height`.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func fillExtrusionBase(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionBase, .expression(expression)))
     }
 
     /// The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root `light` settings. If this color is specified as `rgba` with an alpha component, the alpha component will be ignored; use `fill-extrusion-opacity` to set layer opacity.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func fillExtrusionColor(_ constant: StyleColor) -> Self {
         with(self, setter(\.fillExtrusionColor, .constant(constant)))
     }
 
     /// The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root `light` settings. If this color is specified as `rgba` with an alpha component, the alpha component will be ignored; use `fill-extrusion-opacity` to set layer opacity.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func fillExtrusionColor(_ color: UIColor) -> Self {
         with(self, setter(\.fillExtrusionColor, .constant(StyleColor(color))))
     }
 
     /// Transition property for `fillExtrusionColor`
-    @_documentation(visibility: public)
     public func fillExtrusionColorTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillExtrusionColorTransition, transition))
     }
 
     /// The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root `light` settings. If this color is specified as `rgba` with an alpha component, the alpha component will be ignored; use `fill-extrusion-opacity` to set layer opacity.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func fillExtrusionColor(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionColor, .expression(expression)))
     }
 
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff on pitched map views. Fade out is implemented by scaling down and removing buildings in the fade range in a staggered fashion. Opacity is not changed. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
     /// Default value: 0. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func fillExtrusionCutoffFadeRange(_ constant: Double) -> Self {
         with(self, setter(\.fillExtrusionCutoffFadeRange, .constant(constant)))
     }
 
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff on pitched map views. Fade out is implemented by scaling down and removing buildings in the fade range in a staggered fashion. Opacity is not changed. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
     /// Default value: 0. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func fillExtrusionCutoffFadeRange(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionCutoffFadeRange, .expression(expression)))
     }
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func fillExtrusionEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.fillExtrusionEmissiveStrength, .constant(constant)))
     }
 
     /// Transition property for `fillExtrusionEmissiveStrength`
-    @_documentation(visibility: public)
     public func fillExtrusionEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillExtrusionEmissiveStrengthTransition, transition))
     }
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func fillExtrusionEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionEmissiveStrength, .expression(expression)))
     }
@@ -755,52 +737,44 @@ extension FillExtrusionLayer {
 
     /// The height with which to extrude this layer.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func fillExtrusionHeight(_ constant: Double) -> Self {
         with(self, setter(\.fillExtrusionHeight, .constant(constant)))
     }
 
     /// Transition property for `fillExtrusionHeight`
-    @_documentation(visibility: public)
     public func fillExtrusionHeightTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillExtrusionHeightTransition, transition))
     }
 
     /// The height with which to extrude this layer.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func fillExtrusionHeight(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionHeight, .expression(expression)))
     }
 
     /// The opacity of the entire fill extrusion layer. This is rendered on a per-layer, not per-feature, basis, and data-driven styling is not available.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func fillExtrusionOpacity(_ constant: Double) -> Self {
         with(self, setter(\.fillExtrusionOpacity, .constant(constant)))
     }
 
     /// Transition property for `fillExtrusionOpacity`
-    @_documentation(visibility: public)
     public func fillExtrusionOpacityTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillExtrusionOpacityTransition, transition))
     }
 
     /// The opacity of the entire fill extrusion layer. This is rendered on a per-layer, not per-feature, basis, and data-driven styling is not available.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func fillExtrusionOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionOpacity, .expression(expression)))
     }
 
     /// Name of image in sprite to use for drawing images on extruded fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
-    @_documentation(visibility: public)
     public func fillExtrusionPattern(_ constant: String) -> Self {
         with(self, setter(\.fillExtrusionPattern, .constant(.name(constant))))
     }
 
     /// Name of image in sprite to use for drawing images on extruded fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
-    @_documentation(visibility: public)
     public func fillExtrusionPattern(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionPattern, .expression(expression)))
     }
@@ -823,48 +797,41 @@ extension FillExtrusionLayer {
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
     /// Default value: [0,0].
-    @_documentation(visibility: public)
     public func fillExtrusionTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.fillExtrusionTranslate, .constant([x, y])))
     }
 
     /// Transition property for `fillExtrusionTranslate`
-    @_documentation(visibility: public)
     public func fillExtrusionTranslateTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillExtrusionTranslateTransition, transition))
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
     /// Default value: [0,0].
-    @_documentation(visibility: public)
     public func fillExtrusionTranslate(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionTranslate, .expression(expression)))
     }
 
     /// Controls the frame of reference for `fill-extrusion-translate`.
     /// Default value: "map".
-    @_documentation(visibility: public)
     public func fillExtrusionTranslateAnchor(_ constant: FillExtrusionTranslateAnchor) -> Self {
         with(self, setter(\.fillExtrusionTranslateAnchor, .constant(constant)))
     }
 
     /// Controls the frame of reference for `fill-extrusion-translate`.
     /// Default value: "map".
-    @_documentation(visibility: public)
     public func fillExtrusionTranslateAnchor(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionTranslateAnchor, .expression(expression)))
     }
 
     /// Whether to apply a vertical gradient to the sides of a fill-extrusion layer. If true, sides will be shaded slightly darker farther down.
     /// Default value: true.
-    @_documentation(visibility: public)
     public func fillExtrusionVerticalGradient(_ constant: Bool) -> Self {
         with(self, setter(\.fillExtrusionVerticalGradient, .constant(constant)))
     }
 
     /// Whether to apply a vertical gradient to the sides of a fill-extrusion layer. If true, sides will be shaded slightly darker farther down.
     /// Default value: true.
-    @_documentation(visibility: public)
     public func fillExtrusionVerticalGradient(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionVerticalGradient, .expression(expression)))
     }
@@ -894,7 +861,6 @@ extension FillExtrusionLayer {
 }
 
 @available(iOS 13.0, *)
-@_spi(Experimental)
 extension FillExtrusionLayer: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))

@@ -126,7 +126,6 @@ extension GeoJSONSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
 }
 
 @available(iOS 13.0, *)
-@_spi(Experimental)
 extension CustomGeometrySource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: CustomGeometrySource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
@@ -138,7 +137,6 @@ extension CustomGeometrySource: UpdatableSource, MapStyleContent, PrimitiveMapCo
 }
 
 @available(iOS 13.0, *)
-@_spi(Experimental)
 extension CustomRasterSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: CustomRasterSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)

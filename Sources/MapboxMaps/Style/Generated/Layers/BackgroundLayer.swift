@@ -146,86 +146,73 @@ extension BackgroundLayer {
 
     /// The color with which the background will be drawn.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func backgroundColor(_ constant: StyleColor) -> Self {
         with(self, setter(\.backgroundColor, .constant(constant)))
     }
 
     /// The color with which the background will be drawn.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func backgroundColor(_ color: UIColor) -> Self {
         with(self, setter(\.backgroundColor, .constant(StyleColor(color))))
     }
 
     /// Transition property for `backgroundColor`
-    @_documentation(visibility: public)
     public func backgroundColorTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.backgroundColorTransition, transition))
     }
 
     /// The color with which the background will be drawn.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func backgroundColor(_ expression: Exp) -> Self {
         with(self, setter(\.backgroundColor, .expression(expression)))
     }
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func backgroundEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.backgroundEmissiveStrength, .constant(constant)))
     }
 
     /// Transition property for `backgroundEmissiveStrength`
-    @_documentation(visibility: public)
     public func backgroundEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.backgroundEmissiveStrengthTransition, transition))
     }
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func backgroundEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.backgroundEmissiveStrength, .expression(expression)))
     }
 
     /// The opacity at which the background will be drawn.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func backgroundOpacity(_ constant: Double) -> Self {
         with(self, setter(\.backgroundOpacity, .constant(constant)))
     }
 
     /// Transition property for `backgroundOpacity`
-    @_documentation(visibility: public)
     public func backgroundOpacityTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.backgroundOpacityTransition, transition))
     }
 
     /// The opacity at which the background will be drawn.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func backgroundOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.backgroundOpacity, .expression(expression)))
     }
 
     /// Name of image in sprite to use for drawing an image background. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
-    @_documentation(visibility: public)
     public func backgroundPattern(_ constant: String) -> Self {
         with(self, setter(\.backgroundPattern, .constant(.name(constant))))
     }
 
     /// Name of image in sprite to use for drawing an image background. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
-    @_documentation(visibility: public)
     public func backgroundPattern(_ expression: Exp) -> Self {
         with(self, setter(\.backgroundPattern, .expression(expression)))
     }
 }
 
 @available(iOS 13.0, *)
-@_spi(Experimental)
 extension BackgroundLayer: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))

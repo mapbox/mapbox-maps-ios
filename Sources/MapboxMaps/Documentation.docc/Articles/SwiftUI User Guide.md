@@ -36,7 +36,7 @@ To start using Mapbox Map in SwiftUI you need to import `SwiftUI` and  `MapboxMa
 
 ```swift
 import SwiftUI
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 ```
 
 Then you can use ``Map-swift.struct`` to display map content.

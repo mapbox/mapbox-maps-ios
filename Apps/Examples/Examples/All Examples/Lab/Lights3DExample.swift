@@ -1,5 +1,5 @@
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 final class Lights3DExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!

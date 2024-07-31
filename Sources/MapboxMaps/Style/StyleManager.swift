@@ -63,7 +63,7 @@ internal extension StyleProtocol {
 /// Use style manager to dynamically modify the map style. You can manage layers, sources, lights, terrain, and many more.
 /// Typically, you don’t create the style manager instances yourself. Instead you receive instance of this class from ``MapView`` as the ``MapView/mapboxMap`` property, or create an instance of ``Snapshotter``.
 ///
-/// To load the style use ``styleURI`` or ``styleJSON`` or new experimental ``mapStyle`` property. The latter
+/// To load the style use ``styleURI`` or ``styleJSON`` or ``mapStyle`` property. The latter
 /// allows not only load the style, but also modify the style configuration, for more information, see ``MapStyle``.
 ///
 /// - Important: `StyleManager` should only be used from the main thread.
@@ -408,8 +408,6 @@ public class StyleManager {
     /// MapStyle represents style configuration to load the style.
     ///
     /// It comprises from a StyleURI or style JSON complemented by style import configuration.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public var mapStyle: MapStyle? {
         get { styleReconciler.mapStyle }
         set { styleReconciler.mapStyle = newValue }
@@ -450,8 +448,6 @@ public class StyleManager {
     /// - Warning: Avoind having strong references to `MapboxMap` or `MapView` in your custom content as it will lead to strong reference cycles.
     ///
     /// See more information in the <doc:Declarative-Map-Styling>.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @available(iOS 13.0, *)
     public func setMapStyleContent(@MapStyleContentBuilder content: () -> some MapStyleContent) {
         setMapContent({
@@ -519,8 +515,6 @@ public class StyleManager {
     ///   - mapStyle: A style to load.
     ///   - transition: Options for the style transition.
     ///   - completion: Closure called when the style has been fully loaded.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func load(mapStyle: MapStyle,
                      transition: TransitionOptions? = nil,
                      completion: ((Error?) -> Void)? = nil) {
@@ -765,7 +759,6 @@ public class StyleManager {
     }
 
     /// The ordered list of the current style slots identifiers
-    @_spi(Experimental)
     public var allSlotIdentifiers: [Slot] {
         styleManager.getStyleSlots().compactMap(Slot.init)
     }

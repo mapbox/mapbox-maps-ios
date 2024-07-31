@@ -1,5 +1,5 @@
 import UIKit
-@testable @_spi(Experimental) import MapboxMaps
+@testable import MapboxMaps
 
 final class MockStyle: StyleProtocol {
     @TestPublished var styleRootLoaded = false

@@ -376,68 +376,58 @@ extension LineLayer {
 
     /// The display of line endings.
     /// Default value: "butt".
-    @_documentation(visibility: public)
     public func lineCap(_ constant: LineCap) -> Self {
         with(self, setter(\.lineCap, .constant(constant)))
     }
 
     /// The display of line endings.
     /// Default value: "butt".
-    @_documentation(visibility: public)
     public func lineCap(_ expression: Exp) -> Self {
         with(self, setter(\.lineCap, .expression(expression)))
     }
 
     /// The display of lines when joining.
     /// Default value: "miter".
-    @_documentation(visibility: public)
     public func lineJoin(_ constant: LineJoin) -> Self {
         with(self, setter(\.lineJoin, .constant(constant)))
     }
 
     /// The display of lines when joining.
     /// Default value: "miter".
-    @_documentation(visibility: public)
     public func lineJoin(_ expression: Exp) -> Self {
         with(self, setter(\.lineJoin, .expression(expression)))
     }
 
     /// Used to automatically convert miter joins to bevel joins for sharp angles.
     /// Default value: 2.
-    @_documentation(visibility: public)
     public func lineMiterLimit(_ constant: Double) -> Self {
         with(self, setter(\.lineMiterLimit, .constant(constant)))
     }
 
     /// Used to automatically convert miter joins to bevel joins for sharp angles.
     /// Default value: 2.
-    @_documentation(visibility: public)
     public func lineMiterLimit(_ expression: Exp) -> Self {
         with(self, setter(\.lineMiterLimit, .expression(expression)))
     }
 
     /// Used to automatically convert round joins to miter joins for shallow angles.
     /// Default value: 1.05.
-    @_documentation(visibility: public)
     public func lineRoundLimit(_ constant: Double) -> Self {
         with(self, setter(\.lineRoundLimit, .constant(constant)))
     }
 
     /// Used to automatically convert round joins to miter joins for shallow angles.
     /// Default value: 1.05.
-    @_documentation(visibility: public)
     public func lineRoundLimit(_ expression: Exp) -> Self {
         with(self, setter(\.lineRoundLimit, .expression(expression)))
     }
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
-    @_documentation(visibility: public)
     public func lineSortKey(_ constant: Double) -> Self {
         with(self, setter(\.lineSortKey, .constant(constant)))
     }
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
-    @_documentation(visibility: public)
     public func lineSortKey(_ expression: Exp) -> Self {
         with(self, setter(\.lineSortKey, .expression(expression)))
     }
@@ -458,186 +448,158 @@ extension LineLayer {
 
     /// Blur applied to the line, in pixels.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineBlur(_ constant: Double) -> Self {
         with(self, setter(\.lineBlur, .constant(constant)))
     }
 
     /// Transition property for `lineBlur`
-    @_documentation(visibility: public)
     public func lineBlurTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineBlurTransition, transition))
     }
 
     /// Blur applied to the line, in pixels.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineBlur(_ expression: Exp) -> Self {
         with(self, setter(\.lineBlur, .expression(expression)))
     }
 
     /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
     /// Default value: "rgba(0, 0, 0, 0)".
-    @_documentation(visibility: public)
     public func lineBorderColor(_ constant: StyleColor) -> Self {
         with(self, setter(\.lineBorderColor, .constant(constant)))
     }
 
     /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
     /// Default value: "rgba(0, 0, 0, 0)".
-    @_documentation(visibility: public)
     public func lineBorderColor(_ color: UIColor) -> Self {
         with(self, setter(\.lineBorderColor, .constant(StyleColor(color))))
     }
 
     /// Transition property for `lineBorderColor`
-    @_documentation(visibility: public)
     public func lineBorderColorTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineBorderColorTransition, transition))
     }
 
     /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
     /// Default value: "rgba(0, 0, 0, 0)".
-    @_documentation(visibility: public)
     public func lineBorderColor(_ expression: Exp) -> Self {
         with(self, setter(\.lineBorderColor, .expression(expression)))
     }
 
     /// The width of the line border. A value of zero means no border.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineBorderWidth(_ constant: Double) -> Self {
         with(self, setter(\.lineBorderWidth, .constant(constant)))
     }
 
     /// Transition property for `lineBorderWidth`
-    @_documentation(visibility: public)
     public func lineBorderWidthTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineBorderWidthTransition, transition))
     }
 
     /// The width of the line border. A value of zero means no border.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineBorderWidth(_ expression: Exp) -> Self {
         with(self, setter(\.lineBorderWidth, .expression(expression)))
     }
 
     /// The color with which the line will be drawn.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func lineColor(_ constant: StyleColor) -> Self {
         with(self, setter(\.lineColor, .constant(constant)))
     }
 
     /// The color with which the line will be drawn.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func lineColor(_ color: UIColor) -> Self {
         with(self, setter(\.lineColor, .constant(StyleColor(color))))
     }
 
     /// Transition property for `lineColor`
-    @_documentation(visibility: public)
     public func lineColorTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineColorTransition, transition))
     }
 
     /// The color with which the line will be drawn.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func lineColor(_ expression: Exp) -> Self {
         with(self, setter(\.lineColor, .expression(expression)))
     }
 
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     /// Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineDashArray(_ constant: [Double]) -> Self {
         with(self, setter(\.lineDasharray, .constant(constant)))
     }
 
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     /// Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineDashArray(_ expression: Exp) -> Self {
         with(self, setter(\.lineDasharray, .expression(expression)))
     }
 
     /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func lineDepthOcclusionFactor(_ constant: Double) -> Self {
         with(self, setter(\.lineDepthOcclusionFactor, .constant(constant)))
     }
 
     /// Transition property for `lineDepthOcclusionFactor`
-    @_documentation(visibility: public)
     public func lineDepthOcclusionFactorTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineDepthOcclusionFactorTransition, transition))
     }
 
     /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func lineDepthOcclusionFactor(_ expression: Exp) -> Self {
         with(self, setter(\.lineDepthOcclusionFactor, .expression(expression)))
     }
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.lineEmissiveStrength, .constant(constant)))
     }
 
     /// Transition property for `lineEmissiveStrength`
-    @_documentation(visibility: public)
     public func lineEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineEmissiveStrengthTransition, transition))
     }
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.lineEmissiveStrength, .expression(expression)))
     }
 
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineGapWidth(_ constant: Double) -> Self {
         with(self, setter(\.lineGapWidth, .constant(constant)))
     }
 
     /// Transition property for `lineGapWidth`
-    @_documentation(visibility: public)
     public func lineGapWidthTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineGapWidthTransition, transition))
     }
 
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineGapWidth(_ expression: Exp) -> Self {
         with(self, setter(\.lineGapWidth, .expression(expression)))
     }
 
     /// A gradient used to color a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
-    @_documentation(visibility: public)
     public func lineGradient(_ constant: StyleColor) -> Self {
         with(self, setter(\.lineGradient, .constant(constant)))
     }
 
     /// A gradient used to color a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
-    @_documentation(visibility: public)
     public func lineGradient(_ color: UIColor) -> Self {
         with(self, setter(\.lineGradient, .constant(StyleColor(color))))
     }
 
     /// A gradient used to color a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
-    @_documentation(visibility: public)
     public func lineGradient(_ expression: Exp) -> Self {
         with(self, setter(\.lineGradient, .expression(expression)))
     }
@@ -667,127 +629,108 @@ extension LineLayer {
 
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
     /// Default value: 0.
-    @_documentation(visibility: public)
     public func lineOffset(_ constant: Double) -> Self {
         with(self, setter(\.lineOffset, .constant(constant)))
     }
 
     /// Transition property for `lineOffset`
-    @_documentation(visibility: public)
     public func lineOffsetTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineOffsetTransition, transition))
     }
 
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
     /// Default value: 0.
-    @_documentation(visibility: public)
     public func lineOffset(_ expression: Exp) -> Self {
         with(self, setter(\.lineOffset, .expression(expression)))
     }
 
     /// The opacity at which the line will be drawn.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func lineOpacity(_ constant: Double) -> Self {
         with(self, setter(\.lineOpacity, .constant(constant)))
     }
 
     /// Transition property for `lineOpacity`
-    @_documentation(visibility: public)
     public func lineOpacityTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineOpacityTransition, transition))
     }
 
     /// The opacity at which the line will be drawn.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func lineOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.lineOpacity, .expression(expression)))
     }
 
     /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
-    @_documentation(visibility: public)
     public func linePattern(_ constant: String) -> Self {
         with(self, setter(\.linePattern, .constant(.name(constant))))
     }
 
     /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
-    @_documentation(visibility: public)
     public func linePattern(_ expression: Exp) -> Self {
         with(self, setter(\.linePattern, .expression(expression)))
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     /// Default value: [0,0].
-    @_documentation(visibility: public)
     public func lineTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.lineTranslate, .constant([x, y])))
     }
 
     /// Transition property for `lineTranslate`
-    @_documentation(visibility: public)
     public func lineTranslateTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineTranslateTransition, transition))
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     /// Default value: [0,0].
-    @_documentation(visibility: public)
     public func lineTranslate(_ expression: Exp) -> Self {
         with(self, setter(\.lineTranslate, .expression(expression)))
     }
 
     /// Controls the frame of reference for `line-translate`.
     /// Default value: "map".
-    @_documentation(visibility: public)
     public func lineTranslateAnchor(_ constant: LineTranslateAnchor) -> Self {
         with(self, setter(\.lineTranslateAnchor, .constant(constant)))
     }
 
     /// Controls the frame of reference for `line-translate`.
     /// Default value: "map".
-    @_documentation(visibility: public)
     public func lineTranslateAnchor(_ expression: Exp) -> Self {
         with(self, setter(\.lineTranslateAnchor, .expression(expression)))
     }
 
     /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
-    @_documentation(visibility: public)
     public func lineTrimOffset(start: Double, end: Double) -> Self {
         with(self, setter(\.lineTrimOffset, .constant([start, end])))
     }
 
     /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
-    @_documentation(visibility: public)
     public func lineTrimOffset(_ expression: Exp) -> Self {
         with(self, setter(\.lineTrimOffset, .expression(expression)))
     }
 
     /// Stroke thickness.
     /// Default value: 1. Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineWidth(_ constant: Double) -> Self {
         with(self, setter(\.lineWidth, .constant(constant)))
     }
 
     /// Transition property for `lineWidth`
-    @_documentation(visibility: public)
     public func lineWidthTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineWidthTransition, transition))
     }
 
     /// Stroke thickness.
     /// Default value: 1. Minimum value: 0.
-    @_documentation(visibility: public)
     public func lineWidth(_ expression: Exp) -> Self {
         with(self, setter(\.lineWidth, .expression(expression)))
     }
 }
 
 @available(iOS 13.0, *)
-@_spi(Experimental)
 extension LineLayer: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))

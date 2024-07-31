@@ -1,5 +1,5 @@
 import XCTest
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 class TileCoverIntegrationTests: MapViewIntegrationTestCase {
     func testTileCover() {

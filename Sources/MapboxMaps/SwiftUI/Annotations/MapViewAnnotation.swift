@@ -134,8 +134,6 @@ public struct MapViewAnnotation {
     /// effective position is updated.
     ///
     /// If not specified, the annotation will be placed in center.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func variableAnchors(_ variableAnchors: [ViewAnnotationAnchorConfig]) -> MapViewAnnotation {
         with(self, setter(\.variableAnchors, variableAnchors))
     }

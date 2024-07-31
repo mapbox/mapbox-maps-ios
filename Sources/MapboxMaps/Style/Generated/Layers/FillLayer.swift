@@ -233,171 +233,145 @@ extension FillLayer {
     }
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
-    @_documentation(visibility: public)
     public func fillSortKey(_ constant: Double) -> Self {
         with(self, setter(\.fillSortKey, .constant(constant)))
     }
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
-    @_documentation(visibility: public)
     public func fillSortKey(_ expression: Exp) -> Self {
         with(self, setter(\.fillSortKey, .expression(expression)))
     }
 
     /// Whether or not the fill should be antialiased.
     /// Default value: true.
-    @_documentation(visibility: public)
     public func fillAntialias(_ constant: Bool) -> Self {
         with(self, setter(\.fillAntialias, .constant(constant)))
     }
 
     /// Whether or not the fill should be antialiased.
     /// Default value: true.
-    @_documentation(visibility: public)
     public func fillAntialias(_ expression: Exp) -> Self {
         with(self, setter(\.fillAntialias, .expression(expression)))
     }
 
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func fillColor(_ constant: StyleColor) -> Self {
         with(self, setter(\.fillColor, .constant(constant)))
     }
 
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func fillColor(_ color: UIColor) -> Self {
         with(self, setter(\.fillColor, .constant(StyleColor(color))))
     }
 
     /// Transition property for `fillColor`
-    @_documentation(visibility: public)
     public func fillColorTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillColorTransition, transition))
     }
 
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
     /// Default value: "#000000".
-    @_documentation(visibility: public)
     public func fillColor(_ expression: Exp) -> Self {
         with(self, setter(\.fillColor, .expression(expression)))
     }
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func fillEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.fillEmissiveStrength, .constant(constant)))
     }
 
     /// Transition property for `fillEmissiveStrength`
-    @_documentation(visibility: public)
     public func fillEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillEmissiveStrengthTransition, transition))
     }
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
     public func fillEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.fillEmissiveStrength, .expression(expression)))
     }
 
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func fillOpacity(_ constant: Double) -> Self {
         with(self, setter(\.fillOpacity, .constant(constant)))
     }
 
     /// Transition property for `fillOpacity`
-    @_documentation(visibility: public)
     public func fillOpacityTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillOpacityTransition, transition))
     }
 
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func fillOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.fillOpacity, .expression(expression)))
     }
 
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
-    @_documentation(visibility: public)
     public func fillOutlineColor(_ constant: StyleColor) -> Self {
         with(self, setter(\.fillOutlineColor, .constant(constant)))
     }
 
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
-    @_documentation(visibility: public)
     public func fillOutlineColor(_ color: UIColor) -> Self {
         with(self, setter(\.fillOutlineColor, .constant(StyleColor(color))))
     }
 
     /// Transition property for `fillOutlineColor`
-    @_documentation(visibility: public)
     public func fillOutlineColorTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillOutlineColorTransition, transition))
     }
 
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
-    @_documentation(visibility: public)
     public func fillOutlineColor(_ expression: Exp) -> Self {
         with(self, setter(\.fillOutlineColor, .expression(expression)))
     }
 
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
-    @_documentation(visibility: public)
     public func fillPattern(_ constant: String) -> Self {
         with(self, setter(\.fillPattern, .constant(.name(constant))))
     }
 
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
-    @_documentation(visibility: public)
     public func fillPattern(_ expression: Exp) -> Self {
         with(self, setter(\.fillPattern, .expression(expression)))
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     /// Default value: [0,0].
-    @_documentation(visibility: public)
     public func fillTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.fillTranslate, .constant([x, y])))
     }
 
     /// Transition property for `fillTranslate`
-    @_documentation(visibility: public)
     public func fillTranslateTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.fillTranslateTransition, transition))
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     /// Default value: [0,0].
-    @_documentation(visibility: public)
     public func fillTranslate(_ expression: Exp) -> Self {
         with(self, setter(\.fillTranslate, .expression(expression)))
     }
 
     /// Controls the frame of reference for `fill-translate`.
     /// Default value: "map".
-    @_documentation(visibility: public)
     public func fillTranslateAnchor(_ constant: FillTranslateAnchor) -> Self {
         with(self, setter(\.fillTranslateAnchor, .constant(constant)))
     }
 
     /// Controls the frame of reference for `fill-translate`.
     /// Default value: "map".
-    @_documentation(visibility: public)
     public func fillTranslateAnchor(_ expression: Exp) -> Self {
         with(self, setter(\.fillTranslateAnchor, .expression(expression)))
     }
 }
 
 @available(iOS 13.0, *)
-@_spi(Experimental)
 extension FillLayer: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))

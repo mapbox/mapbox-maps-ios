@@ -1,6 +1,4 @@
 // Wraps a layer with its ``LayerPosition`` so it can be placed appropriately in the layer stack.
-@_spi(Experimental)
-@_documentation(visibility: public)
 @available(iOS 13.0, *)
 public struct LayerAtPosition<L>: MapStyleContent, PrimitiveMapContent where L: Layer, L: Equatable {
     // The layer wrapped in its ``LayerPosition``
@@ -12,7 +10,6 @@ public struct LayerAtPosition<L>: MapStyleContent, PrimitiveMapContent where L: 
     }
 }
 
-@_spi(Experimental)
 @available(iOS 13.0, *)
 extension SlotLayer {
     /// Positions this layer at a specified position.

@@ -1,5 +1,5 @@
 import Foundation
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 // To add a new example, create a new `Example` struct
 // and place it within the array for the category it belongs to below. Make sure

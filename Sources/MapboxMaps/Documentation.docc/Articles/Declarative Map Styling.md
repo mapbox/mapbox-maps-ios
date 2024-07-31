@@ -11,7 +11,7 @@ Starting from version `11.4.0-beta.1` of Mapbox Maps SDK you can now use a decla
 As these features are experimental, there may be breaking changes between minor versions. In this period, we are especially interested in hearing feedback from developers like you! To provide feedback please open an issue in [mapbox-maps-ios](https://github.com/mapbox/mapbox-maps-ios/issues) repository. To opt-in, import MapboxMaps with the experimental SPI:
 
 ```swift
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 ```
 
 - Note: Declarative styling is available starting from iOS 13.

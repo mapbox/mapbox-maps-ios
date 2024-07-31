@@ -15,8 +15,6 @@ extension SlotLayer {
     /// Positions this layer at a specified position.
     ///
     /// - Note: This method should be called last in a chain of layer updates.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     public func position(_ position: LayerPosition) -> LayerAtPosition<Self> {
         LayerAtPosition(layer: self, position: position)
     }

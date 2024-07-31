@@ -25,8 +25,14 @@ extension Bundle {
     }
 
     static var mapboxMapsMetadata: MapboxMapsMetadata = {
-        let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json")!
-        let data = try! Data(contentsOf: metadataPath)
-        return try! JSONDecoder().decode(MapboxMapsMetadata.self, from: data)
+        guard let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json") else {
+            return MapboxMapsMetadata(version: "unknown.ios-metatadata-failure")
+        }
+        do {
+            let data = try Data(contentsOf: metadataPath)
+            return try JSONDecoder().decode(MapboxMapsMetadata.self, from: data)
+        } catch {
+            return MapboxMapsMetadata(version: "unknown.ios-metatadata-failure")
+        }
     }()
 }

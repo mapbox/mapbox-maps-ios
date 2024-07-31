@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 @_implementationOnly import MapboxCommon_Private
 
 final class StyleManagerTests: XCTestCase {

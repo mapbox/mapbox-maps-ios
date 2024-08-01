@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Expose new Standard Satellite style. Add new parameters to the Standard Style.
 * Fix bug where updating MapStyle didn't update the configuration properties.
+* Expose getters for `MapOptions.orientation`, `MapOptions.constrainMode` and `MapOptions.viewportMode`.
 
 ## 11.6.0-beta.1 - 19 July, 2024
 

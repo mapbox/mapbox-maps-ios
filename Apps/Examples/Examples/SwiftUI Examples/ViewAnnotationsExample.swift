@@ -1,6 +1,6 @@
 import SwiftUI
 import Turf
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 @available(iOS 14.0, *)
 struct ViewAnnotationsExample: View {

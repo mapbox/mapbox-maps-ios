@@ -26,7 +26,6 @@ internal final class EventsManager: EventsManagerProtocol {
     private enum Constants {
         static let MGLAPIClientUserAgentBase = "mapbox-maps-ios"
         static let SDKVersion = Bundle.mapboxMapsMetadata.version
-        static let UserAgent = String(format: "%/%", MGLAPIClientUserAgentBase, SDKVersion)
     }
 
     /// Responsible for location and telemetry metrics events

@@ -4,6 +4,20 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.6.0-rc.1 - 31 July, 2024
+
+⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️
+* `ClipLayer` property `clipLayerTypes` is not updated in runtime. The fix is expected to land in stable 11.6.0.
+
+### Features ✨ and improvements 🏁
+
+* Expose new Standard Satellite style. Add new parameters to the Standard Style. With new Standard Style API it's possible to apply color themes on the map, hide/show road labels and show/hide 3D models. With new Standard Satellite style it's possible to show satellite imagery and also apply some configurations similar to Standard Style.
+
+### Bug fixes 🐞
+
+* Fix bug where updating MapStyle didn't update the configuration properties.
+* Fix symbols with occlusion crashing on iOS simulators
+
 ## 11.6.0-beta.1 - 19 July, 2024
 
 ⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️

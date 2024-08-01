@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 final class MapViewRenderedSnapshotIntegrationTests: MapViewIntegrationTestCase {
 

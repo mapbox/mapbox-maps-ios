@@ -19,6 +19,7 @@
 - ``LightInfo``
 - ``LightType``
 - ``StandardLightPreset``
+- ``StandardTheme``
 - ``StyleProjection``
 - ``StyleProjectionName``
 - ``CancelError``

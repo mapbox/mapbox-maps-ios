@@ -26,25 +26,20 @@ public struct Terrain: Codable, Equatable {
     }
 }
 
-@_spi(Experimental)
-@_documentation(visibility: public)
 extension Terrain {
     /// Exaggerates the elevation of the terrain by multiplying the data from the DEM with this value.
     /// Default value: 1. Value range: [0, 1000]
-    @_documentation(visibility: public)
     public func exaggeration(_ constant: Double) -> Self {
         with(self, setter(\.exaggeration, .constant(constant)))
     }
 
     /// Transition property for `exaggeration`
-    @_documentation(visibility: public)
     public func exaggerationTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.exaggerationTransition, transition))
     }
 
     /// Exaggerates the elevation of the terrain by multiplying the data from the DEM with this value.
     /// Default value: 1. Value range: [0, 1000]
-    @_documentation(visibility: public)
     public func exaggeration(_ expression: Exp) -> Self {
         with(self, setter(\.exaggeration, .expression(expression)))
     }

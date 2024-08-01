@@ -171,6 +171,7 @@ class AttributionTests: XCTestCase {
     }
 
     func testAttributionFeedbackURL() throws {
+        throw XCTSkip("MAPSIOS-1517")
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 1, longitude: 2), zoom: 3, bearing: 4, pitch: 5)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
         let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json")!

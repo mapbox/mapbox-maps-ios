@@ -352,7 +352,6 @@ extension RasterParticleLayer {
 }
 
 @available(iOS 13.0, *)
-@_spi(Experimental)
 extension RasterParticleLayer: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))

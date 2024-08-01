@@ -33,7 +33,7 @@ import MapboxCoreMaps
 /// }
 /// ```
 ///
-/// The ``MapStyle/standard(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:)`` factory method lists the predefined parameters that Standard Style supports. You can also use the Classic Mapbox-designed styles such as ``MapStyle/satelliteStreets``, ``MapStyle/outdoors``, and many more. Or use custom styles that you design with [Mapbox Studio](https://www.mapbox.com/mapbox-studio).
+/// The ``MapStyle/standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:)`` factory method lists the predefined parameters that Standard Style supports. You can also use the Classic Mapbox-designed styles such as ``MapStyle/satelliteStreets``, ``MapStyle/outdoors``, and many more. Or use custom styles that you design with [Mapbox Studio](https://www.mapbox.com/mapbox-studio).
 ///
 ///
 /// - Important: Configuration can be applied only to `.standard` style or styles that uses `.standard` as import. For any other styles configuration will make no effect.
@@ -125,43 +125,34 @@ public struct MapStyle: Equatable {
     /// When the returned ``MapStyle`` is set to the map, the Standard Style will be loaded, and specified import configurations will be applied to the basemap.
     ///
     /// - Parameters:
+    ///   - theme: A style theme. See ``StandardTheme`` for more options.
     ///   - lightPreset: Switches between 4 time-of-day states: ``StandardLightPreset/dusk``,  ``StandardLightPreset/dawn``, ``StandardLightPreset/day``, and ``StandardLightPreset/night``.  By default, the Day preset is applied.
     ///   - font: Defines font family for the style from predefined options. The possible options are `Alegreya`, `Alegreya SC`, `Asap`, `Barlow`, `DIN Pro`, `EB Garamond`, `Faustina`, `Frank Ruhl Libre`, `Heebo`, `Inter`, `League Mono`, `Montserrat`, `Poppins`, `Raleway`, `Roboto`, `Roboto Mono`, `Rubik`, `Source`, `Code Pro`, `Spectral`, `Ubuntu`, `Noto Sans CJK JP`, `Open Sans`, `Manrope`, `Source Sans Pro`, `Lato`.
     ///   - showPointOfInterestLabels: Shows or hides all POI icons and text. Default value is `true`.
     ///   - showTransitLabels: Shows or hides all transit icons and text. Default value is `true`.
     ///   - showPlaceLabels: Shows and hides place label layers, such as house numbers. Default value is `true`.
     ///   - showRoadLabels: Shows and hides all road labels, including road shields. Default value is `true`.
+    ///   - show3dObjects: Shows and hides 3D objects. Default value is `true`.
     public static func standard(
-        lightPreset: StandardLightPreset?,
+        theme: StandardTheme? = nil,
+        lightPreset: StandardLightPreset? = nil,
         font: String? = nil,
         showPointOfInterestLabels: Bool? = nil,
         showTransitLabels: Bool? = nil,
         showPlaceLabels: Bool? = nil,
-        showRoadLabels: Bool? = nil
+        showRoadLabels: Bool? = nil,
+        show3dObjects: Bool? = nil
     ) -> MapStyle {
-        MapStyle(uri: .standard, configuration: standardConfiguration(
-              lightPreset: lightPreset,
-              font: font,
-              showPointOfInterestLabels: showPointOfInterestLabels,
-              showTransitLabels: showTransitLabels,
-              showPlaceLabels: showPlaceLabels,
-              showRoadLabels: showRoadLabels)
-        )
-    }
-
-    private static func standardConfiguration(
-        lightPreset: StandardLightPreset?,
-        font: String? = nil,
-        showPointOfInterestLabels: Bool? = nil,
-        showTransitLabels: Bool? = nil,
-        showPlaceLabels: Bool? = nil,
-        showRoadLabels: Bool? = nil
-    ) -> JSONObject {
         var config = JSONObject()
+
+        if let theme {
+            config["theme"] = .string(theme.rawValue)
+        }
 
         if let lightPreset {
             config["lightPreset"] = .string(lightPreset.rawValue)
         }
+
         if let font {
             config["font"] = .string(font)
         }
@@ -178,6 +169,62 @@ public struct MapStyle: Equatable {
             config["showRoadLabels"] = .boolean(showRoadLabels)
         }
 
-        return config
+        if let show3dObjects {
+            config["show3dObjects"] = .boolean(show3dObjects)
+        }
+
+        return MapStyle(uri: .standard, configuration: config)
+    }
+
+    /// Mapbox Standard Satellite style
+    ///
+    /// - Parameters:
+    ///   - lightPreset: Switches between 4 time-of-day states: ``StandardLightPreset/dusk``,  ``StandardLightPreset/dawn``, ``StandardLightPreset/day``, and ``StandardLightPreset/night``.  By default, the Day preset is applied.
+    ///   - font: Defines font family for the style from predefined options. The possible options are `Alegreya`, `Alegreya SC`, `Asap`, `Barlow`, `DIN Pro`, `EB Garamond`, `Faustina`, `Frank Ruhl Libre`, `Heebo`, `Inter`, `League Mono`, `Montserrat`, `Poppins`, `Raleway`, `Roboto`, `Roboto Mono`, `Rubik`, `Source`, `Code Pro`, `Spectral`, `Ubuntu`, `Noto Sans CJK JP`, `Open Sans`, `Manrope`, `Source Sans Pro`, `Lato`.
+    ///   - showPointOfInterestLabels: Shows or hides all POI icons and text. Default value is `true`.
+    ///   - showTransitLabels: Shows or hides all transit icons and text. Default value is `true`.
+    ///   - showPlaceLabels: Shows and hides place label layers, such as house numbers. Default value is `true`.
+    ///   - showRoadLabels: Shows and hides all road labels, including road shields. Default value is `true`.
+    public static func standardSatellite(
+        lightPreset: StandardLightPreset? = nil,
+        font: String? = nil,
+        showPointOfInterestLabels: Bool? = nil,
+        showTransitLabels: Bool? = nil,
+        showPlaceLabels: Bool? = nil,
+        showRoadLabels: Bool? = nil,
+        showRoadsAndTransit: Bool? = nil,
+        showPedestrianRoads: Bool? = nil
+    ) -> MapStyle {
+        var config = JSONObject()
+
+        if let lightPreset {
+            config["lightPreset"] = .string(lightPreset.rawValue)
+        }
+
+        if let font {
+            config["font"] = .string(font)
+        }
+        if let showPointOfInterestLabels {
+            config["showPointOfInterestLabels"] = .boolean(showPointOfInterestLabels)
+        }
+        if let showTransitLabels {
+            config["showTransitLabels"] = .boolean(showTransitLabels)
+        }
+        if let showPlaceLabels {
+            config["showPlaceLabels"] = .boolean(showPlaceLabels)
+        }
+        if let showRoadLabels {
+            config["showRoadLabels"] = .boolean(showRoadLabels)
+        }
+
+        if let showRoadsAndTransit {
+            config["showRoadsAndTransit"] = .boolean(showRoadsAndTransit)
+        }
+
+        if let showPedestrianRoads {
+            config["showPedestrianRoads"] = .boolean(showPedestrianRoads)
+        }
+
+        return MapStyle(uri: .standardSatellite, configuration: config)
     }
 }

@@ -1,5 +1,5 @@
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 @available(iOS 13.0, *)
 final class CameraForExample: UIViewController, ExampleProtocol {

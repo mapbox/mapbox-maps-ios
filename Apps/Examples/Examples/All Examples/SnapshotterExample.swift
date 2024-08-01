@@ -1,5 +1,5 @@
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 final class SnapshotterExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()

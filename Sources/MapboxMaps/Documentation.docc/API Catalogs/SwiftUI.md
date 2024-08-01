@@ -2,10 +2,6 @@
 
 ## Topics
 
-### Articles
-- <doc:SwiftUI-User-Guide>
-- <doc:Map-Content-Gestures-User-Guide>
-
 ### SwiftUI
 - ``Map-swift.struct``
 - ``MapContent``

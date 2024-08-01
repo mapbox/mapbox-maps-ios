@@ -4,19 +4,23 @@ import MapboxMaps
 @available(iOS 14.0, *)
 struct StandardStyleImportExample: View {
     @State private var lightPreset: StandardLightPreset? = .night
+    @State private var theme: StandardTheme? = .default
     @State private var showLabels = true
     @State private var priceAlertMessage: String?
     @State private var panelHeight: CGFloat = 0
     @State private var showRealEstate = false
+    @State private var show3DObjects = true
 
     var body: some View {
         Map(initialViewport: .camera(center: .init(latitude: 40.72, longitude: -73.99), zoom: 11, pitch: 45)) {
             StyleImport(style: .standard(
+                theme: theme,
                 lightPreset: lightPreset,
                 showPointOfInterestLabels: showLabels,
                 showTransitLabels: showLabels,
                 showPlaceLabels: showLabels,
-                showRoadLabels: showLabels)
+                showRoadLabels: showLabels,
+                show3dObjects: show3DObjects)
             )
 
             if showRealEstate {
@@ -36,6 +40,14 @@ struct StandardStyleImportExample: View {
     var settingsPanel: some View {
         VStack(alignment: .leading) {
             HStack {
+                Text("Theme")
+                Picker("Theme", selection: $theme) {
+                    Text("Default").tag(Optional(StandardTheme.default))
+                    Text("Faded").tag(Optional(StandardTheme.faded))
+                    Text("Monochrome").tag(Optional(StandardTheme.monochrome))
+                }.pickerStyle(.segmented)
+            }
+            HStack {
                 Text("Light")
                 Picker("Light preset", selection: $lightPreset) {
                     Text("Dawn").tag(Optional(StandardLightPreset.dawn))
@@ -47,6 +59,7 @@ struct StandardStyleImportExample: View {
             }
             Toggle("Labels", isOn: $showLabels)
             Toggle("Show Real Estate", isOn: $showRealEstate)
+            Toggle("Show 3D Objects", isOn: $show3DObjects)
         }
         .padding(10)
         .floating(RoundedRectangle(cornerRadius: 10))

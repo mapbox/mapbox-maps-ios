@@ -92,87 +92,74 @@ public struct FlatLight: Codable, StyleEncodable, Equatable {
 extension FlatLight {
     /// Whether extruded geometries are lit relative to the map or viewport.
     /// Default value: "viewport".
-    @_documentation(visibility: public)
     public func anchor(_ constant: Anchor) -> Self {
         with(self, setter(\.anchor, .constant(constant)))
     }
 
     /// Whether extruded geometries are lit relative to the map or viewport.
     /// Default value: "viewport".
-    @_documentation(visibility: public)
     public func anchor(_ expression: Exp) -> Self {
         with(self, setter(\.anchor, .expression(expression)))
     }
 
     /// Color tint for lighting extruded geometries.
     /// Default value: "#ffffff".
-    @_documentation(visibility: public)
     public func color(_ constant: StyleColor) -> Self {
         with(self, setter(\.color, .constant(constant)))
     }
 
     /// Color tint for lighting extruded geometries.
     /// Default value: "#ffffff".
-    @_documentation(visibility: public)
     public func color(_ color: UIColor) -> Self {
         with(self, setter(\.color, .constant(StyleColor(color))))
     }
 
     /// Transition property for `color`
-    @_documentation(visibility: public)
     public func colorTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.colorTransition, transition))
     }
 
     /// Color tint for lighting extruded geometries.
     /// Default value: "#ffffff".
-    @_documentation(visibility: public)
     public func color(_ expression: Exp) -> Self {
         with(self, setter(\.color, .expression(expression)))
     }
 
     /// Intensity of lighting (on a scale from 0 to 1). Higher numbers will present as more extreme contrast.
     /// Default value: 0.5. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func intensity(_ constant: Double) -> Self {
         with(self, setter(\.intensity, .constant(constant)))
     }
 
     /// Transition property for `intensity`
-    @_documentation(visibility: public)
     public func intensityTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.intensityTransition, transition))
     }
 
     /// Intensity of lighting (on a scale from 0 to 1). Higher numbers will present as more extreme contrast.
     /// Default value: 0.5. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func intensity(_ expression: Exp) -> Self {
         with(self, setter(\.intensity, .expression(expression)))
     }
 
     /// Position of the light source relative to lit (extruded) geometries, in [r radial coordinate, a azimuthal angle, p polar angle] where r indicates the distance from the center of the base of an object to its light, a indicates the position of the light relative to 0 degree (0 degree when `light.anchor` is set to `viewport` corresponds to the top of the viewport, or 0 degree when `light.anchor` is set to `map` corresponds to due north, and degrees proceed clockwise), and p indicates the height of the light (from 0 degree, directly above, to 180 degree, directly below).
     /// Default value: [1.15,210,30].
-    @_documentation(visibility: public)
     public func position(radial: Double, azimuthal: Double, polar: Double) -> Self {
         with(self, setter(\.position, .constant([radial, azimuthal, polar])))
     }
 
     /// Transition property for `position`
-    @_documentation(visibility: public)
     public func positionTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.positionTransition, transition))
     }
 
     /// Position of the light source relative to lit (extruded) geometries, in [r radial coordinate, a azimuthal angle, p polar angle] where r indicates the distance from the center of the base of an object to its light, a indicates the position of the light relative to 0 degree (0 degree when `light.anchor` is set to `viewport` corresponds to the top of the viewport, or 0 degree when `light.anchor` is set to `map` corresponds to due north, and degrees proceed clockwise), and p indicates the height of the light (from 0 degree, directly above, to 180 degree, directly below).
     /// Default value: [1.15,210,30].
-    @_documentation(visibility: public)
     public func position(_ expression: Exp) -> Self {
         with(self, setter(\.position, .expression(expression)))
     }
 }
 
-@_spi(Experimental)
 @available(iOS 13.0, *)
 extension FlatLight: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {

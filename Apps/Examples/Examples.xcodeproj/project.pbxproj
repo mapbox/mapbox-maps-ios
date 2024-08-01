@@ -72,6 +72,7 @@
 		6B040F65241ABF600D70D14D /* Custom3DPuckExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C957F9CA07061B793C2DD4A /* Custom3DPuckExample.swift */; platformFilters = (ios, ); };
 		7036A19FCD2CCE85BDDF4E00 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5E598A16FA446F583344CB /* TrackingModeExample.swift */; platformFilters = (ios, ); };
 		7365170E39A459EB4DFA198B /* ExamplesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE18E37A8652B4807D2459F1 /* ExamplesUITests.swift */; platformFilters = (ios, ); };
+		759D42AA5FE93B6FA9DFADF5 /* LocationOverrideExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B39AE24486FED5ED30392D /* LocationOverrideExample.swift */; };
 		7686448F8648BECC75A912B6 /* DashboardCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913B4773A82AD6357D6AAEA1 /* DashboardCarPlaySceneDelegate.swift */; platformFilters = (ios, ); };
 		79843B780E7C5DC68433B745 /* SnapshotMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5A8729C9AEA4711B56B5F0 /* SnapshotMapExample.swift */; };
 		79B889CF23A3C0A5EA7F6ADD /* ApplicationCarPlaySceneDelegage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3F37CAE7A0B66BE429525C /* ApplicationCarPlaySceneDelegage.swift */; platformFilters = (ios, ); };
@@ -204,6 +205,7 @@
 		3FC5980DD30479F30127BA71 /* NavigationSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSimulator.swift; sourceTree = "<group>"; };
 		450C8D5E4B84428FE51BCA97 /* route.geojson */ = {isa = PBXFileReference; path = route.geojson; sourceTree = "<group>"; };
 		455C0B9F01316D0FF38ED62B /* CLLocationCoordinate2D+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Random.swift"; sourceTree = "<group>"; };
+		45B39AE24486FED5ED30392D /* LocationOverrideExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationOverrideExample.swift; sourceTree = "<group>"; };
 		46CE3D9C2873C0767DD76D85 /* ClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusteringExample.swift; sourceTree = "<group>"; };
 		4D5DB9BD5E97D3C0080EC5D3 /* CustomPointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPointAnnotationExample.swift; sourceTree = "<group>"; };
 		4DCBE814694CF08A9C2E4A42 /* AddOneMarkerSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOneMarkerSymbolExample.swift; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 				C61CC711054A032EE0446036 /* DynamicStylingExample.swift */,
 				A6B06A1D70F479D8DC5C375A /* FeaturesQueryExample.swift */,
 				62DA0608D44DEF6C4A82777C /* LocateMeExample.swift */,
+				45B39AE24486FED5ED30392D /* LocationOverrideExample.swift */,
 				6CD7ADCCB774239AA0090C46 /* RasterParticleExample.swift */,
 				AC5A8729C9AEA4711B56B5F0 /* SnapshotMapExample.swift */,
 				640198169EEDFC7CBEFCFCCF /* StandardStyleImportExample.swift */,
@@ -700,7 +703,6 @@
 			packageReferences = (
 				B50D5CC28BF0DFBA55456D89 /* XCRemoteSwiftPackageReference "Fingertips" */,
 			);
-			productRefGroup = 3FDBCEEB7C4C53F0545FC427 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -860,6 +862,7 @@
 				1B97702805C5EC4703A6CAA9 /* LineAnnotationExample.swift in Sources */,
 				48040990713D3220E7055434 /* LiveDataExample.swift in Sources */,
 				E121F023995CCF2F3A65BC2A /* LocateMeExample.swift in Sources */,
+				759D42AA5FE93B6FA9DFADF5 /* LocationOverrideExample.swift in Sources */,
 				AE51E276DCD8CF89AB339224 /* LongTapAnimationExample.swift in Sources */,
 				03EEF25ABD58ADD9631AB509 /* MapEventsExample.swift in Sources */,
 				3FD83483E0AE57790504CB0C /* MapRecorderExample.swift in Sources */,
@@ -954,12 +957,7 @@
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-					"$(PROJECT_DIR)/../lib",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(PROJECT_DIR)/../lib";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxTests;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
@@ -1067,18 +1065,9 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "Apple Development: Created via API";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
 				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-					"$(PROJECT_DIR)/../lib",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(PROJECT_DIR)/../lib";
 				PRODUCT_BUNDLE_IDENTIFIER = mapbox.ExamplesUITests;
-				PROVISIONING_PROFILE_SPECIFIER = "match Development mapbox.ExamplesUITests.xctrunner";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1095,10 +1084,8 @@
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "Apple Development: Created via API";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = Examples/Info.plist;
 				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
 				INFOPLIST_PREPROCESS = YES;
@@ -1109,7 +1096,6 @@
 				MAPBOXMAPS_PATH = ../../;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.mapbox.examples";
 				SDKROOT = auto;
 				SKIP_INSTALL = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
@@ -1212,10 +1198,8 @@
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "Apple Development: Created via API";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = Examples/Info.plist;
 				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
 				INFOPLIST_PREPROCESS = YES;
@@ -1226,7 +1210,6 @@
 				MAPBOXMAPS_PATH = ../../;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.mapbox.examples";
 				SDKROOT = auto;
 				SKIP_INSTALL = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
@@ -1244,12 +1227,7 @@
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-					"$(PROJECT_DIR)/../lib",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(PROJECT_DIR)/../lib";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxTests;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
@@ -1266,18 +1244,9 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "Apple Development: Created via API";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
 				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-					"$(PROJECT_DIR)/../lib",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(PROJECT_DIR)/../lib";
 				PRODUCT_BUNDLE_IDENTIFIER = mapbox.ExamplesUITests;
-				PROVISIONING_PROFILE_SPECIFIER = "match Development mapbox.ExamplesUITests.xctrunner";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;

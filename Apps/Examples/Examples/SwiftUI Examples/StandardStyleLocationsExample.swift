@@ -15,14 +15,32 @@ struct StandardStyleLocationsExample: View {
     @Environment(\.dismissWindow) var dismissWindow
 #endif
 
-    var body: some View {
-        Map(viewport: $model.viewport)
-            .mapStyle(.standard(
+    var style: MapStyle {
+        switch model.style {
+        case .standard:
+            .standard(
+                theme: model.theme,
                 lightPreset: model.lightPreset,
                 showPointOfInterestLabels: model.poi,
                 showTransitLabels: model.transitLabels,
                 showPlaceLabels: model.placeLabels,
-                showRoadLabels: model.roadLabels))
+                showRoadLabels: model.roadLabels,
+                show3dObjects: model.show3DObjects)
+        case .standardSatellite:
+            .standardSatellite(
+                    lightPreset: model.lightPreset,
+                    showPointOfInterestLabels: model.poi,
+                    showTransitLabels: model.transitLabels,
+                    showPlaceLabels: model.placeLabels,
+                    showRoadLabels: model.roadLabels,
+                    showRoadsAndTransit: model.showRoadsAndTransit,
+                    showPedestrianRoads: model.showPedestrianRoads)
+        }
+    }
+
+    var body: some View {
+        Map(viewport: $model.viewport)
+            .mapStyle(style)
             // Center of the map will be translated in order to accommodate settings panel
             .additionalSafeAreaInsets(.bottom, settingsHeight)
             .ignoresSafeArea()
@@ -57,8 +75,18 @@ class StandardStyleLocationsModel: ObservableObject {
     @Published var transitLabels = true
     @Published var placeLabels = true
     @Published var roadLabels = true
+    @Published var showRoadsAndTransit = true
+    @Published var showPedestrianRoads = true
+    @Published var show3DObjects = true
     @Published var selectedBookmark = Location.all.first!
     @Published var viewport: Viewport = Location.all.first!.viewport
+    @Published var style: Style = .standard
+    @Published var theme: StandardTheme = .default
+
+    enum Style {
+        case standard
+        case standardSatellite
+    }
 
     struct Location: Equatable, Identifiable {
         var id: String { title }
@@ -90,6 +118,10 @@ struct StandardStyleLocationsSettings: View {
                          selection: $model.selectedBookmark) { b in
                 Text(b.title)
             }
+            Picker("Style", selection: $model.style) {
+                Text("Standard").tag(StandardStyleLocationsModel.Style.standard)
+                Text("Standard Satellite").tag(StandardStyleLocationsModel.Style.standardSatellite)
+            }.pickerStyle(.segmented)
             HStack {
                 Text("Light")
                 Picker("Light", selection: $model.lightPreset) {
@@ -100,17 +132,37 @@ struct StandardStyleLocationsSettings: View {
                 }.pickerStyle(.segmented)
             }
 
-            HStack {
-                Text("Labels")
-                Group {
-                    Toggle("Poi", isOn: $model.poi)
-                    Toggle("Transit", isOn: $model.transitLabels)
-                    Toggle("Places", isOn: $model.placeLabels)
-                    Toggle("Roads", isOn: $model.roadLabels)
+            if model.style == .standard {
+                HStack {
+                    Text("Theme")
+                    Picker("Theme", selection: $model.theme) {
+                        Text("Default").tag(StandardTheme.default)
+                        Text("Faded").tag(StandardTheme.faded)
+                        Text("Monochrome").tag(StandardTheme.monochrome)
+                    }.pickerStyle(.segmented)
                 }
-                .fixedSize()
-                .font(.footnote)
-            }.toggleStyleButton()
+            }
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    Text("Labels")
+                    Group {
+                        Toggle("Poi", isOn: $model.poi)
+                        Toggle("Transit", isOn: $model.transitLabels)
+                        Toggle("Places", isOn: $model.placeLabels)
+                        Toggle("Roads", isOn: $model.roadLabels)
+                        switch model.style {
+                        case .standard:
+                            Toggle("3D Objects", isOn: $model.show3DObjects)
+                        case .standardSatellite:
+                            Toggle("Roads&Transit", isOn: $model.showRoadsAndTransit)
+                            Toggle("Pedestrian roads", isOn: $model.showPedestrianRoads)
+                        }
+                    }
+                    .fixedSize()
+                    .font(.footnote)
+                }.toggleStyleButton()
+            }
         }
         .padding(10)
     }

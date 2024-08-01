@@ -197,102 +197,87 @@ extension HeatmapLayer {
 
     /// Defines the color of each pixel based on its density value in a heatmap. Should be an expression that uses `["heatmap-density"]` as input.
     /// Default value: ["interpolate",["linear"],["heatmap-density"],0,"rgba(0, 0, 255, 0)",0.1,"royalblue",0.3,"cyan",0.5,"lime",0.7,"yellow",1,"red"].
-    @_documentation(visibility: public)
     public func heatmapColor(_ constant: StyleColor) -> Self {
         with(self, setter(\.heatmapColor, .constant(constant)))
     }
 
     /// Defines the color of each pixel based on its density value in a heatmap. Should be an expression that uses `["heatmap-density"]` as input.
     /// Default value: ["interpolate",["linear"],["heatmap-density"],0,"rgba(0, 0, 255, 0)",0.1,"royalblue",0.3,"cyan",0.5,"lime",0.7,"yellow",1,"red"].
-    @_documentation(visibility: public)
     public func heatmapColor(_ color: UIColor) -> Self {
         with(self, setter(\.heatmapColor, .constant(StyleColor(color))))
     }
 
     /// Defines the color of each pixel based on its density value in a heatmap. Should be an expression that uses `["heatmap-density"]` as input.
     /// Default value: ["interpolate",["linear"],["heatmap-density"],0,"rgba(0, 0, 255, 0)",0.1,"royalblue",0.3,"cyan",0.5,"lime",0.7,"yellow",1,"red"].
-    @_documentation(visibility: public)
     public func heatmapColor(_ expression: Exp) -> Self {
         with(self, setter(\.heatmapColor, .expression(expression)))
     }
 
     /// Similar to `heatmap-weight` but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.
     /// Default value: 1. Minimum value: 0.
-    @_documentation(visibility: public)
     public func heatmapIntensity(_ constant: Double) -> Self {
         with(self, setter(\.heatmapIntensity, .constant(constant)))
     }
 
     /// Transition property for `heatmapIntensity`
-    @_documentation(visibility: public)
     public func heatmapIntensityTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.heatmapIntensityTransition, transition))
     }
 
     /// Similar to `heatmap-weight` but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.
     /// Default value: 1. Minimum value: 0.
-    @_documentation(visibility: public)
     public func heatmapIntensity(_ expression: Exp) -> Self {
         with(self, setter(\.heatmapIntensity, .expression(expression)))
     }
 
     /// The global opacity at which the heatmap layer will be drawn.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func heatmapOpacity(_ constant: Double) -> Self {
         with(self, setter(\.heatmapOpacity, .constant(constant)))
     }
 
     /// Transition property for `heatmapOpacity`
-    @_documentation(visibility: public)
     public func heatmapOpacityTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.heatmapOpacityTransition, transition))
     }
 
     /// The global opacity at which the heatmap layer will be drawn.
     /// Default value: 1. Value range: [0, 1]
-    @_documentation(visibility: public)
     public func heatmapOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.heatmapOpacity, .expression(expression)))
     }
 
     /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
     /// Default value: 30. Minimum value: 1.
-    @_documentation(visibility: public)
     public func heatmapRadius(_ constant: Double) -> Self {
         with(self, setter(\.heatmapRadius, .constant(constant)))
     }
 
     /// Transition property for `heatmapRadius`
-    @_documentation(visibility: public)
     public func heatmapRadiusTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.heatmapRadiusTransition, transition))
     }
 
     /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
     /// Default value: 30. Minimum value: 1.
-    @_documentation(visibility: public)
     public func heatmapRadius(_ expression: Exp) -> Self {
         with(self, setter(\.heatmapRadius, .expression(expression)))
     }
 
     /// A measure of how much an individual point contributes to the heatmap. A value of 10 would be equivalent to having 10 points of weight 1 in the same spot. Especially useful when combined with clustering.
     /// Default value: 1. Minimum value: 0.
-    @_documentation(visibility: public)
     public func heatmapWeight(_ constant: Double) -> Self {
         with(self, setter(\.heatmapWeight, .constant(constant)))
     }
 
     /// A measure of how much an individual point contributes to the heatmap. A value of 10 would be equivalent to having 10 points of weight 1 in the same spot. Especially useful when combined with clustering.
     /// Default value: 1. Minimum value: 0.
-    @_documentation(visibility: public)
     public func heatmapWeight(_ expression: Exp) -> Self {
         with(self, setter(\.heatmapWeight, .expression(expression)))
     }
 }
 
 @available(iOS 13.0, *)
-@_spi(Experimental)
 extension HeatmapLayer: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))

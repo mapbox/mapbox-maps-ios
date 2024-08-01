@@ -1,4 +1,4 @@
-@testable @_spi(Experimental) import MapboxMaps
+@testable import MapboxMaps
 import CoreLocation
 import UIKit
 

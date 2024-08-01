@@ -5,6 +5,7 @@ import argparse
 import json
 
 acceptedTopSectionTitles = [
+    "Articles",
     "Essentials",
     "Styling",
     "Annotations",

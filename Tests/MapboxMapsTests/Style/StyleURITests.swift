@@ -36,8 +36,7 @@ class StyleURITests: XCTestCase {
         checkDefaultStyleURI(with: "mapbox://styles/mapbox/dark-v11", expected: .dark)
         checkDefaultStyleURI(with: "mapbox://styles/mapbox/satellite-v9", expected: .satellite)
         checkDefaultStyleURI(with: "mapbox://styles/mapbox/satellite-streets-v12", expected: .satelliteStreets)
-        // MAPSIOS-1517
-        // checkDefaultStyleURI(with: "mapbox://styles/mapbox/standard", expected: .standard)
+        checkDefaultStyleURI(with: "mapbox://styles/mapbox/standard", expected: .standard)
     }
 
     func testInvalidStyleURIs() throws {

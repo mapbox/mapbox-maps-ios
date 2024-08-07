@@ -113,6 +113,9 @@ final class LineLayerTests: XCTestCase {
        layer.lineTranslate = Value<[Double]>.testConstantValue()
        layer.lineTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineTranslateAnchor = Value<LineTranslateAnchor>.testConstantValue()
+       layer.lineTrimColor = Value<StyleColor>.testConstantValue()
+       layer.lineTrimColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.lineTrimFadeRange = Value<[Double]>.testConstantValue()
        layer.lineTrimOffset = Value<[Double]>.testConstantValue()
        layer.lineWidth = Value<Double>.testConstantValue()
        layer.lineWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -147,6 +150,8 @@ final class LineLayerTests: XCTestCase {
            XCTAssertEqual(layer.linePattern, Value<ResolvedImage>.testConstantValue())
            XCTAssertEqual(layer.lineTranslate, Value<[Double]>.testConstantValue())
            XCTAssertEqual(layer.lineTranslateAnchor, Value<LineTranslateAnchor>.testConstantValue())
+           XCTAssertEqual(layer.lineTrimColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.lineTrimFadeRange, Value<[Double]>.testConstantValue())
            XCTAssertEqual(layer.lineTrimOffset, Value<[Double]>.testConstantValue())
            XCTAssertEqual(layer.lineWidth, Value<Double>.testConstantValue())
        } catch {
@@ -183,6 +188,8 @@ final class LineLayerTests: XCTestCase {
             .linePattern(String.testConstantValue())
             .lineTranslate(x: 0, y: 1)
             .lineTranslateAnchor(LineTranslateAnchor.testConstantValue())
+            .lineTrimColor(StyleColor.testConstantValue())
+            .lineTrimFadeRange(start: 0, end: 1)
             .lineTrimOffset(start: 0, end: 1)
             .lineWidth(Double.testConstantValue())
 
@@ -213,6 +220,8 @@ final class LineLayerTests: XCTestCase {
         XCTAssertEqual(layer.linePattern, Value<ResolvedImage>.constant(.name(String.testConstantValue())))
         XCTAssertEqual(layer.lineTranslate, Value.constant([0, 1]))
         XCTAssertEqual(layer.lineTranslateAnchor, Value.constant(LineTranslateAnchor.testConstantValue()))
+        XCTAssertEqual(layer.lineTrimColor, Value.constant(StyleColor.testConstantValue()))
+        XCTAssertEqual(layer.lineTrimFadeRange, Value.constant([0, 1]))
         XCTAssertEqual(layer.lineTrimOffset, Value.constant([0, 1]))
         XCTAssertEqual(layer.lineWidth, Value.constant(Double.testConstantValue()))
     }

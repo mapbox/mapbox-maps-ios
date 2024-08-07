@@ -155,7 +155,21 @@ public struct LineLayer: Layer, Equatable {
     /// Default value: "map".
     public var lineTranslateAnchor: Value<LineTranslateAnchor>?
 
-    /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
+    /// The color to be used for rendering the trimmed line section that is defined by the `line-trim-offset` property.
+    /// Default value: "transparent".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineTrimColor: Value<StyleColor>?
+
+    /// Transition options for `lineTrimColor`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineTrimColorTransition: StyleTransition?
+
+    /// The fade range for the trim-start and trim-end points is defined by the `line-trim-offset` property. The first element of the array represents the fade range from the trim-start point toward the end of the line, while the second element defines the fade range from the trim-end point toward the beginning of the line. The fade result is achieved by interpolating between `line-trim-color` and the color specified by the `line-color` or the `line-gradient` property.
+    /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineTrimFadeRange: Value<[Double]>?
+
+    /// The line part between [trim-start, trim-end] will be painted using `line-trim-color,` which is transparent by default to produce a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
     public var lineTrimOffset: Value<[Double]>?
 
@@ -211,6 +225,9 @@ public struct LineLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(lineTranslate, forKey: .lineTranslate)
         try paintContainer.encodeIfPresent(lineTranslateTransition, forKey: .lineTranslateTransition)
         try paintContainer.encodeIfPresent(lineTranslateAnchor, forKey: .lineTranslateAnchor)
+        try paintContainer.encodeIfPresent(lineTrimColor, forKey: .lineTrimColor)
+        try paintContainer.encodeIfPresent(lineTrimColorTransition, forKey: .lineTrimColorTransition)
+        try paintContainer.encodeIfPresent(lineTrimFadeRange, forKey: .lineTrimFadeRange)
         try paintContainer.encodeIfPresent(lineTrimOffset, forKey: .lineTrimOffset)
         try paintContainer.encodeIfPresent(lineWidth, forKey: .lineWidth)
         try paintContainer.encodeIfPresent(lineWidthTransition, forKey: .lineWidthTransition)
@@ -263,6 +280,9 @@ public struct LineLayer: Layer, Equatable {
             lineTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineTranslate)
             lineTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineTranslateTransition)
             lineTranslateAnchor = try paintContainer.decodeIfPresent(Value<LineTranslateAnchor>.self, forKey: .lineTranslateAnchor)
+            lineTrimColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineTrimColor)
+            lineTrimColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineTrimColorTransition)
+            lineTrimFadeRange = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineTrimFadeRange)
             lineTrimOffset = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineTrimOffset)
             lineWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineWidth)
             lineWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineWidthTransition)
@@ -331,6 +351,9 @@ public struct LineLayer: Layer, Equatable {
         case lineTranslate = "line-translate"
         case lineTranslateTransition = "line-translate-transition"
         case lineTranslateAnchor = "line-translate-anchor"
+        case lineTrimColor = "line-trim-color"
+        case lineTrimColorTransition = "line-trim-color-transition"
+        case lineTrimFadeRange = "line-trim-fade-range"
         case lineTrimOffset = "line-trim-offset"
         case lineWidth = "line-width"
         case lineWidthTransition = "line-width-transition"
@@ -700,13 +723,60 @@ extension LineLayer {
         with(self, setter(\.lineTranslateAnchor, .expression(expression)))
     }
 
-    /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
+    /// The color to be used for rendering the trimmed line section that is defined by the `line-trim-offset` property.
+    /// Default value: "transparent".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineTrimColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.lineTrimColor, .constant(constant)))
+    }
+
+    /// The color to be used for rendering the trimmed line section that is defined by the `line-trim-offset` property.
+    /// Default value: "transparent".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineTrimColor(_ color: UIColor) -> Self {
+        with(self, setter(\.lineTrimColor, .constant(StyleColor(color))))
+    }
+
+    /// Transition property for `lineTrimColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineTrimColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.lineTrimColorTransition, transition))
+    }
+
+    /// The color to be used for rendering the trimmed line section that is defined by the `line-trim-offset` property.
+    /// Default value: "transparent".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineTrimColor(_ expression: Exp) -> Self {
+        with(self, setter(\.lineTrimColor, .expression(expression)))
+    }
+
+    /// The fade range for the trim-start and trim-end points is defined by the `line-trim-offset` property. The first element of the array represents the fade range from the trim-start point toward the end of the line, while the second element defines the fade range from the trim-end point toward the beginning of the line. The fade result is achieved by interpolating between `line-trim-color` and the color specified by the `line-color` or the `line-gradient` property.
+    /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineTrimFadeRange(start: Double, end: Double) -> Self {
+        with(self, setter(\.lineTrimFadeRange, .constant([start, end])))
+    }
+
+    /// The fade range for the trim-start and trim-end points is defined by the `line-trim-offset` property. The first element of the array represents the fade range from the trim-start point toward the end of the line, while the second element defines the fade range from the trim-end point toward the beginning of the line. The fade result is achieved by interpolating between `line-trim-color` and the color specified by the `line-color` or the `line-gradient` property.
+    /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineTrimFadeRange(_ expression: Exp) -> Self {
+        with(self, setter(\.lineTrimFadeRange, .expression(expression)))
+    }
+
+    /// The line part between [trim-start, trim-end] will be painted using `line-trim-color,` which is transparent by default to produce a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
     public func lineTrimOffset(start: Double, end: Double) -> Self {
         with(self, setter(\.lineTrimOffset, .constant([start, end])))
     }
 
-    /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
+    /// The line part between [trim-start, trim-end] will be painted using `line-trim-color,` which is transparent by default to produce a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
     public func lineTrimOffset(_ expression: Exp) -> Self {
         with(self, setter(\.lineTrimOffset, .expression(expression)))

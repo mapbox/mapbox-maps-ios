@@ -250,7 +250,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor(red: 255, green: 0, blue: 255)
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
         annotation.fillColor = value
         XCTAssertEqual(annotation.fillColor, value)
 
@@ -336,7 +336,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor(red: 255, green: 0, blue: 255)
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
         annotation.fillOutlineColor = value
         XCTAssertEqual(annotation.fillOutlineColor, value)
 

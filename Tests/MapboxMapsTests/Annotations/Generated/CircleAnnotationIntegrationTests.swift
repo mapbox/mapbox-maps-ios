@@ -291,7 +291,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleColor() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor(red: 255, green: 0, blue: 255)
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
         annotation.circleColor = value
         XCTAssertEqual(annotation.circleColor, value)
 
@@ -399,7 +399,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleStrokeColor() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor(red: 255, green: 0, blue: 255)
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
         annotation.circleStrokeColor = value
         XCTAssertEqual(annotation.circleStrokeColor, value)
 

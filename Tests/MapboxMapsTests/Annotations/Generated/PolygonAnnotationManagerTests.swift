@@ -322,9 +322,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             ]
             var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotation.fillSortKey = 0.0
-            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.fillOpacity = 0.5
-            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.fillPattern = UUID().uuidString
             annotations.append(annotation)
         }
@@ -396,9 +396,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             ]
             var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotation.fillSortKey = 0.0
-            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.fillOpacity = 0.5
-            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.fillPattern = UUID().uuidString
             annotations.append(annotation)
         }
@@ -470,9 +470,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             ]
             var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotation.fillSortKey = 0.0
-            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.fillOpacity = 0.5
-            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.fillPattern = UUID().uuidString
             annotations.append(annotation)
         }
@@ -544,9 +544,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             ]
             var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotation.fillSortKey = 0.0
-            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.fillOpacity = 0.5
-            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.fillPattern = UUID().uuidString
             annotations.append(annotation)
         }
@@ -618,9 +618,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             ]
             var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotation.fillSortKey = 0.0
-            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.fillOpacity = 0.5
-            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.fillOutlineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.fillPattern = UUID().uuidString
             annotations.append(annotation)
         }

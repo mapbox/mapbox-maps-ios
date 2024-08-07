@@ -274,10 +274,10 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.circleSortKey = 0.0
             annotation.circleBlur = 0.0
-            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleOpacity = 0.5
             annotation.circleRadius = 50000.0
-            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleStrokeOpacity = 0.5
             annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)
@@ -344,10 +344,10 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.circleSortKey = 0.0
             annotation.circleBlur = 0.0
-            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleOpacity = 0.5
             annotation.circleRadius = 50000.0
-            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleStrokeOpacity = 0.5
             annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)
@@ -414,10 +414,10 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.circleSortKey = 0.0
             annotation.circleBlur = 0.0
-            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleOpacity = 0.5
             annotation.circleRadius = 50000.0
-            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleStrokeOpacity = 0.5
             annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)
@@ -484,10 +484,10 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.circleSortKey = 0.0
             annotation.circleBlur = 0.0
-            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleOpacity = 0.5
             annotation.circleRadius = 50000.0
-            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleStrokeOpacity = 0.5
             annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)
@@ -554,10 +554,10 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.circleSortKey = 0.0
             annotation.circleBlur = 0.0
-            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleOpacity = 0.5
             annotation.circleRadius = 50000.0
-            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleStrokeOpacity = 0.5
             annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)
@@ -624,10 +624,10 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.circleSortKey = 0.0
             annotation.circleBlur = 0.0
-            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleOpacity = 0.5
             annotation.circleRadius = 50000.0
-            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.circleStrokeColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.circleStrokeOpacity = 0.5
             annotation.circleStrokeWidth = 50000.0
             annotations.append(annotation)

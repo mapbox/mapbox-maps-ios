@@ -300,6 +300,60 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.lineTranslateAnchor, .constant(LineTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String)))
     }
 
+    func testLineTrimColor() throws {
+        // Test that the setter and getter work
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.lineTrimColor = value
+        XCTAssertEqual(manager.lineTrimColor, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        if case .constant(let actualValue) = layer.lineTrimColor {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.lineTrimColor = nil
+        XCTAssertNil(manager.lineTrimColor)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineTrimColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-trim-color").value as! [Any], options: []))))
+    }
+
+    func testLineTrimFadeRange() throws {
+        // Test that the setter and getter work
+        let value = [0.5, 0.5]
+        manager.lineTrimFadeRange = value
+        XCTAssertEqual(manager.lineTrimFadeRange, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        if case .constant(let actualValue) = layer.lineTrimFadeRange {
+            for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.lineTrimFadeRange = nil
+        XCTAssertNil(manager.lineTrimFadeRange)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineTrimFadeRange, .constant(StyleManager.layerPropertyDefaultValue(for: .line, property: "line-trim-fade-range").value as! [Double]))
+    }
+
     func testLineTrimOffset() throws {
         // Test that the setter and getter work
         let value = [0.5, 0.5].sorted()
@@ -503,7 +557,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor(red: 255, green: 0, blue: 255)
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
         annotation.lineBorderColor = value
         XCTAssertEqual(annotation.lineBorderColor, value)
 
@@ -577,7 +631,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor(red: 255, green: 0, blue: 255)
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
         annotation.lineColor = value
         XCTAssertEqual(annotation.lineColor, value)
 

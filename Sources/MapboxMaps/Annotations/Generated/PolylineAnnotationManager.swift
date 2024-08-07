@@ -339,7 +339,29 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
+    /// The color to be used for rendering the trimmed line section that is defined by the `line-trim-offset` property.
+    /// Default value: "transparent".
+    public var lineTrimColor: StyleColor? {
+        get {
+            return layerProperties["line-trim-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:))
+        }
+        set {
+            layerProperties["line-trim-color"] = newValue?.rawValue
+        }
+    }
+
+    /// The fade range for the trim-start and trim-end points is defined by the `line-trim-offset` property. The first element of the array represents the fade range from the trim-start point toward the end of the line, while the second element defines the fade range from the trim-end point toward the beginning of the line. The fade result is achieved by interpolating between `line-trim-color` and the color specified by the `line-color` or the `line-gradient` property.
+    /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
+    public var lineTrimFadeRange: [Double]? {
+        get {
+            return layerProperties["line-trim-fade-range"] as? [Double]
+        }
+        set {
+            layerProperties["line-trim-fade-range"] = newValue
+        }
+    }
+
+    /// The line part between [trim-start, trim-end] will be painted using `line-trim-color,` which is transparent by default to produce a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
     public var lineTrimOffset: [Double]? {
         get {

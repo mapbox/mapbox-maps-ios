@@ -283,9 +283,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineSortKey = 0.0
             annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
-            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineBorderWidth = 50000.0
-            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineGapWidth = 50000.0
             annotation.lineOffset = 0.0
             annotation.lineOpacity = 0.5
@@ -358,9 +358,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineSortKey = 0.0
             annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
-            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineBorderWidth = 50000.0
-            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineGapWidth = 50000.0
             annotation.lineOffset = 0.0
             annotation.lineOpacity = 0.5
@@ -433,9 +433,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineSortKey = 0.0
             annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
-            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineBorderWidth = 50000.0
-            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineGapWidth = 50000.0
             annotation.lineOffset = 0.0
             annotation.lineOpacity = 0.5
@@ -508,9 +508,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineSortKey = 0.0
             annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
-            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineBorderWidth = 50000.0
-            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineGapWidth = 50000.0
             annotation.lineOffset = 0.0
             annotation.lineOpacity = 0.5
@@ -583,9 +583,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineSortKey = 0.0
             annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
-            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineBorderWidth = 50000.0
-            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineGapWidth = 50000.0
             annotation.lineOffset = 0.0
             annotation.lineOpacity = 0.5
@@ -658,9 +658,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineSortKey = 0.0
             annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
-            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineBorderWidth = 50000.0
-            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineGapWidth = 50000.0
             annotation.lineOffset = 0.0
             annotation.lineOpacity = 0.5
@@ -733,9 +733,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineSortKey = 0.0
             annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
-            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineBorderWidth = 50000.0
-            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineGapWidth = 50000.0
             annotation.lineOffset = 0.0
             annotation.lineOpacity = 0.5
@@ -808,9 +808,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineSortKey = 0.0
             annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
-            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineBorderWidth = 50000.0
-            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineGapWidth = 50000.0
             annotation.lineOffset = 0.0
             annotation.lineOpacity = 0.5
@@ -883,9 +883,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineSortKey = 0.0
             annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
-            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineBorderWidth = 50000.0
-            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineGapWidth = 50000.0
             annotation.lineOffset = 0.0
             annotation.lineOpacity = 0.5
@@ -916,6 +916,157 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineTranslateAnchor)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-translate-anchor"] as! String, defaultValue)
+    }
+
+    func testInitialLineTrimColor() {
+        let initialValue = manager.lineTrimColor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineTrimColor() {
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.lineTrimColor = value
+        XCTAssertEqual(manager.lineTrimColor, value)
+
+        // test layer and source synced and properties added
+        $displayLink.send()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-color"] as? String, value?.rawValue)
+    }
+
+    func testLineTrimColorAnnotationPropertiesAddedWithoutDuplicate() {
+        let newLineTrimColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let secondLineTrimColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+
+        manager.lineTrimColor = newLineTrimColorProperty
+        $displayLink.send()
+        manager.lineTrimColor = secondLineTrimColorProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(StyleColor(rawValue: style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-color"] as! String), secondLineTrimColorProperty)
+    }
+
+    func testNewLineTrimColorPropertyMergedWithAnnotationProperties() {
+        var annotations = [PolylineAnnotation]()
+        for _ in 0...5 {
+            let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
+            annotations.append(annotation)
+        }
+        let newLineTrimColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+
+        manager.annotations = annotations
+        manager.lineTrimColor = newLineTrimColorProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-color"])
+    }
+
+    func testSetToNilLineTrimColor() {
+        let newLineTrimColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-trim-color").value as! [Any], options: []))
+        manager.lineTrimColor = newLineTrimColorProperty
+        $displayLink.send()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-color"])
+
+        manager.lineTrimColor = nil
+        $displayLink.send()
+        XCTAssertNil(manager.lineTrimColor)
+
+        let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-color"] as! [Any]))
+        XCTAssertEqual(currentValue, defaultValue)
+    }
+
+    func testInitialLineTrimFadeRange() {
+        let initialValue = manager.lineTrimFadeRange
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineTrimFadeRange() {
+        let value = [0.5, 0.5]
+        manager.lineTrimFadeRange = value
+        XCTAssertEqual(manager.lineTrimFadeRange, value)
+
+        // test layer and source synced and properties added
+        $displayLink.send()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-fade-range"] as! [Double], value)
+    }
+
+    func testLineTrimFadeRangeAnnotationPropertiesAddedWithoutDuplicate() {
+        let newLineTrimFadeRangeProperty = [0.5, 0.5]
+        let secondLineTrimFadeRangeProperty = [0.5, 0.5]
+
+        manager.lineTrimFadeRange = newLineTrimFadeRangeProperty
+        $displayLink.send()
+        manager.lineTrimFadeRange = secondLineTrimFadeRangeProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-fade-range"] as! [Double], secondLineTrimFadeRangeProperty)
+    }
+
+    func testNewLineTrimFadeRangePropertyMergedWithAnnotationProperties() {
+        var annotations = [PolylineAnnotation]()
+        for _ in 0...5 {
+            let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+            annotation.lineJoin = LineJoin.testConstantValue()
+            annotation.lineSortKey = 0.0
+            annotation.lineZOffset = 0.0
+            annotation.lineBlur = 50000.0
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+            annotation.lineBorderWidth = 50000.0
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+            annotation.lineGapWidth = 50000.0
+            annotation.lineOffset = 0.0
+            annotation.lineOpacity = 0.5
+            annotation.linePattern = UUID().uuidString
+            annotation.lineWidth = 50000.0
+            annotations.append(annotation)
+        }
+        let newLineTrimFadeRangeProperty = [0.5, 0.5]
+
+        manager.annotations = annotations
+        manager.lineTrimFadeRange = newLineTrimFadeRangeProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-fade-range"])
+    }
+
+    func testSetToNilLineTrimFadeRange() {
+        let newLineTrimFadeRangeProperty = [0.5, 0.5]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-trim-fade-range").value as! [Double]
+        manager.lineTrimFadeRange = newLineTrimFadeRangeProperty
+        $displayLink.send()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-fade-range"])
+
+        manager.lineTrimFadeRange = nil
+        $displayLink.send()
+        XCTAssertNil(manager.lineTrimFadeRange)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-fade-range"] as! [Double], defaultValue)
     }
 
     func testInitialLineTrimOffset() {
@@ -958,9 +1109,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineSortKey = 0.0
             annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
-            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineBorderWidth = 50000.0
-            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineGapWidth = 50000.0
             annotation.lineOffset = 0.0
             annotation.lineOpacity = 0.5
@@ -1033,9 +1184,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineSortKey = 0.0
             annotation.lineZOffset = 0.0
             annotation.lineBlur = 50000.0
-            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineBorderColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineBorderWidth = 50000.0
-            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255)
+            annotation.lineColor = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
             annotation.lineGapWidth = 50000.0
             annotation.lineOffset = 0.0
             annotation.lineOpacity = 0.5

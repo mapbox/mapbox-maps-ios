@@ -1565,7 +1565,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testIconColor() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor(red: 255, green: 0, blue: 255)
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
         annotation.iconColor = value
         XCTAssertEqual(annotation.iconColor, value)
 
@@ -1673,7 +1673,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testIconHaloColor() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor(red: 255, green: 0, blue: 255)
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
         annotation.iconHaloColor = value
         XCTAssertEqual(annotation.iconHaloColor, value)
 
@@ -1817,7 +1817,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testTextColor() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor(red: 255, green: 0, blue: 255)
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
         annotation.textColor = value
         XCTAssertEqual(annotation.textColor, value)
 
@@ -1925,7 +1925,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testTextHaloColor() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = StyleColor(red: 255, green: 0, blue: 255)
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
         annotation.textHaloColor = value
         XCTAssertEqual(annotation.textHaloColor, value)
 

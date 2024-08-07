@@ -1,5 +1,5 @@
 import UIKit
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
@@ -62,6 +62,8 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
         var routeLayer = LineLayer(id: ID.routeLineLayer, source: ID.routeSource)
         routeLayer.lineCap = .constant(.round)
         routeLayer.lineJoin = .constant(.round)
+        routeLayer.lineTrimColor = .constant(StyleColor(.lightGray))
+        routeLayer.lineTrimFadeRange = .constant([0.0, 0.0001])
         routeLayer.lineWidth = .expression(
             Exp(.interpolate) {
                 Exp(.exponential) {

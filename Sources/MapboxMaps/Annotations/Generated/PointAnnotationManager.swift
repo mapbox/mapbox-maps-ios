@@ -602,8 +602,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// The opacity at which the icon will be drawn in case of being depth occluded. Not supported on globe zoom levels.
-    /// Default value: 1. Value range: [0, 1]
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
     public var iconOcclusionOpacity: Double? {
         get {
             return layerProperties["icon-occlusion-opacity"] as? Double
@@ -635,8 +635,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// The opacity at which the text will be drawn in case of being depth occluded. Not supported on globe zoom levels.
-    /// Default value: 1. Value range: [0, 1]
+    /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
     public var textOcclusionOpacity: Double? {
         get {
             return layerProperties["text-occlusion-opacity"] as? Double

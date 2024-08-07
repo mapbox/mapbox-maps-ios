@@ -120,12 +120,10 @@ public struct LineLayer: Layer, Equatable {
 
     /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
     /// Default value: 0. Value range: [0, 1]
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var lineOcclusionOpacity: Value<Double>?
+    public var lineOcclusionOpacity: Value<Double>?
 
     /// Transition options for `lineOcclusionOpacity`.
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var lineOcclusionOpacityTransition: StyleTransition?
+    public var lineOcclusionOpacityTransition: StyleTransition?
 
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
     /// Default value: 0.
@@ -629,23 +627,17 @@ extension LineLayer {
 
     /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
     /// Default value: 0. Value range: [0, 1]
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func lineOcclusionOpacity(_ constant: Double) -> Self {
         with(self, setter(\.lineOcclusionOpacity, .constant(constant)))
     }
 
     /// Transition property for `lineOcclusionOpacity`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func lineOcclusionOpacityTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.lineOcclusionOpacityTransition, transition))
     }
 
     /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
     /// Default value: 0. Value range: [0, 1]
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func lineOcclusionOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.lineOcclusionOpacity, .expression(expression)))
     }

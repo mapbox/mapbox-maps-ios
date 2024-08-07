@@ -277,8 +277,8 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     }
 
     private var iconOcclusionOpacity: Double?
-    /// The opacity at which the icon will be drawn in case of being depth occluded. Not supported on globe zoom levels.
-    /// Default value: 1. Value range: [0, 1]
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
     public func iconOcclusionOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.iconOcclusionOpacity, newValue))
     }
@@ -298,8 +298,8 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     }
 
     private var textOcclusionOpacity: Double?
-    /// The opacity at which the text will be drawn in case of being depth occluded. Not supported on globe zoom levels.
-    /// Default value: 1. Value range: [0, 1]
+    /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
     public func textOcclusionOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.textOcclusionOpacity, newValue))
     }

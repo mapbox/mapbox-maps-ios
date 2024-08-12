@@ -113,12 +113,14 @@ public struct PointAnnotation: Annotation, Equatable {
         properties["icon-halo-color"] = iconHaloColor?.rawValue
         properties["icon-halo-width"] = iconHaloWidth
         properties["icon-image-cross-fade"] = iconImageCrossFade
+        properties["icon-occlusion-opacity"] = iconOcclusionOpacity
         properties["icon-opacity"] = iconOpacity
         properties["text-color"] = textColor?.rawValue
         properties["text-emissive-strength"] = textEmissiveStrength
         properties["text-halo-blur"] = textHaloBlur
         properties["text-halo-color"] = textHaloColor?.rawValue
         properties["text-halo-width"] = textHaloWidth
+        properties["text-occlusion-opacity"] = textOcclusionOpacity
         properties["text-opacity"] = textOpacity
         return properties
     }
@@ -255,6 +257,10 @@ public struct PointAnnotation: Annotation, Equatable {
     /// Default value: 0. Value range: [0, 1]
     public var iconImageCrossFade: Double?
 
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
+    public var iconOcclusionOpacity: Double?
+
     /// The opacity at which the icon will be drawn.
     /// Default value: 1. Value range: [0, 1]
     public var iconOpacity: Double?
@@ -278,6 +284,10 @@ public struct PointAnnotation: Annotation, Equatable {
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
     /// Default value: 0. Minimum value: 0.
     public var textHaloWidth: Double?
+
+    /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
+    public var textOcclusionOpacity: Double?
 
     /// The opacity at which the text will be drawn.
     /// Default value: 1. Value range: [0, 1]
@@ -455,6 +465,12 @@ extension PointAnnotation {
         with(self, setter(\.iconImageCrossFade, newValue))
     }
 
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
+    public func iconOcclusionOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.iconOcclusionOpacity, newValue))
+    }
+
     /// The opacity at which the icon will be drawn.
     /// Default value: 1. Value range: [0, 1]
     public func iconOpacity(_ newValue: Double) -> Self {
@@ -501,6 +517,12 @@ extension PointAnnotation {
     /// Default value: 0. Minimum value: 0.
     public func textHaloWidth(_ newValue: Double) -> Self {
         with(self, setter(\.textHaloWidth, newValue))
+    }
+
+    /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
+    public func textOcclusionOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.textOcclusionOpacity, newValue))
     }
 
     /// The opacity at which the text will be drawn.

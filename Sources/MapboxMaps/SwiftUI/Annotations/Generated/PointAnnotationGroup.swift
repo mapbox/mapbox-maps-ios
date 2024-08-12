@@ -97,13 +97,13 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         assign(manager, \.textVariableAnchor, value: textVariableAnchor)
         assign(manager, \.textWritingMode, value: textWritingMode)
         assign(manager, \.iconColorSaturation, value: iconColorSaturation)
-        assign(manager, \.iconOcclusionOpacity, value: iconOcclusionOpacity)
         assign(manager, \.iconTranslate, value: iconTranslate)
         assign(manager, \.iconTranslateAnchor, value: iconTranslateAnchor)
-        assign(manager, \.textOcclusionOpacity, value: textOcclusionOpacity)
         assign(manager, \.textTranslate, value: textTranslate)
         assign(manager, \.textTranslateAnchor, value: textTranslateAnchor)
         assign(manager, \.slot, value: slot)
+        assign(manager, \.iconOcclusionOpacity, value: iconOcclusionOpacity)
+        assign(manager, \.textOcclusionOpacity, value: textOcclusionOpacity)    
 
         manager.onClusterTap = onClusterTap
         manager.onClusterLongPress = onClusterLongPress
@@ -276,13 +276,6 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.iconColorSaturation, newValue))
     }
 
-    private var iconOcclusionOpacity: Double?
-    /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
-    /// Default value: 0. Value range: [0, 1]
-    public func iconOcclusionOpacity(_ newValue: Double) -> Self {
-        with(self, setter(\.iconOcclusionOpacity, newValue))
-    }
-
     private var iconTranslate: [Double]?
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     /// Default value: [0,0].
@@ -295,13 +288,6 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     /// Default value: "map".
     public func iconTranslateAnchor(_ newValue: IconTranslateAnchor) -> Self {
         with(self, setter(\.iconTranslateAnchor, newValue))
-    }
-
-    private var textOcclusionOpacity: Double?
-    /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
-    /// Default value: 0. Value range: [0, 1]
-    public func textOcclusionOpacity(_ newValue: Double) -> Self {
-        with(self, setter(\.textOcclusionOpacity, newValue))
     }
 
     private var textTranslate: [Double]?
@@ -325,6 +311,22 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
     public func slot(_ newValue: String) -> Self {
         with(self, setter(\.slot, newValue))
+    }
+
+    private var iconOcclusionOpacity: Double?
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
+    @available(*, deprecated, message: "icon-occlusion-opacity property is now data driven, use `PointAnnotation.iconOcclusionOpacity` instead.")
+    public func iconOcclusionOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.iconOcclusionOpacity, newValue))
+    }
+
+    private var textOcclusionOpacity: Double?
+    /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
+    @available(*, deprecated, message: "text-occlusion-opacity property is now data driven, use `PointAnnotation.textOcclusionOpacity` instead.")
+    public func textOcclusionOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.textOcclusionOpacity, newValue))
     }
 
     private var clusterOptions: ClusterOptions?

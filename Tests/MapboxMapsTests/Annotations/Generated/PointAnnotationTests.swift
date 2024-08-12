@@ -354,6 +354,20 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(iconImageCrossFade, annotation.iconImageCrossFade)
     }
 
+    func testIconOcclusionOpacity() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.iconOcclusionOpacity =  Double.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(iconOcclusionOpacity) = layerProperties["icon-occlusion-opacity"] else {
+            return XCTFail("Layer property icon-occlusion-opacity should be set to a number.")
+        }
+        XCTAssertEqual(iconOcclusionOpacity, annotation.iconOcclusionOpacity)
+    }
+
     func testIconOpacity() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconOpacity =  Double.testConstantValue()
@@ -436,6 +450,20 @@ final class PointAnnotationTests: XCTestCase {
             return XCTFail("Layer property text-halo-width should be set to a number.")
         }
         XCTAssertEqual(textHaloWidth, annotation.textHaloWidth)
+    }
+
+    func testTextOcclusionOpacity() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.textOcclusionOpacity =  Double.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(textOcclusionOpacity) = layerProperties["text-occlusion-opacity"] else {
+            return XCTFail("Layer property text-occlusion-opacity should be set to a number.")
+        }
+        XCTAssertEqual(textOcclusionOpacity, annotation.textOcclusionOpacity)
     }
 
     func testTextOpacity() {

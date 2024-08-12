@@ -341,6 +341,8 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     /// The color to be used for rendering the trimmed line section that is defined by the `line-trim-offset` property.
     /// Default value: "transparent".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
     public var lineTrimColor: StyleColor? {
         get {
             return layerProperties["line-trim-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:))
@@ -352,6 +354,8 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     /// The fade range for the trim-start and trim-end points is defined by the `line-trim-offset` property. The first element of the array represents the fade range from the trim-start point toward the end of the line, while the second element defines the fade range from the trim-end point toward the beginning of the line. The fade result is achieved by interpolating between `line-trim-color` and the color specified by the `line-color` or the `line-gradient` property.
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
+    @_documentation(visibility: public)
+    @_spi(Experimental)
     public var lineTrimFadeRange: [Double]? {
         get {
             return layerProperties["line-trim-fade-range"] as? [Double]

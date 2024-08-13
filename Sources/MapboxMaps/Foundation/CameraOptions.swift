@@ -41,7 +41,6 @@ public struct CameraOptions: Codable, Hashable {
     - Parameter zoom: The zoom level of the map.
     - Parameter bearing: The bearing of the map, measured in degrees clockwise from true north.
     - Parameter pitch: Pitch toward the horizon measured in degrees, with 0 degrees resulting in a top-down view for a two-dimensional map.
-    - Returns: A `CameraOptions` that contains all configuration information the map will use to determine which part of the map to render.
     */
     public init(center: CLLocationCoordinate2D? = nil,
                 padding: UIEdgeInsets? = nil,

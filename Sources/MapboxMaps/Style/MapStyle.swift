@@ -185,6 +185,8 @@ public struct MapStyle: Equatable {
     ///   - showTransitLabels: Shows or hides all transit icons and text. Default value is `true`.
     ///   - showPlaceLabels: Shows and hides place label layers, such as house numbers. Default value is `true`.
     ///   - showRoadLabels: Shows and hides all road labels, including road shields. Default value is `true`.
+    ///   - showRoadsAndTransit: Show and hide all roads and transits. Default values is `true`.
+    ///   - showPedestrianRoads: Show and hide pedestrian roads. Default value is `true`.
     public static func standardSatellite(
         lightPreset: StandardLightPreset? = nil,
         font: String? = nil,

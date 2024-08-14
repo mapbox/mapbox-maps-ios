@@ -2,13 +2,13 @@
 
 /// An instance of `PolylineAnnotationManager` is responsible for a collection of `PolylineAnnotation`s.
 public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInternal, AnnotationManagerImplDelegate {
-    typealias Impl = AnnotationManagerImpl<PolylineAnnotationManagerTraits>
+    typealias Impl = AnnotationManagerImpl<PolylineAnnotation>
 
     public var sourceId: String { impl.id }
     public var layerId: String { impl.id }
     public var id: String { impl.id }
 
-    let impl: AnnotationManagerImpl<PolylineAnnotationManagerTraits>
+    let impl: AnnotationManagerImpl<PolylineAnnotation>
 
     /// The collection of ``PolylineAnnotation`` being managed.
     ///

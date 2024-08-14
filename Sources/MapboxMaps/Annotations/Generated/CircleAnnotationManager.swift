@@ -2,13 +2,13 @@
 
 /// An instance of `CircleAnnotationManager` is responsible for a collection of `CircleAnnotation`s.
 public class CircleAnnotationManager: AnnotationManager, AnnotationManagerInternal, AnnotationManagerImplDelegate {
-    typealias Impl = AnnotationManagerImpl<CircleAnnotationManagerTraits>
+    typealias Impl = AnnotationManagerImpl<CircleAnnotation>
 
     public var sourceId: String { impl.id }
     public var layerId: String { impl.id }
     public var id: String { impl.id }
 
-    let impl: AnnotationManagerImpl<CircleAnnotationManagerTraits>
+    let impl: AnnotationManagerImpl<CircleAnnotation>
 
     /// The collection of ``CircleAnnotation`` being managed.
     ///

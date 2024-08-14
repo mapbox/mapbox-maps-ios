@@ -2,13 +2,13 @@
 
 /// An instance of `PolygonAnnotationManager` is responsible for a collection of `PolygonAnnotation`s.
 public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInternal, AnnotationManagerImplDelegate {
-    typealias Impl = AnnotationManagerImpl<PolygonAnnotationManagerTraits>
+    typealias Impl = AnnotationManagerImpl<PolygonAnnotation>
 
     public var sourceId: String { impl.id }
     public var layerId: String { impl.id }
     public var id: String { impl.id }
 
-    let impl: AnnotationManagerImpl<PolygonAnnotationManagerTraits>
+    let impl: AnnotationManagerImpl<PolygonAnnotation>
 
     /// The collection of ``PolygonAnnotation`` being managed.
     ///

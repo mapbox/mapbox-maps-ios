@@ -2,22 +2,14 @@
 import UIKit
 
 public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
-
     /// Identifier for this annotation
     internal(set) public var id: String
 
     /// The geometry backing this annotation
-    public var geometry: Geometry {
-        .polygon(polygon)
-    }
+    public var geometry: Geometry { polygon.geometry }
 
     /// The Polygon backing this annotation
     public var polygon: Polygon
-
-    var _geometry: Polygon {
-        get { polygon }
-        set { polygon = newValue }
-    }
 
     /// Toggles the annotation's selection state.
     /// If the annotation is deselected, it becomes selected.
@@ -114,6 +106,10 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
         return feature
     }
 
+    mutating func drag(translation: CGPoint, in map: MapboxMapProtocol) {
+        polygon = GeometryType.projection(of: polygon, for: translation, in: map)
+    }
+
     /// Create a polygon annotation with a `Polygon` and an optional identifier.
     public init(id: String = UUID().uuidString, polygon: Polygon, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id
@@ -143,7 +139,6 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
 
 }
 
-@_documentation(visibility: public)
 extension PolygonAnnotation {
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.

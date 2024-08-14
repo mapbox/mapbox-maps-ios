@@ -31,10 +31,6 @@ struct AnnotationManagerDeps {
     let imagesManager: AnnotationImagesManagerProtocol
     let displayLink: Signal<Void>
 
-    func makeOffsetCalculator<T: OffsetGeometryCalculator>() -> T {
-        return T.init(mapboxMap: map)
-    }
-
     static func from(mapboxMap map: MapboxMap, displayLink: Signal<Void>) -> AnnotationManagerDeps {
         AnnotationManagerDeps(
             map: map,
@@ -46,8 +42,8 @@ struct AnnotationManagerDeps {
 }
 
 protocol AnnotationManagerInternal: AnnotationManager {
-    associatedtype Traits: AnnotationManagerTraits
-    var impl: AnnotationManagerImpl<Traits> { get }
+    associatedtype AnnotationType: Annotation & AnnotationInternal & Equatable
+    var impl: AnnotationManagerImpl<AnnotationType> { get }
     init(params: AnnotationManagerParams, deps: AnnotationManagerDeps)
 }
 

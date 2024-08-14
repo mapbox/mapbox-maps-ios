@@ -2,22 +2,14 @@
 import UIKit
 
 public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
-
     /// Identifier for this annotation
     internal(set) public var id: String
 
     /// The geometry backing this annotation
-    public var geometry: Geometry {
-        .point(point)
-    }
+    public var geometry: Geometry { point.geometry }
 
     /// The Point backing this annotation
     public var point: Point
-
-    var _geometry: Point {
-        get { point }
-        set { point = newValue }
-    }
 
     /// Toggles the annotation's selection state.
     /// If the annotation is deselected, it becomes selected.
@@ -141,6 +133,10 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
         }
         feature.properties = properties
         return feature
+    }
+
+    mutating func drag(translation: CGPoint, in map: MapboxMapProtocol) {
+        point = GeometryType.projection(of: point, for: translation, in: map)
     }
 
     /// Create a point annotation with a `Point` and an optional identifier.
@@ -307,7 +303,6 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     }
 }
 
-@_documentation(visibility: public)
 extension PointAnnotation {
 
     /// Part of the icon placed closest to the anchor.

@@ -13,14 +13,14 @@ public protocol Annotation {
 }
 
 protocol AnnotationInternal {
-    associatedtype GeometryType: GeometryConvertible
+    associatedtype LayerType: Layer
+    associatedtype GeometryType: GeometryConvertible & OffsetGeometryCalculator
 
     var id: String { get set }
     var layerProperties: [String: Any] { get }
     var feature: Feature { get }
     var isSelected: Bool { get set }
     var isDraggable: Bool { get set }
-    var _geometry: GeometryType { get set }
 
     var tapHandler: ((MapContentGestureContext) -> Bool)? { get set }
     var longPressHandler: ((MapContentGestureContext) -> Bool)? { get set }
@@ -28,6 +28,52 @@ protocol AnnotationInternal {
     var dragBeginHandler: ((inout Self, MapContentGestureContext) -> Bool)? { get set }
     var dragChangeHandler: ((inout Self, MapContentGestureContext) -> Void)? { get set }
     var dragEndHandler: ((inout Self, MapContentGestureContext) -> Void)? { get set }
+
+    mutating func drag(translation: CGPoint, in map: MapboxMapProtocol)
+
+    static func makeLayer(id: String) -> LayerType
+}
+
+extension PointAnnotation {
+    typealias GeometryType = Point
+    typealias LayerType = SymbolLayer
+
+    static func makeLayer(id: String) -> SymbolLayer {
+        var layer = SymbolLayer(id: id, source: id)
+        // Show all icons and texts by default in point annotations.
+        layer.iconAllowOverlap = .constant(true)
+        layer.textAllowOverlap = .constant(true)
+        layer.iconIgnorePlacement = .constant(true)
+        layer.textIgnorePlacement = .constant(true)
+        return layer
+    }
+}
+
+extension CircleAnnotation {
+    typealias GeometryType = Point
+    typealias LayerType = CircleLayer
+
+    static func makeLayer(id: String) -> CircleLayer {
+        CircleLayer(id: id, source: id)
+    }
+}
+
+extension PolygonAnnotation {
+    typealias GeometryType = Polygon
+    typealias LayerType = FillLayer
+
+    static func makeLayer(id: String) -> FillLayer {
+        FillLayer(id: id, source: id)
+    }
+}
+
+extension PolylineAnnotation {
+    typealias GeometryType = LineString
+    typealias LayerType = LineLayer
+
+    static func makeLayer(id: String) -> LineLayer {
+        LineLayer(id: id, source: id)
+    }
 }
 
 extension Array where Element: Annotation {

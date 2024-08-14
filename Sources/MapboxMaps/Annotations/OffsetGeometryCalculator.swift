@@ -3,18 +3,13 @@ import UIKit
 
 protocol OffsetGeometryCalculator {
     associatedtype GeometryType: GeometryConvertible
-    func geometry(for translation: CGPoint, from geometry: GeometryType) -> GeometryType?
-    init(mapboxMap: MapboxMapProtocol)
+    static func projection(of geometry: GeometryType, for translation: CGPoint, in mapboxMap: MapboxMapProtocol) -> GeometryType
 }
 
-internal struct OffsetPointCalculator: OffsetGeometryCalculator {
-    private let mapboxMap: MapboxMapProtocol
+extension Point: OffsetGeometryCalculator {
+    typealias GeometryType = Point
 
-    internal init(mapboxMap: MapboxMapProtocol) {
-        self.mapboxMap = mapboxMap
-    }
-
-    func geometry(for translation: CGPoint, from geometry: Point) -> Point? {
+    static func projection(of geometry: Point, for translation: CGPoint, in mapboxMap: MapboxMapProtocol) -> Point {
         let point = geometry.coordinates
 
         let pointScreenCoordinate = mapboxMap.point(for: point)
@@ -35,24 +30,20 @@ internal struct OffsetPointCalculator: OffsetGeometryCalculator {
             zoomLevel: mapboxMap.cameraState.zoom)
 
         guard Projection.latitudeRange.contains(targetPoint.coordinates.latitude) else {
-            return nil
+            return geometry
         }
         return Point(targetPoint.coordinates)
     }
 }
 
-internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
-    private let mapboxMap: MapboxMapProtocol
+extension LineString: OffsetGeometryCalculator {
+    typealias GeometryType = LineString
 
-    internal init(mapboxMap: MapboxMapProtocol) {
-        self.mapboxMap = mapboxMap
-    }
-
-    func geometry(for translation: CGPoint, from geometry: LineString) -> LineString? {
+    static func projection(of geometry: LineString, for translation: CGPoint, in mapboxMap: MapboxMapProtocol) -> LineString {
         let startPoints = geometry.coordinates
 
         if startPoints.isEmpty {
-            return nil
+            return geometry
         }
         let latitudeSum = startPoints.map(\.latitude).reduce(0, +)
         let longitudeSum = startPoints.map(\.longitude).reduce(0, +)
@@ -82,30 +73,26 @@ internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
         }
 
         guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else {
-            return nil
+            return geometry
         }
 
         guard Projection.latitudeRange.contains(targetPointLatitude) else {
-            return nil
+            return geometry
         }
         return LineString(.init(coordinates: targetPoints.map {$0.coordinates}))
     }
 }
 
-internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
-    private let mapboxMap: MapboxMapProtocol
-
-    internal init(mapboxMap: MapboxMapProtocol) {
-        self.mapboxMap = mapboxMap
-    }
+extension Polygon: OffsetGeometryCalculator {
+    typealias GeometryType = Polygon
 
     // swiftlint:disable:next function_body_length
-    func geometry(for translation: CGPoint, from geometry: Polygon) -> Polygon? {
+    static func projection(of geometry: Polygon, for translation: CGPoint, in mapboxMap: MapboxMapProtocol) -> Polygon {
         var outerRing = [CLLocationCoordinate2D]()
         var innerRing: [CLLocationCoordinate2D]?
         let startPoints = geometry.outerRing.coordinates
         if startPoints.isEmpty {
-            return nil
+            return geometry
         }
 
         let latitudeSum = startPoints.map { $0.latitude }.reduce(0, +)
@@ -133,17 +120,17 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
 
         let targetPoints = startPoints.map {
             Projection.shiftPointWithMercatorCoordinate(
-            point: Point($0),
-            shiftMercatorCoordinate: shiftMercatorCoordinate,
-            zoomLevel: mapboxMap.cameraState.zoom)
+                point: Point($0),
+                shiftMercatorCoordinate: shiftMercatorCoordinate,
+                zoomLevel: mapboxMap.cameraState.zoom)
         }
 
         guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else {
-            return nil
+            return geometry
         }
 
         guard Projection.latitudeRange.contains(targetPointLatitude) else {
-            return nil
+            return geometry
         }
 
         outerRing = targetPoints.map {$0.coordinates}
@@ -154,7 +141,7 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
             for ring in geometry.innerRings {
                 let startPoints = ring.coordinates
                 if startPoints.isEmpty {
-                    return nil
+                    return geometry
                 }
 
                 let latitudeSum = startPoints.map { $0.latitude }.reduce(0, +)
@@ -186,15 +173,15 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
                     zoomLevel: mapboxMap.cameraState.zoom)}
 
                 guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else {
-                    return nil
+                    return geometry
                 }
 
                 guard Projection.latitudeRange.contains(targetPointLatitude) else {
-                    return nil
+                    return geometry
                 }
 
                 innerRing = targetPoints.map {$0.coordinates}
-                guard let innerRing = innerRing else { return nil }
+                guard let innerRing = innerRing else { return geometry }
                 innerRings.append(.init(coordinates: innerRing))
 
             }

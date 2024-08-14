@@ -18,14 +18,12 @@ protocol AnnotationManagerImplProtocol {
     func handleDragEnd(context: MapContentGestureContext)
 }
 
-final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationManagerImplProtocol {
-    typealias AnnotationType = Traits.AnnotationType
-
+final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInternal & Equatable>: AnnotationManagerImplProtocol {
     let id: String
 
     weak var delegate: AnnotationManagerImplDelegate?
 
-    var annotations: [Traits.AnnotationType] {
+    var annotations: [AnnotationType] {
         get { mainAnnotations + draggedAnnotations }
         set {
             mainAnnotations = newValue
@@ -40,8 +38,8 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
 
     // Deps
     private let style: StyleProtocol
-    private let offsetCalculator: Traits.OffsetCalculator
     private let mapFeatureQueryable: MapFeatureQueryable
+    private let mapboxMap: MapboxMapProtocol
     private let clusterOptions: ClusterOptions?
     private let layerType: LayerType
 
@@ -54,15 +52,15 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
     private weak var _delegate: AnnotationInteractionDelegate?
 
     /// Currently displayed (synced) annotations.
-    private var displayedAnnotations: [Traits.AnnotationType] = []
+    private var displayedAnnotations: [AnnotationType] = []
 
     /// Updated, non-moved annotations. On next display link they will be diffed with `displayedAnnotations` and updated.
-    private var mainAnnotations = [Traits.AnnotationType]() {
+    private var mainAnnotations = [AnnotationType]() {
         didSet { syncSourceOnce.reset() }
     }
 
     /// When annotation is moved for the first time, it migrates to this array from mainAnnotations.
-    private var draggedAnnotations = [Traits.AnnotationType]() {
+    private var draggedAnnotations = [AnnotationType]() {
         didSet {
             if insertDraggedLayerAndSourceOnce.happened {
                 // Update dragged annotation only when the drag layer is created.
@@ -109,7 +107,7 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
     init(params: AnnotationManagerParams, deps: AnnotationManagerDeps) {
         self.id = params.id
         self.style = deps.style
-        self.offsetCalculator = deps.makeOffsetCalculator()
+        self.mapboxMap = deps.map
         self.layerPosition = params.layerPosition
 
         self.clusterOptions = params.clusterOptions
@@ -127,7 +125,7 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
             source.clusterMinPoints = clusterOptions.clusterMinPoints
         }
 
-        let layer = Traits.makeLayer(id: id)
+        let layer = AnnotationType.makeLayer(id: id)
         self.layerType = layer.type
 
         if let clusterOptions {
@@ -140,7 +138,7 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
             try style.addSource(source)
         } catch {
             Log.error(
-                forMessage: "Failed to create source / layer in \(Traits.tag). Error: \(error)",
+                forMessage: "Failed to create source / layer in \(implementationName). Error: \(error)",
                 category: "Annotations")
         }
 
@@ -157,7 +155,7 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
             try addClusterLayer(clusterLayer: clusterTextLayer)
         } catch {
             Log.error(
-                forMessage: "Failed to add cluster layer in \(Traits.tag). Error: \(error)",
+                forMessage: "Failed to add cluster layer in \(implementationName). Error: \(error)",
                 category: "Annotations")
         }
     }
@@ -193,14 +191,14 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
             try style.removeLayer(withId: "mapbox-iOS-cluster-text-layer-manager-" + id)
         } catch {
             Log.error(
-                forMessage: "Failed to remove cluster layer in \(Traits.tag). Error: \(error)",
+                forMessage: "Failed to remove cluster layer in \(implementationName). Error: \(error)",
                 category: "Annotations")
         }
     }
 
     // For SwiftUI
-    func set(newAnnotations: [(AnyHashable, Traits.AnnotationType)]) {
-        var resolvedAnnotations = [Traits.AnnotationType]()
+    func set(newAnnotations: [(AnyHashable, AnnotationType)]) {
+        var resolvedAnnotations = [AnnotationType]()
         newAnnotations.forEach { elementId, annotation in
             var annotation = annotation
             let stringId = idsMap[elementId] ?? annotation.id
@@ -228,7 +226,7 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
                 try body()
             } catch {
                 Log.warning(
-                    forMessage: "Failed to remove \(what) for PointAnnotationManager with id \(id) due to error: \(error)",
+                    forMessage: "Failed to remove \(what) for \(implementationName) with id \(id) due to error: \(error)",
                     category: "Annotations")
             }
         }
@@ -257,7 +255,7 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
     func syncSourceAndLayerIfNeeded() {
         guard !destroyOnce.happened else { return }
 
-        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink, "Participant: \(Traits.tag)") {
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink, "Participant: \(implementationName)") {
             syncSource()
             syncDragSource()
             syncLayer()
@@ -380,11 +378,11 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
     func handleDragBegin(with featureId: String, context: MapContentGestureContext) -> Bool {
         guard !isSwiftUI else { return false }
 
-        func predicate(annotation: Traits.AnnotationType) -> Bool {
+        func predicate(annotation: AnnotationType) -> Bool {
             annotation.id == featureId && annotation.isDraggable
         }
 
-        func tryBeginDragging(_ annotations: inout [Traits.AnnotationType], idx: Int) -> Bool {
+        func tryBeginDragging(_ annotations: inout [AnnotationType], idx: Int) -> Bool {
             var annotation = annotations[idx]
             // If no drag handler set, the dragging is allowed
             let dragAllowed = annotation.dragBeginHandler?(&annotation, context) ?? true
@@ -424,11 +422,9 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
 
     private func insertDraggedLayerAndSource() {
         insertDraggedLayerAndSourceOnce {
-            let source = GeoJSONSource(id: dragId)
-            let layer = Traits.makeLayer(id: dragId)
             do {
-                try style.addSource(source)
-                try style.addPersistentLayer(layer, layerPosition: .above(id))
+                try style.addSource(GeoJSONSource(id: dragId))
+                try style.addPersistentLayer(AnnotationType.makeLayer(id: dragId), layerPosition: .above(id))
             } catch {
                 Log.error(forMessage: "Add drag source/layer \(error)", category: "Annotations")
             }
@@ -443,10 +439,7 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
             return
         }
 
-        let currentGeometry = draggedAnnotations[draggedAnnotationIndex]._geometry
-        guard let geometry = offsetCalculator.geometry(for: translation, from: currentGeometry) else { return }
-        draggedAnnotations[draggedAnnotationIndex]._geometry = geometry
-
+        draggedAnnotations[draggedAnnotationIndex].drag(translation: translation, in: mapboxMap)
         callDragHandler(\.dragChangeHandler, context: context)
     }
 
@@ -457,7 +450,7 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
     }
 
     private func callDragHandler(
-        _ keyPath: KeyPath<Traits.AnnotationType, ((inout Traits.AnnotationType, MapContentGestureContext) -> Void)?>,
+        _ keyPath: KeyPath<AnnotationType, ((inout AnnotationType, MapContentGestureContext) -> Void)?>,
         context: MapContentGestureContext
     ) {
         guard let draggedAnnotationIndex, draggedAnnotationIndex < draggedAnnotations.endIndex else {
@@ -470,4 +463,8 @@ final class AnnotationManagerImpl<Traits: AnnotationManagerTraits>: AnnotationMa
             draggedAnnotations[draggedAnnotationIndex] = copy
         }
     }
+}
+
+private extension AnnotationManagerImpl {
+    var implementationName: String { "\(String(describing: AnnotationType.self))Manager" }
 }

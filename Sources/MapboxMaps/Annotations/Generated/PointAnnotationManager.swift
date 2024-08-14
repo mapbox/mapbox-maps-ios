@@ -2,13 +2,13 @@
 
 /// An instance of `PointAnnotationManager` is responsible for a collection of `PointAnnotation`s.
 public class PointAnnotationManager: AnnotationManager, AnnotationManagerInternal, AnnotationManagerImplDelegate {
-    typealias Impl = AnnotationManagerImpl<PointAnnotationManagerTraits>
+    typealias Impl = AnnotationManagerImpl<PointAnnotation>
 
     public var sourceId: String { impl.id }
     public var layerId: String { impl.id }
     public var id: String { impl.id }
 
-    let impl: AnnotationManagerImpl<PointAnnotationManagerTraits>
+    let impl: AnnotationManagerImpl<PointAnnotation>
 
     /// The collection of ``PointAnnotation`` being managed.
     ///

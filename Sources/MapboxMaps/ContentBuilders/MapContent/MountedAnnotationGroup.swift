@@ -2,7 +2,7 @@ import os.log
 
 @available(iOS 13.0, *)
 struct MountedAnnotationGroup<Manager: AnnotationManagerInternal>: MapContentMountedComponent {
-    private let annotations: [(AnyHashable, Manager.Traits.AnnotationType)]
+    private let annotations: [(AnyHashable, Manager.AnnotationType)]
     private let layerId: String
     private let clusterOptions: ClusterOptions?
     private let updateProperties: (Manager) -> Void
@@ -10,7 +10,7 @@ struct MountedAnnotationGroup<Manager: AnnotationManagerInternal>: MapContentMou
     init(
         layerId: String,
         clusterOptions: ClusterOptions?,
-        annotations: [(AnyHashable, Manager.Traits.AnnotationType)],
+        annotations: [(AnyHashable, Manager.AnnotationType)],
         updateProperties: @escaping (Manager) -> Void
     ) {
         self.layerId = layerId

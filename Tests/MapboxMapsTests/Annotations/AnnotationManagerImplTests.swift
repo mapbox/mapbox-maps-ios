@@ -4,7 +4,7 @@ import XCTest
 final class AnnotationManagerImplTests: XCTestCase {
     private var harness: AnnotationManagerTestingHarness!
     private var style: MockStyle { harness.style }
-    private var me: AnnotationManagerImpl<PointAnnotationManagerTraits>!
+    private var me: AnnotationManagerImpl<PointAnnotation>!
     private var annotations = [PointAnnotation]()
 
     let id = "default"

@@ -2,22 +2,14 @@
 import UIKit
 
 public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
-
     /// Identifier for this annotation
     internal(set) public var id: String
 
     /// The geometry backing this annotation
-    public var geometry: Geometry {
-        .lineString(lineString)
-    }
+    public var geometry: Geometry { lineString.geometry }
 
     /// The LineString backing this annotation
     public var lineString: LineString
-
-    var _geometry: LineString {
-        get { lineString }
-        set { lineString = newValue }
-    }
 
     /// Toggles the annotation's selection state.
     /// If the annotation is deselected, it becomes selected.
@@ -121,6 +113,10 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
         return feature
     }
 
+    mutating func drag(translation: CGPoint, in map: MapboxMapProtocol) {
+        lineString = GeometryType.projection(of: lineString, for: translation, in: map)
+    }
+
     /// Create a polyline annotation with a `LineString` and an optional identifier.
     public init(id: String = UUID().uuidString, lineString: LineString, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id
@@ -184,7 +180,6 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
 
 }
 
-@_documentation(visibility: public)
 extension PolylineAnnotation {
 
     /// The display of lines when joining.

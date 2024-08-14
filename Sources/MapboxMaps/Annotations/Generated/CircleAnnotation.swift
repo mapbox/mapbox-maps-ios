@@ -2,22 +2,14 @@
 import UIKit
 
 public struct CircleAnnotation: Annotation, Equatable, AnnotationInternal {
-
     /// Identifier for this annotation
     internal(set) public var id: String
 
     /// The geometry backing this annotation
-    public var geometry: Geometry {
-        .point(point)
-    }
+    public var geometry: Geometry { point.geometry }
 
     /// The Point backing this annotation
     public var point: Point
-
-    var _geometry: Point {
-        get { point }
-        set { point = newValue }
-    }
 
     /// Toggles the annotation's selection state.
     /// If the annotation is deselected, it becomes selected.
@@ -117,6 +109,10 @@ public struct CircleAnnotation: Annotation, Equatable, AnnotationInternal {
         return feature
     }
 
+    mutating func drag(translation: CGPoint, in map: MapboxMapProtocol) {
+        point = GeometryType.projection(of: point, for: translation, in: map)
+    }
+
     /// Create a circle annotation with a `Point` and an optional identifier.
     public init(id: String = UUID().uuidString, point: Point, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id
@@ -171,7 +167,6 @@ public struct CircleAnnotation: Annotation, Equatable, AnnotationInternal {
 
 }
 
-@_documentation(visibility: public)
 extension CircleAnnotation {
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.

@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.6.0 - 14 August, 2024
+
+* Expose getters for `MapOptions.orientation`, `MapOptions.constrainMode` and `MapOptions.viewportMode`.
+* Expose `lineTrimColor` and `lineTrimFadeRange` on `LineLayer` which allow to set custom color for trimmed line and fade effect for trim. Update navigation example to use those properties.
+
 ## 11.6.0-rc.1 - 31 July, 2024
 
 ⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️

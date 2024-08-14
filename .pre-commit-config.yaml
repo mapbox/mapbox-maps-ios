@@ -1,0 +1,28 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+    - id: trailing-whitespace
+      exclude: LICENSE.md
+    - id: end-of-file-fixer
+    - id: check-yaml
+    - id: check-json
+      exclude: .vscode/.*.json
+    - id: check-byte-order-marker
+    - id: check-merge-conflict
+- repo: "https://github.com/realm/SwiftLint"
+  rev: 0.55.1
+  hooks:
+    - id: swiftlint
+      entry: swiftlint --fix --strict
+- repo: https://github.com/psf/black
+  rev: 24.4.2
+  hooks:
+    - id: black
+      language_version: python3.12
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.16.1
+  hooks:
+    - id: gitleaks

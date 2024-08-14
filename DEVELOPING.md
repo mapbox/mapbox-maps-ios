@@ -33,13 +33,13 @@ This project:
    to manage dependencies for development. CocoaPods is supported for *consuming*
    the SDK.
 
-5. uses [secret-shield](https://github.com/mapbox/secret-shield) to help block
-   secrets such as access tokens from being exposed. Setup `secret-shield` by running:
+5. Install pre-commit hooks
+  ```bash
+  brew install xcodegen swiftlint
+  pip install pre-commit
 
-   ```sh
-   npm install -g @mapbox/secret-shield
-   scripts/install-pre-commit/install-pre-commit.sh
-   ```
+  pre-commit install # Installs the pre-commit hooks
+  ```
 
 6. uses CircleCI and Firebase Test Lab for continuous integration.
 

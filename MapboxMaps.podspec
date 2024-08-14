@@ -1,6 +1,6 @@
 Pod::Spec.new do |m|
 
-  maps_version = '11.6.0-rc.1'
+  maps_version = '11.6.0'
 
   m.name = 'MapboxMaps'
   m.version = maps_version
@@ -21,8 +21,8 @@ Pod::Spec.new do |m|
   m.source_files = 'Sources/MapboxMaps/**/*.{swift,h}'
   m.resource_bundles = { 'MapboxMapsResources' => ['Sources/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json', 'Sources/MapboxMaps/PrivacyInfo.xcprivacy'] }
 
-  m.dependency 'MapboxCoreMaps', '11.6.0-SNAPSHOT.0806T0745Z.09cf3ec'
-  m.dependency 'MapboxCommon', '24.6.0-rc.1'
+  m.dependency 'MapboxCoreMaps', '11.6.0'
+  m.dependency 'MapboxCommon', '24.6.0'
   m.dependency 'Turf', '2.8.0'
 
 end

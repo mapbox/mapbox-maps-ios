@@ -32,6 +32,10 @@ targets:
           - "All Examples/Sample Data/**"
           - "Assets.xcassets/**"
         # destinationFilters: [iOS, visionOS]
+    entitlements:
+      path: ../Apps/Examples/Examples/Examples_CarPlay.entitlements
+      properties:
+        com.apple.developer.carplay-maps: YES
 
     dependencies:
       - package: Fingertips

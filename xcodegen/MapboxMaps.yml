@@ -37,3 +37,13 @@ targets:
           - ../.build
         buildPhase: none
         group: General
+    postCompileScripts:
+      - name: Compile unified documentation
+        showEnvVars: true
+        basedOnDependencyAnalysis: true
+        discoveredDependencyFile: $(DERIVED_FILES_DIR)/MapboxMapsCustomDocumentation.d
+        script: $SRCROOT/$MAPBOXMAPS_PATH/scripts/doc-generation/xcode-rebuild-docc.sh
+        inputFiles:
+          - $(SRCROOT)/$(MAPBOXMAPS_PATH)/Sources/MapboxMaps/Documentation.docc
+        outputFiles:
+          - $(TARGET_TEMP_DIR)/MapboxMaps-fixed-diagnostics.json

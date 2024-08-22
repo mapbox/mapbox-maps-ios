@@ -5,20 +5,17 @@
 
 ### Settings
 
-- ``MapboxCommonSettings``
-- ``MapboxOptions``
+- ``MapboxCommon/MapboxCommonSettings``
+- ``MapboxCommon/MapboxOptions``
 - ``MapboxMapsOptions``
 
 ### Common Settings
 
-- ``SettingsService``
-- ``SettingsServiceFactory``
-- ``SettingsServiceError``
-- ``SettingsServiceStorageType``
-
-<!-- What is this? oO -->
-- ``IntervalSettings``
-- ``SdkInformation``
+- ``MapboxCommon/SettingsService``
+- ``MapboxCommon/SettingsServiceFactory``
+- ``MapboxCommon/SettingsServiceError``
+- ``MapboxCommon/SettingsServiceStorageType``
+- ``MapboxCommon/SdkInformation``
 
 ### Constants
 

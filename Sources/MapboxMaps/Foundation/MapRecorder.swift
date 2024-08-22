@@ -27,8 +27,8 @@ import Foundation
     }
 
     /// Stops the current recording session.
-    /// Recorded section can be replayed with ``replay()`` function.
-    /// Returns the ``Data`` containing the recorded sequence in raw format.
+    /// Recorded section can be replayed with ``replay(recordedSequence:options:completion:)`` function.
+    /// Returns the `Data` containing the recorded sequence in raw format.
     public func stop() -> Data {
         recorder.stopRecording().data
     }

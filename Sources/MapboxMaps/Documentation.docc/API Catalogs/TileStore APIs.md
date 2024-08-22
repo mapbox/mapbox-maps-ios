@@ -7,34 +7,34 @@
 
 ### TileStore
 
-- ``TileStore``
-- ``TileStoreOptions``
+- ``MapboxCommon/TileStore``
+- ``MapboxCommon/TileStoreOptions``
 - ``TileCacheBudget``
 - ``TileCacheBudgetInMegabytes``
 - ``TileCacheBudgetInTiles``
 - ``TileCoverOptions-struct``
 - ``TileOptions``
-- ``TileRegion``
+- ``MapboxCommon/TileRegion``
 - ``TileRegionError-enum``
-- ``TileRegionLoadOptions``
-- ``TileRegionLoadProgress``
+- ``MapboxCommon/TileRegionLoadOptions``
+- ``MapboxCommon/TileRegionLoadProgress``
 <!--- Should we hide it? There are no fields available -->
-- ``TilesetDescriptor``
+- ``MapboxCommon/TilesetDescriptor``
 - ``TilesetDescriptorOptions``
 - ``CanonicalTileID``
 - ``TileStoreObserver``
-- ``TileRegionLoadProgressCallback``
+- ``MapboxCommon/TileRegionLoadProgressCallback``
 - ``TileStoreUsageMode``
 - ``TileRegionError-enum``
 <!--should next item be public?-->
-- ``TileDataDomain``
+- ``MapboxCommon/TileDataDomain``
 - ``TileCacheBudgetType``
-- ``TileRegionEstimateOptions``
-- ``TileRegionEstimateProgress``
-- ``TileRegionEstimateResult``
-- ``TileRegionEstimateProgressCallback``
-- ``CacheClearingError``
-- ``CacheClearingErrorType``
+- ``MapboxCommon/TileRegionEstimateOptions``
+- ``MapboxCommon/TileRegionEstimateProgress``
+- ``MapboxCommon/TileRegionEstimateResult``
+- ``MapboxCommon/TileRegionEstimateProgressCallback``
+- ``MapboxCommon/CacheClearingError``
+- ``MapboxCommon/CacheClearingErrorType``
 
 ### Style pack
 

@@ -1453,7 +1453,7 @@ extension MapboxMap {
 
 extension MapboxMap {
 
-    /// Create a ``MapRecorder`` to record the current MapboxMap
+    /// Create a ``MapRecorder-4soa`` to record the current MapboxMap
     @_spi(Experimental) public final func makeRecorder() throws -> MapRecorder {
         try MapRecorder(mapView: __map)
     }

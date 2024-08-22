@@ -5,6 +5,13 @@ Maps rendering SDK also known as GL-Native. These are for internal use only.
 ## Topics
 
 ### Symbols
+
+- ``MapRecorder-240jd``
+- ``FeatureExtensionValue``
+- ``Size``
+- ``StylePackError-class``
+- ``RequestErrorType``
+
 <!-- functions -->
 - ``MBMMapLoadingErrorTypeToString(_:)``
 - ``MBMRenderModeTypeToString(_:)``

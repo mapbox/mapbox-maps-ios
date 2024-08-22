@@ -1,4 +1,4 @@
-# ``MapboxMap``
+# ``/MapboxMaps/MapboxMap``
 
 ## Topics
 

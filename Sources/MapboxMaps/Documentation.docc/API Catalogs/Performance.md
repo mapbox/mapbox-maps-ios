@@ -8,7 +8,6 @@
 
 ### Map Recording
 
-- ``MapRecorder``
 - ``MapRecorderOptions-struct``
 - ``MapPlayerOptions-struct``
 
@@ -24,9 +23,9 @@
 
 ### Logs
 
-- ``LogConfiguration``
-- ``LogWriterBackend``
-- ``LoggingLevel``
+- ``MapboxCommon/LogConfiguration``
+- ``MapboxCommon/LogWriterBackend``
+- ``MapboxCommon/LoggingLevel``
 
 ### Debug
 
@@ -35,4 +34,4 @@
 
 ### Crashes
 
-- ``NSExceptionHandler``
+- ``MapboxCommon/NSExceptionHandler``

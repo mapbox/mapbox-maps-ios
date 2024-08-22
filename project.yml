@@ -46,4 +46,4 @@ targets:
     settings:
       base:
         RUN_DOCUMENTATION_COMPILER: YES
-        OTHER_DOCC_FLAGS: "--warnings-as-errors"
+        OTHER_DOCC_FLAGS: "--help" # Disable embedded documentation compiler in favor of custom docc behavior. That should fix missing documentation symbols issue (MAPSIOS-1467).

@@ -39,7 +39,7 @@ The simplified diagram of the events emitted by the map is displayed below.
 
 - ``Signal``
 - ``AnyCancelable``
-- ``Cancelable``
+- ``MapboxCommon/Cancelable``
 - ``EventTimeInterval``
 
 ### Extras

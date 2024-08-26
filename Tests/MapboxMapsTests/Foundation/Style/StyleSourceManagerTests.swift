@@ -558,6 +558,31 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(parameters.featureIds, featureIdentifiers)
         XCTAssertEqual(parameters.dataId, dataId)
     }
+
+    func testPartialUpdateCancellableIsDeallocatedWhenUpdateIsComplete() {
+        let workItems = NSHashTable<DispatchWorkItem>.weakObjects()
+
+        autoreleasepool {
+            let dummyQueue = DispatchQueue(label: "Dummy queue", qos: .userInitiated)
+            let sourceId = "sourceId"
+
+            sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [], dataId: nil)
+            sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [], dataId: nil)
+            sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: [], dataId: nil)
+
+            backgroundQueue.asyncWorkItemStub.invocations.map(\.parameters).forEach(workItems.add)
+            backgroundQueue.asyncWorkItemStub.reset()
+
+            XCTAssertEqual(workItems.count, 3)
+
+            workItems.allObjects.forEach(dummyQueue.sync)
+        }
+        expectation(for: NSPredicate(block: { (_, _) in
+            workItems.anyObject == nil
+        }), evaluatedWith: nil)
+
+        waitForExpectations(timeout: 3)
+    }
 }
 
 private extension GeoJSONSourceData {

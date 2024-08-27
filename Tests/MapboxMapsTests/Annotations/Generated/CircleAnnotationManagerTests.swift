@@ -29,6 +29,82 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         super.tearDown()
     }
 
+    func testInitialCircleSortKey() {
+        let initialValue = manager.circleSortKey
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetCircleSortKey() {
+        let value = 0.0
+        manager.circleSortKey = value
+        XCTAssertEqual(manager.circleSortKey, value)
+        XCTAssertEqual(manager.impl.layerProperties["circle-sort-key"] as! Double, value)
+    }
+
+    func testSetToNilCircleSortKey() {
+        let newCircleSortKeyProperty = 0.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-sort-key").value as! Double
+        manager.circleSortKey = newCircleSortKeyProperty
+        XCTAssertNotNil(manager.impl.layerProperties["circle-sort-key"])
+        harness.triggerDisplayLink()
+
+        manager.circleSortKey = nil
+        XCTAssertNil(manager.circleSortKey)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-sort-key"] as! Double, defaultValue)
+    }
+    func testInitialCircleBlur() {
+        let initialValue = manager.circleBlur
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetCircleBlur() {
+        let value = 0.0
+        manager.circleBlur = value
+        XCTAssertEqual(manager.circleBlur, value)
+        XCTAssertEqual(manager.impl.layerProperties["circle-blur"] as! Double, value)
+    }
+
+    func testSetToNilCircleBlur() {
+        let newCircleBlurProperty = 0.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-blur").value as! Double
+        manager.circleBlur = newCircleBlurProperty
+        XCTAssertNotNil(manager.impl.layerProperties["circle-blur"])
+        harness.triggerDisplayLink()
+
+        manager.circleBlur = nil
+        XCTAssertNil(manager.circleBlur)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-blur"] as! Double, defaultValue)
+    }
+    func testInitialCircleColor() {
+        let initialValue = manager.circleColor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetCircleColor() {
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.circleColor = value
+        XCTAssertEqual(manager.circleColor, value)
+        XCTAssertEqual(manager.impl.layerProperties["circle-color"] as? String, value?.rawValue)
+    }
+
+    func testSetToNilCircleColor() {
+        let newCircleColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-color").value as! [Any], options: []))
+        manager.circleColor = newCircleColorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["circle-color"])
+        harness.triggerDisplayLink()
+
+        manager.circleColor = nil
+        XCTAssertNil(manager.circleColor)
+        harness.triggerDisplayLink()
+
+        let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-color"] as! [Any]))
+        XCTAssertEqual(currentValue, defaultValue)
+    }
     func testInitialCircleEmissiveStrength() {
         let initialValue = manager.circleEmissiveStrength
         XCTAssertNil(initialValue)
@@ -53,6 +129,31 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-emissive-strength"] as! Double, defaultValue)
+    }
+    func testInitialCircleOpacity() {
+        let initialValue = manager.circleOpacity
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetCircleOpacity() {
+        let value = 0.5
+        manager.circleOpacity = value
+        XCTAssertEqual(manager.circleOpacity, value)
+        XCTAssertEqual(manager.impl.layerProperties["circle-opacity"] as! Double, value)
+    }
+
+    func testSetToNilCircleOpacity() {
+        let newCircleOpacityProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-opacity").value as! Double
+        manager.circleOpacity = newCircleOpacityProperty
+        XCTAssertNotNil(manager.impl.layerProperties["circle-opacity"])
+        harness.triggerDisplayLink()
+
+        manager.circleOpacity = nil
+        XCTAssertNil(manager.circleOpacity)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-opacity"] as! Double, defaultValue)
     }
     func testInitialCirclePitchAlignment() {
         let initialValue = manager.circlePitchAlignment
@@ -103,6 +204,107 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-scale"] as! String, defaultValue)
+    }
+    func testInitialCircleRadius() {
+        let initialValue = manager.circleRadius
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetCircleRadius() {
+        let value = 50000.0
+        manager.circleRadius = value
+        XCTAssertEqual(manager.circleRadius, value)
+        XCTAssertEqual(manager.impl.layerProperties["circle-radius"] as! Double, value)
+    }
+
+    func testSetToNilCircleRadius() {
+        let newCircleRadiusProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-radius").value as! Double
+        manager.circleRadius = newCircleRadiusProperty
+        XCTAssertNotNil(manager.impl.layerProperties["circle-radius"])
+        harness.triggerDisplayLink()
+
+        manager.circleRadius = nil
+        XCTAssertNil(manager.circleRadius)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-radius"] as! Double, defaultValue)
+    }
+    func testInitialCircleStrokeColor() {
+        let initialValue = manager.circleStrokeColor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetCircleStrokeColor() {
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.circleStrokeColor = value
+        XCTAssertEqual(manager.circleStrokeColor, value)
+        XCTAssertEqual(manager.impl.layerProperties["circle-stroke-color"] as? String, value?.rawValue)
+    }
+
+    func testSetToNilCircleStrokeColor() {
+        let newCircleStrokeColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-color").value as! [Any], options: []))
+        manager.circleStrokeColor = newCircleStrokeColorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["circle-stroke-color"])
+        harness.triggerDisplayLink()
+
+        manager.circleStrokeColor = nil
+        XCTAssertNil(manager.circleStrokeColor)
+        harness.triggerDisplayLink()
+
+        let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-stroke-color"] as! [Any]))
+        XCTAssertEqual(currentValue, defaultValue)
+    }
+    func testInitialCircleStrokeOpacity() {
+        let initialValue = manager.circleStrokeOpacity
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetCircleStrokeOpacity() {
+        let value = 0.5
+        manager.circleStrokeOpacity = value
+        XCTAssertEqual(manager.circleStrokeOpacity, value)
+        XCTAssertEqual(manager.impl.layerProperties["circle-stroke-opacity"] as! Double, value)
+    }
+
+    func testSetToNilCircleStrokeOpacity() {
+        let newCircleStrokeOpacityProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-opacity").value as! Double
+        manager.circleStrokeOpacity = newCircleStrokeOpacityProperty
+        XCTAssertNotNil(manager.impl.layerProperties["circle-stroke-opacity"])
+        harness.triggerDisplayLink()
+
+        manager.circleStrokeOpacity = nil
+        XCTAssertNil(manager.circleStrokeOpacity)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-stroke-opacity"] as! Double, defaultValue)
+    }
+    func testInitialCircleStrokeWidth() {
+        let initialValue = manager.circleStrokeWidth
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetCircleStrokeWidth() {
+        let value = 50000.0
+        manager.circleStrokeWidth = value
+        XCTAssertEqual(manager.circleStrokeWidth, value)
+        XCTAssertEqual(manager.impl.layerProperties["circle-stroke-width"] as! Double, value)
+    }
+
+    func testSetToNilCircleStrokeWidth() {
+        let newCircleStrokeWidthProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-width").value as! Double
+        manager.circleStrokeWidth = newCircleStrokeWidthProperty
+        XCTAssertNotNil(manager.impl.layerProperties["circle-stroke-width"])
+        harness.triggerDisplayLink()
+
+        manager.circleStrokeWidth = nil
+        XCTAssertNil(manager.circleStrokeWidth)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-stroke-width"] as! Double, defaultValue)
     }
     func testInitialCircleTranslate() {
         let initialValue = manager.circleTranslate

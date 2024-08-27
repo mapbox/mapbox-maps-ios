@@ -20,13 +20,14 @@ final class CircleAnnotationExample: UIViewController, ExampleProtocol {
         let circleAnnotationManager = mapView.annotations.makeCircleAnnotationManager()
 
         var annotations = [CircleAnnotation]()
-        for _ in 0...2000 {
+        for i in 0...2000 {
             var annotation = CircleAnnotation(centerCoordinate: .random)
-            annotation.circleColor = StyleColor(.random)
-            annotation.circleStrokeColor = StyleColor(UIColor.black)
-            annotation.circleRadius = 12
+            if i % 2 == 0 {
+                annotation.circleColor = StyleColor(.random)
+                annotation.circleStrokeColor = StyleColor(UIColor.black)
+                annotation.circleOpacity = 0.7
+            }
             annotation.isDraggable = true
-            annotation.circleStrokeWidth = 0
 
             /// The following handlers add tap and longpress gesture handlers. The `context` parameter
             /// contains the `point` of the gesture in view coordinate system and a geographical `coordinate`.
@@ -69,6 +70,12 @@ final class CircleAnnotationExample: UIViewController, ExampleProtocol {
         }
 
         circleAnnotationManager.annotations = annotations
+        circleAnnotationManager.circleColor = StyleColor(UIColor.blue)
+        circleAnnotationManager.circleStrokeColor = StyleColor(UIColor.white)
+        circleAnnotationManager.circleStrokeWidth = 4
+        circleAnnotationManager.circleRadius = 12
+        circleAnnotationManager.circleOpacity = 0.3
+        circleAnnotationManager.circleStrokeOpacity = 0.8
         // The following line is just for testing purposes.
         finish()
     }

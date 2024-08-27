@@ -54,6 +54,31 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-allow-overlap"] as! Bool, defaultValue)
     }
+    func testInitialIconAnchor() {
+        let initialValue = manager.iconAnchor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconAnchor() {
+        let value = IconAnchor.testConstantValue()
+        manager.iconAnchor = value
+        XCTAssertEqual(manager.iconAnchor, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-anchor"] as! String, value.rawValue)
+    }
+
+    func testSetToNilIconAnchor() {
+        let newIconAnchorProperty = IconAnchor.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-anchor").value as! String
+        manager.iconAnchor = newIconAnchorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-anchor"])
+        harness.triggerDisplayLink()
+
+        manager.iconAnchor = nil
+        XCTAssertNil(manager.iconAnchor)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-anchor"] as! String, defaultValue)
+    }
     func testInitialIconIgnorePlacement() {
         let initialValue = manager.iconIgnorePlacement
         XCTAssertNil(initialValue)
@@ -79,6 +104,31 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-ignore-placement"] as! Bool, defaultValue)
     }
+    func testInitialIconImage() {
+        let initialValue = manager.iconImage
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconImage() {
+        let value = UUID().uuidString
+        manager.iconImage = value
+        XCTAssertEqual(manager.iconImage, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-image"] as! String, value)
+    }
+
+    func testSetToNilIconImage() {
+        let newIconImageProperty = UUID().uuidString
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-image").value as! String
+        manager.iconImage = newIconImageProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-image"])
+        harness.triggerDisplayLink()
+
+        manager.iconImage = nil
+        XCTAssertNil(manager.iconImage)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-image"] as! String, defaultValue)
+    }
     func testInitialIconKeepUpright() {
         let initialValue = manager.iconKeepUpright
         XCTAssertNil(initialValue)
@@ -103,6 +153,31 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-keep-upright"] as! Bool, defaultValue)
+    }
+    func testInitialIconOffset() {
+        let initialValue = manager.iconOffset
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconOffset() {
+        let value = [0.0, 0.0]
+        manager.iconOffset = value
+        XCTAssertEqual(manager.iconOffset, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-offset"] as! [Double], value)
+    }
+
+    func testSetToNilIconOffset() {
+        let newIconOffsetProperty = [0.0, 0.0]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-offset").value as! [Double]
+        manager.iconOffset = newIconOffsetProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-offset"])
+        harness.triggerDisplayLink()
+
+        manager.iconOffset = nil
+        XCTAssertNil(manager.iconOffset)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-offset"] as! [Double], defaultValue)
     }
     func testInitialIconOptional() {
         let initialValue = manager.iconOptional
@@ -179,6 +254,31 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-pitch-alignment"] as! String, defaultValue)
     }
+    func testInitialIconRotate() {
+        let initialValue = manager.iconRotate
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconRotate() {
+        let value = 0.0
+        manager.iconRotate = value
+        XCTAssertEqual(manager.iconRotate, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-rotate"] as! Double, value)
+    }
+
+    func testSetToNilIconRotate() {
+        let newIconRotateProperty = 0.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-rotate").value as! Double
+        manager.iconRotate = newIconRotateProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-rotate"])
+        harness.triggerDisplayLink()
+
+        manager.iconRotate = nil
+        XCTAssertNil(manager.iconRotate)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotate"] as! Double, defaultValue)
+    }
     func testInitialIconRotationAlignment() {
         let initialValue = manager.iconRotationAlignment
         XCTAssertNil(initialValue)
@@ -203,6 +303,81 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotation-alignment"] as! String, defaultValue)
+    }
+    func testInitialIconSize() {
+        let initialValue = manager.iconSize
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconSize() {
+        let value = 50000.0
+        manager.iconSize = value
+        XCTAssertEqual(manager.iconSize, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-size"] as! Double, value)
+    }
+
+    func testSetToNilIconSize() {
+        let newIconSizeProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-size").value as! Double
+        manager.iconSize = newIconSizeProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-size"])
+        harness.triggerDisplayLink()
+
+        manager.iconSize = nil
+        XCTAssertNil(manager.iconSize)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-size"] as! Double, defaultValue)
+    }
+    func testInitialIconTextFit() {
+        let initialValue = manager.iconTextFit
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconTextFit() {
+        let value = IconTextFit.testConstantValue()
+        manager.iconTextFit = value
+        XCTAssertEqual(manager.iconTextFit, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-text-fit"] as! String, value.rawValue)
+    }
+
+    func testSetToNilIconTextFit() {
+        let newIconTextFitProperty = IconTextFit.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value as! String
+        manager.iconTextFit = newIconTextFitProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-text-fit"])
+        harness.triggerDisplayLink()
+
+        manager.iconTextFit = nil
+        XCTAssertNil(manager.iconTextFit)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"] as! String, defaultValue)
+    }
+    func testInitialIconTextFitPadding() {
+        let initialValue = manager.iconTextFitPadding
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconTextFitPadding() {
+        let value = [0.0, 0.0, 0.0, 0.0]
+        manager.iconTextFitPadding = value
+        XCTAssertEqual(manager.iconTextFitPadding, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-text-fit-padding"] as! [Double], value)
+    }
+
+    func testSetToNilIconTextFitPadding() {
+        let newIconTextFitPaddingProperty = [0.0, 0.0, 0.0, 0.0]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit-padding").value as! [Double]
+        manager.iconTextFitPadding = newIconTextFitPaddingProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-text-fit-padding"])
+        harness.triggerDisplayLink()
+
+        manager.iconTextFitPadding = nil
+        XCTAssertNil(manager.iconTextFitPadding)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"] as! [Double], defaultValue)
     }
     func testInitialSymbolAvoidEdges() {
         let initialValue = manager.symbolAvoidEdges
@@ -253,6 +428,31 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-placement"] as! String, defaultValue)
+    }
+    func testInitialSymbolSortKey() {
+        let initialValue = manager.symbolSortKey
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetSymbolSortKey() {
+        let value = 0.0
+        manager.symbolSortKey = value
+        XCTAssertEqual(manager.symbolSortKey, value)
+        XCTAssertEqual(manager.impl.layerProperties["symbol-sort-key"] as! Double, value)
+    }
+
+    func testSetToNilSymbolSortKey() {
+        let newSymbolSortKeyProperty = 0.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-sort-key").value as! Double
+        manager.symbolSortKey = newSymbolSortKeyProperty
+        XCTAssertNotNil(manager.impl.layerProperties["symbol-sort-key"])
+        harness.triggerDisplayLink()
+
+        manager.symbolSortKey = nil
+        XCTAssertNil(manager.symbolSortKey)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-sort-key"] as! Double, defaultValue)
     }
     func testInitialSymbolSpacing() {
         let initialValue = manager.symbolSpacing
@@ -354,6 +554,61 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-allow-overlap"] as! Bool, defaultValue)
     }
+    func testInitialTextAnchor() {
+        let initialValue = manager.textAnchor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextAnchor() {
+        let value = TextAnchor.testConstantValue()
+        manager.textAnchor = value
+        XCTAssertEqual(manager.textAnchor, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-anchor"] as! String, value.rawValue)
+    }
+
+    func testSetToNilTextAnchor() {
+        let newTextAnchorProperty = TextAnchor.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-anchor").value as! String
+        manager.textAnchor = newTextAnchorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-anchor"])
+        harness.triggerDisplayLink()
+
+        manager.textAnchor = nil
+        XCTAssertNil(manager.textAnchor)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-anchor"] as! String, defaultValue)
+    }
+    func testInitialTextField() {
+        let initialValue = manager.textField
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextField() {
+        let value = UUID().uuidString
+        manager.textField = value
+        XCTAssertEqual(manager.textField, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-field"] as! String, value)
+    }
+
+    func testSetToNilTextField() {
+        let newTextFieldProperty = UUID().uuidString
+        let defaultValue = Value<String>.expression(Exp(.format) {
+            ""
+            FormatOptions()
+        })
+        manager.textField = newTextFieldProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-field"])
+        harness.triggerDisplayLink()
+
+        manager.textField = nil
+        XCTAssertNil(manager.textField)
+        harness.triggerDisplayLink()
+
+        let currentValueData = try! JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last!.parameters.properties["text-field"]!)
+        let currentValueString = String(data: currentValueData, encoding: .utf8)
+        XCTAssertEqual(currentValueString, try! defaultValue.jsonString())
+    }
     func testInitialTextFont() {
         let initialValue = manager.textFont
         XCTAssertNil(initialValue)
@@ -404,6 +659,31 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-ignore-placement"] as! Bool, defaultValue)
     }
+    func testInitialTextJustify() {
+        let initialValue = manager.textJustify
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextJustify() {
+        let value = TextJustify.testConstantValue()
+        manager.textJustify = value
+        XCTAssertEqual(manager.textJustify, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-justify"] as! String, value.rawValue)
+    }
+
+    func testSetToNilTextJustify() {
+        let newTextJustifyProperty = TextJustify.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-justify").value as! String
+        manager.textJustify = newTextJustifyProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-justify"])
+        harness.triggerDisplayLink()
+
+        manager.textJustify = nil
+        XCTAssertNil(manager.textJustify)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-justify"] as! String, defaultValue)
+    }
     func testInitialTextKeepUpright() {
         let initialValue = manager.textKeepUpright
         XCTAssertNil(initialValue)
@@ -429,6 +709,56 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-keep-upright"] as! Bool, defaultValue)
     }
+    func testInitialTextLetterSpacing() {
+        let initialValue = manager.textLetterSpacing
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextLetterSpacing() {
+        let value = 0.0
+        manager.textLetterSpacing = value
+        XCTAssertEqual(manager.textLetterSpacing, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-letter-spacing"] as! Double, value)
+    }
+
+    func testSetToNilTextLetterSpacing() {
+        let newTextLetterSpacingProperty = 0.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-letter-spacing").value as! Double
+        manager.textLetterSpacing = newTextLetterSpacingProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-letter-spacing"])
+        harness.triggerDisplayLink()
+
+        manager.textLetterSpacing = nil
+        XCTAssertNil(manager.textLetterSpacing)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-letter-spacing"] as! Double, defaultValue)
+    }
+    func testInitialTextLineHeight() {
+        let initialValue = manager.textLineHeight
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextLineHeight() {
+        let value = 0.0
+        manager.textLineHeight = value
+        XCTAssertEqual(manager.textLineHeight, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-line-height"] as! Double, value)
+    }
+
+    func testSetToNilTextLineHeight() {
+        let newTextLineHeightProperty = 0.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-line-height").value as! Double
+        manager.textLineHeight = newTextLineHeightProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-line-height"])
+        harness.triggerDisplayLink()
+
+        manager.textLineHeight = nil
+        XCTAssertNil(manager.textLineHeight)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-line-height"] as! Double, defaultValue)
+    }
     func testInitialTextMaxAngle() {
         let initialValue = manager.textMaxAngle
         XCTAssertNil(initialValue)
@@ -453,6 +783,56 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-max-angle"] as! Double, defaultValue)
+    }
+    func testInitialTextMaxWidth() {
+        let initialValue = manager.textMaxWidth
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextMaxWidth() {
+        let value = 50000.0
+        manager.textMaxWidth = value
+        XCTAssertEqual(manager.textMaxWidth, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-max-width"] as! Double, value)
+    }
+
+    func testSetToNilTextMaxWidth() {
+        let newTextMaxWidthProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-max-width").value as! Double
+        manager.textMaxWidth = newTextMaxWidthProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-max-width"])
+        harness.triggerDisplayLink()
+
+        manager.textMaxWidth = nil
+        XCTAssertNil(manager.textMaxWidth)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-max-width"] as! Double, defaultValue)
+    }
+    func testInitialTextOffset() {
+        let initialValue = manager.textOffset
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextOffset() {
+        let value = [0.0, 0.0]
+        manager.textOffset = value
+        XCTAssertEqual(manager.textOffset, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-offset"] as! [Double], value)
+    }
+
+    func testSetToNilTextOffset() {
+        let newTextOffsetProperty = [0.0, 0.0]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-offset").value as! [Double]
+        manager.textOffset = newTextOffsetProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-offset"])
+        harness.triggerDisplayLink()
+
+        manager.textOffset = nil
+        XCTAssertNil(manager.textOffset)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-offset"] as! [Double], defaultValue)
     }
     func testInitialTextOptional() {
         let initialValue = manager.textOptional
@@ -529,6 +909,56 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-pitch-alignment"] as! String, defaultValue)
     }
+    func testInitialTextRadialOffset() {
+        let initialValue = manager.textRadialOffset
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextRadialOffset() {
+        let value = 0.0
+        manager.textRadialOffset = value
+        XCTAssertEqual(manager.textRadialOffset, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-radial-offset"] as! Double, value)
+    }
+
+    func testSetToNilTextRadialOffset() {
+        let newTextRadialOffsetProperty = 0.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-radial-offset").value as! Double
+        manager.textRadialOffset = newTextRadialOffsetProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-radial-offset"])
+        harness.triggerDisplayLink()
+
+        manager.textRadialOffset = nil
+        XCTAssertNil(manager.textRadialOffset)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-radial-offset"] as! Double, defaultValue)
+    }
+    func testInitialTextRotate() {
+        let initialValue = manager.textRotate
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextRotate() {
+        let value = 0.0
+        manager.textRotate = value
+        XCTAssertEqual(manager.textRotate, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-rotate"] as! Double, value)
+    }
+
+    func testSetToNilTextRotate() {
+        let newTextRotateProperty = 0.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-rotate").value as! Double
+        manager.textRotate = newTextRotateProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-rotate"])
+        harness.triggerDisplayLink()
+
+        manager.textRotate = nil
+        XCTAssertNil(manager.textRotate)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-rotate"] as! Double, defaultValue)
+    }
     func testInitialTextRotationAlignment() {
         let initialValue = manager.textRotationAlignment
         XCTAssertNil(initialValue)
@@ -553,6 +983,56 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-rotation-alignment"] as! String, defaultValue)
+    }
+    func testInitialTextSize() {
+        let initialValue = manager.textSize
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextSize() {
+        let value = 50000.0
+        manager.textSize = value
+        XCTAssertEqual(manager.textSize, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-size"] as! Double, value)
+    }
+
+    func testSetToNilTextSize() {
+        let newTextSizeProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-size").value as! Double
+        manager.textSize = newTextSizeProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-size"])
+        harness.triggerDisplayLink()
+
+        manager.textSize = nil
+        XCTAssertNil(manager.textSize)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-size"] as! Double, defaultValue)
+    }
+    func testInitialTextTransform() {
+        let initialValue = manager.textTransform
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextTransform() {
+        let value = TextTransform.testConstantValue()
+        manager.textTransform = value
+        XCTAssertEqual(manager.textTransform, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-transform"] as! String, value.rawValue)
+    }
+
+    func testSetToNilTextTransform() {
+        let newTextTransformProperty = TextTransform.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-transform").value as! String
+        manager.textTransform = newTextTransformProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-transform"])
+        harness.triggerDisplayLink()
+
+        manager.textTransform = nil
+        XCTAssertNil(manager.textTransform)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-transform"] as! String, defaultValue)
     }
     func testInitialTextVariableAnchor() {
         let initialValue = manager.textVariableAnchor
@@ -606,6 +1086,32 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-writing-mode"] as! [TextWritingMode], defaultValue)
     }
+    func testInitialIconColor() {
+        let initialValue = manager.iconColor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconColor() {
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.iconColor = value
+        XCTAssertEqual(manager.iconColor, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-color"] as? String, value?.rawValue)
+    }
+
+    func testSetToNilIconColor() {
+        let newIconColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color").value as! [Any], options: []))
+        manager.iconColor = newIconColorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-color"])
+        harness.triggerDisplayLink()
+
+        manager.iconColor = nil
+        XCTAssertNil(manager.iconColor)
+        harness.triggerDisplayLink()
+
+        let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color"] as! [Any]))
+        XCTAssertEqual(currentValue, defaultValue)
+    }
     func testInitialIconColorSaturation() {
         let initialValue = manager.iconColorSaturation
         XCTAssertNil(initialValue)
@@ -630,6 +1136,182 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-saturation"] as! Double, defaultValue)
+    }
+    func testInitialIconEmissiveStrength() {
+        let initialValue = manager.iconEmissiveStrength
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconEmissiveStrength() {
+        let value = 50000.0
+        manager.iconEmissiveStrength = value
+        XCTAssertEqual(manager.iconEmissiveStrength, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-emissive-strength"] as! Double, value)
+    }
+
+    func testSetToNilIconEmissiveStrength() {
+        let newIconEmissiveStrengthProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-emissive-strength").value as! Double
+        manager.iconEmissiveStrength = newIconEmissiveStrengthProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-emissive-strength"])
+        harness.triggerDisplayLink()
+
+        manager.iconEmissiveStrength = nil
+        XCTAssertNil(manager.iconEmissiveStrength)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-emissive-strength"] as! Double, defaultValue)
+    }
+    func testInitialIconHaloBlur() {
+        let initialValue = manager.iconHaloBlur
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconHaloBlur() {
+        let value = 50000.0
+        manager.iconHaloBlur = value
+        XCTAssertEqual(manager.iconHaloBlur, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-halo-blur"] as! Double, value)
+    }
+
+    func testSetToNilIconHaloBlur() {
+        let newIconHaloBlurProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-blur").value as! Double
+        manager.iconHaloBlur = newIconHaloBlurProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-halo-blur"])
+        harness.triggerDisplayLink()
+
+        manager.iconHaloBlur = nil
+        XCTAssertNil(manager.iconHaloBlur)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-halo-blur"] as! Double, defaultValue)
+    }
+    func testInitialIconHaloColor() {
+        let initialValue = manager.iconHaloColor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconHaloColor() {
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.iconHaloColor = value
+        XCTAssertEqual(manager.iconHaloColor, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-halo-color"] as? String, value?.rawValue)
+    }
+
+    func testSetToNilIconHaloColor() {
+        let newIconHaloColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-color").value as! [Any], options: []))
+        manager.iconHaloColor = newIconHaloColorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-halo-color"])
+        harness.triggerDisplayLink()
+
+        manager.iconHaloColor = nil
+        XCTAssertNil(manager.iconHaloColor)
+        harness.triggerDisplayLink()
+
+        let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-halo-color"] as! [Any]))
+        XCTAssertEqual(currentValue, defaultValue)
+    }
+    func testInitialIconHaloWidth() {
+        let initialValue = manager.iconHaloWidth
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconHaloWidth() {
+        let value = 50000.0
+        manager.iconHaloWidth = value
+        XCTAssertEqual(manager.iconHaloWidth, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-halo-width"] as! Double, value)
+    }
+
+    func testSetToNilIconHaloWidth() {
+        let newIconHaloWidthProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-width").value as! Double
+        manager.iconHaloWidth = newIconHaloWidthProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-halo-width"])
+        harness.triggerDisplayLink()
+
+        manager.iconHaloWidth = nil
+        XCTAssertNil(manager.iconHaloWidth)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-halo-width"] as! Double, defaultValue)
+    }
+    func testInitialIconImageCrossFade() {
+        let initialValue = manager.iconImageCrossFade
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconImageCrossFade() {
+        let value = 0.5
+        manager.iconImageCrossFade = value
+        XCTAssertEqual(manager.iconImageCrossFade, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-image-cross-fade"] as! Double, value)
+    }
+
+    func testSetToNilIconImageCrossFade() {
+        let newIconImageCrossFadeProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-image-cross-fade").value as! Double
+        manager.iconImageCrossFade = newIconImageCrossFadeProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-image-cross-fade"])
+        harness.triggerDisplayLink()
+
+        manager.iconImageCrossFade = nil
+        XCTAssertNil(manager.iconImageCrossFade)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-image-cross-fade"] as! Double, defaultValue)
+    }
+    func testInitialIconOcclusionOpacity() {
+        let initialValue = manager.iconOcclusionOpacity
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconOcclusionOpacity() {
+        let value = 0.5
+        manager.iconOcclusionOpacity = value
+        XCTAssertEqual(manager.iconOcclusionOpacity, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-occlusion-opacity"] as! Double, value)
+    }
+
+    func testSetToNilIconOcclusionOpacity() {
+        let newIconOcclusionOpacityProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-occlusion-opacity").value as! Double
+        manager.iconOcclusionOpacity = newIconOcclusionOpacityProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-occlusion-opacity"])
+        harness.triggerDisplayLink()
+
+        manager.iconOcclusionOpacity = nil
+        XCTAssertNil(manager.iconOcclusionOpacity)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-occlusion-opacity"] as! Double, defaultValue)
+    }
+    func testInitialIconOpacity() {
+        let initialValue = manager.iconOpacity
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconOpacity() {
+        let value = 0.5
+        manager.iconOpacity = value
+        XCTAssertEqual(manager.iconOpacity, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-opacity"] as! Double, value)
+    }
+
+    func testSetToNilIconOpacity() {
+        let newIconOpacityProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-opacity").value as! Double
+        manager.iconOpacity = newIconOpacityProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-opacity"])
+        harness.triggerDisplayLink()
+
+        manager.iconOpacity = nil
+        XCTAssertNil(manager.iconOpacity)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-opacity"] as! Double, defaultValue)
     }
     func testInitialIconTranslate() {
         let initialValue = manager.iconTranslate
@@ -680,6 +1362,183 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"] as! String, defaultValue)
+    }
+    func testInitialTextColor() {
+        let initialValue = manager.textColor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextColor() {
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.textColor = value
+        XCTAssertEqual(manager.textColor, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-color"] as? String, value?.rawValue)
+    }
+
+    func testSetToNilTextColor() {
+        let newTextColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-color").value as! [Any], options: []))
+        manager.textColor = newTextColorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-color"])
+        harness.triggerDisplayLink()
+
+        manager.textColor = nil
+        XCTAssertNil(manager.textColor)
+        harness.triggerDisplayLink()
+
+        let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-color"] as! [Any]))
+        XCTAssertEqual(currentValue, defaultValue)
+    }
+    func testInitialTextEmissiveStrength() {
+        let initialValue = manager.textEmissiveStrength
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextEmissiveStrength() {
+        let value = 50000.0
+        manager.textEmissiveStrength = value
+        XCTAssertEqual(manager.textEmissiveStrength, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-emissive-strength"] as! Double, value)
+    }
+
+    func testSetToNilTextEmissiveStrength() {
+        let newTextEmissiveStrengthProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-emissive-strength").value as! Double
+        manager.textEmissiveStrength = newTextEmissiveStrengthProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-emissive-strength"])
+        harness.triggerDisplayLink()
+
+        manager.textEmissiveStrength = nil
+        XCTAssertNil(manager.textEmissiveStrength)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-emissive-strength"] as! Double, defaultValue)
+    }
+    func testInitialTextHaloBlur() {
+        let initialValue = manager.textHaloBlur
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextHaloBlur() {
+        let value = 50000.0
+        manager.textHaloBlur = value
+        XCTAssertEqual(manager.textHaloBlur, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-halo-blur"] as! Double, value)
+    }
+
+    func testSetToNilTextHaloBlur() {
+        let newTextHaloBlurProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-halo-blur").value as! Double
+        manager.textHaloBlur = newTextHaloBlurProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-halo-blur"])
+        harness.triggerDisplayLink()
+
+        manager.textHaloBlur = nil
+        XCTAssertNil(manager.textHaloBlur)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-halo-blur"] as! Double, defaultValue)
+    }
+    func testInitialTextHaloColor() {
+        let initialValue = manager.textHaloColor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextHaloColor() {
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.textHaloColor = value
+        XCTAssertEqual(manager.textHaloColor, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-halo-color"] as? String, value?.rawValue)
+    }
+
+    func testSetToNilTextHaloColor() {
+        let newTextHaloColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-halo-color").value as! [Any], options: []))
+        manager.textHaloColor = newTextHaloColorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-halo-color"])
+        harness.triggerDisplayLink()
+
+        manager.textHaloColor = nil
+        XCTAssertNil(manager.textHaloColor)
+        harness.triggerDisplayLink()
+
+        let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-halo-color"] as! [Any]))
+        XCTAssertEqual(currentValue, defaultValue)
+    }
+    func testInitialTextHaloWidth() {
+        let initialValue = manager.textHaloWidth
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextHaloWidth() {
+        let value = 50000.0
+        manager.textHaloWidth = value
+        XCTAssertEqual(manager.textHaloWidth, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-halo-width"] as! Double, value)
+    }
+
+    func testSetToNilTextHaloWidth() {
+        let newTextHaloWidthProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-halo-width").value as! Double
+        manager.textHaloWidth = newTextHaloWidthProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-halo-width"])
+        harness.triggerDisplayLink()
+
+        manager.textHaloWidth = nil
+        XCTAssertNil(manager.textHaloWidth)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-halo-width"] as! Double, defaultValue)
+    }
+    func testInitialTextOcclusionOpacity() {
+        let initialValue = manager.textOcclusionOpacity
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextOcclusionOpacity() {
+        let value = 0.5
+        manager.textOcclusionOpacity = value
+        XCTAssertEqual(manager.textOcclusionOpacity, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-occlusion-opacity"] as! Double, value)
+    }
+
+    func testSetToNilTextOcclusionOpacity() {
+        let newTextOcclusionOpacityProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-occlusion-opacity").value as! Double
+        manager.textOcclusionOpacity = newTextOcclusionOpacityProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-occlusion-opacity"])
+        harness.triggerDisplayLink()
+
+        manager.textOcclusionOpacity = nil
+        XCTAssertNil(manager.textOcclusionOpacity)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-occlusion-opacity"] as! Double, defaultValue)
+    }
+    func testInitialTextOpacity() {
+        let initialValue = manager.textOpacity
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextOpacity() {
+        let value = 0.5
+        manager.textOpacity = value
+        XCTAssertEqual(manager.textOpacity, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-opacity"] as! Double, value)
+    }
+
+    func testSetToNilTextOpacity() {
+        let newTextOpacityProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-opacity").value as! Double
+        manager.textOpacity = newTextOpacityProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-opacity"])
+        harness.triggerDisplayLink()
+
+        manager.textOpacity = nil
+        XCTAssertNil(manager.textOpacity)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-opacity"] as! Double, defaultValue)
     }
     func testInitialTextTranslate() {
         let initialValue = manager.textTranslate

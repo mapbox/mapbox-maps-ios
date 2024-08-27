@@ -41,13 +41,11 @@ struct AnnotationsExample: View {
                     CircleAnnotationGroup(flight.airports, id: \.name) { airport in
                         CircleAnnotation(centerCoordinate: airport.coordinate, isDraggable: true)
                             .circleColor(StyleColor(flight.color))
-                            .circleRadius(10)
-                            .circleStrokeColor(.black)
-                            .circleStrokeWidth(1)
-                            .onTapGesture {
-                                alert = "Airport: \(airport.name)"
-                            }
+                            .onTapGesture { alert = "Airport: \(airport.name)" }
                     }
+                    .circleRadius(10)
+                    .circleStrokeWidth(1)
+                    .circleStrokeColor(.black)
 
                     PolylineAnnotation(lineCoordinates: flight.airports.map(\.coordinate))
                         .lineColor(.init(flight.color))

@@ -93,6 +93,13 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["icon-allow-overlap"] = newValue }
     }
 
+    /// Part of the icon placed closest to the anchor.
+    /// Default value: "center".
+    public var iconAnchor: IconAnchor? {
+        get { impl.layerProperties["icon-anchor"].flatMap { $0 as? String }.flatMap(IconAnchor.init(rawValue:)) }
+        set { impl.layerProperties["icon-anchor"] = newValue?.rawValue }
+    }
+
     /// If true, other symbols can be visible even if they collide with the icon.
     /// Default value: false.
     public var iconIgnorePlacement: Bool? {
@@ -100,11 +107,24 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["icon-ignore-placement"] = newValue }
     }
 
+    /// Name of image in sprite to use for drawing an image background.
+    public var iconImage: String? {
+        get { impl.layerProperties["icon-image"] as? String }
+        set { impl.layerProperties["icon-image"] = newValue }
+    }
+
     /// If true, the icon may be flipped to prevent it from being rendered upside-down.
     /// Default value: false.
     public var iconKeepUpright: Bool? {
         get { impl.layerProperties["icon-keep-upright"] as? Bool }
         set { impl.layerProperties["icon-keep-upright"] = newValue }
+    }
+
+    /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
+    /// Default value: [0,0].
+    public var iconOffset: [Double]? {
+        get { impl.layerProperties["icon-offset"] as? [Double] }
+        set { impl.layerProperties["icon-offset"] = newValue }
     }
 
     /// If true, text will display without their corresponding icons when the icon collides with other symbols and the text does not.
@@ -128,11 +148,39 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["icon-pitch-alignment"] = newValue?.rawValue }
     }
 
+    /// Rotates the icon clockwise.
+    /// Default value: 0.
+    public var iconRotate: Double? {
+        get { impl.layerProperties["icon-rotate"] as? Double }
+        set { impl.layerProperties["icon-rotate"] = newValue }
+    }
+
     /// In combination with `symbol-placement`, determines the rotation behavior of icons.
     /// Default value: "auto".
     public var iconRotationAlignment: IconRotationAlignment? {
         get { impl.layerProperties["icon-rotation-alignment"].flatMap { $0 as? String }.flatMap(IconRotationAlignment.init(rawValue:)) }
         set { impl.layerProperties["icon-rotation-alignment"] = newValue?.rawValue }
+    }
+
+    /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
+    /// Default value: 1. Minimum value: 0.
+    public var iconSize: Double? {
+        get { impl.layerProperties["icon-size"] as? Double }
+        set { impl.layerProperties["icon-size"] = newValue }
+    }
+
+    /// Scales the icon to fit around the associated text.
+    /// Default value: "none".
+    public var iconTextFit: IconTextFit? {
+        get { impl.layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:)) }
+        set { impl.layerProperties["icon-text-fit"] = newValue?.rawValue }
+    }
+
+    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
+    /// Default value: [0,0,0,0].
+    public var iconTextFitPadding: [Double]? {
+        get { impl.layerProperties["icon-text-fit-padding"] as? [Double] }
+        set { impl.layerProperties["icon-text-fit-padding"] = newValue }
     }
 
     /// If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Mapbox GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.
@@ -147,6 +195,12 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     public var symbolPlacement: SymbolPlacement? {
         get { impl.layerProperties["symbol-placement"].flatMap { $0 as? String }.flatMap(SymbolPlacement.init(rawValue:)) }
         set { impl.layerProperties["symbol-placement"] = newValue?.rawValue }
+    }
+
+    /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first. When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
+    public var symbolSortKey: Double? {
+        get { impl.layerProperties["symbol-sort-key"] as? Double }
+        set { impl.layerProperties["symbol-sort-key"] = newValue }
     }
 
     /// Distance between two symbol anchors.
@@ -177,6 +231,20 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["text-allow-overlap"] = newValue }
     }
 
+    /// Part of the text placed closest to the anchor.
+    /// Default value: "center".
+    public var textAnchor: TextAnchor? {
+        get { impl.layerProperties["text-anchor"].flatMap { $0 as? String }.flatMap(TextAnchor.init(rawValue:)) }
+        set { impl.layerProperties["text-anchor"] = newValue?.rawValue }
+    }
+
+    /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options. SDF images are not supported in formatted text and will be ignored.
+    /// Default value: "".
+    public var textField: String? {
+        get { impl.layerProperties["text-field"] as? String }
+        set { impl.layerProperties["text-field"] = newValue }
+    }
+
     /// Font stack to use for displaying text.
     public var textFont: [String]? {
         get { (impl.layerProperties["text-font"] as? [Any])?[1] as? [String] }
@@ -190,6 +258,13 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["text-ignore-placement"] = newValue }
     }
 
+    /// Text justification options.
+    /// Default value: "center".
+    public var textJustify: TextJustify? {
+        get { impl.layerProperties["text-justify"].flatMap { $0 as? String }.flatMap(TextJustify.init(rawValue:)) }
+        set { impl.layerProperties["text-justify"] = newValue?.rawValue }
+    }
+
     /// If true, the text may be flipped vertically to prevent it from being rendered upside-down.
     /// Default value: true.
     public var textKeepUpright: Bool? {
@@ -197,11 +272,39 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["text-keep-upright"] = newValue }
     }
 
+    /// Text tracking amount.
+    /// Default value: 0.
+    public var textLetterSpacing: Double? {
+        get { impl.layerProperties["text-letter-spacing"] as? Double }
+        set { impl.layerProperties["text-letter-spacing"] = newValue }
+    }
+
+    /// Text leading value for multi-line text.
+    /// Default value: 1.2.
+    public var textLineHeight: Double? {
+        get { impl.layerProperties["text-line-height"] as? Double }
+        set { impl.layerProperties["text-line-height"] = newValue }
+    }
+
     /// Maximum angle change between adjacent characters.
     /// Default value: 45.
     public var textMaxAngle: Double? {
         get { impl.layerProperties["text-max-angle"] as? Double }
         set { impl.layerProperties["text-max-angle"] = newValue }
+    }
+
+    /// The maximum line width for text wrapping.
+    /// Default value: 10. Minimum value: 0.
+    public var textMaxWidth: Double? {
+        get { impl.layerProperties["text-max-width"] as? Double }
+        set { impl.layerProperties["text-max-width"] = newValue }
+    }
+
+    /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
+    /// Default value: [0,0].
+    public var textOffset: [Double]? {
+        get { impl.layerProperties["text-offset"] as? [Double] }
+        set { impl.layerProperties["text-offset"] = newValue }
     }
 
     /// If true, icons will display without their corresponding text when the text collides with other symbols and the icon does not.
@@ -225,11 +328,39 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["text-pitch-alignment"] = newValue?.rawValue }
     }
 
+    /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
+    /// Default value: 0.
+    public var textRadialOffset: Double? {
+        get { impl.layerProperties["text-radial-offset"] as? Double }
+        set { impl.layerProperties["text-radial-offset"] = newValue }
+    }
+
+    /// Rotates the text clockwise.
+    /// Default value: 0.
+    public var textRotate: Double? {
+        get { impl.layerProperties["text-rotate"] as? Double }
+        set { impl.layerProperties["text-rotate"] = newValue }
+    }
+
     /// In combination with `symbol-placement`, determines the rotation behavior of the individual glyphs forming the text.
     /// Default value: "auto".
     public var textRotationAlignment: TextRotationAlignment? {
         get { impl.layerProperties["text-rotation-alignment"].flatMap { $0 as? String }.flatMap(TextRotationAlignment.init(rawValue:)) }
         set { impl.layerProperties["text-rotation-alignment"] = newValue?.rawValue }
+    }
+
+    /// Font size.
+    /// Default value: 16. Minimum value: 0.
+    public var textSize: Double? {
+        get { impl.layerProperties["text-size"] as? Double }
+        set { impl.layerProperties["text-size"] = newValue }
+    }
+
+    /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
+    /// Default value: "none".
+    public var textTransform: TextTransform? {
+        get { impl.layerProperties["text-transform"].flatMap { $0 as? String }.flatMap(TextTransform.init(rawValue:)) }
+        set { impl.layerProperties["text-transform"] = newValue?.rawValue }
     }
 
     /// To increase the chance of placing high-priority labels on the map, you can provide an array of `text-anchor` locations: the renderer will attempt to place the label at each location, in order, before moving onto the next label. Use `text-justify: auto` to choose justification based on anchor position. To apply an offset, use the `text-radial-offset` or the two-dimensional `text-offset`.
@@ -244,11 +375,67 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["text-writing-mode"] = newValue?.map(\.rawValue) }
     }
 
+    /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
+    /// Default value: "#000000".
+    public var iconColor: StyleColor? {
+        get { impl.layerProperties["icon-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["icon-color"] = newValue?.rawValue }
+    }
+
     /// Increase or reduce the saturation of the symbol icon.
     /// Default value: 0. Value range: [-1, 1]
     public var iconColorSaturation: Double? {
         get { impl.layerProperties["icon-color-saturation"] as? Double }
         set { impl.layerProperties["icon-color-saturation"] = newValue }
+    }
+
+    /// Controls the intensity of light emitted on the source features.
+    /// Default value: 1. Minimum value: 0.
+    public var iconEmissiveStrength: Double? {
+        get { impl.layerProperties["icon-emissive-strength"] as? Double }
+        set { impl.layerProperties["icon-emissive-strength"] = newValue }
+    }
+
+    /// Fade out the halo towards the outside.
+    /// Default value: 0. Minimum value: 0.
+    public var iconHaloBlur: Double? {
+        get { impl.layerProperties["icon-halo-blur"] as? Double }
+        set { impl.layerProperties["icon-halo-blur"] = newValue }
+    }
+
+    /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
+    /// Default value: "rgba(0, 0, 0, 0)".
+    public var iconHaloColor: StyleColor? {
+        get { impl.layerProperties["icon-halo-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["icon-halo-color"] = newValue?.rawValue }
+    }
+
+    /// Distance of halo to the icon outline.
+    /// Default value: 0. Minimum value: 0.
+    public var iconHaloWidth: Double? {
+        get { impl.layerProperties["icon-halo-width"] as? Double }
+        set { impl.layerProperties["icon-halo-width"] = newValue }
+    }
+
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+    /// Default value: 0. Value range: [0, 1]
+    public var iconImageCrossFade: Double? {
+        get { impl.layerProperties["icon-image-cross-fade"] as? Double }
+        set { impl.layerProperties["icon-image-cross-fade"] = newValue }
+    }
+
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
+    public var iconOcclusionOpacity: Double? {
+        get { impl.layerProperties["icon-occlusion-opacity"] as? Double }
+        set { impl.layerProperties["icon-occlusion-opacity"] = newValue }
+    }
+
+    /// The opacity at which the icon will be drawn.
+    /// Default value: 1. Value range: [0, 1]
+    public var iconOpacity: Double? {
+        get { impl.layerProperties["icon-opacity"] as? Double }
+        set { impl.layerProperties["icon-opacity"] = newValue }
     }
 
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
@@ -263,6 +450,55 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     public var iconTranslateAnchor: IconTranslateAnchor? {
         get { impl.layerProperties["icon-translate-anchor"].flatMap { $0 as? String }.flatMap(IconTranslateAnchor.init(rawValue:)) }
         set { impl.layerProperties["icon-translate-anchor"] = newValue?.rawValue }
+    }
+
+    /// The color with which the text will be drawn.
+    /// Default value: "#000000".
+    public var textColor: StyleColor? {
+        get { impl.layerProperties["text-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["text-color"] = newValue?.rawValue }
+    }
+
+    /// Controls the intensity of light emitted on the source features.
+    /// Default value: 1. Minimum value: 0.
+    public var textEmissiveStrength: Double? {
+        get { impl.layerProperties["text-emissive-strength"] as? Double }
+        set { impl.layerProperties["text-emissive-strength"] = newValue }
+    }
+
+    /// The halo's fadeout distance towards the outside.
+    /// Default value: 0. Minimum value: 0.
+    public var textHaloBlur: Double? {
+        get { impl.layerProperties["text-halo-blur"] as? Double }
+        set { impl.layerProperties["text-halo-blur"] = newValue }
+    }
+
+    /// The color of the text's halo, which helps it stand out from backgrounds.
+    /// Default value: "rgba(0, 0, 0, 0)".
+    public var textHaloColor: StyleColor? {
+        get { impl.layerProperties["text-halo-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["text-halo-color"] = newValue?.rawValue }
+    }
+
+    /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
+    /// Default value: 0. Minimum value: 0.
+    public var textHaloWidth: Double? {
+        get { impl.layerProperties["text-halo-width"] as? Double }
+        set { impl.layerProperties["text-halo-width"] = newValue }
+    }
+
+    /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
+    public var textOcclusionOpacity: Double? {
+        get { impl.layerProperties["text-occlusion-opacity"] as? Double }
+        set { impl.layerProperties["text-occlusion-opacity"] = newValue }
+    }
+
+    /// The opacity at which the text will be drawn.
+    /// Default value: 1. Value range: [0, 1]
+    public var textOpacity: Double? {
+        get { impl.layerProperties["text-opacity"] as? Double }
+        set { impl.layerProperties["text-opacity"] = newValue }
     }
 
     /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
@@ -286,35 +522,6 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     public var slot: String? {
         get { impl.layerProperties["slot"] as? String }
         set { impl.layerProperties["slot"] = newValue }
-    }
-
-    /// Scales the icon to fit around the associated text.
-    @available(*, deprecated, message: "icon-text-fit property is now data driven, use `PointAnnotation.iconTextFit` instead.")
-    public var iconTextFit: IconTextFit? {
-        get { impl.layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:)) }
-        set { impl.layerProperties["icon-text-fit"] = newValue?.rawValue }
-    }
-
-    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    @available(*, deprecated, message: "icon-text-fit-padding property is now data driven, use `PointAnnotation.iconTextFitPadding` instead.")
-    public var iconTextFitPadding: [Double]? {
-        get {impl.layerProperties["icon-text-fit-padding"] as? [Double] }
-        set { impl.layerProperties["icon-text-fit-padding"] = newValue }
-    }
-
-    /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
-    /// Default value: 0. Value range: [0, 1]
-    @available(*, deprecated, message: "icon-occlusion-opacity property is now data driven, use `PointAnnotation.iconOcclusionOpacity` instead.")
-    public var iconOcclusionOpacity: Double? {
-        get { impl.layerProperties["icon-occlusion-opacity"] as? Double }
-        set { impl.layerProperties["icon-occlusion-opacity"] = newValue }
-    }
-    /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
-    /// Default value: 0. Value range: [0, 1]
-    @available(*, deprecated, message: "text-occlusion-opacity property is now data driven, use `PointAnnotation.textOcclusionOpacity` instead.")
-    public var textOcclusionOpacity: Double? {
-        get { impl.layerProperties["text-occlusion-opacity"] as? Double }
-        set { impl.layerProperties["text-occlusion-opacity"] = newValue }
     }
 }
 

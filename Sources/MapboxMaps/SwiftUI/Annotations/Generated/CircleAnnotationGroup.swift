@@ -35,6 +35,8 @@
 ///     .slot("top")
 /// }
 /// ```
+import UIKit
+
 @available(iOS 13.0, *)
 public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     let annotations: [(ID, CircleAnnotation)]
@@ -75,9 +77,17 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     }
 
     private func updateProperties(manager: CircleAnnotationManager) {
+        assign(manager, \.circleSortKey, value: circleSortKey)
+        assign(manager, \.circleBlur, value: circleBlur)
+        assign(manager, \.circleColor, value: circleColor)
         assign(manager, \.circleEmissiveStrength, value: circleEmissiveStrength)
+        assign(manager, \.circleOpacity, value: circleOpacity)
         assign(manager, \.circlePitchAlignment, value: circlePitchAlignment)
         assign(manager, \.circlePitchScale, value: circlePitchScale)
+        assign(manager, \.circleRadius, value: circleRadius)
+        assign(manager, \.circleStrokeColor, value: circleStrokeColor)
+        assign(manager, \.circleStrokeOpacity, value: circleStrokeOpacity)
+        assign(manager, \.circleStrokeWidth, value: circleStrokeWidth)
         assign(manager, \.circleTranslate, value: circleTranslate)
         assign(manager, \.circleTranslateAnchor, value: circleTranslateAnchor)
         assign(manager, \.slot, value: slot)
@@ -85,11 +95,38 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
 
     // MARK: - Common layer properties
 
+    private var circleSortKey: Double?
+    /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
+    public func circleSortKey(_ newValue: Double) -> Self {
+        with(self, setter(\.circleSortKey, newValue))
+    }
+
+    private var circleBlur: Double?
+    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Default value: 0.
+    public func circleBlur(_ newValue: Double) -> Self {
+        with(self, setter(\.circleBlur, newValue))
+    }
+
+    private var circleColor: StyleColor?
+    /// The fill color of the circle.
+    /// Default value: "#000000".
+    public func circleColor(_ color: UIColor) -> Self {
+        with(self, setter(\.circleColor, StyleColor(color)))
+    }
+
     private var circleEmissiveStrength: Double?
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
     public func circleEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.circleEmissiveStrength, newValue))
+    }
+
+    private var circleOpacity: Double?
+    /// The opacity at which the circle will be drawn.
+    /// Default value: 1. Value range: [0, 1]
+    public func circleOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.circleOpacity, newValue))
     }
 
     private var circlePitchAlignment: CirclePitchAlignment?
@@ -104,6 +141,34 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     /// Default value: "map".
     public func circlePitchScale(_ newValue: CirclePitchScale) -> Self {
         with(self, setter(\.circlePitchScale, newValue))
+    }
+
+    private var circleRadius: Double?
+    /// Circle radius.
+    /// Default value: 5. Minimum value: 0.
+    public func circleRadius(_ newValue: Double) -> Self {
+        with(self, setter(\.circleRadius, newValue))
+    }
+
+    private var circleStrokeColor: StyleColor?
+    /// The stroke color of the circle.
+    /// Default value: "#000000".
+    public func circleStrokeColor(_ color: UIColor) -> Self {
+        with(self, setter(\.circleStrokeColor, StyleColor(color)))
+    }
+
+    private var circleStrokeOpacity: Double?
+    /// The opacity of the circle's stroke.
+    /// Default value: 1. Value range: [0, 1]
+    public func circleStrokeOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.circleStrokeOpacity, newValue))
+    }
+
+    private var circleStrokeWidth: Double?
+    /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
+    /// Default value: 0. Minimum value: 0.
+    public func circleStrokeWidth(_ newValue: Double) -> Self {
+        with(self, setter(\.circleStrokeWidth, newValue))
     }
 
     private var circleTranslate: [Double]?

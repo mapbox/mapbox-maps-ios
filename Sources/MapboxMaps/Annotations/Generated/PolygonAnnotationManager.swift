@@ -41,6 +41,12 @@ public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInter
 
     // MARK: - Common layer properties
 
+    /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
+    public var fillSortKey: Double? {
+        get { impl.layerProperties["fill-sort-key"] as? Double }
+        set { impl.layerProperties["fill-sort-key"] = newValue }
+    }
+
     /// Whether or not the fill should be antialiased.
     /// Default value: true.
     public var fillAntialias: Bool? {
@@ -48,11 +54,37 @@ public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInter
         set { impl.layerProperties["fill-antialias"] = newValue }
     }
 
+    /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+    /// Default value: "#000000".
+    public var fillColor: StyleColor? {
+        get { impl.layerProperties["fill-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["fill-color"] = newValue?.rawValue }
+    }
+
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
     public var fillEmissiveStrength: Double? {
         get { impl.layerProperties["fill-emissive-strength"] as? Double }
         set { impl.layerProperties["fill-emissive-strength"] = newValue }
+    }
+
+    /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
+    /// Default value: 1. Value range: [0, 1]
+    public var fillOpacity: Double? {
+        get { impl.layerProperties["fill-opacity"] as? Double }
+        set { impl.layerProperties["fill-opacity"] = newValue }
+    }
+
+    /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
+    public var fillOutlineColor: StyleColor? {
+        get { impl.layerProperties["fill-outline-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["fill-outline-color"] = newValue?.rawValue }
+    }
+
+    /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+    public var fillPattern: String? {
+        get { impl.layerProperties["fill-pattern"] as? String }
+        set { impl.layerProperties["fill-pattern"] = newValue }
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
@@ -77,7 +109,6 @@ public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInter
         get { impl.layerProperties["slot"] as? String }
         set { impl.layerProperties["slot"] = newValue }
     }
-
 }
 
 // End of generated file.

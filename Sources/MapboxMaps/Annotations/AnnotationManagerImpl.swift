@@ -285,14 +285,20 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
 
         // Construct the properties dictionary from the annotations
         let dataDrivenLayerPropertyKeys = Set(annotations.flatMap(\.layerProperties.keys))
+
+        /// The logic of the expression is the following
+        /// Firstly, it tries to get the the value for the given key from `layerProperties` in feature. Properties for the feature are set in <Type>Annotation.feature
+        /// Secondly, it tries to read the value from `layerProperties` dictionary from annotation manager.
+        /// In the end if the property is not set either on annotation or on annotation manager we just use default value from the style.gst
         let dataDrivenProperties = Dictionary(
-            uniqueKeysWithValues: dataDrivenLayerPropertyKeys
-                .map { (key) -> (String, Any) in
-                    (key, ["get", key, ["get", "layerProperties"]] as [Any])
-                })
+            uniqueKeysWithValues: dataDrivenLayerPropertyKeys.map { (key) -> (String, Any) in (key, [
+                "coalesce",
+                ["get", key, ["get", "layerProperties"]],
+                layerProperties[key] ?? StyleManager.layerPropertyDefaultValue(for: self.layerType, property: key).value
+            ] as [Any])})
 
         // Merge the common layer properties
-        let newLayerProperties = dataDrivenProperties.merging(layerProperties, uniquingKeysWith: { $1 })
+        let newLayerProperties = dataDrivenProperties.merging(layerProperties, uniquingKeysWith: { dataDriven, _ in dataDriven })
 
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)

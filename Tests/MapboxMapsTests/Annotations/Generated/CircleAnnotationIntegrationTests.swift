@@ -46,16 +46,14 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
             guard let layer = try? self.mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self) else {
                 return false
             }
-            return layer.circleRadius == .expression(Exp(.number) {
-                Exp(.get) {
-                    "circle-radius"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            })
+            let fallbackValue = self.manager.circleRadius ?? StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-radius").value
+            let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+                ? (try? JSONSerialization.data(withJSONObject: fallbackValue)) ?? Data()
+                : Data(String(describing: fallbackValue).utf8)
+            let fallbackValueString = String(decoding: fallbackValueData, as: UTF8.self)
+            let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"circle-radius\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+            let currentValueString = (try? layer.circleRadius.toString()) ?? "<nil>"
+            return currentValueString == expectedString
         }), evaluatedWith: nil, handler: nil)
 
         waitForExpectations(timeout: 2, handler: nil)
@@ -228,16 +226,13 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleSortKey, .expression(Exp(.number) {
-                Exp(.get) {
-                    "circle-sort-key"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.circleSortKey ?? StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-sort-key").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"circle-sort-key\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.circleSortKey.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.circleSortKey = nil
@@ -264,16 +259,13 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleBlur, .expression(Exp(.number) {
-                Exp(.get) {
-                    "circle-blur"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.circleBlur ?? StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-blur").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"circle-blur\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.circleBlur.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.circleBlur = nil
@@ -300,16 +292,13 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleColor, .expression(Exp(.toColor) {
-                Exp(.get) {
-                    "circle-color"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.circleColor ?? StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-color").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-color\",[\"coalesce\",[\"get\",\"circle-color\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.circleColor.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.circleColor = nil
@@ -336,16 +325,13 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleOpacity, .expression(Exp(.number) {
-                Exp(.get) {
-                    "circle-opacity"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.circleOpacity ?? StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-opacity").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"circle-opacity\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.circleOpacity.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.circleOpacity = nil
@@ -372,16 +358,13 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleRadius, .expression(Exp(.number) {
-                Exp(.get) {
-                    "circle-radius"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.circleRadius ?? StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-radius").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"circle-radius\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.circleRadius.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.circleRadius = nil
@@ -408,16 +391,13 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleStrokeColor, .expression(Exp(.toColor) {
-                Exp(.get) {
-                    "circle-stroke-color"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.circleStrokeColor ?? StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-color").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-color\",[\"coalesce\",[\"get\",\"circle-stroke-color\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.circleStrokeColor.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.circleStrokeColor = nil
@@ -444,16 +424,13 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleStrokeOpacity, .expression(Exp(.number) {
-                Exp(.get) {
-                    "circle-stroke-opacity"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.circleStrokeOpacity ?? StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-opacity").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"circle-stroke-opacity\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.circleStrokeOpacity.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.circleStrokeOpacity = nil
@@ -480,16 +457,13 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleStrokeWidth, .expression(Exp(.number) {
-                Exp(.get) {
-                    "circle-stroke-width"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.circleStrokeWidth ?? StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-width").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"circle-stroke-width\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.circleStrokeWidth.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.circleStrokeWidth = nil

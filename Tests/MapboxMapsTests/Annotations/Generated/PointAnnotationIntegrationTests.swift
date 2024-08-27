@@ -46,16 +46,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
             guard let layer = try? self.mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self) else {
                 return false
             }
-            return layer.textSize == .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-size"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            })
+            let fallbackValue = self.manager.textSize ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-size").value
+            let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+                ? (try? JSONSerialization.data(withJSONObject: fallbackValue)) ?? Data()
+                : Data(String(describing: fallbackValue).utf8)
+            let fallbackValueString = String(decoding: fallbackValueData, as: UTF8.self)
+            let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-size\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+            let currentValueString = (try? layer.textSize.toString()) ?? "<nil>"
+            return currentValueString == expectedString
         }), evaluatedWith: nil, handler: nil)
 
         waitForExpectations(timeout: 2, handler: nil)
@@ -828,16 +826,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconAnchor, .expression(Exp(.toString) {
-                Exp(.get) {
-                    "icon-anchor"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconAnchor ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-anchor").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-string\",[\"coalesce\",[\"get\",\"icon-anchor\",[\"object\",[\"get\",\"layerProperties\"]]],\"\(fallbackValueString)\"]]"
+        XCTAssertEqual(try layer.iconAnchor.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconAnchor = nil
@@ -864,16 +859,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconImage, .expression(Exp(.image) {
-                Exp(.get) {
-                    "icon-image"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconImage ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-image").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"image\",[\"coalesce\",[\"get\",\"icon-image\",[\"object\",[\"get\",\"layerProperties\"]]],\"\(fallbackValueString)\"]]"
+        XCTAssertEqual(try layer.iconImage.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconImage = nil
@@ -900,18 +892,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconOffset, .expression(Exp(.array) {
-                "number"
-                2
-                Exp(.get) {
-                    "icon-offset"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconOffset ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-offset").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"array\",\"number\",2,[\"coalesce\",[\"get\",\"icon-offset\",[\"object\",[\"get\",\"layerProperties\"]]],[\"literal\",\(fallbackValueString)]]]"
+        XCTAssertEqual(try layer.iconOffset.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconOffset = nil
@@ -938,16 +925,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconRotate, .expression(Exp(.number) {
-                Exp(.get) {
-                    "icon-rotate"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconRotate ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-rotate").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"icon-rotate\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.iconRotate.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconRotate = nil
@@ -974,16 +958,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconSize, .expression(Exp(.number) {
-                Exp(.get) {
-                    "icon-size"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconSize ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-size").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"icon-size\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.iconSize.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconSize = nil
@@ -1010,16 +991,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTextFit, .expression(Exp(.toString) {
-                Exp(.get) {
-                    "icon-text-fit"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconTextFit ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-string\",[\"coalesce\",[\"get\",\"icon-text-fit\",[\"object\",[\"get\",\"layerProperties\"]]],\"\(fallbackValueString)\"]]"
+        XCTAssertEqual(try layer.iconTextFit.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconTextFit = nil
@@ -1046,18 +1024,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTextFitPadding, .expression(Exp(.array) {
-                "number"
-                4
-                Exp(.get) {
-                    "icon-text-fit-padding"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconTextFitPadding ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit-padding").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"array\",\"number\",4,[\"coalesce\",[\"get\",\"icon-text-fit-padding\",[\"object\",[\"get\",\"layerProperties\"]]],[\"literal\",\(fallbackValueString)]]]"
+        XCTAssertEqual(try layer.iconTextFitPadding.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconTextFitPadding = nil
@@ -1084,16 +1057,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.symbolSortKey, .expression(Exp(.number) {
-                Exp(.get) {
-                    "symbol-sort-key"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.symbolSortKey ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-sort-key").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"symbol-sort-key\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.symbolSortKey.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.symbolSortKey = nil
@@ -1120,16 +1090,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textAnchor, .expression(Exp(.toString) {
-                Exp(.get) {
-                    "text-anchor"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textAnchor ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-anchor").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-string\",[\"coalesce\",[\"get\",\"text-anchor\",[\"object\",[\"get\",\"layerProperties\"]]],\"\(fallbackValueString)\"]]"
+        XCTAssertEqual(try layer.textAnchor.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textAnchor = nil
@@ -1156,17 +1123,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textField, .expression(Exp(.format) {
-                Exp(.get) {
-                    "text-field"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-                FormatOptions()
-            }))
+        let fallbackValue = self.manager.textField ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-field").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"format\",[\"coalesce\",[\"get\",\"text-field\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)],{}]"
+        XCTAssertEqual(try layer.textField.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textField = nil
@@ -1178,10 +1141,10 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textField, .expression(Exp(.format) {
+        XCTAssertEqual(layer.textField, Value<String>.expression(Exp(.format) {
             ""
             FormatOptions()
-        }))
+          }))
     }
 
     func testTextJustify() throws {
@@ -1196,16 +1159,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textJustify, .expression(Exp(.toString) {
-                Exp(.get) {
-                    "text-justify"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textJustify ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-justify").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-string\",[\"coalesce\",[\"get\",\"text-justify\",[\"object\",[\"get\",\"layerProperties\"]]],\"\(fallbackValueString)\"]]"
+        XCTAssertEqual(try layer.textJustify.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textJustify = nil
@@ -1232,16 +1192,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textLetterSpacing, .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-letter-spacing"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textLetterSpacing ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-letter-spacing").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-letter-spacing\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textLetterSpacing.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textLetterSpacing = nil
@@ -1268,16 +1225,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textLineHeight, .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-line-height"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textLineHeight ?? (StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-line-height").value as! NSNumber).doubleValue
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-line-height\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textLineHeight.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textLineHeight = nil
@@ -1304,16 +1258,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textMaxWidth, .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-max-width"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textMaxWidth ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-max-width").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-max-width\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textMaxWidth.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textMaxWidth = nil
@@ -1340,18 +1291,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textOffset, .expression(Exp(.array) {
-                "number"
-                2
-                Exp(.get) {
-                    "text-offset"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textOffset ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-offset").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"array\",\"number\",2,[\"coalesce\",[\"get\",\"text-offset\",[\"object\",[\"get\",\"layerProperties\"]]],[\"literal\",\(fallbackValueString)]]]"
+        XCTAssertEqual(try layer.textOffset.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textOffset = nil
@@ -1378,16 +1324,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textRadialOffset, .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-radial-offset"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textRadialOffset ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-radial-offset").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-radial-offset\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textRadialOffset.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textRadialOffset = nil
@@ -1414,16 +1357,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textRotate, .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-rotate"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textRotate ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-rotate").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-rotate\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textRotate.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textRotate = nil
@@ -1450,16 +1390,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textSize, .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-size"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textSize ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-size").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-size\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textSize.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textSize = nil
@@ -1486,16 +1423,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textTransform, .expression(Exp(.toString) {
-                Exp(.get) {
-                    "text-transform"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textTransform ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-transform").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-string\",[\"coalesce\",[\"get\",\"text-transform\",[\"object\",[\"get\",\"layerProperties\"]]],\"\(fallbackValueString)\"]]"
+        XCTAssertEqual(try layer.textTransform.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textTransform = nil
@@ -1522,16 +1456,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconColor, .expression(Exp(.toColor) {
-                Exp(.get) {
-                    "icon-color"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconColor ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-color\",[\"coalesce\",[\"get\",\"icon-color\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.iconColor.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconColor = nil
@@ -1558,16 +1489,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconEmissiveStrength, .expression(Exp(.number) {
-                Exp(.get) {
-                    "icon-emissive-strength"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconEmissiveStrength ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-emissive-strength").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"icon-emissive-strength\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.iconEmissiveStrength.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconEmissiveStrength = nil
@@ -1594,16 +1522,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconHaloBlur, .expression(Exp(.number) {
-                Exp(.get) {
-                    "icon-halo-blur"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconHaloBlur ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-blur").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"icon-halo-blur\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.iconHaloBlur.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconHaloBlur = nil
@@ -1630,16 +1555,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconHaloColor, .expression(Exp(.toColor) {
-                Exp(.get) {
-                    "icon-halo-color"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconHaloColor ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-color").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-color\",[\"coalesce\",[\"get\",\"icon-halo-color\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.iconHaloColor.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconHaloColor = nil
@@ -1666,16 +1588,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconHaloWidth, .expression(Exp(.number) {
-                Exp(.get) {
-                    "icon-halo-width"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconHaloWidth ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-width").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"icon-halo-width\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.iconHaloWidth.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconHaloWidth = nil
@@ -1702,16 +1621,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconImageCrossFade, .expression(Exp(.number) {
-                Exp(.get) {
-                    "icon-image-cross-fade"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconImageCrossFade ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-image-cross-fade").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"icon-image-cross-fade\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.iconImageCrossFade.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconImageCrossFade = nil
@@ -1738,16 +1654,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconOcclusionOpacity, .expression(Exp(.number) {
-                Exp(.get) {
-                    "icon-occlusion-opacity"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconOcclusionOpacity ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-occlusion-opacity").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"icon-occlusion-opacity\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.iconOcclusionOpacity.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconOcclusionOpacity = nil
@@ -1774,16 +1687,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconOpacity, .expression(Exp(.number) {
-                Exp(.get) {
-                    "icon-opacity"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.iconOpacity ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-opacity").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"icon-opacity\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.iconOpacity.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.iconOpacity = nil
@@ -1810,16 +1720,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textColor, .expression(Exp(.toColor) {
-                Exp(.get) {
-                    "text-color"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textColor ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-color").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-color\",[\"coalesce\",[\"get\",\"text-color\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textColor.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textColor = nil
@@ -1846,16 +1753,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textEmissiveStrength, .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-emissive-strength"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textEmissiveStrength ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-emissive-strength").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-emissive-strength\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textEmissiveStrength.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textEmissiveStrength = nil
@@ -1882,16 +1786,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textHaloBlur, .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-halo-blur"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textHaloBlur ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-halo-blur").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-halo-blur\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textHaloBlur.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textHaloBlur = nil
@@ -1918,16 +1819,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textHaloColor, .expression(Exp(.toColor) {
-                Exp(.get) {
-                    "text-halo-color"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textHaloColor ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-halo-color").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-color\",[\"coalesce\",[\"get\",\"text-halo-color\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textHaloColor.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textHaloColor = nil
@@ -1954,16 +1852,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textHaloWidth, .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-halo-width"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textHaloWidth ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-halo-width").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-halo-width\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textHaloWidth.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textHaloWidth = nil
@@ -1990,16 +1885,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textOcclusionOpacity, .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-occlusion-opacity"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textOcclusionOpacity ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-occlusion-opacity").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-occlusion-opacity\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textOcclusionOpacity.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textOcclusionOpacity = nil
@@ -2026,16 +1918,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textOpacity, .expression(Exp(.number) {
-                Exp(.get) {
-                    "text-opacity"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.textOpacity ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-opacity").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"text-opacity\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.textOpacity.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.textOpacity = nil

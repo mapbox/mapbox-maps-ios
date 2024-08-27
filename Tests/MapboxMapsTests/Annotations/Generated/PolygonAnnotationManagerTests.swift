@@ -36,6 +36,31 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         super.tearDown()
     }
 
+    func testInitialFillSortKey() {
+        let initialValue = manager.fillSortKey
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillSortKey() {
+        let value = 0.0
+        manager.fillSortKey = value
+        XCTAssertEqual(manager.fillSortKey, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-sort-key"] as! Double, value)
+    }
+
+    func testSetToNilFillSortKey() {
+        let newFillSortKeyProperty = 0.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-sort-key").value as! Double
+        manager.fillSortKey = newFillSortKeyProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-sort-key"])
+        harness.triggerDisplayLink()
+
+        manager.fillSortKey = nil
+        XCTAssertNil(manager.fillSortKey)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-sort-key"] as! Double, defaultValue)
+    }
     func testInitialFillAntialias() {
         let initialValue = manager.fillAntialias
         XCTAssertNil(initialValue)
@@ -61,6 +86,32 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-antialias"] as! Bool, defaultValue)
     }
+    func testInitialFillColor() {
+        let initialValue = manager.fillColor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillColor() {
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.fillColor = value
+        XCTAssertEqual(manager.fillColor, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-color"] as? String, value?.rawValue)
+    }
+
+    func testSetToNilFillColor() {
+        let newFillColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-color").value as! [Any], options: []))
+        manager.fillColor = newFillColorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-color"])
+        harness.triggerDisplayLink()
+
+        manager.fillColor = nil
+        XCTAssertNil(manager.fillColor)
+        harness.triggerDisplayLink()
+
+        let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-color"] as! [Any]))
+        XCTAssertEqual(currentValue, defaultValue)
+    }
     func testInitialFillEmissiveStrength() {
         let initialValue = manager.fillEmissiveStrength
         XCTAssertNil(initialValue)
@@ -85,6 +136,82 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-emissive-strength"] as! Double, defaultValue)
+    }
+    func testInitialFillOpacity() {
+        let initialValue = manager.fillOpacity
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillOpacity() {
+        let value = 0.5
+        manager.fillOpacity = value
+        XCTAssertEqual(manager.fillOpacity, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-opacity"] as! Double, value)
+    }
+
+    func testSetToNilFillOpacity() {
+        let newFillOpacityProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-opacity").value as! Double
+        manager.fillOpacity = newFillOpacityProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-opacity"])
+        harness.triggerDisplayLink()
+
+        manager.fillOpacity = nil
+        XCTAssertNil(manager.fillOpacity)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-opacity"] as! Double, defaultValue)
+    }
+    func testInitialFillOutlineColor() {
+        let initialValue = manager.fillOutlineColor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillOutlineColor() {
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.fillOutlineColor = value
+        XCTAssertEqual(manager.fillOutlineColor, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-outline-color"] as? String, value?.rawValue)
+    }
+
+    func testSetToNilFillOutlineColor() {
+        let newFillOutlineColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-outline-color").value as! [Any], options: []))
+        manager.fillOutlineColor = newFillOutlineColorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-outline-color"])
+        harness.triggerDisplayLink()
+
+        manager.fillOutlineColor = nil
+        XCTAssertNil(manager.fillOutlineColor)
+        harness.triggerDisplayLink()
+
+        let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-outline-color"] as! [Any]))
+        XCTAssertEqual(currentValue, defaultValue)
+    }
+    func testInitialFillPattern() {
+        let initialValue = manager.fillPattern
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillPattern() {
+        let value = UUID().uuidString
+        manager.fillPattern = value
+        XCTAssertEqual(manager.fillPattern, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-pattern"] as! String, value)
+    }
+
+    func testSetToNilFillPattern() {
+        let newFillPatternProperty = UUID().uuidString
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String
+        manager.fillPattern = newFillPatternProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-pattern"])
+        harness.triggerDisplayLink()
+
+        manager.fillPattern = nil
+        XCTAssertNil(manager.fillPattern)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-pattern"] as! String, defaultValue)
     }
     func testInitialFillTranslate() {
         let initialValue = manager.fillTranslate

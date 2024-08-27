@@ -48,6 +48,13 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-cap"] = newValue?.rawValue }
     }
 
+    /// The display of lines when joining.
+    /// Default value: "miter".
+    public var lineJoin: LineJoin? {
+        get { impl.layerProperties["line-join"].flatMap { $0 as? String }.flatMap(LineJoin.init(rawValue:)) }
+        set { impl.layerProperties["line-join"] = newValue?.rawValue }
+    }
+
     /// Used to automatically convert miter joins to bevel joins for sharp angles.
     /// Default value: 2.
     public var lineMiterLimit: Double? {
@@ -60,6 +67,46 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
     public var lineRoundLimit: Double? {
         get { impl.layerProperties["line-round-limit"] as? Double }
         set { impl.layerProperties["line-round-limit"] = newValue }
+    }
+
+    /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
+    public var lineSortKey: Double? {
+        get { impl.layerProperties["line-sort-key"] as? Double }
+        set { impl.layerProperties["line-sort-key"] = newValue }
+    }
+
+    /// Vertical offset from ground, in meters. Defaults to 0. Not supported for globe projection at the moment.
+    public var lineZOffset: Double? {
+        get { impl.layerProperties["line-z-offset"] as? Double }
+        set { impl.layerProperties["line-z-offset"] = newValue }
+    }
+
+    /// Blur applied to the line, in pixels.
+    /// Default value: 0. Minimum value: 0.
+    public var lineBlur: Double? {
+        get { impl.layerProperties["line-blur"] as? Double }
+        set { impl.layerProperties["line-blur"] = newValue }
+    }
+
+    /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
+    /// Default value: "rgba(0, 0, 0, 0)".
+    public var lineBorderColor: StyleColor? {
+        get { impl.layerProperties["line-border-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["line-border-color"] = newValue?.rawValue }
+    }
+
+    /// The width of the line border. A value of zero means no border.
+    /// Default value: 0. Minimum value: 0.
+    public var lineBorderWidth: Double? {
+        get { impl.layerProperties["line-border-width"] as? Double }
+        set { impl.layerProperties["line-border-width"] = newValue }
+    }
+
+    /// The color with which the line will be drawn.
+    /// Default value: "#000000".
+    public var lineColor: StyleColor? {
+        get { impl.layerProperties["line-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["line-color"] = newValue?.rawValue }
     }
 
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
@@ -83,11 +130,38 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-emissive-strength"] = newValue }
     }
 
+    /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
+    /// Default value: 0. Minimum value: 0.
+    public var lineGapWidth: Double? {
+        get { impl.layerProperties["line-gap-width"] as? Double }
+        set { impl.layerProperties["line-gap-width"] = newValue }
+    }
+
     /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
     /// Default value: 0. Value range: [0, 1]
     public var lineOcclusionOpacity: Double? {
         get { impl.layerProperties["line-occlusion-opacity"] as? Double }
         set { impl.layerProperties["line-occlusion-opacity"] = newValue }
+    }
+
+    /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
+    /// Default value: 0.
+    public var lineOffset: Double? {
+        get { impl.layerProperties["line-offset"] as? Double }
+        set { impl.layerProperties["line-offset"] = newValue }
+    }
+
+    /// The opacity at which the line will be drawn.
+    /// Default value: 1. Value range: [0, 1]
+    public var lineOpacity: Double? {
+        get { impl.layerProperties["line-opacity"] as? Double }
+        set { impl.layerProperties["line-opacity"] = newValue }
+    }
+
+    /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+    public var linePattern: String? {
+        get { impl.layerProperties["line-pattern"] as? String }
+        set { impl.layerProperties["line-pattern"] = newValue }
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
@@ -125,6 +199,13 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-trim-offset"] = newValue }
     }
 
+    /// Stroke thickness.
+    /// Default value: 1. Minimum value: 0.
+    public var lineWidth: Double? {
+        get { impl.layerProperties["line-width"] as? Double }
+        set { impl.layerProperties["line-width"] = newValue }
+    }
+
     /// Slot for the underlying layer.
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
@@ -133,7 +214,6 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         get { impl.layerProperties["slot"] as? String }
         set { impl.layerProperties["slot"] = newValue }
     }
-
 }
 
 // End of generated file.

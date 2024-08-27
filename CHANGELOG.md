@@ -4,6 +4,39 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Expose data-driven properties on annotation managers. Now it's possible to set data-dirven properties globally on annotation manager and specify per-annotation overrides.
+Previosuly user had to specify those properties on each annotation and couldn't specify them globally
+```swift
+CircleAnnotationGroup(circles, id: \.id) { circle in
+    CircleAnnotation(centerCoordinate: circle.coordinate)
+      .circleColor(circle.color)
+      .circleRadius(10)
+      .circleStrokeWidth(1)
+      .circleStrokeColor(.black)
+}
+```
+The problem with the above approach is that most of the properties are just duplicated for each annotation, which can lead to **large memory overhead** in case of big datasets. In order to solve this issue and provide more versatile API the following approach is now possible, which is visualy identical to previous snippet, but more performant.
+```swift
+CircleAnnotationGroup(circles, id: \.id) { circle in
+    CircleAnnotation(centerCoordinate: circle.coordinate)
+      .circleColor(circle.color)
+}
+.circleRadius(10)
+.circleStrokeWidth(1)
+.circleStrokeColor(.black)
+```
+
+Same applies for imperative API. In this case each even annotation will have random color, but others will use the global default specified in the annotation manager.
+```swift
+let circleAnnotationManager = mapView.annotations.makeCircleAnnotationManager()
+var annotations = [CircleAnnotation]()
+for i in 0...2000 {
+  var annotation = CircleAnnotation(centerCoordinate: .random)
+  if i % 2 == 0 { annotation.circleColor = StyleColor(.random) }
+  annotations.append(annotation)
+}
+circleAnnotationManager.circleColor = .blue
+```
 * Improve memory reclamation behavior when using partial GeoJSON update API.
 
 ## 11.6.0 - 14 August, 2024

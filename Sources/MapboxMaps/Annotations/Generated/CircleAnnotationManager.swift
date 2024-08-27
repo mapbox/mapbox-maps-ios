@@ -41,11 +41,38 @@ public class CircleAnnotationManager: AnnotationManager, AnnotationManagerIntern
 
     // MARK: - Common layer properties
 
+    /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
+    public var circleSortKey: Double? {
+        get { impl.layerProperties["circle-sort-key"] as? Double }
+        set { impl.layerProperties["circle-sort-key"] = newValue }
+    }
+
+    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Default value: 0.
+    public var circleBlur: Double? {
+        get { impl.layerProperties["circle-blur"] as? Double }
+        set { impl.layerProperties["circle-blur"] = newValue }
+    }
+
+    /// The fill color of the circle.
+    /// Default value: "#000000".
+    public var circleColor: StyleColor? {
+        get { impl.layerProperties["circle-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["circle-color"] = newValue?.rawValue }
+    }
+
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0.
     public var circleEmissiveStrength: Double? {
         get { impl.layerProperties["circle-emissive-strength"] as? Double }
         set { impl.layerProperties["circle-emissive-strength"] = newValue }
+    }
+
+    /// The opacity at which the circle will be drawn.
+    /// Default value: 1. Value range: [0, 1]
+    public var circleOpacity: Double? {
+        get { impl.layerProperties["circle-opacity"] as? Double }
+        set { impl.layerProperties["circle-opacity"] = newValue }
     }
 
     /// Orientation of circle when map is pitched.
@@ -60,6 +87,34 @@ public class CircleAnnotationManager: AnnotationManager, AnnotationManagerIntern
     public var circlePitchScale: CirclePitchScale? {
         get { impl.layerProperties["circle-pitch-scale"].flatMap { $0 as? String }.flatMap(CirclePitchScale.init(rawValue:)) }
         set { impl.layerProperties["circle-pitch-scale"] = newValue?.rawValue }
+    }
+
+    /// Circle radius.
+    /// Default value: 5. Minimum value: 0.
+    public var circleRadius: Double? {
+        get { impl.layerProperties["circle-radius"] as? Double }
+        set { impl.layerProperties["circle-radius"] = newValue }
+    }
+
+    /// The stroke color of the circle.
+    /// Default value: "#000000".
+    public var circleStrokeColor: StyleColor? {
+        get { impl.layerProperties["circle-stroke-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["circle-stroke-color"] = newValue?.rawValue }
+    }
+
+    /// The opacity of the circle's stroke.
+    /// Default value: 1. Value range: [0, 1]
+    public var circleStrokeOpacity: Double? {
+        get { impl.layerProperties["circle-stroke-opacity"] as? Double }
+        set { impl.layerProperties["circle-stroke-opacity"] = newValue }
+    }
+
+    /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
+    /// Default value: 0. Minimum value: 0.
+    public var circleStrokeWidth: Double? {
+        get { impl.layerProperties["circle-stroke-width"] as? Double }
+        set { impl.layerProperties["circle-stroke-width"] = newValue }
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
@@ -84,7 +139,6 @@ public class CircleAnnotationManager: AnnotationManager, AnnotationManagerIntern
         get { impl.layerProperties["slot"] as? String }
         set { impl.layerProperties["slot"] = newValue }
     }
-
 }
 
 // End of generated file.

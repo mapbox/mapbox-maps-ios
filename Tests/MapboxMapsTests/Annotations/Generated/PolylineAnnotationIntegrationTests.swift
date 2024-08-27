@@ -47,16 +47,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
             guard let layer = try? self.mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self) else {
                 return false
             }
-            return layer.lineWidth == .expression(Exp(.number) {
-                Exp(.get) {
-                    "line-width"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            })
+            let fallbackValue = self.manager.lineWidth ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-width").value
+            let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+                ? (try? JSONSerialization.data(withJSONObject: fallbackValue)) ?? Data()
+                : Data(String(describing: fallbackValue).utf8)
+            let fallbackValueString = String(decoding: fallbackValueData, as: UTF8.self)
+            let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"line-width\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+            let currentValueString = (try? layer.lineWidth.toString()) ?? "<nil>"
+            return currentValueString == expectedString
         }), evaluatedWith: nil, handler: nil)
 
         waitForExpectations(timeout: 2, handler: nil)
@@ -418,16 +416,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineJoin, .expression(Exp(.toString) {
-                Exp(.get) {
-                    "line-join"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.lineJoin ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-join").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-string\",[\"coalesce\",[\"get\",\"line-join\",[\"object\",[\"get\",\"layerProperties\"]]],\"\(fallbackValueString)\"]]"
+        XCTAssertEqual(try layer.lineJoin.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.lineJoin = nil
@@ -455,16 +450,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineSortKey, .expression(Exp(.number) {
-                Exp(.get) {
-                    "line-sort-key"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.lineSortKey ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-sort-key").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"line-sort-key\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineSortKey.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.lineSortKey = nil
@@ -492,16 +484,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineZOffset, .expression(Exp(.number) {
-                Exp(.get) {
-                    "line-z-offset"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.lineZOffset ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-z-offset").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"line-z-offset\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineZOffset.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.lineZOffset = nil
@@ -529,16 +518,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineBlur, .expression(Exp(.number) {
-                Exp(.get) {
-                    "line-blur"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.lineBlur ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-blur").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"line-blur\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineBlur.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.lineBlur = nil
@@ -566,16 +552,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineBorderColor, .expression(Exp(.toColor) {
-                Exp(.get) {
-                    "line-border-color"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.lineBorderColor ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-border-color").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-color\",[\"coalesce\",[\"get\",\"line-border-color\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineBorderColor.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.lineBorderColor = nil
@@ -603,16 +586,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineBorderWidth, .expression(Exp(.number) {
-                Exp(.get) {
-                    "line-border-width"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.lineBorderWidth ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-border-width").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"line-border-width\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineBorderWidth.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.lineBorderWidth = nil
@@ -640,16 +620,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineColor, .expression(Exp(.toColor) {
-                Exp(.get) {
-                    "line-color"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.lineColor ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-color").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-color\",[\"coalesce\",[\"get\",\"line-color\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineColor.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.lineColor = nil
@@ -677,16 +654,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineGapWidth, .expression(Exp(.number) {
-                Exp(.get) {
-                    "line-gap-width"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.lineGapWidth ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-gap-width").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"line-gap-width\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineGapWidth.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.lineGapWidth = nil
@@ -714,16 +688,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineOffset, .expression(Exp(.number) {
-                Exp(.get) {
-                    "line-offset"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.lineOffset ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-offset").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"line-offset\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineOffset.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.lineOffset = nil
@@ -751,16 +722,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineOpacity, .expression(Exp(.number) {
-                Exp(.get) {
-                    "line-opacity"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.lineOpacity ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-opacity").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"line-opacity\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineOpacity.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.lineOpacity = nil
@@ -788,16 +756,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.linePattern, .expression(Exp(.image) {
-                Exp(.get) {
-                    "line-pattern"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.linePattern ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-pattern").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"image\",[\"coalesce\",[\"get\",\"line-pattern\",[\"object\",[\"get\",\"layerProperties\"]]],\"\(fallbackValueString)\"]]"
+        XCTAssertEqual(try layer.linePattern.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.linePattern = nil
@@ -825,16 +790,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.impl.syncSourceAndLayerIfNeeded()
         var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineWidth, .expression(Exp(.number) {
-                Exp(.get) {
-                    "line-width"
-                    Exp(.objectExpression) {
-                        Exp(.get) {
-                            "layerProperties"
-                        }
-                    }
-                }
-            }))
+        let fallbackValue = self.manager.lineWidth ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-width").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"line-width\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineWidth.toString(), expectedString)
 
         // Test that the property can be reset to nil
         annotation.lineWidth = nil

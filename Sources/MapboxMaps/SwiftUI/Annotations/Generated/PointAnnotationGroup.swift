@@ -33,6 +33,8 @@
 ///     .slot("top")
 /// }
 /// ```
+import UIKit
+
 @available(iOS 13.0, *)
 public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     let annotations: [(ID, PointAnnotation)]
@@ -74,31 +76,65 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private func updateProperties(manager: PointAnnotationManager) {
         assign(manager, \.iconAllowOverlap, value: iconAllowOverlap)
+        assign(manager, \.iconAnchor, value: iconAnchor)
         assign(manager, \.iconIgnorePlacement, value: iconIgnorePlacement)
+        assign(manager, \.iconImage, value: iconImage)
         assign(manager, \.iconKeepUpright, value: iconKeepUpright)
+        assign(manager, \.iconOffset, value: iconOffset)
         assign(manager, \.iconOptional, value: iconOptional)
         assign(manager, \.iconPadding, value: iconPadding)
         assign(manager, \.iconPitchAlignment, value: iconPitchAlignment)
+        assign(manager, \.iconRotate, value: iconRotate)
         assign(manager, \.iconRotationAlignment, value: iconRotationAlignment)
+        assign(manager, \.iconSize, value: iconSize)
+        assign(manager, \.iconTextFit, value: iconTextFit)
+        assign(manager, \.iconTextFitPadding, value: iconTextFitPadding)
         assign(manager, \.symbolAvoidEdges, value: symbolAvoidEdges)
         assign(manager, \.symbolPlacement, value: symbolPlacement)
+        assign(manager, \.symbolSortKey, value: symbolSortKey)
         assign(manager, \.symbolSpacing, value: symbolSpacing)
         assign(manager, \.symbolZElevate, value: symbolZElevate)
         assign(manager, \.symbolZOrder, value: symbolZOrder)
         assign(manager, \.textAllowOverlap, value: textAllowOverlap)
+        assign(manager, \.textAnchor, value: textAnchor)
+        assign(manager, \.textField, value: textField)
         assign(manager, \.textFont, value: textFont)
         assign(manager, \.textIgnorePlacement, value: textIgnorePlacement)
+        assign(manager, \.textJustify, value: textJustify)
         assign(manager, \.textKeepUpright, value: textKeepUpright)
+        assign(manager, \.textLetterSpacing, value: textLetterSpacing)
+        assign(manager, \.textLineHeight, value: textLineHeight)
         assign(manager, \.textMaxAngle, value: textMaxAngle)
+        assign(manager, \.textMaxWidth, value: textMaxWidth)
+        assign(manager, \.textOffset, value: textOffset)
         assign(manager, \.textOptional, value: textOptional)
         assign(manager, \.textPadding, value: textPadding)
         assign(manager, \.textPitchAlignment, value: textPitchAlignment)
+        assign(manager, \.textRadialOffset, value: textRadialOffset)
+        assign(manager, \.textRotate, value: textRotate)
         assign(manager, \.textRotationAlignment, value: textRotationAlignment)
+        assign(manager, \.textSize, value: textSize)
+        assign(manager, \.textTransform, value: textTransform)
         assign(manager, \.textVariableAnchor, value: textVariableAnchor)
         assign(manager, \.textWritingMode, value: textWritingMode)
+        assign(manager, \.iconColor, value: iconColor)
         assign(manager, \.iconColorSaturation, value: iconColorSaturation)
+        assign(manager, \.iconEmissiveStrength, value: iconEmissiveStrength)
+        assign(manager, \.iconHaloBlur, value: iconHaloBlur)
+        assign(manager, \.iconHaloColor, value: iconHaloColor)
+        assign(manager, \.iconHaloWidth, value: iconHaloWidth)
+        assign(manager, \.iconImageCrossFade, value: iconImageCrossFade)
+        assign(manager, \.iconOcclusionOpacity, value: iconOcclusionOpacity)
+        assign(manager, \.iconOpacity, value: iconOpacity)
         assign(manager, \.iconTranslate, value: iconTranslate)
         assign(manager, \.iconTranslateAnchor, value: iconTranslateAnchor)
+        assign(manager, \.textColor, value: textColor)
+        assign(manager, \.textEmissiveStrength, value: textEmissiveStrength)
+        assign(manager, \.textHaloBlur, value: textHaloBlur)
+        assign(manager, \.textHaloColor, value: textHaloColor)
+        assign(manager, \.textHaloWidth, value: textHaloWidth)
+        assign(manager, \.textOcclusionOpacity, value: textOcclusionOpacity)
+        assign(manager, \.textOpacity, value: textOpacity)
         assign(manager, \.textTranslate, value: textTranslate)
         assign(manager, \.textTranslateAnchor, value: textTranslateAnchor)
         assign(manager, \.slot, value: slot)
@@ -118,6 +154,13 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.iconAllowOverlap, newValue))
     }
 
+    private var iconAnchor: IconAnchor?
+    /// Part of the icon placed closest to the anchor.
+    /// Default value: "center".
+    public func iconAnchor(_ newValue: IconAnchor) -> Self {
+        with(self, setter(\.iconAnchor, newValue))
+    }
+
     private var iconIgnorePlacement: Bool?
     /// If true, other symbols can be visible even if they collide with the icon.
     /// Default value: false.
@@ -125,11 +168,24 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.iconIgnorePlacement, newValue))
     }
 
+    private var iconImage: String?
+    /// Name of image in sprite to use for drawing an image background.
+    public func iconImage(_ newValue: String) -> Self {
+        with(self, setter(\.iconImage, newValue))
+    }
+
     private var iconKeepUpright: Bool?
     /// If true, the icon may be flipped to prevent it from being rendered upside-down.
     /// Default value: false.
     public func iconKeepUpright(_ newValue: Bool) -> Self {
         with(self, setter(\.iconKeepUpright, newValue))
+    }
+
+    private var iconOffset: [Double]?
+    /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
+    /// Default value: [0,0].
+    public func iconOffset(_ newValue: [Double]) -> Self {
+        with(self, setter(\.iconOffset, newValue))
     }
 
     private var iconOptional: Bool?
@@ -153,11 +209,39 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.iconPitchAlignment, newValue))
     }
 
+    private var iconRotate: Double?
+    /// Rotates the icon clockwise.
+    /// Default value: 0.
+    public func iconRotate(_ newValue: Double) -> Self {
+        with(self, setter(\.iconRotate, newValue))
+    }
+
     private var iconRotationAlignment: IconRotationAlignment?
     /// In combination with `symbol-placement`, determines the rotation behavior of icons.
     /// Default value: "auto".
     public func iconRotationAlignment(_ newValue: IconRotationAlignment) -> Self {
         with(self, setter(\.iconRotationAlignment, newValue))
+    }
+
+    private var iconSize: Double?
+    /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
+    /// Default value: 1. Minimum value: 0.
+    public func iconSize(_ newValue: Double) -> Self {
+        with(self, setter(\.iconSize, newValue))
+    }
+
+    private var iconTextFit: IconTextFit?
+    /// Scales the icon to fit around the associated text.
+    /// Default value: "none".
+    public func iconTextFit(_ newValue: IconTextFit) -> Self {
+        with(self, setter(\.iconTextFit, newValue))
+    }
+
+    private var iconTextFitPadding: [Double]?
+    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
+    /// Default value: [0,0,0,0].
+    public func iconTextFitPadding(_ newValue: [Double]) -> Self {
+        with(self, setter(\.iconTextFitPadding, newValue))
     }
 
     private var symbolAvoidEdges: Bool?
@@ -172,6 +256,12 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     /// Default value: "point".
     public func symbolPlacement(_ newValue: SymbolPlacement) -> Self {
         with(self, setter(\.symbolPlacement, newValue))
+    }
+
+    private var symbolSortKey: Double?
+    /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first. When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
+    public func symbolSortKey(_ newValue: Double) -> Self {
+        with(self, setter(\.symbolSortKey, newValue))
     }
 
     private var symbolSpacing: Double?
@@ -202,6 +292,20 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.textAllowOverlap, newValue))
     }
 
+    private var textAnchor: TextAnchor?
+    /// Part of the text placed closest to the anchor.
+    /// Default value: "center".
+    public func textAnchor(_ newValue: TextAnchor) -> Self {
+        with(self, setter(\.textAnchor, newValue))
+    }
+
+    private var textField: String?
+    /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options. SDF images are not supported in formatted text and will be ignored.
+    /// Default value: "".
+    public func textField(_ newValue: String) -> Self {
+        with(self, setter(\.textField, newValue))
+    }
+
     private var textFont: [String]?
     /// Font stack to use for displaying text.
     public func textFont(_ newValue: [String]) -> Self {
@@ -215,6 +319,13 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.textIgnorePlacement, newValue))
     }
 
+    private var textJustify: TextJustify?
+    /// Text justification options.
+    /// Default value: "center".
+    public func textJustify(_ newValue: TextJustify) -> Self {
+        with(self, setter(\.textJustify, newValue))
+    }
+
     private var textKeepUpright: Bool?
     /// If true, the text may be flipped vertically to prevent it from being rendered upside-down.
     /// Default value: true.
@@ -222,11 +333,39 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.textKeepUpright, newValue))
     }
 
+    private var textLetterSpacing: Double?
+    /// Text tracking amount.
+    /// Default value: 0.
+    public func textLetterSpacing(_ newValue: Double) -> Self {
+        with(self, setter(\.textLetterSpacing, newValue))
+    }
+
+    private var textLineHeight: Double?
+    /// Text leading value for multi-line text.
+    /// Default value: 1.2.
+    public func textLineHeight(_ newValue: Double) -> Self {
+        with(self, setter(\.textLineHeight, newValue))
+    }
+
     private var textMaxAngle: Double?
     /// Maximum angle change between adjacent characters.
     /// Default value: 45.
     public func textMaxAngle(_ newValue: Double) -> Self {
         with(self, setter(\.textMaxAngle, newValue))
+    }
+
+    private var textMaxWidth: Double?
+    /// The maximum line width for text wrapping.
+    /// Default value: 10. Minimum value: 0.
+    public func textMaxWidth(_ newValue: Double) -> Self {
+        with(self, setter(\.textMaxWidth, newValue))
+    }
+
+    private var textOffset: [Double]?
+    /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
+    /// Default value: [0,0].
+    public func textOffset(_ newValue: [Double]) -> Self {
+        with(self, setter(\.textOffset, newValue))
     }
 
     private var textOptional: Bool?
@@ -250,11 +389,39 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.textPitchAlignment, newValue))
     }
 
+    private var textRadialOffset: Double?
+    /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
+    /// Default value: 0.
+    public func textRadialOffset(_ newValue: Double) -> Self {
+        with(self, setter(\.textRadialOffset, newValue))
+    }
+
+    private var textRotate: Double?
+    /// Rotates the text clockwise.
+    /// Default value: 0.
+    public func textRotate(_ newValue: Double) -> Self {
+        with(self, setter(\.textRotate, newValue))
+    }
+
     private var textRotationAlignment: TextRotationAlignment?
     /// In combination with `symbol-placement`, determines the rotation behavior of the individual glyphs forming the text.
     /// Default value: "auto".
     public func textRotationAlignment(_ newValue: TextRotationAlignment) -> Self {
         with(self, setter(\.textRotationAlignment, newValue))
+    }
+
+    private var textSize: Double?
+    /// Font size.
+    /// Default value: 16. Minimum value: 0.
+    public func textSize(_ newValue: Double) -> Self {
+        with(self, setter(\.textSize, newValue))
+    }
+
+    private var textTransform: TextTransform?
+    /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
+    /// Default value: "none".
+    public func textTransform(_ newValue: TextTransform) -> Self {
+        with(self, setter(\.textTransform, newValue))
     }
 
     private var textVariableAnchor: [TextAnchor]?
@@ -269,11 +436,67 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.textWritingMode, newValue))
     }
 
+    private var iconColor: StyleColor?
+    /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
+    /// Default value: "#000000".
+    public func iconColor(_ color: UIColor) -> Self {
+        with(self, setter(\.iconColor, StyleColor(color)))
+    }
+
     private var iconColorSaturation: Double?
     /// Increase or reduce the saturation of the symbol icon.
     /// Default value: 0. Value range: [-1, 1]
     public func iconColorSaturation(_ newValue: Double) -> Self {
         with(self, setter(\.iconColorSaturation, newValue))
+    }
+
+    private var iconEmissiveStrength: Double?
+    /// Controls the intensity of light emitted on the source features.
+    /// Default value: 1. Minimum value: 0.
+    public func iconEmissiveStrength(_ newValue: Double) -> Self {
+        with(self, setter(\.iconEmissiveStrength, newValue))
+    }
+
+    private var iconHaloBlur: Double?
+    /// Fade out the halo towards the outside.
+    /// Default value: 0. Minimum value: 0.
+    public func iconHaloBlur(_ newValue: Double) -> Self {
+        with(self, setter(\.iconHaloBlur, newValue))
+    }
+
+    private var iconHaloColor: StyleColor?
+    /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
+    /// Default value: "rgba(0, 0, 0, 0)".
+    public func iconHaloColor(_ color: UIColor) -> Self {
+        with(self, setter(\.iconHaloColor, StyleColor(color)))
+    }
+
+    private var iconHaloWidth: Double?
+    /// Distance of halo to the icon outline.
+    /// Default value: 0. Minimum value: 0.
+    public func iconHaloWidth(_ newValue: Double) -> Self {
+        with(self, setter(\.iconHaloWidth, newValue))
+    }
+
+    private var iconImageCrossFade: Double?
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+    /// Default value: 0. Value range: [0, 1]
+    public func iconImageCrossFade(_ newValue: Double) -> Self {
+        with(self, setter(\.iconImageCrossFade, newValue))
+    }
+
+    private var iconOcclusionOpacity: Double?
+    /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
+    public func iconOcclusionOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.iconOcclusionOpacity, newValue))
+    }
+
+    private var iconOpacity: Double?
+    /// The opacity at which the icon will be drawn.
+    /// Default value: 1. Value range: [0, 1]
+    public func iconOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.iconOpacity, newValue))
     }
 
     private var iconTranslate: [Double]?
@@ -288,6 +511,55 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     /// Default value: "map".
     public func iconTranslateAnchor(_ newValue: IconTranslateAnchor) -> Self {
         with(self, setter(\.iconTranslateAnchor, newValue))
+    }
+
+    private var textColor: StyleColor?
+    /// The color with which the text will be drawn.
+    /// Default value: "#000000".
+    public func textColor(_ color: UIColor) -> Self {
+        with(self, setter(\.textColor, StyleColor(color)))
+    }
+
+    private var textEmissiveStrength: Double?
+    /// Controls the intensity of light emitted on the source features.
+    /// Default value: 1. Minimum value: 0.
+    public func textEmissiveStrength(_ newValue: Double) -> Self {
+        with(self, setter(\.textEmissiveStrength, newValue))
+    }
+
+    private var textHaloBlur: Double?
+    /// The halo's fadeout distance towards the outside.
+    /// Default value: 0. Minimum value: 0.
+    public func textHaloBlur(_ newValue: Double) -> Self {
+        with(self, setter(\.textHaloBlur, newValue))
+    }
+
+    private var textHaloColor: StyleColor?
+    /// The color of the text's halo, which helps it stand out from backgrounds.
+    /// Default value: "rgba(0, 0, 0, 0)".
+    public func textHaloColor(_ color: UIColor) -> Self {
+        with(self, setter(\.textHaloColor, StyleColor(color)))
+    }
+
+    private var textHaloWidth: Double?
+    /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
+    /// Default value: 0. Minimum value: 0.
+    public func textHaloWidth(_ newValue: Double) -> Self {
+        with(self, setter(\.textHaloWidth, newValue))
+    }
+
+    private var textOcclusionOpacity: Double?
+    /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
+    /// Default value: 0. Value range: [0, 1]
+    public func textOcclusionOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.textOcclusionOpacity, newValue))
+    }
+
+    private var textOpacity: Double?
+    /// The opacity at which the text will be drawn.
+    /// Default value: 1. Value range: [0, 1]
+    public func textOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.textOpacity, newValue))
     }
 
     private var textTranslate: [Double]?
@@ -311,22 +583,6 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
     public func slot(_ newValue: String) -> Self {
         with(self, setter(\.slot, newValue))
-    }
-
-    private var iconOcclusionOpacity: Double?
-    /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
-    /// Default value: 0. Value range: [0, 1]
-    @available(*, deprecated, message: "icon-occlusion-opacity property is now data driven, use `PointAnnotation.iconOcclusionOpacity` instead.")
-    public func iconOcclusionOpacity(_ newValue: Double) -> Self {
-        with(self, setter(\.iconOcclusionOpacity, newValue))
-    }
-
-    private var textOcclusionOpacity: Double?
-    /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
-    /// Default value: 0. Value range: [0, 1]
-    @available(*, deprecated, message: "text-occlusion-opacity property is now data driven, use `PointAnnotation.textOcclusionOpacity` instead.")
-    public func textOcclusionOpacity(_ newValue: Double) -> Self {
-        with(self, setter(\.textOcclusionOpacity, newValue))
     }
 
     private var clusterOptions: ClusterOptions?

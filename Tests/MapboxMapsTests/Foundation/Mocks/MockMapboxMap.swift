@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@_spi(Experimental) @_spi(Internal) @testable import MapboxMaps
 import CoreLocation
 import UIKit
 
@@ -199,5 +199,121 @@ final class MockMapboxMap: MapboxMapProtocol {
     let collectPerformanceStatisticsStub = Stub<PerformanceStatisticsParameters, AnyCancelable>(defaultReturnValue: MockCancelable().erased)
     func collectPerformanceStatistics(_ options: PerformanceStatisticsOptions, callback: @escaping (PerformanceStatistics) -> Void) -> AnyCancelable {
         collectPerformanceStatisticsStub.call(with: PerformanceStatisticsParameters(options: options, callback: callback))
+    }
+
+    struct FeatureStateParams {
+        var featureset: FeaturesetDescriptor
+        var featureId: FeaturesetFeatureId
+        var state: JSONObject?
+        var key: String?
+    }
+    var setFeatureStateStub = Stub<FeatureStateParams, Cancelable>(defaultReturnValue: AnyCancelable.empty)
+    func setFeatureState(featureset: FeaturesetDescriptor, featureId: FeaturesetFeatureId, state: Turf.JSONObject, callback: @escaping (Result<NSNull, any Error>) -> Void) -> any Cancelable {
+        setFeatureStateStub.call(with: .init(featureset: featureset, featureId: featureId, state: state))
+    }
+
+    var removeFeatureStateStub = Stub<FeatureStateParams, Cancelable>(defaultReturnValue: AnyCancelable.empty)
+    func removeFeatureState(featureset: FeaturesetDescriptor, featureId: MapboxMaps.FeaturesetFeatureId, stateKey: String?, callback: @escaping (Result<NSNull, any Error>) -> Void) -> any Cancelable {
+        removeFeatureStateStub.call(with: .init(featureset: featureset, featureId: featureId, key: stateKey))
+    }
+
+    let dispatchStub = Stub<CorePlatformEventInfo, Void>()
+    func dispatch(event: CorePlatformEventInfo) {
+        dispatchStub.call(with: event)
+    }
+
+    private var interactions = [(Int, InteractionImpl)]()
+    private var id = 0
+    func addInteraction(_ interaction: some Interaction) -> any Cancelable {
+        addInteraction(interaction.impl)
+    }
+
+    func addInteraction(_ interaction: CoreInteraction) -> any Cancelable {
+        let type: InteractionImpl.InteractionType = switch interaction.type {
+        case .click: .tap
+        case .drag: .drag
+        case .longClick: .longPress
+        @unknown default:
+            fatalError()
+        }
+        guard let featureset = interaction.featureset else { return AnyCancelable.empty }
+        return addInteraction(InteractionImpl(featureset: featureset, filter: nil, type: type, onBegin: { feature, context in
+            let queriedFeature = QueriedFeature(
+                __feature: MapboxCommon.Feature(feature.originalFeature),
+                source: "",
+                sourceLayer: nil,
+                state: [String: Any](),
+                featuresetFeatureId: nil)
+
+            return interaction.handler.handleBegin(for: queriedFeature, context: CoreInteractionContext(coordinateInfo: CoordinateInfo(coordinate: context.coordinate, isOnSurface: context.isOnSurface), screenCoordinate: context.point.screenCoordinate))
+        }))
+    }
+
+    func addInteraction(_ interaction: InteractionImpl) -> any Cancelable {
+        self.id += 1
+        let id = self.id
+
+        interactions.append((id, interaction))
+        return BlockCancelable { [weak self] in
+            self?.interactions.removeAll { $0.0 == id }
+        }
+    }
+
+    enum DragStage {
+        case begin
+        case change
+        case end
+    }
+    enum InteractionType {
+        case tap
+        case longPress
+        case drag(DragStage)
+        func canHandle(_ interaction: InteractionImpl) -> Bool {
+            switch (self, interaction.type) {
+            case (.tap, .tap): true
+            case (.longPress, .longPress): true
+            case (.drag(_), .drag): true
+            default: false
+            }
+        }
+    }
+
+    func simulateInteraction(_ type: InteractionType, _ featureset: FeaturesetDescriptor?, feature: Feature?, context: InteractionContext) {
+        let interactiveFeature: InteractiveFeature? = if let featureset, let feature {
+            InteractiveFeature(id: feature.identifier?.string.map { FeaturesetFeatureId(id: $0) }, featureset: featureset, feature: feature, state: nil)
+        } else {
+            nil
+        }
+
+        simulateInteraction(type: type, feature: interactiveFeature, context: context)
+    }
+
+    func simulateInteraction(type: InteractionType, feature: InteractiveFeature?, context: InteractionContext) {
+        for (_, interaction) in interactions.reversed() {
+            guard type.canHandle(interaction),
+                  feature?.featureset == interaction.target?.0 else { continue }
+
+            var handled = false
+            switch type {
+            case .tap:
+                handled = interaction.onBegin(feature, context)
+            case .longPress:
+                handled = interaction.onBegin(feature, context)
+            case .drag(let dragStage):
+                switch dragStage {
+                case .begin:
+                    handled = interaction.onBegin(feature, context)
+                case .change:
+                    handled = true
+                    interaction.onChange?(context)
+                case .end:
+                    handled = true
+                    interaction.onEnd?(context)
+                }
+            }
+            if handled {
+                break
+            }
+        }
     }
 }

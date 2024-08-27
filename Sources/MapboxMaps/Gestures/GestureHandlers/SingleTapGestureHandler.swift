@@ -2,15 +2,15 @@ import UIKit
 
 /// `SingleTapGestureHandler` manages a gesture recognizer looking for single tap touch events
 final class SingleTapGestureHandler: GestureHandler {
-    var onTap: Signal<CGPoint> { onTapSubject.signal }
-    private let onTapSubject = SignalSubject<CGPoint>()
-
+    private let map: MapboxMapProtocol
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
     init(
         gestureRecognizer: UITapGestureRecognizer,
+        map: MapboxMapProtocol,
         cameraAnimationsManager: CameraAnimationsManagerProtocol
     ) {
+        self.map = map
         self.cameraAnimationsManager = cameraAnimationsManager
         gestureRecognizer.numberOfTapsRequired = 1
         gestureRecognizer.numberOfTouchesRequired = 1
@@ -24,7 +24,7 @@ final class SingleTapGestureHandler: GestureHandler {
         case .recognized:
             cameraAnimationsManager.cancelAnimations()
             let point = gestureRecognizer.location(in: gestureRecognizer.view)
-            onTapSubject.send(point)
+            map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
             delegate?.gestureBegan(for: .singleTap)
             delegate?.gestureEnded(for: .singleTap, willAnimate: false)
         default:

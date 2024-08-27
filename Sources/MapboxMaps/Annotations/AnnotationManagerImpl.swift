@@ -10,12 +10,6 @@ protocol AnnotationManagerImplProtocol {
     var allLayerIds: [String] { get }
 
     func destroy()
-
-    func handleTap(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool
-    func handleLongPress(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool
-    func handleDragBegin(with featureId: String, context: MapContentGestureContext) -> Bool
-    func handleDragChange(with translation: CGPoint, context: MapContentGestureContext)
-    func handleDragEnd(context: MapContentGestureContext)
 }
 
 final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInternal & Equatable>: AnnotationManagerImplProtocol {
@@ -30,6 +24,12 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
             mainAnnotations.removeDuplicates()
             draggedAnnotations.removeAll(keepingCapacity: true)
             draggedAnnotationIndex = nil
+
+            /// Initialize interaction handlers when they are needed
+            /// In non-SwiftUI we support legacy "selectable" attribute which requires tap handling.
+            handlesTaps = !isSwiftUI || mainAnnotations.contains(where: \.handlesTap)
+            handlesLongPress = mainAnnotations.contains(where: \.handlesLongPress)
+            handlesDrag = mainAnnotations.contains(where: \.isDraggable)
         }
     }
 
@@ -150,9 +150,17 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
     private func createClusterLayers(clusterOptions: ClusterOptions) {
         let clusterLevelLayer = createClusterLevelLayer(clusterOptions: clusterOptions)
         let clusterTextLayer = createClusterTextLayer(clusterOptions: clusterOptions)
+
         do {
             try addClusterLayer(clusterLayer: clusterLevelLayer)
             try addClusterLayer(clusterLayer: clusterTextLayer)
+
+            clusterTokens = (
+                mapboxMap.addInteraction(
+                    TapInteraction(.layer(clusterLevelLayer.id), action: clusterInteractionHandler(\.onClusterTap))).erased,
+                mapboxMap.addInteraction(
+                    LongPressInteraction(.layer(clusterLevelLayer.id), action: clusterInteractionHandler(\.onClusterLongPress))).erased
+            )
         } catch {
             Log.error(
                 forMessage: "Failed to add cluster layer in \(implementationName). Error: \(error)",
@@ -187,6 +195,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
 
     private func destroyClusterLayers() {
         do {
+            clusterTokens = nil
             try style.removeLayer(withId: "mapbox-iOS-cluster-circle-layer-manager-" + id)
             try style.removeLayer(withId: "mapbox-iOS-cluster-text-layer-manager-" + id)
         } catch {
@@ -327,61 +336,125 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
 
     // MARK: - User interaction handling
 
+    typealias TokenPair = (AnyCancelable, AnyCancelable)
+    var tapTokens: TokenPair?
+    var longPressTokens: TokenPair?
+    var dragTokens: TokenPair?
+    var clusterTokens: TokenPair?
+
+    private var handlesTaps = false {
+        didSet {
+            if handlesTaps {
+                if tapTokens == nil {
+                    tapTokens = (
+                        mapboxMap.addInteraction(tapInteraction(layerId: id)).erased,
+                        mapboxMap.addInteraction(tapInteraction(layerId: dragId)).erased
+                    )
+                }
+            } else {
+                tapTokens = nil
+            }
+        }
+    }
+
+    private var handlesLongPress = false {
+        didSet {
+            if handlesLongPress {
+                if longPressTokens == nil {
+                    longPressTokens = (
+                        mapboxMap.addInteraction(longPressInteraction(layerId: id)).erased,
+                        mapboxMap.addInteraction(longPressInteraction(layerId: dragId)).erased
+                    )
+                }
+            } else {
+                longPressTokens = nil
+            }
+        }
+    }
+
+    private var handlesDrag = false {
+        didSet {
+            if handlesDrag {
+                if dragTokens == nil {
+                    dragTokens = (
+                        mapboxMap.addInteraction(dragInteraction(layerId: id)).erased,
+                        mapboxMap.addInteraction(dragInteraction(layerId: dragId)).erased
+                    )
+                }
+            } else {
+                dragTokens = nil
+            }
+        }
+    }
+
     private var queryToken: AnyCancelable?
-    private func queryAnnotationClusterContext(
-        feature: Feature,
-        context: MapContentGestureContext,
-        completion: @escaping (Result<AnnotationClusterGestureContext, Error>) -> Void
-    ) {
-        queryToken = mapFeatureQueryable
-            .getAnnotationClusterContext(layerId: id, feature: feature, context: context, completion: completion)
-            .erased
-    }
-
-    func handleTap(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
-        if layerId == clusterId, let onClusterTap {
-            queryAnnotationClusterContext(feature: feature, context: context) { result in
-                if case let .success(clusterContext) = result {
-                    onClusterTap(clusterContext)
-                }
+    private func clusterInteractionHandler(
+        _ callbackKeyPath: KeyPath<AnnotationManagerImpl, ((AnnotationClusterGestureContext) -> Void)?>
+    ) -> (InteractiveFeature, InteractionContext) -> Bool {
+        return { [weak self] feature, context in
+            guard
+                let self,
+                let callback = self[keyPath: callbackKeyPath] else {
+                return false
             }
+            self.queryToken = mapFeatureQueryable
+                .getAnnotationClusterContext(sourceId: id, feature: feature.originalFeature, context: context) { result in
+                    if case let .success(clusterContext) = result {
+                        callback(clusterContext)
+                    }
+                }
+                .erased
             return true
         }
-
-        guard let featureId = feature.identifier?.string else { return false }
-
-        let tappedIndex = annotations.firstIndex { $0.id == featureId }
-        guard let tappedIndex else { return false }
-        var tappedAnnotation = annotations[tappedIndex]
-
-        tappedAnnotation.isSelected.toggle()
-
-        if !isSwiftUI {
-            // In-place update of annotations is not supported in SwiftUI.
-            // Use the .onTapGesture {} to update annotations on call side.
-            self.annotations[tappedIndex] = tappedAnnotation
-        }
-
-        delegate?.didTap([tappedAnnotation])
-
-        return tappedAnnotation.tapHandler?(context) ?? false
     }
 
-    func handleLongPress(layerId: String, feature: Feature, context: MapContentGestureContext) -> Bool {
-        if layerId == clusterId, let onClusterLongPress {
-            queryAnnotationClusterContext(feature: feature, context: context) { result in
-                if case let .success(clusterContext) = result {
-                    onClusterLongPress(clusterContext)
-                }
+    private func tapInteraction(layerId: String) -> TapInteraction {
+        return TapInteraction(.layer(layerId)) { [weak self] feature, context in
+            guard
+                let self,
+                let featureId = feature.originalFeature.identifier?.string else { return false }
+
+            let tappedIndex = annotations.firstIndex { $0.id == featureId }
+            guard let tappedIndex else { return false }
+            var tappedAnnotation = annotations[tappedIndex]
+
+            tappedAnnotation.isSelected.toggle()
+
+            if !isSwiftUI {
+                // In-place update of annotations is not supported in SwiftUI.
+                // Use the .onTapGesture {} to update annotations on call side.
+                self.annotations[tappedIndex] = tappedAnnotation
             }
-            return true
-        }
-        guard let featureId = feature.identifier?.string else { return false }
 
-        return annotations.first { $0.id == featureId }?.longPressHandler?(context) ?? false
+            delegate?.didTap([tappedAnnotation])
+
+            return tappedAnnotation.tapHandler?(context) ?? false
+        }
     }
 
-    func handleDragBegin(with featureId: String, context: MapContentGestureContext) -> Bool {
+    private func longPressInteraction(layerId: String) -> LongPressInteraction {
+        LongPressInteraction(.layer(layerId)) { [weak self] feature, context in
+            guard
+                let self,
+                let featureId = feature.originalFeature.identifier?.string else { return false }
+
+            return annotations.first { $0.id == featureId }?.longPressHandler?(context) ?? false
+        }
+    }
+
+    private func dragInteraction(layerId: String) -> DragInteraction {
+        DragInteraction(.layer(layerId)) { [weak self] feature, ctx in
+            guard let id = feature.originalFeature.identifier?.string else { return false }
+            return self?.handleDragBegin(with: id, context: ctx) ?? false
+        } onMove: { [weak self] ctx in
+            self?.handleDragChange(context: ctx)
+        } onEnd: { [weak self] ctx in
+            self?.handleDragEnd(context: ctx)
+        }
+
+    }
+
+    private func handleDragBegin(with featureId: String, context: InteractionContext) -> Bool {
         guard !isSwiftUI else { return false }
 
         func predicate(annotation: AnnotationType) -> Bool {
@@ -404,6 +477,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
             }
 
             draggedAnnotationIndex = idx
+            lastDragPoint = context.point
             return true
         }
 
@@ -419,6 +493,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
             let annotation = mainAnnotations.remove(at: idx)
             draggedAnnotations.append(annotation)
             draggedAnnotationIndex = draggedAnnotations.endIndex - 1
+            lastDragPoint = context.point
             syncLayerOnce.reset()
             return true
         }
@@ -437,27 +512,34 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
         }
     }
 
-    func handleDragChange(with translation: CGPoint, context: MapContentGestureContext) {
+    private var lastDragPoint: CGPoint?
+    private func handleDragChange(context: InteractionContext) {
         guard !isSwiftUI,
+              let lastDragPoint,
               let draggedAnnotationIndex,
               draggedAnnotationIndex < draggedAnnotations.endIndex
         else {
             return
         }
 
+        let translation = lastDragPoint - context.point
+        self.lastDragPoint = context.point
+
         draggedAnnotations[draggedAnnotationIndex].drag(translation: translation, in: mapboxMap)
         callDragHandler(\.dragChangeHandler, context: context)
+
     }
 
-    func handleDragEnd(context: MapContentGestureContext) {
+    private func handleDragEnd(context: InteractionContext) {
         guard !isSwiftUI else { return }
         callDragHandler(\.dragEndHandler, context: context)
         draggedAnnotationIndex = nil
+        lastDragPoint = nil
     }
 
     private func callDragHandler(
-        _ keyPath: KeyPath<AnnotationType, ((inout AnnotationType, MapContentGestureContext) -> Void)?>,
-        context: MapContentGestureContext
+        _ keyPath: KeyPath<AnnotationType, ((inout AnnotationType, InteractionContext) -> Void)?>,
+        context: InteractionContext
     ) {
         guard let draggedAnnotationIndex, draggedAnnotationIndex < draggedAnnotations.endIndex else {
             return

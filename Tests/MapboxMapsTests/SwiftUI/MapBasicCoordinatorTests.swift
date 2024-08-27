@@ -105,10 +105,10 @@ final class MapBasicCoordinatorTests: XCTestCase {
     }
 
     func testContentGestures() {
-        let onTapGesture = Stub<MapContentGestureContext, Void>()
-        let onLongPressGesture = Stub<MapContentGestureContext, Void>()
-        let onLayerTapGesture = Stub<(QueriedFeature, MapContentGestureContext), Bool>(defaultReturnValue: true)
-        let onLayerLongPressGesture = Stub<(QueriedFeature, MapContentGestureContext), Bool>(defaultReturnValue: true)
+        let onTapGesture = Stub<InteractionContext, Void>()
+        let onLongPressGesture = Stub<InteractionContext, Void>()
+        let onLayerTapGesture = Stub<(QueriedFeature, InteractionContext), Bool>(defaultReturnValue: true)
+        let onLayerLongPressGesture = Stub<(QueriedFeature, InteractionContext), Bool>(defaultReturnValue: true)
 
         let deps = MapDependencies(
             onMapTap: onTapGesture.call(with:),
@@ -118,17 +118,16 @@ final class MapBasicCoordinatorTests: XCTestCase {
         )
         update(with: deps)
 
-        let contentGestures = mapView.gestures.contentManager
         let point = CGPoint(x: 10, y: 20)
         let coordinate = CLLocationCoordinate2D(latitude: 30, longitude: 40)
-        let context = MapContentGestureContext(point: point, coordinate: coordinate)
+        let context = InteractionContext(point: point, coordinate: coordinate)
 
-        contentGestures.$onMapTap.send(context)
+        mapView.gestures.$onMapTap.send(context)
         XCTAssertEqual(onTapGesture.invocations.count, 1)
         XCTAssertEqual(onTapGesture.invocations.first?.parameters.point, point)
         XCTAssertEqual(onTapGesture.invocations.first?.parameters.coordinate, coordinate)
 
-        contentGestures.$onMapLongPress.send(context)
+        mapView.gestures.$onMapLongPress.send(context)
         XCTAssertEqual(onLongPressGesture.invocations.count, 1)
         XCTAssertEqual(onLongPressGesture.invocations.first?.parameters.point, point)
         XCTAssertEqual(onLongPressGesture.invocations.first?.parameters.coordinate, coordinate)
@@ -141,13 +140,13 @@ final class MapBasicCoordinatorTests: XCTestCase {
             state: [String: Any](),
             featuresetFeatureId: nil)
 
-        contentGestures.simulateLayerTap(layerId: "layer1", queriedFeature: queriedFeature, context: context)
+        mapView.gestures.simulateLayerTap(layerId: "layer1", queriedFeature: queriedFeature, context: context)
         XCTAssertEqual(onLayerTapGesture.invocations.count, 1)
         XCTAssertEqual(onLayerTapGesture.invocations.first?.parameters.0, queriedFeature)
         XCTAssertEqual(onLayerTapGesture.invocations.first?.parameters.1.point, point)
         XCTAssertEqual(onLayerTapGesture.invocations.first?.parameters.1.coordinate, coordinate)
 
-        contentGestures.simulateLayerLongPress(layerId: "layer1", queriedFeature: queriedFeature, context: context)
+        mapView.gestures.simulateLayerLongPress(layerId: "layer1", queriedFeature: queriedFeature, context: context)
         XCTAssertEqual(onLayerLongPressGesture.invocations.count, 1)
         XCTAssertEqual(onLayerLongPressGesture.invocations.first?.parameters.0, queriedFeature)
         XCTAssertEqual(onLayerLongPressGesture.invocations.first?.parameters.1.point, point)

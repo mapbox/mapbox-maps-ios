@@ -1741,6 +1741,92 @@ Extension Array has removed conformance to RawRepresentable
 Extension Dictionary has removed conformance to RawRepresentable
 
 // Removing experimental model-front-model
-Func ModelLayer.modelFrontCutoff(_:) has been removed 
-Func ModelLayer.modelFrontCutoff(start:range:end:) has been removed 
-Var ModelLayer.modelFrontCutoff has been removed 
+Func ModelLayer.modelFrontCutoff(_:) has been removed
+Func ModelLayer.modelFrontCutoff(start:range:end:) has been removed
+Var ModelLayer.modelFrontCutoff has been removed
+
+// Interactive features
+Accessor CircleAnnotation.dragBeginHandler.Get() has return type change from ((inout MapboxMaps.CircleAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.CircleAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor CircleAnnotation.dragBeginHandler.Set() has parameter 0 type change from ((inout MapboxMaps.CircleAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.CircleAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor CircleAnnotation.dragChangeHandler.Get() has return type change from ((inout MapboxMaps.CircleAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.CircleAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor CircleAnnotation.dragChangeHandler.Set() has parameter 0 type change from ((inout MapboxMaps.CircleAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.CircleAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor CircleAnnotation.dragEndHandler.Get() has return type change from ((inout MapboxMaps.CircleAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.CircleAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor CircleAnnotation.dragEndHandler.Set() has parameter 0 type change from ((inout MapboxMaps.CircleAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.CircleAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor CircleAnnotation.longPressHandler.Get() has return type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor CircleAnnotation.longPressHandler.Set() has parameter 0 type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor CircleAnnotation.tapHandler.Get() has return type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor CircleAnnotation.tapHandler.Set() has parameter 0 type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor GestureManager.onMapLongPress.Get() has return type change from MapboxMaps.Signal<MapboxMaps.MapContentGestureContext> to MapboxMaps.Signal<MapboxMaps.InteractionContext>
+Accessor GestureManager.onMapTap.Get() has return type change from MapboxMaps.Signal<MapboxMaps.MapContentGestureContext> to MapboxMaps.Signal<MapboxMaps.InteractionContext>
+Accessor PointAnnotation.dragBeginHandler.Get() has return type change from ((inout MapboxMaps.PointAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.PointAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PointAnnotation.dragBeginHandler.Set() has parameter 0 type change from ((inout MapboxMaps.PointAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.PointAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PointAnnotation.dragChangeHandler.Get() has return type change from ((inout MapboxMaps.PointAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PointAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PointAnnotation.dragChangeHandler.Set() has parameter 0 type change from ((inout MapboxMaps.PointAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PointAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PointAnnotation.dragEndHandler.Get() has return type change from ((inout MapboxMaps.PointAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PointAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PointAnnotation.dragEndHandler.Set() has parameter 0 type change from ((inout MapboxMaps.PointAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PointAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PointAnnotation.longPressHandler.Get() has return type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PointAnnotation.longPressHandler.Set() has parameter 0 type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PointAnnotation.tapHandler.Get() has return type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PointAnnotation.tapHandler.Set() has parameter 0 type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolygonAnnotation.dragBeginHandler.Get() has return type change from ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolygonAnnotation.dragBeginHandler.Set() has parameter 0 type change from ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolygonAnnotation.dragChangeHandler.Get() has return type change from ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PolygonAnnotation.dragChangeHandler.Set() has parameter 0 type change from ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PolygonAnnotation.dragEndHandler.Get() has return type change from ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PolygonAnnotation.dragEndHandler.Set() has parameter 0 type change from ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PolygonAnnotation.longPressHandler.Get() has return type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolygonAnnotation.longPressHandler.Set() has parameter 0 type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolygonAnnotation.tapHandler.Get() has return type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolygonAnnotation.tapHandler.Set() has parameter 0 type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolylineAnnotation.dragBeginHandler.Get() has return type change from ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolylineAnnotation.dragBeginHandler.Set() has parameter 0 type change from ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolylineAnnotation.dragChangeHandler.Get() has return type change from ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PolylineAnnotation.dragChangeHandler.Set() has parameter 0 type change from ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PolylineAnnotation.dragEndHandler.Get() has return type change from ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PolylineAnnotation.dragEndHandler.Set() has parameter 0 type change from ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Accessor PolylineAnnotation.longPressHandler.Get() has return type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolylineAnnotation.longPressHandler.Set() has parameter 0 type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolylineAnnotation.tapHandler.Get() has return type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Accessor PolylineAnnotation.tapHandler.Set() has parameter 0 type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Func CircleAnnotation.onLongPressGesture(handler:) has parameter 0 type change from (MapboxMaps.MapContentGestureContext) -> Swift.Bool to (MapboxMaps.InteractionContext) -> Swift.Bool
+Func CircleAnnotation.onTapGesture(handler:) has parameter 0 type change from (MapboxMaps.MapContentGestureContext) -> Swift.Bool to (MapboxMaps.InteractionContext) -> Swift.Bool
+Func Map.onMapLongPressGesture(perform:) has parameter 0 type change from (MapboxMaps.MapContentGestureContext) -> Swift.Void to (MapboxMaps.InteractionContext) -> Swift.Void
+Func Map.onMapTapGesture(perform:) has parameter 0 type change from (MapboxMaps.MapContentGestureContext) -> Swift.Void to (MapboxMaps.InteractionContext) -> Swift.Void
+Func MapboxMap.queryRenderedFeatures(with:options:completion:) has parameter 0 type change from CoreFoundation.CGRect to some MapboxMaps.RenderedQueryGeometryConvertible
+Func MapboxMap.queryRenderedFeatures(with:options:completion:) has parameter 0 type change from [CoreFoundation.CGPoint] to some MapboxMaps.RenderedQueryGeometryConvertible
+Func MapboxMap.queryRenderedFeatures(with:options:completion:) has parameter 1 type change from MapboxCoreMaps.RenderedQueryOptions? to [MapboxMaps.FeaturesetQueryTarget]
+Func MapboxMap.queryRenderedFeatures(with:options:completion:) has removed default argument from parameter 1
+Func PointAnnotation.onLongPressGesture(handler:) has parameter 0 type change from (MapboxMaps.MapContentGestureContext) -> Swift.Bool to (MapboxMaps.InteractionContext) -> Swift.Bool
+Func PointAnnotation.onTapGesture(handler:) has parameter 0 type change from (MapboxMaps.MapContentGestureContext) -> Swift.Bool to (MapboxMaps.InteractionContext) -> Swift.Bool
+Func PolygonAnnotation.onLongPressGesture(handler:) has parameter 0 type change from (MapboxMaps.MapContentGestureContext) -> Swift.Bool to (MapboxMaps.InteractionContext) -> Swift.Bool
+Func PolygonAnnotation.onTapGesture(handler:) has parameter 0 type change from (MapboxMaps.MapContentGestureContext) -> Swift.Bool to (MapboxMaps.InteractionContext) -> Swift.Bool
+Func PolylineAnnotation.onLongPressGesture(handler:) has parameter 0 type change from (MapboxMaps.MapContentGestureContext) -> Swift.Bool to (MapboxMaps.InteractionContext) -> Swift.Bool
+Func PolylineAnnotation.onTapGesture(handler:) has parameter 0 type change from (MapboxMaps.MapContentGestureContext) -> Swift.Bool to (MapboxMaps.InteractionContext) -> Swift.Bool
+TypeAlias MapLayerGestureHandler has underlying type change from (MapboxCoreMaps.QueriedFeature, MapboxMaps.MapContentGestureContext) -> Swift.Bool to (MapboxCoreMaps.QueriedFeature, MapboxMaps.InteractionContext) -> Swift.Bool
+Var CircleAnnotation.dragBeginHandler has declared type change from ((inout MapboxMaps.CircleAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.CircleAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Var CircleAnnotation.dragChangeHandler has declared type change from ((inout MapboxMaps.CircleAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.CircleAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Var CircleAnnotation.dragEndHandler has declared type change from ((inout MapboxMaps.CircleAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.CircleAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Var CircleAnnotation.longPressHandler has declared type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Var CircleAnnotation.tapHandler has declared type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Var GestureManager.onMapLongPress has declared type change from MapboxMaps.Signal<MapboxMaps.MapContentGestureContext> to MapboxMaps.Signal<MapboxMaps.InteractionContext>
+Var GestureManager.onMapTap has declared type change from MapboxMaps.Signal<MapboxMaps.MapContentGestureContext> to MapboxMaps.Signal<MapboxMaps.InteractionContext>
+Var PointAnnotation.dragBeginHandler has declared type change from ((inout MapboxMaps.PointAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.PointAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Var PointAnnotation.dragChangeHandler has declared type change from ((inout MapboxMaps.PointAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PointAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Var PointAnnotation.dragEndHandler has declared type change from ((inout MapboxMaps.PointAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PointAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Var PointAnnotation.longPressHandler has declared type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Var PointAnnotation.tapHandler has declared type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Var PolygonAnnotation.dragBeginHandler has declared type change from ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Var PolygonAnnotation.dragChangeHandler has declared type change from ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Var PolygonAnnotation.dragEndHandler has declared type change from ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolygonAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Var PolygonAnnotation.longPressHandler has declared type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Var PolygonAnnotation.tapHandler has declared type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Var PolylineAnnotation.dragBeginHandler has declared type change from ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.InteractionContext) -> Swift.Bool)?
+Var PolylineAnnotation.dragChangeHandler has declared type change from ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Var PolylineAnnotation.dragEndHandler has declared type change from ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.MapContentGestureContext) -> Swift.Void)? to ((inout MapboxMaps.PolylineAnnotation, MapboxMaps.InteractionContext) -> Swift.Void)?
+Var PolylineAnnotation.longPressHandler has declared type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+Var PolylineAnnotation.tapHandler has declared type change from ((MapboxMaps.MapContentGestureContext) -> Swift.Bool)? to ((MapboxMaps.InteractionContext) -> Swift.Bool)?
+
+// This fails false-negatively. The original QRF method is source compatible (no examples were changed).
+Func MapboxMap.queryRenderedFeatures(with:options:completion:) has been renamed to Func queryRenderedFeatures(with:targets:completion:)
+Func MapboxMap.queryRenderedFeatures(with:options:completion:) is now with @_documentation
+Func MapboxMap.queryRenderedFeatures(with:options:completion:) is now with @_spi

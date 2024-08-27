@@ -73,10 +73,10 @@
 
 ### Quering map features
 
-- ``MapboxMap/queryRenderedFeatures(with:options:completion:)-5p9gh``
-- ``MapboxMap/queryRenderedFeatures(with:options:completion:)-8iu3i``
-- ``MapboxMap/queryRenderedFeatures(with:options:completion:)-2qoxs``
+- ``MapboxMap/queryRenderedFeatures(with:options:completion:)``
+- ``MapboxMap/queryRenderedFeatures(with:targets:completion:)``
 - ``MapboxMap/querySourceFeatures(for:options:completion:)``
+- ``MapboxMap/querySourceFeatures(for:completion:)``
 - ``MapboxMap/getGeoJsonClusterLeaves(forSourceId:feature:limit:offset:completion:)``
 - ``MapboxMap/getGeoJsonClusterChildren(forSourceId:feature:completion:)``
 - ``MapboxMap/getGeoJsonClusterExpansionZoom(forSourceId:feature:completion:)``

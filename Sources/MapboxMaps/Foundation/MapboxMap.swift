@@ -1,5 +1,6 @@
 // swiftlint:disable file_length
 import UIKit
+import MapboxCoreMaps
 @_implementationOnly import MapboxCommon_Private
 import Turf
 
@@ -59,6 +60,13 @@ protocol MapboxMapProtocol: AnyObject {
     var onRenderFrameStarted: Signal<RenderFrameStarted> { get }
     var onRenderFrameFinished: Signal<RenderFrameFinished> { get }
     var onResourceRequest: Signal<ResourceRequest> { get }
+
+    func dispatch(event: CorePlatformEventInfo)
+    @discardableResult func addInteraction(_ interaction: some Interaction) -> Cancelable
+    @discardableResult func addInteraction(_ interaction: InteractionImpl) -> Cancelable
+    @discardableResult func addInteraction(_ interaction: CoreInteraction) -> Cancelable
+    @discardableResult func setFeatureState(featureset: FeaturesetDescriptor, featureId: FeaturesetFeatureId, state: JSONObject, callback: @escaping (Result<NSNull, Error>) -> Void) -> Cancelable
+    @discardableResult func removeFeatureState(featureset: FeaturesetDescriptor, featureId: FeaturesetFeatureId, stateKey: String?, callback: @escaping (Result<NSNull, Error>) -> Void) -> Cancelable
 }
 
 // swiftlint:disable type_body_length
@@ -997,6 +1005,10 @@ public final class MapboxMap: StyleManager {
             __map.setCenterAltitudeModeFor(gestureState.intrinsicMode)
         }
     }
+
+    func dispatch(event: CorePlatformEventInfo) {
+        __map.dispatch(for: event)
+    }
 }
 
 extension MapboxMap: MapboxMapProtocol {}
@@ -1009,44 +1021,61 @@ extension MapboxMap: MapFeatureQueryable {
 
     /// Queries the map for rendered features.
     ///
+    /// The feature must be visible on screen to be queried. The `geometry` defines a portion of the screen that should be queried. Thus, it must be a screen coordinate.
+    ///
+    /// If the `geometry` parameter is CGPoint, only that point is queried. When it's a `CGRect` or an array of `CGPoint`, the shape is queried.
+    ///
+    /// - Important: If you need to handle basic gestures on map content, please prefer to use Interactions API (see ``MapboxMap/addInteraction(_:)``). If you need to query a featureset from an imported style, use ``queryRenderedFeatures(with:targets:completion:)`` instead.
+    ///
     /// - Parameters:
-    ///   - shape: Screen point coordinates (point, line string or box) to query
-    ///         for rendered features.
+    ///   - geometry: A screen geometry to query. Can be a `CGPoint`, `CGRect`, or an array of `CGPoint`.
     ///   - options: Options for querying rendered features.
     ///   - completion: Callback called when the query completes.
     @discardableResult
-    public func queryRenderedFeatures(with shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
-        return __map.__queryRenderedFeatures(for: .fromNSArray(shape.map {$0.screenCoordinate}),
-                                       options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
-                                       callback: coreAPIClosureAdapter(for: completion,
-                                                                       type: NSArray.self,
-                                                                       concreteErrorType: MapError.self))
+    public func queryRenderedFeatures(with geometry: some RenderedQueryGeometryConvertible, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
+        return __map.__queryRenderedFeatures(for: geometry.geometry.core,
+                                             options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
+                                             callback: coreAPIClosureAdapter(for: completion,
+                                                                             type: NSArray.self,
+                                                                             concreteErrorType: MapError.self))
     }
 
-    /// Queries the map for rendered features.
+    /// Queries the map for rendered features using featureset descriptors.
+    ///
+    /// This method allows to query both featureset from imported styles and user layers in the root style.
+    /// The results can be additionally filtered per-featureset.
+    ///
+    /// ```swift
+    /// let targets = [
+    ///     FeaturesetQueryTarget(
+    ///         featureset: .layer("my-layer"),
+    ///         filter: Exp(.eq) {
+    ///             Exp(.get) { "type" }
+    ///             "hotel"
+    ///         }
+    ///     ),
+    ///     FeaturesetQueryTarget(featureset: .featureset("poi", importId: "basemap"))
+    /// ]
+    /// mapView.mapboxMap.queryRenderedFeatures(with: CGPoint(x: 0, y: 0),
+    ///                            targets: targets) { result in
+    ///     // handle features in result
+    /// }
+    /// ```
+    ///
+    /// - Important: If you need to handle basic gestures on map content, please prefer to use Interactions API, see ``MapboxMap/addInteraction(_:)``.
     ///
     /// - Parameters:
-    ///   - rect: Screen rect to query for rendered features.
-    ///   - options: Options for querying rendered features.
+    ///   - geometry: A screen geometry to query. Can be a `CGPoint`, `CGRect`, or an array of `CGPoint`.
+    ///   - targets: An array of targets to query with.
     ///   - completion: Callback called when the query completes.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
     @discardableResult
-    public func queryRenderedFeatures(with rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
-        return __map.__queryRenderedFeatures(for: .fromScreenBox(.init(rect)),
-                                       options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
-                                       callback: coreAPIClosureAdapter(for: completion,
-                                                                       type: NSArray.self,
-                                                                       concreteErrorType: MapError.self))
-    }
-    /// Queries the map for rendered features.
-    ///
-    /// - Parameters:
-    ///   - point: Screen point at which to query for rendered features.
-    ///   - options: Options for querying rendered features.
-    ///   - completion: Callback called when the query completes.
-    @discardableResult
-    public func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
-        return __map.__queryRenderedFeatures(for: .fromScreenCoordinate(point.screenCoordinate),
-                                             options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
+    public func queryRenderedFeatures(with geometry: some RenderedQueryGeometryConvertible,
+                                      targets: [FeaturesetQueryTarget],
+                                      completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
+        return __map.__queryRenderedFeatures(for: geometry.geometry.core,
+                                             targets: targets.map(\.core),
                                              callback: coreAPIClosureAdapter(for: completion,
                                                                              type: NSArray.self,
                                                                              concreteErrorType: MapError.self))
@@ -1064,6 +1093,22 @@ extension MapboxMap: MapFeatureQueryable {
                                     completion: @escaping (Result<[QueriedSourceFeature], Error>) -> Void) -> Cancelable {
         return __map.__querySourceFeatures(forSourceId: sourceId,
                                   options: options,
+                                  callback: coreAPIClosureAdapter(for: completion,
+                                                                  type: NSArray.self,
+                                                                  concreteErrorType: MapError.self))
+    }
+
+    /// Queries  the source features for a given featureset.
+    ///
+    /// - Parameters:
+    ///   - target: A featureset query target.
+    ///   - completion: Callback called when the query completes.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    @discardableResult
+    public func querySourceFeatures(for target: FeaturesetQueryTarget,
+                                    completion: @escaping (Result<[QueriedSourceFeature], Error>) -> Void) -> Cancelable {
+        return __map.__querySourceFeatures(for: target.core,
                                   callback: coreAPIClosureAdapter(for: completion,
                                                                   type: NSArray.self,
                                                                   concreteErrorType: MapError.self))
@@ -1327,6 +1372,52 @@ extension MapboxMap {
                                                                                   concreteErrorType: MapError.self))
     }
 
+    /// Update the state map of a feature within a featureset.
+    /// Update entries in the state map of a given feature within a style source. Only entries listed in the state map
+    /// will be updated. An entry in the feature state map that is not listed in `state` will retain its previous value.
+    ///
+    /// - Parameters:
+    ///   - featureset: The featureset to look the feature in.
+    ///   - featureId: Identifier of the feature whose state should be updated.
+    ///   - state: Map of entries to update with their respective new values
+    ///   - callback: The `feature state operation callback` called when the operation completes or ends.
+    ///
+    /// - Returns: A `Cancelable` object  that could be used to cancel the pending operation.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    @discardableResult
+    public func setFeatureState(featureset: FeaturesetDescriptor, featureId: FeaturesetFeatureId, state: JSONObject, callback: @escaping (Result<NSNull, Error>) -> Void) -> Cancelable {
+
+        return __map.__setFeatureStateForFeatureset(featureset,
+                                                    featureId: featureId.core,
+                                                    state: state.turfRawValue,
+                                                    callback: coreAPIClosureAdapter(for: callback,
+                                                                                    type: NSNull.self,
+                                                                                    concreteErrorType: MapError.self))
+    }
+
+    /// Update the state map of an individual feature.
+    ///
+    ///  The feature should have a non-nil ``InteractiveFeature/id`` feature. Otherwise,
+    ///  the operation will be no-op and callback will receive an error.
+    ///
+    /// - Parameters:
+    ///   - feature: The feature to update.
+    ///   - state: Map of entries to update with their respective new values
+    ///   - callback: The `feature state operation callback` called when the operation completes or ends.
+    ///
+    /// - Returns: A `Cancelable` object  that could be used to cancel the pending operation.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    @discardableResult
+    public func setFeatureState(feature: InteractiveFeature, state: JSONObject, callback: ((Result<NSNull, Error>) -> Void)? = nil) -> Cancelable {
+        guard let id = feature.id else {
+            callback?(.failure(MapError(coreError: "Feature id is not specified")))
+            return AnyCancelable.empty
+        }
+        return setFeatureState(featureset: feature.featureset, featureId: id, state: state, callback: callback ?? { _ in })
+    }
+
     /// Get the state map of a feature within a style source.
     ///
     /// - Parameters:
@@ -1344,6 +1435,43 @@ extension MapboxMap {
                               callback: coreAPIClosureAdapter(for: callback,
                                                               type: AnyObject.self,
                                                               concreteErrorType: MapError.self))
+    }
+
+    /// Get the state map of a feature within a style source.
+    ///
+    /// - Parameters:
+    ///   - featureset: A featureset the feature belongs to.
+    ///   - featureId: Identifier of the feature whose state should be queried.
+    ///   - callback: Feature's state map or an empty map if the feature could not be found.
+    ///
+    /// - Returns: A `Cancelable` object that could be used to cancel the pending query.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    @discardableResult
+    public func getFeatureState(featureset: FeaturesetDescriptor, featureId: FeaturesetFeatureId, callback: @escaping (Result<[String: Any], Error>) -> Void) -> Cancelable {
+        __map.__getFeatureState(forFeatureset: featureset,
+                                featureId: featureId.core,
+                                callback: coreAPIClosureAdapter(for: callback,
+                                                                type: AnyObject.self,
+                                                                concreteErrorType: MapError.self))
+    }
+
+    /// Get the state map of a feature within a style source.
+    ///
+    /// - Parameters:
+    ///   - feature: An interactive feature to query the state from.
+    ///   - callback: Feature's state map or an empty map if the feature could not be found.
+    ///
+    /// - Returns: A `Cancelable` object that could be used to cancel the pending query.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    @discardableResult
+    public func getFeatureState(feature: InteractiveFeature, callback: @escaping (Result<[String: Any], Error>) -> Void) -> Cancelable {
+        guard let id = feature.id else {
+            callback(.failure(MapError(coreError: "Feature id is not specified")))
+            return AnyCancelable.empty
+        }
+        return getFeatureState(featureset: feature.featureset, featureId: id, callback: callback)
     }
 
     /// Removes entries from a feature state object.
@@ -1366,6 +1494,48 @@ extension MapboxMap {
                                 callback: coreAPIClosureAdapter(for: callback,
                                                                 type: NSNull.self,
                                                                   concreteErrorType: MapError.self))
+    }
+
+    /// Removes entries from a feature state object of a feature in the specified featureset.
+    /// Remove a specified property or all property from a feature's state object, depending on the value of `stateKey`.
+    ///
+    /// - Parameters:
+    ///   - featureset: A featureset the feature belongs to.
+    ///   - featureId: Identifier of the feature whose state should be queried.
+    ///   - stateKey: The key of the property to remove. If `nil`, all feature's state object properties are removed. Defaults to `nil`.
+    ///   - callback: The `feature state operation callback` called when the operation completes or ends.
+    ///
+    /// - Returns: A `Cancelable` object that could be used to cancel the pending operation.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    @discardableResult
+    public func removeFeatureState(featureset: FeaturesetDescriptor, featureId: FeaturesetFeatureId, stateKey: String? = nil, callback: @escaping (Result<NSNull, Error>) -> Void) -> Cancelable {
+        return __map.__removeFeatureState(forFeatureset: featureset,
+                                          featureId: featureId.core,
+                                          stateKey: stateKey,
+                                                  callback: coreAPIClosureAdapter(for: callback,
+                                                                                  type: NSNull.self,
+                                                                                  concreteErrorType: MapError.self))
+    }
+
+    /// Removes entries from a specified Feature.
+    /// Remove a specified property or all property from a feature's state object, depending on the value of `stateKey`.
+    ///
+    /// - Parameters:
+    ///   - feature: An interactive feature to update.
+    ///   - stateKey: The key of the property to remove. If `nil`, all feature's state object properties are removed. Defaults to `nil`.
+    ///   - callback: The `feature state operation callback` called when the operation completes or ends.
+    ///
+    /// - Returns: A `Cancelable` object that could be used to cancel the pending operation.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    @discardableResult
+    public func removeFeatureState(feature: InteractiveFeature, stateKey: String?, callback: ((Result<NSNull, Error>) -> Void)? = nil) -> Cancelable {
+        guard let id = feature.id else {
+            callback?(.failure(MapError(coreError: "Feature id is not specified")))
+            return AnyCancelable.empty
+        }
+        return removeFeatureState(featureset: feature.featureset, featureId: id, stateKey: stateKey, callback: callback ?? { _ in })
     }
 
     /// Reset all the feature states within a style source.
@@ -1429,7 +1599,6 @@ extension MapboxMap {
         }
         return ViewAnnotationOptions(options)
     }
-
 }
 
 // MARK: - TileCover
@@ -1456,6 +1625,43 @@ extension MapboxMap {
     /// Create a ``MapRecorder-4soa`` to record the current MapboxMap
     @_spi(Experimental) public final func makeRecorder() throws -> MapRecorder {
         try MapRecorder(mapView: __map)
+    }
+}
+
+// MARK: - Interactions
+
+extension MapboxMap {
+    func addInteraction(_ interaction: CoreInteraction) -> Cancelable {
+        __map.addInteraction(for: interaction)
+    }
+
+    /// Adds interaction to the map.
+    ///
+    /// Use this method to add ``TapInteraction`` or ``LongPressInteraction`` to the map.
+    ///
+    /// ```swift
+    /// map.addInteraction(TapInteraction(.layer("my-layer") { feature, context in
+    ///     // Handle tap on the feature
+    ///     return true // Stops propagation to features below or the map.
+    /// })
+    ///
+    /// map.addInteraction(TapInteraction{ context in
+    ///     // Handle tap on the map itself
+    ///     return true
+    /// })
+    /// ```
+    ///
+    /// - Parameters:
+    ///     - interaction: An instance of interaction
+    /// - Returns: A cancelable token that cancels (removes) the interaction.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    @discardableResult public func addInteraction(_ interaction: some Interaction) -> Cancelable {
+        addInteraction(interaction.impl)
+    }
+
+    @discardableResult func addInteraction(_ interaction: InteractionImpl) -> Cancelable {
+        addInteraction(CoreInteraction(impl: interaction))
     }
 }
 

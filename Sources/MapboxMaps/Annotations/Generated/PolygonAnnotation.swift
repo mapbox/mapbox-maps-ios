@@ -22,7 +22,7 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
     /// Handles tap gesture on this annotation.
     ///
     /// Should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
-    public var tapHandler: ((MapContentGestureContext) -> Bool)? {
+    public var tapHandler: ((InteractionContext) -> Bool)? {
         get { gestureHandlers.value.tap }
         set { gestureHandlers.value.tap = newValue }
     }
@@ -30,7 +30,7 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
     /// Handles long press gesture on this annotation.
     ///
     /// Should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
-    public var longPressHandler: ((MapContentGestureContext) -> Bool)? {
+    public var longPressHandler: ((InteractionContext) -> Bool)? {
         get { gestureHandlers.value.longPress }
         set { gestureHandlers.value.longPress = newValue }
     }
@@ -45,7 +45,7 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
     /// - Use the `annotation` inout property to update properties of the annotation.
     /// - The `context` contains position of the gesture.
     /// Return `true` to allow dragging to begin, or `false` to prevent it and propagate the gesture to the map's other annotations or layers.
-    public var dragBeginHandler: ((inout PolygonAnnotation, MapContentGestureContext) -> Bool)? {
+    public var dragBeginHandler: ((inout PolygonAnnotation, InteractionContext) -> Bool)? {
         get { gestureHandlers.value.dragBegin }
         set { gestureHandlers.value.dragBegin = newValue }
     }
@@ -55,7 +55,7 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
     /// The handler receives the `annotation` and the `context` parameters of the gesture:
     /// - Use the `annotation` inout property to update properties of the annotation.
     /// - The `context` contains position of the gesture.
-    public var dragChangeHandler: ((inout PolygonAnnotation, MapContentGestureContext) -> Void)? {
+    public var dragChangeHandler: ((inout PolygonAnnotation, InteractionContext) -> Void)? {
         get { gestureHandlers.value.dragChange }
         set { gestureHandlers.value.dragChange = newValue }
     }
@@ -63,7 +63,7 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
     /// The handler receives the `annotation` and the `context` parameters of the gesture:
     /// - Use the `annotation` inout property to update properties of the annotation.
     /// - The `context` contains position of the gesture.
-    public var dragEndHandler: ((inout PolygonAnnotation, MapContentGestureContext) -> Void)? {
+    public var dragEndHandler: ((inout PolygonAnnotation, InteractionContext) -> Void)? {
         get { gestureHandlers.value.dragEnd }
         set { gestureHandlers.value.dragEnd = newValue }
     }
@@ -185,7 +185,7 @@ extension PolygonAnnotation {
     ///
     /// - Parameters:
     ///   - handler: A handler for tap gesture.
-    public func onTapGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
+    public func onTapGesture(handler: @escaping (InteractionContext) -> Bool) -> Self {
         with(self, setter(\.tapHandler, handler))
     }
 
@@ -206,7 +206,7 @@ extension PolygonAnnotation {
     ///
     /// - Parameters:
     ///   - handler: A handler for long press gesture.
-    public func onLongPressGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
+    public func onLongPressGesture(handler: @escaping (InteractionContext) -> Bool) -> Self {
         with(self, setter(\.longPressHandler, handler))
     }
 

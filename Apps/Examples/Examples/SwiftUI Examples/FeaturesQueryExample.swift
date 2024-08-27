@@ -46,7 +46,7 @@ private class Model: ObservableObject {
 
     private var cancellable: Cancelable?
 
-    func mapTapped(_ context: MapContentGestureContext, map: MapboxMap?, bottomInset: CGFloat) {
+    func mapTapped(_ context: InteractionContext, map: MapboxMap?, bottomInset: CGFloat) {
         cancellable?.cancel()
         guard let map = map else {
             return

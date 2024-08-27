@@ -1,23 +1,39 @@
 import UIKit
 
-final class LongPressGestureHandler: NSObject, UIGestureRecognizerDelegate {
-    let recognizer = UILongPressGestureRecognizer()
+final class LongPressGestureHandler: GestureHandler, UIGestureRecognizerDelegate {
+    private let map: MapboxMapProtocol
 
-    /// Returns signal that retains self while being observed.
-    var signal: Signal<(CGPoint, UIGestureRecognizer.State)> {
-        Signal(gesture: recognizer).map { ($0.location(in: $0.view), $0.state) }
-    }
-
-    override init() {
-        super.init()
-        recognizer.delegate = self
+    init(gestureRecognizer: UILongPressGestureRecognizer, map: MapboxMapProtocol) {
+        self.map = map
+        super.init(gestureRecognizer: gestureRecognizer)
+        gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
+        gestureRecognizer.delegate = self
     }
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        assert(gestureRecognizer == recognizer)
+        assert(gestureRecognizer == self.gestureRecognizer)
 
         guard gestureRecognizer.attachedToSameView(as: otherGestureRecognizer) else { return true }
 
         return otherGestureRecognizer is UILongPressGestureRecognizer
+    }
+
+    @objc private func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
+        assert(gestureRecognizer == self.gestureRecognizer)
+        let point = gestureRecognizer.location(in: gestureRecognizer.view).screenCoordinate
+        switch gestureRecognizer.state {
+        case .began:
+            map.dispatch(event: CorePlatformEventInfo(type: .longClick, screenCoordinate: point))
+            map.dispatch(event: CorePlatformEventInfo(type: .dragBegin, screenCoordinate: point))
+
+        case .changed:
+            map.dispatch(event: CorePlatformEventInfo(type: .drag, screenCoordinate: point))
+
+        case .ended, .cancelled:
+            map.dispatch(event: CorePlatformEventInfo(type: .dragEnd, screenCoordinate: point))
+
+        default:
+            break
+        }
     }
 }

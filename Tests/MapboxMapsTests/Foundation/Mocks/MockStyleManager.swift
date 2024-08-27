@@ -3,6 +3,11 @@ import Foundation
 @_implementationOnly import MapboxCommon_Private
 
 class MockStyleManager: StyleManagerProtocol {
+    let getFeaturesetsStub = Stub<Void, [FeaturesetDescriptor]>(defaultReturnValue: [])
+    func getStyleFeaturesets() -> [FeaturesetDescriptor] {
+        getFeaturesetsStub.call()
+    }
+
     struct LoadStyleParams {
         var value: String
         var callbacks: RuntimeStylingCallbacks

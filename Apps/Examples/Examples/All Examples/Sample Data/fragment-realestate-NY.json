@@ -16,6 +16,13 @@
             "url": "mapbox://examples.clkiiizwk04l62jo3rjx61lgj-7xsxp"
         }
     },
+    "featuresets": {
+        "hotels-price": {
+            "selectors": [
+                { "layer": "NY-hotels-price" }
+            ]
+        }
+    },
     "layers": [
         {
             "id": "subway-lines",
@@ -306,7 +313,14 @@
                 "icon-image": "price_1.2",
                 "text-font": ["Open Sans ExtraBold", "Arial Unicode MS Regular"]
             },
-            "paint": {"text-color": "hsl(220, 100%, 20%)"}
+            "paint": {
+                "text-color": [
+                    "case",
+                    ["to-boolean", ["feature-state", "active"]],
+                    "red",
+                    "hsl(220, 100%, 20%)"
+                ]
+            }
         }
     ]
 }

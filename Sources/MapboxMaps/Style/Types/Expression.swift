@@ -250,3 +250,11 @@ public struct Exp: Codable, CustomStringConvertible, Equatable, Sendable {
         }
     }
 }
+
+extension Exp {
+    var asCore: Any? {
+        let encoder = DictionaryEncoder()
+        encoder.shouldEncodeNilValues = false
+        return try? encoder.encodeAny(self)
+    }
+}

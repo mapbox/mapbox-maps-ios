@@ -22,16 +22,21 @@ protocol AnnotationInternal {
     var isSelected: Bool { get set }
     var isDraggable: Bool { get set }
 
-    var tapHandler: ((MapContentGestureContext) -> Bool)? { get set }
-    var longPressHandler: ((MapContentGestureContext) -> Bool)? { get set }
+    var tapHandler: ((InteractionContext) -> Bool)? { get set }
+    var longPressHandler: ((InteractionContext) -> Bool)? { get set }
 
-    var dragBeginHandler: ((inout Self, MapContentGestureContext) -> Bool)? { get set }
-    var dragChangeHandler: ((inout Self, MapContentGestureContext) -> Void)? { get set }
-    var dragEndHandler: ((inout Self, MapContentGestureContext) -> Void)? { get set }
+    var dragBeginHandler: ((inout Self, InteractionContext) -> Bool)? { get set }
+    var dragChangeHandler: ((inout Self, InteractionContext) -> Void)? { get set }
+    var dragEndHandler: ((inout Self, InteractionContext) -> Void)? { get set }
 
     mutating func drag(translation: CGPoint, in map: MapboxMapProtocol)
 
     static func makeLayer(id: String) -> LayerType
+}
+
+extension AnnotationInternal {
+    var handlesTap: Bool { tapHandler != nil }
+    var handlesLongPress: Bool { longPressHandler != nil }
 }
 
 extension PointAnnotation {

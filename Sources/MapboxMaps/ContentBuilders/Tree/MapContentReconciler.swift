@@ -84,6 +84,7 @@ private extension MapContentNodeContext {
 
     func reload(mapContent: any MapContent, root: MapContentNode) {
         lastLayerId = nil
+        lastImportId = nil
 
         /// On style reload we need to traverse the whole tree to reconstruct non-persistent layers
         /// On style reload we need to identify the bottom position in the style in order to stack content above

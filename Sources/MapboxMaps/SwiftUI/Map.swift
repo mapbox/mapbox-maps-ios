@@ -105,6 +105,7 @@ public struct Map: UIViewControllerRepresentable {
             layerAnnotations: Ref.weakRef(mapView, property: \.annotations),
             viewAnnotations: Ref.weakRef(mapView, property: \.viewAnnotations),
             location: Ref.weakRef(mapView, property: \.location),
+            mapboxMap: Ref { [weak mapView] in mapView?.mapboxMap },
             addAnnotationViewController: { [weak viewController] childVC in
                 guard let viewController else { return }
                 viewController.addChild(childVC)

@@ -7,20 +7,23 @@ final class SingleTapGestureHandlerTests: XCTestCase {
     var gestureHandler: SingleTapGestureHandler!
     var delegate: MockGestureHandlerDelegate!
     var view: UIView!
+    var map: MockMapboxMap!
     let interruptingRecognizers = UIGestureRecognizer.interruptingRecognizers([.pan, .longPress, .swipe, .screenEdge, .rotation])
 
     override func setUp() {
         super.setUp()
+        map = MockMapboxMap()
         view = UIView()
         gestureRecognizer = MockTapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         cameraAnimationsManager = MockCameraAnimationsManager()
-        gestureHandler = SingleTapGestureHandler(gestureRecognizer: gestureRecognizer, cameraAnimationsManager: cameraAnimationsManager)
+        gestureHandler = SingleTapGestureHandler(gestureRecognizer: gestureRecognizer, map: map, cameraAnimationsManager: cameraAnimationsManager)
         delegate = MockGestureHandlerDelegate()
         gestureHandler.delegate = delegate
     }
 
     override func tearDown() {
+        map = nil
         delegate = nil
         gestureHandler = nil
         cameraAnimationsManager = nil
@@ -45,6 +48,7 @@ final class SingleTapGestureHandlerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureEndedStub.invocations.first?.parameters.gestureType, .singleTap)
         XCTAssertEqual(delegate.gestureEndedStub.invocations.first?.parameters.willAnimate, false)
+        XCTAssertEqual(map.dispatchStub.invocations.count, 1)
     }
 
     func testShouldNotRecognizeSimultaneouslyTap() {

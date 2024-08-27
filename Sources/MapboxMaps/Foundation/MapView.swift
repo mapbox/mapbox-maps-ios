@@ -381,8 +381,6 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         gestures = dependencyProvider.makeGestureManager(
             view: self,
             mapboxMap: mapboxMap,
-            mapFeatureQueryable: mapboxMap,
-            annotationManagersByLayerId: annotations.$managersByLayerId,
             cameraAnimationsManager: internalCamera)
 
         // Initialize the attribution manager

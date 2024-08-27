@@ -113,7 +113,7 @@ var body: some View {
 }
 ```
 
-- Note:  Every gesture handler can receive the ``MapContentGestureContext`` that provides additional information about the gesture, such as point and the geographical coordinate.
+- Note:  Every gesture handler can receive the ``InteractionContext`` that provides additional information about the gesture, such as point and the geographical coordinate.
 
 ## Clustered Annotations
 

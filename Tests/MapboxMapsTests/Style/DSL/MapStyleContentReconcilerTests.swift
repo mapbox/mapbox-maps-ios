@@ -11,6 +11,7 @@ final class MapContentReconcilerTests: XCTestCase {
     var annotationsOrchestrator: AnnotationOrchestrator!
     var viewAnnotationsManager: ViewAnnotationManager!
     var locationManager: LocationManager!
+    var map: MockMapboxMap!
 
     @TestPublished var styleIsLoaded = true
 
@@ -19,7 +20,8 @@ final class MapContentReconcilerTests: XCTestCase {
         sourceManager = MockStyleSourceManager()
         harness = AnnotationManagerTestingHarness()
         annotationsOrchestrator = AnnotationOrchestrator(deps: harness.makeDeps())
-        viewAnnotationsManager = ViewAnnotationManager(containerView: UIView(), mapboxMap: MockMapboxMap(), displayLink: Signal(just: ()))
+        map = MockMapboxMap()
+        viewAnnotationsManager = ViewAnnotationManager(containerView: UIView(), mapboxMap: map, displayLink: Signal(just: ()))
         locationManager = LocationManager(
             interfaceOrientationView: Ref({ nil }),
             displayLink: Signal(just: ()),
@@ -33,12 +35,14 @@ final class MapContentReconcilerTests: XCTestCase {
             layerAnnotations: Ref.weakRef(self, property: \.annotationsOrchestrator),
             viewAnnotations: Ref.weakRef(self, property: \.viewAnnotationsManager),
             location: Ref.weakRef(self, property: \.locationManager),
+            mapboxMap: Ref { [weak self] in self?.map },
             addAnnotationViewController: { _ in },
             removeAnnotationViewController: { _ in }
         ))
     }
 
     override func tearDown() {
+        map = nil
         me = nil
         sourceManager = nil
         styleManager = nil

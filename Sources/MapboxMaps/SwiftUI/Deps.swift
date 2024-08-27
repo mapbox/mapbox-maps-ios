@@ -22,8 +22,8 @@ struct MapDependencies {
     var viewportOptions = ViewportOptions(transitionsToIdleUponUserInteraction: true, usesSafeAreaInsetsAsPadding: true)
     var performanceStatisticsParameters: Map.PerformanceStatisticsParameters?
 
-    var onMapTap: ((MapContentGestureContext) -> Void)?
-    var onMapLongPress: ((MapContentGestureContext) -> Void)?
+    var onMapTap: ((InteractionContext) -> Void)?
+    var onMapLongPress: ((InteractionContext) -> Void)?
     var onLayerTap = [String: MapLayerGestureHandler]()
     var onLayerLongPress = [String: MapLayerGestureHandler]()
 }

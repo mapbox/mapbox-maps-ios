@@ -92,12 +92,18 @@ public final class GestureManager: GestureHandlerDelegate {
         return quickZoomGestureHandler.gestureRecognizer
     }
 
-    /// The gesture recognizer for the single tap gesture
-    /// - NOTE: The single tap gesture recognizer is primarily used to route tap events to the
-    ///         `*AnnotationManager`s. You can add a target-action pair to this gesture recognizer
-    ///         to be notified when a single tap occurs on the map.
+    /// The gesture recognizer for the single tap gesture.
+    ///
+    /// - Note: This gesture recognizer is used to route tap gestures into ``Interaction``s and Annotations. To add your handlers use ``TapInteraction`` API or `Annotation.onTapGesture` callback.
     public var singleTapGestureRecognizer: UIGestureRecognizer {
         return singleTapGestureHandler.gestureRecognizer
+    }
+
+    /// The gesture recognizer for the long press gesture.
+    ///
+    /// - Note: This gesture recognizer is used to route long press gestures into ``Interaction``s and Annotations. To add your handlers use ``TapInteraction`` API or `Annotation.onLongPress` callback.
+    public var longPressGestureRecognizer: UIGestureRecognizer {
+        return longPressGestureHandler.gestureRecognizer
     }
 
     internal var anyTouchGestureRecognizer: UIGestureRecognizer {
@@ -106,26 +112,26 @@ public final class GestureManager: GestureHandlerDelegate {
 
     /// A stream of single tap events on the map.
     ///
-    //// This event is called when the user taps the map and no annotations or layers handled the gesture.
-    public var onMapTap: Signal<MapContentGestureContext> { mapContentGestureManager.onMapTap }
+    /// This event is called when the user taps the map and no interactions, annotations or layers handled the gesture.
+    public var onMapTap: Signal<InteractionContext> { mapTap.signal }
 
     /// A stream of long press events.
     ///
     /// This event is called when the user long-presses the map and no annotations or layers handled the gesture.
-    public var onMapLongPress: Signal<MapContentGestureContext> { mapContentGestureManager.onMapLongPress }
+    public var onMapLongPress: Signal<InteractionContext> { mapLongPress.signal }
 
     /// Adds a tap handler to the specified layer.
     ///
     /// The handler will be called in the event, starting with the topmost layer and propagating down to each layer under the tap in order.
     public func onLayerTap(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable {
-        mapContentGestureManager.onLayerTap(layerId, handler: handler)
+        mapboxMap.addInteraction(CoreInteraction(layerId: layerId, type: .click, handler: handler)).erased
     }
 
     /// Adds a long press handler for the layer with `layerId`.
     ///
     /// The handler will be called in the event, starting with the topmost layer and propagating down to each layer under the tap in order.
     public func onLayerLongPress(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable {
-        mapContentGestureManager.onLayerLongPress(layerId, handler: handler)
+        mapboxMap.addInteraction(CoreInteraction(layerId: layerId, type: .longClick, handler: handler)).erased
     }
 
     /// Set this delegate to be called back if a gesture begins
@@ -142,10 +148,13 @@ public final class GestureManager: GestureHandlerDelegate {
     private let doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol
     private let quickZoomGestureHandler: FocusableGestureHandlerProtocol
     private let singleTapGestureHandler: GestureHandler
+    private let longPressGestureHandler: GestureHandler
     private let anyTouchGestureHandler: GestureHandler
     private let interruptDecelerationGestureHandler: GestureHandler
     private let mapboxMap: MapboxMapProtocol
-    private let mapContentGestureManager: MapContentGestureManagerProtocol
+
+    private let mapTap = SignalSubject<InteractionContext>()
+    private let mapLongPress = SignalSubject<InteractionContext>()
 
     init(
         panGestureHandler: PanGestureHandlerProtocol,
@@ -156,10 +165,10 @@ public final class GestureManager: GestureHandlerDelegate {
         doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol,
         quickZoomGestureHandler: FocusableGestureHandlerProtocol,
         singleTapGestureHandler: GestureHandler,
+        longPressGestureHandler: GestureHandler,
         anyTouchGestureHandler: GestureHandler,
         interruptDecelerationGestureHandler: GestureHandler,
-        mapboxMap: MapboxMapProtocol,
-        mapContentGestureManager: MapContentGestureManagerProtocol
+        mapboxMap: MapboxMapProtocol
     ) {
         self.panGestureHandler = panGestureHandler
         self.pinchGestureHandler = pinchGestureHandler
@@ -168,11 +177,11 @@ public final class GestureManager: GestureHandlerDelegate {
         self.doubleTouchToZoomOutGestureHandler = doubleTouchToZoomOutGestureHandler
         self.quickZoomGestureHandler = quickZoomGestureHandler
         self.singleTapGestureHandler = singleTapGestureHandler
+        self.longPressGestureHandler = longPressGestureHandler
         self.anyTouchGestureHandler = anyTouchGestureHandler
         self.rotateGestureHandler = rotateGestureHandler
         self.interruptDecelerationGestureHandler = interruptDecelerationGestureHandler
         self.mapboxMap = mapboxMap
-        self.mapContentGestureManager = mapContentGestureManager
 
         panGestureHandler.delegate = self
         pinchGestureHandler.delegate = self
@@ -189,6 +198,16 @@ public final class GestureManager: GestureHandlerDelegate {
 
         // Invoke the setter to ensure the defaults are synchronized
         self.options = GestureOptions()
+
+        // Add default tap and long-press interactions for API compatibility.
+        mapboxMap.addInteraction(TapInteraction { [mapTap] in
+            mapTap.send($0)
+            return false
+        })
+        mapboxMap.addInteraction(LongPressInteraction { [mapLongPress] in
+            mapLongPress.send($0)
+            return false
+        })
     }
 
     func gestureBegan(for gestureType: GestureType) {
@@ -223,8 +242,8 @@ public final class GestureManager: GestureHandlerDelegate {
 protocol GestureManagerProtocol: AnyObject {
     var gestureHandlers: MapGestureHandlers { get set }
     var options: GestureOptions { get set }
-    var onMapTap: Signal<MapContentGestureContext> { get }
-    var onMapLongPress: Signal<MapContentGestureContext> { get }
+    var onMapTap: Signal<InteractionContext> { get }
+    var onMapLongPress: Signal<InteractionContext> { get }
     func onLayerTap(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable
     func onLayerLongPress(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable
 }

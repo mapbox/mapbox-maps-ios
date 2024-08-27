@@ -48,11 +48,11 @@ protocol AnnotationManagerInternal: AnnotationManager {
 }
 
 struct AnnotationGestureHandlers<T: Annotation> {
-    var tap: ((MapContentGestureContext) -> Bool)?
-    var longPress: ((MapContentGestureContext) -> Bool)?
-    var dragBegin: ((inout T, MapContentGestureContext) -> Bool)?
-    var dragChange: ((inout T, MapContentGestureContext) -> Void)?
-    var dragEnd: ((inout T, MapContentGestureContext) -> Void)?
+    var tap: ((InteractionContext) -> Bool)?
+    var longPress: ((InteractionContext) -> Bool)?
+    var dragBegin: ((inout T, InteractionContext) -> Bool)?
+    var dragChange: ((inout T, InteractionContext) -> Void)?
+    var dragEnd: ((inout T, InteractionContext) -> Void)?
 }
 
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).
@@ -80,18 +80,7 @@ public final class AnnotationOrchestrator {
     /// Dictionary of annotation managers keyed by their identifiers.
     private(set) public var annotationManagersById = [String: AnnotationManager]()
 
-    // TODO: Remove the following after migration to interactions.
-    @MutableRef
-    private(set) var managersByLayerId =  [String: AnnotationManagerImplProtocol]()
-    private var annotationManagersImplsById = [String: AnnotationManagerImplProtocol]() {
-        didSet {
-            // calculate (layerId, manager) pairs
-            let pairs = annotationManagersImplsById.values.flatMap { manager in
-                manager.allLayerIds.map { ($0, manager) }
-            }
-            self.managersByLayerId = Dictionary(uniqueKeysWithValues: pairs)
-        }
-    }
+    private var annotationManagersImplsById = [String: AnnotationManagerImplProtocol]()
 
     /// Creates a `PointAnnotationManager` which is used to manage a collection of
     /// `PointAnnotation`s. Annotations persist across style changes. If an annotation manager with

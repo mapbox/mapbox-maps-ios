@@ -22,6 +22,13 @@ internal final class DictionaryEncoder {
         return dictionary
     }
 
+    func encodeAny<T>(_ value: T) throws -> Any where T: Encodable {
+        let encoder = Encoder(
+            userInfo: userInfo,
+            shouldEncodeNilValues: shouldEncodeNilValues)
+        return try encoder.encode(value)
+    }
+
     enum Error: Swift.Error {
         case unexpectedType
         case incomplete(at: [CodingKey])

@@ -37,7 +37,7 @@ public extension Map {
     ///
     /// - Parameters:
     ///  - action: The action to perform.
-    func onMapTapGesture(perform action: @escaping (MapContentGestureContext) -> Void) -> Self {
+    func onMapTapGesture(perform action: @escaping (InteractionContext) -> Void) -> Self {
         copyAssigned(self, \.mapDependencies.onMapTap, action)
     }
 
@@ -47,7 +47,7 @@ public extension Map {
     ///
     /// - Parameters:
     ///  - action: The action to perform.
-    func onMapLongPressGesture(perform action: @escaping (MapContentGestureContext) -> Void) -> Self {
+    func onMapLongPressGesture(perform action: @escaping (InteractionContext) -> Void) -> Self {
         copyAssigned(self, \.mapDependencies.onMapLongPress, action)
     }
 

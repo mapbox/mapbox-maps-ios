@@ -201,6 +201,8 @@ internal protocol StyleManagerProtocol {
     func removeGeoJSONSourceFeatures(forSourceId sourceId: String,
                                      dataId: String,
                                      featureIds: [String]) -> Expected<NSNull, NSString>
+
+    func getStyleFeaturesets() -> [FeaturesetDescriptor]
 }
 
 // MARK: Conformance

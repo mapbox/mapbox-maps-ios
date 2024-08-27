@@ -250,7 +250,7 @@ private struct FadingCircle: MapStyleContent {
     }
 }
 
-private func gestureMessage(_ label: String, context: MapContentGestureContext) -> String {
+private func gestureMessage(_ label: String, context: InteractionContext) -> String {
     let coordinate =  String(format: "%.2f, %.2f", context.coordinate.latitude, context.coordinate.longitude)
     return "\(label) (\(coordinate))"
 }

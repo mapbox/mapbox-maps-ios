@@ -23,6 +23,7 @@
 - ``Puck3D``
 - ``MapReader``
 - ``MapProxy``
+- ``FeatureState``
 - ``Viewport/FollowPuckOptions``
 - ``Viewport/OverviewOptions``
 - ``MapGestureHandlers``

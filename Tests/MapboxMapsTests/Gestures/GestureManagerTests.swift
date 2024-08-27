@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class GestureManagerTests: XCTestCase {
 
@@ -13,12 +13,12 @@ final class GestureManagerTests: XCTestCase {
     var doubleTouchToZoomOutGestureHandler: MockFocusableGestureHandler!
     var quickZoomGestureHandler: MockFocusableGestureHandler!
     var singleTapGestureHandler: GestureHandler!
+    var longPressGestureHandler: GestureHandler!
     var anyTouchGestureHandler: GestureHandler!
     var interruptDecelerationGestureHandler: GestureHandler!
     var gestureManager: GestureManager!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureManagerDelegate!
-    var mapContentGestureManager: MockMapContentGestureManager!
     var tokens = Set<AnyCancelable>()
 
     override func setUp() {
@@ -37,9 +37,9 @@ final class GestureManagerTests: XCTestCase {
             gestureRecognizer: MockGestureRecognizer())
         quickZoomGestureHandler = MockFocusableGestureHandler(gestureRecognizer: MockGestureRecognizer())
         singleTapGestureHandler = makeGestureHandler()
+        longPressGestureHandler = makeGestureHandler()
         anyTouchGestureHandler = makeGestureHandler()
         interruptDecelerationGestureHandler = makeGestureHandler()
-        mapContentGestureManager = MockMapContentGestureManager()
         gestureManager = GestureManager(
             panGestureHandler: panGestureHandler,
             pinchGestureHandler: pinchGestureHandler,
@@ -49,10 +49,10 @@ final class GestureManagerTests: XCTestCase {
             doubleTouchToZoomOutGestureHandler: doubleTouchToZoomOutGestureHandler,
             quickZoomGestureHandler: quickZoomGestureHandler,
             singleTapGestureHandler: singleTapGestureHandler,
+            longPressGestureHandler: longPressGestureHandler,
             anyTouchGestureHandler: anyTouchGestureHandler,
             interruptDecelerationGestureHandler: interruptDecelerationGestureHandler,
-            mapboxMap: mapboxMap,
-            mapContentGestureManager: mapContentGestureManager)
+            mapboxMap: mapboxMap)
         delegate = MockGestureManagerDelegate()
         gestureManager.delegate = delegate
     }
@@ -71,7 +71,6 @@ final class GestureManagerTests: XCTestCase {
         panGestureHandler = nil
         cameraAnimationsManager = nil
         mapboxMap = nil
-        mapContentGestureManager = nil
         super.tearDown()
     }
 
@@ -566,10 +565,10 @@ final class GestureManagerTests: XCTestCase {
     }
 
     func testContentGestures() {
-        let onTapGesture = Stub<MapContentGestureContext, Void>()
-        let onLongPressGesture = Stub<MapContentGestureContext, Void>()
-        let onLayerTapGesture = Stub<(QueriedFeature, MapContentGestureContext), Bool>(defaultReturnValue: true)
-        let onLayerLongPressGesture = Stub<(QueriedFeature, MapContentGestureContext), Bool>(defaultReturnValue: true)
+        let onTapGesture = Stub<InteractionContext, Void>()
+        let onLongPressGesture = Stub<InteractionContext, Void>()
+        let onLayerTapGesture = Stub<(QueriedFeature, InteractionContext), Bool>(defaultReturnValue: true)
+        let onLayerLongPressGesture = Stub<(QueriedFeature, InteractionContext), Bool>(defaultReturnValue: true)
 
         gestureManager.onMapTap.observe(onTapGesture.call(with:)).store(in: &tokens)
         gestureManager.onMapLongPress.observe(onLongPressGesture.call(with:)).store(in: &tokens)
@@ -578,35 +577,30 @@ final class GestureManagerTests: XCTestCase {
 
         let point = CGPoint(x: 10, y: 20)
         let coordinate = CLLocationCoordinate2D(latitude: 30, longitude: 40)
-        let context = MapContentGestureContext(point: point, coordinate: coordinate)
+        let context = InteractionContext(point: point, coordinate: coordinate)
 
-        mapContentGestureManager.$onMapTap.send(context)
+        mapboxMap.simulateInteraction(.tap, nil, feature: nil, context: context)
         XCTAssertEqual(onTapGesture.invocations.count, 1)
         XCTAssertEqual(onTapGesture.invocations.first?.parameters.point, point)
         XCTAssertEqual(onTapGesture.invocations.first?.parameters.coordinate, coordinate)
 
-        mapContentGestureManager.$onMapLongPress.send(context)
+        mapboxMap.simulateInteraction(.longPress, nil, feature: nil, context: context)
         XCTAssertEqual(onLongPressGesture.invocations.count, 1)
         XCTAssertEqual(onLongPressGesture.invocations.first?.parameters.point, point)
         XCTAssertEqual(onLongPressGesture.invocations.first?.parameters.coordinate, coordinate)
 
-        let feature = Feature(geometry: Point(coordinate))
-        let queriedFeature = QueriedFeature(
-            __feature: MapboxCommon.Feature(feature),
-            source: "src",
-            sourceLayer: "src-layer",
-            state: [String: Any](),
-            featuresetFeatureId: nil)
+        var feature = Feature(geometry: Point(coordinate))
+        feature.properties = JSONObject()
 
-        mapContentGestureManager.simulateLayerTap(layerId: "layer1", queriedFeature: queriedFeature, context: context)
+        mapboxMap.simulateInteraction(.tap, .layer("layer1"), feature: feature, context: context)
         XCTAssertEqual(onLayerTapGesture.invocations.count, 1)
-        XCTAssertEqual(onLayerTapGesture.invocations.first?.parameters.0, queriedFeature)
+        XCTAssertEqual(onLayerTapGesture.invocations.first?.parameters.0.feature, feature)
         XCTAssertEqual(onLayerTapGesture.invocations.first?.parameters.1.point, point)
         XCTAssertEqual(onLayerTapGesture.invocations.first?.parameters.1.coordinate, coordinate)
 
-        mapContentGestureManager.simulateLayerLongPress(layerId: "layer1", queriedFeature: queriedFeature, context: context)
+        mapboxMap.simulateInteraction(.longPress, .layer("layer1"), feature: feature, context: context)
         XCTAssertEqual(onLayerLongPressGesture.invocations.count, 1)
-        XCTAssertEqual(onLayerLongPressGesture.invocations.first?.parameters.0, queriedFeature)
+        XCTAssertEqual(onLayerLongPressGesture.invocations.first?.parameters.0.feature, feature)
         XCTAssertEqual(onLayerLongPressGesture.invocations.first?.parameters.1.point, point)
         XCTAssertEqual(onLayerLongPressGesture.invocations.first?.parameters.1.coordinate, coordinate)
     }

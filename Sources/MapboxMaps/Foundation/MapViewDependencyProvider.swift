@@ -11,8 +11,6 @@ protocol MapViewDependencyProviderProtocol: AnyObject {
                                          cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
-                            mapFeatureQueryable: MapFeatureQueryable,
-                            annotationManagersByLayerId: Ref<[String: AnnotationManagerImplProtocol]>,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
     // swiftlint:disable:next function_parameter_count
     func makeViewportManagerImpl(mapboxMap: MapboxMapProtocol,
@@ -78,154 +76,76 @@ final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
             runner: cameraAnimatorsRunner)
     }
 
-    private func makePanGestureHandler(view: UIView,
-                                       mapboxMap: MapboxMapProtocol,
-                                       cameraAnimationsManager: CameraAnimationsManagerProtocol) -> PanGestureHandlerProtocol {
-        let gestureRecognizer = UIPanGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return PanGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager,
-            dateProvider: DefaultDateProvider())
-    }
-
-    private func makePinchGestureHandler(view: UIView,
-                                         mapboxMap: MapboxMapProtocol) -> PinchGestureHandlerProtocol {
-        let gestureRecognizer = UIPinchGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return PinchGestureHandler(gestureRecognizer: gestureRecognizer, mapboxMap: mapboxMap)
-    }
-
-    private func makeRotateGestureHandler(view: UIView, mapboxMap: MapboxMapProtocol) -> RotateGestureHandler {
-        let gestureRecognizer = UIRotationGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return RotateGestureHandler(gestureRecognizer: gestureRecognizer, mapboxMap: mapboxMap)
-    }
-
-    private func makePitchGestureHandler(view: UIView,
-                                         mapboxMap: MapboxMapProtocol) -> GestureHandler {
-        let gestureRecognizer = UIPanGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return PitchGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap)
-    }
-
-    private func makeDoubleTapToZoomInGestureHandler(view: UIView,
-                                                     mapboxMap: MapboxMapProtocol,
-                                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol {
-        let gestureRecognizer = UITapGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return DoubleTapToZoomInGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
-    }
-
-    private func makeDoubleTouchToZoomOutGestureHandler(view: UIView,
-                                                        mapboxMap: MapboxMapProtocol,
-                                                        cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol {
-        let gestureRecognizer = UITapGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return DoubleTouchToZoomOutGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
-    }
-
-    private func makeQuickZoomGestureHandler(view: UIView,
-                                             mapboxMap: MapboxMapProtocol) -> FocusableGestureHandlerProtocol {
-        let gestureRecognizer = UILongPressGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return QuickZoomGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap)
-    }
-
-    private func makeSingleTapGestureHandler(view: UIView,
-                                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> SingleTapGestureHandler {
-        let gestureRecognizer = UITapGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return SingleTapGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            cameraAnimationsManager: cameraAnimationsManager)
-    }
-
-    private func makeAnyTouchGestureHandler(
-        view: UIView,
-        cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
-        // Cancel animations and idle viewport when pan gesture begins.
-        let gestureRecognizer = UIPanGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return AnyTouchGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            cameraAnimationsManager: cameraAnimationsManager)
-    }
-
-    private func makeInterruptDecelerationGestureHandler(view: UIView,
-                                                         cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
-        let gestureRecognizer = TouchBeganGestureRecognizer()
-        gestureRecognizer.cancelsTouchesInView = false
-        gestureRecognizer.delaysTouchesEnded = false
-        view.addGestureRecognizer(gestureRecognizer)
-
-        return InterruptDecelerationGestureHandler(gestureRecognizer: gestureRecognizer,
-                                                   cameraAnimationsManager: cameraAnimationsManager)
-    }
-
+    // swiftlint:disable:next function_body_length
     func makeGestureManager(
         view: UIView,
         mapboxMap: MapboxMapProtocol,
-        mapFeatureQueryable: MapFeatureQueryable,
-        annotationManagersByLayerId: Ref<[String: AnnotationManagerImplProtocol]>,
         cameraAnimationsManager: CameraAnimationsManagerProtocol
     ) -> GestureManager {
-        let singleTap = makeSingleTapGestureHandler(
-            view: view,
+        let singleTap = SingleTapGestureHandler(
+            gestureRecognizer: UITapGestureRecognizer(),
+            map: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
 
-        let longPress = LongPressGestureHandler()
-        view.addGestureRecognizer(longPress.recognizer)
+        let longPress = LongPressGestureHandler(
+            gestureRecognizer: UILongPressGestureRecognizer(),
+            map: mapboxMap)
 
-        let mapContentGestureManager = MapContentGestureManager(
-            annotationManagersByLayerId: annotationManagersByLayerId,
+        let pan = PanGestureHandler(
+            gestureRecognizer: UIPanGestureRecognizer(),
             mapboxMap: mapboxMap,
-            mapFeatureQueryable: mapFeatureQueryable,
-            onTap: singleTap.onTap,
-            onLongPress: longPress.signal.retaining(longPress))
+            cameraAnimationsManager: cameraAnimationsManager,
+            dateProvider: DefaultDateProvider())
+
+        let pinch = PinchGestureHandler(gestureRecognizer: UIPinchGestureRecognizer(), mapboxMap: mapboxMap)
+        let rotate = RotateGestureHandler(gestureRecognizer: UIRotationGestureRecognizer(), mapboxMap: mapboxMap)
+        let pitch =  PitchGestureHandler(gestureRecognizer: UIPanGestureRecognizer(), mapboxMap: mapboxMap)
+
+        let doubleTouchToZoomIn =  DoubleTapToZoomInGestureHandler(
+            gestureRecognizer: UITapGestureRecognizer(),
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+
+        let doubleTouchToZoomOut = DoubleTouchToZoomOutGestureHandler(
+            gestureRecognizer: UITapGestureRecognizer(),
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+
+        let quickZoom = QuickZoomGestureHandler(
+            gestureRecognizer: UILongPressGestureRecognizer(),
+            mapboxMap: mapboxMap)
+
+        // Cancel animations and idle viewport when pan gesture begins.
+        let anyTouch =  AnyTouchGestureHandler(
+            gestureRecognizer: UIPanGestureRecognizer(),
+            cameraAnimationsManager: cameraAnimationsManager)
+
+        let interruptDeceleration = InterruptDecelerationGestureHandler(
+            gestureRecognizer: {
+                let gesture = TouchBeganGestureRecognizer()
+                gesture.cancelsTouchesInView = false
+                gesture.delaysTouchesEnded = false
+                return gesture
+            }(),
+            cameraAnimationsManager: cameraAnimationsManager)
+
+        for gestureHandler in [singleTap, longPress, pan, pinch, rotate, pitch, doubleTouchToZoomIn, doubleTouchToZoomOut, quickZoom, anyTouch, interruptDeceleration] {
+            view.addGestureRecognizer(gestureHandler.gestureRecognizer)
+        }
 
         return GestureManager(
-            panGestureHandler: makePanGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager),
-            pinchGestureHandler: makePinchGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap),
-            rotateGestureHandler: makeRotateGestureHandler(view: view, mapboxMap: mapboxMap),
-            pitchGestureHandler: makePitchGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap),
-            doubleTapToZoomInGestureHandler: makeDoubleTapToZoomInGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager),
-            doubleTouchToZoomOutGestureHandler: makeDoubleTouchToZoomOutGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager),
-            quickZoomGestureHandler: makeQuickZoomGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap),
+            panGestureHandler: pan,
+            pinchGestureHandler: pinch,
+            rotateGestureHandler: rotate,
+            pitchGestureHandler: pitch,
+            doubleTapToZoomInGestureHandler: doubleTouchToZoomIn,
+            doubleTouchToZoomOutGestureHandler: doubleTouchToZoomOut,
+            quickZoomGestureHandler: quickZoom,
             singleTapGestureHandler: singleTap,
-            anyTouchGestureHandler: makeAnyTouchGestureHandler(view: view,
-                                                               cameraAnimationsManager: cameraAnimationsManager),
-            interruptDecelerationGestureHandler: makeInterruptDecelerationGestureHandler(
-                view: view,
-                cameraAnimationsManager: cameraAnimationsManager),
-            mapboxMap: mapboxMap,
-            mapContentGestureManager: mapContentGestureManager)
+            longPressGestureHandler: longPress,
+            anyTouchGestureHandler: anyTouch,
+            interruptDecelerationGestureHandler: interruptDeceleration,
+            mapboxMap: mapboxMap)
     }
 
     // swiftlint:disable:next function_parameter_count

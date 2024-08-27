@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 import XCTest
 
 final class AnnotationManagerImplTests: XCTestCase {
@@ -37,6 +37,7 @@ final class AnnotationManagerImplTests: XCTestCase {
 
         annotations = (0...10).map {
             PointAnnotation(
+                id: "default-\($0)",
                 coordinate: .init(latitude: LocationDegrees($0), longitude: LocationDegrees($0)), isSelected: false, isDraggable: false)
         }
     }
@@ -85,7 +86,7 @@ final class AnnotationManagerImplTests: XCTestCase {
         annotation.isDraggable = true
         me.annotations = [annotation]
         // adds drag source/layer
-        _ = me.handleDragBegin(with: annotation.id, context: .zero)
+        harness.map.simulateInteraction(.drag(.begin), .layer(id), feature: annotation.feature, context: .zero)
 
         me.destroy()
 
@@ -219,7 +220,7 @@ final class AnnotationManagerImplTests: XCTestCase {
     @available(*, deprecated)
     func testHandleTap() throws {
         let delegate = Delegate()
-        var taps = [MapContentGestureContext]()
+        var taps = [InteractionContext]()
         annotations[0].tapHandler = { context in
             taps.append(context)
             return true
@@ -231,12 +232,11 @@ final class AnnotationManagerImplTests: XCTestCase {
         me.annotations = annotations
 
         // first annotation, handles tap
-        let context = MapContentGestureContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
-        var handled = me.handleTap(layerId: "layerId", feature: annotations[0].feature, context: context)
+        let context = InteractionContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
+        harness.map.simulateInteraction(.tap, .layer(id), feature: annotations[0].feature, context: context)
 
         var result = try XCTUnwrap(delegate.annotations)
         XCTAssertEqual(result[0].id, annotations[0].id)
-        XCTAssertEqual(handled, true)
 
         XCTAssertEqual(taps.count, 1)
         XCTAssertEqual(taps.first?.point, context.point)
@@ -244,24 +244,22 @@ final class AnnotationManagerImplTests: XCTestCase {
 
         // second annotation, skips handling tap
         delegate.annotations = nil
-        handled = me.handleTap(layerId: "layerId", feature: annotations[1].feature, context: context)
+        harness.map.simulateInteraction(.tap, .layer(id), feature: annotations[1].feature, context: context)
 
         result = try XCTUnwrap(delegate.annotations)
         XCTAssertEqual(result[0].id, annotations[1].id)
-        XCTAssertEqual(handled, false)
 
         // invalid id
         delegate.annotations = nil
         let invalidFeature = Feature(geometry: nil)
-        handled = me.handleTap(layerId: "layerId", feature: invalidFeature, context: context)
+        harness.map.simulateInteraction(.tap, .layer(id), feature: invalidFeature, context: context)
 
         XCTAssertNil(delegate.annotations)
-        XCTAssertEqual(handled, false)
         XCTAssertEqual(taps.count, 1)
     }
 
     func testHandleLongPress() throws {
-        var taps = [MapContentGestureContext]()
+        var taps = [InteractionContext]()
         annotations[0].longPressHandler = { context in
             taps.append(context)
             return true
@@ -269,44 +267,35 @@ final class AnnotationManagerImplTests: XCTestCase {
         me.annotations = annotations
 
         // first annotation, handles tap
-        let context = MapContentGestureContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
-        var handled = me.handleLongPress(layerId: "layerId", feature: annotations[0].feature, context: context)
-
-        XCTAssertEqual(handled, true)
+        let context = InteractionContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
+        harness.map.simulateInteraction(.longPress, .layer(id), feature: annotations[0].feature, context: context)
 
         XCTAssertEqual(taps.count, 1)
         XCTAssertEqual(taps.first?.point, context.point)
         XCTAssertEqual(taps.first?.coordinate, context.coordinate)
 
         // second annotation, skips handling tap
-        handled = me.handleLongPress(layerId: "layerId", feature: annotations[1].feature, context: context)
-
-        XCTAssertEqual(handled, false)
+        harness.map.simulateInteraction(.longPress, .layer(id), feature: annotations[1].feature, context: context)
 
         // invalid id
         let invalidFeature = Feature(geometry: nil)
-        handled = me.handleLongPress(layerId: "layerId", feature: invalidFeature, context: context)
+        harness.map.simulateInteraction(.longPress, .layer(id), feature: invalidFeature, context: context)
 
-        XCTAssertEqual(handled, false)
         XCTAssertEqual(taps.count, 1)
     }
 
     func testHandleClusterTap() {
         let onClusterTap = Stub<AnnotationClusterGestureContext, Void>(defaultReturnValue: ())
-        let context = MapContentGestureContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
+        let context = InteractionContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
         let annotationContext = AnnotationClusterGestureContext(point: context.point, coordinate: context.coordinate, expansionZoom: 4)
         me.onClusterTap = onClusterTap.call
 
-        let isHandled = me.handleTap(
-            layerId: "mapbox-iOS-cluster-circle-layer-manager-default",
-            feature: annotations[1].feature,
-            context: context
-        )
+        harness.map.simulateInteraction(.tap, .layer("mapbox-iOS-cluster-circle-layer-manager-default"), feature: annotations[1].feature, context: context)
+
         harness.mapFeatureQueryable.getGeoJsonClusterExpansionZoomStub.invocations.map(\.parameters.completion).forEach { completion in
             completion(.success(FeatureExtensionValue(value: 4, features: nil)))
         }
 
-        XCTAssertTrue(isHandled)
         XCTAssertEqual(harness.mapFeatureQueryable.getGeoJsonClusterExpansionZoomStub.invocations.map(\.parameters.feature), [
             annotations[1].feature
         ])
@@ -316,20 +305,16 @@ final class AnnotationManagerImplTests: XCTestCase {
 
     func testHandleClusterLongPress() {
         let onClusterLongPress = Stub<AnnotationClusterGestureContext, Void>(defaultReturnValue: ())
-        let context = MapContentGestureContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
+        let context = InteractionContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
         let annotationContext = AnnotationClusterGestureContext(point: context.point, coordinate: context.coordinate, expansionZoom: 4)
         me.onClusterLongPress = onClusterLongPress.call
 
-        let isHandled = me.handleLongPress(
-            layerId: "mapbox-iOS-cluster-circle-layer-manager-default",
-            feature: annotations[1].feature,
-            context: context
-        )
+        harness.map.simulateInteraction(.longPress, .layer("mapbox-iOS-cluster-circle-layer-manager-default"), feature: annotations[1].feature, context: context)
+
         harness.mapFeatureQueryable.getGeoJsonClusterExpansionZoomStub.invocations.map(\.parameters.completion).forEach { completion in
             completion(.success(FeatureExtensionValue(value: 4, features: nil)))
         }
 
-        XCTAssertTrue(isHandled)
         XCTAssertEqual(harness.mapFeatureQueryable.getGeoJsonClusterExpansionZoomStub.invocations.map(\.parameters.feature), [
             annotations[1].feature
         ])
@@ -548,32 +533,22 @@ final class AnnotationManagerImplTests: XCTestCase {
 
         // Dragged annotation will be added to internal list of dragged annotations.
         let annotationToDrag = annotations.randomElement()!
-        _ = me.handleDragBegin(with: annotationToDrag.id, context: .zero)
+        harness.map.simulateInteraction(.drag(.begin), .layer(id), feature: annotationToDrag.feature, context: .zero)
+
         XCTAssertTrue(me.annotations.contains(where: { $0.id == annotationToDrag.id }))
     }
 
     func testHandleDragBeginIsDraggableFalse() throws {
-        me.annotations = [
-            PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: false)
-        ]
+        let annotation = PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: false)
+        me.annotations = [annotation]
 
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
 
-        _ = me.handleDragBegin(with: "point1", context: .zero)
+        harness.map.simulateInteraction(.drag(.begin), .layer(id), feature: annotation.feature, context: .zero)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-    }
-
-    func testHandleDragBeginInvalidFeatureId() {
-        style.addSourceStub.reset()
-        style.addPersistentLayerStub.reset()
-
-        _ = me.handleDragBegin(with: "not-a-feature", context: .zero)
-
-        XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
-        XCTAssertTrue(style.addPersistentLayerStub.invocations.isEmpty)
     }
 
     func testDrag() throws {
@@ -582,7 +557,7 @@ final class AnnotationManagerImplTests: XCTestCase {
 
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
-        _ = me.handleDragBegin(with: "point1", context: .zero)
+        harness.map.simulateInteraction(.drag(.begin), .layer(id), feature: annotation.feature, context: .zero)
 
         let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
         let addLayerParameters = try XCTUnwrap(style.addPersistentLayerStub.invocations.last).parameters
@@ -597,7 +572,7 @@ final class AnnotationManagerImplTests: XCTestCase {
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.id, "\(id)_drag")
 
-        _ = me.handleDragBegin(with: "point1", context: .zero)
+        harness.map.simulateInteraction(.drag(.begin), .layer(id), feature: annotation.feature, context: .zero)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)
@@ -606,7 +581,7 @@ final class AnnotationManagerImplTests: XCTestCase {
         harness.map.coordinateForPointStub.defaultReturnValue = .init(latitude: 0, longitude: 0)
         harness.map.cameraState.zoom = 1
 
-        me.handleDragChange(with: .zero, context: .zero)
+        harness.map.simulateInteraction(.drag(.change), .layer(id), feature: annotation.feature, context: .zero)
 
         harness.triggerDisplayLink()
 
@@ -622,7 +597,7 @@ final class AnnotationManagerImplTests: XCTestCase {
     func testDragHandlers() throws {
         struct GestureData {
             var annotation: PointAnnotation
-            var context: MapContentGestureContext
+            var context: InteractionContext
         }
 
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
@@ -646,7 +621,7 @@ final class AnnotationManagerImplTests: XCTestCase {
         harness.map.coordinateForPointStub.defaultReturnValue = .init(latitude: 23.5432356, longitude: -12.5326744)
         harness.map.cameraState.zoom = 1
 
-        var context = MapContentGestureContext(point: CGPoint(x: 0, y: 1), coordinate: .init(latitude: 2, longitude: 3))
+        var context = InteractionContext(point: CGPoint(x: 0, y: 1), coordinate: .init(latitude: 2, longitude: 3))
 
         // test it twice to cover the case when annotation was already on drag layer.
         for _ in 0...1 {
@@ -656,16 +631,15 @@ final class AnnotationManagerImplTests: XCTestCase {
 
             // skipped gesture
             beginDragStub.defaultReturnValue = false
-            var res = me.handleDragBegin(with: annotation.id, context: context)
+            harness.map.simulateInteraction(.drag(.begin), .layer(id), feature: annotation.feature, context: context)
             XCTAssertEqual(beginDragStub.invocations.count, 1)
-            XCTAssertEqual(res, false)
             var data = try XCTUnwrap(beginDragStub.invocations.last).parameters
             XCTAssertEqual(data.annotation.id, annotation.id)
             XCTAssertEqual(data.context.point, context.point)
             XCTAssertEqual(data.context.coordinate, context.coordinate)
 
-            me.handleDragChange(with: CGPoint(x: 10, y: 20), context: context)
-            me.handleDragEnd(context: context)
+            harness.map.simulateInteraction(.drag(.change), .layer(id), feature: annotation.feature, context: context)
+            harness.map.simulateInteraction(.drag(.end), .layer(id), feature: annotation.feature, context: context)
             XCTAssertEqual(changeDragStub.invocations.count, 0)
             XCTAssertEqual(endDragStub.invocations.count, 0)
 
@@ -673,9 +647,9 @@ final class AnnotationManagerImplTests: XCTestCase {
             context.point.x += 1
             context.coordinate.latitude += 1
             beginDragStub.defaultReturnValue = true
-            res = me.handleDragBegin(with: annotation.id, context: context)
+
+            harness.map.simulateInteraction(.drag(.begin), .layer(id), feature: annotation.feature, context: context)
             XCTAssertEqual(beginDragStub.invocations.count, 2)
-            XCTAssertEqual(res, true)
             data = try XCTUnwrap(beginDragStub.invocations.last).parameters
             XCTAssertEqual(data.annotation.id, annotation.id)
             XCTAssertEqual(data.context.point, context.point)
@@ -683,7 +657,7 @@ final class AnnotationManagerImplTests: XCTestCase {
 
             context.point.x += 1
             context.coordinate.latitude += 1
-            me.handleDragChange(with: CGPoint(x: 10, y: 20), context: context)
+            harness.map.simulateInteraction(.drag(.change), .layer(id), feature: annotation.feature, context: context)
             XCTAssertEqual(changeDragStub.invocations.count, 1)
             data = try XCTUnwrap(changeDragStub.invocations.last).parameters
             XCTAssertEqual(data.annotation.id, annotation.id)
@@ -692,7 +666,7 @@ final class AnnotationManagerImplTests: XCTestCase {
 
             context.point.x += 1
             context.coordinate.latitude += 1
-            me.handleDragEnd(context: context)
+            harness.map.simulateInteraction(.drag(.end), .layer(id), feature: annotation.feature, context: context)
             XCTAssertEqual(endDragStub.invocations.count, 1)
             data = try XCTUnwrap(endDragStub.invocations.last).parameters
             XCTAssertEqual(data.annotation.id, annotation.id)

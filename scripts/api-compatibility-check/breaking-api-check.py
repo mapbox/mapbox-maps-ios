@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import glob
+import json
 import os
 import argparse
 import subprocess
@@ -208,28 +209,60 @@ ERROR: API breakage detected in {os.path.basename(latest_dump_path)}
 
 def add_comment_to_pr(report: "APIDigester.BreakageReport"):
     print("Commenting on PR")
-    if report.is_good:
-        comment = f"""
-**API compatibility report:** ✅
-        """
+
+    helper = GHHelper()
+    number = helper.findPRNumber()
+    comments = helper.findPRComments(number)
+
+    def findApiReportComment(comments):
+        for comment in comments:
+            if "API compatibility report" in comment["body"] and comment["performed_via_github_app"] is not None and comment["performed_via_github_app"]["owner"]["login"] == "mapbox":
+                return comment
+        return None
+
+    apiReportComment = findApiReportComment(comments)
+
+    if apiReportComment is None:
+        if report.is_good:
+            print("Skipping positive report comment as there are no failed report comments")
+            return
+        else:
+            helper.addCommentToPR(number, report.reportComment())
     else:
-        comment = f"""
-## API compatibility report: ❌
-"""
-        for category in report.breakage:
-            comment += f"#### {category}\n"
-            for breakage in report.breakage[category]:
-                comment += f"* `{breakage}`\n"
+        helper.updateCommentToPR(apiReportComment["id"], report.reportComment())
 
-    open("comment.txt", "w").write(comment)
-    proc = subprocess.run(
-        ["gh", "pr", "comment", "--edit-last", "--body-file", "comment.txt"]
-    )
-    if proc.returncode != 0 and not report.is_good:
-        subprocess.run(["gh", "pr", "comment", "--body-file", "comment.txt"])
+class GHHelper:
+    def __init__(self):
+        pass
 
-    os.remove("comment.txt")
+    def findPRNumber(self):
+        proc = subprocess.run(["gh", "pr", "view", "--json", "number", "-q", ".number"], capture_output=True, text=True)
+        if proc.returncode != 0:
+            print(f"Failed to find PR number. Error: {proc.stderr}")
+            return None
+        # Check that proc.stdout is a number
+        return proc.stdout.rstrip()
 
+    def findPRComments(self, prNumber):
+        proc = subprocess.run(["gh", "api", "repos/{owner}/{repo}/issues" + f"/{prNumber}/comments"], capture_output=True, text=True)
+        if proc.returncode != 0:
+            print(f"Failed to find PR comments. Error: {proc.stderr}")
+            return None
+        return json.loads(proc.stdout)
+
+    def addCommentToPR(self, prNumber, body):
+        proc = subprocess.run(["gh", "api", "repos/{owner}/{repo}/issues" + f"/{prNumber}/comments", "-f", f"body={body}"], capture_output=True, text=True)
+        if proc.returncode != 0:
+            print(f"Failed to add comment. Error: {proc.stderr}")
+            return None
+        return json.loads(proc.stdout)
+
+    def updateCommentToPR(self, commentId, body):
+        proc = subprocess.run(["gh", "api", "repos/{owner}/{repo}/issues" + f"/comments/{commentId}", "-f", f"body={body}"], capture_output=True, text=True)
+        if proc.returncode != 0:
+            print(f"Failed to update comment. Error: {proc.stderr}")
+            return None
+        return json.loads(proc.stdout)
 
 class APIDigester:
 
@@ -422,6 +455,17 @@ class APIDigester:
         def __empty_report_hashsum(self):
             # Represents a sha1 hashsum of an empty report (including section names).
             return "afd2a1b542b33273920d65821deddc653063c700"
+
+        def reportComment(self):
+            if self.is_good:
+                return "API compatibility report: ✅"
+            else:
+                comment = "API compatibility report: ❌\n"
+                for category in self.breakage:
+                    comment += f"#### {category}\n"
+                    for breakage in self.breakage[category]:
+                        comment += f"* `{breakage}`\n"
+                return comment
 
 
 class Executable:

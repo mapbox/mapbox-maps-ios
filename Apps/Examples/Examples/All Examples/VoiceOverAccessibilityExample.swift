@@ -155,7 +155,7 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                     self.annotationAccessibilityElements = queriedFeatures.compactMap { queriedFeature -> UIAccessibilityElement? in
                         guard case .point(let point) = queriedFeature.queriedFeature.feature.geometry,
                               let accessibilityFrame = mapView.accessibilityFrame(for: point.coordinates),
-                              let properties = queriedFeature.queriedFeature.feature.properties?.rawValue as? [String: Any],
+                              let properties = queriedFeature.queriedFeature.feature.properties?.turfRawValue as? [String: Any],
                               let customData = properties["custom_data"] as? [String: Any],
                               let name = customData["name"] as? String else {
                             return nil
@@ -193,7 +193,7 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                     self.routeShieldAccessibilityElements = queriedFeatures.compactMap { queriedFeature -> UIAccessibilityElement? in
                         guard case .point(let point) = queriedFeature.queriedFeature.feature.geometry,
                               let accessibilityFrame = mapView.accessibilityFrame(for: point.coordinates),
-                              let properties = queriedFeature.queriedFeature.feature.properties?.rawValue as? [String: Any],
+                              let properties = queriedFeature.queriedFeature.feature.properties?.turfRawValue as? [String: Any],
                               let shieldNumber = properties["ref"] as? String else {
                             return nil
                         }

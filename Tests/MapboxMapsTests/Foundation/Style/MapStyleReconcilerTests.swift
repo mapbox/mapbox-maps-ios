@@ -56,7 +56,7 @@ final class MapStyleReconcilerTests: XCTestCase {
         let json = """
         {"foo": "bar"}
         """
-        me.mapStyle = .init(json: json, configuration: JSONObject(rawValue: ["bar": "baz"])!)
+        me.mapStyle = .init(json: json, configuration: JSONObject(turfRawValue: ["bar": "baz"])!)
 
         XCTAssertEqual(styleManager.setStyleJSONStub.invocations.count, 1)
         let params = try XCTUnwrap(styleManager.setStyleJSONStub.invocations.last).parameters
@@ -79,7 +79,7 @@ final class MapStyleReconcilerTests: XCTestCase {
             self.styleManager.isStyleLoadedStub.defaultReturnValue = false
         }
 
-        me.mapStyle = .init(uri: .streets, configuration: JSONObject(rawValue: ["bar": "baz"])!)
+        me.mapStyle = .init(uri: .streets, configuration: JSONObject(turfRawValue: ["bar": "baz"])!)
 
         XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 1)
         let params = try XCTUnwrap(styleManager.setStyleURIStub.invocations.last).parameters
@@ -107,8 +107,8 @@ final class MapStyleReconcilerTests: XCTestCase {
             callbacks = invoc.parameters.callbacks
         }
 
-        me.mapStyle = .init(uri: .outdoors, configuration: JSONObject(rawValue: ["k-1": "v-1", "a": "b"])!)
-        me.mapStyle = .init(uri: .streets, configuration: JSONObject(rawValue: ["k-2": "v-2"])!)
+        me.mapStyle = .init(uri: .outdoors, configuration: JSONObject(turfRawValue: ["k-1": "v-1", "a": "b"])!)
+        me.mapStyle = .init(uri: .streets, configuration: JSONObject(turfRawValue: ["k-2": "v-2"])!)
 
         XCTAssertEqual(styleManager.setStyleURIStub.invocations.map(\.parameters.value), [
             StyleURI.outdoors.rawValue,
@@ -192,9 +192,9 @@ final class MapStyleReconcilerTests: XCTestCase {
             self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
             self.styleManager.setStyleImportConfigPropertyForImportIdStub.reset()
         }
-        me.mapStyle = MapStyle(uri: .outdoors, configuration: JSONObject(rawValue: ["k-1": "v-1", "a": "b"])!)
+        me.mapStyle = MapStyle(uri: .outdoors, configuration: JSONObject(turfRawValue: ["k-1": "v-1", "a": "b"])!)
 
-        let s2 = MapStyle(uri: .outdoors, configuration: JSONObject(rawValue: ["k-2": "v-2"])!)
+        let s2 = MapStyle(uri: .outdoors, configuration: JSONObject(turfRawValue: ["k-2": "v-2"])!)
 
         var count = 0
         me.loadStyle(s2, transition: nil) { error in
@@ -214,11 +214,11 @@ final class MapStyleReconcilerTests: XCTestCase {
         styleManager.setStyleURIStub.defaultSideEffect = { invoc in
             self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
         }
-        me.mapStyle = MapStyle(uri: .outdoors, configuration: JSONObject(rawValue: ["k-1": "v-1", "a": "b"])!)
+        me.mapStyle = MapStyle(uri: .outdoors, configuration: JSONObject(turfRawValue: ["k-1": "v-1", "a": "b"])!)
 
         self.styleManager.setStyleImportConfigPropertyForImportIdStub.reset()
 
-        me.mapStyle = MapStyle(uri: .standard, configuration: JSONObject(rawValue: ["k-1": "v-1", "k-2": "v-2"])!)
+        me.mapStyle = MapStyle(uri: .standard, configuration: JSONObject(turfRawValue: ["k-1": "v-1", "k-2": "v-2"])!)
 
         let inv = styleManager.setStyleImportConfigPropertyForImportIdStub.invocations
         XCTAssertEqual(inv.count, 2)
@@ -233,7 +233,7 @@ final class MapStyleReconcilerTests: XCTestCase {
     func testStyleImportsReconcileFromNil() {
             MapStyleReconciler.reconcileBasemapConfiguration(
             from: nil,
-            to: .init(rawValue: ["bar": "baz"])!,
+            to: .init(["bar": "baz"])!,
             styleManager: styleManager)
 
         let inv = styleManager.setStyleImportConfigPropertyForImportIdStub.invocations
@@ -245,11 +245,11 @@ final class MapStyleReconcilerTests: XCTestCase {
 
     func testStyleImportsReconcilePartialUpdate() {
         MapStyleReconciler.reconcileBasemapConfiguration(
-            from: JSONObject(rawValue: [
+            from: JSONObject(turfRawValue: [
                 "bar": "baz",
                 "x": "y"
             ])!,
-            to: JSONObject(rawValue: [
+            to: JSONObject(turfRawValue: [
                 "bar": "foo",
                 "x": "y"
             ])!,

@@ -1735,3 +1735,7 @@ Func MapStyle.standard(lightPreset:font:showPointOfInterestLabels:showTransitLab
 Func MapStyle.standard(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has parameter 0 type change from MapboxMaps.StandardLightPreset? to MapboxMaps.StandardTheme?
 Func MapStyle.standard(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has parameter 1 type change from Swift.String? to MapboxMaps.StandardLightPreset?
 Func MapStyle.standard(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:) has parameter 2 type change from Swift.Bool? to Swift.String?
+
+// Turf 3.0
+Extension Array has removed conformance to RawRepresentable
+Extension Dictionary has removed conformance to RawRepresentable

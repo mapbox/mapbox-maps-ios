@@ -38,6 +38,10 @@ for i in 0...2000 {
 circleAnnotationManager.circleColor = .blue
 ```
 * Improve memory reclamation behavior when using partial GeoJSON update API.
+* Update Turf to 3.0.0 version. That version introduce breaking change – there is no more `RawRepresentable` conformances for `Array` and `Dictionary` system types. If you were relying on the `init(rawValue:)` function or `rawValue` property, you can use the substitution instead:
+
+  * `init(rawValue:)` -> `init(turfRawValue:)`
+  * `rawValue` -> `turfRawValue`
 
 ## 11.6.0 - 14 August, 2024
 

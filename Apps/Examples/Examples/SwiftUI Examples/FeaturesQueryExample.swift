@@ -135,7 +135,7 @@ struct FeaturesQueryExample_Preview: PreviewProvider {
 extension JSONObject {
     var prettyPrinted: String? {
         do {
-            let data = try JSONSerialization.data(withJSONObject: rawValue, options: .prettyPrinted)
+            let data = try JSONSerialization.data(withJSONObject: turfRawValue, options: .prettyPrinted)
             return String(data: data, encoding: .utf8)
         } catch {
             return nil
@@ -153,7 +153,7 @@ extension Feature {
                 // can be too long for example
                 jsonObject["geometry"] = ["..."]
             }
-            return JSONObject(rawValue: jsonObject)
+            return JSONObject(turfRawValue: jsonObject)
         } catch {
             return nil
         }

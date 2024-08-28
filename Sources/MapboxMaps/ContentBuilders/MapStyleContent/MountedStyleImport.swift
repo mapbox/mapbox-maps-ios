@@ -27,7 +27,7 @@ struct MountedStyleImport: MapContentMountedComponent {
                 context.style.styleManager.addStyleImportFromURI(
                     forImportId: id,
                     uri: styleURI.rawValue,
-                    config: configuration?.rawValue as? [String: Any],
+                    config: configuration?.turfRawValue as? [String: Any],
                     importPosition: importPosition.corePosition)
             }
         case .json(let json):
@@ -35,7 +35,7 @@ struct MountedStyleImport: MapContentMountedComponent {
                 context.style.styleManager.addStyleImportFromJSON(
                     forImportId: id,
                     json: json,
-                    config: configuration?.rawValue as? [String: Any],
+                    config: configuration?.turfRawValue as? [String: Any],
                     importPosition: importPosition.corePosition)
             }
         }
@@ -67,7 +67,7 @@ struct MountedStyleImport: MapContentMountedComponent {
                     context.style.styleManager.updateStyleImportWithURI(
                         forImportId: id,
                         uri: styleURI.rawValue,
-                        config: configuration?.rawValue as? [String: Any]
+                        config: configuration?.turfRawValue as? [String: Any]
                     )
                 }
             case .json(let json):
@@ -75,11 +75,11 @@ struct MountedStyleImport: MapContentMountedComponent {
                     context.style.styleManager.updateStyleImportWithJSON(
                         forImportId: id,
                         json: json,
-                        config: configuration?.rawValue as? [String: Any]
+                        config: configuration?.turfRawValue as? [String: Any]
                     )
                 }
             }
-        } else if configuration != old.configuration, let config = configuration?.rawValue as? [String: Any] {
+        } else if configuration != old.configuration, let config = configuration?.turfRawValue as? [String: Any] {
             try handleExpected {
                 context.style.styleManager.setStyleImportConfigPropertiesForImportId(id, configs: config)
             }

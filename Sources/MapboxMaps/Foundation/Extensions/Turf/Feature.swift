@@ -21,7 +21,7 @@ extension Feature {
             break
         }
 
-        properties = JSONObject(rawValue: feature.properties)
+        properties = JSONObject(turfRawValue: feature.properties)
     }
 
     /// Set properties on this Feature

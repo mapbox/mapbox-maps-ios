@@ -1,4 +1,4 @@
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -33,7 +33,9 @@ struct AnnotationsOrderTestExample: View {
                 circles: circles
             )
             TestLayer(id: "black-layer", radius: 2, color: .black.darker, coordinate: .init(latitude: -10, longitude: 0))
+            FadingCircle()
         }
+        .debugOptions(.camera)
         .mapStyle(mapStyle)
         .onLayerTapGesture("purple-layer") { _, context in
             tapMessage = gestureMessage("Purple layer", context: context)
@@ -233,6 +235,21 @@ private struct TestLayer: MapStyleContent {
     }
 }
 
+@available(iOS 13.0, *)
+private struct FadingCircle: MapStyleContent {
+    var body: some MapStyleContent {
+        GeoJSONSource(id: "source-id")
+            .data(.geometry(makeFadingCircle()))
+            .autoMaxZoom(true)
+
+        FillExtrusionLayer(id: "fill-layer-id", source: "source-id")
+            .fillExtrusionFloodLightGroundRadius(-400000)
+            .fillExtrusionColor(UIColor(red: 0, green: 0, blue: 0, alpha: 0))
+            .fillExtrusionFloodLightColor(.blue)
+            .fillExtrusionFloodLightIntensity(0.5)
+    }
+}
+
 private func gestureMessage(_ label: String, context: MapContentGestureContext) -> String {
     let coordinate =  String(format: "%.2f, %.2f", context.coordinate.latitude, context.coordinate.longitude)
     return "\(label) (\(coordinate))"
@@ -311,4 +328,30 @@ private extension Polygon {
             CLLocationCoordinate2D(latitude: 20, longitude: 0),
         ]
     ])
+}
+
+private func makeFadingCircle(
+    _ center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: -37.8, longitude: 145.004),
+    radius: Double = 600000,
+    tess: Int = 3600
+) -> Geometry {
+    let earthRadiusMeters = 6378137.0
+    let degToRad = Double.pi / 180.0
+
+    let lon0 = center.longitude * degToRad
+    let lat0 = center.latitude * degToRad
+
+    var coords = (0..<tess).map { index in
+        let bearing = (Double(index) * 2.0 * Double.pi) / Double(tess)
+        let angle = radius / earthRadiusMeters
+        var lat = asin(sin(lat0) * cos(angle) + cos(lat0) * sin(angle) * cos(bearing))
+        var lon = lon0 + atan2(sin(bearing) * sin(angle) * cos(lat0), cos(angle) - sin(lat0) * sin(lat))
+
+        lat = lat / degToRad
+        lon = lon / degToRad
+        return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+    }
+
+    coords.append(coords[0])
+    return Geometry(Polygon([coords]))
 }

@@ -1,6 +1,6 @@
 // This file is generated.
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class GeoJSONSourceIntegrationTests: MapViewIntegrationTestCase {
 
@@ -27,6 +27,7 @@ final class GeoJSONSourceIntegrationTests: MapViewIntegrationTestCase {
             source.lineMetrics = Bool.testSourceValue()
             source.generateId = Bool.testSourceValue()
             source.promoteId = PromoteId.testSourceValue()
+            source.autoMaxZoom = Bool.testSourceValue()
             source.prefetchZoomDelta = Double.testSourceValue()
             source.tileCacheBudget = TileCacheBudgetSize.testSourceValue()
 

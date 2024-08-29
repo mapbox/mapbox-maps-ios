@@ -19,6 +19,7 @@ final class GeoJSONSourceTests: XCTestCase {
         source.lineMetrics = Bool.testSourceValue()
         source.generateId = Bool.testSourceValue()
         source.promoteId = PromoteId.testSourceValue()
+        source.autoMaxZoom = Bool.testSourceValue()
         source.prefetchZoomDelta = Double.testSourceValue()
         source.tileCacheBudget = TileCacheBudgetSize.testSourceValue()
 
@@ -50,6 +51,7 @@ final class GeoJSONSourceTests: XCTestCase {
             XCTAssert(decodedSource.lineMetrics == Bool.testSourceValue())
             XCTAssert(decodedSource.generateId == Bool.testSourceValue())
             XCTAssert(decodedSource.promoteId == PromoteId.testSourceValue())
+            XCTAssert(decodedSource.autoMaxZoom == Bool.testSourceValue())
             XCTAssert(decodedSource.prefetchZoomDelta == Double.testSourceValue())
             XCTAssert(decodedSource.tileCacheBudget == TileCacheBudgetSize.testSourceValue())
         } catch {
@@ -60,10 +62,12 @@ final class GeoJSONSourceTests: XCTestCase {
     func testSetPropertyValueWithFunction() {
         let source = GeoJSONSource(id: "test-source")
             .data(GeoJSONSourceData.testSourceValue())
+            .autoMaxZoom(Bool.testSourceValue())
             .prefetchZoomDelta(Double.testSourceValue())
             .tileCacheBudget(TileCacheBudgetSize.testSourceValue())
 
         XCTAssertEqual(source.data, GeoJSONSourceData.testSourceValue())
+        XCTAssertEqual(source.autoMaxZoom, Bool.testSourceValue())
         XCTAssertEqual(source.prefetchZoomDelta, Double.testSourceValue())
         XCTAssertEqual(source.tileCacheBudget, TileCacheBudgetSize.testSourceValue())
     }

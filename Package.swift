@@ -4,7 +4,7 @@
 import PackageDescription
 import Foundation
 
-let coreMaps = MapsDependency.coreMaps(version: "11.3.0")
+let coreMaps = MapsDependency.coreMaps(version: "11.3.4-SNAPSHOT.0829T1108Z.endanke-snapshot-feature-state-relayout-11-3.bed6e10", checksum: "383ecc8dd0917feb5465bdb9de9ed7e1935cece071c91631f9211d28cc22b105")
 let common = MapsDependency.common(version: "24.3.1")
 
 let mapboxMapsPath: String? = nil

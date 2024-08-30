@@ -215,6 +215,8 @@ def add_comment_to_pr(report: "APIDigester.BreakageReport"):
     comments = helper.findPRComments(number)
 
     def findApiReportComment(comments):
+        if comments is None:
+            return None
         for comment in comments:
             if "API compatibility report" in comment["body"] and comment["performed_via_github_app"] is not None and comment["performed_via_github_app"]["owner"]["login"] == "mapbox":
                 return comment

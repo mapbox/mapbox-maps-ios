@@ -27,7 +27,6 @@ final class GeoJSONSourceIntegrationTests: MapViewIntegrationTestCase {
             source.lineMetrics = Bool.testSourceValue()
             source.generateId = Bool.testSourceValue()
             source.promoteId = PromoteId.testSourceValue()
-            source.autoMaxZoom = Bool.testSourceValue()
             source.prefetchZoomDelta = Double.testSourceValue()
             source.tileCacheBudget = TileCacheBudgetSize.testSourceValue()
 

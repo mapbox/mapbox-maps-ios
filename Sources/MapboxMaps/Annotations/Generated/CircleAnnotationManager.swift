@@ -47,7 +47,7 @@ public class CircleAnnotationManager: AnnotationManager, AnnotationManagerIntern
         set { impl.layerProperties["circle-sort-key"] = newValue }
     }
 
-    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity. Setting a negative value renders the blur as an inner glow effect.
     /// Default value: 0.
     public var circleBlur: Double? {
         get { impl.layerProperties["circle-blur"] as? Double }

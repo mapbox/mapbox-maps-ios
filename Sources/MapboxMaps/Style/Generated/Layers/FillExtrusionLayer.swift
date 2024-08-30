@@ -128,7 +128,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionFloodLightGroundAttenuationTransition: StyleTransition?
 
-    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters.
+    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
     /// Default value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionFloodLightGroundRadius: Value<Double>?
@@ -666,7 +666,7 @@ extension FillExtrusionLayer {
         with(self, setter(\.fillExtrusionFloodLightGroundAttenuation, .expression(expression)))
     }
 
-    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters.
+    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
     /// Default value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -681,7 +681,7 @@ extension FillExtrusionLayer {
         with(self, setter(\.fillExtrusionFloodLightGroundRadiusTransition, transition))
     }
 
-    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters.
+    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
     /// Default value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)

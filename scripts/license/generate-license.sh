@@ -57,7 +57,7 @@ CURRENT_YEAR=$(date +%Y)
 
 # Fetch license contents from GitHub
 TURF_LICENSE_CONTENT=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/turf-swift/contents/LICENSE.md?ref=v$TURF_VERSION" --jq ".content" | base64 --decode)
-CORE_LICENSE=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/mapbox-gl-native-internal/contents/LICENSE-iOS.md?ref=maps-v$COREMAPS_VERSION" --jq ".content" | base64 --decode)
+CORE_LICENSE=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/mapbox-sdk/contents/projects/gl-native/LICENSE-iOS.md?ref=gl-native/v$COREMAPS_VERSION" --jq ".content" | base64 --decode)
 
 LICENSE_TEMPLATE="changequote("""","""")dnl # prevents m4 from being confused with backquotes by changing quotes to non-existent tokens
 ## License

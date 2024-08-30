@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -82,6 +82,9 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.iconOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconTranslateAnchor = Value<IconTranslateAnchor>.testConstantValue()
+            layer.symbolElevationReference = Value<SymbolElevationReference>.testConstantValue()
+            layer.symbolZOffset = Value<Double>.testConstantValue()
+            layer.symbolZOffsetTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textColor = Value<StyleColor>.testConstantValue()
             layer.textColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textEmissiveStrength = Value<Double>.testConstantValue()

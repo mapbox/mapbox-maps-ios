@@ -41,6 +41,7 @@
 - ``Visibility``
 - ``TransitionOptions-struct``
 - ``ModelScaleMode``
+- ``SymbolElevationReference``
 
 <!-- Next two are arguable regarding it's category -->
 - ``ImageContent``

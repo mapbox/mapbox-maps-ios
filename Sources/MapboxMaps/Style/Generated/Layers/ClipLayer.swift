@@ -49,6 +49,11 @@ import UIKit
     @_documentation(visibility: public)
     public var visibility: Value<Visibility>
 
+    /// Removes content from layers with the specified scope. By default all layers are affected. For example specifying `basemap` will only remove content from the Mapbox Standard style layers which have the same scope
+    /// Default value: [].
+    @_documentation(visibility: public)
+    public var clipLayerScope: Value<[String]>?
+
     /// Layer types that will also be removed if fallen below this clip layer.
     /// Default value: [].
     @_documentation(visibility: public)
@@ -75,6 +80,7 @@ import UIKit
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encode(visibility, forKey: .visibility)
+        try layoutContainer.encodeIfPresent(clipLayerScope, forKey: .clipLayerScope)
         try layoutContainer.encodeIfPresent(clipLayerTypes, forKey: .clipLayerTypes)
     }
 
@@ -92,6 +98,7 @@ import UIKit
         var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
             visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            clipLayerScope = try layoutContainer.decodeIfPresent(Value<[String]>.self, forKey: .clipLayerScope)
             clipLayerTypes = try layoutContainer.decodeIfPresent(Value<[ClipLayerTypes]>.self, forKey: .clipLayerTypes)
         }
         visibility = visibilityEncoded ?? .constant(.visible)
@@ -111,6 +118,7 @@ import UIKit
     }
 
     enum LayoutCodingKeys: String, CodingKey {
+        case clipLayerScope = "clip-layer-scope"
         case clipLayerTypes = "clip-layer-types"
         case visibility = "visibility"
     }
@@ -151,6 +159,22 @@ extension ClipLayer {
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// Removes content from layers with the specified scope. By default all layers are affected. For example specifying `basemap` will only remove content from the Mapbox Standard style layers which have the same scope
+    /// Default value: [].
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func clipLayerScope(_ constant: [String]) -> Self {
+        with(self, setter(\.clipLayerScope, .constant(constant)))
+    }
+
+    /// Removes content from layers with the specified scope. By default all layers are affected. For example specifying `basemap` will only remove content from the Mapbox Standard style layers which have the same scope
+    /// Default value: [].
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func clipLayerScope(_ expression: Exp) -> Self {
+        with(self, setter(\.clipLayerScope, .expression(expression)))
     }
 
     /// Layer types that will also be removed if fallen below this clip layer.

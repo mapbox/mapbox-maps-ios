@@ -52,6 +52,7 @@ final class ClipLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = ClipLayer(id: "test-id", source: "source")
         layer.visibility = .constant(.visible)
+        layer.clipLayerScope = Value<[String]>.testConstantValue()
         layer.clipLayerTypes = Value<[ClipLayerTypes]>.testConstantValue()
 
         var data: Data?
@@ -69,6 +70,7 @@ final class ClipLayerTests: XCTestCase {
         do {
             let decodedLayer = try JSONDecoder().decode(ClipLayer.self, from: validData)
             XCTAssert(decodedLayer.visibility == .constant(.visible))
+            XCTAssertEqual(layer.clipLayerScope, Value<[String]>.testConstantValue())
             XCTAssertEqual(layer.clipLayerTypes, Value<[ClipLayerTypes]>.testConstantValue())
         } catch {
             XCTFail("Failed to decode ClipLayer")
@@ -106,6 +108,7 @@ final class ClipLayerTests: XCTestCase {
             .slot(Slot.testConstantValue())
             .minZoom(Double.testConstantValue())
             .maxZoom(Double.testConstantValue())
+            .clipLayerScope([String].testConstantValue())
             .clipLayerTypes([ClipLayerTypes].testConstantValue())
 
         XCTAssertEqual(layer.filter, Exp.testConstantValue())
@@ -114,6 +117,7 @@ final class ClipLayerTests: XCTestCase {
         XCTAssertEqual(layer.slot, Slot.testConstantValue())
         XCTAssertEqual(layer.minZoom, Double.testConstantValue())
         XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.clipLayerScope, Value.constant([String].testConstantValue()))
         XCTAssertEqual(layer.clipLayerTypes, Value.constant([ClipLayerTypes].testConstantValue()))
     }
 }

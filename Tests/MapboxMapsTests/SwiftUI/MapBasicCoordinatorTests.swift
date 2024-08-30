@@ -138,7 +138,8 @@ final class MapBasicCoordinatorTests: XCTestCase {
             __feature: MapboxCommon.Feature(feature),
             source: "src",
             sourceLayer: "src-layer",
-            state: [String: Any]())
+            state: [String: Any](),
+            featuresetFeatureId: nil)
 
         contentGestures.simulateLayerTap(layerId: "layer1", queriedFeature: queriedFeature, context: context)
         XCTAssertEqual(onLayerTapGesture.invocations.count, 1)

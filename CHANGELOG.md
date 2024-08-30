@@ -43,6 +43,8 @@ circleAnnotationManager.circleColor = .blue
   * `init(rawValue:)` -> `init(turfRawValue:)`
   * `rawValue` -> `turfRawValue`
 * Remove experimental `model-front-cutoff` property from `ModelLayer` 
+* Bump core maps version to 11.7.0-beta.1 and common sdk to 24.7.0-beta.1
+* Expose experimental `ClipLayer.clipLayerScope`, `SymbolLayer.symbolElevationReference` and `SymbolLayer.symbolZOffset`.
 
 ## 11.6.0 - 14 August, 2024
 

@@ -42,7 +42,7 @@ public struct CircleLayer: Layer, Equatable {
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var circleSortKey: Value<Double>?
 
-    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity. Setting a negative value renders the blur as an inner glow effect.
     /// Default value: 0.
     public var circleBlur: Value<Double>?
 
@@ -296,7 +296,7 @@ extension CircleLayer {
         with(self, setter(\.circleSortKey, .expression(expression)))
     }
 
-    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity. Setting a negative value renders the blur as an inner glow effect.
     /// Default value: 0.
     public func circleBlur(_ constant: Double) -> Self {
         with(self, setter(\.circleBlur, .constant(constant)))
@@ -307,7 +307,7 @@ extension CircleLayer {
         with(self, setter(\.circleBlurTransition, transition))
     }
 
-    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity. Setting a negative value renders the blur as an inner glow effect.
     /// Default value: 0.
     public func circleBlur(_ expression: Exp) -> Self {
         with(self, setter(\.circleBlur, .expression(expression)))

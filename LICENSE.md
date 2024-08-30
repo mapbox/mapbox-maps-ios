@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### MapboxCoreMaps,11.6.0,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### MapboxCoreMaps,11.7.0-beta.1,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Core Maps version 10.0
@@ -468,7 +468,7 @@ without including the above copyright and permission notices.
 
 ---
 
-### Boost C++ Libraries,1.69,BSL-1.0,Boost authors,https://www.boost.org
+### Boost C++ Libraries,1.84.0,BSL-1.0,Boost authors,https://www.boost.org
 
 ```
 Boost Software License - Version 1.0 - August 17th, 2003

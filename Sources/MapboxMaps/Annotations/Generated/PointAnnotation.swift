@@ -112,6 +112,7 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
         properties["icon-image-cross-fade"] = iconImageCrossFade
         properties["icon-occlusion-opacity"] = iconOcclusionOpacity
         properties["icon-opacity"] = iconOpacity
+        properties["symbol-z-offset"] = symbolZOffset
         properties["text-color"] = textColor?.rawValue
         properties["text-emissive-strength"] = textEmissiveStrength
         properties["text-halo-blur"] = textHaloBlur
@@ -265,6 +266,10 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     /// The opacity at which the icon will be drawn.
     /// Default value: 1. Value range: [0, 1]
     public var iconOpacity: Double?
+
+    /// Specifies an uniform elevation from the ground, in meters.
+    /// Default value: 0. Minimum value: 0.
+    public var symbolZOffset: Double?
 
     /// The color with which the text will be drawn.
     /// Default value: "#000000".
@@ -475,6 +480,12 @@ extension PointAnnotation {
     /// Default value: 1. Value range: [0, 1]
     public func iconOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.iconOpacity, newValue))
+    }
+
+    /// Specifies an uniform elevation from the ground, in meters.
+    /// Default value: 0. Minimum value: 0.
+    public func symbolZOffset(_ newValue: Double) -> Self {
+        with(self, setter(\.symbolZOffset, newValue))
     }
 
     /// The color with which the text will be drawn.

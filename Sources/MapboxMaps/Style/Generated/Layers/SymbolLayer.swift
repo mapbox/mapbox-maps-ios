@@ -276,6 +276,20 @@ public struct SymbolLayer: Layer, Equatable {
     /// Default value: "map".
     public var iconTranslateAnchor: Value<IconTranslateAnchor>?
 
+    /// Selects the base of symbol-elevation.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var symbolElevationReference: Value<SymbolElevationReference>?
+
+    /// Specifies an uniform elevation from the ground, in meters.
+    /// Default value: 0. Minimum value: 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var symbolZOffset: Value<Double>?
+
+    /// Transition options for `symbolZOffset`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var symbolZOffsetTransition: StyleTransition?
+
     /// The color with which the text will be drawn.
     /// Default value: "#000000".
     public var textColor: Value<StyleColor>?
@@ -376,6 +390,9 @@ public struct SymbolLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(iconTranslate, forKey: .iconTranslate)
         try paintContainer.encodeIfPresent(iconTranslateTransition, forKey: .iconTranslateTransition)
         try paintContainer.encodeIfPresent(iconTranslateAnchor, forKey: .iconTranslateAnchor)
+        try paintContainer.encodeIfPresent(symbolElevationReference, forKey: .symbolElevationReference)
+        try paintContainer.encodeIfPresent(symbolZOffset, forKey: .symbolZOffset)
+        try paintContainer.encodeIfPresent(symbolZOffsetTransition, forKey: .symbolZOffsetTransition)
         try paintContainer.encodeIfPresent(textColor, forKey: .textColor)
         try paintContainer.encodeIfPresent(textColorTransition, forKey: .textColorTransition)
         try paintContainer.encodeIfPresent(textEmissiveStrength, forKey: .textEmissiveStrength)
@@ -473,6 +490,9 @@ public struct SymbolLayer: Layer, Equatable {
             iconTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .iconTranslate)
             iconTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconTranslateTransition)
             iconTranslateAnchor = try paintContainer.decodeIfPresent(Value<IconTranslateAnchor>.self, forKey: .iconTranslateAnchor)
+            symbolElevationReference = try paintContainer.decodeIfPresent(Value<SymbolElevationReference>.self, forKey: .symbolElevationReference)
+            symbolZOffset = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .symbolZOffset)
+            symbolZOffsetTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .symbolZOffsetTransition)
             textColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .textColor)
             textColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textColorTransition)
             textEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textEmissiveStrength)
@@ -622,6 +642,9 @@ public struct SymbolLayer: Layer, Equatable {
         case iconTranslate = "icon-translate"
         case iconTranslateTransition = "icon-translate-transition"
         case iconTranslateAnchor = "icon-translate-anchor"
+        case symbolElevationReference = "symbol-elevation-reference"
+        case symbolZOffset = "symbol-z-offset"
+        case symbolZOffsetTransition = "symbol-z-offset-transition"
         case textColor = "text-color"
         case textColorTransition = "text-color-transition"
         case textEmissiveStrength = "text-emissive-strength"
@@ -1365,6 +1388,45 @@ extension SymbolLayer {
     /// Default value: "map".
     public func iconTranslateAnchor(_ expression: Exp) -> Self {
         with(self, setter(\.iconTranslateAnchor, .expression(expression)))
+    }
+
+    /// Selects the base of symbol-elevation.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func symbolElevationReference(_ constant: SymbolElevationReference) -> Self {
+        with(self, setter(\.symbolElevationReference, .constant(constant)))
+    }
+
+    /// Selects the base of symbol-elevation.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func symbolElevationReference(_ expression: Exp) -> Self {
+        with(self, setter(\.symbolElevationReference, .expression(expression)))
+    }
+
+    /// Specifies an uniform elevation from the ground, in meters.
+    /// Default value: 0. Minimum value: 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func symbolZOffset(_ constant: Double) -> Self {
+        with(self, setter(\.symbolZOffset, .constant(constant)))
+    }
+
+    /// Transition property for `symbolZOffset`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func symbolZOffsetTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.symbolZOffsetTransition, transition))
+    }
+
+    /// Specifies an uniform elevation from the ground, in meters.
+    /// Default value: 0. Minimum value: 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func symbolZOffset(_ expression: Exp) -> Self {
+        with(self, setter(\.symbolZOffset, .expression(expression)))
     }
 
     /// The color with which the text will be drawn.

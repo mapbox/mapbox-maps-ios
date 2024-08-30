@@ -102,7 +102,7 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     }
 
     private var circleBlur: Double?
-    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity. Setting a negative value renders the blur as an inner glow effect.
     /// Default value: 0.
     public func circleBlur(_ newValue: Double) -> Self {
         with(self, setter(\.circleBlur, newValue))

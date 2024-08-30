@@ -382,6 +382,24 @@ public struct IconTranslateAnchor: RawRepresentable, Codable, Hashable {
 
 }
 
+// MARK: SYMBOL_ELEVATION_REFERENCE
+
+/// Selects the base of symbol-elevation.
+public struct SymbolElevationReference: RawRepresentable, Codable, Hashable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Elevate symbols relative to the sea level.
+    public static let sea = SymbolElevationReference(rawValue: "sea")
+
+    /// Elevate symbols relative to the ground's height below them.
+    public static let ground = SymbolElevationReference(rawValue: "ground")
+
+}
+
 // MARK: TEXT_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `text-translate`.

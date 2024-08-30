@@ -32,3 +32,4 @@
 - ``QueriedSourceFeature``
 - ``RenderedQueryOptions``
 - ``AnnotatedFeature``
+- ``FeaturesetDescriptor``

@@ -382,6 +382,20 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(iconOpacity, annotation.iconOpacity)
     }
 
+    func testSymbolZOffset() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.symbolZOffset =  Double.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(symbolZOffset) = layerProperties["symbol-z-offset"] else {
+            return XCTFail("Layer property symbol-z-offset should be set to a number.")
+        }
+        XCTAssertEqual(symbolZOffset, annotation.symbolZOffset)
+    }
+
     func testTextColor() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textColor =  StyleColor.testConstantValue()

@@ -1363,6 +1363,56 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"] as! String, defaultValue)
     }
+    func testInitialSymbolElevationReference() {
+        let initialValue = manager.symbolElevationReference
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetSymbolElevationReference() {
+        let value = SymbolElevationReference.testConstantValue()
+        manager.symbolElevationReference = value
+        XCTAssertEqual(manager.symbolElevationReference, value)
+        XCTAssertEqual(manager.impl.layerProperties["symbol-elevation-reference"] as! String, value.rawValue)
+    }
+
+    func testSetToNilSymbolElevationReference() {
+        let newSymbolElevationReferenceProperty = SymbolElevationReference.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-elevation-reference").value as! String
+        manager.symbolElevationReference = newSymbolElevationReferenceProperty
+        XCTAssertNotNil(manager.impl.layerProperties["symbol-elevation-reference"])
+        harness.triggerDisplayLink()
+
+        manager.symbolElevationReference = nil
+        XCTAssertNil(manager.symbolElevationReference)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-elevation-reference"] as! String, defaultValue)
+    }
+    func testInitialSymbolZOffset() {
+        let initialValue = manager.symbolZOffset
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetSymbolZOffset() {
+        let value = 50000.0
+        manager.symbolZOffset = value
+        XCTAssertEqual(manager.symbolZOffset, value)
+        XCTAssertEqual(manager.impl.layerProperties["symbol-z-offset"] as! Double, value)
+    }
+
+    func testSetToNilSymbolZOffset() {
+        let newSymbolZOffsetProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-offset").value as! Double
+        manager.symbolZOffset = newSymbolZOffsetProperty
+        XCTAssertNotNil(manager.impl.layerProperties["symbol-z-offset"])
+        harness.triggerDisplayLink()
+
+        manager.symbolZOffset = nil
+        XCTAssertNil(manager.symbolZOffset)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-offset"] as! Double, defaultValue)
+    }
     func testInitialTextColor() {
         let initialValue = manager.textColor
         XCTAssertNil(initialValue)

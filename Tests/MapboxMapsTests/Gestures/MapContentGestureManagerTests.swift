@@ -295,6 +295,7 @@ private func makeRenderedFeature(id: String? = nil, coordinate: CLLocationCoordi
         __feature: MapboxCommon.Feature(feature),
         source: "src",
         sourceLayer: "src-layer",
-        state: [String: Any]())
-    return QueriedRenderedFeature(__queriedFeature: queriedFeature, layers: [layerId])
+        state: [String: Any](),
+        featuresetFeatureId: nil)
+    return QueriedRenderedFeature(__queriedFeature: queriedFeature, layers: [layerId], targets: [])
 }

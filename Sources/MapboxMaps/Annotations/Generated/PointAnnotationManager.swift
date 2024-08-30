@@ -452,6 +452,20 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["icon-translate-anchor"] = newValue?.rawValue }
     }
 
+    /// Selects the base of symbol-elevation.
+    /// Default value: "ground".
+    public var symbolElevationReference: SymbolElevationReference? {
+        get { impl.layerProperties["symbol-elevation-reference"].flatMap { $0 as? String }.flatMap(SymbolElevationReference.init(rawValue:)) }
+        set { impl.layerProperties["symbol-elevation-reference"] = newValue?.rawValue }
+    }
+
+    /// Specifies an uniform elevation from the ground, in meters.
+    /// Default value: 0. Minimum value: 0.
+    public var symbolZOffset: Double? {
+        get { impl.layerProperties["symbol-z-offset"] as? Double }
+        set { impl.layerProperties["symbol-z-offset"] = newValue }
+    }
+
     /// The color with which the text will be drawn.
     /// Default value: "#000000".
     public var textColor: StyleColor? {

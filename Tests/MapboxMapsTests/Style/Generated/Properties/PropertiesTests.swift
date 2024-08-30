@@ -319,6 +319,25 @@ extension IconTranslateAnchor {
     }
 }
 
+// MARK: SYMBOL_ELEVATION_REFERENCE
+
+extension Value where T == SymbolElevationReference {
+    static func testConstantValue() -> Value<SymbolElevationReference> {
+        return .constant(SymbolElevationReference.testConstantValue())
+    }
+}
+
+extension SymbolElevationReference {
+    static func testConstantValue() -> SymbolElevationReference {
+        return .sea
+    }
+
+    static func random() -> SymbolElevationReference {
+        let allCases: [SymbolElevationReference] = [.sea, .ground]
+        return allCases.randomElement()!
+    }
+}
+
 // MARK: TEXT_TRANSLATE_ANCHOR
 
 extension Value where T == TextTranslateAnchor {

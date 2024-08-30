@@ -737,6 +737,32 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.iconTranslateAnchor, .constant(IconTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String)))
     }
 
+    func testSymbolElevationReference() throws {
+        // Test that the setter and getter work
+        let value = SymbolElevationReference.testConstantValue()
+        manager.symbolElevationReference = value
+        XCTAssertEqual(manager.symbolElevationReference, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.symbolElevationReference {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.symbolElevationReference = nil
+        XCTAssertNil(manager.symbolElevationReference)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.symbolElevationReference, .constant(SymbolElevationReference(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-elevation-reference").value as! String)))
+    }
+
     func testTextTranslate() throws {
         // Test that the setter and getter work
         let value = [0.0, 0.0]
@@ -1706,6 +1732,39 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
         XCTAssertEqual(layer.iconOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-opacity").value as! NSNumber).doubleValue))
+    }
+
+    func testSymbolZOffset() throws {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        // Test that the setter and getter work
+        let value = 50000.0
+        annotation.symbolZOffset = value
+        XCTAssertEqual(annotation.symbolZOffset, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        let fallbackValue = self.manager.symbolZOffset ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-offset").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"symbol-z-offset\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.symbolZOffset.toString(), expectedString)
+
+        // Test that the property can be reset to nil
+        annotation.symbolZOffset = nil
+        XCTAssertNil(annotation.symbolZOffset)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.symbolZOffset, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-offset").value as! NSNumber).doubleValue))
     }
 
     func testTextColor() throws {

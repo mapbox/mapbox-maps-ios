@@ -23,6 +23,7 @@ final class ClipLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
+            layer.clipLayerScope = Value<[String]>.testConstantValue()
             layer.clipLayerTypes = Value<[ClipLayerTypes]>.testConstantValue()
 
             // Add the layer

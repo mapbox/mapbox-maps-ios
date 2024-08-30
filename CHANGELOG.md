@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 11.7.0-beta.1 - 30 August, 2024
 
 * Expose data-driven properties on annotation managers. Now it's possible to set data-driven properties globally on annotation manager and specify per-annotation overrides.
 Previously user had to specify those properties on each annotation and couldn't specify them globally
@@ -52,6 +52,8 @@ circleAnnotationManager.circleColor = .blue
 * Remove experimental `model-front-cutoff` property from `ModelLayer`
 * Bump core maps version to 11.7.0-beta.1 and common sdk to 24.7.0-beta.1
 * Expose experimental `ClipLayer.clipLayerScope`, `SymbolLayer.symbolElevationReference` and `SymbolLayer.symbolZOffset`.
+* Most of public value types was marked as Sendable now, to facilitate adoption of Swift 6 concurrency model for SDK clients.
+* `autoMaxZoom` property exposed for GeoJSONSource to fix rendering issues with `FillExtrusionLayer` in some cases
 
 ## 11.6.0 - 14 August, 2024
 

@@ -1739,3 +1739,8 @@ Func MapStyle.standard(lightPreset:font:showPointOfInterestLabels:showTransitLab
 // Turf 3.0
 Extension Array has removed conformance to RawRepresentable
 Extension Dictionary has removed conformance to RawRepresentable
+
+// Removing experimental model-front-model
+Func ModelLayer.modelFrontCutoff(_:) has been removed 
+Func ModelLayer.modelFrontCutoff(start:range:end:) has been removed 
+Var ModelLayer.modelFrontCutoff has been removed 

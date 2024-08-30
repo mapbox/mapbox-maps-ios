@@ -4,8 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-* Expose data-driven properties on annotation managers. Now it's possible to set data-dirven properties globally on annotation manager and specify per-annotation overrides.
-Previosuly user had to specify those properties on each annotation and couldn't specify them globally
+* Expose data-driven properties on annotation managers. Now it's possible to set data-driven properties globally on annotation manager and specify per-annotation overrides.
+Previously user had to specify those properties on each annotation and couldn't specify them globally
 ```swift
 CircleAnnotationGroup(circles, id: \.id) { circle in
     CircleAnnotation(centerCoordinate: circle.coordinate)
@@ -15,7 +15,7 @@ CircleAnnotationGroup(circles, id: \.id) { circle in
       .circleStrokeColor(.black)
 }
 ```
-The problem with the above approach is that most of the properties are just duplicated for each annotation, which can lead to **large memory overhead** in case of big datasets. In order to solve this issue and provide more versatile API the following approach is now possible, which is visualy identical to previous snippet, but more performant.
+The problem with the above approach is that most of the properties are just duplicated for each annotation, which can lead to **large memory overhead** in case of big datasets. In order to solve this issue and provide more versatile API the following approach is now possible, which is visually identical to previous snippet, but more performant.
 ```swift
 CircleAnnotationGroup(circles, id: \.id) { circle in
     CircleAnnotation(centerCoordinate: circle.coordinate)
@@ -42,6 +42,7 @@ circleAnnotationManager.circleColor = .blue
 
   * `init(rawValue:)` -> `init(turfRawValue:)`
   * `rawValue` -> `turfRawValue`
+* Remove experimental `model-front-cutoff` property from `ModelLayer` 
 
 ## 11.6.0 - 14 August, 2024
 

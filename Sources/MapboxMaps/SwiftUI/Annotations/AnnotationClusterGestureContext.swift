@@ -1,7 +1,7 @@
 import Foundation
 
 /// A structure that defines additional information about  map content gesture performed on annotations' cluster.
-public struct AnnotationClusterGestureContext: Equatable {
+public struct AnnotationClusterGestureContext: Equatable, Sendable {
     /// The location of gesture in Map view bounds.
     public var point: CGPoint
 

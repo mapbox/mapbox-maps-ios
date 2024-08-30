@@ -11,7 +11,7 @@ public typealias Expression = Exp
 /// or filter within a map style. Expressions allow you to style data with multiple feature
 /// properties at once, apply conditional logic, and manipulate data with mathematical, logical, and
 /// string operators. This allows for sophisticated runtime styling.
-public struct Exp: Codable, CustomStringConvertible, Equatable {
+public struct Exp: Codable, CustomStringConvertible, Equatable, Sendable {
 
     /// The individual elements of the expression in an array
     internal var elements: [Element]
@@ -103,7 +103,7 @@ public struct Exp: Codable, CustomStringConvertible, Equatable {
      An `ExpressionElement` can be either a `op` (associated with a `String`)
      OR an `argument` (associated with an `ExpressionArgument`)
      */
-    public indirect enum Element: Codable, CustomStringConvertible, Equatable {
+    public indirect enum Element: Codable, CustomStringConvertible, Equatable, Sendable {
 
         case `operator`(Operator)
         case argument(Argument)
@@ -160,7 +160,7 @@ public struct Exp: Codable, CustomStringConvertible, Equatable {
 
     /// An `Exp.Argument` is either a literal (associated with a double, string, boolean, or null value)
     /// or another `Exp`
-    public indirect enum Argument: Codable, CustomStringConvertible, Equatable {
+    public indirect enum Argument: Codable, CustomStringConvertible, Equatable, Sendable {
 
         case number(Double)
         case string(String)

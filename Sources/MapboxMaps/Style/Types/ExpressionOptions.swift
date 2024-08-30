@@ -2,7 +2,7 @@ import Foundation
 
 extension Exp {
 
-    public enum Option: Codable, Equatable {
+    public enum Option: Codable, Equatable, Sendable {
         case format(FormatOptions)
         case numberFormat(NumberFormatOptions)
         case collator(CollatorOptions)
@@ -43,7 +43,7 @@ extension Exp {
 
 }
 
-public struct FormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
+public struct FormatOptions: Codable, Equatable, Sendable, ExpressionArgumentConvertible {
 
     /// Applies a scaling factor on text-size as specified by the root layout property.
     public var fontScale: Value<Double>?
@@ -73,7 +73,7 @@ public struct FormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
     public init() {}
 }
 
-public struct NumberFormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
+public struct NumberFormatOptions: Codable, Equatable, ExpressionArgumentConvertible, Sendable {
 
     /// Specifies the locale to use, as a BCP 47 language tag.
     public var locale: String?
@@ -106,7 +106,7 @@ public struct NumberFormatOptions: Codable, Equatable, ExpressionArgumentConvert
     }
 }
 
-public struct CollatorOptions: Codable, Equatable, ExpressionArgumentConvertible {
+public struct CollatorOptions: Codable, Equatable, ExpressionArgumentConvertible, Sendable {
 
     /// Whether comparison option is case sensitive.
     public var caseSensitive: Bool?

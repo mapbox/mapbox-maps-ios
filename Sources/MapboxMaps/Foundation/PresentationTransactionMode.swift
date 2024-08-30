@@ -1,7 +1,7 @@
 /// Determines if the underlying `CAMetalLayer` rendering output should synchronize with the Core Animation transactions.
 ///
 /// This property controls the `CAMetalLayer.presentsWithTransaction` property, please refer to its documentation.
-public enum PresentationTransactionMode {
+public enum PresentationTransactionMode: Sendable {
     /// The map render call is synchronized with Core Animation transaction (`presentsWithTransaction = true`).
     ///
     /// Use this option if position a custom View depending on map camera position.

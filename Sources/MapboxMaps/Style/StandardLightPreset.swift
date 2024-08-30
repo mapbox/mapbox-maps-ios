@@ -1,5 +1,5 @@
 /// Defines the available light presets in the Mapbox Standard Style.
-public struct StandardLightPreset: RawRepresentable, Hashable {
+public struct StandardLightPreset: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {

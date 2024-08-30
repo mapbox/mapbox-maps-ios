@@ -3,7 +3,7 @@ import UIKit
 
 extension MapView {
     /// Errors related to rendered snapshots
-    public struct SnapshotError: Error, Equatable {
+    public struct SnapshotError: Error, Equatable, Sendable {
         public let message: String
 
         /// No metal view available. Catastrophic error.

@@ -63,8 +63,8 @@ public struct CameraBoundsOptions: Hashable {
     }
 }
 
+// TODO: After MAPSIOS-1538 landed - mark as Sendable along with the inner type CoordinateBounds which need to be marked as Sendable.
 extension CameraBoundsOptions {
-
     /// Initialize a `CameraBoundsOptions` from the immutable `CameraBounds` type
     /// - Parameter cameraBounds: `CameraBounds`
     public init(cameraBounds: CameraBounds) {
@@ -75,8 +75,6 @@ extension CameraBoundsOptions {
         minPitch = cameraBounds.minPitch
     }
 }
-
-// MARK: - MapboxCoreMaps.CameraBoundsOptions -
 
 extension CoreCameraBoundsOptions {
     internal convenience init(_ swiftValue: CameraBoundsOptions) {

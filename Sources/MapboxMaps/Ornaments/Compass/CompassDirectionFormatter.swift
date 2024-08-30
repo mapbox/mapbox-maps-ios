@@ -8,7 +8,7 @@ public class CompassDirectionFormatter {
 
     /// `Style` is used to configure how a `CompassDirectionFormatter`
     /// translates a compass direction into a `String`.
-    public enum Style: Hashable {
+    public enum Style: Hashable, Sendable {
 
         /// When a `CompassDirectionFormatter` is configured to use
         /// the `short` style, it uses an abbreviation of the compass direction,

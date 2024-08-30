@@ -3,7 +3,7 @@ import Foundation
 // MARK: - Style error types
 
 /// Type of errors thrown by the `Style` APIs.
-public struct StyleError: RawRepresentable, LocalizedError {
+public struct StyleError: RawRepresentable, LocalizedError, Sendable {
     public typealias RawValue = String
 
     public var rawValue: String
@@ -23,13 +23,13 @@ public struct StyleError: RawRepresentable, LocalizedError {
 }
 
 /// Operation is cancelled.
-public struct CancelError: LocalizedError {
+public struct CancelError: LocalizedError, Sendable {
     public var errorDescription: String? {
         return "Cancelled"
     }
 }
 
-public struct TypeConversionError: Error, Equatable {
+public struct TypeConversionError: Error, Equatable, Sendable {
     public let message: String
 
     /// The object is invalid for this operation
@@ -43,7 +43,7 @@ public struct TypeConversionError: Error, Equatable {
 }
 
 /// Type of errors thrown by the `MapboxMap` APIs.
-public struct MapError: LocalizedError, CoreErrorRepresentable {
+public struct MapError: LocalizedError, CoreErrorRepresentable, Sendable {
     internal typealias CoreErrorType = NSString
 
     /// Error message

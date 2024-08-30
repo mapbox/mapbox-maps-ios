@@ -2,7 +2,7 @@ import UIKit
 import CoreLocation
 
 /// Structure used to represent a desired change to the map's camera
-public struct CameraTransition: Equatable {
+public struct CameraTransition: Equatable, Sendable {
 
     /// Represents a change to the center coordinate of the map.
     /// NOTE: Setting the `toValue` of `center` overrides any `anchor` animations
@@ -91,3 +91,5 @@ public struct CameraTransition: Equatable {
     }
 
 }
+
+extension CameraTransition.Change: Sendable where T: Sendable {}

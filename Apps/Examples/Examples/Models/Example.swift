@@ -1,6 +1,6 @@
 import UIKit
 
-public struct Example {
+public struct Example: Sendable {
     public static let finishNotificationName = Notification.Name("com.mapbox.Examples.finish")
 
     public var title: String

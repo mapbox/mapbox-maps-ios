@@ -1,5 +1,5 @@
 /// Describes the projection used to render the map.
-public struct StyleProjection: Hashable, Codable, StyleEncodable, Equatable {
+public struct StyleProjection: Hashable, Codable, StyleEncodable, Equatable, Sendable {
 
     /// The name of the projection.
     public var name: StyleProjectionName

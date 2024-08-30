@@ -13,13 +13,13 @@ protocol DispatchQueueProtocol: AnyObject {
 }
 
 extension DispatchQueueProtocol {
-    @preconcurrency func async(execute work: @escaping @convention(block) () -> Void) {
+    @preconcurrency func async(execute work: @Sendable @escaping @convention(block) () -> Void) {
         async(group: nil, qos: .unspecified, flags: [], execute: work)
     }
 
     @preconcurrency func async(
         qos: DispatchQoS,
-        execute work: @escaping @convention(block) () -> Void
+        execute work: @Sendable @escaping @convention(block) () -> Void
     ) {
         async(group: nil, qos: qos, flags: [], execute: work)
     }

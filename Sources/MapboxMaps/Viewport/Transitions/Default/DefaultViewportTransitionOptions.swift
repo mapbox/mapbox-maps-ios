@@ -1,5 +1,5 @@
 /// Configuration options for ``DefaultViewportTransition``.
-public struct DefaultViewportTransitionOptions: Hashable {
+public struct DefaultViewportTransitionOptions: Hashable, Sendable {
 
     /// The maximum duration of the transition.
     public var maxDuration: TimeInterval

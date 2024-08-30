@@ -5,7 +5,7 @@ import UIKit
 /// All margin values are relative to the ``MapView``'s safe area. To allow the safe area
 /// (and thereby ornaments) to track the presence of navigation bars and tab bars,
 /// make MapView the root view of a view controller.
-public struct OrnamentOptions: Equatable {
+public struct OrnamentOptions: Equatable, Sendable {
 
     // MARK: - Scale Bar
 
@@ -52,7 +52,7 @@ public struct OrnamentOptions: Equatable {
 }
 
 /// Used to configure position, margin, and visibility for the map's scale bar view.
-public struct ScaleBarViewOptions: Equatable {
+public struct ScaleBarViewOptions: Equatable, Sendable {
 
     /// The position of the scale bar view.
     ///
@@ -95,7 +95,7 @@ public struct ScaleBarViewOptions: Equatable {
 }
 
 /// Used to configure position, margin, image, and visibility for the map's compass view.
-public struct CompassViewOptions: Equatable {
+public struct CompassViewOptions: Equatable, Sendable {
 
     /// The position of the compass view.
     ///
@@ -137,7 +137,7 @@ public struct CompassViewOptions: Equatable {
 }
 
 /// Used to configure position, margin, and visibility for the map's attribution button.
-public struct AttributionButtonOptions: Equatable {
+public struct AttributionButtonOptions: Equatable, Sendable {
 
     /// The position of the attribution button.
     ///
@@ -170,7 +170,7 @@ public struct AttributionButtonOptions: Equatable {
 }
 
 /// Used to configure position, margin, and visibility for the map's logo view.
-public struct LogoViewOptions: Equatable {
+public struct LogoViewOptions: Equatable, Sendable {
 
     /// The position of the logo view.
     ///

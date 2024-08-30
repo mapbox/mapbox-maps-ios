@@ -7,7 +7,7 @@ import MapboxCoreMaps
 ///  To use, create a TileCacheBudgetSize and then either:
 ///  (1) Set it for an individual source with with the tileCacheBudget property, or
 ///  (2) Set if for the map with ``MapboxMap/setTileCacheBudget(size:)``
-public enum TileCacheBudgetSize {
+public enum TileCacheBudgetSize: Sendable {
 
     /// A tile cache budget measured in tile units
     case tiles(Int)

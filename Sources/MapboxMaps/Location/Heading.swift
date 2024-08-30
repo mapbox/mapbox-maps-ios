@@ -2,7 +2,7 @@ import Foundation
 import CoreLocation
 
 /// The azimuth (orientation) of the user’s device, relative to true or magnetic north.
-public struct Heading: Equatable {
+public struct Heading: Equatable, Sendable {
     /// The heading direction (measured in degrees) relative to true or magnetic north.
     ///
     /// When heading is created from CLHeading, this value resolves to `trueHeading` (priority, if valid)

@@ -2,7 +2,7 @@
 /// setting ``CameraOptions-swift.struct/bearing``.
 ///
 /// - SeeAlso: ``LocationOptions/puckBearing``
-public enum FollowPuckViewportStateBearing: Codable, Hashable {
+public enum FollowPuckViewportStateBearing: Codable, Hashable, Sendable {
 
     /// ``FollowPuckViewportState`` sets ``CameraOptions-swift.struct/bearing`` to a constant value.
     ///

@@ -3,7 +3,7 @@ import UIKit
 @_implementationOnly import MapboxCommon_Private
 import Turf
 
-public struct ViewAnnotationManagerError: Error, Equatable {
+public struct ViewAnnotationManagerError: Error, Equatable, Sendable {
     public let message: String
 
     /// This view has alread been added

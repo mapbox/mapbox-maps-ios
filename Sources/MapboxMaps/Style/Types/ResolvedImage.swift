@@ -3,7 +3,7 @@ import Foundation
 // Represents the resolved image type used in MapboxCoreMaps
 // When assigning a value to a layer, use the `name` case
 // When retrieving a value from a layer, the `data` case is populated
-public enum ResolvedImage: Codable {
+public enum ResolvedImage: Codable, Sendable {
 
     /// Use to assign a new resolved image with a name
     case name(String)
@@ -41,7 +41,7 @@ public enum ResolvedImage: Codable {
     }
 }
 
-public struct ResolvedImageData: Codable, Equatable {
+public struct ResolvedImageData: Codable, Equatable, Sendable {
     public var available: Bool
     public var name: String
 }

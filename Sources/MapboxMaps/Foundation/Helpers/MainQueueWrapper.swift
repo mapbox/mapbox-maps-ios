@@ -8,7 +8,7 @@ final class MainQueueWrapper: MainQueueProtocol {
         group: DispatchGroup?,
         qos: DispatchQoS,
         flags: DispatchWorkItemFlags,
-        execute work: @escaping @convention(block) () -> Void
+        execute work: @Sendable @escaping @convention(block) () -> Void
     ) {
         DispatchQueue.main.async(group: group, qos: qos, flags: flags, execute: work)
     }

@@ -1,5 +1,5 @@
 /// Options for recording the map when using ``MapRecorder``
-public struct MapRecorderOptions {
+public struct MapRecorderOptions: Sendable {
     /// The maximum duration (in milliseconds) from the current time until API calls are kept.
     /// If not specified, all API calls will be kept during the recording,
     /// which can lead to significant memory consumption for long sessions.

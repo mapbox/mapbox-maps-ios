@@ -57,8 +57,8 @@ import MapboxCoreMaps
 /// ```
 ///
 /// The style reloads only when the actual ``StyleURI`` or JSON (when loaded with ``MapStyle/init(json:configuration:)`` is changed. To observe the result of the style load you can subscribe to ``MapboxMap/onStyleLoaded`` or ``Snapshotter/onStyleLoaded`` events, or use use ``StyleManager/load(mapStyle:transition:completion:)`` method.
-public struct MapStyle: Equatable {
-    enum Data: Equatable {
+public struct MapStyle: Equatable, Sendable {
+    enum Data: Equatable, Sendable {
         case uri(StyleURI)
         case json(String)
     }

@@ -1,7 +1,7 @@
 import Foundation
 
 /// A structure represeting a Model
-public struct Model: Equatable, Codable {
+public struct Model: Equatable, Codable, Sendable {
 
     /// The model's identifier
     public var id: String?

@@ -1,7 +1,7 @@
 import CoreLocation
 
 /// A structure that defines additional information about map content gesture
-public struct MapContentGestureContext {
+public struct MapContentGestureContext: Sendable {
     /// The location of gesture in Map view bounds.
     public var point: CGPoint
 

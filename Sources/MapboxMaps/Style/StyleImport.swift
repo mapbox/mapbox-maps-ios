@@ -29,7 +29,7 @@
 ///              Therefore, any layers defined inside the import won't be accessible from API. More information in [v11 Migration Guide](https://docs.mapbox.com/ios/maps/guides/migrate-to-v11/#211-style-imports)
 ///
 /// More information [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/imports)
-public struct StyleImport {
+public struct StyleImport: Sendable {
     let id: String?
     let style: MapStyle
 

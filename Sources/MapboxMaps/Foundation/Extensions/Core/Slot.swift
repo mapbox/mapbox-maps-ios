@@ -4,7 +4,7 @@ import Foundation
 /// (such as on top of existing land layers, but below all labels).
 ///
 /// - SeeAlso: More information about slots in [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/slots).
-public struct Slot: Hashable, Codable, RawRepresentable, ExpressibleByStringLiteral {
+public struct Slot: Hashable, Codable, RawRepresentable, ExpressibleByStringLiteral, Sendable {
     /// Above POI labels and behind Place and Transit labels
     public static let top = Slot(rawValue: "top")
 

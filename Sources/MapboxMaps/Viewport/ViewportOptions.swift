@@ -1,5 +1,5 @@
 /// Configuration options for ``ViewportManager``.
-public struct ViewportOptions: Hashable {
+public struct ViewportOptions: Hashable, Sendable {
     /// Indicates whether the ``ViewportManager`` should idle when the ``MapView``
     /// receives pan touch input.
     ///

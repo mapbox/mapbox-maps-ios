@@ -1,7 +1,7 @@
 import Foundation
 
 /// Options for enabling debugging features in a map.
-public struct MapViewDebugOptions: OptionSet, Hashable {
+public struct MapViewDebugOptions: OptionSet, Hashable, Sendable {
     public let rawValue: Int
 
     /// Edges of tile boundaries are shown as thick, red lines to help diagnose

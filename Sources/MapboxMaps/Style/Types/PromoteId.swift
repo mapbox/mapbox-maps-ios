@@ -1,6 +1,6 @@
 import Foundation
 
-public enum PromoteId: Equatable, Codable {
+public enum PromoteId: Equatable, Codable, Sendable {
     case string(String)
     case object([String: String])
 

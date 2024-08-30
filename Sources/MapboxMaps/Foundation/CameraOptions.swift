@@ -2,7 +2,7 @@ import Foundation
 import CoreLocation
 import UIKit
 
-public struct CameraOptions: Codable, Hashable {
+public struct CameraOptions: Codable, Hashable, Sendable {
     /// The geographic coordinate that will be rendered at the midpoint of the area defined by `padding`. Defaults to (0, 0).
     public var center: CLLocationCoordinate2D? {
         get { centerCodable?.coordinates }

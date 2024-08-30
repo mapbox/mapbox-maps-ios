@@ -272,7 +272,7 @@ public class Snapshotter: StyleManager {
         mapSnapshotter.cancel()
     }
 
-    public enum SnapshotError: Error {
+    public enum SnapshotError: Error, Sendable {
         case unknown
 
         /// Snapshot failed with error description

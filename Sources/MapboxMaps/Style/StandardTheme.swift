@@ -1,5 +1,5 @@
 /// Defines the available themes in the Mapbox Standard Style.
-public struct StandardTheme: RawRepresentable, Hashable {
+public struct StandardTheme: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {

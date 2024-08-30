@@ -1,5 +1,5 @@
 /// Set of options for taking map snapshot with Snapshotter.
-public struct MapSnapshotOptions {
+public struct MapSnapshotOptions: Sendable {
     /// Dimensions of the snapshot in points.
     public var size: CGSize
 

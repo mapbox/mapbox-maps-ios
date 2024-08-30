@@ -62,6 +62,7 @@ public struct CameraBounds: Hashable {
     }
 }
 
+// TODO: After MAPSIOS-1538 landed - mark as Sendable along with the inner type CoordinateBounds which need to be marked as Sendable.
 extension CameraBounds {
     internal static var `default`: CameraBounds {
         let defaultSouthWest = CLLocationCoordinate2D(latitude: -90, longitude: -180)

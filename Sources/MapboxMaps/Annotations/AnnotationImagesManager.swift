@@ -12,7 +12,7 @@ internal protocol AnnotationImagesConsumer: AnyObject {
 }
 
 extension PointAnnotation {
-    public struct Image: Hashable {
+    public struct Image: Hashable, Sendable {
         public var image: UIImage
         public var name: String
 
@@ -24,7 +24,6 @@ extension PointAnnotation {
 }
 
 extension PointAnnotationManager: AnnotationImagesConsumer {
-
     func isUsingStyleImage(_ imageName: String) -> Bool {
         allImages.contains(imageName)
     }

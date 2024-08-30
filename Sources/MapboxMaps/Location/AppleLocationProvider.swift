@@ -28,7 +28,7 @@ public protocol AppleLocationProviderDelegate: AnyObject {
 /// A location provider based on CoreLocation's `CLLocationManager`.
 public final class AppleLocationProvider {
 
-    public struct Options: Equatable {
+    public struct Options: Equatable, Sendable {
         /// Specifies the minimum distance (measured in meters) a device must move horizontally
         /// before a location update is generated.
         ///

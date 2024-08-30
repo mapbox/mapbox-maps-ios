@@ -35,6 +35,7 @@ public enum Value<T: Codable>: Codable {
 }
 
 extension Value: Equatable where T: Equatable {}
+extension Value: Sendable where T: Sendable {}
 
 extension Value {
     internal init(constant: T) {

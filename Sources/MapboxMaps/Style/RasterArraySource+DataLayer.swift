@@ -3,7 +3,7 @@ import Foundation
 extension RasterArraySource {
     /// The description of the raster data layers and the bands contained within the tiles.
     @_documentation(visibility: public)
-    @_spi(Experimental) public struct RasterDataLayer: Equatable, Codable {
+    @_spi(Experimental) public struct RasterDataLayer: Equatable, Codable, Sendable {
         /// Identifier of the data layer fetched from tiles.
         @_documentation(visibility: public)
         public let layerId: String

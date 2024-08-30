@@ -2,7 +2,7 @@ import Foundation
 
 /// Struct of supported Source Types
 /// Docs : https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
-public struct SourceType: ExpressibleByStringLiteral, RawRepresentable, Codable, Hashable {
+public struct SourceType: ExpressibleByStringLiteral, RawRepresentable, Codable, Hashable, Sendable {
 
     /// The raw value of the source type.
     public let rawValue: String

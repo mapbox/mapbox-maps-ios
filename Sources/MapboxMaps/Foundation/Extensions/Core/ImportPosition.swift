@@ -1,5 +1,5 @@
 /// Specifies the position at which an import will be added when using `Style.addImport`
-public enum ImportPosition: Equatable, Codable {
+public enum ImportPosition: Equatable, Codable, Sendable {
     /// Default behavior; add to the top of the imports stack.
     case `default`
 

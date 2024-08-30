@@ -17,7 +17,7 @@ public protocol ViewportStatusObserver: AnyObject {
 }
 
 /// Constants that describe why ``ViewportManager/status`` changed.
-public struct ViewportStatusChangeReason: Hashable {
+public struct ViewportStatusChangeReason: Hashable, Sendable {
     private var rawValue: String
 
     /// ``ViewportManager/status`` changed because ``ViewportManager/idle()`` was invoked.

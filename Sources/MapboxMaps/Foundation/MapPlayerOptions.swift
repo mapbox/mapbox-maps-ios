@@ -1,5 +1,5 @@
 /// Options for playback when using ``MapRecorder``
-public struct MapPlayerOptions {
+public struct MapPlayerOptions: Sendable {
     /// The number of times the sequence is played. If negative, the playback loops indefinitely.
     let playbackCount: Int
 

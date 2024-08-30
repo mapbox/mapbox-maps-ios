@@ -2,7 +2,7 @@ import Foundation
 import MapboxCoreMaps
 
 /// Struct of supported Layer rendering types
-public struct LayerType: ExpressibleByStringLiteral, RawRepresentable, Codable, Hashable {
+public struct LayerType: ExpressibleByStringLiteral, RawRepresentable, Codable, Hashable, Sendable {
 
     /// The raw value of the layer type.
     public let rawValue: String

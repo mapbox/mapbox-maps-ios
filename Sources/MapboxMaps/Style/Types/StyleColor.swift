@@ -2,7 +2,7 @@ import UIKit
 import RegexBuilder
 
 /// Represents a color as defined by the [Mapbox Style Spec](https://docs.mapbox.com/style-spec/reference/types/#color)
-public struct StyleColor: Codable, Equatable, RawRepresentable, ExpressibleByStringInterpolation {
+public struct StyleColor: Codable, Equatable, Sendable, RawRepresentable, ExpressibleByStringInterpolation {
 
     /// A color string as defined by the [Mapbox Style Spec](https://docs.mapbox.com/style-spec/reference/types/#color).
     public let rawValue: String

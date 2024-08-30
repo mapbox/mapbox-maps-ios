@@ -1,9 +1,9 @@
 import MapboxCoreMaps
 
 /// Represents either a GeoJSON geometry or an annotated layer feature.
-public struct AnnotatedFeature: Equatable {
+public struct AnnotatedFeature: Equatable, Sendable {
     /// Represents a specific feature rendered on the layer.
-    public struct LayerFeature: Equatable {
+    public struct LayerFeature: Equatable, Sendable {
         /// Identifier of the layer, that renders the feature.
         public var layerId: String
 

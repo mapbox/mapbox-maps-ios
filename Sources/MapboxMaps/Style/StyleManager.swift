@@ -1630,7 +1630,7 @@ extension StyleManager {
  A transition property controls timing for the interpolation between a
  transitionable style property's previous value and new value.
  */
-public struct StyleTransition: Codable, Equatable {
+public struct StyleTransition: Codable, Equatable, Sendable {
 
     /// Disabled style transition
     public static let zero = StyleTransition(duration: 0, delay: 0)

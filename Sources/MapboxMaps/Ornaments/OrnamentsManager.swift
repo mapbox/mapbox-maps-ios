@@ -1,7 +1,7 @@
 import UIKit
 
 /// Options used to configure the corner position of an ornament
-public enum OrnamentPosition: String, Equatable {
+public enum OrnamentPosition: String, Equatable, Sendable {
     // Clockwise from top left
     case topLeft
     case topRight
@@ -15,7 +15,7 @@ public enum OrnamentPosition: String, Equatable {
 }
 
 /// Options used to configure the visibility of an ornament
-public enum OrnamentVisibility: String, Equatable {
+public enum OrnamentVisibility: String, Equatable, Sendable {
     /// Shows the ornament when relevant
     case adaptive
     /// Hides the ornament

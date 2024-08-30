@@ -1,5 +1,5 @@
 /// Information about a layer
-public struct LayerInfo {
+public struct LayerInfo: Sendable {
     /// The identifier of the layer
     public var id: String
 

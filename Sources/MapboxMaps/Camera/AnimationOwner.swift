@@ -1,4 +1,4 @@
-public struct AnimationOwner: RawRepresentable, Equatable {
+public struct AnimationOwner: RawRepresentable, Equatable, Sendable {
     public typealias RawValue = String
 
     public let rawValue: String

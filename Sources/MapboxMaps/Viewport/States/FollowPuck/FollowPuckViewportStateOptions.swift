@@ -7,7 +7,7 @@ import UIKit
 /// zoom gestures to work simultaneously with ``FollowPuckViewportState``.
 ///
 /// - SeeAlso: ``ViewportOptions/transitionsToIdleUponUserInteraction``
-public struct FollowPuckViewportStateOptions: Codable, Hashable {
+public struct FollowPuckViewportStateOptions: Codable, Hashable, Sendable {
 
     /// The value to use for ``CameraOptions-swift.struct/padding`` when setting the camera. If `nil`, padding
     /// will not be modified.

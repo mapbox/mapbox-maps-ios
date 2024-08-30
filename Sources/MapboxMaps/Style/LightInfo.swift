@@ -1,7 +1,7 @@
 import Foundation
 
 /// Information about a light
-public struct LightInfo: Decodable {
+public struct LightInfo: Decodable, Sendable {
     /// The identifier of the light
     public var id: String
 

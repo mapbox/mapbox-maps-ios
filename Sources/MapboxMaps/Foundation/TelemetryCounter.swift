@@ -1,6 +1,6 @@
 import Foundation
 
-extension TelemetryCounter {
+extension TelemetryCounter: @unchecked Sendable {
     fileprivate static let sdkPrefix = "maps-mobile"
     fileprivate static let swiftUI = TelemetryCounter.create(name: "map", category: "swift-ui")
     fileprivate static let viewportCameraState = TelemetryCounter.viewport(name: "state/camera")
@@ -22,7 +22,7 @@ extension TelemetryCounter {
 /// Default scope for telemetry events
 /// This scope and all posible future scopes should be singleton to get rid of spawning several equal counters
 /// Also singleton allows the usage of KeyPath in sendTelemetry (static members on metatype not allowed in KeyPath)
-struct TelemetryEvents {
+struct TelemetryEvents: Sendable {
     let swiftUI = TelemetryEvent(counter: .swiftUI)
     let viewportCameraState = TelemetryEvent(counter: .viewportCameraState)
     let viewportFollowState = TelemetryEvent(counter: .viewportFollowState)
@@ -38,7 +38,7 @@ struct TelemetryEvents {
 
 /// Abstraction over the actiual telemetry implementation, which hides all the implementtion details
 /// All it's properties should be fileprivate to keep implementation inside the file
-struct TelemetryEvent {
+struct TelemetryEvent: Sendable {
     fileprivate let counter: TelemetryCounter
 }
 

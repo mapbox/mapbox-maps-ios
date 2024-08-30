@@ -1,7 +1,7 @@
 import CoreGraphics
 
 /// Timing curve to use in animator.
-public struct TimingCurve: Equatable {
+public struct TimingCurve: Equatable, Sendable {
     let p1: CGPoint
     let p2: CGPoint
 

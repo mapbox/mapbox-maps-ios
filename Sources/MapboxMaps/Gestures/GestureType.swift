@@ -1,4 +1,4 @@
-public enum GestureType: Hashable, CaseIterable {
+public enum GestureType: Hashable, CaseIterable, Sendable {
     /// The pan gesture
     case pan
 

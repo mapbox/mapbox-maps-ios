@@ -53,7 +53,7 @@ public struct LocationOptions: Equatable {
 }
 
 /// Controls how the puck is oriented
-public enum PuckBearing: Equatable {
+public enum PuckBearing: Equatable, Sendable {
     /// The puck should set its bearing using `heading: CLHeading`. Bearing will mimic user's
     /// spatial orientation.
     ///

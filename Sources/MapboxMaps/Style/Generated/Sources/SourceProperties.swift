@@ -2,7 +2,7 @@
 import Foundation
 
 /// Influences the y direction of the tile coordinates. The global-mercator (aka Spherical Mercator) profile is assumed.
-public struct Scheme: RawRepresentable, Codable, Hashable {
+public struct Scheme: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -18,7 +18,7 @@ public struct Scheme: RawRepresentable, Codable, Hashable {
 }
 
 /// The encoding used by this source. Mapbox Terrain RGB is used by default
-public struct Encoding: RawRepresentable, Codable, Hashable {
+public struct Encoding: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {

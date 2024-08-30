@@ -2,7 +2,7 @@
 import Foundation
 
 public extension Exp {
-    struct Operator: RawRepresentable, Codable, Equatable {
+    struct Operator: RawRepresentable, Codable, Equatable, Sendable {
 
         /// For two inputs, returns the result of subtracting the second input from the first. For a single input, returns the result of subtracting it from 0.
         public static let subtract = Operator(rawValue: "-")

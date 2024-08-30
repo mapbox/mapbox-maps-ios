@@ -2,7 +2,7 @@ import Foundation
 
 /// Enum representing the latest version of the Mapbox styles (as of publication). In addition,
 /// you can provide a custom URL or earlier version of a Mapbox style by using `init?(url: URL)`.
-public struct StyleURI: Hashable, RawRepresentable {
+public struct StyleURI: Hashable, RawRepresentable, Sendable {
     public typealias RawValue = String
 
     public let rawValue: String

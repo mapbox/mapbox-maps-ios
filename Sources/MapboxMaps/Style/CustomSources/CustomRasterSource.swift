@@ -3,7 +3,7 @@ import Foundation
 /// Describes a Custom Raster Source to be used in the style.
 ///
 /// To add the data, set options with a ``CustomRasterSourceOptions`` with a fetchTileFunction callback
-    @_documentation(visibility: public)
+@_documentation(visibility: public)
 @_spi(Experimental)
 public struct CustomRasterSource: Source, Equatable {
 

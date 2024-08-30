@@ -1,7 +1,7 @@
 // This file is generated.
 import Foundation
 
-public enum Visibility: String, Codable {
+public enum Visibility: String, Codable, Sendable {
 
     /// The layer is shown.
     case visible = "visible"
@@ -13,7 +13,7 @@ public enum Visibility: String, Codable {
 // MARK: LINE_CAP
 
 /// The display of line endings.
-public struct LineCap: RawRepresentable, Codable, Hashable {
+public struct LineCap: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -34,7 +34,7 @@ public struct LineCap: RawRepresentable, Codable, Hashable {
 // MARK: LINE_JOIN
 
 /// The display of lines when joining.
-public struct LineJoin: RawRepresentable, Codable, Hashable {
+public struct LineJoin: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -58,7 +58,7 @@ public struct LineJoin: RawRepresentable, Codable, Hashable {
 // MARK: ICON_ANCHOR
 
 /// Part of the icon placed closest to the anchor.
-public struct IconAnchor: RawRepresentable, Codable, Hashable {
+public struct IconAnchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -97,7 +97,7 @@ public struct IconAnchor: RawRepresentable, Codable, Hashable {
 // MARK: ICON_PITCH_ALIGNMENT
 
 /// Orientation of icon when map is pitched.
-public struct IconPitchAlignment: RawRepresentable, Codable, Hashable {
+public struct IconPitchAlignment: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -118,7 +118,7 @@ public struct IconPitchAlignment: RawRepresentable, Codable, Hashable {
 // MARK: ICON_ROTATION_ALIGNMENT
 
 /// In combination with `symbol-placement`, determines the rotation behavior of icons.
-public struct IconRotationAlignment: RawRepresentable, Codable, Hashable {
+public struct IconRotationAlignment: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -139,7 +139,7 @@ public struct IconRotationAlignment: RawRepresentable, Codable, Hashable {
 // MARK: ICON_TEXT_FIT
 
 /// Scales the icon to fit around the associated text.
-public struct IconTextFit: RawRepresentable, Codable, Hashable {
+public struct IconTextFit: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -163,7 +163,7 @@ public struct IconTextFit: RawRepresentable, Codable, Hashable {
 // MARK: SYMBOL_PLACEMENT
 
 /// Label placement relative to its geometry.
-public struct SymbolPlacement: RawRepresentable, Codable, Hashable {
+public struct SymbolPlacement: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -184,7 +184,7 @@ public struct SymbolPlacement: RawRepresentable, Codable, Hashable {
 // MARK: SYMBOL_Z_ORDER
 
 /// Determines whether overlapping symbols in the same layer are rendered in the order that they appear in the data source or by their y-position relative to the viewport. To control the order and prioritization of symbols otherwise, use `symbol-sort-key`.
-public struct SymbolZOrder: RawRepresentable, Codable, Hashable {
+public struct SymbolZOrder: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -205,7 +205,7 @@ public struct SymbolZOrder: RawRepresentable, Codable, Hashable {
 // MARK: TEXT_ANCHOR
 
 /// Part of the text placed closest to the anchor.
-public struct TextAnchor: RawRepresentable, Codable, Hashable {
+public struct TextAnchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -244,7 +244,7 @@ public struct TextAnchor: RawRepresentable, Codable, Hashable {
 // MARK: TEXT_JUSTIFY
 
 /// Text justification options.
-public struct TextJustify: RawRepresentable, Codable, Hashable {
+public struct TextJustify: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -268,7 +268,7 @@ public struct TextJustify: RawRepresentable, Codable, Hashable {
 // MARK: TEXT_PITCH_ALIGNMENT
 
 /// Orientation of text when map is pitched.
-public struct TextPitchAlignment: RawRepresentable, Codable, Hashable {
+public struct TextPitchAlignment: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -289,7 +289,7 @@ public struct TextPitchAlignment: RawRepresentable, Codable, Hashable {
 // MARK: TEXT_ROTATION_ALIGNMENT
 
 /// In combination with `symbol-placement`, determines the rotation behavior of the individual glyphs forming the text.
-public struct TextRotationAlignment: RawRepresentable, Codable, Hashable {
+public struct TextRotationAlignment: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -310,7 +310,7 @@ public struct TextRotationAlignment: RawRepresentable, Codable, Hashable {
 // MARK: TEXT_TRANSFORM
 
 /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
-public struct TextTransform: RawRepresentable, Codable, Hashable {
+public struct TextTransform: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -331,7 +331,7 @@ public struct TextTransform: RawRepresentable, Codable, Hashable {
 // MARK: FILL_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `fill-translate`.
-public struct FillTranslateAnchor: RawRepresentable, Codable, Hashable {
+public struct FillTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -349,7 +349,7 @@ public struct FillTranslateAnchor: RawRepresentable, Codable, Hashable {
 // MARK: LINE_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `line-translate`.
-public struct LineTranslateAnchor: RawRepresentable, Codable, Hashable {
+public struct LineTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -367,7 +367,7 @@ public struct LineTranslateAnchor: RawRepresentable, Codable, Hashable {
 // MARK: ICON_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `icon-translate`.
-public struct IconTranslateAnchor: RawRepresentable, Codable, Hashable {
+public struct IconTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -403,7 +403,7 @@ public struct SymbolElevationReference: RawRepresentable, Codable, Hashable {
 // MARK: TEXT_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `text-translate`.
-public struct TextTranslateAnchor: RawRepresentable, Codable, Hashable {
+public struct TextTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -421,7 +421,7 @@ public struct TextTranslateAnchor: RawRepresentable, Codable, Hashable {
 // MARK: CIRCLE_PITCH_ALIGNMENT
 
 /// Orientation of circle when map is pitched.
-public struct CirclePitchAlignment: RawRepresentable, Codable, Hashable {
+public struct CirclePitchAlignment: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -439,7 +439,7 @@ public struct CirclePitchAlignment: RawRepresentable, Codable, Hashable {
 // MARK: CIRCLE_PITCH_SCALE
 
 /// Controls the scaling behavior of the circle when the map is pitched.
-public struct CirclePitchScale: RawRepresentable, Codable, Hashable {
+public struct CirclePitchScale: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -457,7 +457,7 @@ public struct CirclePitchScale: RawRepresentable, Codable, Hashable {
 // MARK: CIRCLE_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `circle-translate`.
-public struct CircleTranslateAnchor: RawRepresentable, Codable, Hashable {
+public struct CircleTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -475,7 +475,7 @@ public struct CircleTranslateAnchor: RawRepresentable, Codable, Hashable {
 // MARK: FILL_EXTRUSION_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `fill-extrusion-translate`.
-public struct FillExtrusionTranslateAnchor: RawRepresentable, Codable, Hashable {
+public struct FillExtrusionTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -493,7 +493,7 @@ public struct FillExtrusionTranslateAnchor: RawRepresentable, Codable, Hashable 
 // MARK: RASTER_RESAMPLING
 
 /// The resampling/interpolation method to use for overscaling, also known as texture magnification filter
-public struct RasterResampling: RawRepresentable, Codable, Hashable {
+public struct RasterResampling: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -511,7 +511,7 @@ public struct RasterResampling: RawRepresentable, Codable, Hashable {
 // MARK: HILLSHADE_ILLUMINATION_ANCHOR
 
 /// Direction of light source when map is rotated.
-public struct HillshadeIlluminationAnchor: RawRepresentable, Codable, Hashable {
+public struct HillshadeIlluminationAnchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -529,7 +529,7 @@ public struct HillshadeIlluminationAnchor: RawRepresentable, Codable, Hashable {
 // MARK: MODEL_SCALE_MODE
 
 /// Defines scaling mode. Only applies to location-indicator type layers.
-public struct ModelScaleMode: RawRepresentable, Codable, Hashable {
+public struct ModelScaleMode: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -547,7 +547,7 @@ public struct ModelScaleMode: RawRepresentable, Codable, Hashable {
 // MARK: MODEL_TYPE
 
 /// Defines rendering behavior of model in respect to other 3D scene objects.
-public struct ModelType: RawRepresentable, Codable, Hashable {
+public struct ModelType: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -565,7 +565,7 @@ public struct ModelType: RawRepresentable, Codable, Hashable {
 // MARK: SKY_TYPE
 
 /// The type of the sky
-public struct SkyType: RawRepresentable, Codable, Hashable {
+public struct SkyType: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -583,7 +583,7 @@ public struct SkyType: RawRepresentable, Codable, Hashable {
 // MARK: ANCHOR
 
 /// Whether extruded geometries are lit relative to the map or viewport.
-public struct Anchor: RawRepresentable, Codable, Hashable {
+public struct Anchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -601,7 +601,7 @@ public struct Anchor: RawRepresentable, Codable, Hashable {
 // MARK: NAME
 
 /// The name of the projection to be used for rendering the map.
-public struct StyleProjectionName: RawRepresentable, Codable, Hashable {
+public struct StyleProjectionName: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -619,7 +619,7 @@ public struct StyleProjectionName: RawRepresentable, Codable, Hashable {
 // MARK: TEXT_WRITING_MODE
 
 /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. For symbol with point placement, the order of elements in an array define priority order for the placement of an orientation variant. For symbol with line placement, the default text writing mode is either ['horizontal', 'vertical'] or ['vertical', 'horizontal'], the order doesn't affect the placement.
-public struct TextWritingMode: RawRepresentable, Codable, Hashable {
+public struct TextWritingMode: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -637,7 +637,7 @@ public struct TextWritingMode: RawRepresentable, Codable, Hashable {
 // MARK: CLIP_LAYER_TYPES
 
 /// Layer types that will also be removed if fallen below this clip layer.
-public struct ClipLayerTypes: RawRepresentable, Codable, Hashable {
+public struct ClipLayerTypes: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {

@@ -3,7 +3,7 @@ import CoreLocation
 import UIKit
 
 /// Configuration options for ``OverviewViewportState``.
-public struct OverviewViewportStateOptions: Equatable {
+public struct OverviewViewportStateOptions: Equatable, Sendable {
 
     /// The geometry that the ``OverviewViewportState`` should use when calculating its camera.
     public var geometry: Geometry

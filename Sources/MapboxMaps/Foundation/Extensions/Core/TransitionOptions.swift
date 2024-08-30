@@ -7,7 +7,7 @@ import Foundation
  * property that defines specific transition timing for that specific layer property, overriding
  * the global transition values.
  */
-public struct TransitionOptions: Equatable {
+public struct TransitionOptions: Equatable, Sendable {
     /// Initializes `TransitionOptions` with provided `duration`, `delay` and `enablePlacementTransitions` flag.
     /// - Parameters:
     ///   - duration: Time allotted for transitions to complete.

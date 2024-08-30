@@ -1,5 +1,5 @@
 /// Information about a Source
-public struct SourceInfo {
+public struct SourceInfo: Sendable {
     /// The identifier of the source
     public var id: String
 

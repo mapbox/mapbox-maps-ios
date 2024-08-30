@@ -52,8 +52,8 @@ import Turf
 ///
 /// The ``Viewport`` allows you to read only the values that you set. If you need to read the actual camera state values, subscribe to ``Map/onCameraChanged(action:)`` event.
 @available(iOS 13.0, *)
-public struct Viewport: Equatable {
-    enum Storage: Equatable {
+public struct Viewport: Equatable, Sendable {
+    enum Storage: Equatable, Sendable {
         case idle
         case styleDefault
         case camera(CameraOptions)
@@ -62,7 +62,7 @@ public struct Viewport: Equatable {
     }
 
     /// Options for the overview viewport.
-    public struct OverviewOptions: Equatable {
+    public struct OverviewOptions: Equatable, Sendable {
         /// Geometry to overview.
         public var geometry: Geometry
         /// Camera bearing.
@@ -84,7 +84,7 @@ public struct Viewport: Equatable {
     }
 
     /// Options for the follow puck viewport.
-    public struct FollowPuckOptions: Equatable {
+    public struct FollowPuckOptions: Equatable, Sendable {
         /// Camera zoom.
         public var zoom: CGFloat
 

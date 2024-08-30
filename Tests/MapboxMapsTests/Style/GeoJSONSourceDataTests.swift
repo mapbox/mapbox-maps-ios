@@ -11,7 +11,7 @@ class GeoJSONSourceDataTests: XCTestCase {
     }
 
     func testFeatureCoding() throws {
-        var feature = Feature(geometry: Point(.random()))
+        var feature = Feature(geometry: Point(.testConstantValue()))
         feature.identifier = "foo"
         let original = GeoJSONSourceData.feature(feature)
         let encodedData = try JSONEncoder().encode(original)
@@ -20,7 +20,7 @@ class GeoJSONSourceDataTests: XCTestCase {
     }
 
     func testFeatureCollectionCoding() throws {
-        var feature = Feature(geometry: Point(.random()))
+        var feature = Feature(geometry: Point(.testConstantValue()))
         feature.identifier = "foo"
         let original = GeoJSONSourceData.featureCollection(FeatureCollection(features: [feature]))
         let encodedData = try JSONEncoder().encode(original)
@@ -29,7 +29,7 @@ class GeoJSONSourceDataTests: XCTestCase {
     }
 
     func testGeometryCoding() throws {
-        let point = Point(.random())
+        let point = Point(.testConstantValue())
         let original = GeoJSONSourceData.geometry(.point(point))
         let encodedData = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(GeoJSONSourceData.self, from: encodedData)

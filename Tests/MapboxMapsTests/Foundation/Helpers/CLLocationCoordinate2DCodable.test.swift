@@ -45,7 +45,7 @@ class CLLocationCoordinate2DCodableTest: XCTestCase {
     }
 
     func testCoreLocationCoordinatesConversion() throws {
-        let coordinates: CLLocationCoordinate2D = .random()
+        let coordinates: CLLocationCoordinate2D = .testConstantValue()
         let codableCoordinates = CLLocationCoordinate2DCodable(coordinates)
 
         XCTAssertEqual(coordinates, codableCoordinates.coordinates)

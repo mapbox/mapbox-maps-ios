@@ -452,7 +452,7 @@ final class StyleSourceManagerTests: XCTestCase {
         // given
         let sourceId = String.randomASCII(withLength: 10)
         let dataId = String.randomASCII(withLength: 11)
-        let point = Point(.random())
+        let point = Point(.testConstantValue())
         let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)
@@ -476,7 +476,7 @@ final class StyleSourceManagerTests: XCTestCase {
         // given
         let sourceId = String.randomASCII(withLength: 10)
         let dataId = String.randomASCII(withLength: 11)
-        let point = Point(.random())
+        let point = Point(.testConstantValue())
         let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)
@@ -499,7 +499,7 @@ final class StyleSourceManagerTests: XCTestCase {
     func testPartialUpdateAPIsDontCancelPreviousUpdates() throws {
         // given
         let sourceId = String.randomASCII(withLength: 10)
-        let point = Point(.random())
+        let point = Point(.testConstantValue())
         let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)
@@ -520,7 +520,7 @@ final class StyleSourceManagerTests: XCTestCase {
     func testFullUpdateAPIsCancelsAllPreviousUpdates() throws {
         // given
         let sourceId = String.randomASCII(withLength: 10)
-        let point = Point(.random())
+        let point = Point(.testConstantValue())
         let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)

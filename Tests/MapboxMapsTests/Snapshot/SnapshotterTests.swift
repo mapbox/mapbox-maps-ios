@@ -91,7 +91,7 @@ final class SnapshotterTests: XCTestCase {
         let pitch = 90.0
         let cameraOptions = CameraOptions(center: center, padding: padding, anchor: anchor, zoom: zoom, bearing: bearing, pitch: pitch)
 
-        let coordinateBounds = CoordinateBounds(southwest: .random(), northeast: .random())
+        let coordinateBounds = CoordinateBounds(southwest: .testConstantValue(), northeast: .testConstantValue())
         mockMapSnapshotter.coordinateBoundsForCameraStub.defaultReturnValue = coordinateBounds
 
         let returnedCoordinateBounds = snapshotter.coordinateBounds(for: cameraOptions)

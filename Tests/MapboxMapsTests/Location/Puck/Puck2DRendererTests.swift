@@ -35,11 +35,11 @@ final class Puck2DRendererTests: XCTestCase {
 
     @discardableResult
     func updateState(
-        with accuracyAuthorization: CLAccuracyAuthorization = .random(),
-        course: CLLocationDirection? = .random(.random(in: 0..<360)),
-        heading: CLLocationDirection? = .random(.random(in: 0..<360)),
-        coordinate: CLLocationCoordinate2D = .random(),
-        horizontalAccuracy: CLLocationAccuracy = .random(in: 0...100),
+        with accuracyAuthorization: CLAccuracyAuthorization = .testConstantValue(),
+        course: CLLocationDirection? = 154,
+        heading: CLLocationDirection? = 240,
+        coordinate: CLLocationCoordinate2D = .testConstantValue(),
+        horizontalAccuracy: CLLocationAccuracy = 56,
         puckBearingEnabled: Bool = false,
         puckBearing: PuckBearing = .course,
         configuration: Puck2DConfiguration = .makeDefault(showBearing: true)
@@ -49,7 +49,7 @@ final class Puck2DRendererTests: XCTestCase {
             horizontalAccuracy: horizontalAccuracy,
             accuracyAuthorization: accuracyAuthorization,
             bearing: course,
-            heading: heading.map { Heading(direction: $0, accuracy: .random(in: 0..<360)) },
+            heading: heading.map { Heading(direction: $0, accuracy: 345) },
             configuration: configuration,
             bearingEnabled: puckBearingEnabled,
             bearingType: puckBearing
@@ -236,7 +236,7 @@ final class Puck2DRendererTests: XCTestCase {
 
     func testActivatingPuckWithBearingDisabledForHeading() throws {
         style.layerExistsStub.defaultReturnValue = false
-        let state = updateState(with: .fullAccuracy, heading: .random(in: 0..<360), puckBearingEnabled: false)
+        let state = updateState(with: .fullAccuracy, heading: 123, puckBearingEnabled: false)
 
         let expectedProperties = makeExpectedLayerProperties(with: state)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
@@ -245,7 +245,7 @@ final class Puck2DRendererTests: XCTestCase {
 
     func testActivatingPuckWithBearingDisabledForCourse() throws {
         style.layerExistsStub.defaultReturnValue = false
-        let state = updateState(with: .fullAccuracy, course: .random(in: 0..<360), puckBearingEnabled: false)
+        let state = updateState(with: .fullAccuracy, course: 234, puckBearingEnabled: false)
 
         let expectedProperties = makeExpectedLayerProperties(with: state)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
@@ -254,7 +254,7 @@ final class Puck2DRendererTests: XCTestCase {
 
     func testActivatingPuckWithPuckBearingSetToCourse() throws {
         style.layerExistsStub.defaultReturnValue = false
-        let state = updateState(with: .fullAccuracy, course: .random(in: 0..<360), puckBearingEnabled: true, puckBearing: .course)
+        let state = updateState(with: .fullAccuracy, course: 360, puckBearingEnabled: true, puckBearing: .course)
 
         let expectedProperties = makeExpectedLayerProperties(with: state, bearing: state.bearing)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
@@ -263,7 +263,7 @@ final class Puck2DRendererTests: XCTestCase {
 
     func testActivatingPuckWithPuckBearingSetToCourseWithNilCourse() throws {
         style.layerExistsStub.defaultReturnValue = false
-        updateState(with: .fullAccuracy, course: .random(in: 0..<360), puckBearing: .course)
+        updateState(with: .fullAccuracy, course: 0, puckBearing: .course)
         let state = updateState(with: .fullAccuracy, course: nil, puckBearing: .course)
 
         let expectedProperties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
@@ -276,7 +276,7 @@ final class Puck2DRendererTests: XCTestCase {
 
     func testActivatingPuckWithPuckBearingSetToHeadingWithNilHeading() throws {
         style.layerExistsStub.defaultReturnValue = false
-        updateState(with: .fullAccuracy, heading: .random(in: 0..<360), puckBearing: .heading)
+        updateState(with: .fullAccuracy, heading: 1, puckBearing: .heading)
         let state = updateState(with: .fullAccuracy, heading: nil, puckBearing: .heading)
 
         let expectedProperties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
@@ -292,8 +292,8 @@ final class Puck2DRendererTests: XCTestCase {
 
     func testActivatingPuckWithReducedAccuracy() throws {
         style.layerExistsStub.defaultReturnValue = false
-        let coordinate: CLLocationCoordinate2D = .random()
-        let accuracy: CLLocationAccuracy = .random(in: 1_000..<20_000)
+        let coordinate: CLLocationCoordinate2D = .testConstantValue()
+        let accuracy: CLLocationAccuracy = 129784
         let zoomCutoffRange: ClosedRange<Double> = 4.0...7.5
         let accuracyRange: ClosedRange<CLLocationDistance> = 1000...20_000
         let cutoffZoomLevel = zoomCutoffRange.upperBound - (zoomCutoffRange.magnitude * (accuracy - accuracyRange.lowerBound) / accuracyRange.magnitude)
@@ -301,7 +301,7 @@ final class Puck2DRendererTests: XCTestCase {
         let minPuckRadiusInMeters = minPuckRadiusInPoints * Projection.metersPerPoint(for: coordinate.latitude, zoom: cutoffZoomLevel)
         let state = updateState(
             with: .reducedAccuracy,
-            heading: .random(in: 0..<360),
+            heading: 359,
             coordinate: coordinate,
             horizontalAccuracy: accuracy
         )
@@ -361,8 +361,8 @@ final class Puck2DRendererTests: XCTestCase {
         // there are a bunch of properties that aren't used in "reduced" mode
         // and they should be reset to their default values if the layer already
         // existed
-        let coordinate: CLLocationCoordinate2D = .random()
-        let accuracy: CLLocationAccuracy = .random(in: 1_000..<20_000)
+        let coordinate: CLLocationCoordinate2D = .testConstantValue()
+        let accuracy: CLLocationAccuracy = 1000
         let zoomCutoffRange: ClosedRange<Double> = 4.0...7.5
         let accuracyRange: ClosedRange<CLLocationDistance> = 1000...20_000
         let cutoffZoomLevel = zoomCutoffRange.upperBound - (zoomCutoffRange.magnitude * (accuracy - accuracyRange.lowerBound) / accuracyRange.magnitude)
@@ -456,7 +456,7 @@ final class Puck2DRendererTests: XCTestCase {
     }
 
     func testFastPathFullAccuracyWithoutAccuracyRingNonNilHeading() throws {
-        let heading = CLLocationDirection.random(in: 0..<360)
+        let heading = CLLocationDirection.testConstantValue()
         updateState(with: .fullAccuracy, puckBearingEnabled: true, puckBearing: .heading)
         let state = updateState(with: .fullAccuracy, heading: heading, puckBearingEnabled: true, puckBearing: .heading)
 
@@ -473,7 +473,7 @@ final class Puck2DRendererTests: XCTestCase {
 
     func testFastPathFullAccuracyWithoutAccuracyRingUsingCourse() throws {
         updateState(with: .fullAccuracy, puckBearingEnabled: true, puckBearing: .course, configuration: .init(showsAccuracyRing: false))
-        let state = updateState(with: .fullAccuracy, course: .random(in: 0..<360), puckBearingEnabled: true, puckBearing: .course, configuration: .init(showsAccuracyRing: false))
+        let state = updateState(with: .fullAccuracy, course: 43, puckBearingEnabled: true, puckBearing: .course, configuration: .init(showsAccuracyRing: false))
 
         let expectedProperties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
             .location: [state.coordinate.latitude, state.coordinate.longitude, 0],
@@ -501,7 +501,7 @@ final class Puck2DRendererTests: XCTestCase {
     }
 
     func testPulsingAnimationDuration() throws {
-        let expectedColor: UIColor = .random()
+        let expectedColor: UIColor = .testConstantValue()
         let expectedRadius: Double = 100
         let configuration = Puck2DConfiguration(pulsing: .init(color: expectedColor, radius: .constant(expectedRadius)))
         updateState(configuration: configuration)
@@ -529,7 +529,7 @@ final class Puck2DRendererTests: XCTestCase {
     func testPulsingAnimationMidway() throws {
         let curve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
         let curvedProgress = curve.solve(0.5, 1e-6)
-        let expectedColor: UIColor = .random()
+        let expectedColor: UIColor = .testConstantValue()
         let expectedRadius: Double = 30
         let configuration = Puck2DConfiguration(pulsing: .init(color: expectedColor, radius: .constant(expectedRadius)))
         updateState(configuration: configuration)
@@ -555,7 +555,7 @@ final class Puck2DRendererTests: XCTestCase {
     }
 
     func testPulsingCyclesOver() throws {
-        let expectedColor: UIColor = .random()
+        let expectedColor: UIColor = .testConstantValue()
         let expectedRadius: Double = 100
         let curve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
         let curvedProgress = curve.solve(0.5, 1e-6)
@@ -586,9 +586,9 @@ final class Puck2DRendererTests: XCTestCase {
     }
 
     func testPulsingAnimationUsesAccuracyRadius() throws {
-        let expectedColor: UIColor = .random()
-        let coordinate: CLLocationCoordinate2D = .random()
-        let horizontalAccuracy: CLLocationAccuracy = .random(in: 500...10000)
+        let expectedColor: UIColor = .testConstantValue()
+        let coordinate: CLLocationCoordinate2D = .testConstantValue()
+        let horizontalAccuracy: CLLocationAccuracy = 550
         let expectedRadius: Double = horizontalAccuracy / Projection.metersPerPoint(for: coordinate.latitude, zoom: mapboxMap.cameraState.zoom)
         let configuration = Puck2DConfiguration(pulsing: .init(color: expectedColor, radius: .accuracy))
         style.layerExistsStub.defaultReturnValue = true

@@ -382,7 +382,7 @@ final class MapboxMapTests: XCTestCase {
             tileId: nil,
             timestamp: Date())
         let cameraChanged = CameraChanged(
-            cameraState: CameraState(center: .random(), padding: .random(), zoom: 0, bearing: 0, pitch: 0),
+            cameraState: CameraState(center: .testConstantValue(), padding: .random(), zoom: 0, bearing: 0, pitch: 0),
             timestamp: Date())
 
         checkEvent(\.onMapIdle, \.onMapIdle, value: MapIdle(timestamp: Date()))

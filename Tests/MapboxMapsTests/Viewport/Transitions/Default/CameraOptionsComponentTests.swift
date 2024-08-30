@@ -3,7 +3,7 @@ import XCTest
 
 final class CameraOptionsComponentTests: XCTestCase {
     func testCameraOptionsForCenter() {
-        let value = CLLocationCoordinate2D.random()
+        let value = CLLocationCoordinate2D.testConstantValue()
         let component = CameraOptionsComponent(keyPath: \.center, value: value)
 
         XCTAssertEqual(component.cameraOptions, CameraOptions(center: value))
@@ -45,7 +45,7 @@ final class CameraOptionsComponentTests: XCTestCase {
     }
 
     func testUpdatedForCenterNonNil() throws {
-        let component = CameraOptionsComponent(keyPath: \.center, value: .random())
+        let component = CameraOptionsComponent(keyPath: \.center, value: .testConstantValue())
         let cameraOptions = CameraOptions.random()
 
         let updatedComponent = try XCTUnwrap(
@@ -56,7 +56,7 @@ final class CameraOptionsComponentTests: XCTestCase {
     }
 
     func testUpdatedForCenterNil() {
-        let component = CameraOptionsComponent(keyPath: \.center, value: .random())
+        let component = CameraOptionsComponent(keyPath: \.center, value: .testConstantValue())
         var cameraOptions = CameraOptions.random()
         cameraOptions.center = nil
 

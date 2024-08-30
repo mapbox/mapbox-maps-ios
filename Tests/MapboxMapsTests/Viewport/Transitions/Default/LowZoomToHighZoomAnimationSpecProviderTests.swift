@@ -19,7 +19,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsCenterLongDistance() {
-        let cameraOptions = CameraOptions(center: .random())
+        let cameraOptions = CameraOptions(center: .testConstantValue())
         // center duration is calculated based on 500 screen points per second
         // or 3 seconds, whichever is smaller. This configuration simultes a
         // 2000 point distance, so it should be clamped to 3 seconds.
@@ -39,7 +39,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsCenterShortDistance() {
-        let cameraOptions = CameraOptions(center: .random())
+        let cameraOptions = CameraOptions(center: .testConstantValue())
         // center duration is calculated based on 500 screen points per second
         // or 3 seconds, whichever is smaller. This configuration simultes a
         // 500 point distance, so it should take 1 second.
@@ -59,7 +59,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsZoomLargeDifference() {
-        let cameraOptions = CameraOptions(zoom: .random(in: 10...22))
+        let cameraOptions = CameraOptions(zoom: 15.5)
         // zoom duration is calculated based on 2.2 zoom levels per second or 3
         // seconds, whichever is smaller. This configuration simulates a 10
         // level difference, so it should be clamped to 3 seconds.
@@ -74,7 +74,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsZoomSmallDifference() throws {
-        let cameraOptions = CameraOptions(zoom: .random(in: 2.2...22))
+        let cameraOptions = CameraOptions(zoom: 11.4)
         // zoom duration is calculated based on 2.2 zoom levels per second or 3
         // seconds, whichever is smaller. This configuration simulates a 2.2
         // level difference, so it should take 1 second.
@@ -90,7 +90,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsZoomWithDelay() {
-        let cameraOptions = CameraOptions(center: .random(), zoom: .random(in: 10...22))
+        let cameraOptions = CameraOptions(center: .testConstantValue(), zoom: 14.5)
         // zoom delay is calculated as half of the center duration. In this
         // case, the center duration will be 3 seconds, so the zoom delay should
         // be 1.5 seconds.
@@ -105,7 +105,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsBearingWithoutZoom() {
-        let cameraOptions = CameraOptions(bearing: .random(in: 0...360))
+        let cameraOptions = CameraOptions(bearing: 150)
         // If there's no zoom animation, bearing is not delayed
 
         let specs = provider.makeAnimationSpecs(cameraOptions: cameraOptions)
@@ -118,7 +118,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
 
     func testMakeAnimationSpecsBearingWithShortZoomAnimation() {
         mapboxMap.cameraState.zoom = 0
-        let cameraOptions = CameraOptions(zoom: 2.2, bearing: .random(in: 0...360))
+        let cameraOptions = CameraOptions(zoom: 2.2, bearing: 67)
         // If there is a zoom animation, bearing is configured to end at the
         // same time as it unless the zoom animation ends in less time than the
         // total bearing animation. In this scenario, the zoom animation is too
@@ -133,7 +133,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
 
     func testMakeAnimationSpecsBearingWithLongZoomAnimation() throws {
         mapboxMap.cameraState.zoom = 0
-        let cameraOptions = CameraOptions(zoom: 6.6, bearing: .random(in: 0...360))
+        let cameraOptions = CameraOptions(zoom: 6.6, bearing: 256)
         // If there is a zoom animation, bearing is configured to end at the
         // same time as it unless the zoom animation ends in less time than the
         // total bearing animation. In this scenario, the zoom animation is
@@ -157,9 +157,9 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
             CGPoint(x: 2000, y: 0)]
         mapboxMap.cameraState.zoom = 0
         let cameraOptions = CameraOptions(
-            center: .random(),
+            center: .testConstantValue(),
             zoom: 2.2,
-            bearing: .random(in: 0...360))
+            bearing: 45)
         // If there is a zoom animation, bearing is configured to end at the
         // same time as it unless the zoom animation ends in less time than the
         // total bearing animation. In this scenario, the zoom animation is
@@ -176,7 +176,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsPitchWithoutZoom() {
-        let cameraOptions = CameraOptions(pitch: .random(in: 0...85))
+        let cameraOptions = CameraOptions(pitch: 56)
 
         let specs = provider.makeAnimationSpecs(cameraOptions: cameraOptions)
 
@@ -188,7 +188,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
 
     func testMakeAnimationSpecsPitchWithShortZoomAnimation() {
         mapboxMap.cameraState.zoom = 0
-        let cameraOptions = CameraOptions(zoom: 2.2, pitch: .random(in: 0...85))
+        let cameraOptions = CameraOptions(zoom: 2.2, pitch: 25)
         // If there is a zoom animation, pitch is configured to end 0.1 s after
         // it unless the zoom animation ends in less time than the total pitch
         // animation minus 0.1 s. In this scenario, the zoom animation is too
@@ -203,7 +203,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
 
     func testMakeAnimationSpecsPitchWithLongZoomAnimation() throws {
         mapboxMap.cameraState.zoom = 0
-        let cameraOptions = CameraOptions(zoom: 6.6, pitch: .random(in: 0...85))
+        let cameraOptions = CameraOptions(zoom: 6.6, pitch: 82)
         // If there is a zoom animation, pitch is configured to end 0.1 s after
         // it unless the zoom animation ends in less time than the total pitch
         // animation minus 0.1 s. In this scenario, the zoom animation is
@@ -227,9 +227,9 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
             CGPoint(x: 2000, y: 0)]
         mapboxMap.cameraState.zoom = 0
         let cameraOptions = CameraOptions(
-            center: .random(),
+            center: .testConstantValue(),
             zoom: 2.2,
-            pitch: .random(in: 0...85))
+            pitch: 46)
         // If there is a zoom animation, pitch is configured to end 0.1 s after
         // it unless the zoom animation ends in less time than the total pitch
         // animation minus 0.1 s. In this scenario, the zoom animation is
@@ -246,7 +246,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsPaddingWithoutZoom() {
-        let cameraOptions = CameraOptions(padding: .random())
+        let cameraOptions = CameraOptions(padding: .testConstantValue())
 
         let specs = provider.makeAnimationSpecs(cameraOptions: cameraOptions)
 
@@ -258,7 +258,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
 
     func testMakeAnimationSpecsPaddingWithShortZoomAnimation() {
         mapboxMap.cameraState.zoom = 0
-        let cameraOptions = CameraOptions(padding: .random(), zoom: 2.2)
+        let cameraOptions = CameraOptions(padding: .testConstantValue(), zoom: 2.2)
         // If there is a zoom animation, padding is configured to end 0.1 s
         // after it unless the zoom animation ends in less time than the total
         // padding animation minus 0.1 s. In this scenario, the zoom animation
@@ -273,7 +273,7 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
 
     func testMakeAnimationSpecsPaddingWithLongZoomAnimation() throws {
         mapboxMap.cameraState.zoom = 0
-        let cameraOptions = CameraOptions(padding: .random(), zoom: 6.6)
+        let cameraOptions = CameraOptions(padding: .testConstantValue(), zoom: 6.6)
         // If there is a zoom animation, padding is configured to end 0.1 s
         // after it unless the zoom animation ends in less time than the total
         // padding animation minus 0.1 s. In this scenario, the zoom animation
@@ -297,8 +297,8 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
             CGPoint(x: 2000, y: 0)]
         mapboxMap.cameraState.zoom = 0
         let cameraOptions = CameraOptions(
-            center: .random(),
-            padding: .random(),
+            center: .testConstantValue(),
+            padding: .testConstantValue(),
             zoom: 2.2)
         // If there is a zoom animation, padding is configured to end 0.1 s
         // after it unless the zoom animation ends in less time than the total

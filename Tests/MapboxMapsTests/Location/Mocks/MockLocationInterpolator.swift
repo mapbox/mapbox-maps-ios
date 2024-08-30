@@ -6,7 +6,7 @@ final class MockLocationInterpolator: LocationInterpolatorProtocol {
         var toLocation: [Location]
         var fraction: Double
     }
-    let interpolateStub = Stub<InterpolateParams, [Location]>(defaultReturnValue: [.random()])
+    let interpolateStub = Stub<InterpolateParams, [Location]>(defaultReturnValue: [.testConstantValue()])
     func interpolate(from fromLocation: [Location],
                      to toLocation: [Location],
                      fraction: Double) -> [Location] {

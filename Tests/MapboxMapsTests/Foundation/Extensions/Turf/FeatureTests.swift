@@ -3,7 +3,7 @@ import XCTest
 
 final class FeatureTests: XCTestCase {
 
-    let geometry = Geometry.point(Point(.random()))
+    let geometry = Geometry.point(Point(.testConstantValue()))
 
     func testInitializingTurfFeatureFromCommonFeatureNilIdentifier() throws {
         let commonFeature = MapboxCommon.Feature(

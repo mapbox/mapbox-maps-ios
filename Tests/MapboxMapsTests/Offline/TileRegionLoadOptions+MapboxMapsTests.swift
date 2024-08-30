@@ -7,7 +7,7 @@ final class TileRegionLoadOptions_MapboxMapsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        coordinate = .random()
+        coordinate = .testConstantValue()
     }
 
     override func tearDown() {
@@ -28,7 +28,7 @@ final class TileRegionLoadOptions_MapboxMapsTests: XCTestCase {
     }
 
     func testInitialization() throws {
-        let geometry: Geometry? = .random(Point(.random()).geometry)
+        let geometry: Geometry? = .random(Point(.testConstantValue()).geometry)
         let descriptors: [TilesetDescriptor]? = .random([])
         let metadata: [Int]? = .random(Array.random(withLength: 5, generator: { Int.random(in: 0...9) }))
         let acceptExpired = Bool.random()

@@ -46,15 +46,15 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(me.onHeadingChange.latestValue, nil)
         XCTAssertEqual(me.latestLocation, nil)
 
-        let l1 = Location.random()
-        let l2 = Location.random()
+        let l1 = Location.testConstantValue()
+        let l2 = Location.testConstantValue()
         location = [l1, l2]
 
         XCTAssertEqual(observedLocations, [[], [l1, l2]])
         XCTAssertEqual(me.onLocationChange.latestValue, [l1, l2])
         XCTAssertEqual(me.latestLocation, l2)
 
-        let h1 = Heading.random()
+        let h1 = Heading.testConstantValue()
         heading = h1
 
         XCTAssertEqual(observedHeading, [h1])
@@ -72,20 +72,20 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(me.onLocationChange.latestValue, [l1, l2])
         XCTAssertEqual(me.latestLocation, l2)
 
-        let l3 = Location.random()
+        let l3 = Location.testConstantValue()
         locationSubject.send([l3])
         XCTAssertEqual(observedLocations, [[], [l1, l2], [l3]])
         XCTAssertEqual(me.latestLocation, l3)
 
-        let h2 = Heading.random()
+        let h2 = Heading.testConstantValue()
         headingSubject.send(h2)
         XCTAssertEqual(observedHeading, [h1, h2])
 
         // override with signal with cached value
-        let l4 = Location.random()
+        let l4 = Location.testConstantValue()
         let justLocationSignal = Signal(just: [l4])
 
-        let h3 = Heading.random()
+        let h3 = Heading.testConstantValue()
         let justHeadingSignal = Signal(just: h3)
 
         me.override(locationProvider: justLocationSignal, headingProvider: justHeadingSignal)
@@ -112,9 +112,9 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(me.onHeadingChange.latestValue, nil)
         XCTAssertEqual(me.latestLocation, nil)
 
-        let l1 = Location.random()
-        let l2 = Location.random()
-        let h1 = Heading.random()
+        let l1 = Location.testConstantValue()
+        let l2 = Location.testConstantValue()
+        let h1 = Heading.testConstantValue()
 
         locationProvider.location = [l1, l2]
         headingProvider.latestHeading = h1

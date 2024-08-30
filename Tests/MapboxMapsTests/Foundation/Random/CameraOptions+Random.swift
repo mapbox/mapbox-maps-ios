@@ -13,7 +13,7 @@ extension CameraOptions {
     }
     static func random() -> Self {
         return CameraOptions(
-            center: .random(),
+            center: .testConstantValue(),
             padding: .random(),
             anchor: .random(),
             zoom: .random(in: 0...20),

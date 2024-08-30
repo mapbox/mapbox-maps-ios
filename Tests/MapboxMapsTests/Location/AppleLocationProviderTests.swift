@@ -120,8 +120,24 @@ final class AppleLocationProviderTests: XCTestCase {
     }
 #endif
 
-    func testAddingALocationConsumerDoesNotRequestWhenInUseAuthorizationForOtherStatuses() {
-        locationManager.compatibleAuthorizationStatus = [.restricted, .denied, .authorizedWhenInUse].randomElement()!
+    func testAddingALocationConsumerDoesNotRequestWhenInUseAuthorizationForOtherStatusesRestricted() {
+        locationManager.compatibleAuthorizationStatus = .restricted
+
+        _ = locationProvider.onLocationUpdate.observe { _ in }
+
+        XCTAssertTrue(locationManager.requestWhenInUseAuthorizationStub.invocations.isEmpty)
+    }
+
+    func testAddingALocationConsumerDoesNotRequestWhenInUseAuthorizationForOtherStatusesDenied() {
+        locationManager.compatibleAuthorizationStatus = .denied
+
+        _ = locationProvider.onLocationUpdate.observe { _ in }
+
+        XCTAssertTrue(locationManager.requestWhenInUseAuthorizationStub.invocations.isEmpty)
+    }
+
+    func testAddingALocationConsumerDoesNotRequestWhenInUseAuthorizationForOtherStatusesAuthWhenInUse() {
+        locationManager.compatibleAuthorizationStatus = .authorizedWhenInUse
 
         _ = locationProvider.onLocationUpdate.observe { _ in }
 
@@ -191,8 +207,8 @@ final class AppleLocationProviderTests: XCTestCase {
         XCTAssertEqual(observedViaObjectAPI, observed)
         XCTAssertEqual(locationProvider.latestHeading, nil)
 
-        let heading1 = Heading.random()
-        let heading2 = Heading.random()
+        let heading1 = Heading.testConstantValue()
+        let heading2 = Heading.testConstantValue()
 
         let clHeading1 = MockHeading()
         clHeading1.trueHeadingStub.defaultReturnValue = heading1.direction
@@ -215,7 +231,7 @@ final class AppleLocationProviderTests: XCTestCase {
 #endif
 
     func testConsumersAreNotifiedOfNewAccuracyAuthorizationsAfterLatestLocationIsUpdated() {
-        let coordinate = CLLocationCoordinate2D.random()
+        let coordinate = CLLocationCoordinate2D.testConstantValue()
         let clLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let accuracyAuthorization = CLAccuracyAuthorization.reducedAccuracy
 
@@ -306,7 +322,7 @@ final class AppleLocationProviderTests: XCTestCase {
 
     func testDidChangeAuthorizationNotifiesDelegateIfAccuracyAuthorizationChanged() {
         let accuracyAuthorizationValues: [CLAccuracyAuthorization] = [.fullAccuracy, .reducedAccuracy]
-        let initialIndex = Int.random(in: 0...1)
+        let initialIndex = 0
         let changedIndex = (initialIndex + 1) % 2 // the other one
         locationManager.compatibleAccuracyAuthorization = accuracyAuthorizationValues[initialIndex]
         locationProvider = AppleLocationProvider(
@@ -326,13 +342,29 @@ final class AppleLocationProviderTests: XCTestCase {
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.first?.parameters.accuracyAuthorization, locationManager.compatibleAccuracyAuthorization)
     }
 
-    func testDidChangeAuthorizationDoesNotNotifyDelegateIfAccuracyAuthorizationDidNotChange() {
-        locationManager.compatibleAccuracyAuthorization = [.fullAccuracy, .reducedAccuracy].randomElement()!
+    func testDidChangeAuthorizationDoesNotNotifyDelegateIfAccuracyAuthorizationDidNotChangeFull() {
+        locationManager.compatibleAccuracyAuthorization = .fullAccuracy
         locationProvider = AppleLocationProvider(
             locationManager: locationManager,
             interfaceOrientation: $interfaceOrientation,
             mayRequestWhenInUseAuthorization: true,
         locationManagerDelegateProxy: locationManagerDelegateProxy)
+        delegate = MockLocationProducerDelegate()
+        locationProvider.delegate = delegate
+        addNoopLocationObserver()
+
+        locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
+
+        XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.count, 0)
+    }
+
+    func testDidChangeAuthorizationDoesNotNotifyDelegateIfAccuracyAuthorizationDidNotChangeReduced() {
+        locationManager.compatibleAccuracyAuthorization = .reducedAccuracy
+        locationProvider = AppleLocationProvider(
+            locationManager: locationManager,
+            interfaceOrientation: $interfaceOrientation,
+            mayRequestWhenInUseAuthorization: true,
+            locationManagerDelegateProxy: locationManagerDelegateProxy)
         delegate = MockLocationProducerDelegate()
         locationProvider.delegate = delegate
         addNoopLocationObserver()
@@ -358,9 +390,29 @@ final class AppleLocationProviderTests: XCTestCase {
         }
     }
 
-    func testDoesNotRequestTemporaryFullAccuracyAuthorizationIfPermissionsNotGranted() {
+    func testDoesNotRequestTemporaryFullAccuracyAuthorizationIfPermissionsNotGrantedNotDetermined() {
         addNoopLocationObserver()
-        locationManager.compatibleAuthorizationStatus = [.notDetermined, .restricted, .denied].randomElement()!
+        locationManager.compatibleAuthorizationStatus = .notDetermined
+        locationManager.compatibleAccuracyAuthorization = .reducedAccuracy
+
+        locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
+
+        XCTAssertTrue(locationManager.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
+    }
+
+    func testDoesNotRequestTemporaryFullAccuracyAuthorizationIfPermissionsNotGrantedRestricted() {
+        addNoopLocationObserver()
+        locationManager.compatibleAuthorizationStatus = .restricted
+        locationManager.compatibleAccuracyAuthorization = .reducedAccuracy
+
+        locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
+
+        XCTAssertTrue(locationManager.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
+    }
+
+    func testDoesNotRequestTemporaryFullAccuracyAuthorizationIfPermissionsNotGrantedDenied() {
+        addNoopLocationObserver()
+        locationManager.compatibleAuthorizationStatus = .denied
         locationManager.compatibleAccuracyAuthorization = .reducedAccuracy
 
         locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
@@ -434,8 +486,8 @@ final class AppleLocationProviderTests: XCTestCase {
 
     func testOptions() {
         // given
-        let options = AppleLocationProvider.Options(distanceFilter: .random(in: 0...10_000),
-                                                    desiredAccuracy: .random(in: 0...1000),
+        let options = AppleLocationProvider.Options(distanceFilter: 45890,
+                                                    desiredAccuracy: 783,
                                                     activityType: .other)
         // when
         locationProvider.options = options

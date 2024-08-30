@@ -8,7 +8,7 @@ final class MockCoordinateInterpolator: CoordinateInterpolatorProtocol {
         var to: CLLocationCoordinate2D
         var fraction: Double
     }
-    let interpolateStub = Stub<InterpolateParams, CLLocationCoordinate2D>(defaultReturnValue: .random())
+    let interpolateStub = Stub<InterpolateParams, CLLocationCoordinate2D>(defaultReturnValue: .testConstantValue())
     func interpolate(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D, fraction: Double) -> CLLocationCoordinate2D {
         interpolateStub.call(with: .init(from: from, to: to, fraction: fraction))
     }

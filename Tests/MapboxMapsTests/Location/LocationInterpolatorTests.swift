@@ -15,7 +15,7 @@ final class LocationInterpolatorTests: XCTestCase {
         var result = me.interpolate(from: [], to: [], fraction: 1)
         XCTAssertEqual(result, [])
 
-        let l1 = Location.random()
+        let l1 = Location.testConstantValue()
         result = me.interpolate(from: [l1], to: [], fraction: 1)
         XCTAssertEqual(result, [])
 

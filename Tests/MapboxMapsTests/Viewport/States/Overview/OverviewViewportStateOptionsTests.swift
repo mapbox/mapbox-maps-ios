@@ -4,8 +4,8 @@ import XCTest
 final class OverviewViewportStateOptionsTests: XCTestCase {
     func testInitWithDefaultValues() {
         let geometry: GeometryConvertible = [
-            Point(.random()),
-            LineString([.random(), .random()])
+            Point(.testConstantValue()),
+            LineString([.testConstantValue(), .testConstantValue()])
         ].randomElement()!
 
         let options = OverviewViewportStateOptions(geometry: geometry)
@@ -19,8 +19,8 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
 
     func testInitWithNonDefaultValues() {
         let geometry: GeometryConvertible = [
-            Point(.random()),
-            LineString([.random(), .random()])
+            Point(.testConstantValue()),
+            LineString([.testConstantValue(), .testConstantValue()])
         ].randomElement()!
         let geometryPadding = UIEdgeInsets.random()
         let padding = UIEdgeInsets.random()

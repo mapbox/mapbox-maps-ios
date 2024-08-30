@@ -34,22 +34,22 @@ final class PuckManagerTests: XCTestCase {
 
     func test_Send2DData_SeveralTimes_MakeRenderer_Once() {
         me.locationOptions = LocationOptions(puckType: .puck2D(.makeDefault()))
-        $onPuckRender.send(.random())
+        $onPuckRender.send(.testConstantValue())
 
         me.locationOptions = LocationOptions(puckType: .puck2D(.makeDefault()), puckBearingEnabled: true)
-        $onPuckRender.send(.random())
+        $onPuckRender.send(.testConstantValue())
 
         XCTAssertEqual(make2DRenderer.invocations.count, 1)
     }
 
     func test_SetLocationOptions_WithNilPuckType_StopsRendering() {
-        let data = PuckRenderingData.random()
+        let data = PuckRenderingData.testConstantValue()
         let locationOptions = LocationOptions(puckType: .puck2D(.makeDefault()))
 
         me.locationOptions = locationOptions
         $onPuckRender.send(data)
         me.locationOptions = LocationOptions(puckType: nil)
-        $onPuckRender.send(.random())
+        $onPuckRender.send(.testConstantValue())
         me.locationOptions = locationOptions
         $onPuckRender.send(data)
 
@@ -72,7 +72,7 @@ final class PuckManagerTests: XCTestCase {
     }
 
     func test_SetLocationOptions_With2DPuckType_Uses2DRenderer() {
-        let data = PuckRenderingData.random()
+        let data = PuckRenderingData.testConstantValue()
         let locationOptions = LocationOptions(puckType: .puck2D(.makeDefault()))
 
         me.locationOptions = locationOptions
@@ -88,7 +88,7 @@ final class PuckManagerTests: XCTestCase {
     }
 
     func test_SetLocationOptions_With3DPuckType_Uses3DRenderer() {
-        let data = PuckRenderingData.random()
+        let data = PuckRenderingData.testConstantValue()
         let configuration = Puck3DConfiguration(model: Model())
         let locationOptions = LocationOptions(puckType: .puck3D(configuration))
 
@@ -105,7 +105,7 @@ final class PuckManagerTests: XCTestCase {
     }
 
     func test_SetLocationOptions_WithNewPuckType_UsesNewRendererAndStopsPrevious() {
-        let data = PuckRenderingData.random()
+        let data = PuckRenderingData.testConstantValue()
         let configuration = Puck3DConfiguration(model: Model())
         let locationOptions3D = LocationOptions(puckType: .puck3D(configuration))
         let locationOptions2D = LocationOptions(puckType: .puck2D(.makeDefault()))

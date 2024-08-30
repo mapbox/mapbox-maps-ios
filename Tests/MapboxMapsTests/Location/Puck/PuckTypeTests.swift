@@ -77,12 +77,12 @@ internal class PuckTypeTests: XCTestCase {
     }
 
     func testPuck2DConfigurationInitializerWithNonDefaultValues() {
-        let topImage: UIImage? = .random(UIImage())
-        let bearingImage: UIImage? = .random(UIImage())
-        let shadowImage: UIImage? = .random(UIImage())
-        let scale: Value<Double>? = .random(.constant(.random(in: 0...10)))
-        let showsAccuracyRing: Bool = .random()
-        let opacity: CGFloat = .random(in: 0.0...1.0)
+        let topImage: UIImage? = UIImage()
+        let bearingImage: UIImage? = UIImage()
+        let shadowImage: UIImage? = UIImage()
+        let scale: Value<Double>? = .constant(6)
+        let showsAccuracyRing: Bool = .testConstantValue()
+        let opacity: CGFloat = 0.7
 
         let config = Puck2DConfiguration(
             topImage: topImage,
@@ -131,14 +131,14 @@ internal class PuckTypeTests: XCTestCase {
     }
 
     func testPuck2DConfigurationExtendedInitializerWithNonDefaultValues() {
-        let topImage: UIImage? = .random(UIImage())
-        let bearingImage: UIImage? = .random(UIImage())
-        let shadowImage: UIImage? = .random(UIImage())
-        let scale: Value<Double>? = .random(.constant(.random(in: 0...10)))
-        let showsAccuracyRing: Bool = .random()
-        let accuracyRingColor: UIColor = .random()
-        let accuracyRingBorderColor: UIColor = .random()
-        let opacity: CGFloat = .random(in: 0.0...1.0)
+        let topImage: UIImage? = UIImage()
+        let bearingImage: UIImage? = UIImage()
+        let shadowImage: UIImage? = UIImage()
+        let scale: Value<Double>? = .constant(0.9)
+        let showsAccuracyRing: Bool = .testConstantValue()
+        let accuracyRingColor: UIColor = .testConstantValue()
+        let accuracyRingBorderColor: UIColor = .testConstantValue()
+        let opacity: CGFloat = 0.3
 
         let config = Puck2DConfiguration(
             topImage: topImage,
@@ -169,7 +169,7 @@ internal class PuckTypeTests: XCTestCase {
     }
 
     func testPuck2DPulsingConfigurationInitializerWithNonDefaultValues() {
-        let color: UIColor = .random()
+        let color: UIColor = .testConstantValue()
         let radius: Puck2DConfiguration.Pulsing.Radius = .accuracy
 
         var pulsing = Puck2DConfiguration.Pulsing(color: color, radius: radius)

@@ -14,7 +14,7 @@ final class OfflineRegionGeometryDefinitionTests: XCTestCase {
     override func setUp() {
         super.setUp()
         styleURL = .randomASCII(withLength: .random(in: 0...50))
-        coordinate = .random()
+        coordinate = .testConstantValue()
         minZoom = .random(in: 0..<10)
         maxZoom = .random(in: 10...20)
         // swiftlint:disable:next syntactic_sugar

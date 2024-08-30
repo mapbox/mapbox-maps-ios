@@ -3,7 +3,7 @@ import XCTest
 
 final class FollowPuckViewportStateBearingTests: XCTestCase {
     func testConstant() {
-        let state = FollowPuckViewportState.RenderingState(coordinate: .random())
+        let state = FollowPuckViewportState.RenderingState(coordinate: .testConstantValue())
         let value = CLLocationDirection.random(in: 0..<360)
 
         let bearing = FollowPuckViewportStateBearing.constant(value)
@@ -12,14 +12,14 @@ final class FollowPuckViewportStateBearingTests: XCTestCase {
     }
 
     func testHeading() {
-        let state = FollowPuckViewportState.RenderingState(coordinate: .random())
+        let state = FollowPuckViewportState.RenderingState(coordinate: .testConstantValue())
         let bearing = FollowPuckViewportStateBearing.heading
 
         XCTAssertEqual(bearing.evaluate(with: state), state.heading)
     }
 
     func testCourse() {
-        let state = FollowPuckViewportState.RenderingState(coordinate: .random())
+        let state = FollowPuckViewportState.RenderingState(coordinate: .testConstantValue())
         let bearing = FollowPuckViewportStateBearing.course
 
         XCTAssertEqual(bearing.evaluate(with: state), state.bearing)

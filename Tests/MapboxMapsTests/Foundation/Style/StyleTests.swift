@@ -422,13 +422,13 @@ final class StyleManagerTests: XCTestCase {
         styleManager.invalidateStyleCustomGeometrySourceRegionStub.defaultReturnValue = Expected(value: NSNull())
         XCTAssertNoThrow(try style.invalidateCustomGeometrySourceRegion(
             forSourceId: "dummy-source-id",
-            bounds: CoordinateBounds(southwest: .random(), northeast: .random()))
+            bounds: CoordinateBounds(southwest: .testConstantValue(), northeast: .testConstantValue()))
         )
 
         styleManager.invalidateStyleCustomGeometrySourceRegionStub.defaultReturnValue = Expected(error: "Cannot invalidate custom geometry source tile")
         XCTAssertThrowsError(try style.invalidateCustomGeometrySourceRegion(
             forSourceId: "dummy-source-id",
-            bounds: CoordinateBounds(southwest: .random(), northeast: .random()))
+            bounds: CoordinateBounds(southwest: .testConstantValue(), northeast: .testConstantValue()))
         )
     }
 
@@ -623,7 +623,7 @@ final class StyleManagerTests: XCTestCase {
         // given
         let sourceId = String.randomASCII(withLength: 10)
         let dataId = String.randomASCII(withLength: 11)
-        let point = Point(.random())
+        let point = Point(.testConstantValue())
         let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)
@@ -643,7 +643,7 @@ final class StyleManagerTests: XCTestCase {
         // given
         let sourceId = String.randomASCII(withLength: 10)
         let dataId = String.randomASCII(withLength: 11)
-        let point = Point(.random())
+        let point = Point(.testConstantValue())
         let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)

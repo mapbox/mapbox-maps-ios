@@ -84,7 +84,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
     }
 
     func testOnRegionGeometryChanged() {
-        let geometry = Geometry.point(Point(.random()))
+        let geometry = Geometry.point(Point(.testConstantValue()))
 
         wrapper.onRegionGeometryChanged(forId: id, geometry: MapboxCommon.Geometry(geometry))
 

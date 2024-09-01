@@ -62,7 +62,15 @@ extension CoreInteraction {
 
     convenience init(impl: InteractionImpl) {
         let featureset = impl.target?.0
-        self.init(featureset: featureset, filter: impl.target?.1, type: impl.type.core, handler: HandlerImpl(featureset: featureset, onBegin: impl.onBegin, onChange: impl.onChange, onEnd: impl.onEnd))
+        self.init(
+            featureset: featureset,
+            filter: impl.target?.1?.asCore,
+            type: impl.type.core,
+            handler: HandlerImpl(
+                featureset: featureset,
+                onBegin: impl.onBegin,
+                onChange: impl.onChange,
+                onEnd: impl.onEnd))
     }
 
     convenience init(layerId: String, type: CoreInteractionType, handler: @escaping MapLayerGestureHandler) {

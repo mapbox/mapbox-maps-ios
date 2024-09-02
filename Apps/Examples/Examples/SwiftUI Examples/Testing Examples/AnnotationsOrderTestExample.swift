@@ -240,7 +240,6 @@ private struct FadingCircle: MapStyleContent {
     var body: some MapStyleContent {
         GeoJSONSource(id: "source-id")
             .data(.geometry(makeFadingCircle()))
-            .autoMaxZoom(true)
 
         FillExtrusionLayer(id: "fill-layer-id", source: "source-id")
             .fillExtrusionFloodLightGroundRadius(-400000)

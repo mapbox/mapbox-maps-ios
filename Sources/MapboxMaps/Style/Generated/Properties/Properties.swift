@@ -385,7 +385,7 @@ public struct IconTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable
 // MARK: SYMBOL_ELEVATION_REFERENCE
 
 /// Selects the base of symbol-elevation.
-public struct SymbolElevationReference: RawRepresentable, Codable, Hashable {
+public struct SymbolElevationReference: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
 
     public init(rawValue: String) {

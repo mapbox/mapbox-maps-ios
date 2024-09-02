@@ -148,13 +148,6 @@ extension GeoJSONSource {
         with(self, setter(\.data, newValue))
     }
 
-    /// When set to true, the maxZoom property is ignored and is instead calculated automatically based on the largest bounding box from the geoJSON features. This resolves rendering artifacts for features that use wide blur (e.g. fill extrusion ground flood light or circle layer) and would bring performance improvement on lower zoom levels, especially for geoJSON sources that update data frequently. However, it can lead to flickering and precision loss on zoom levels above 19.
-    /// Default value: false.
-    @_spi(Experimental)
-    public func autoMaxZoom(_ newValue: Bool) -> Self {
-        with(self, setter(\.autoMaxZoom, newValue))
-    }
-
     /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom.
     /// Default value: 4.
     public func prefetchZoomDelta(_ newValue: Double) -> Self {

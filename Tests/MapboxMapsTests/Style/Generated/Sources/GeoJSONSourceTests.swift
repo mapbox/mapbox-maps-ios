@@ -62,12 +62,10 @@ final class GeoJSONSourceTests: XCTestCase {
     func testSetPropertyValueWithFunction() {
         let source = GeoJSONSource(id: "test-source")
             .data(GeoJSONSourceData.testSourceValue())
-            .autoMaxZoom(Bool.testSourceValue())
             .prefetchZoomDelta(Double.testSourceValue())
             .tileCacheBudget(TileCacheBudgetSize.testSourceValue())
 
         XCTAssertEqual(source.data, GeoJSONSourceData.testSourceValue())
-        XCTAssertEqual(source.autoMaxZoom, Bool.testSourceValue())
         XCTAssertEqual(source.prefetchZoomDelta, Double.testSourceValue())
         XCTAssertEqual(source.tileCacheBudget, TileCacheBudgetSize.testSourceValue())
     }

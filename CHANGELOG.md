@@ -50,7 +50,7 @@ circleAnnotationManager.circleColor = .blue
   * `init(rawValue:)` -> `init(turfRawValue:)`
   * `rawValue` -> `turfRawValue`
 * Remove experimental `model-front-cutoff` property from `ModelLayer`
-* Bump core maps version to 11.7.0-beta.1 and common sdk to 24.7.0-beta.1
+* Bump core maps version to 11.7.0-beta.2 and common sdk to 24.7.0-beta.2
 * Expose experimental `ClipLayer.clipLayerScope`, `SymbolLayer.symbolElevationReference` and `SymbolLayer.symbolZOffset`.
 * Most of public value types was marked as Sendable now, to facilitate adoption of Swift 6 concurrency model for SDK clients.
 * `autoMaxZoom` property exposed for GeoJSONSource to fix rendering issues with `FillExtrusionLayer` in some cases

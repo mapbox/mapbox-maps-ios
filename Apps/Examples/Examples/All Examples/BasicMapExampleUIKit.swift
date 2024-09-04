@@ -20,21 +20,6 @@ final class BasicMapExample: UIViewController, ExampleProtocol {
         mapView.ornaments.options.scaleBar.visibility = .visible
 
         view.addSubview(mapView)
-
-        let targets = [
-            FeaturesetQueryTarget(
-                featureset: .layer("my-layer"),
-                filter: Exp(.eq) {
-                    Exp(.get) { "type" }
-                    "hotel"
-                }
-            ),
-            FeaturesetQueryTarget(featureset: .featureset("poi", importId: "basemap"))
-        ]
-        mapView.mapboxMap.queryRenderedFeatures(with: CGPoint(x: 0, y: 0),
-                                   targets: targets) { _ in
-            // handle features in result
-        }
     }
 
     override func viewDidAppear(_ animated: Bool) {

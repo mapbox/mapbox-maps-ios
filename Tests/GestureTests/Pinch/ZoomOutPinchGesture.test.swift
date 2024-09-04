@@ -9,7 +9,7 @@ final class ZoomOutPinchGestureTestCase: GestureTestCase {
     func testQuickZoomOut() async throws {
         try eventGenerator.fingerPinchClose(duration: Constants.pinchDuration)
 
-        XCTAssertEqual(mapView.cameraState.zoom, 1.737, accuracy: 0.001)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, 1.737, accuracy: 0.001)
     }
 
     /// Test that zoom-out gesture change nothing if changed distance is ≤ threshold
@@ -20,7 +20,7 @@ final class ZoomOutPinchGestureTestCase: GestureTestCase {
                                        toDistance: EventGenerator.pinchSmallDistance,
                                        duration: Constants.pinchDuration)
 
-        XCTAssertEqual(mapView.cameraState.zoom, 3)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, 3)
     }
 
     /// Test that zooming-out happens if pinch gesture exceeds threshold by 1 point
@@ -31,7 +31,7 @@ final class ZoomOutPinchGestureTestCase: GestureTestCase {
                                        toDistance: EventGenerator.pinchSmallDistance,
                                        duration: Constants.pinchDuration)
 
-        XCTAssertEqual(mapView.cameraState.zoom, 2.930, accuracy: 0.001)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, 2.930, accuracy: 0.001)
     }
 
     /// Same as ``testZoomOutNextAfterThreshold`` on city zoom level
@@ -42,7 +42,7 @@ final class ZoomOutPinchGestureTestCase: GestureTestCase {
                                        toDistance: EventGenerator.pinchSmallDistance,
                                        duration: Constants.pinchDuration)
 
-        XCTAssertEqual(mapView.cameraState.zoom, 12.929, accuracy: 0.001)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, 12.929, accuracy: 0.001)
     }
 
     /// Same as ``testZoomOutNextAfterThresholdOnCloseZoom`` but for a few points instead of 1
@@ -54,6 +54,6 @@ final class ZoomOutPinchGestureTestCase: GestureTestCase {
                                        toDistance: EventGenerator.pinchSmallDistance,
                                        duration: Constants.pinchDuration)
 
-        XCTAssertEqual(mapView.cameraState.zoom, 12.737, accuracy: 0.001)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, 12.737, accuracy: 0.001)
     }
 }

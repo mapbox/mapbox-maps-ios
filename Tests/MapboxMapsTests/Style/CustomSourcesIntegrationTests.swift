@@ -17,7 +17,7 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
         )
 
         didFinishLoadingStyle = { mapView in
-            var source = CustomRasterSource(id: "test-source", options: rasterOptions)
+            let source = CustomRasterSource(id: "test-source", options: rasterOptions)
 
             // Add source
             do {
@@ -29,7 +29,7 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the source
             do {
-                let retrievedSource = try mapView.mapboxMap.source(withId: "test-source", type: CustomRasterSource.self)
+                _ = try mapView.mapboxMap.source(withId: "test-source", type: CustomRasterSource.self)
 
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {

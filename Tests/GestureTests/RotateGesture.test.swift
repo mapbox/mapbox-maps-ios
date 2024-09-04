@@ -12,6 +12,6 @@ final class RotateGestureTestCase: GestureTestCase {
                                         duration: Constants.pinchDuration)
 
         XCTAssertTrue(mapView.camera.cameraAnimators.isEmpty)
-        XCTAssertGreaterThanOrEqual(mapView.cameraState.bearing, 70)
+        XCTAssertGreaterThanOrEqual(mapView.mapboxMap.cameraState.bearing, 70)
     }
 }

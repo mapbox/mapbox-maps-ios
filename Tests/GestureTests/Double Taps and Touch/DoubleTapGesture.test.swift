@@ -12,7 +12,7 @@ final class DoubleTapGestureTestCase: GestureTestCase {
         await mapView.camera.cameraAnimators.waitForAllAnimations()
 
         XCTAssertTrue(mapView.camera.cameraAnimators.isEmpty)
-        XCTAssertEqual(mapView.cameraState.zoom, 6, accuracy: 0)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, 6, accuracy: 0)
     }
 
     /// That test validates that after triple tap gesture at the end of camera animation
@@ -22,7 +22,7 @@ final class DoubleTapGestureTestCase: GestureTestCase {
 
         await mapView.camera.cameraAnimators.waitForAllAnimations()
 
-        XCTAssertEqual(mapView.cameraState.zoom, 6, accuracy: 0)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, 6, accuracy: 0)
     }
 
     /// That test validates that after triple tap gesture at the end of camera animation
@@ -32,7 +32,7 @@ final class DoubleTapGestureTestCase: GestureTestCase {
 
         await mapView.camera.cameraAnimators.waitForAllAnimations()
 
-        XCTAssertEqual(mapView.cameraState.zoom, 7, accuracy: 0)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, 7, accuracy: 0)
     }
 
     /// That test validates that after triple tap gesture at the end of camera animation
@@ -43,7 +43,7 @@ final class DoubleTapGestureTestCase: GestureTestCase {
         await mapView.camera.cameraAnimators.waitForAllAnimations()
 
         XCTExpectFailure("<https://mapbox.atlassian.net/jira/software/c/projects/MAPSIOS/issues/?jql=project%20%3D%20%22MAPSIOS%22%20AND%20text%20~%20%22Double%20Tap%22%20ORDER%20BY%20created%20DESC> Potential bug. TODO: Create a ticket") {
-            XCTAssertEqual(mapView.cameraState.zoom, 7, accuracy: 0)
+            XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, 7, accuracy: 0)
         }
 
     }
@@ -55,6 +55,6 @@ final class DoubleTapGestureTestCase: GestureTestCase {
         try eventGenerator.fingerDoubleTap()
 
         XCTAssertTrue(mapView.camera.cameraAnimators.isEmpty)
-        XCTAssertEqual(mapView.cameraState.zoom, 5, accuracy: 0)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, 5, accuracy: 0)
     }
 }

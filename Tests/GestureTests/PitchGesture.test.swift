@@ -15,7 +15,7 @@ final class PitchGestureTestCase: GestureTestCase {
         try eventGenerator.twoFingerUp()
 
         XCTAssertTrue(mapView.camera.cameraAnimators.isEmpty)
-        XCTAssertEqual(mapView.cameraState.pitch, 25)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.pitch, 25)
     }
 
     func testDefaultPitchGesture2() async throws {
@@ -32,7 +32,7 @@ final class PitchGestureTestCase: GestureTestCase {
         try eventGenerator.twoFingerUp()
 
         XCTAssertTrue(mapView.camera.cameraAnimators.isEmpty)
-        XCTAssertEqual(mapView.cameraState.pitch, 85)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.pitch, 85)
     }
 
     func testPitchDoesntRecognizeSimultaneouslyWithPinchPanAndRotate() async throws {
@@ -75,10 +75,10 @@ final class PitchGestureTestCase: GestureTestCase {
         try eventGenerator.twoFingerUp()
 
         XCTAssertTrue(mapView.camera.cameraAnimators.isEmpty)
-        XCTAssertEqual(mapView.cameraState.pitch, 25)
-        XCTAssertEqual(mapView.cameraState.zoom, originalZoomLevel)
-        XCTAssertEqual(mapView.cameraState.center, originalLocation)
-        XCTAssertEqual(mapView.cameraState.bearing, originalBearing)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.pitch, 25)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, originalZoomLevel)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.center, originalLocation)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.bearing, originalBearing)
     }
 }
 

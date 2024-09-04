@@ -8,6 +8,6 @@ final class DoubleTouchGestureTestCase: GestureTestCase {
         try eventGenerator.twoFingerTap()
         await mapView.camera.cameraAnimators.waitForAllAnimations()
 
-        XCTAssertEqual(mapView.cameraState.zoom, 4)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, 4)
     }
 }

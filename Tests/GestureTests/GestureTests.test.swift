@@ -15,7 +15,7 @@ class GestureTestCase: MapViewIntegrationTestCase {
     @MainActor
     var camera: CameraState {
         get {
-            mapView.cameraState
+            mapView.mapboxMap.cameraState
         }
         set {
             mapView.mapboxMap.setCamera(to: CameraOptions(cameraState: newValue))

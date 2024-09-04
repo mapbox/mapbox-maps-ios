@@ -272,7 +272,7 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
     }
 
     func testCameraAnimatorPaused() {
-        var mockCameraAnimator = MockCameraAnimator()
+        let mockCameraAnimator = MockCameraAnimator()
         cameraAnimatorsRunner.isEnabled = true
         cameraAnimatorsRunner.add(mockCameraAnimator)
 

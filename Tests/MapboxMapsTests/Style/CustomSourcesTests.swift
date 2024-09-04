@@ -8,7 +8,7 @@ final class CustomSourcesSourceTests: XCTestCase {
             clientCallback: CustomRasterSourceClient.fromCustomRasterSourceTileStatusChangedCallback { _, _ in }
         )
 
-        var source = CustomRasterSource(id: "test-source", options: testCustomRasterSourceOptions)
+        let source = CustomRasterSource(id: "test-source", options: testCustomRasterSourceOptions)
 
         var data: Data?
         do {

@@ -288,7 +288,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
     @available(*, deprecated)
     func testDisplaysAnnotationProperty() {
         XCTAssertEqual(manager.displaysAnnotations.value, false)
-        let annotationViewA = addTestAnnotationView(id: "test-id")
+        _ = addTestAnnotationView(id: "test-id")
 
         XCTAssertEqual(manager.displaysAnnotations.value, false)
 

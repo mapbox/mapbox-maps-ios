@@ -4,7 +4,6 @@ import MapboxCoreMaps
 
 final class MapViewIntegrationTests: IntegrationTestCase {
     var rootView: UIView!
-    var mapView: MapView!
     var dataPathURL: URL!
 
     override func setUpWithError() throws {
@@ -20,13 +19,9 @@ final class MapViewIntegrationTests: IntegrationTestCase {
         dataPathURL = try temporaryCacheDirectory()
 
         MapboxMapsOptions.dataPath = dataPathURL
-        mapView = MapView(frame: rootView.bounds)
-        rootView.addSubview(mapView)
     }
 
     override func tearDownWithError() throws {
-        mapView?.removeFromSuperview()
-        mapView = nil
         rootView = nil
 
         let expectation = self.expectation(description: "Clear map data")
@@ -47,21 +42,22 @@ final class MapViewIntegrationTests: IntegrationTestCase {
                 return
             }
 
-            let expectation = self.expectation(description: "wait for map")
+            let mapLoadExpectation = self.expectation(description: "map is loaded")
+            let animationExpectation = self.expectation(description: "camera animation is completed")
 
-            MapboxMapsOptions.dataPath = dataPathURL
             let mapView = MapView(frame: rootView.bounds)
             weakMapView = mapView
 
             rootView.addSubview(mapView)
 
             mapView.mapboxMap.onMapLoaded.observeNext { [weak mapView] _ in
+                mapLoadExpectation.fulfill()
                 let dest = CameraOptions(center: CLLocationCoordinate2D(latitude: 10, longitude: 10), zoom: 10)
                 mapView?.camera.ease(to: dest, duration: 5) { (_) in
-                    expectation.fulfill()
+                    animationExpectation.fulfill()
                 }
             }.store(in: &cancelables)
-            wait(for: [expectation], timeout: 30.0)
+            wait(for: [mapLoadExpectation, animationExpectation], timeout: 30.0)
             mapView.removeFromSuperview()
 
             XCTAssertNotNil(weakMapView)
@@ -82,7 +78,6 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
             let expectation = self.expectation(description: "wait for map")
 
-            MapboxMapsOptions.dataPath = dataPathURL
             let mapView = MapView(frame: rootView.bounds)
             weakMapView = mapView
             weakViewport = mapView.viewport

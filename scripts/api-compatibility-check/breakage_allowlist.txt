@@ -1830,3 +1830,7 @@ Var PolylineAnnotation.tapHandler has declared type change from ((MapboxMaps.Map
 Func MapboxMap.queryRenderedFeatures(with:options:completion:) has been renamed to Func queryRenderedFeatures(with:targets:completion:)
 Func MapboxMap.queryRenderedFeatures(with:options:completion:) is now with @_documentation
 Func MapboxMap.queryRenderedFeatures(with:options:completion:) is now with @_spi
+
+// Sendable support in some gl-native objects
+Extension CoordinateBounds is now with @Sendable 
+Extension GlyphsRasterizationOptions is now with @Sendable 

@@ -112,15 +112,15 @@ final class FormatOptionsTests: XCTestCase {
 
         let encoded = try DictionaryEncoder().encode(formatOptions)
         XCTAssertEqual(
-            String(decoding: try JSONSerialization.data(withJSONObject: encoded["font-scale"] as Any), as: UTF8.self),
+            String(data: try JSONSerialization.data(withJSONObject: encoded["font-scale"] as Any), encoding: .utf8),
             #"["case",[">=",["to-number",["get","point_count"]],4],1,2]"#
         )
         XCTAssertEqual(
-            String(decoding: try JSONSerialization.data(withJSONObject: encoded["text-font"] as Any), as: UTF8.self),
+            String(data: try JSONSerialization.data(withJSONObject: encoded["text-font"] as Any), encoding: .utf8),
             #"["case",[">=",["to-number",["get","point_count"]],4],["Open Sans Semibold"],["Arial Unicode MS Bold"]]"#
         )
         XCTAssertEqual(
-            String(decoding: try JSONSerialization.data(withJSONObject: encoded["text-color"] as Any), as: UTF8.self),
+            String(data: try JSONSerialization.data(withJSONObject: encoded["text-color"] as Any), encoding: .utf8),
             ##"["case",[">=",["to-number",["get","point_count"]],4],"#ffffff","#000000"]"##
         )
     }

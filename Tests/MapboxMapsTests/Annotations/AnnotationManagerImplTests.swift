@@ -141,13 +141,13 @@ final class AnnotationManagerImplTests: XCTestCase {
         func checkExpression(key: String, props: [String: Any]) throws {
             let value = try XCTUnwrap(props[key] as? [Any])
             let valueData = try XCTUnwrap(JSONSerialization.data(withJSONObject: value))
-            let valueString = try XCTUnwrap(String(decoding: valueData, as: UTF8.self))
+            let valueString = try XCTUnwrap(String(data: valueData, encoding: .utf8))
 
             let fallbackValue = me.layerProperties[key] ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: key).value
             let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
                 ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
                 : Data(String(describing: fallbackValue).utf8)
-            let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+            let fallbackValueString = try XCTUnwrap(String(data: fallbackValueData, encoding: .utf8))
 
             let expectedString = "[\"coalesce\",[\"get\",\"\(key)\",[\"get\",\"layerProperties\"]],\(fallbackValueString)]"
             XCTAssertEqual(valueString, expectedString)

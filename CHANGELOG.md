@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.6.1 - 10 September, 2024
+
+* Upgrade MapboxCommon to v24.6.1.
+* Upgrade MapboxCoreMaps to v11.6.1.
+* Fix for offline retrieval of 3d tiles for standard style.
+
 ## 11.6.0 - 14 August, 2024
 
 * Expose getters for `MapOptions.orientation`, `MapOptions.constrainMode` and `MapOptions.viewportMode`.

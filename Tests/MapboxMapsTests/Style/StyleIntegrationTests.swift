@@ -226,7 +226,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertNoThrow {
             let convertedExpression = try self.mapView.mapboxMap.convertExpressionForLocalization(symbolLayer: symbolLayer, localeValue: "zh")
             let data = try JSONSerialization.data(withJSONObject: XCTUnwrap(convertedExpression), options: [.prettyPrinted])
-            let convertedString = String(decoding: data, as: UTF8.self).replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\n", with: "")
+            let convertedString = String(data: data, encoding: .utf8)!.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\n", with: "")
 
             let result = "[\"format\",[\"coalesce\",[\"get\",\"name_zh\"],[\"get\",\"name\"]]]"
             XCTAssertEqual(result, convertedString)
@@ -261,7 +261,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             ],
         ]
 
-        let styleJSON: String =  String(decoding: try! JSONSerialization.data(withJSONObject: styleJSONObject, options: [.prettyPrinted]), as: UTF8.self)
+        let styleJSON: String =  String(data: try! JSONSerialization.data(withJSONObject: styleJSONObject, options: [.prettyPrinted]), encoding: .utf8)!
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
 
         let styleJSONFinishedLoading = expectation(description: "Style JSON has finished loading")

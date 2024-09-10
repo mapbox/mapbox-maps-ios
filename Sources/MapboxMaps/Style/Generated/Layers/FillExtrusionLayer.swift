@@ -162,6 +162,15 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Transition options for `fillExtrusionHeight`.
     public var fillExtrusionHeightTransition: StyleTransition?
 
+    /// If a non-zero value is provided, it sets the fill-extrusion layer into wall rendering mode. The value is used to render the feature with the given width over the outlines of the geometry. Note: This property is experimental and some other fill-extrusion properties might not be supported with non-zero line width.
+    /// Default value: 0. Minimum value: 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillExtrusionLineWidth: Value<Double>?
+
+    /// Transition options for `fillExtrusionLineWidth`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillExtrusionLineWidthTransition: StyleTransition?
+
     /// The opacity of the entire fill extrusion layer. This is rendered on a per-layer, not per-feature, basis, and data-driven styling is not available.
     /// Default value: 1. Value range: [0, 1]
     public var fillExtrusionOpacity: Value<Double>?
@@ -249,6 +258,8 @@ public struct FillExtrusionLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightWallRadiusTransition, forKey: .fillExtrusionFloodLightWallRadiusTransition)
         try paintContainer.encodeIfPresent(fillExtrusionHeight, forKey: .fillExtrusionHeight)
         try paintContainer.encodeIfPresent(fillExtrusionHeightTransition, forKey: .fillExtrusionHeightTransition)
+        try paintContainer.encodeIfPresent(fillExtrusionLineWidth, forKey: .fillExtrusionLineWidth)
+        try paintContainer.encodeIfPresent(fillExtrusionLineWidthTransition, forKey: .fillExtrusionLineWidthTransition)
         try paintContainer.encodeIfPresent(fillExtrusionOpacity, forKey: .fillExtrusionOpacity)
         try paintContainer.encodeIfPresent(fillExtrusionOpacityTransition, forKey: .fillExtrusionOpacityTransition)
         try paintContainer.encodeIfPresent(fillExtrusionPattern, forKey: .fillExtrusionPattern)
@@ -306,6 +317,8 @@ public struct FillExtrusionLayer: Layer, Equatable {
             fillExtrusionFloodLightWallRadiusTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionFloodLightWallRadiusTransition)
             fillExtrusionHeight = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionHeight)
             fillExtrusionHeightTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionHeightTransition)
+            fillExtrusionLineWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionLineWidth)
+            fillExtrusionLineWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionLineWidthTransition)
             fillExtrusionOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionOpacity)
             fillExtrusionOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionOpacityTransition)
             fillExtrusionPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .fillExtrusionPattern)
@@ -374,6 +387,8 @@ public struct FillExtrusionLayer: Layer, Equatable {
         case fillExtrusionFloodLightWallRadiusTransition = "fill-extrusion-flood-light-wall-radius-transition"
         case fillExtrusionHeight = "fill-extrusion-height"
         case fillExtrusionHeightTransition = "fill-extrusion-height-transition"
+        case fillExtrusionLineWidth = "fill-extrusion-line-width"
+        case fillExtrusionLineWidthTransition = "fill-extrusion-line-width-transition"
         case fillExtrusionOpacity = "fill-extrusion-opacity"
         case fillExtrusionOpacityTransition = "fill-extrusion-opacity-transition"
         case fillExtrusionPattern = "fill-extrusion-pattern"
@@ -750,6 +765,29 @@ extension FillExtrusionLayer {
     /// Default value: 0. Minimum value: 0.
     public func fillExtrusionHeight(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionHeight, .expression(expression)))
+    }
+
+    /// If a non-zero value is provided, it sets the fill-extrusion layer into wall rendering mode. The value is used to render the feature with the given width over the outlines of the geometry. Note: This property is experimental and some other fill-extrusion properties might not be supported with non-zero line width.
+    /// Default value: 0. Minimum value: 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillExtrusionLineWidth(_ constant: Double) -> Self {
+        with(self, setter(\.fillExtrusionLineWidth, .constant(constant)))
+    }
+
+    /// Transition property for `fillExtrusionLineWidth`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillExtrusionLineWidthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillExtrusionLineWidthTransition, transition))
+    }
+
+    /// If a non-zero value is provided, it sets the fill-extrusion layer into wall rendering mode. The value is used to render the feature with the given width over the outlines of the geometry. Note: This property is experimental and some other fill-extrusion properties might not be supported with non-zero line width.
+    /// Default value: 0. Minimum value: 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillExtrusionLineWidth(_ expression: Exp) -> Self {
+        with(self, setter(\.fillExtrusionLineWidth, .expression(expression)))
     }
 
     /// The opacity of the entire fill extrusion layer. This is rendered on a per-layer, not per-feature, basis, and data-driven styling is not available.

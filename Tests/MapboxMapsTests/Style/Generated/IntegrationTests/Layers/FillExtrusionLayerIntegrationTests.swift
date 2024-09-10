@@ -53,6 +53,8 @@ final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.fillExtrusionFloodLightWallRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionHeight = Value<Double>.testConstantValue()
             layer.fillExtrusionHeightTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillExtrusionLineWidth = Value<Double>.testConstantValue()
+            layer.fillExtrusionLineWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionOpacity = Value<Double>.testConstantValue()
             layer.fillExtrusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionPattern = Value<ResolvedImage>.testConstantValue()

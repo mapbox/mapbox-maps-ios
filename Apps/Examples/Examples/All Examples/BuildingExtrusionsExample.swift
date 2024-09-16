@@ -98,6 +98,11 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
 
     // See https://docs.mapbox.com/mapbox-gl-js/example/3d-buildings/ for equivalent gl-js example
     internal func addBuildingExtrusions() {
+        let wallOnlyThreshold = 20
+        let extrudeFilter = Exp(.eq) {
+            Exp(.get) { "extrude" }
+            "true"
+        }
         var layer = FillExtrusionLayer(id: "3d-buildings", source: "composite")
 
         layer.minZoom                     = 15
@@ -105,11 +110,12 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         layer.fillExtrusionColor   = .constant(StyleColor(.lightGray))
         layer.fillExtrusionOpacity = .constant(0.6)
 
-        layer.filter = Exp(.eq) {
-            Exp(.get) {
-                "extrude"
+        layer.filter = Exp(.all) {
+            extrudeFilter
+            Exp(.gt) {
+                Exp(.get) { "height" }
+                wallOnlyThreshold
             }
-            "true"
         }
 
         layer.fillExtrusionHeight = .expression(
@@ -140,6 +146,20 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         layer.fillExtrusionAmbientOcclusionRadius = .constant(3.0)
 
         try! mapView.mapboxMap.addLayer(layer)
+
+        var wallsOnlyExtrusionLayer = layer
+        wallsOnlyExtrusionLayer.id = "3d-buildings-wall"
+        wallsOnlyExtrusionLayer.filter = Exp(.all) {
+            extrudeFilter
+            Exp(.lte) {
+                Exp(.get) { "height" }
+                wallOnlyThreshold
+            }
+        }
+
+        wallsOnlyExtrusionLayer.fillExtrusionLineWidth = .constant(2)
+
+        try! mapView.mapboxMap.addLayer(wallsOnlyExtrusionLayer)
     }
 
     // MARK: - Actions

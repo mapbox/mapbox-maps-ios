@@ -46,8 +46,13 @@ public class InteractiveFeature {
         let state = (queriedFeature.state as? JSONObject.TurfRawValue).flatMap {
             JSONObject(turfRawValue: $0)
         }
-        self.init(id: queriedFeature.featuresetFeatureId.map(FeaturesetFeatureId.init(core:)),
-                  featureset: featureset, feature: queriedFeature.feature, state: state)
+
+        self.init(
+            id: queriedFeature.featuresetFeatureId.map(FeaturesetFeatureId.init(core:)),
+            featureset: featureset,
+            feature: queriedFeature.feature,
+            state: state
+        )
     }
 
     /// Creates a feature.

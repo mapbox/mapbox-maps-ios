@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Add experimental `FillExtrusionLayer.fillExtrusionLineWidth` that can switches fill extrusion rendering into wall rendering mode. Use this property to render the feature with the given width over the outlines of the geometry.
+
 ## 11.7.0-beta.1 - 30 August, 2024
 
 * Expose data-driven properties on annotation managers. Now it's possible to set data-driven properties globally on annotation manager and specify per-annotation overrides.

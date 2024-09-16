@@ -28,33 +28,10 @@ public struct FeaturesetFeatureId: Hashable {
     }
 
     var core: CoreFeaturesetFeatureId {
-        CoreFeaturesetFeatureId(featureId: .fromNSString(id), featureNamespace: namespace)
+        CoreFeaturesetFeatureId(featureId: id, featureNamespace: namespace)
     }
 
     init(core: CoreFeaturesetFeatureId) {
-        self.init(id: core.featureId.string, namespace: core.featureNamespace)
-    }
-}
-
-// TODO: remove when core migrates to string id
-extension CoreFeatureIdentifier {
-    var string: String {
-        if isDouble() {
-            return String(getDouble())
-        }
-        if isLongLong() {
-            return String(getLongLong())
-        }
-
-        if isUnsignedLongLong() {
-            return String(getUnsignedLongLong())
-        }
-
-        if isNSString() {
-            return getNSString()
-        }
-
-        assertionFailure("Invalid id")
-        return ""
+        self.init(id: core.featureId, namespace: core.featureNamespace)
     }
 }

@@ -189,7 +189,7 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             let loadTileRegionCompletionBlockInvoked = expectation(description: "loadTileRegion completion block invoked")
 
             /// Perform the download
-            tileStore.loadTileRegion(
+            let tileRegionCancelable = tileStore.loadTileRegion(
                 forId: tileRegionId,
                 loadOptions: tileRegionLoadOptions!,
                 progress: { _ in },
@@ -218,7 +218,7 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                 glyphsRasterizationMode: .ideographsRasterizedLocally,
                 metadata: ["tag": "my-outdoors-style-pack"])!
 
-            offlineManager.loadStylePack(
+            let stylePackCancelable = offlineManager.loadStylePack(
                 for: .outdoors,
                    loadOptions: stylePackOptions,
                    completion: { result in
@@ -234,15 +234,19 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                        }
                    })
 
-            let result = XCTWaiter().wait(
-                for: [loadStylePackCompletionBlockInvoked,
-                      loadTileRegionCompletionBlockInvoked],
-                timeout: 120)
+            let waiter = XCTWaiter()
+            let expectations: Set<XCTestExpectation> = [loadStylePackCompletionBlockInvoked,
+                                loadTileRegionCompletionBlockInvoked]
+            let result = waiter.wait(for: Array(expectations), timeout: 120)
             switch result {
             case .completed:
                 break
             default:
-                XCTFail("Expectation failed with \(result). Aborting test.")
+                tileRegionCancelable.cancel()
+                stylePackCancelable.cancel()
+
+                let unfullfilledExpectations = expectations.subtracting(Set(waiter.fulfilledExpectations))
+                XCTFail("Expectation failed with \(result), unfullfilled expectations: \(unfullfilledExpectations). Aborting test.")
                 abortTest = true
             }
         }

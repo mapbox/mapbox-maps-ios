@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 11.7.0-rc.1 - 13 September, 2024
 
 * Add experimental `FillExtrusionLayer.fillExtrusionLineWidth` that can switches fill extrusion rendering into wall rendering mode. Use this property to render the feature with the given width over the outlines of the geometry.
 

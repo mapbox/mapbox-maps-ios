@@ -55,11 +55,15 @@ public final class ViewAnnotationManager {
     private var displayLink: Signal<Void>
     private(set) var displaysAnnotations = CurrentValueSignalSubject<Bool>(false)
 
-    private var objectAnnotations = [String: ViewAnnotation]()
+    private var objectAnnotations = [String: ViewAnnotation]() {
+        didSet { updateDisplaysAnnotations() }
+    }
 
     // deprecated properties
     private var viewsById: [String: UIView] = [:]
-    private var idsByView: [UIView: String] = [:]
+    private var idsByView: [UIView: String] = [:] {
+        didSet { updateDisplaysAnnotations() }
+    }
     private var expectedHiddenByView: [UIView: Bool] = [:]
     private var observers = [ObjectIdentifier: ViewAnnotationUpdateObserver]()
 
@@ -116,7 +120,8 @@ public final class ViewAnnotationManager {
             mapboxMap: mapboxMap,
             displayLink: displayLink,
             onRemove: { [weak self, id = annotation.id] in
-                self?.objectAnnotations.removeValue(forKey: id)
+                guard let self else { return }
+                objectAnnotations.removeValue(forKey: id)
             })
 
         annotation.bind(deps)
@@ -375,7 +380,6 @@ public final class ViewAnnotationManager {
     // MARK: - Private functions
 
     private func placeAnnotations(positions: [ViewAnnotationPositionDescriptor]) {
-        displaysAnnotations.value = !positions.isEmpty
         // Iterate through and update all view annotations
         // First update the position of the views based on the placement info from GL-Native
         // Then hide the views which are off screen
@@ -461,6 +465,10 @@ public final class ViewAnnotationManager {
         observers.values.forEach { observer in
             observer.visibilityDidChange(for: annotationViews)
         }
+    }
+
+    private func updateDisplaysAnnotations() {
+        displaysAnnotations.value = !idsByView.isEmpty || !objectAnnotations.isEmpty
     }
 }
 

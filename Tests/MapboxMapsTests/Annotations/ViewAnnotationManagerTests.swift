@@ -288,18 +288,25 @@ final class ViewAnnotationManagerTests: XCTestCase {
     @available(*, deprecated)
     func testDisplaysAnnotationProperty() {
         XCTAssertEqual(manager.displaysAnnotations.value, false)
-        let annotationViewA = addTestAnnotationView(id: "test-id")
-
-        XCTAssertEqual(manager.displaysAnnotations.value, false)
-
-        mapboxMap.simulateAnnotationPositionsUpdate([ViewAnnotationPositionDescriptor(
-            identifier: "test-id",
-            frame: CGRect(x: 150, y: 200, width: 100, height: 50)
-        )])
+        let view = addTestAnnotationView(id: "test-id")
 
         XCTAssertEqual(manager.displaysAnnotations.value, true)
 
-        mapboxMap.simulateAnnotationPositionsUpdate([])
+        manager.remove(view)
+
+        XCTAssertEqual(manager.displaysAnnotations.value, false)
+    }
+
+    func testDisplaysAnnotationPropertyWithObjectAnnotations() {
+        XCTAssertEqual(manager.displaysAnnotations.value, false)
+        let view = UIView()
+        let coord = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        let annotation = ViewAnnotation(annotatedFeature: AnnotatedFeature.geometry(Point(coord)), view: view)
+        manager.add(annotation)
+
+        XCTAssertEqual(manager.displaysAnnotations.value, true)
+
+        annotation.remove()
 
         XCTAssertEqual(manager.displaysAnnotations.value, false)
     }

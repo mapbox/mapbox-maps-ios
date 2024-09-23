@@ -314,11 +314,18 @@
                 "text-font": ["Open Sans ExtraBold", "Arial Unicode MS Regular"]
             },
             "paint": {
-                "text-color": [
+                "text-color": "hsl(220, 100%, 20%)",
+                "text-opacity": [
                     "case",
-                    ["to-boolean", ["feature-state", "active"]],
-                    "red",
-                    "hsl(220, 100%, 20%)"
+                    ["to-boolean", ["feature-state", "hidden"]],
+                    0,
+                    1
+                ],
+                "icon-opacity": [
+                    "case",
+                    ["to-boolean", ["feature-state", "hidden"]],
+                    0,
+                    1
                 ]
             }
         }

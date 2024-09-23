@@ -19,8 +19,9 @@ struct StandardStyleImportExample: View {
                 let importId = "real-estate-fragment"
                 StyleImport(id: importId, uri: StyleURI(url: styleURL)!)
 
-                /// The contents of the imported style are private. However if it defines the a featureset,
-                /// you can add an interaction handler to it.
+                /// The contents of the imported style are private, meaning all the implementation details such as layers and sources are not accessible at runtime.
+                /// However the style defines a "hotels-price" featureset that represents a portion of features available for interaction.
+                /// Using Interactions API you can add interactions to featuresets.
                 /// See `fragment-realestate-NY.json` for more information.
                 TapInteraction(.featureset("hotels-price", importId: importId)) { priceLabel, _ in
                     /// Select a price label when it's clicked
@@ -28,16 +29,26 @@ struct StandardStyleImportExample: View {
                     return true
                 }
 
+                /// An interaction without specified featureset handles all corresponding events that were haven't been handled by other interactions.
                 TapInteraction { _ in
                     /// When the user taps the map outside of the price labels, deselect the latest selected label.
                     selectedPriceLabel = nil
                     return true
                 }
 
-                if let selectedPriceLabel {
+                if let selectedPriceLabel, let coordinate = selectedPriceLabel.geometry.point?.coordinates {
                     /// When there's a selected price label, we use it to set a feature state.
-                    /// The active state is implemented in `fragment-realestate-NY.json` and changes the label color to red.
-                    FeatureState(selectedPriceLabel, state: ["active": true])
+                    /// The `hidden` state is implemented in `fragment-realestate-NY.json` and hides label and icon.
+                    FeatureState(selectedPriceLabel, state: ["hidden": true])
+
+                    /// Instead of label we show a callout annotation with animation.
+                    MapViewAnnotation(coordinate: coordinate) {
+                        HotelCallout(feature: selectedPriceLabel)
+                            /// The `id` makes the view to be re-created for each unique feature
+                            /// so appearing animation plays each time.
+                            .id(selectedPriceLabel.id)
+                    }
+                    .variableAnchors([.init(anchor: .bottom)])
                 }
             }
 
@@ -90,6 +101,32 @@ struct StandardStyleImportExample: View {
     }
 }
 
+@available (iOS 14.0, *)
+private struct HotelCallout: View {
+    var feature: InteractiveFeature
+    @State private var scale: CGFloat = 0.1
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(feature.name ?? "—")
+                .font(.headline)
+            Text(feature.price ?? "—")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+        }
+
+        .padding(6)
+        /// For callout shape see CalloutView.swift
+        .callout(anchor: .bottom, color: .white, tailSize: 10)
+        .scaleEffect(scale, anchor: .bottom)
+        .onAppear {
+            withAnimation(Animation.interpolatingSpring(stiffness: 200, damping: 16).delay(0)) {
+                scale = 1.0
+            }
+        }
+    }
+}
+
 @available(iOS 13.0, *)
 private struct NYNJBorder: MapContent {
     var body: some MapContent {
@@ -111,12 +148,8 @@ private struct NYNJBorder: MapContent {
 }
 
 private extension InteractiveFeature {
-    var price: String? {
-        guard case .number(let price) = properties?["price"] else {
-            return nil
-        }
-        return "$ \(price)"
-    }
+    var price: String? { properties?["price"]??.number.map { "$ \($0)" } }
+    var name: String? { properties?["name"]??.string }
 }
 
 private let styleURL = Bundle.main.url(forResource: "fragment-realestate-NY", withExtension: "json")!

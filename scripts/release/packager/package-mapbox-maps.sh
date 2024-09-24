@@ -99,7 +99,7 @@ xcodegen --spec artifacts/.xcode/project.yml
 
 step 'Building MapboxMaps.xcframework'
 "$CREATE_XCFRAMEWORK_SCRIPT" 'MapboxMaps' "$LINK_TYPE" 'MapboxMaps' "artifacts/.xcode/MapboxMaps.xcodeproj" "MapboxMaps" "$MAPBOX_MAPS_DIR/Sources/MapboxMaps/MapboxMaps.json" artifacts
-rm -rf .xcode
+rm -rf artifacts/.xcode
 
 step 'Sign XCFrameworks'
 codesign --timestamp -v --sign "Apple Distribution: Mapbox, Inc. (GJZR2MEM28)" "artifacts/Turf.xcframework" "artifacts/MapboxMaps.xcframework"

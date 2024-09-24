@@ -247,7 +247,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let convertedExpression = try! style!.convertExpressionForLocalization(symbolLayer: symbolLayer, localeValue: "zh")
 
         let data = try! JSONSerialization.data(withJSONObject: convertedExpression!, options: [.prettyPrinted])
-        let convertedString = String(decoding: data, as: UTF8.self).replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\n", with: "")
+        let convertedString = String(data: data, encoding: .utf8)!.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\n", with: "")
 
         let result = "[\"format\",[\"coalesce\",[\"get\",\"name_zh\"],[\"get\",\"name\"]]]"
         XCTAssertEqual(result, convertedString)

@@ -108,7 +108,9 @@ extension Style {
                                                      options: .caseInsensitive)
 
         if case .expression(let textField) = symbolLayer.textField {
-            var stringExpression = String(decoding: try JSONEncoder().encode(textField), as: UTF8.self)
+            guard var stringExpression = String(data: try JSONEncoder().encode(textField), encoding: .utf8) else {
+                return nil
+            }
             stringExpression.updateOnceExpression(replacement: replacement, regex: expressionCoalesce)
             stringExpression.updateExpression(replacement: replacement, regex: expressionAbbr)
 

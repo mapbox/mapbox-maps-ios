@@ -1,6 +1,6 @@
 Pod::Spec.new do |m|
 
-  maps_version = '10.18.2'
+  maps_version = '10.19.0'
 
   m.name = 'MapboxMaps'
   m.version = maps_version
@@ -25,9 +25,9 @@ Pod::Spec.new do |m|
   # TODO: remove after Cocoapods 1.12 is released
   m.pod_target_xcconfig = { 'CODE_SIGNING_ALLOWED' => 'NO' }
 
-  m.dependency 'MapboxCoreMaps', '10.18.0'
-  m.dependency 'MapboxMobileEvents', '1.0.10'
-  m.dependency 'MapboxCommon', '23.10.1'
+  m.dependency 'MapboxCoreMaps', '10.19.1'
+  m.dependency 'MapboxMobileEvents', '2.0.0'
+  m.dependency 'MapboxCommon', '23.11.0'
   m.dependency 'Turf', '2.8.0'
 
 end

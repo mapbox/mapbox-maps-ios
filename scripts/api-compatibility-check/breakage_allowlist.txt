@@ -1834,3 +1834,21 @@ Func MapboxMap.queryRenderedFeatures(with:options:completion:) is now with @_spi
 // Sendable support in some gl-native objects
 Extension CoordinateBounds is now with @Sendable 
 Extension GlyphsRasterizationOptions is now with @Sendable 
+
+// ObjC header removal
+TypeAlias char16_t has been removed
+TypeAlias char32_t has been removed
+TypeAlias swift_double2 has been removed
+TypeAlias swift_double3 has been removed
+TypeAlias swift_double4 has been removed
+TypeAlias swift_float2 has been removed
+TypeAlias swift_float3 has been removed
+TypeAlias swift_float4 has been removed
+TypeAlias swift_int2 has been removed
+TypeAlias swift_int3 has been removed
+TypeAlias swift_int4 has been removed
+TypeAlias swift_uint2 has been removed
+TypeAlias swift_uint3 has been removed
+TypeAlias swift_uint4 has been removed
+Var SWIFT_TYPEDEFS has been removed
+Class MapView has removed conformance to Sendable

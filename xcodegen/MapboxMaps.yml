@@ -20,6 +20,7 @@ targets:
         DEFINES_MODULE: YES
         LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks @loader_path/Frameworks
         SWIFT_EMIT_PRIVATE_MODULE_INTERFACE: YES
+        SWIFT_INSTALL_OBJC_HEADER: NO
         SWIFT_TREAT_WARNINGS_AS_ERRORS: NO
         CODE_SIGN_STYLE: Automatic
     sources:

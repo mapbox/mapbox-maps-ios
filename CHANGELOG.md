@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Fix the bug where displaying ViewAnnotation and setting a feature state simultaneously could result in an unapplied feature state.
+* Remove `MapboxMaps-Swift.h` from MapboxMaps framework, this will disable ObjC interop for MapboMaps.
 
 ## 11.7.0-rc.1 - 13 September, 2024
 

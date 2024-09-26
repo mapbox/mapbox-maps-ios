@@ -4,8 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.7.0 - 26 September, 2024
+
 * Fix the bug where displaying ViewAnnotation and setting a feature state simultaneously could result in an unapplied feature state.
 * Remove `MapboxMaps-Swift.h` from MapboxMaps framework, this will disable ObjC interop for MapboMaps.
+* Update CoreMaps to 11.7.0 and Common to 24.7.0
 
 ## 11.7.0-rc.1 - 13 September, 2024
 
@@ -22,6 +25,7 @@ Previously user had to specify those properties on each annotation and couldn't 
 
 * Expose data-driven properties on annotation managers. Now it's possible to set data-dirven properties globally on annotation manager and specify per-annotation overrides.
 Previosuly user had to specify those properties on each annotation and couldn't specify them globally
+
 ```swift
 CircleAnnotationGroup(circles, id: \.id) { circle in
     CircleAnnotation(centerCoordinate: circle.coordinate)
@@ -31,7 +35,9 @@ CircleAnnotationGroup(circles, id: \.id) { circle in
       .circleStrokeColor(.black)
 }
 ```
+
 The problem with the above approach is that most of the properties are just duplicated for each annotation, which can lead to **large memory overhead** in case of big datasets. In order to solve this issue and provide more versatile API the following approach is now possible, which is visually identical to previous snippet, but more performant.
+
 ```swift
 CircleAnnotationGroup(circles, id: \.id) { circle in
     CircleAnnotation(centerCoordinate: circle.coordinate)
@@ -43,6 +49,7 @@ CircleAnnotationGroup(circles, id: \.id) { circle in
 ```
 
 Same applies for imperative API. In this case each even annotation will have random color, but others will use the global default specified in the annotation manager.
+
 ```swift
 let circleAnnotationManager = mapView.annotations.makeCircleAnnotationManager()
 var annotations = [CircleAnnotation]()
@@ -53,6 +60,7 @@ for i in 0...2000 {
 }
 circleAnnotationManager.circleColor = .blue
 ```
+
 * Improve memory reclamation behavior when using partial GeoJSON update API.
 * Update Turf to 3.0.0 version. That version introduce breaking change – there is no more `RawRepresentable` conformances for `Array` and `Dictionary` system types. If you were relying on the `init(rawValue:)` function or `rawValue` property, you can use the substitution instead:
 
@@ -72,6 +80,7 @@ circleAnnotationManager.circleColor = .blue
 ## 11.6.0-rc.1 - 31 July, 2024
 
 ⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️
+
 * `ClipLayer` property `clipLayerTypes` is not updated in runtime. The fix is expected to land in stable 11.6.0.
 
 ### Features ✨ and improvements 🏁
@@ -86,6 +95,7 @@ circleAnnotationManager.circleColor = .blue
 ## 11.6.0-beta.1 - 19 July, 2024
 
 ⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️
+
 * `ClipLayer` property `clipLayerTypes` is not updated in runtime. The fix is expected to land in 11.6.0-rc.1.
 
 ### Features ✨ and improvements 🏁
@@ -93,12 +103,15 @@ circleAnnotationManager.circleColor = .blue
 * SwiftUI API marked as stable
 * Expose experimental `ClipLayer` to remove 3D data (fill extrusions, landmarks, trees) and symbols.
 * `CustomRasterSource` API updated, now `CustomRasterSourceOptions` accepts protocol `CustomRasterSourceClient`, enabling direct rendering into `CustomRasterSource` tiles. To achieve behavior similar to previous releases one may construct instance of `CustomRasterSourceClient` as shown below:
+
 ```swift
 CustomRasterSourceOptions(tileStatusChangedFunction: { tileID, status in }) // Before
 CustomRasterSourceOptions(clientCallback: CustomRasterSourceClient.fromCustomRasterSourceTileStatusChangedCallback { tileID, status in }) // Now
 ```
+
 * Introduce new `ViewAnnotation.allowZElevate` and `MapViewAnnotation.allowZElevate` properties. When set to true, the annotation will be positioned on the rooftops of buildings, including both fill extrusions and models.
 * Deprecate `MapView.presentsWithTransaction` and `Map.presentsWithTransaction` in favor of `MapView.presentationTransactionMode` and `Map.presentationTransactionMode`. The new default `PresentationTransactionMode.automatic` updates the `presentsWithTransaction` automatically when need to optimize performance. If you used the `MapView.presentsWithTransaction` with View Annotations, now you can safely remove this option:
+
 ```swift
 Map {
   MapViewAnnotation(...)
@@ -173,6 +186,7 @@ Map().presentationTransactionMode(.async) // SwiftUI
 ## 11.4.0-beta.1 - 24 April, 2024
 
 ⚠️⚠️⚠️ Known Issues ⚠️⚠️⚠️
+
 * In v11.4.0-beta.1, setting a `RasterLayer`’s `rasterColor` property with an expression will block the layer from rendering. This issue will be resolved in v11.4.0-rc.1.
 
 ### Experimental API breaking changes ⚠️
@@ -181,6 +195,7 @@ In this release, we introduce the new [Declarative Styling API](https://docs.til
 
 * [SwiftUI] `MapContent` now supports custom implementations, similar to SwiftUI views. The `MapContent` protocol now requires the `var body: some MapContent` implementation.
 * [SwiftUI] PointAnnotation and Puck3D property-setters that consumed fixed-length arrays reworked to use named properties or platform types for better readability:
+
 ```swift
 // Before
 PointAnnotation()
@@ -196,12 +211,14 @@ PointAnnotation()
 Puck3D()
     .modelScale(x: 1, y: 2, z: 3)
 ```
+
 * `StyleImportConfiguration` was removed from public API, the `MapStyle` now contains the configuration directly.
 * `TransitionOptions` is now a Swift `struct` rather than an Objective-C `class`.
 
 ### Features ✨ and improvements 🏁
 
 * All the style primitives can now be used as `MapContent` in SwiftUI.
+
 ```swift
 @_spi(Experimental) MapboxMaps
 Map {
@@ -212,6 +229,7 @@ Map {
 ```
 
 * UIKit applications can now use the `setMapStyleContent` to use style primitives:
+
 ```swift
 @_spi(Experimental) MapboxMaps
 mapView.mapboxMap.setMapStyleContent {
@@ -224,6 +242,7 @@ mapView.mapboxMap.setMapStyleContent {
 * Allow to assign slot to 2D and 3D location indicators.
 * Allow observing start/stop event of `CameraAnimator`
   You can observe start/stop event of `CameraAnimator` by using new `CameraAnimationsManager` APIs as shown below
+
   ```swift
   // Observe start event of any CameraAnimator owned by AnimationOwner.cameraAnimationsManager
   mapView.camera
@@ -241,7 +260,9 @@ mapView.mapboxMap.setMapStyleContent {
     }
     .store(in: &cancelables)
   ```
+
   You can also observe directly on an instance of `CameraAnimator` when using low-level camera APIs to create a custom animator
+
   ```swift
   // Declare an animator that changes the map's bearing
   let bearingAnimator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
@@ -251,6 +272,7 @@ mapView.mapboxMap.setMapStyleContent {
     // Bearing animator has started.
   }.store(in: &cancelables)
   ```
+
 * Allow adding slots at runtime.
 * Expose API to interact with style imports using Declarative Styling and regular imperative API.
 * Expose `StyleImport` for declarative styling as `MapStyleContent`.
@@ -317,12 +339,14 @@ Use them to configure respective map options after creating a map view.
 * Introduce experimental `MapboxMap.collectPerformanceStatistics` allowing to collect map rendering performance statistics, both for UIKit and SwiftUI.
 
 ### Bug fixes 🐞
+
 * Fix MapView flickering during resizing.
 * Fix glitch in chained camera animations.
 * Build XCFramework with `SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO` flag to avoid serialized search paths in Swift modules.
 * Fixed a crash that occurs when annotations have duplicate identifiers.
 
 ### Dependency Updates
+
 * Bump Turf version to `2.8.0`.
 * Bump minimum Xcode version to `14.3.1`.
 
@@ -361,16 +385,17 @@ Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value
 
 ### Breaking changes ⚠️
 
-- Note: SwiftUI support is an experimental feature, its API may be changed until it stabilizes.
+* Note: SwiftUI support is an experimental feature, its API may be changed until it stabilizes.
 
 * [SwiftUI] Fixed point annotations clustering.
 * [SwiftUI] Viewport inset system was refactored:
-  - The `Viewport.inset(...)` function was removed in favor of the `Viewport.padding(...)`
-  - The `Viewport.inset(...)` previously had an `ignoringSafeArea` parameter which allowed developers to specify if an edge safe area inset should be accounted for in padding calculation. Starting with this version, instead of this parameter there is a `Map.usesSafeAreaInsetsAsPadding(_:)` modifier that enables or disables this for all edges.
+  * The `Viewport.inset(...)` function was removed in favor of the `Viewport.padding(...)`
+  * The `Viewport.inset(...)` previously had an `ignoringSafeArea` parameter which allowed developers to specify if an edge safe area inset should be accounted for in padding calculation. Starting with this version, instead of this parameter there is a `Map.usesSafeAreaInsetsAsPadding(_:)` modifier that enables or disables this for all edges.
 
 ### Features ✨ and improvements 🏁
- * [SwiftUI] New `Map.additionalSafeAreaInsets(...)` modifier that adds additional global safe area insets for the map. Use them to display any UI elements on top of the map. The additional safe area will automatically be accounted for in camera padding calculation in every Viewport.
- * Added `allowOverlapWithPuck` and `ignoreCameraPadding` options to `ViewAnnotation` and `MapViewAnnotation`.
+
+* [SwiftUI] New `Map.additionalSafeAreaInsets(...)` modifier that adds additional global safe area insets for the map. Use them to display any UI elements on top of the map. The additional safe area will automatically be accounted for in camera padding calculation in every Viewport.
+* Added `allowOverlapWithPuck` and `ignoreCameraPadding` options to `ViewAnnotation` and `MapViewAnnotation`.
 
 ### Bug fixes 🐞
 
@@ -392,13 +417,16 @@ Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value
 
 * Refactor `MapboxMap.loadStyle` to cancel previous style loads when called multiple times.
 * New experimental `StyleManager.load(mapStyle:transition:completion)` method to load `MapStyle` in `MapboxMap`, or `Snapshotter`:
+
   ```swift
   mapboxMap.load(mapStyle: .standard(lightPreset: .dawn, showRoadLabels: false)) { _ in
     print("Style is loaded")
   }
   ```
+
 * Support `slot` for annotation managers and annotation groups.
 * [SwiftUI] Annotation groups can be created with static list of annotations. In the example below polyline annotation group displays two annotations on the same layer.
+
   ```swift
   Map {
       PolylineAnnotationGroup {
@@ -413,6 +441,7 @@ Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value
       .slot("middle")
   }
   ```
+
 * [SwiftUI] Expose `transitionsToIdleUponUserInteraction` modifier.
 * Introduce typed API for assining a layer to a slot.
 * Introduce `Slot` for assining a layer to a slot.
@@ -430,16 +459,16 @@ Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value
 
 * Style projection can be undefined for styles that do not explicitly specify it, so `MapboxMap.projection` has become optional.
 * View Annotation API is changed:
-  - `ViewAnnotationOptions.geometry` was removed in favor of `ViewAnnotationOptions.annotatedFeature`.
-  - `ViewAnnotationOptions.associatedFeatureId` was removed. Use `AnnotatedFeature.layerFeature(layerId:featureId:)` with `ViewAnnotationOptions.annotatedFeature` to bind View Annotation to features rendered by any layer.
-  - [SwiftUI] Use `MapViewAnnotation` instead of `ViewAnnotation` to display view annotations in SwiftUI.
+  * `ViewAnnotationOptions.geometry` was removed in favor of `ViewAnnotationOptions.annotatedFeature`.
+  * `ViewAnnotationOptions.associatedFeatureId` was removed. Use `AnnotatedFeature.layerFeature(layerId:featureId:)` with `ViewAnnotationOptions.annotatedFeature` to bind View Annotation to features rendered by any layer.
+  * [SwiftUI] Use `MapViewAnnotation` instead of `ViewAnnotation` to display view annotations in SwiftUI.
 * `OverviewViewportStateOptions.padding` is renamed to `OverviewViewportStateOptions.coordinatePadding`, the `OverviewViewportStateOptions.padding` now represents the camera padding.
 
 ### Features ✨ and improvements 🏁
 
 * New `ViewAnnotation` class is added for simplifying View Annotation management. It is a simple to use replacement for the old `ViewAnnotationOptions`. It automatically updates size and other properties of annotations, and provides new features:
-  - Automatic anchor position from specified `ViewAnnotation.variableAnchor` configurations.
-  - Supports displaying not only at point features, but also at lines and polygons.
+  * Automatic anchor position from specified `ViewAnnotation.variableAnchor` configurations.
+  * Supports displaying not only at point features, but also at lines and polygons.
 * Support Dynamic View Annotations in SwiftUI.
 * Add `MapboxMaps.camera(for:camera:coordinatesPadding:maxZoom:offset)`.
 * Add `MapViewDebugOptions.padding` debug option.
@@ -454,12 +483,12 @@ Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value
 
 * Add a new CustomLayer API to simplify manipulation of layers with custom rendering (aka "CustomLayerHost").
 * The following APIs have been promoted to stable:
-  - `LineLayer/lineDepthOcclusionFactor`, `LineLayer/lineDepthOcclusionFactorTransition`, `LineLayer/lineEmissiveStrength` and `LineLayer/lineEmissiveStrengthTransition`
-  - `SymbolLayer/iconImageCrossFade`, `SymbolLayer/iconImageCrossFadeTransition`, `SymbolLayer/iconEmissiveStrength`, `SymbolLayer/iconEmissiveStrengthTransition`, `SymbolLayer/textEmissiveStrength` and `SymbolLayer/textEmissiveStrengthTransition`
-  - `BackgroundLayer/backgroundEmissiveStrength` and `BackgroundLayer/backgroundEmissiveStrengthTransition`
-  - `CircleLayer/circleEmissiveStrength` and `CircleLayer/circleEmissiveStrengthTransition`
-  - `FillLayer/fillEmissiveStrength` and `FillLayer/fillEmissiveStrengthTransition`
-  - `AmbientLight`, `DirectionalLight` and related APIs.
+  * `LineLayer/lineDepthOcclusionFactor`, `LineLayer/lineDepthOcclusionFactorTransition`, `LineLayer/lineEmissiveStrength` and `LineLayer/lineEmissiveStrengthTransition`
+  * `SymbolLayer/iconImageCrossFade`, `SymbolLayer/iconImageCrossFadeTransition`, `SymbolLayer/iconEmissiveStrength`, `SymbolLayer/iconEmissiveStrengthTransition`, `SymbolLayer/textEmissiveStrength` and `SymbolLayer/textEmissiveStrengthTransition`
+  * `BackgroundLayer/backgroundEmissiveStrength` and `BackgroundLayer/backgroundEmissiveStrengthTransition`
+  * `CircleLayer/circleEmissiveStrength` and `CircleLayer/circleEmissiveStrengthTransition`
+  * `FillLayer/fillEmissiveStrength` and `FillLayer/fillEmissiveStrengthTransition`
+  * `AmbientLight`, `DirectionalLight` and related APIs.
 * Fix memory leak in SwiftUI.
 * Expose `MapViewDebugOptions` in SwiftUI.
 
@@ -560,8 +589,9 @@ Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value
 * Expose a subset of ModelLayer APIs.
 * Protocol `LocationProvider` now requires class semantic for implementation.
 * The Map events have been reworked:
-  - Now all Map events payloads are serialize-free, which brings more type safety and eliminates possible deserialization errors;
-  - The `MapboxMap` and `Snapshotter` now expose `on`-prefixed properties that allows you to subscribe to map events via `observe` and `observeNext` methods:
+  * Now all Map events payloads are serialize-free, which brings more type safety and eliminates possible deserialization errors;
+  * The `MapboxMap` and `Snapshotter` now expose `on`-prefixed properties that allows you to subscribe to map events via `observe` and `observeNext` methods:
+
     ```swift
     mapboxMap.onCameraChanged.observe { [weak self] event in
       self?.camera = event.cameraState
@@ -571,8 +601,10 @@ Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value
       self?.configureStyle()
     }.store(in: &cancelables)
     ```
-  - The `AnyCancelable` object returned from `observe` and `observeNext` should be stored, otherwise the subscription will be immediately canceled;
-  - The same `on`-prefixed properties can now be used as `Combine.Publisher`:
+
+  * The `AnyCancelable` object returned from `observe` and `observeNext` should be stored, otherwise the subscription will be immediately canceled;
+  * The same `on`-prefixed properties can now be used as `Combine.Publisher`:
+
     ```swift
     import Combine
     mapboxMap.onCameraChanged
@@ -582,22 +614,26 @@ Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value
         self?.camera = cameraState
       }.store(in: &cancellables)
     ```
-  - Methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated;
-  - Methods `MapboxMap.observe` and `Snapshotter.observe` have been removed.
+
+  * Methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated;
+  * Methods `MapboxMap.observe` and `Snapshotter.observe` have been removed.
 * Deprecate `PointAnnotationManager.iconTextFit` and `PointAnnotationManager.iconTextFitPadding` in favor of `PointAnnotation.iconTextFit` and `PointAnnotation.iconTextFitPadding`.
 * Remove deprecated `PuckBearingSource`and related APIs.
 * Experimental API `MapboxMap/setMemoryBudget` was renamed to `MapboxMaps/setTileCacheBudget` and promoted to stable.
 * Location consumer methods have been renamed to align with Swift API Design Guidelines. Use `addLocationConsumer(_:)` and `removeLocationConsumer(_:)` rather than `addLocationConsumer(newConsumer:)` and `removeLocationConsumer(consumer:)`.
 * `SourceType` and `LayerType` are now structs with static variables instead of enums
 * Remove `ResourceOptions` and `ResourceOptionsManager`. Introduce `MapboxOptions` and `MapboxMapsOptions` to handle application-level access token and other generic options.
-  - Mapbox's access token can now be set with `MapboxCommon.MapboxOptions`. By default, MapboxMaps SDK will try to read the access token from app bundle's property list or `MapboxAccessToken` file when Maps service are initialized; if you wish to set access token programmatically, it is highly recommended to set it before initializing a `MapView`.
+  * Mapbox's access token can now be set with `MapboxCommon.MapboxOptions`. By default, MapboxMaps SDK will try to read the access token from app bundle's property list or `MapboxAccessToken` file when Maps service are initialized; if you wish to set access token programmatically, it is highly recommended to set it before initializing a `MapView`.
+
     ```swift
     import MapboxMaps
 
     MapboxOptions.accessToken = accessToken
     ```
-  - `TileStore`no longer requires `TileStoreOptions.mapboxAccessToken` to be explicitly set.
-  - Configurations for the external resources used by Maps API can now be set with `MapboxMapsOptions`:
+
+  * `TileStore`no longer requires `TileStoreOptions.mapboxAccessToken` to be explicitly set.
+  * Configurations for the external resources used by Maps API can now be set with `MapboxMapsOptions`:
+
     ```swift
     import MapboxMaps
 
@@ -606,15 +642,18 @@ Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value
     MapboxMapsOptions.tileStoreUsageMode = .readOnly
     MapboxMapsOptions.tileStore = tileStore
     ```
-  - To clear the temporary map data, you can use `MapboxMap.clearData(completion:)`
+
+  * To clear the temporary map data, you can use `MapboxMap.clearData(completion:)`
 * Expose new 3D Lights API: `AmbientLight` and `DirectionalLight`.
 * `TypeConversionError`, `SnapshotError`, and `ViewAnnotationManagerError` are now structs with static variables instead of enums
 * Extend `Layer` protocol with `visibility` property.
 * Add required `id` property to `Source`. After that change `id` should be specified for source upon creation:
+
   ```swift
   let terrainSource = RasterDemSource(id: "terrain-source")
   mapView.mapboxMap.addSource(terrainSource)
   ```
+
 * Support string option in `GeoJSONSourceData`.
 * Allows passing `extraOptions` (which must be a valid JSON object) when creating `StylePackLoadOptions`and `TilesetDescriptorOptions`.
 * Deprecate `MapboxMap/style` and `Snapshotter/style`, from now on you can access Style APIs directly from `MapboxMap` and `Snapshotter` instance.
@@ -625,11 +664,13 @@ Workaround: use `MapboxMap.sourceProperty(for:property:).value` to fetch a value
 * Introduce `lineDepthOcclusionFactor` API for `LineLayer`s and `PolylineAnnotiationManager`.
 * Add `Codable` support to `CameraOptions`, `CameraState`, `FollowPuckViewportStateBearing`, `FollowPuckViewportStateOptions`.
 * Expose new Style APIs for partial GeoJSON update:
+
 ```swift
 MapboxMap.addGeoJSONSourceFeatures(forSourceId:features:dataId:)
 MapboxMap.updateGeoJSONSourceFeatures(forSourceId:features:dataId:)
 MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 ```
+
 ## 10.15.0 - July 27, 2023
 
 * Update MapboxCoreMaps to 10.15.0 and MapboxCommon to 23.7.0.
@@ -715,6 +756,7 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 * Add a dedicated GestureRecognizer (and Handler) to interrupt deceleration animation on tap on the map.
 
 ## 10.11.0 - February 8, 2023
+
 * Update to MapboxCoreMaps 10.11.1 and MapboxCommon 23.3.1. ([#1899](https://github.com/mapbox/mapbox-maps-ios/pull/1899))
 
 ## 10.11.0-rc.1 - January 26, 2023
@@ -986,6 +1028,7 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 * Fixed a bug where setting LocationManager.options would cause the LocationProvider to be reconfigured. ([#992](https://github.com/mapbox/mapbox-maps-ios/pull/992))
 
 ## 10.2.0 - December 15, 2021
+
 * Update to MapboxCoreMaps 10.2.0 and MapboxCommon 21.0.1. ([#952](https://github.com/mapbox/mapbox-maps-ios/pull/952))
 * Fix the crash when MapView had zero width or height. ([#903](https://github.com/mapbox/mapbox-maps-ios/pull/903))
 
@@ -1111,6 +1154,7 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 * Adds `TileStoreObserver` protocol. ([#737](https://github.com/mapbox/mapbox-maps-ios/pull/737))
 
 ### Bug fixes 🐞
+
 * Fix rendering artifacts for a model layer when `model-opacity` property is used. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Improve rendering performance by avoiding unnecessary re-layout for cached tiles. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Fix telemetry opt-out through attribution dialog. ([#743](https://github.com/mapbox/mapbox-maps-ios/pull/743))
@@ -1210,7 +1254,6 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 * Location puck can now hide the accuracy ring. The default value is to hide the accuracy ring. In order to enable the ring, set the `showAccuracyRing` property in `Puck2DConfiguration` to `true`. [#629](https://github.com/mapbox/mapbox-maps-ios/pull/629)
 * Annotation interaction delegates are only called when at least one annotation is detected to have been tapped ([638](https://github.com/mapbox/mapbox-maps-ios/issues/638))
 
-
 ### Bug fixes 🐞
 
 * Fix volatile tiles disappearing on "not modified" response ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
@@ -1226,6 +1269,7 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 * Fix issue where annotations were not being returned to annotation interaction delegates ([638](https://github.com/mapbox/mapbox-maps-ios/issues/638))
 
 ### Breaking changes ⚠️
+
 * `TileStore.tileRegionGeometry(forId: String, completion: @escaping (Result<MapboxCommon.Geometry, Error>) -> Void)` has been updated to `TileStore.tileRegionGeometry(forId: String, completion: @escaping (Result<Geometry, Error>) -> Void)`. ([#661](https://github.com/mapbox/mapbox-maps-ios/pull/661))
 
 ## 10.0.0-rc.7 - August 25, 2021
@@ -1233,9 +1277,9 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 ### Features ✨ and improvements 🏁
 
 * Add support for `FeatureState` in GeoJSON sources. ([#611](https://github.com/mapbox/mapbox-maps-ios/pull/611))
-    * `setFeatureState(sourceId:sourceLayerId:featureId:state:)` is used to associate a `stateMap` for a particular feature
-    * `getFeatureState(sourceId:sourceLayerId:featureId:callback:)` is used to retrieve a previously stored `stateMap` for a feature
-    * `removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:)` is used to remove a previously stored `stateMap` for a feature
+  * `setFeatureState(sourceId:sourceLayerId:featureId:state:)` is used to associate a `stateMap` for a particular feature
+  * `getFeatureState(sourceId:sourceLayerId:featureId:callback:)` is used to retrieve a previously stored `stateMap` for a feature
+  * `removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:)` is used to remove a previously stored `stateMap` for a feature
 * Added `GeoJSONSource.generateId` ([#593](https://github.com/mapbox/mapbox-maps-ios/pull/593))
 * Enable the combined usage of line-dasharray with line-gradient ([#588](https://github.com/mapbox/mapbox-maps-ios/pull/588))
 * Fixed rendering issue for round line-join in line gradients ([#594](https://github.com/mapbox/mapbox-maps-ios/pull/594))
@@ -1271,9 +1315,10 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 * Fixed an issue where `MapView` positioning wasn't correct when used in containers such as UIStackView. ([#533](https://github.com/mapbox/mapbox-maps-ios/pull/533))
 
 ### Features ✨ and improvements 🏁
+
 * Added new options to `MapSnapshotOptions`
-    * `showsLogo` is a flag that will decide whether the logo will be shown on a snapshot
-    * `showsAttribution` is a flag that will decide whether the attribution will be shown on a snapshot
+  * `showsLogo` is a flag that will decide whether the logo will be shown on a snapshot
+  * `showsAttribution` is a flag that will decide whether the attribution will be shown on a snapshot
 
 ## 10.0.0-rc.4 - July 14, 2021
 
@@ -1321,14 +1366,16 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 ### Features ✨ and improvements 🏁
 
 * Introduced experimental `Style._addPersistentLayer(with:layerPosition:)`, `Style._isPersistentLayer(id:)`, `Style._addPersistentCustomLayer(withId:layerHost:layerPosition:)` APIs, so that the tagged layer and its associated resources remain when a style is reloaded. This improves performance of annotations during a style change. Experimental APIs should be considered liable to change in any SEMVER version. ([#471](https://github.com/mapbox/mapbox-maps-ios/pull/471), [#473](https://github.com/mapbox/mapbox-maps-ios/pull/473))
-- Annotations now will persist across style changes by default. ([#475](https://github.com/mapbox/mapbox-maps-ios/pull/475))
-- Adds localization support for v10 Maps SDK. This can be used by setting the `mapView.locale`. Use the `SupportedLanguages` enum, which lists currently supported `Locale`. ([#480](https://github.com/mapbox/mapbox-maps-ios/pull/480))
-- Fixed Tileset descriptor bug: Completion handler is called even if the `OfflineManager` instance goes out of scope.
-- Fixed text rendering when both 'text-rotate' and 'text-offset' are set.
+
+* Annotations now will persist across style changes by default. ([#475](https://github.com/mapbox/mapbox-maps-ios/pull/475))
+
+* Adds localization support for v10 Maps SDK. This can be used by setting the `mapView.locale`. Use the `SupportedLanguages` enum, which lists currently supported `Locale`. ([#480](https://github.com/mapbox/mapbox-maps-ios/pull/480))
+* Fixed Tileset descriptor bug: Completion handler is called even if the `OfflineManager` instance goes out of scope.
+* Fixed text rendering when both 'text-rotate' and 'text-offset' are set.
 
 ### Breaking changes ⚠️
 
-- MapboxMaps now pins exactly to `MapboxCommon`. ([#485](https://github.com/mapbox/mapbox-maps-ios/pull/485), [#481](https://github.com/mapbox/mapbox-maps-ios/pull/481))
+* MapboxMaps now pins exactly to `MapboxCommon`. ([#485](https://github.com/mapbox/mapbox-maps-ios/pull/485), [#481](https://github.com/mapbox/mapbox-maps-ios/pull/481))
 
 ## 10.0.0-rc.1 - June 9, 2021
 
@@ -1336,146 +1383,151 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 
 ### Breaking changes ⚠️
 
-- Converted `MapSnapshotOptions` to a struct. ([#430](https://github.com/mapbox/mapbox-maps-ios/pull/430))
-- Removed `CacheManager`. In the following releases, an API to control temporary map data may be provided. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
-- Changed `ResourceOptions.cachePathURL` to `dataPathURL` and removed `cacheSize`. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
-- Annotations don't have a `type` property since they can be directly compared to a type. ([451](https://github.com/mapbox/mapbox-maps-ios/pull/451))
-- Internalize extensions of Core and Common types. ([#449](https://github.com/mapbox/mapbox-maps-ios/pull/449))
+* Converted `MapSnapshotOptions` to a struct. ([#430](https://github.com/mapbox/mapbox-maps-ios/pull/430))
+* Removed `CacheManager`. In the following releases, an API to control temporary map data may be provided. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+* Changed `ResourceOptions.cachePathURL` to `dataPathURL` and removed `cacheSize`. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+* Annotations don't have a `type` property since they can be directly compared to a type. ([451](https://github.com/mapbox/mapbox-maps-ios/pull/451))
+* Internalize extensions of Core and Common types. ([#449](https://github.com/mapbox/mapbox-maps-ios/pull/449))
 
 ### Features ✨ and improvements 🏁
-- Allows a developer to choose whether the puck is oriented based on `heading` or `course` via a new `puckBearingSource` option in `mapView.location.options`. By default, the puck will be oriented using `heading`. ([#428](https://github.com/mapbox/mapbox-maps-ios/pull/428))
-- All stock gesture recognizers are now public on the `GestureManager`. ([450](https://github.com/mapbox/mapbox-maps-ios/pull/450))
-- The tap gesture recognizer controlled by any given annotation manager is now public. ([451](https://github.com/mapbox/mapbox-maps-ios/pull/451))
+
+* Allows a developer to choose whether the puck is oriented based on `heading` or `course` via a new `puckBearingSource` option in `mapView.location.options`. By default, the puck will be oriented using `heading`. ([#428](https://github.com/mapbox/mapbox-maps-ios/pull/428))
+
+* All stock gesture recognizers are now public on the `GestureManager`. ([450](https://github.com/mapbox/mapbox-maps-ios/pull/450))
+* The tap gesture recognizer controlled by any given annotation manager is now public. ([451](https://github.com/mapbox/mapbox-maps-ios/pull/451))
 
 ### Bug fixes 🐞
 
-- Fixed a bug where animations were not always honored. ([#443](https://github.com/mapbox/mapbox-maps-ios/pull/443))
-- Fixed an issue that vertical text was not positioned correctly if the `text-offset` property was used. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
-- Emit `.mapLoadingError` when an empty token is provided for accessing Mapbox data sources. Before the fix, the application may crash if an empty token was provided and map tries to load data from Mapbox data source. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
-- Do not emit `.mapLoadingError` when an empty URL is set to GeoJSON source. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+* Fixed a bug where animations were not always honored. ([#443](https://github.com/mapbox/mapbox-maps-ios/pull/443))
+* Fixed an issue that vertical text was not positioned correctly if the `text-offset` property was used. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+* Emit `.mapLoadingError` when an empty token is provided for accessing Mapbox data sources. Before the fix, the application may crash if an empty token was provided and map tries to load data from Mapbox data source. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+* Do not emit `.mapLoadingError` when an empty URL is set to GeoJSON source. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
 
 ### Dependencies
 
-- Updated MapboxCoreMaps, MapboxCommon and Turf dependencies. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+* Updated MapboxCoreMaps, MapboxCommon and Turf dependencies. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
 
 ## 10.0.0-beta.21 - June 3, 2021
 
 ### Breaking changes ⚠️
 
-- Updated MapboxCoreMaps and MapboxCommon dependencies. ([#388](https://github.com/mapbox/mapbox-maps-ios/pull/388))
-  - Removed the `MBX` prefix from `MBXGeometry`, `MBXGeometryType` and `MBXFeature`. Existing uses of the similar Turf types need to be fully namespaced, i.e. `Turf.Feature`
-  - Introduced separate minZoom/maxZoom fields into CustomGeometrySourceOptions API instead of the formerly used `zoomRange`
-  - Improved zooming performance.
-  - Fixed terrain transparency issue when a sky layer is not used.
-- `MapboxMap.__map` is now private. ([#374](https://github.com/mapbox/mapbox-maps-ios/pull/374))
-- Added `CameraManagerProtocol.setCameraBounds`, `MapboxMap.prefetchZoomDelta`, `MapboxMap.options`, `MapboxMap.reduceMemoryUse()`, `MapboxMap.resourceOptions` and `MapboxMap.elevation(at:)`. ([#374](https://github.com/mapbox/mapbox-maps-ios/pull/374))
-- Removed `OfflineError.invalidResult` and `OfflineError.typeMismatch`. ([#374](https://github.com/mapbox/mapbox-maps-ios/pull/374))
-- Updated `Projection` APIs to be more Swift-like. ([#390](https://github.com/mapbox/mapbox-maps-ios/pull/390))
-- Added `ResourceOptionsManager` and removed `CredentialsManager` which it replaces. `ResourceOptions` is now a struct. ([#396](https://github.com/mapbox/mapbox-maps-ios/pull/396))
-- Updated the ambient cache path. ([#396](https://github.com/mapbox/mapbox-maps-ios/pull/396))
-- Removed `CameraAnimationsManager.setCamera()` and renamed `CameraManagerProtocol._setCamera` to `CameraManagerProtocol.setCamera()`. Use `MapView.mapboxMap.setCamera()` to set the camera. ([#426](https://github.com/mapbox/mapbox-maps-ios/pull/426))
-- Removed `MapCameraOptions` and `RenderOptions`; this behavior has moved to both `MapboxMap` and `MapView`. ([#427](https://github.com/mapbox/mapbox-maps-ios/pull/427/files))
-- The Annotations library has been rebuilt to expose many more customization options for each annotation. ([#398](https://github.com/mapbox/mapbox-maps-ios/pull/398))
-- High level animations return `Cancelable` instead of `CameraAnimator`. ([#400](https://github.com/mapbox/mapbox-maps-ios/pull/400))
+* Updated MapboxCoreMaps and MapboxCommon dependencies. ([#388](https://github.com/mapbox/mapbox-maps-ios/pull/388))
+  * Removed the `MBX` prefix from `MBXGeometry`, `MBXGeometryType` and `MBXFeature`. Existing uses of the similar Turf types need to be fully namespaced, i.e. `Turf.Feature`
+  * Introduced separate minZoom/maxZoom fields into CustomGeometrySourceOptions API instead of the formerly used `zoomRange`
+  * Improved zooming performance.
+  * Fixed terrain transparency issue when a sky layer is not used.
+* `MapboxMap.__map` is now private. ([#374](https://github.com/mapbox/mapbox-maps-ios/pull/374))
+* Added `CameraManagerProtocol.setCameraBounds`, `MapboxMap.prefetchZoomDelta`, `MapboxMap.options`, `MapboxMap.reduceMemoryUse()`, `MapboxMap.resourceOptions` and `MapboxMap.elevation(at:)`. ([#374](https://github.com/mapbox/mapbox-maps-ios/pull/374))
+* Removed `OfflineError.invalidResult` and `OfflineError.typeMismatch`. ([#374](https://github.com/mapbox/mapbox-maps-ios/pull/374))
+* Updated `Projection` APIs to be more Swift-like. ([#390](https://github.com/mapbox/mapbox-maps-ios/pull/390))
+* Added `ResourceOptionsManager` and removed `CredentialsManager` which it replaces. `ResourceOptions` is now a struct. ([#396](https://github.com/mapbox/mapbox-maps-ios/pull/396))
+* Updated the ambient cache path. ([#396](https://github.com/mapbox/mapbox-maps-ios/pull/396))
+* Removed `CameraAnimationsManager.setCamera()` and renamed `CameraManagerProtocol._setCamera` to `CameraManagerProtocol.setCamera()`. Use `MapView.mapboxMap.setCamera()` to set the camera. ([#426](https://github.com/mapbox/mapbox-maps-ios/pull/426))
+* Removed `MapCameraOptions` and `RenderOptions`; this behavior has moved to both `MapboxMap` and `MapView`. ([#427](https://github.com/mapbox/mapbox-maps-ios/pull/427/files))
+* The Annotations library has been rebuilt to expose many more customization options for each annotation. ([#398](https://github.com/mapbox/mapbox-maps-ios/pull/398))
+* High level animations return `Cancelable` instead of `CameraAnimator`. ([#400](https://github.com/mapbox/mapbox-maps-ios/pull/400))
 
 ### Bug fixes 🐞
 
-- Fixed a bug with `TileStore.tileRegionGeometry` returning invalid value. ([#390](https://github.com/mapbox/mapbox-maps-ios/pull/390))
-- Fixed a bug where the underlying renderer was not being destroyed. ([#395](https://github.com/mapbox/mapbox-maps-ios/pull/395))
-- Fixed a bug where the snapshotter completion handler was being called twice on cancellation.
+* Fixed a bug with `TileStore.tileRegionGeometry` returning invalid value. ([#390](https://github.com/mapbox/mapbox-maps-ios/pull/390))
+* Fixed a bug where the underlying renderer was not being destroyed. ([#395](https://github.com/mapbox/mapbox-maps-ios/pull/395))
+* Fixed a bug where the snapshotter completion handler was being called twice on cancellation.
 ([#382](https://github.com/mapbox/mapbox-maps-ios/pull/382))
-- Fixed a bug where `GestureManager.delegate` was inaccessible. ([#401](https://github.com/mapbox/mapbox-maps-ios/pull/401))
+* Fixed a bug where `GestureManager.delegate` was inaccessible. ([#401](https://github.com/mapbox/mapbox-maps-ios/pull/401))
 
 ### Features ✨ and improvements 🏁
 
-- Added `Snapshotter.coordinateBounds(for:)` and `Snapshotter.camera(for:padding:bearing:pitch:)`. ([#386](https://github.com/mapbox/mapbox-maps-ios/pull/386))
+* Added `Snapshotter.coordinateBounds(for:)` and `Snapshotter.camera(for:padding:bearing:pitch:)`. ([#386](https://github.com/mapbox/mapbox-maps-ios/pull/386))
 
 ### Development 🛠
 
-- Dependency management for development of the SDK has moved to Swift Package Manager and the existing Cartfile has been removed.
+* Dependency management for development of the SDK has moved to Swift Package Manager and the existing Cartfile has been removed.
 
 ## 10.0.0-beta.20 - May 20, 2021
 
 ### Breaking changes ⚠️
 
- - `BaseMapView.on()` has now been replaced by `mapView.mapboxMap.onNext(...) -> Cancelable` and `mapView.mapboxMap.onEvery(...) -> Cancelable`. ([#339](https://github.com/mapbox/mapbox-maps-ios/pull/339))
- - `StyleURI`, `PreferredFPS`, and `AnimationOwner` are now structs. ([#285](https://github.com/mapbox/mapbox-maps-ios/pull/285))
- - The `layout` and `paint` substructs for each layer are now merged into the root layer struct. ([#362](https://github.com/mapbox/mapbox-maps-ios/pull/362))
- - `GestureOptions` are owned by `GestureManager` directly. ([#343](https://github.com/mapbox/mapbox-maps-ios/pull/343))
- - `LocationOptions` are owned by `LocationManager` directly. ([#344](https://github.com/mapbox/mapbox-maps-ios/pull/344))
- - `MapCameraOptions` are owned by `mapView.camera` directly. ([#345](https://github.com/mapbox/mapbox-maps-ios/pull/345))
- - `RenderOptions` are owned by `BaseMapView` directly. ([#350](https://github.com/mapbox/mapbox-maps-ios/pull/350))
- - `AnnotationOptions` are owned by `AnnotationManager` directly. ([#351](https://github.com/mapbox/mapbox-maps-ios/pull/351))
- - `MapView` has been coalesced into `BaseMapView` and the resulting object is called `MapView`. ([#353](https://github.com/mapbox/mapbox-maps-ios/pull/353))
- - `Style.uri` is now an optional property. ([#347](https://github.com/mapbox/mapbox-maps-ios/pull/347))
- - `Style` is no longer a dependency on `LocationSupportableMapView`. ([#352](https://github.com/mapbox/mapbox-maps-ios/pull/352))
- - `Style` now has a more flat structure. `Layout` and `Paint` structs are now obsolete and `Layer` properties are at the root layer. ([#362](https://github.com/mapbox/mapbox-maps-ios/pull/362))
- - Changed `LayerPosition` to an enum. ([#](https://github.com/mapbox/mapbox-maps-ios/pull/221))
- - Removed `style` from MapView; updated tests and examples to use `mapboxMap.style`. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
- - The `visibleFeatures` APIs have been renamed to `queryRenderedFeatures`. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
- - `LoggingConfiguration` is no longer public. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
- - The following Swift wrappers have been added for existing types; these primarily change callbacks from using an internal `MBXExpected` type to using Swift's `Result` type. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
-     - `CacheManager`
-     - `HttpResponse`
-     - `OfflineSwitch` (which replaces NetworkConnectivity)
-     - `OfflineRegionManager` (though this API is deprecated)
- - Adds `loadStyleURI` and `loadStyleJSON` to `MapboxMap`. ([#354](https://github.com/mapbox/mapbox-maps-ios/pull/354))
+* `BaseMapView.on()` has now been replaced by `mapView.mapboxMap.onNext(...) -> Cancelable` and `mapView.mapboxMap.onEvery(...) -> Cancelable`. ([#339](https://github.com/mapbox/mapbox-maps-ios/pull/339))
+* `StyleURI`, `PreferredFPS`, and `AnimationOwner` are now structs. ([#285](https://github.com/mapbox/mapbox-maps-ios/pull/285))
+* The `layout` and `paint` substructs for each layer are now merged into the root layer struct. ([#362](https://github.com/mapbox/mapbox-maps-ios/pull/362))
+* `GestureOptions` are owned by `GestureManager` directly. ([#343](https://github.com/mapbox/mapbox-maps-ios/pull/343))
+* `LocationOptions` are owned by `LocationManager` directly. ([#344](https://github.com/mapbox/mapbox-maps-ios/pull/344))
+* `MapCameraOptions` are owned by `mapView.camera` directly. ([#345](https://github.com/mapbox/mapbox-maps-ios/pull/345))
+* `RenderOptions` are owned by `BaseMapView` directly. ([#350](https://github.com/mapbox/mapbox-maps-ios/pull/350))
+* `AnnotationOptions` are owned by `AnnotationManager` directly. ([#351](https://github.com/mapbox/mapbox-maps-ios/pull/351))
+* `MapView` has been coalesced into `BaseMapView` and the resulting object is called `MapView`. ([#353](https://github.com/mapbox/mapbox-maps-ios/pull/353))
+* `Style.uri` is now an optional property. ([#347](https://github.com/mapbox/mapbox-maps-ios/pull/347))
+* `Style` is no longer a dependency on `LocationSupportableMapView`. ([#352](https://github.com/mapbox/mapbox-maps-ios/pull/352))
+* `Style` now has a more flat structure. `Layout` and `Paint` structs are now obsolete and `Layer` properties are at the root layer. ([#362](https://github.com/mapbox/mapbox-maps-ios/pull/362))
+* Changed `LayerPosition` to an enum. ([#](https://github.com/mapbox/mapbox-maps-ios/pull/221))
+* Removed `style` from MapView; updated tests and examples to use `mapboxMap.style`. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
+* The `visibleFeatures` APIs have been renamed to `queryRenderedFeatures`. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
+* `LoggingConfiguration` is no longer public. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
+* The following Swift wrappers have been added for existing types; these primarily change callbacks from using an internal `MBXExpected` type to using Swift's `Result` type. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
+  * `CacheManager`
+  * `HttpResponse`
+  * `OfflineSwitch` (which replaces NetworkConnectivity)
+  * `OfflineRegionManager` (though this API is deprecated)
+* Adds `loadStyleURI` and `loadStyleJSON` to `MapboxMap`. ([#354](https://github.com/mapbox/mapbox-maps-ios/pull/354))
 
 ### Bug fixes 🐞
 
-- Fixed an issue where the map's scale bar and compass view could trigger `layoutSubviews()` for the map view. ([#338](https://github.com/mapbox/mapbox-maps-ios/pull/338))
+* Fixed an issue where the map's scale bar and compass view could trigger `layoutSubviews()` for the map view. ([#338](https://github.com/mapbox/mapbox-maps-ios/pull/338))
 
 ## 10.0.0-beta.19.1 - May 7, 2021
 
 ### Breaking changes ⚠️
 
-  - `OrnamentOptions.logo._isVisible` and `OrnamentOptions.attributionButton._isVisible` have been replaced with `OrnamentOptions.logo.visibility` and `OrnamentOptions.attributionButton.visibility`. ([#326](https://github.com/mapbox/mapbox-maps-ios/pull/326))
+* `OrnamentOptions.logo._isVisible` and `OrnamentOptions.attributionButton._isVisible` have been replaced with `OrnamentOptions.logo.visibility` and `OrnamentOptions.attributionButton.visibility`. ([#326](https://github.com/mapbox/mapbox-maps-ios/pull/326))
 
 ### Bug fixes 🐞
 
-  - Fixed an issue where location pucks would not be rendered. ([#331](https://github.com/mapbox/mapbox-maps-ios/pull/331))
+* Fixed an issue where location pucks would not be rendered. ([#331](https://github.com/mapbox/mapbox-maps-ios/pull/331))
 
 ## 10.0.0-beta.19 - May 6, 2021
 
 ### Breaking changes ⚠️
 
-- `camera(for:)` methods have moved from `BaseMapView` to `MapboxMap` ([#286](https://github.com/mapbox/mapbox-maps-ios/pull/286))
+* `camera(for:)` methods have moved from `BaseMapView` to `MapboxMap` ([#286](https://github.com/mapbox/mapbox-maps-ios/pull/286))
   * The API has also been aligned with Android by:
-      * Removing default values for parameters
-      * Making `bearing` and `pitch` parameters optional
-      * Adding the `camera(for:camera:rect:)` variant
-- `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. `MapConfig.ornaments` has been removed. Updates can be applied directly to `OrnamentsManager.options`. Previously the map's ornament options were updated on `MapConfig.ornaments` with `MapView.update`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
-- `OrnamentOptions` now uses structs to manage options for individual ornaments. For example, `OrnamentOptions.scaleBarPosition` is now `OrnamentOptions.scaleBar.position`. ([#318](https://github.com/mapbox/mapbox-maps-ios/pull/318))
-- The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
-- `Style` has been significantly refactored, for example:
-  - Synchronous APIs returning `Result` types now throw.
-  - A number of APIs previously accessed via `__map` are now available via the `Style` object.
-  - APIs with a `get` prefix have been renamed; for example `getLayer<T>(with:type:)` to `layer<T>(withId:type:) throws` and `getSource<T>(id:type:)` to `source<T>(withId:type:) throws`
+    * Removing default values for parameters
+    * Making `bearing` and `pitch` parameters optional
+    * Adding the `camera(for:camera:rect:)` variant
+* `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. `MapConfig.ornaments` has been removed. Updates can be applied directly to `OrnamentsManager.options`. Previously the map's ornament options were updated on `MapConfig.ornaments` with `MapView.update`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
+* `OrnamentOptions` now uses structs to manage options for individual ornaments. For example, `OrnamentOptions.scaleBarPosition` is now `OrnamentOptions.scaleBar.position`. ([#318](https://github.com/mapbox/mapbox-maps-ios/pull/318))
+* The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
+* `Style` has been significantly refactored, for example:
+  * Synchronous APIs returning `Result` types now throw.
+  * A number of APIs previously accessed via `__map` are now available via the `Style` object.
+  * APIs with a `get` prefix have been renamed; for example `getLayer<T>(with:type:)` to `layer<T>(withId:type:) throws` and `getSource<T>(id:type:)` to `source<T>(withId:type:) throws`
 
 ### Features ✨ and improvements 🏁
 
-- `OrnamentsManager` is now a public class and can be accessed via the `MapView`'s `ornaments` property.
-- `CompassDirectionFormatter` is now public. It provides a string representation of a `CLLocationDirection` and supports the same languages as in pre-v10 versions of the Maps SDK. ([#300](https://github.com/mapbox/mapbox-maps-ios/pull/300))- `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. Updates can be applied directly to the `options` property. Previously the map's ornament options were updated via `MapConfig.ornaments`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
-- The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
+* `OrnamentsManager` is now a public class and can be accessed via the `MapView`'s `ornaments` property.
+* `CompassDirectionFormatter` is now public. It provides a string representation of a `CLLocationDirection` and supports the same languages as in pre-v10 versions of the Maps SDK. ([#300](https://github.com/mapbox/mapbox-maps-ios/pull/300))- `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. Updates can be applied directly to the `options` property. Previously the map's ornament options were updated via `MapConfig.ornaments`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
+* The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
 
 ## 10.0.0-beta.18.1 - April 28, 2021
 
 ### Breaking changes ⚠️
 
-- #### Camera Animations
+* #### Camera Animations
+
   * A new `CameraTransition` struct has been introduced to allow better control on the "from" and "to" values of a camera animation ([#282](https://github.com/mapbox/mapbox-maps-ios/pull/282))
-     * A mutable version of the `CameraTransition` struct is passed into every animation block.
+    * A mutable version of the `CameraTransition` struct is passed into every animation block.
   * Animations can only be constructor injected into `CameraAnimator` as part of the `makeAnimator*` methods on `mapView.camera`.
   * The `makeCameraAnimator*` methods have been renamed to `makeAnimator*` methods
 
-- #### Gestures
-  - Gestures now directly call `__map.setCamera()` instead of using CoreAnimation
+* #### Gestures
+
+  * Gestures now directly call `__map.setCamera()` instead of using CoreAnimation
 
 ## 10.0.0-beta.18 - April 23, 2021
 
 ### Breaking changes ⚠️
 
-- #### `MapView`
+* #### `MapView`
+
   * The initializer has changed to `public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions(), styleURI: StyleURI? = .streets)`.
   * `MapOptions` has been renamed `MapConfig`. A new `MapOptions` has been introduced; its properties are required to initialize the underlying map object.
   * A `MapInitOptions` configuration struct has been introduced. It currently wraps both `ResourceOptions` and `MapOptions` and is used when initializing a `MapView`.
@@ -1483,74 +1535,79 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
   * The `Manager` suffix has been removed from `MapView.gesturesManager`, `MapView.ornamentsManager`, `MapView.cameraManager`, `MapView.locationManager`, and `MapView.annotationsManager`.
   * `BaseMapView.camera` has been renamed to `BaseMapView.cameraOptions`.
 
-- #### Foundation
+* #### Foundation
+
   * `AccountManager` has been removed. A new `CredentialsManager` replaces it. You can use `CredentialsManager.default` to set a global access token.
   * MapboxCoreMaps protocol conformances have been encapsulated. ([#265](https://github.com/mapbox/mapbox-maps-ios/pull/265))
-      * `ObserverConcrete` has been removed.
-      * `BaseMapView` no longer conforms to `MapClient` or `MBMMetalViewProvider`, and the methods they required are now internal.
-      * The setter for `BaseMapView.__map` is now private
-      * `Snapshotter` no longer conforms to `Observer`, and the method it required is now internal.
+    * `ObserverConcrete` has been removed.
+    * `BaseMapView` no longer conforms to `MapClient` or `MBMMetalViewProvider`, and the methods they required are now internal.
+    * The setter for `BaseMapView.__map` is now private
+    * `Snapshotter` no longer conforms to `Observer`, and the method it required is now internal.
   * The `BaseMapView.__map` property has been moved to `BaseMapView.mapboxMap.__map`. ([#280](https://github.com/mapbox/mapbox-maps-ios/pull/280))
   * A `CameraOptions` struct has been introduced. This shadows the class of the same name from MapboxCoreMaps and. This avoids unintended sharing and better reflects the intended value semantics of the `CameraOptions` concept. ([#284](https://github.com/mapbox/mapbox-maps-ios/pull/284))
 
-- #### Dependencies
+* #### Dependencies
+
   * Updated dependencies to MapboxCoreMaps 10.0.0-beta.20 and MapboxCommon 11.0.1
   * ResourceOptions now contains a `TileStore` instance. Tile store usage is enabled by default, the resource option `tileStoreEnabled` flag is introduced to disable it.
   * `TileStore` no longer returns cached responses for 401, 403 and unauthorized requests.
   * Fixed a bug where `TileStore` would not invoke completion closures (when client code did not keep a strong reference to the tile store instance).
 
-
 ### Features ✨ and improvements 🏁
 
-- Introduced the `OfflineManager` API that manages style packs and produces tileset descriptors for use with the tile store. The `OfflineManager` and `TileStore` APIs are used in conjunction to download offline regions and associated "style packs". These new APIs replace the deprecated `OfflineRegionManager`. Please see the new `OfflineManager` guide for more details.
+* Introduced the `OfflineManager` API that manages style packs and produces tileset descriptors for use with the tile store. The `OfflineManager` and `TileStore` APIs are used in conjunction to download offline regions and associated "style packs". These new APIs replace the deprecated `OfflineRegionManager`. Please see the new `OfflineManager` guide for more details.
 
 ### Bug fixes 🐞
 
-- Fixed a crash in line layer rendering, where the uniform buffer size had an incorrect value.
+* Fixed a crash in line layer rendering, where the uniform buffer size had an incorrect value.
 
 ## 10.0.0-beta.17 - April 13, 2021
 
 ### Breaking changes ⚠️
 
-- `AnnotationManager` no longer conforms to `Observer` and no longer has a `peer` ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
-- `AnnotationSupportableMap` is now internal ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
+* `AnnotationManager` no longer conforms to `Observer` and no longer has a `peer` ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
+* `AnnotationSupportableMap` is now internal ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
 
-- #### MapView
-    * Initializer has been changed to `public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets)`.
-    * `StyleURL` has been renamed to `StyleURI`
-    * `OrnamentSupportableMapView` is not internal.
+* #### MapView
 
-- #### Ornaments
-    * `LayoutPosition` has been deprecated in favor of `OrnamentPosition`.
-    * `LayoutVisibility` has been deprecated in favor of `OrnamentVisibility`.
-    * `showsLogoView` has been renamed to `_showsLogoView`.
-    * `showsCompass` and `showsScale` have been deprecated. Visibility properties can be used to set how the Compass and Scale Bar should be shown.
+  * Initializer has been changed to `public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets)`.
+  * `StyleURL` has been renamed to `StyleURI`
+  * `OrnamentSupportableMapView` is not internal.
 
-- #### Foundation
-    * `cancelTransitions` has been renamed to `cancelAnimations`.
-    * [`setCamera()`](https://github.com/mapbox/mapbox-maps-ios/pull/250/files#diff-8fa667141ac423a208a6e7036ed759e7e52fc6940bd58834c1935c2c6ead9c65L177) with individual parameters has been deprecated in favor of [`setCamera(to targetCamera: CameraOptions...)`](https://github.com/mapbox/mapbox-maps-ios/blob/edbf08e37975c81c7ee1cbc4bb046c48d522d306/Sources/MapboxMaps/Foundation/Camera/CameraManager.swift#L140) which requires `CameraOptions`.
-    * The following camera convenience functions have been removed:
-        * `public func transitionCoordinateBounds(newCoordinateBounds: CoordinateBounds, animated: Bool = false)`
-        * `public func transitionCoordinateBounds(to newCoordinateBounds: CoordinateBounds, edgePadding: UIEdgeInsets, animated: Bool = false, completion: ((UIViewAnimatingPosition) -> Void)? = nil)`
-        * `public func transitionVisibleCoordinates(newCoordinates: [CLLocationCoordinate2D], edgePadding: UIEdgeInsets, animated: Bool = false)`
-        * `public func transitionVisibleCoordinates(to newCoordinates: [CLLocationCoordinate2D], edgePadding: UIEdgeInsets, bearing: CLLocationDirection, duration: TimeInterval, animated: Bool = false, completion: ((UIViewAnimatingPosition) -> Void)? = nil)`
-        * `public func resetPosition()`
-        * `public func resetNorth(_ animated: Bool = false)`
-    * In `CameraAnimator`, `fractionComplete` is now of type `Double` and `delayFactor` now returns a `Double`.
-    * `MapboxLogoView` has been renamed to `LogoView`.
-    * `MapboxLogoSize` has been renamed to `LogoSize`.
+* #### Ornaments
 
-- #### Style
-    * Initializer is now marked as internal.
-    * `styleUri` property has been renamed to `uri`.
-    * The `url` property from `StyleURL` has been removed.
+  * `LayoutPosition` has been deprecated in favor of `OrnamentPosition`.
+  * `LayoutVisibility` has been deprecated in favor of `OrnamentVisibility`.
+  * `showsLogoView` has been renamed to `_showsLogoView`.
+  * `showsCompass` and `showsScale` have been deprecated. Visibility properties can be used to set how the Compass and Scale Bar should be shown.
 
-- #### Expressions
-    * `init(from: jsonObject)` and `public func jsonObject()` have been removed.
-    * `Element.op` has been renamed to `Element.operator`.
-    * `Argument.array` has been renamed to `Argument.numberArray`.
-    * `ValidExpressionArgument` has been renamed to `ExpressionArgumentConvertible`
+* #### Foundation
 
+  * `cancelTransitions` has been renamed to `cancelAnimations`.
+  * [`setCamera()`](https://github.com/mapbox/mapbox-maps-ios/pull/250/files#diff-8fa667141ac423a208a6e7036ed759e7e52fc6940bd58834c1935c2c6ead9c65L177) with individual parameters has been deprecated in favor of [`setCamera(to targetCamera: CameraOptions...)`](https://github.com/mapbox/mapbox-maps-ios/blob/edbf08e37975c81c7ee1cbc4bb046c48d522d306/Sources/MapboxMaps/Foundation/Camera/CameraManager.swift#L140) which requires `CameraOptions`.
+  * The following camera convenience functions have been removed:
+    * `public func transitionCoordinateBounds(newCoordinateBounds: CoordinateBounds, animated: Bool = false)`
+    * `public func transitionCoordinateBounds(to newCoordinateBounds: CoordinateBounds, edgePadding: UIEdgeInsets, animated: Bool = false, completion: ((UIViewAnimatingPosition) -> Void)? = nil)`
+    * `public func transitionVisibleCoordinates(newCoordinates: [CLLocationCoordinate2D], edgePadding: UIEdgeInsets, animated: Bool = false)`
+    * `public func transitionVisibleCoordinates(to newCoordinates: [CLLocationCoordinate2D], edgePadding: UIEdgeInsets, bearing: CLLocationDirection, duration: TimeInterval, animated: Bool = false, completion: ((UIViewAnimatingPosition) -> Void)? = nil)`
+    * `public func resetPosition()`
+    * `public func resetNorth(_ animated: Bool = false)`
+  * In `CameraAnimator`, `fractionComplete` is now of type `Double` and `delayFactor` now returns a `Double`.
+  * `MapboxLogoView` has been renamed to `LogoView`.
+  * `MapboxLogoSize` has been renamed to `LogoSize`.
+
+* #### Style
+
+  * Initializer is now marked as internal.
+  * `styleUri` property has been renamed to `uri`.
+  * The `url` property from `StyleURL` has been removed.
+
+* #### Expressions
+
+  * `init(from: jsonObject)` and `public func jsonObject()` have been removed.
+  * `Element.op` has been renamed to `Element.operator`.
+  * `Argument.array` has been renamed to `Argument.numberArray`.
+  * `ValidExpressionArgument` has been renamed to `ExpressionArgumentConvertible`
 
 ### Bug fixes 🐞
 

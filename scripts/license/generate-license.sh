@@ -59,6 +59,16 @@ CURRENT_YEAR=$(date +%Y)
 TURF_LICENSE_CONTENT=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/turf-swift/contents/LICENSE.md?ref=v$TURF_VERSION" --jq ".content" | base64 --decode)
 CORE_LICENSE=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/mapbox-sdk/contents/projects/gl-native/LICENSE-iOS.md?ref=gl-native/v$COREMAPS_VERSION" --jq ".content" | base64 --decode)
 
+# Fetch versions.json from the monorepo
+MONOREPO_VERSIONS_JSON=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/mapbox-sdk/contents/versions.json?ref=gl-native/v$COREMAPS_VERSION" --jq ".content" | base64 --decode)
+MONOREPO_CORE_LOCAL_VERSION="$(echo "$MONOREPO_VERSIONS_JSON" | jq -r '.projects | .["gl-native"] | .local')"
+MONOREPO_CORE_HEAD_VERSION=$(echo "$MONOREPO_VERSIONS_JSON" | jq -r '.projects | .["gl-native"] | .head')
+
+# Monorepo don't store release version in license files. Instead, version is updated in CI runtime before distribution.
+# Replacing 'local' version with 'head' version to avoid license validation issues.
+CORE_LICENSE="${CORE_LICENSE/$MONOREPO_CORE_LOCAL_VERSION/$MONOREPO_CORE_HEAD_VERSION}"
+
+
 LICENSE_TEMPLATE="changequote("""","""")dnl # prevents m4 from being confused with backquotes by changing quotes to non-existent tokens
 ## License
 

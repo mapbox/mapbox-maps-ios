@@ -21,9 +21,9 @@ main() {
     export GITHUB_TOKEN
 
     VERSION_JSON_PATH="$SCRIPT_DIR/packager/versions.json"
-    GL_NATIVE_VERSION="maps-v$(jq -r .MapboxCoreMaps "$VERSION_JSON_PATH")"
+    GL_NATIVE_VERSION="gl-native/v$(jq -r .MapboxCoreMaps "$VERSION_JSON_PATH")"
 
-    GL_NATIVE_PUBLIC_CHANGELOG=$(gh -R mapbox/mapbox-gl-native-internal release view "$GL_NATIVE_VERSION" --json body -q ".body" | awk 'BEGIN{ found=0} /Public changelog entries/{found=1}  {if (found) print }' | tail -n +2)
+    GL_NATIVE_PUBLIC_CHANGELOG=$(gh -R mapbox/mapbox-sdk release view "$GL_NATIVE_VERSION" --json body -q ".body" | awk 'BEGIN{ found=0} /Public changelog entries/{found=1}  {if (found) print }' | tail -n +2)
     GL_NATIVE_PUBLIC_MARKDOWN_CHANGELOG=$(prepare_glnative_release_notes "$GL_NATIVE_PUBLIC_CHANGELOG")
 
     MAPBOX_COMMON_VERSION=$(jq -r .MapboxCommon "$VERSION_JSON_PATH")

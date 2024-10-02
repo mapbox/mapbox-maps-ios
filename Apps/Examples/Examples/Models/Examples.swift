@@ -137,9 +137,6 @@ struct Examples {
         Example(title: "Map recorder",
                 description: "Record and replay map animations and actions.",
                 type: MapRecorderExample.self)
-        Example(title: "Resize MapView",
-                description: "Support smooth MapView resizing animations",
-                type: ResizeMapViewExample.self)
         if #available(iOS 13.0, *) {
             Example(title: "Combine",
                 description: "Shows how to use map events with Combine framework.",

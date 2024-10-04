@@ -4,6 +4,16 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Generate `MapStyle.standard` and `MapStyle.standardSatellite` from the style specification. Added the new `StandardFont` type to represent the font family in these configurations. If you used a string variable, update your code:
+```swift
+// Old:
+Map().mapStyle(.standard(font: fontValue))
+/// New:
+Map().mapStyle(.standard(font: StandardFont(rawValue: fontValue)))
+Map().mapStyle(.standard(font: .lato))
+```
+
+
 ## 11.7.0 - 26 September, 2024
 
 * Fix the bug where displaying ViewAnnotation and setting a feature state simultaneously could result in an unapplied feature state.

@@ -21,6 +21,7 @@ struct StandardStyleLocationsExample: View {
             .standard(
                 theme: model.theme,
                 lightPreset: model.lightPreset,
+                font: model.font,
                 showPointOfInterestLabels: model.poi,
                 showTransitLabels: model.transitLabels,
                 showPlaceLabels: model.placeLabels,
@@ -29,6 +30,7 @@ struct StandardStyleLocationsExample: View {
         case .standardSatellite:
             .standardSatellite(
                     lightPreset: model.lightPreset,
+                    font: model.font,
                     showPointOfInterestLabels: model.poi,
                     showTransitLabels: model.transitLabels,
                     showPlaceLabels: model.placeLabels,
@@ -82,6 +84,7 @@ class StandardStyleLocationsModel: ObservableObject {
     @Published var viewport: Viewport = Location.all.first!.viewport
     @Published var style: Style = .standard
     @Published var theme: StandardTheme = .default
+    @Published var font: StandardFont = .dinPro
 
     enum Style {
         case standard
@@ -141,6 +144,38 @@ struct StandardStyleLocationsSettings: View {
                         Text("Monochrome").tag(StandardTheme.monochrome)
                     }.pickerStyle(.segmented)
                 }
+            }
+
+            HStack {
+                Text("Font")
+                Spacer()
+                Picker("Font", selection: $model.font) {
+                    Text("Alegreya").tag(StandardFont.alegreya)
+                    Text("Alegreya SC").tag(StandardFont.alegreyaSc)
+                    Text("Asap").tag(StandardFont.asap)
+                    Text("Barlow").tag(StandardFont.barlow)
+                    Text("DIN Pro").tag(StandardFont.dinPro)
+                    Text("EB Garamond").tag(StandardFont.ebGaramond)
+                    Text("Faustina").tag(StandardFont.faustina)
+                    Text("Frank Ruhl Libre").tag(StandardFont.frankRuhlLibre)
+                    Text("Heebo").tag(StandardFont.heebo)
+                    Text("Inter").tag(StandardFont.inter)
+                    Text("Lato").tag(StandardFont.lato)
+                    Text("League Mono").tag(StandardFont.leagueMono)
+                    Text("Montserrat").tag(StandardFont.montserrat)
+                    Text("Manrope").tag(StandardFont.manrope)
+                    Text("Noto Sans CJK JP").tag(StandardFont.notoSansCjkJp)
+                    Text("Open Sans").tag(StandardFont.openSans)
+                    Text("Poppins").tag(StandardFont.poppins)
+                    Text("Raleway").tag(StandardFont.raleway)
+                    Text("Roboto").tag(StandardFont.roboto)
+                    Text("Roboto Mono").tag(StandardFont.robotoMono)
+                    Text("Rubik").tag(StandardFont.rubik)
+                    Text("Source Code Pro").tag(StandardFont.sourceCodePro)
+                    Text("Source Sans Pro").tag(StandardFont.sourceSansPro)
+                    Text("Spectral").tag(StandardFont.spectral)
+                    Text("Ubuntu").tag(StandardFont.ubuntu)
+                }.pickerStyle(.menu)
             }
 
             ScrollView(.horizontal, showsIndicators: false) {

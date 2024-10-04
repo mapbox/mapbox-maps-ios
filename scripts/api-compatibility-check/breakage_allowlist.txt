@@ -1832,8 +1832,8 @@ Func MapboxMap.queryRenderedFeatures(with:options:completion:) is now with @_doc
 Func MapboxMap.queryRenderedFeatures(with:options:completion:) is now with @_spi
 
 // Sendable support in some gl-native objects
-Extension CoordinateBounds is now with @Sendable 
-Extension GlyphsRasterizationOptions is now with @Sendable 
+Extension CoordinateBounds is now with @Sendable
+Extension GlyphsRasterizationOptions is now with @Sendable
 
 // ObjC header removal
 TypeAlias char16_t has been removed
@@ -1852,3 +1852,7 @@ TypeAlias swift_uint3 has been removed
 TypeAlias swift_uint4 has been removed
 Var SWIFT_TYPEDEFS has been removed
 Class MapView has removed conformance to Sendable
+
+// Standard Style types generation.
+Func MapStyle.standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:) has parameter 2 type change from Swift.String? to MapboxMaps.StandardFont?
+Func MapStyle.standardSatellite(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showRoadsAndTransit:showPedestrianRoads:) has parameter 1 type change from Swift.String? to MapboxMaps.StandardFont?

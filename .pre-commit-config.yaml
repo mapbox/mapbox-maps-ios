@@ -7,6 +7,7 @@ repos:
     - id: trailing-whitespace
       exclude: LICENSE.md
     - id: end-of-file-fixer
+      exclude: ".*.list"
     - id: check-yaml
     - id: check-json
       exclude: .vscode/.*.json

@@ -288,14 +288,14 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetLineDasharray() {
-        let value = Array.random(withLength: .random(in: 0...10), generator: { 0.0 })
+        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { 0.0 })
         manager.lineDasharray = value
         XCTAssertEqual(manager.lineDasharray, value)
         XCTAssertEqual(manager.impl.layerProperties["line-dasharray"] as! [Double], value)
     }
 
     func testSetToNilLineDasharray() {
-        let newLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { 0.0 })
+        let newLineDasharrayProperty = Array.testFixture(withLength: .random(in: 0...10), generator: { 0.0 })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-dasharray").value as! [Double]
         manager.lineDasharray = newLineDasharrayProperty
         XCTAssertNotNil(manager.impl.layerProperties["line-dasharray"])

@@ -398,7 +398,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertNil(manager.camera(forAnnotations: ["dummy"]))
 
         // Annotations that have been added and are valid.
-        let points = Array.random(
+        let points = Array.testFixture(
             withLength: 10,
             generator: { CLLocationCoordinate2D(latitude: 24, longitude: 84) }
         )

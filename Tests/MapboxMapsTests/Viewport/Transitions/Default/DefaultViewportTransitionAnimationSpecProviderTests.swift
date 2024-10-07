@@ -18,20 +18,20 @@ final class DefaultViewportTransitionAnimationSpecProviderTests: XCTestCase {
             lowZoomToHighZoomAnimationSpecProvider: lowZoomToHighZoomAnimationSpecProvider,
             highZoomToLowZoomAnimationSpecProvider: highZoomToLowZoomAnimationSpecProvider)
 
-        lowZoomToHighZoomAnimationSpecProvider.makeAnimationSpecsStub.defaultReturnValue = .random(
-            withLength: .random(in: 1...10),
+        lowZoomToHighZoomAnimationSpecProvider.makeAnimationSpecsStub.defaultReturnValue = .testFixture(
+            withLength: 5,
             generator: {
                 DefaultViewportTransitionAnimationSpec(
-                    duration: .random(in: 0...10),
-                    delay: .random(in: 0...10),
+                    duration: 2,
+                    delay: 6,
                     cameraOptionsComponent: MockCameraOptionsComponent())
             })
-        highZoomToLowZoomAnimationSpecProvider.makeAnimationSpecsStub.defaultReturnValue = .random(
-            withLength: .random(in: 1...10),
+        highZoomToLowZoomAnimationSpecProvider.makeAnimationSpecsStub.defaultReturnValue = .testFixture(
+            withLength: 5,
             generator: {
                 DefaultViewportTransitionAnimationSpec(
-                    duration: .random(in: 0...10),
-                    delay: .random(in: 0...10),
+                    duration: 6,
+                    delay: 10,
                     cameraOptionsComponent: MockCameraOptionsComponent())
             })
     }
@@ -58,7 +58,7 @@ final class DefaultViewportTransitionAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsWithNilTargetZoom() throws {
-        var cameraOptions = CameraOptions.random()
+        var cameraOptions = CameraOptions.testConstantValue()
         cameraOptions.zoom = nil
 
         let specs = provider.makeAnimationSpecs(cameraOptions: cameraOptions)
@@ -73,8 +73,8 @@ final class DefaultViewportTransitionAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsWithCurrentZoomGreaterThanTargetZoom() throws {
-        var cameraOptions = CameraOptions.random()
-        cameraOptions.zoom = .random(in: 0...20)
+        var cameraOptions = CameraOptions.testConstantValue()
+        cameraOptions.zoom = 12.3
 
         mapboxMap.cameraState.zoom = cameraOptions.zoom! + 1
 
@@ -90,8 +90,8 @@ final class DefaultViewportTransitionAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsWithCurrentZoomEqualToTargetZoom() throws {
-        var cameraOptions = CameraOptions.random()
-        cameraOptions.zoom = .random(in: 0...20)
+        var cameraOptions = CameraOptions.testConstantValue()
+        cameraOptions.zoom = 12.4
 
         mapboxMap.cameraState.zoom = cameraOptions.zoom!
 
@@ -107,8 +107,8 @@ final class DefaultViewportTransitionAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecsWithCurrentZoomLessThanTargetZoom() throws {
-        var cameraOptions = CameraOptions.random()
-        cameraOptions.zoom = .random(in: 1...20)
+        var cameraOptions = CameraOptions.testConstantValue()
+        cameraOptions.zoom = 1.2
 
         mapboxMap.cameraState.zoom = cameraOptions.zoom! - 1
 

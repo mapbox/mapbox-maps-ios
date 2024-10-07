@@ -28,7 +28,7 @@ final class StyleSourceManagerTests: XCTestCase {
     }
 
     func testGetAllSourceIdentifiers() {
-        let stubbedStyleSources: [StyleObjectInfo] = .random(withLength: 3) {
+        let stubbedStyleSources: [StyleObjectInfo] = .testFixture(withLength: 3) {
             StyleObjectInfo(id: .randomAlphanumeric(withLength: 12), type: LayerType.random().rawValue)
         }
         styleManager.getStyleSourcesStub.defaultReturnValue = stubbedStyleSources

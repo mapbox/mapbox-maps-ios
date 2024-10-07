@@ -12,15 +12,6 @@ extension CameraState {
 
     }
 
-    static func random() -> Self {
-        return CameraState(
-            center: .testConstantValue(),
-            padding: .random(),
-            zoom: .random(in: 0...20),
-            bearing: .random(in: 0..<360),
-            pitch: .random(in: 0...50))
-    }
-
     static var zero: CameraState {
         CameraState(
         center: CLLocationCoordinate2D(

@@ -15,7 +15,7 @@ final class MockLongPressGestureRecognizer: UILongPressGestureRecognizer {
         set { $viewStub.wrappedValue  = newValue }
     }
 
-    let locationStub = Stub<UIView?, CGPoint>(defaultReturnValue: .random())
+    let locationStub = Stub<UIView?, CGPoint>(defaultReturnValue: .testConstantValue())
     override func location(in view: UIView?) -> CGPoint {
         locationStub.call(with: view)
     }

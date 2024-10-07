@@ -105,7 +105,7 @@ internal extension Bool {
 
 internal extension UIEdgeInsets {
     static func testConstantValue() -> UIEdgeInsets {
-        return UIEdgeInsets()
+        return UIEdgeInsets(top: 12, left: 34, bottom: 56, right: 78)
     }
 }
 

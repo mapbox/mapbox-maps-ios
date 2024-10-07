@@ -10,7 +10,7 @@ final class DefaultViewportTransitionOptionsTests: XCTestCase {
     }
 
     func testInitWithNonDefaultValues() {
-        let maxDuration = TimeInterval.random(in: 0..<100)
+        let maxDuration = TimeInterval.testConstantValue()
 
         let options = DefaultViewportTransitionOptions(
             maxDuration: maxDuration)

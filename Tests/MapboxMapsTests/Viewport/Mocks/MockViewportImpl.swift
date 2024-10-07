@@ -4,9 +4,9 @@ import UIKit
 final class MockViewportManagerImpl: ViewportManagerImplProtocol {
     @TestSignal var safeAreaPadding: Signal<UIEdgeInsets?>
 
-    @Stubbed var options: ViewportOptions = .random()
+    @Stubbed var options: ViewportOptions = .testConstantValue()
 
-    @Stubbed var status: ViewportStatus = .random()
+    @Stubbed var status: ViewportStatus = .testConstantValue()
 
     let addStatusObserverStub = Stub<ViewportStatusObserver, Void>()
     func addStatusObserver(_ observer: ViewportStatusObserver) {

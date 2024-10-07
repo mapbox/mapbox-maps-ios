@@ -8,7 +8,7 @@ final class MockSimpleCameraAnimator: SimpleCameraAnimatorProtocol {
 
     @Stubbed var animationType: AnimationType = .unspecified
 
-    @Stubbed var to: CameraOptions = .random()
+    @Stubbed var to: CameraOptions = .testConstantValue()
 
     @TestSignal var onCameraAnimatorStatusChanged: Signal<CameraAnimatorStatus>
 

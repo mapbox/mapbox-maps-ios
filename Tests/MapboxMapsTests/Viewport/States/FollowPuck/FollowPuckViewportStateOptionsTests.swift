@@ -12,10 +12,10 @@ final class FollowPuckViewportStateOptionsTests: XCTestCase {
     }
 
     func testInitializer() {
-        let padding = UIEdgeInsets.random()
-        let zoom = CGFloat.random(in: 0...20)
-        let bearing = FollowPuckViewportStateBearing.random()
-        let pitch = CGFloat.random(in: 0...80)
+        let padding = UIEdgeInsets.testConstantValue()
+        let zoom = 12.3
+        let bearing = FollowPuckViewportStateBearing.testConstantValue()
+        let pitch = 45.4
 
         let options = FollowPuckViewportStateOptions(
             padding: padding,
@@ -42,39 +42,39 @@ final class FollowPuckViewportStateOptionsTests: XCTestCase {
 
     func testEquatableAndHashable() {
         let options1 = FollowPuckViewportStateOptions(
-            padding: .random(),
-            zoom: .random(in: 0...20),
+            padding: .testConstantValue(),
+            zoom: 12.5,
             bearing: .constant(0),
-            pitch: .random(in: 0...80))
+            pitch: 79.5)
         var options2 = options1
         verifyEqual(options1, options1)
 
         options2 = options1
-        options2.padding?.top += .random(in: 1...10)
+        options2.padding?.top += 5
         verifyNotEqual(options1, options2)
 
         options2 = options1
-        options2.padding?.left += .random(in: 1...10)
+        options2.padding?.left += 3
         verifyNotEqual(options1, options2)
 
         options2 = options1
-        options2.padding?.bottom += .random(in: 1...10)
+        options2.padding?.bottom += 1
         verifyNotEqual(options1, options2)
 
         options2 = options1
-        options2.padding?.right += .random(in: 1...10)
+        options2.padding?.right += 8
         verifyNotEqual(options1, options2)
 
         options2 = options1
-        options2.zoom? += .random(in: 1...10)
+        options2.zoom? += 9
         verifyNotEqual(options1, options2)
 
         options2 = options1
-        options2.bearing = .constant(.random(in: 1...10))
+        options2.bearing = .constant(7)
         verifyNotEqual(options1, options2)
 
         options2 = options1
-        options2.pitch? += .random(in: 1...10)
+        options2.pitch? += 6
         verifyNotEqual(options1, options2)
     }
 
@@ -88,19 +88,19 @@ final class FollowPuckViewportStateOptionsTests: XCTestCase {
         verifyEqual(options1, options1)
 
         options2 = options1
-        options2.padding = .random()
+        options2.padding = .testConstantValue()
         verifyNotEqual(options1, options2)
 
         options2 = options1
-        options2.zoom = .random(in: 1...10)
+        options2.zoom = 4.6
         verifyNotEqual(options1, options2)
 
         options2 = options1
-        options2.bearing = .constant(.random(in: 1...10))
+        options2.bearing = .constant(65.4)
         verifyNotEqual(options1, options2)
 
         options2 = options1
-        options2.pitch = .random(in: 1...10)
+        options2.pitch = 65
         verifyNotEqual(options1, options2)
     }
 }

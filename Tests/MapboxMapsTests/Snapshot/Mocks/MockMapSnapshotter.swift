@@ -52,7 +52,7 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
         var pitch: NSNumber?
     }
 
-    var cameraForCoordinatesStub = Stub<CameraForCoordinatesParams, CoreCameraOptions>(defaultReturnValue: .init(.random()))
+    var cameraForCoordinatesStub = Stub<CameraForCoordinatesParams, CoreCameraOptions>(defaultReturnValue: .init(.testConstantValue()))
     func cameraForCoordinates(for coordinates: [Coordinate2D], padding: CoreEdgeInsets?, bearing: NSNumber?, pitch: NSNumber?) -> CoreCameraOptions {
         cameraForCoordinatesStub.call(with: CameraForCoordinatesParams(coordinates: coordinates, padding: padding, bearing: bearing, pitch: pitch))
     }

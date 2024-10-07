@@ -80,7 +80,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
     func testFocalPoint() {
         let focalPoint = CGPoint(x: 1000, y: 1000)
         quickZoomHandler.focalPoint = focalPoint
-        mapboxMap.cameraState = .random()
+        mapboxMap.cameraState = .testConstantValue()
 
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.sendActions()

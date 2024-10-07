@@ -8,8 +8,8 @@ final class DefaultViewportTransitionAnimationTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        components = Array.random(
-            withLength: .random(in: 1...10),
+        components = Array.testFixture(
+            withLength: 5,
             generator: MockDefaultViewportTransitionAnimation.init)
         animation = DefaultViewportTransitionAnimation(components: components)
     }
@@ -49,7 +49,7 @@ final class DefaultViewportTransitionAnimationTests: XCTestCase {
 
         animation.start(with: completionStub.call(with:))
 
-        let failingIndex = Int.random(in: 0..<components.count)
+        let failingIndex = 1
         for (idx, component) in components.enumerated() {
             XCTAssertEqual(component.startStub.invocations.count, 1)
             let completion = try XCTUnwrap(component.startStub.invocations.first?.parameters)
@@ -78,7 +78,7 @@ final class DefaultViewportTransitionAnimationTests: XCTestCase {
     }
 
     func testUpdateTargetCamera() {
-        let cameraOptions = CameraOptions.random()
+        let cameraOptions = CameraOptions.testConstantValue()
 
         animation.updateTargetCamera(with: cameraOptions)
 
@@ -106,7 +106,7 @@ final class DefaultViewportTransitionAnimationComponentTests: XCTestCase {
     override func setUp() {
         super.setUp()
         animator = MockSimpleCameraAnimator()
-        delay = .random(in: 0...100)
+        delay = 99
         cameraOptionsComponent = MockCameraOptionsComponent()
         mapboxMap = MockMapboxMap()
         animationComponent = DefaultViewportTransitionAnimationComponent(
@@ -134,7 +134,7 @@ final class DefaultViewportTransitionAnimationComponentTests: XCTestCase {
         let animatorCompletion = try XCTUnwrap(animator.addCompletionStub.invocations.first?.parameters)
         XCTAssertEqual(animator.startAnimationAfterDelayStub.invocations.map(\.parameters), [delay])
 
-        let position: UIViewAnimatingPosition = [.start, .end].randomElement()!
+        let position: UIViewAnimatingPosition = .end
         animatorCompletion(position)
 
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [true])
@@ -155,7 +155,7 @@ final class DefaultViewportTransitionAnimationComponentTests: XCTestCase {
     }
 
     func testUpdateTargetCameraWhenUpdatedComponentIsNil() {
-        let cameraOptions = CameraOptions.random()
+        let cameraOptions = CameraOptions.testConstantValue()
         cameraOptionsComponent.updatedStub.defaultReturnValue = nil
 
         animationComponent.updateTargetCamera(with: cameraOptions)
@@ -169,7 +169,7 @@ final class DefaultViewportTransitionAnimationComponentTests: XCTestCase {
         let updatedComponent = MockCameraOptionsComponent()
         cameraOptionsComponent.updatedStub.defaultReturnValue = updatedComponent
         animator.state = .inactive
-        let cameraOptions = CameraOptions.random()
+        let cameraOptions = CameraOptions.testConstantValue()
 
         animationComponent.updateTargetCamera(with: cameraOptions)
 
@@ -181,8 +181,8 @@ final class DefaultViewportTransitionAnimationComponentTests: XCTestCase {
     func testUpdateTargetCameraWhenUpdatedComponentIsNonNilAndAnimatorIsNotInactive() {
         let updatedComponent = MockCameraOptionsComponent()
         cameraOptionsComponent.updatedStub.defaultReturnValue = updatedComponent
-        animator.state = [.active, .stopped].randomElement()!
-        let cameraOptions = CameraOptions.random()
+        animator.state = .active
+        let cameraOptions = CameraOptions.testConstantValue()
 
         animationComponent.updateTargetCamera(with: cameraOptions)
 

@@ -97,7 +97,7 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testDefaultCamera() {
-        let stubCamera = MapboxMaps.CameraOptions.random()
+        let stubCamera = MapboxMaps.CameraOptions.testConstantValue()
         styleManager.getStyleDefaultCameraStub.defaultReturnValue = CoreCameraOptions(stubCamera)
 
         XCTAssertEqual(style.styleDefaultCamera, stubCamera)
@@ -176,7 +176,7 @@ final class StyleManagerTests: XCTestCase {
     // MARK: Source
 
     func testGetAllSourceIdentifiers() {
-        let stubbedStyleSources: [SourceInfo] = .random(withLength: 3) {
+        let stubbedStyleSources: [SourceInfo] = .testFixture(withLength: 3) {
             SourceInfo(id: .randomAlphanumeric(withLength: 12), type: .random())
         }
         sourceManager.$allSourceIdentifiers.getStub.defaultReturnValue = stubbedStyleSources

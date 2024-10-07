@@ -9,7 +9,7 @@ final class DefaultViewportTransitionTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        options = .random()
+        options = .testConstantValue()
         animationHelper = MockDefaultViewportTransitionAnimationHelper()
         transition = DefaultViewportTransition(
             options: options,
@@ -36,7 +36,7 @@ final class DefaultViewportTransitionTests: XCTestCase {
         let observeHandler = observeInvocation.parameters
         let observeCancelable = try XCTUnwrap(observeInvocation.returnValue as? MockCancelable)
 
-        let cameraOptions = CameraOptions.random()
+        let cameraOptions = CameraOptions.testConstantValue()
         let result = observeHandler(cameraOptions)
 
         // the handler returns true because it wants continual updates
@@ -54,7 +54,7 @@ final class DefaultViewportTransitionTests: XCTestCase {
         let animateCompletion = try XCTUnwrap(animation.startStub.invocations.first?.parameters)
 
         // invoke the observe handler again to verify that updateTargetCamera is called
-        let cameraOptions2 = CameraOptions.random()
+        let cameraOptions2 = CameraOptions.testConstantValue()
         XCTAssertTrue(observeHandler(cameraOptions2))
 
         XCTAssertEqual(animation.updateTargetCameraStub.invocations.count, 1)
@@ -81,7 +81,7 @@ final class DefaultViewportTransitionTests: XCTestCase {
         let observeHandler = observeInvocation.parameters
         let observeCancelable = try XCTUnwrap(observeInvocation.returnValue as? MockCancelable)
 
-        let cameraOptions = CameraOptions.random()
+        let cameraOptions = CameraOptions.testConstantValue()
         let result = observeHandler(cameraOptions)
 
         // the handler returns true because it wants continual updates
@@ -118,7 +118,7 @@ final class DefaultViewportTransitionTests: XCTestCase {
         let observeHandler = observeInvocation.parameters
         let observeCancelable = try XCTUnwrap(observeInvocation.returnValue as? MockCancelable)
 
-        let cameraOptions = CameraOptions.random()
+        let cameraOptions = CameraOptions.testConstantValue()
         let result = observeHandler(cameraOptions)
 
         // the handler returns true because it wants continual updates

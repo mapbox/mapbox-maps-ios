@@ -4,7 +4,7 @@ import XCTest
 final class FollowPuckViewportStateBearingTests: XCTestCase {
     func testConstant() {
         let state = FollowPuckViewportState.RenderingState(coordinate: .testConstantValue())
-        let value = CLLocationDirection.random(in: 0..<360)
+        let value = CLLocationDirection.testConstantValue()
 
         let bearing = FollowPuckViewportStateBearing.constant(value)
 

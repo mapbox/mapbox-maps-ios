@@ -9,7 +9,7 @@ final class ViewportOptionsTests: XCTestCase {
     }
 
     func testInitWithNonDefaultValues() {
-        let transitionsToIdleUponUserInteraction = Bool.random()
+        let transitionsToIdleUponUserInteraction = Bool.testConstantValue()
 
         let options = ViewportOptions(
             transitionsToIdleUponUserInteraction: transitionsToIdleUponUserInteraction)

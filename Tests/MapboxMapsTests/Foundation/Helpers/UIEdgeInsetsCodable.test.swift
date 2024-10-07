@@ -44,7 +44,7 @@ class UIEdgeInsetsCodableTest: XCTestCase {
     }
 
     func testUIEdgeInsetsConversion() throws {
-        let value = UIEdgeInsets.random()
+        let value = UIEdgeInsets.testConstantValue()
         let codableValue = UIEdgeInsetsCodable(value)
 
         XCTAssertEqual(value, codableValue.edgeInsets)

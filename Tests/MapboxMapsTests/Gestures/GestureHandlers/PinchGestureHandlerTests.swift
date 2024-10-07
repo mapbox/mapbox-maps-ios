@@ -26,7 +26,7 @@ final class PinchGestureHandlerTests: XCTestCase {
             CGPoint(x: -1, y: -1),
             CGPoint(x: 1, y: 1)]
         initialPinchMidpoint = CGPoint(x: 0.0, y: 0.0)
-        mapboxMap.cameraState = .random()
+        mapboxMap.cameraState = .testConstantValue()
     }
 
     override func tearDown() {
@@ -117,9 +117,9 @@ final class PinchGestureHandlerTests: XCTestCase {
         let initialZoom = mapboxMap.cameraState.zoom
         sendActions(with: .began, numberOfTouches: 2)
 
-        let pinchMidpoint = CGPoint.random()
+        let pinchMidpoint = CGPoint.testConstantValue()
         gestureRecognizer.locationStub.defaultReturnValue = pinchMidpoint
-        let pinchScale = CGFloat.random(in: 0.1..<10)
+        let pinchScale = 1.1
         gestureRecognizer.getScaleStub.defaultReturnValue = pinchScale
         gestureRecognizer.locationOfTouchStub.returnValueQueue = [
             CGPoint(x: 1, y: 0),
@@ -137,8 +137,8 @@ final class PinchGestureHandlerTests: XCTestCase {
 
     func testUpdate() {
         // given
-        let pinchScale = CGFloat.random(in: 0.1..<10)
-        let pinchMidpoint = CGPoint.random()
+        let pinchScale = 2.3
+        let pinchMidpoint = CGPoint.testConstantValue()
         let initialZoom = mapboxMap.cameraState.zoom
 
         gestureRecognizer.locationStub.defaultReturnValue = pinchMidpoint
@@ -160,7 +160,7 @@ final class PinchGestureHandlerTests: XCTestCase {
 
     func testFocalPoint() {
         // given
-        let focalPoint = CGPoint.random()
+        let focalPoint = CGPoint.testConstantValue()
         pinchGestureHandler.focalPoint = focalPoint
         gestureRecognizer.getStateStub.returnValueQueue = [.began, .changed]
 

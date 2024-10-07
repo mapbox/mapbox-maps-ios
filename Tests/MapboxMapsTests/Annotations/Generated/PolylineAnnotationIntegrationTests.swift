@@ -140,7 +140,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineDasharray() throws {
         // Test that the setter and getter work
-        let value = Array.random(withLength: .random(in: 0...10), generator: { 0.0 })
+        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { 0.0 })
         manager.lineDasharray = value
         XCTAssertEqual(manager.lineDasharray, value)
 

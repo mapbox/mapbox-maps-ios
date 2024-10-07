@@ -44,7 +44,7 @@ class CGPointCodableTest: XCTestCase {
     }
 
     func testCGPointConversion() throws {
-        let value = CGPoint.random()
+        let value = CGPoint.testConstantValue()
         let codableValue = CGPointCodable(value)
 
         XCTAssertEqual(value, codableValue.point)

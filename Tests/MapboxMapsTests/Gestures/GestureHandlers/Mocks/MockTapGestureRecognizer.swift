@@ -34,7 +34,7 @@ final class MockTapGestureRecognizer: UITapGestureRecognizer {
         }
     }
 
-    let locationStub = Stub<UIView?, CGPoint>(defaultReturnValue: .random())
+    let locationStub = Stub<UIView?, CGPoint>(defaultReturnValue: .testConstantValue())
     override func location(in view: UIView?) -> CGPoint {
         locationStub(with: view)
     }

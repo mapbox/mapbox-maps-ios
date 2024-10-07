@@ -130,7 +130,7 @@ final class MockMapboxMap: MapboxMapProtocol {
         var maxZoom: Double?
         var offset: CGPoint?
     }
-    let cameraForCoordinateBoundsStub = Stub<CameraForCoordinateBoundsParams, MapboxMaps.CameraOptions>(defaultReturnValue: .random())
+    let cameraForCoordinateBoundsStub = Stub<CameraForCoordinateBoundsParams, MapboxMaps.CameraOptions>(defaultReturnValue: .testConstantValue())
     // swiftlint:disable:next function_parameter_count
     func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets?, bearing: Double?, pitch: Double?, maxZoom: Double?, offset: CGPoint?) -> MapboxMaps.CameraOptions {
         cameraForCoordinateBoundsStub.call(with: .init(coordinateBounds: coordinateBounds, padding: padding, bearing: bearing, pitch: pitch, maxZoom: maxZoom, offset: offset))
@@ -143,7 +143,7 @@ final class MockMapboxMap: MapboxMapProtocol {
         var maxZoom: Double?
         var offset: CGPoint?
     }
-    let cameraForCoordinatesStub = Stub<CameraForCoordinatesParams, MapboxMaps.CameraOptions>(defaultReturnValue: .random())
+    let cameraForCoordinatesStub = Stub<CameraForCoordinatesParams, MapboxMaps.CameraOptions>(defaultReturnValue: .testConstantValue())
     func camera(for coordinates: [CLLocationCoordinate2D],
                 camera: MapboxMaps.CameraOptions,
                 coordinatesPadding: UIEdgeInsets?,
@@ -157,7 +157,7 @@ final class MockMapboxMap: MapboxMapProtocol {
         return cameraOptions
     }
 
-    let pointStub = Stub<CLLocationCoordinate2D, CGPoint>(defaultReturnValue: .random())
+    let pointStub = Stub<CLLocationCoordinate2D, CGPoint>(defaultReturnValue: .testConstantValue())
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
         pointStub.call(with: coordinate)
     }

@@ -11,9 +11,9 @@ class StylePackLoadOptionsTests: XCTestCase {
         ]
 
         let glyphsRasterizationMode = GlyphsRasterizationMode?.random(allGlyphsRasterizationMode.randomElement()!)
-        let metadata: [Int]? = .random(Array.random(withLength: 5, generator: { Int.random(in: 0...9) }))
+        let metadata: [Int]? = .random(Array.testFixture(withLength: 5, generator: { Int.random(in: 0...9) }))
         let acceptExpired = Bool.random()
-        let extraOptions: [Int]? = .random(Array.random(withLength: 5, generator: { Int.random(in: 0...9) }))
+        let extraOptions: [Int]? = .random(Array.testFixture(withLength: 5, generator: { Int.random(in: 0...9) }))
 
         let stylePackLoadOptions = try XCTUnwrap(StylePackLoadOptions(
             glyphsRasterizationMode: glyphsRasterizationMode,

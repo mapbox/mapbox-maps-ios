@@ -52,7 +52,7 @@ final class PanGestureHandlerTests: XCTestCase {
 
     func testHandlePanBegan() {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
-        let touchLocation = CGPoint.random()
+        let touchLocation = CGPoint.testConstantValue()
         gestureRecognizer.locationStub.defaultReturnValue = touchLocation
         mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = false
 
@@ -65,12 +65,12 @@ final class PanGestureHandlerTests: XCTestCase {
                                 initialTouchLocation: CGPoint,
                                 clampingFunction: (CGPoint) -> CGPoint,
                                 line: UInt = #line) throws {
-        let initialCameraState = CameraState.random()
+        let initialCameraState = CameraState.testConstantValue()
         mapboxMap.cameraState = initialCameraState
-        mapboxMap.dragCameraOptionsStub.defaultReturnValue = .random()
+        mapboxMap.dragCameraOptionsStub.defaultReturnValue = .testConstantValue()
         mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = false
         gestureRecognizer.getStateStub.defaultReturnValue = .began
-        let touchLocations: [CGPoint] = [initialTouchLocation, .random(), .random()]
+        let touchLocations: [CGPoint] = [initialTouchLocation, .testConstantValue(), .testConstantValue()]
         gestureRecognizer.locationStub.returnValueQueue = touchLocations
         panGestureHandler.panMode = panMode
         gestureRecognizer.sendActions()
@@ -93,12 +93,12 @@ final class PanGestureHandlerTests: XCTestCase {
     func testHandlePanChanged() throws {
         try verifyHandlePanChanged(
             panMode: .horizontalAndVertical,
-            initialTouchLocation: .random(),
+            initialTouchLocation: .testConstantValue(),
             clampingFunction: { $0 })
     }
 
     func testHandlePanChangedWithHorizontalPanMode() throws {
-        let initialTouchLocation = CGPoint.random()
+        let initialTouchLocation = CGPoint.testConstantValue()
 
         try verifyHandlePanChanged(
             panMode: .horizontal,
@@ -111,7 +111,7 @@ final class PanGestureHandlerTests: XCTestCase {
     }
 
     func testHandlePanChangedWithVerticalPanMode() throws {
-        let initialTouchLocation = CGPoint.random()
+        let initialTouchLocation = CGPoint.testConstantValue()
 
         try verifyHandlePanChanged(
             panMode: .vertical,
@@ -140,14 +140,14 @@ final class PanGestureHandlerTests: XCTestCase {
         mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = false
         panGestureHandler.panMode = panMode
         panGestureHandler.decelerationFactor = .random(in: 0.1...0.99)
-        var initialCameraState = CameraState.random()
+        var initialCameraState = CameraState.testConstantValue()
         initialCameraState.pitch = initialCameraState.pitch.clamped(to: 0...60)
         mapboxMap.cameraState = initialCameraState
         mapboxMap.size.height = .random(in: 100..<1000)
-        let endedTouchLocation = CGPoint.random()
-        let touchLocations = [.random(), endedTouchLocation, endedTouchLocation]
+        let endedTouchLocation = CGPoint.testConstantValue()
+        let touchLocations = [.testConstantValue(), endedTouchLocation, endedTouchLocation]
         gestureRecognizer.locationStub.returnValueQueue = touchLocations
-        let velocity = CGPoint.random()
+        let velocity = CGPoint.testConstantValue()
         gestureRecognizer.velocityStub.defaultReturnValue = velocity
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.sendActions()
@@ -155,7 +155,7 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
         mapboxMap.dragCameraOptionsStub.reset()
         mapboxMap.setCameraStub.reset()
-        mapboxMap.dragCameraOptionsStub.defaultReturnValue = .random()
+        mapboxMap.dragCameraOptionsStub.defaultReturnValue = .testConstantValue()
 
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.sendActions()
@@ -171,7 +171,7 @@ final class PanGestureHandlerTests: XCTestCase {
         XCTAssertEqual(decelerateParams?.velocity, velocityClampingFunction(velocity))
         XCTAssertEqual(decelerateParams?.decelerationFactor, panGestureHandler.decelerationFactor)
 
-        let interpolatedLocations: [CGPoint] = [.random(), .random()]
+        let interpolatedLocations: [CGPoint] = [.testConstantValue(), .testConstantValue()]
         let previousLocations = [endedTouchLocation, interpolatedLocations[0]]
         for i in 0..<interpolatedLocations.count {
             mapboxMap.dragCameraOptionsStub.reset()
@@ -383,7 +383,7 @@ final class PanGestureHandlerTests: XCTestCase {
     func testMultiTouchPanUsesCentroidOfTouches() throws {
         // given
         let numberOfTouches = Int.random(in: 2...1000)
-        let initialTouches: [CGPoint] = (0..<numberOfTouches).map { _ in .random() }
+        let initialTouches: [CGPoint] = (0..<numberOfTouches).map { _ in .testConstantValue() }
         func centroid(_ touches: [CGPoint]) -> CGPoint {
             let touchSum = touches.reduce(into: CGPoint.zero) { partialResult, touchLocation in
                 partialResult.x += touchLocation.x
@@ -392,7 +392,7 @@ final class PanGestureHandlerTests: XCTestCase {
             return CGPoint(x: touchSum.x / CGFloat(numberOfTouches), y: touchSum.y / CGFloat(numberOfTouches))
         }
         let initialCentroid = centroid(initialTouches)
-        let changedTouches: [CGPoint] = (0..<numberOfTouches).map { _ in .random() }
+        let changedTouches: [CGPoint] = (0..<numberOfTouches).map { _ in .testConstantValue() }
         let changedCentroid = centroid(changedTouches)
 
         panGestureHandler.panMode = .horizontalAndVertical

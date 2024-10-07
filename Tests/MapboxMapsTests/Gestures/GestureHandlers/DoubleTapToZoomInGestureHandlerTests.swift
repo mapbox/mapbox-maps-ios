@@ -44,7 +44,7 @@ final class DoubleTapToZoomInGestureHandlerTests: XCTestCase {
 
     func testHandler() throws {
         gestureRecognizer.getStateStub.defaultReturnValue = .recognized
-        mapboxMap.cameraState = .random()
+        mapboxMap.cameraState = .testConstantValue()
 
         gestureRecognizer.sendActions()
 

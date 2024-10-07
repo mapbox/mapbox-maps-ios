@@ -43,7 +43,7 @@ final class ImmediateViewportTransitionTests: XCTestCase {
         XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
         let observeDataSourceInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
         let observeDataSourceHandler = observeDataSourceInvocation.parameters
-        let cameraOptions = CameraOptions.random()
+        let cameraOptions = CameraOptions.testConstantValue()
 
         let shouldContinue = observeDataSourceHandler(cameraOptions)
 

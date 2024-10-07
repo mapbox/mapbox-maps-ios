@@ -37,7 +37,7 @@ final class ViewportManagerTests: XCTestCase {
 
         XCTAssertEqual([value], impl.$options.getStub.invocations.map(\.returnValue))
 
-        let newValue = ViewportOptions.random()
+        let newValue = ViewportOptions.testConstantValue()
 
         viewport.options = newValue
 
@@ -86,7 +86,7 @@ final class ViewportManagerTests: XCTestCase {
         let implInvocation = try XCTUnwrap(impl.transitionStub.invocations.first)
         XCTAssertTrue(implInvocation.parameters.toState === toState)
         XCTAssertTrue(implInvocation.parameters.transition === transition)
-        let finished = Bool.random()
+        let finished = Bool.testConstantValue()
         implInvocation.parameters.completion?(finished)
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [finished])
     }
@@ -134,7 +134,7 @@ final class ViewportManagerTests: XCTestCase {
     }
 
     func testMakeFollowPuckViewportStateWithCustomOptions() {
-        let options = FollowPuckViewportStateOptions.random()
+        let options = FollowPuckViewportStateOptions.testConstantValue()
 
         let state = viewport.makeFollowPuckViewportState(options: options)
 
@@ -142,7 +142,7 @@ final class ViewportManagerTests: XCTestCase {
     }
 
     func testMakeOverviewViewportStateWithCustomOptions() {
-        let options = OverviewViewportStateOptions.random()
+        let options = OverviewViewportStateOptions.testConstantValue()
 
         let state = viewport.makeOverviewViewportState(options: options)
 
@@ -156,7 +156,7 @@ final class ViewportManagerTests: XCTestCase {
     }
 
     func testMakeDefaultViewportTransitionWithCustomOptions() {
-        let options = DefaultViewportTransitionOptions.random()
+        let options = DefaultViewportTransitionOptions.testConstantValue()
 
         let transition = viewport.makeDefaultViewportTransition(options: options)
 

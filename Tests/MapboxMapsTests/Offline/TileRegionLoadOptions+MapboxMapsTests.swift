@@ -30,11 +30,11 @@ final class TileRegionLoadOptions_MapboxMapsTests: XCTestCase {
     func testInitialization() throws {
         let geometry: Geometry? = .random(Point(.testConstantValue()).geometry)
         let descriptors: [TilesetDescriptor]? = .random([])
-        let metadata: [Int]? = .random(Array.random(withLength: 5, generator: { Int.random(in: 0...9) }))
+        let metadata: [Int]? = .random(Array.testFixture(withLength: 5, generator: { Int.random(in: 0...9) }))
         let acceptExpired = Bool.random()
         let networkRestriction: NetworkRestriction = [.none, .disallowAll, .disallowExpensive].randomElement()!
         let averageBytesPerSecond: Int? = .random(Int.random(in: 1...10_000))
-        let extraOptions: [Int]? = .random(Array.random(withLength: 5, generator: { Int.random(in: 0...9) }))
+        let extraOptions: [Int]? = .random(Array.testFixture(withLength: 5, generator: { Int.random(in: 0...9) }))
 
         let tileRegionLoadOptions = try XCTUnwrap(TileRegionLoadOptions(
             geometry: geometry,

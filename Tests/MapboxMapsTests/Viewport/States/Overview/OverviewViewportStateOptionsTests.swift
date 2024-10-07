@@ -3,10 +3,7 @@ import XCTest
 
 final class OverviewViewportStateOptionsTests: XCTestCase {
     func testInitWithDefaultValues() {
-        let geometry: GeometryConvertible = [
-            Point(.testConstantValue()),
-            LineString([.testConstantValue(), .testConstantValue()])
-        ].randomElement()!
+        let geometry: GeometryConvertible = LineString([.testConstantValue(), .testConstantValue()])
 
         let options = OverviewViewportStateOptions(geometry: geometry)
 
@@ -18,15 +15,12 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
     }
 
     func testInitWithNonDefaultValues() {
-        let geometry: GeometryConvertible = [
-            Point(.testConstantValue()),
-            LineString([.testConstantValue(), .testConstantValue()])
-        ].randomElement()!
-        let geometryPadding = UIEdgeInsets.random()
-        let padding = UIEdgeInsets.random()
-        let bearing = CLLocationDirection?.random(.random(in: 0..<360))
-        let pitch = CGFloat?.random(.random(in: 0...80))
-        let animationDuration = TimeInterval.random(in: 0..<10)
+        let geometry: GeometryConvertible =  Point(.testConstantValue())
+        let geometryPadding = UIEdgeInsets.testConstantValue()
+        let padding = UIEdgeInsets.testConstantValue()
+        let bearing = 123.9
+        let pitch = 43.9
+        let animationDuration = TimeInterval.testConstantValue()
 
         let options = OverviewViewportStateOptions(
             geometry: geometry,

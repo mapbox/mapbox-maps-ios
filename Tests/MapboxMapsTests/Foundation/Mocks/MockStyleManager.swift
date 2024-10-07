@@ -67,7 +67,7 @@ class MockStyleManager: StyleManagerProtocol {
 
     // MARK: Style Layers
 
-    @Stubbed var stubStyleLayers: [MapboxCoreMaps.StyleObjectInfo] = .random(withLength: 3) {
+    @Stubbed var stubStyleLayers: [MapboxCoreMaps.StyleObjectInfo] = .testFixture(withLength: 3) {
         MapboxCoreMaps.StyleObjectInfo(
             id: .randomAlphanumeric(withLength: 12),
             type: MapboxMaps.LayerType.random().rawValue)

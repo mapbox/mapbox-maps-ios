@@ -91,7 +91,7 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
     }
 
     func testCancelAnimationsWithEmptyOwnersArray() {
-        let animators = [MockCameraAnimator].random(withLength: 10) {
+        let animators = [MockCameraAnimator].testFixture(withLength: 10) {
             let animator = MockCameraAnimator()
             animator.state = .stopped
             animator.owner = .init(rawValue: UUID().uuidString)
@@ -113,7 +113,7 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
     func testCancelAnimationsWithSingleOwner() {
         let owner = AnimationOwner.init(rawValue: UUID().uuidString)
 
-        let animators = [MockCameraAnimator].random(withLength: 10) {
+        let animators = [MockCameraAnimator].testFixture(withLength: 10) {
             let animator = MockCameraAnimator()
             animator.state = .inactive
             animator.owner = owner
@@ -141,12 +141,12 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
         let owner1 = AnimationOwner.init(rawValue: UUID().uuidString)
         let owner2 = AnimationOwner.init(rawValue: UUID().uuidString)
 
-        let animators: [MockCameraAnimator] = .random(withLength: 5) {
+        let animators: [MockCameraAnimator] = .testFixture(withLength: 5) {
             let animator = MockCameraAnimator()
             animator.state = .active
             animator.owner = owner1
             return animator
-        } + .random(withLength: 6) {
+        } + .testFixture(withLength: 6) {
             let animator = MockCameraAnimator()
             animator.state = .stopped
             animator.owner = owner2

@@ -14,7 +14,7 @@ final class FeatureExtensionValueTests: XCTestCase {
 
     func testInitializationWithWithNonNilValues() throws {
         let value = Int.random(in: 0..<100)
-        let features = Array.random(withLength: .random(in: 0..<10)) { () -> Feature in
+        let features = Array.testFixture(withLength: .random(in: 0..<10)) { () -> Feature in
             var feature = Feature(geometry: Point(.testConstantValue()))
             feature.identifier = .number(Double(Int.random(in: (.min)...(.max))))
             return feature
@@ -37,7 +37,7 @@ final class FeatureExtensionValueTests: XCTestCase {
     }
 
     func testNonNilFeatures() {
-        let features = Array.random(withLength: .random(in: 0..<10)) { () -> Feature in
+        let features = Array.testFixture(withLength: .random(in: 0..<10)) { () -> Feature in
             var feature = Feature(geometry: Point(.testConstantValue()))
             feature.identifier = .number(Double(Int.random(in: (.min)...(.max))))
             return feature

@@ -44,7 +44,7 @@ final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {
 
     func testHandler() throws {
         gestureRecognizer.getStateStub.defaultReturnValue = .recognized
-        mapboxMap.cameraState = .random()
+        mapboxMap.cameraState = .testConstantValue()
 
         gestureRecognizer.sendActions()
 
@@ -67,7 +67,7 @@ final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {
         let focalPoint = CGPoint(x: 1000, y: 1000)
         gestureHandler.focalPoint = focalPoint
         gestureRecognizer.getStateStub.defaultReturnValue = .recognized
-        mapboxMap.cameraState = .random()
+        mapboxMap.cameraState = .testConstantValue()
 
         gestureRecognizer.sendActions()
 

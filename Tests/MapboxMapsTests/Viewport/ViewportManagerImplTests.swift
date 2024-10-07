@@ -17,7 +17,7 @@ final class ViewportManagerImplTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        options = .random()
+        options = .testConstantValue()
         mainQueue = MockDispatchQueue()
         defaultTransition = MockViewportTransition()
         mapboxMap = MockMapboxMap()

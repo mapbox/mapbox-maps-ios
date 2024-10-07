@@ -526,7 +526,7 @@ final class AnnotationManagerImplTests: XCTestCase {
     // MARK: - Draggable
 
     func testGetDraggedAnnotations() {
-        let annotations = Array.random(withLength: 10) {
+        let annotations = Array.testFixture(withLength: 10) {
             PointAnnotation(coordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
         }
         me.annotations = annotations

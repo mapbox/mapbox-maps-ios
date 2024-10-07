@@ -31,12 +31,12 @@ final class DefaultViewportTransitionAnimationHelperTests: XCTestCase {
     }
 
     func testMakeAnimationWithZeroSpecs() throws {
-        let cameraOptions = CameraOptions.random()
+        let cameraOptions = CameraOptions.testConstantValue()
         animationSpecProvider.makeAnimationSpecsStub.defaultReturnValue = []
 
         let animation = helper.makeAnimation(
             cameraOptions: cameraOptions,
-            maxDuration: .random(in: 0...100))
+            maxDuration: 43)
 
         XCTAssertEqual(animationSpecProvider.makeAnimationSpecsStub.invocations.map(\.parameters), [cameraOptions])
 
@@ -73,7 +73,7 @@ final class DefaultViewportTransitionAnimationHelperTests: XCTestCase {
                              duration: TimeInterval,
                              delay: TimeInterval,
                              expectedScaleFactor: Double) throws {
-        let cameraOptions = CameraOptions.random()
+        let cameraOptions = CameraOptions.testConstantValue()
         let specs = [
             DefaultViewportTransitionAnimationSpec(
                 duration: duration,
@@ -85,7 +85,7 @@ final class DefaultViewportTransitionAnimationHelperTests: XCTestCase {
                 cameraOptionsComponent: MockCameraOptionsComponent())
         ]
         animationSpecProvider.makeAnimationSpecsStub.defaultReturnValue = specs
-        mapboxMap.cameraState = .random()
+        mapboxMap.cameraState = .testConstantValue()
 
         let animation = helper.makeAnimation(
             cameraOptions: cameraOptions,

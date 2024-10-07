@@ -16,7 +16,7 @@ final class HighZoomToLowZoomAnimationSpecProviderTests: XCTestCase {
     }
 
     func testMakeAnimationSpecs() {
-        let cameraOptions = CameraOptions.random()
+        let cameraOptions = CameraOptions.testConstantValue()
 
         let specs = provider.makeAnimationSpecs(cameraOptions: cameraOptions)
 

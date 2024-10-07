@@ -7,7 +7,7 @@ final class MockUIEdgeInsetsInterpolator: UIEdgeInsetsInterpolatorProtocol {
         var to: UIEdgeInsets
         var fraction: Double
     }
-    let interpolateStub = Stub<InterpolateParams, UIEdgeInsets>(defaultReturnValue: .random())
+    let interpolateStub = Stub<InterpolateParams, UIEdgeInsets>(defaultReturnValue: .testConstantValue())
     func interpolate(from: UIEdgeInsets,
                      to: UIEdgeInsets,
                      fraction: Double) -> UIEdgeInsets {

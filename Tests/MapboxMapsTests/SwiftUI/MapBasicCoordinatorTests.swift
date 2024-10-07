@@ -71,10 +71,10 @@ final class MapBasicCoordinatorTests: XCTestCase {
 
     func testOrnamentOptions() {
         let ornamentOptions = OrnamentOptions(
-            scaleBar: ScaleBarViewOptions(margins: .random(), useMetricUnits: .random()),
-            compass: CompassViewOptions(margins: .random()),
-            logo: LogoViewOptions(margins: .random()),
-            attributionButton: AttributionButtonOptions(margins: .random())
+            scaleBar: ScaleBarViewOptions(margins: .testConstantValue(), useMetricUnits: .testConstantValue()),
+            compass: CompassViewOptions(margins: .testConstantValue()),
+            logo: LogoViewOptions(margins: .testConstantValue()),
+            attributionButton: AttributionButtonOptions(margins: .testConstantValue())
         )
         update(with: MapDependencies(ornamentOptions: ornamentOptions))
 

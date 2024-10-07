@@ -133,7 +133,7 @@ final class RotateGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
 
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
-        gestureRecognizer.locationInViewStub.defaultReturnValue = .random()
+        gestureRecognizer.locationInViewStub.defaultReturnValue = .testConstantValue()
         gestureRecognizer.getVelocityStub.defaultReturnValue = 1.radiansPerSecond
         gestureRecognizer.getRotationStub.defaultReturnValue = 30.toRadians()
         gestureRecognizer.sendActions()
@@ -147,7 +147,7 @@ final class RotateGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.sendActions()
 
-        rotateGestureHandler.focalPoint = .random()
+        rotateGestureHandler.focalPoint = .testConstantValue()
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.getVelocityStub.defaultReturnValue = 1.radiansPerSecond
         gestureRecognizer.getRotationStub.defaultReturnValue = 30.toRadians()

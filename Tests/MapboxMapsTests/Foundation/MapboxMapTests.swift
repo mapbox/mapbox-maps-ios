@@ -97,6 +97,18 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(mapboxMap.__testingMap.getRenderWorldCopies(), renderWorldCopies)
     }
 
+    func testGetStyleGlyphURL() {
+        let glyphURL = "test://test/test/{fontstack}/{range}.pbf"
+        mapboxMap.__testingMap.setStyleGlyphURLForUrl(glyphURL)
+        XCTAssertEqual(mapboxMap.styleGlyphURL, glyphURL)
+    }
+
+    func testSetStyleGlyphURL() {
+        let glyphURL = "test://test/test/{fontstack}/{range}.pbf"
+        mapboxMap.styleGlyphURL = glyphURL
+        XCTAssertEqual(mapboxMap.__testingMap.getStyleGlyphURL(), glyphURL)
+    }
+
     func testGetCameraOptions() {
         XCTAssertEqual(mapboxMap.cameraState, CameraState(mapboxMap.__testingMap.getCameraState()))
     }

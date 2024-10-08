@@ -265,7 +265,8 @@ extension PerformanceStatistics {
                 textureBytes: nil,
                 vertexBytes: nil,
                 graphicsPrograms: nil,
-                graphicsProgramsCreationTimeMillis: nil
+                graphicsProgramsCreationTimeMillis: nil,
+                fboSwitchCount: nil
             ),
             perFrameStatistics: PerFrameRenderingStatistics(
                 topRenderGroups: [],

@@ -356,6 +356,16 @@ public final class MapboxMap: StyleManager {
         return __map.getElevationFor(coordinate)?.doubleValue
     }
 
+    /// The URL that points to the glyphs used by the style for rendering text labels on the map.
+    ///
+    /// This property allows setting a custom glyph URL at runtime, making it easier to
+    /// apply custom fonts to the map without modifying the base style.
+    @_spi(Experimental)
+    public var styleGlyphURL: String {
+        get { __map.getStyleGlyphURL() }
+        set { __map.setStyleGlyphURLForUrl(newValue) }
+    }
+
     // MARK: - Camera Fitting
 
     /// Transforms a view's frame into a set of coordinate bounds

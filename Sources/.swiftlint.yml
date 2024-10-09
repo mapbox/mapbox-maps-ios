@@ -3,3 +3,4 @@ opt_in_rules:
   - missing_docs
 disabled_rules:
   - file_length
+  - non_optional_string_data_conversion

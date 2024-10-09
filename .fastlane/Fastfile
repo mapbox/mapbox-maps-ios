@@ -27,7 +27,7 @@ platform :ios do
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["mapbox.ExamplesUITests.xctrunner"],
       targets: ["ExamplesUITests"],
-      code_sign_identity: "Apple Development: Machiney McMachineface",
+      code_sign_identity: "Apple Development: Created via API",
     )
     update_code_signing_settings(
       use_automatic_signing: false,
@@ -35,7 +35,7 @@ platform :ios do
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
       targets: ["Examples"],
-      code_sign_identity: "Apple Development: Machiney McMachineface",
+      code_sign_identity: "Apple Development: Created via API",
     )
     run_tests(
       workspace: 'Apps/Apps.xcworkspace',
@@ -95,7 +95,7 @@ platform :ios do
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
       targets: ["Examples"],
-      code_sign_identity: "Apple Development: Machiney McMachineface",
+      code_sign_identity: "Apple Development: Created via API",
       entitlements_file_path: "Examples/Examples_CarPlay.entitlements"
     )
     sync_code_signing(type: "appstore")
@@ -114,7 +114,7 @@ platform :ios do
 
   lane :build_tests do
     sh("cd .. && xcodegen")
-    app_store_connect_api_key # Generate API Token
+    # app_store_connect_api_key # Generate API Token
     setup_circle_ci
     sync_code_signing(app_identifier: "com.mapbox.MapboxMapsTestHost")
     update_code_signing_settings(
@@ -123,7 +123,7 @@ platform :ios do
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.MapboxMapsTestHost"],
       targets: ["MapboxTestHost"],
-      code_sign_identity: "Apple Development: Machiney McMachineface",
+      code_sign_identity: "Apple Development: Created via API",
     )
     run_tests(
       project: 'MapboxMaps.xcodeproj',

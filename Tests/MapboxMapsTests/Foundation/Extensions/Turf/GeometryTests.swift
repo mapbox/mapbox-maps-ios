@@ -147,7 +147,7 @@ final class GeometryTests: XCTestCase {
                        expectedTurfMultiPolygon.coordinates)
     }
 
-    // // MARK: - Turf Geometry → Geometry
+    // MARK: - Turf Geometry → Geometry
     func testGeometryToMBXGeometry_Point() {
         // Given
         let point = Point(CLLocationCoordinate2D(latitude: -10, longitude: 10))

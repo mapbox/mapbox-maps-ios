@@ -31,13 +31,13 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### MapboxCoreMaps,11.7.0,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### MapboxCoreMaps,11.8.0-beta.1,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
-Mapbox Core Maps version 10.0
+Mapbox Core Maps version 11.0
 Mapbox Core Maps SDK
 
-Copyright (c) 2021 Mapbox
+Copyright (c) 2024 Mapbox
 
 All rights reserved.
 
@@ -711,7 +711,7 @@ DEALINGS IN THE SOFTWARE.
 
 ---
 
-### vector-tile,1.0.4,ISC,Mapbox,https://github.com/mapbox/vector-tile
+### vector-tile-internal,1.0.4,ISC,Mapbox,https://github.com/mapbox/vector-tile-internal
 
 ```
 Copyright (c) 2016, Mapbox
@@ -1295,7 +1295,7 @@ For more information, please see
 
 ---
 
-### mapbox-base-internal,dev,BSD-3-Clause,Mapbox,https://github.com/mapbox/mapbox-base-internal
+### mapbox-base-internal,dev,BSD-3-Clause,Mapbox,https://www.mapbox.com/
 
 ```
 Copyright (c) MapBox
@@ -1595,7 +1595,7 @@ DEALINGS IN THE SOFTWARE.
 
 ---
 
-### mapbox-common,dev,Mapbox ToS,Mapbox,https://github.com/mapbox/mapbox-sdk-common
+### mapbox-common,dev,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Common SDK

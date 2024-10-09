@@ -109,7 +109,7 @@ if [ "$MODE" == "validate" ]; then
     fi
 elif [ "$MODE" == "generate" ]; then
     echo "$EXPECTED_LICENSE" > "$LICENSE_OUTPUT_PATH"
-    echo "License file has been updated."
+    echo "License file has been updated." >&2
 else
     usage
 fi

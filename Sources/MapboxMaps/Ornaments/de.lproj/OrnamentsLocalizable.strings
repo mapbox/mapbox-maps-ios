@@ -44,7 +44,7 @@
 "SDK_NAME" = "Unterstützt von Mapbox Maps";
 
 /* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "Stornieren";
+"ATTRIBUTION_CANCEL" = "Abbrechen";
 
 // MARK: - Strings that SDK expect to receive from sources
 

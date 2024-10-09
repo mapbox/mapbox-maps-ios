@@ -13,6 +13,7 @@ Map().mapStyle(.standard(font: StandardFont(rawValue: fontValue)))
 Map().mapStyle(.standard(font: .lato))
 ```
 * Introduce experimental property `MapboxMap.styleGlyphURL`. Use this property to apply custom fonts to the map at runtime, without modifying the base style.
+* Fix a console warning (`Source x missing for layer x`) when using annotation managers.
 
 ## 11.7.0 - 26 September, 2024
 

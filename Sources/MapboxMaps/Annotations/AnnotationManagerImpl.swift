@@ -134,8 +134,8 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
         }
 
         do {
-            try style.addPersistentLayer(layer, layerPosition: layerPosition)
             try style.addSource(source)
+            try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(
                 forMessage: "Failed to create source / layer in \(implementationName). Error: \(error)",

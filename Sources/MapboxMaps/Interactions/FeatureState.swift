@@ -1,42 +1,40 @@
-/// Sets the feature state to a feature in the SwiftUI context.
-///
-/// The feature is identified by two parameters:
-///  - The ``FeaturesetDescriptor`` denotes the featureset the feature belongs to.
-///  - The ``FeaturesetFeatureId`` identifies the feature inside of the featureset.
+/// Sets the feature state to a feature in the SwiftUI  ``Map``.
 @_spi(Experimental)
 @_documentation(visibility: public)
 @available(iOS 13.0, *)
-public struct FeatureState: Equatable, MapContent, PrimitiveMapContent {
-    var featureset: FeaturesetDescriptor
+public struct FeatureState<T: FeaturesetFeatureType>: Equatable, MapContent, PrimitiveMapContent {
+    var featureset: FeaturesetDescriptor<T>
     var featureId: FeaturesetFeatureId?
-    var state: JSONObject
+    var state: T.State
 
-    /// Sets the feature state.
+    /// Sets the feature state using typed descriptor and feature id.
     ///
     /// - Parameters:
-    ///   - featureset: A featureset descriptor of the feature
-    ///   - id: A feature identifier
+    ///   - featureset: A typed featureset descriptor.
+    ///   - id: A feature identifier.
     ///   - state: A state to set.
     @_documentation(visibility: public)
-    public init(_ featureset: FeaturesetDescriptor, id: FeaturesetFeatureId, state: JSONObject) {
+    public init(_ featureset: FeaturesetDescriptor<T>, id: FeaturesetFeatureId, state: T.State) {
         self.featureset = featureset
-        self.state = state
         self.featureId = id
+        self.state = state
     }
 
-    /// A convenience initializer that users the whole interactive feature.
+    /// Sets the feature state using the feature.
+    ///
+    /// The feature should have a valid ``FeaturesetFeatureType/id``. Otherwise this call is no-op.
     ///
     /// - Parameters:
-    ///   - feature: A feature to set state to.
-    ///   - state: A state to set.
+    ///   - feature: A feature.
+    ///   - state: A state instance.
     @_documentation(visibility: public)
-    public init(_ feature: InteractiveFeature, state: JSONObject) {
+    public init(_ feature: T, _ state: T.State) {
         self.featureset = feature.featureset
         self.featureId = feature.id
         self.state = state
     }
 
     func visit(_ node: MapContentNode) {
-        node.mount(MountedFeatureState(state: self))
+        node.mount(MountedFeatureState<T>(state: self))
     }
 }

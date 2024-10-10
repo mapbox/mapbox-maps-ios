@@ -29,33 +29,27 @@ extension CoreInteraction {
         }
 
         init(
-            featureset: FeaturesetDescriptor?,
-            onBegin: @escaping (InteractiveFeature?, InteractionContext) -> Bool,
+            featureset: FeaturesetDescriptor<FeaturesetFeature>?,
+            onBegin: @escaping (FeaturesetFeature?, InteractionContext) -> Bool,
             onChange: ((InteractionContext) -> Void)? = nil,
             onEnd: ((InteractionContext) -> Void)? = nil
         ) {
-            if let featureset {
-                self.onBegin = { feature, context  in
-                    let swiftContext = InteractionContext(coreContext: context)
-                    guard let feature else {
-                        return onBegin(nil, swiftContext)
-                    }
-                    guard let interactiveFeature = InteractiveFeature(queriedFeature: feature, featureset: featureset) else {
-                        return false
-                    }
-                    return onBegin(interactiveFeature, swiftContext)
+            self.onBegin = { queriedFeature, context  in
+                let feature: FeaturesetFeature? = if let queriedFeature, let featureset {
+                    FeaturesetFeature(queriedFeature: queriedFeature, featureset: featureset)
+                } else {
+                    nil
                 }
-            } else {
-                self.onBegin = { _, context in
-                    return onBegin(nil, InteractionContext(coreContext: context))
-                }
+                let swiftContext = InteractionContext(coreContext: context)
+                return onBegin(feature, swiftContext)
             }
 
             self.onEnd = onEnd.map { onEnd in
-                return { onEnd(InteractionContext(coreContext: $0))}
+                return { onEnd(InteractionContext(coreContext: $0)) }
             }
+
             self.onChange = onChange.map { onChange in
-                return { onChange(InteractionContext(coreContext: $0))}
+                return { onChange(InteractionContext(coreContext: $0)) }
             }
         }
     }
@@ -63,7 +57,7 @@ extension CoreInteraction {
     convenience init(impl: InteractionImpl) {
         let featureset = impl.target?.0
         self.init(
-            featureset: featureset,
+            featureset: featureset?.core,
             filter: impl.target?.1?.asCore,
             type: impl.type.core,
             handler: HandlerImpl(
@@ -74,6 +68,6 @@ extension CoreInteraction {
     }
 
     convenience init(layerId: String, type: CoreInteractionType, handler: @escaping MapLayerGestureHandler) {
-        self.init(featureset: .layer(layerId), filter: nil, type: type, handler: HandlerImpl(handler: handler))
+        self.init(featureset: FeaturesetDescriptor.layer(layerId).core, filter: nil, type: type, handler: HandlerImpl(handler: handler))
     }
 }

@@ -202,7 +202,7 @@ internal protocol StyleManagerProtocol {
                                      dataId: String,
                                      featureIds: [String]) -> Expected<NSNull, NSString>
 
-    func getStyleFeaturesets() -> [FeaturesetDescriptor]
+    func getStyleFeaturesets() -> [CoreFeaturesetDescriptor]
 }
 
 // MARK: Conformance

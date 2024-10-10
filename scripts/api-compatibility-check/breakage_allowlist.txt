@@ -1856,3 +1856,71 @@ Class MapView has removed conformance to Sendable
 // Standard Style types generation.
 Func MapStyle.standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:) has parameter 2 type change from Swift.String? to MapboxMaps.StandardFont?
 Func MapStyle.standardSatellite(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showRoadsAndTransit:showPedestrianRoads:) has parameter 1 type change from Swift.String? to MapboxMaps.StandardFont?
+
+
+// Featuresets types generation
+Constructor FeatureState.init(_:id:state:) has generic signature change from  to <T where T : MapboxMaps.FeaturesetFeatureType>
+Constructor FeaturesetQueryTarget.init(featureset:filter:id:) has generic signature change from  to <T where T : MapboxMaps.FeaturesetFeatureType>
+Constructor LongPressInteraction.init(_:filter:action:) has generic signature change from  to <T where T : MapboxMaps.FeaturesetFeatureType>
+Constructor TapInteraction.init(_:filter:action:) has generic signature change from  to <T where T : MapboxMaps.FeaturesetFeatureType>
+Extension FeaturesetDescriptor has generic signature change from  to <FeatureType where FeatureType : MapboxMaps.FeaturesetFeatureType>
+Func FeatureState.==(_:_:) has generic signature change from  to <T where T : MapboxMaps.FeaturesetFeatureType>
+Func FeaturesetDescriptor.featureset(_:importId:) has generic signature change from  to <FeatureType where FeatureType == MapboxMaps.FeaturesetFeature>
+Func FeaturesetDescriptor.layer(_:) has generic signature change from  to <FeatureType where FeatureType == MapboxMaps.FeaturesetFeature>
+Func MapboxMap.getFeatureState(feature:callback:) has generic signature change from  to <F where F : MapboxMaps.FeaturesetFeatureType>
+Func MapboxMap.getFeatureState(featureset:featureId:callback:) has generic signature change from  to <T where T : MapboxMaps.FeaturesetFeatureType>
+Func MapboxMap.removeFeatureState(feature:stateKey:callback:) has generic signature change from  to <F where F : MapboxMaps.FeaturesetFeatureType>
+Func MapboxMap.removeFeatureState(featureset:featureId:stateKey:callback:) has generic signature change from  to <T where T : MapboxMaps.FeaturesetFeatureType>
+Func MapboxMap.setFeatureState(feature:state:callback:) has generic signature change from  to <T where T : MapboxMaps.FeaturesetFeatureType>
+Func MapboxMap.setFeatureState(featureset:featureId:state:callback:) has generic signature change from  to <T where T : MapboxMaps.FeaturesetFeatureType>
+Struct FeatureState has generic signature change from  to <T where T : MapboxMaps.FeaturesetFeatureType>
+TypeAlias FeatureState.Body has generic signature change from  to <T where T : MapboxMaps.FeaturesetFeatureType>
+Class InteractiveFeature has been removed
+Constructor FeatureState.init(_:state:) has been removed
+Extension FeaturesetDescriptor has been changed to a Struct
+Extension FeaturesetDescriptor has ObjC name change from MBMFeaturesetDescriptor to
+Func MapboxMap.getFeatureState(feature:callback:) has been renamed to Func getFeatureState(_:callback:)
+Func MapboxMap.removeFeatureState(feature:stateKey:callback:) has been renamed to Func removeFeatureState(_:stateKey:callback:)
+Func MapboxMap.setFeatureState(feature:state:callback:) has been renamed to Func setFeatureState(_:state:callback:)
+Accessor FeaturesetQueryTarget.featureset.Get() has return type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<MapboxMaps.FeaturesetFeature>
+Accessor FeaturesetQueryTarget.featureset.Set() has parameter 0 type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<MapboxMaps.FeaturesetFeature>
+Accessor StyleManager.featuresets.Get() has return type change from [MapboxCoreMaps.FeaturesetDescriptor] to [MapboxMaps.FeaturesetDescriptor<MapboxMaps.FeaturesetFeature>]
+Constructor FeatureState.init(_:id:state:) has parameter 0 type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<T>
+Constructor FeatureState.init(_:id:state:) has parameter 2 type change from Turf.JSONObject to T.State
+Constructor FeatureState.init(_:id:state:) has return type change from MapboxMaps.FeatureState to MapboxMaps.FeatureState<T>
+Constructor FeaturesetQueryTarget.init(featureset:filter:id:) has parameter 0 type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<T>
+Constructor LongPressInteraction.init(_:filter:action:) has parameter 0 type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<T>
+Constructor LongPressInteraction.init(_:filter:action:) has parameter 2 type change from (MapboxMaps.InteractiveFeature, MapboxMaps.InteractionContext) -> Swift.Bool to (T, MapboxMaps.InteractionContext) -> Swift.Bool
+Constructor TapInteraction.init(_:filter:action:) has parameter 0 type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<T>
+Constructor TapInteraction.init(_:filter:action:) has parameter 2 type change from (MapboxMaps.InteractiveFeature, MapboxMaps.InteractionContext) -> Swift.Bool to (T, MapboxMaps.InteractionContext) -> Swift.Bool
+Func FeatureState.==(_:_:) has parameter 0 type change from MapboxMaps.FeatureState to MapboxMaps.FeatureState<T>
+Func FeatureState.==(_:_:) has parameter 1 type change from MapboxMaps.FeatureState to MapboxMaps.FeatureState<T>
+Func FeaturesetDescriptor.featureset(_:importId:) has return type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<FeatureType>
+Func FeaturesetDescriptor.layer(_:) has return type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<FeatureType>
+Func MapboxMap.getFeatureState(feature:callback:) has parameter 0 type change from MapboxMaps.InteractiveFeature to F
+Func MapboxMap.getFeatureState(feature:callback:) has parameter 1 type change from (Swift.Result<[Swift.String : Any], Swift.Error>) -> Swift.Void to (Swift.Result<F.State, Swift.Error>) -> Swift.Void
+Func MapboxMap.getFeatureState(featureset:featureId:callback:) has parameter 0 type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<T>
+Func MapboxMap.getFeatureState(featureset:featureId:callback:) has parameter 2 type change from (Swift.Result<[Swift.String : Any], Swift.Error>) -> Swift.Void to (Swift.Result<T.State, Swift.Error>) -> Swift.Void
+Func MapboxMap.removeFeatureState(feature:stateKey:callback:) has parameter 0 type change from MapboxMaps.InteractiveFeature to F
+Func MapboxMap.removeFeatureState(feature:stateKey:callback:) has parameter 1 type change from Swift.String? to F.StateKey?
+Func MapboxMap.removeFeatureState(feature:stateKey:callback:) has parameter 2 type change from ((Swift.Result<Foundation.NSNull, Swift.Error>) -> Swift.Void)? to (((Swift.Error)?) -> Swift.Void)?
+Func MapboxMap.removeFeatureState(featureset:featureId:stateKey:callback:) has parameter 0 type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<T>
+Func MapboxMap.removeFeatureState(featureset:featureId:stateKey:callback:) has parameter 2 type change from Swift.String? to T.StateKey?
+Func MapboxMap.removeFeatureState(featureset:featureId:stateKey:callback:) has parameter 3 type change from (Swift.Result<Foundation.NSNull, Swift.Error>) -> Swift.Void to (((Swift.Error)?) -> Swift.Void)?
+Func MapboxMap.removeFeatureState(featureset:featureId:stateKey:callback:) has removed default argument from parameter 2
+Func MapboxMap.setFeatureState(feature:state:callback:) has parameter 0 type change from MapboxMaps.InteractiveFeature to T
+Func MapboxMap.setFeatureState(feature:state:callback:) has parameter 1 type change from Turf.JSONObject to T.State
+Func MapboxMap.setFeatureState(feature:state:callback:) has parameter 2 type change from ((Swift.Result<Foundation.NSNull, Swift.Error>) -> Swift.Void)? to (((Swift.Error)?) -> Swift.Void)?
+Func MapboxMap.setFeatureState(featureset:featureId:state:callback:) has parameter 0 type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<T>
+Func MapboxMap.setFeatureState(featureset:featureId:state:callback:) has parameter 2 type change from Turf.JSONObject to T.State
+Func MapboxMap.setFeatureState(featureset:featureId:state:callback:) has parameter 3 type change from (Swift.Result<Foundation.NSNull, Swift.Error>) -> Swift.Void to (((Swift.Error)?) -> Swift.Void)?
+Var FeaturesetQueryTarget.featureset has declared type change from MapboxCoreMaps.FeaturesetDescriptor to MapboxMaps.FeaturesetDescriptor<MapboxMaps.FeaturesetFeature>
+Var StyleManager.featuresets has declared type change from [MapboxCoreMaps.FeaturesetDescriptor] to [MapboxMaps.FeaturesetDescriptor<MapboxMaps.FeaturesetFeature>]
+Extension FeaturesetDescriptor is now with @_documentation
+Extension FeaturesetDescriptor is now with @_spi
+Extension FeaturesetDescriptor has removed conformance to CVarArg
+Extension FeaturesetDescriptor has removed conformance to CustomDebugStringConvertible
+Extension FeaturesetDescriptor has removed conformance to CustomStringConvertible
+Extension FeaturesetDescriptor has removed conformance to Hashable
+Extension FeaturesetDescriptor has removed conformance to NSObjectProtocol
+Extension FeaturesetDescriptor is no longer open for subclassing

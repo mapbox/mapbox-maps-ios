@@ -3,10 +3,10 @@ import SwiftUI
 import os.log
 
 @available(iOS 13.0, *)
-final class MountedFeatureState: MapContentMountedComponent {
-    var state: FeatureState
+final class MountedFeatureState<T: FeaturesetFeatureType>: MapContentMountedComponent {
+    var state: FeatureState<T>
 
-    init(state: FeatureState) {
+    init(state: FeatureState<T>) {
         self.state = state
     }
 
@@ -21,14 +21,23 @@ final class MountedFeatureState: MapContentMountedComponent {
         guard let featureId = state.featureId else {
             return
         }
-        for key in state.state.keys {
+        let encoder = DictionaryEncoder()
+        guard let json = try? encoder.encode(state.state) else {
+            return
+        }
+        for key in json.keys {
             // TODO: Remove all states at once
-            context.content?.mapboxMap.value?.removeFeatureState(featureset: state.featureset, featureId: featureId, stateKey: key, callback: { _ in })
+            // TODO: refactor hack with descriptor conversion.
+            let genericFeatureset: FeaturesetDescriptor<FeaturesetFeature> = state.featureset.converted()
+            context.content?.mapboxMap.value?.removeFeatureState(
+                featureset: genericFeatureset,
+                featureId: featureId,
+                stateKey: key, callback: { _ in })
         }
     }
 
     func tryUpdate(from old: MapContentMountedComponent, with context: MapContentNodeContext) throws -> Bool {
-        guard let old = old as? MountedFeatureState else {
+        guard let old = old as? Self else {
             return false
         }
         return old.state == state

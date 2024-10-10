@@ -9,7 +9,7 @@ struct StandardStyleImportExample: View {
     @State private var panelHeight: CGFloat = 0
     @State private var showRealEstate = true
     @State private var show3DObjects = true
-    @State private var selectedPriceLabel: InteractiveFeature?
+    @State private var selectedPriceLabel: FeaturesetFeature?
 
     var body: some View {
         Map(initialViewport: .camera(center: .init(latitude: 40.72, longitude: -73.99), zoom: 11, pitch: 45)) {
@@ -39,7 +39,7 @@ struct StandardStyleImportExample: View {
                 if let selectedPriceLabel, let coordinate = selectedPriceLabel.geometry.point?.coordinates {
                     /// When there's a selected price label, we use it to set a feature state.
                     /// The `hidden` state is implemented in `fragment-realestate-NY.json` and hides label and icon.
-                    FeatureState(selectedPriceLabel, state: ["hidden": true])
+                    FeatureState(selectedPriceLabel, ["hidden": true])
 
                     /// Instead of label we show a callout annotation with animation.
                     MapViewAnnotation(coordinate: coordinate) {
@@ -103,7 +103,8 @@ struct StandardStyleImportExample: View {
 
 @available (iOS 14.0, *)
 private struct HotelCallout: View {
-    var feature: InteractiveFeature
+    var feature: FeaturesetFeature
+
     @State private var scale: CGFloat = 0.1
 
     var body: some View {
@@ -120,7 +121,7 @@ private struct HotelCallout: View {
         .callout(anchor: .bottom, color: .white, tailSize: 10)
         .scaleEffect(scale, anchor: .bottom)
         .onAppear {
-            withAnimation(Animation.interpolatingSpring(stiffness: 200, damping: 16).delay(0)) {
+            withAnimation(Animation.interpolatingSpring(stiffness: 200, damping: 16)) {
                 scale = 1.0
             }
         }
@@ -147,9 +148,9 @@ private struct NYNJBorder: MapContent {
     }
 }
 
-private extension InteractiveFeature {
-    var price: String? { properties?["price"]??.number.map { "$ \($0)" } }
-    var name: String? { properties?["name"]??.string }
+private extension FeaturesetFeature {
+    var price: String? { properties["price"]??.number.map { "$ \($0)" } }
+    var name: String? { properties["name"]??.string }
 }
 
 private let styleURL = Bundle.main.url(forResource: "fragment-realestate-NY", withExtension: "json")!

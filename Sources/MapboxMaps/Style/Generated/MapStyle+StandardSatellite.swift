@@ -1,7 +1,7 @@
 // This file is generated.
 
 extension MapStyle {
-    /// Mapbox Standard Satellite style
+    /// Mapbox Standard Satellite style.
     ///
     /// - Parameters:
     ///   - lightPreset: Switch between 4 time-of-day states: dusk, dawn, day and night. Default value: `day`.
@@ -34,6 +34,11 @@ extension MapStyle {
         return MapStyle(uri: .standardSatellite, configuration: config)
     }
 
-    /// Mapbox Standard Satellite style
+    /// Mapbox Standard Satellite style.
     public static var standardSatellite: MapStyle { MapStyle(uri: .standardSatellite) }
+}
+
+extension StyleURI {
+    /// Mapbox Standard Satellite style.
+    public static var standardSatellite: StyleURI { StyleURI(rawValue: "mapbox://styles/mapbox/standard-satellite")! }
 }

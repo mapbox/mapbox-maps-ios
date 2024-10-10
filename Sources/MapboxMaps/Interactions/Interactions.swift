@@ -50,7 +50,7 @@ public struct TapInteraction: Interaction {
     ///    - action: Interaction action.
     @_documentation(visibility: public)
     public init(action: @escaping (InteractionContext) -> Bool) {
-        self.impl = InteractionImpl(type: .tap, action: action)
+        self.impl = InteractionImpl(.tap, action)
     }
 
     /// Creates a Tap interaction on the specified featureset.
@@ -65,12 +65,12 @@ public struct TapInteraction: Interaction {
     ///    - filter: An optional filter of features that should trigger the interaction.
     ///    - action: An interaction action.
     @_documentation(visibility: public)
-    public init(_ featureset: FeaturesetDescriptor, filter: Exp? = nil, action: @escaping (InteractiveFeature, InteractionContext) -> Bool) {
-        self.impl = InteractionImpl(
-            featureset: featureset,
-            filter: filter,
-            type: .tap,
-            onBegin: action)
+    public init<T: FeaturesetFeatureType>(
+        _ featureset: FeaturesetDescriptor<T>,
+        filter: Exp? = nil,
+        action: @escaping (T, InteractionContext) -> Bool
+    ) {
+        self.impl = InteractionImpl(.tap, featureset, filter, action)
     }
 }
 
@@ -108,7 +108,7 @@ public struct LongPressInteraction: Interaction {
     ///    - action: Interaction action.
     @_documentation(visibility: public)
     public init(action: @escaping (InteractionContext) -> Bool) {
-        self.impl = InteractionImpl(type: .longPress, action: action)
+        self.impl = InteractionImpl(.longPress, action)
     }
 
     /// Creates a Long Press interaction on the specified featureset.
@@ -123,23 +123,23 @@ public struct LongPressInteraction: Interaction {
     ///    - filter: An optional filter of features that should trigger the interaction.
     ///    - action: An interaction action.
     @_documentation(visibility: public)
-    public init(_ featureset: FeaturesetDescriptor, filter: Exp? = nil, action: @escaping (InteractiveFeature, InteractionContext) -> Bool) {
-        self.impl = InteractionImpl(
-            featureset: featureset,
-            filter: filter,
-            type: .longPress,
-            onBegin: action)
+    public init<T: FeaturesetFeatureType>(
+        _ featureset: FeaturesetDescriptor<T>,
+        filter: Exp? = nil,
+        action: @escaping (T, InteractionContext) -> Bool
+    ) {
+        self.impl = InteractionImpl(.longPress, featureset, filter, action)
     }
 }
 
-/// For internal use in Annotaitons.
+/// For internal use in Annotations.
 struct DragInteraction: Interaction {
-    public let impl: InteractionImpl
+    let impl: InteractionImpl
 
-    public init(
-        _ featureset: FeaturesetDescriptor,
+    init(
+        _ featureset: FeaturesetDescriptor<FeaturesetFeature>,
         filter: Exp? = nil,
-        onBegin: @escaping (InteractiveFeature, InteractionContext) -> Bool,
+        onBegin: @escaping (FeaturesetFeature, InteractionContext) -> Bool,
         onMove: @escaping (InteractionContext) -> Void,
         onEnd: @escaping (InteractionContext) -> Void
     ) {
@@ -172,13 +172,13 @@ public struct InteractionImpl {
             }
         }
     }
-    let target: (FeaturesetDescriptor, Exp?)?
+    let target: (FeaturesetDescriptor<FeaturesetFeature>, Exp?)?
     let type: InteractionType
-    let onBegin: (InteractiveFeature?, InteractionContext) -> Bool
+    let onBegin: (FeaturesetFeature?, InteractionContext) -> Bool
     let onChange: ((InteractionContext) -> Void)?
     let onEnd: ((InteractionContext) -> Void)?
 
-    init(type: InteractionType, action: @escaping (InteractionContext) -> Bool) {
+    init(_ type: InteractionType, _ action: @escaping (InteractionContext) -> Bool) {
         target = nil
         self.type = type
         onBegin = { queriedFeature, context in
@@ -190,10 +190,10 @@ public struct InteractionImpl {
     }
 
     init(
-        featureset: FeaturesetDescriptor,
+        featureset: FeaturesetDescriptor<FeaturesetFeature>,
         filter: Exp?,
         type: InteractionType,
-        onBegin: @escaping (InteractiveFeature, InteractionContext) -> Bool,
+        onBegin: @escaping (FeaturesetFeature, InteractionContext) -> Bool,
         onChange: ((InteractionContext) -> Void)? = nil,
         onEnd: ((InteractionContext) -> Void)? = nil
     ) {
@@ -207,6 +207,19 @@ public struct InteractionImpl {
         }
         self.onEnd = onEnd
         self.onChange = onChange
+    }
+
+    init<T: FeaturesetFeatureType>(_ type: InteractionType, _ featureset: FeaturesetDescriptor<T>, _ filter: Exp? = nil, _ action: @escaping (T, InteractionContext) -> Bool) {
+        self.init(
+            featureset: featureset.converted(),
+            filter: filter,
+            type: type,
+            onBegin: { feature, context in
+                if let converted = T(from: feature) {
+                    return action(converted, context)
+                }
+                return true
+            })
     }
 }
 

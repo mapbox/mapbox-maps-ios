@@ -202,19 +202,36 @@ final class MockMapboxMap: MapboxMapProtocol {
     }
 
     struct FeatureStateParams {
-        var featureset: FeaturesetDescriptor
+        var featureset: FeaturesetDescriptor<FeaturesetFeature>
         var featureId: FeaturesetFeatureId
         var state: JSONObject?
         var key: String?
     }
     var setFeatureStateStub = Stub<FeatureStateParams, Cancelable>(defaultReturnValue: AnyCancelable.empty)
-    func setFeatureState(featureset: FeaturesetDescriptor, featureId: FeaturesetFeatureId, state: Turf.JSONObject, callback: @escaping (Result<NSNull, any Error>) -> Void) -> any Cancelable {
-        setFeatureStateStub.call(with: .init(featureset: featureset, featureId: featureId, state: state))
+    func setFeatureState<T: FeaturesetFeatureType>(
+        featureset: FeaturesetDescriptor<T>,
+        featureId: FeaturesetFeatureId,
+        state: T.State, callback: ((Error?) -> Void)?
+    ) -> any Cancelable {
+        setFeatureStateStub.call(
+            with: .init(featureset: featureset.converted(),
+                        featureId: featureId,
+                        state: encodeState(state).flatMap(JSONObject.init(turfRawValue:))))
     }
 
     var removeFeatureStateStub = Stub<FeatureStateParams, Cancelable>(defaultReturnValue: AnyCancelable.empty)
-    func removeFeatureState(featureset: FeaturesetDescriptor, featureId: MapboxMaps.FeaturesetFeatureId, stateKey: String?, callback: @escaping (Result<NSNull, any Error>) -> Void) -> any Cancelable {
-        removeFeatureStateStub.call(with: .init(featureset: featureset, featureId: featureId, key: stateKey))
+    func removeFeatureState<T: FeaturesetFeatureType>(
+        featureset: FeaturesetDescriptor<T>,
+        featureId: FeaturesetFeatureId,
+        stateKey: T.StateKey?,
+        callback: ((Error?) -> Void)?
+    ) -> Cancelable {
+        removeFeatureStateStub.call(
+            with: .init(
+                featureset: featureset.converted(),
+                featureId: featureId,
+                key: stateKey?.description
+            ))
     }
 
     let dispatchStub = Stub<CorePlatformEventInfo, Void>()
@@ -237,9 +254,9 @@ final class MockMapboxMap: MapboxMapProtocol {
             fatalError()
         }
         guard let featureset = interaction.featureset else { return AnyCancelable.empty }
-        return addInteraction(InteractionImpl(featureset: featureset, filter: nil, type: type, onBegin: { feature, context in
+        return addInteraction(InteractionImpl(featureset: .init(core: featureset), filter: nil, type: type, onBegin: { feature, context in
             let queriedFeature = QueriedFeature(
-                __feature: MapboxCommon.Feature(feature.originalFeature),
+                __feature: MapboxCommon.Feature(feature.geoJsonFeature),
                 source: "",
                 sourceLayer: nil,
                 state: [String: Any](),
@@ -278,17 +295,21 @@ final class MockMapboxMap: MapboxMapProtocol {
         }
     }
 
-    func simulateInteraction(_ type: InteractionType, _ featureset: FeaturesetDescriptor?, feature: Feature?, context: InteractionContext) {
-        let interactiveFeature: InteractiveFeature? = if let featureset, let feature {
-            InteractiveFeature(id: feature.identifier?.string.map { FeaturesetFeatureId(id: $0) }, featureset: featureset, feature: feature, state: nil)
+    func simulateInteraction(_ type: InteractionType, _ featureset: FeaturesetDescriptor<FeaturesetFeature>?, feature: Feature?, context: InteractionContext) {
+        let featuresetFeature: FeaturesetFeature? = if let featureset, let feature {
+            FeaturesetFeature(
+                id: feature.identifier?.string.map { FeaturesetFeatureId(id: $0) },
+                featureset: featureset,
+                geoJsonFeature: feature,
+                state: JSONObject())
         } else {
             nil
         }
 
-        simulateInteraction(type: type, feature: interactiveFeature, context: context)
+        simulateInteraction(type: type, feature: featuresetFeature, context: context)
     }
 
-    func simulateInteraction(type: InteractionType, feature: InteractiveFeature?, context: InteractionContext) {
+    func simulateInteraction(type: InteractionType, feature: FeaturesetFeature?, context: InteractionContext) {
         for (_, interaction) in interactions.reversed() {
             guard type.canHandle(interaction),
                   feature?.featureset == interaction.target?.0 else { continue }

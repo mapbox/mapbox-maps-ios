@@ -37,6 +37,12 @@ extension MapStyle {
     /// [Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) is a general-purpose style with 3D visualization.
     public static var standard: MapStyle { MapStyle(uri: .standard) }
 }
+
+extension StyleURI {
+    /// [Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) is a general-purpose style with 3D visualization.
+    public static var standard: StyleURI { StyleURI(rawValue: "mapbox://styles/mapbox/standard")! }
+}
+
 /// Switch between 3 themes: default, faded and monochrome
 public struct StandardTheme: RawRepresentable, Hashable, Sendable {
     public let rawValue: String

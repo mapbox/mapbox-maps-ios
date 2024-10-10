@@ -390,7 +390,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
     private var queryToken: AnyCancelable?
     private func clusterInteractionHandler(
         _ callbackKeyPath: KeyPath<AnnotationManagerImpl, ((AnnotationClusterGestureContext) -> Void)?>
-    ) -> (InteractiveFeature, InteractionContext) -> Bool {
+    ) -> (FeaturesetFeature, InteractionContext) -> Bool {
         return { [weak self] feature, context in
             guard
                 let self,
@@ -398,7 +398,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
                 return false
             }
             self.queryToken = mapFeatureQueryable
-                .getAnnotationClusterContext(sourceId: id, feature: feature.originalFeature, context: context) { result in
+                .getAnnotationClusterContext(sourceId: id, feature: feature.geoJsonFeature, context: context) { result in
                     if case let .success(clusterContext) = result {
                         callback(clusterContext)
                     }
@@ -412,7 +412,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
         return TapInteraction(.layer(layerId)) { [weak self] feature, context in
             guard
                 let self,
-                let featureId = feature.originalFeature.identifier?.string else { return false }
+                let featureId = feature.id?.id else { return false }
 
             let tappedIndex = annotations.firstIndex { $0.id == featureId }
             guard let tappedIndex else { return false }
@@ -434,17 +434,13 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
 
     private func longPressInteraction(layerId: String) -> LongPressInteraction {
         LongPressInteraction(.layer(layerId)) { [weak self] feature, context in
-            guard
-                let self,
-                let featureId = feature.originalFeature.identifier?.string else { return false }
-
-            return annotations.first { $0.id == featureId }?.longPressHandler?(context) ?? false
+            self?.annotations.first { $0.id == feature.id?.id }?.longPressHandler?(context) ?? false
         }
     }
 
     private func dragInteraction(layerId: String) -> DragInteraction {
         DragInteraction(.layer(layerId)) { [weak self] feature, ctx in
-            guard let id = feature.originalFeature.identifier?.string else { return false }
+            guard let id = feature.id?.id else { return false }
             return self?.handleDragBegin(with: id, context: ctx) ?? false
         } onMove: { [weak self] ctx in
             self?.handleDragChange(context: ctx)

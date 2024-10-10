@@ -34,4 +34,4 @@
 - ``QueriedSourceFeature``
 - ``RenderedQueryOptions``
 - ``AnnotatedFeature``
-- ``FeaturesetDescriptor``
+- ``FeaturesetDescriptor-class``

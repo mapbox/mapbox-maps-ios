@@ -51,10 +51,4 @@ public struct StyleURI: Hashable, RawRepresentable, Sendable {
     /// The Mapbox Satellite Streets style combines the high-resolution satellite and aerial imagery
     /// of Mapbox Satellite with unobtrusive labels and translucent roads from Mapbox Streets.
     public static let satelliteStreets = StyleURI(rawValue: "mapbox://styles/mapbox/satellite-streets-v12")!
-
-    /// Mapbox Standard is a general-purpose style with 3D visualization.
-    public static let standard = StyleURI(rawValue: "mapbox://styles/mapbox/standard")!
-
-    /// Mapbox Standard Satellite
-    public static let standardSatellite = StyleURI(rawValue: "mapbox://styles/mapbox/standard-satellite")!
 }

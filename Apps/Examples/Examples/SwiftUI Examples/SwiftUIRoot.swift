@@ -8,15 +8,18 @@ struct SwiftUIRoot: View {
         ExamplesNavigationView {
             List {
                 Section {
-                    ExampleLink("Show me the map!", note: "Just a Map().", destination: Map().ignoresSafeArea())
-                    ExampleLink("Locate Me", note: "Use Viewport to create user location control.", destination: LocateMeExample())
-                    ExampleLink("Locations", note: "New look of locations, configure standard style parameters.", destination: StandardStyleLocationsExample())
-                    ExampleLink("Style Imports", note: "Learn how to use style imports and add interactions to featuresets.", destination: StandardStyleImportExample())
-                    ExampleLink("Dynamic Styling Example", note: "Use dynamic styling at runtime", destination: DynamicStylingExample())
                     ExampleLink("Simple Map", note: "Camera observing, automatic dark mode support.", destination: SimpleMapExample())
-                    ExampleLink("Snapshot Map", note: "Make a snapshot of the map.", destination: SnapshotMapExample())
+                    ExampleLink("Locate Me", note: "Use Viewport to create user location control.", destination: LocateMeExample())
+                    ExampleLink("Dynamic Styling Example", note: "Use dynamic styling at runtime", destination: DynamicStylingExample())
                     ExampleLink("Override Location", note: "Override LocationProvider using Combine", destination: LocationOverrideExample())
                 } header: { Text("Getting started") }
+
+                Section {
+                    ExampleLink("Locations", note: "New look of locations, configure standard style parameters.", destination: StandardStyleLocationsExample())
+                    ExampleLink("Style Imports", note: "Learn how to use style imports and add interactions to featuresets.", destination: StandardStyleImportExample())
+                    ExampleLink("Interactive features", note: "Use featuresets to add interactions to Standard Style.", destination: StandardInteractiveFeaturesExample())
+                    ExampleLink("Interactive buildings", note: "Add interactions to buildings in Standard Style", destination: StandardInteractiveBuildingsExample())
+                } header: { Text("Standard Style") }
 
                 Section {
                     ExampleLink("View Annotations", note: "Add/remove view annotation on tap.", destination: ViewAnnotationsExample())
@@ -25,7 +28,7 @@ struct SwiftUIRoot: View {
                 } header: { Text("Annotations") }
 
                 Section {
-#if !swift(>=5.9) || !os(visionOS)
+#if !os(visionOS)
                     ExampleLink("Query Rendered Features on tap", note: "Use MapReader and MapboxMap to query rendered features.", destination: FeaturesQueryExample())
 #endif
                     ExampleLink("Clustering data", note: "Display GeoJSON data with clustering using custom layers and handle interactions with them.", destination: ClusteringExample())
@@ -36,6 +39,7 @@ struct SwiftUIRoot: View {
                     ExampleLink("Viewport Playground", note: "Showcase of the possible viewport states.", destination: ViewportPlayground())
                     ExampleLink("Puck playground", note: "Display user location using puck.", destination: PuckPlayground())
                     ExampleLink("Annotation Order", destination: AnnotationsOrderTestExample())
+                    ExampleLink("Snapshot Map", note: "Make a snapshot of the map.", destination: SnapshotMapExample())
 
                     ExampleLink("Attribution url via callback", note: "Works on iOS 13+", destination: AttributionManualURLOpen())
                     ExampleLink("Raster particles", note: "Rendering of raster particles.", destination: RasterParticleExample())
@@ -43,7 +47,7 @@ struct SwiftUIRoot: View {
                     if #available(iOS 15.0, *) {
                         ExampleLink("Attribution url open via environment", note: "Works on iOS 15+", destination: AttributionEnvironmentURLOpen())
                     }
-#if !swift(>=5.9) || !os(visionOS)
+#if !os(visionOS)
                     if #available(iOS 16.5, *) {
                         ExampleLink("Attribution dialog with presented sheet", destination: AttributionDialogueWithSheet())
                     }

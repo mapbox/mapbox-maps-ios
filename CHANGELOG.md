@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Refactor of the experimental Interactions and Featuresets API:
+  - `InteractiveFeature` is renamed to `FeaturesetFeature`.
+  - Introduce new `StandardPoiFeature`, `StandardBuildingsFeature`, `StandardPlaceLabelsFeature`.
+  - Introduce new `FeaturesetDescriptor`.
+
 * Generate `MapStyle.standard` and `MapStyle.standardSatellite` from the style specification. Added the new `StandardFont` type to represent the font family in these configurations. If you used a string variable, update your code:
 ```swift
 // Old:

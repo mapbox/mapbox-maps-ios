@@ -11,7 +11,7 @@ final class GeoJSONSourceIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved GeoJSONSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.styleURI = .streets
+        mapView.mapboxMap.styleJSON = .testStyleJSON()
 
         didFinishLoadingStyle = { mapView in
             var source = GeoJSONSource(id: "test-source")

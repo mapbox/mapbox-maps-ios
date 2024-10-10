@@ -8,7 +8,7 @@ final class ExampleIntegrationTest: MapViewIntegrationTestCase {
         let expectation = XCTestExpectation(description: "Wait for map to idle")
         expectation.expectedFulfillmentCount = 2
 
-        mapView.mapboxMap.styleURI = .streets
+        mapView.mapboxMap.styleJSON = .testStyleJSON()
 
         didFinishLoadingStyle = { _ in
             expectation.fulfill()

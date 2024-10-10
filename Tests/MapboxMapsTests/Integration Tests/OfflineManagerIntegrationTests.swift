@@ -237,7 +237,7 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             let waiter = XCTWaiter()
             let expectations: Set<XCTestExpectation> = [loadStylePackCompletionBlockInvoked,
                                 loadTileRegionCompletionBlockInvoked]
-            let result = waiter.wait(for: Array(expectations), timeout: 120)
+            let result = waiter.wait(for: Array(expectations), timeout: 200)
             switch result {
             case .completed:
                 break

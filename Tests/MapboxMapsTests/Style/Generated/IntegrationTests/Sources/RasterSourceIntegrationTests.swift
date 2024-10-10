@@ -11,7 +11,7 @@ final class RasterSourceIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved RasterSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.styleURI = .streets
+        mapView.mapboxMap.styleJSON = .testStyleJSON()
 
         didFinishLoadingStyle = { mapView in
             var source = RasterSource(id: "test-source")

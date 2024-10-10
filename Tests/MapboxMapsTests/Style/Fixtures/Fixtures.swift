@@ -132,3 +132,19 @@ internal extension Array where Element == RasterArraySource.RasterDataLayer {
         return [.init(layerId: "test-layer-id", bands: ["band_0", "band_1"])]
     }
 }
+
+internal extension String {
+    static func testStyleJSON() -> String {
+        let styleJSONObject: [String: Any] = [
+            "version": 8,
+            "center": [
+                -87.6298,
+                 41.8781
+            ],
+            "zoom": 12,
+            "sources": [Any](),
+            "layers": [Any]()
+        ]
+        return ValueConverter.toJson(forValue: styleJSONObject)
+    }
+}

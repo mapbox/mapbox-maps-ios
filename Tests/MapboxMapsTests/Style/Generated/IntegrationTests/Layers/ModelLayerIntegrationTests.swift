@@ -15,7 +15,7 @@ final class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved ModelLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.styleURI = .streets
+        mapView.mapboxMap.styleJSON = .testStyleJSON()
 
         didFinishLoadingStyle = { mapView in
 

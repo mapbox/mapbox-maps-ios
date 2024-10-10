@@ -45,7 +45,7 @@ final class MapViewIntegrationTests: IntegrationTestCase {
             let mapLoadExpectation = self.expectation(description: "map is loaded")
             let animationExpectation = self.expectation(description: "camera animation is completed")
 
-            let mapView = MapView(frame: rootView.bounds)
+            let mapView = MapView(frame: rootView.bounds, mapInitOptions: MapInitOptions(styleJSON: .testStyleJSON()))
             weakMapView = mapView
 
             rootView.addSubview(mapView)

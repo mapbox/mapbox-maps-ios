@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.7.1 - 10 October, 2024
+
+* Respect holes in polygons when querying rendered features.
+* Update CoreMaps to 11.7.1 and Common to 24.7.1
+
 ## 11.7.0 - 26 September, 2024
 
 * Fix the bug where displaying ViewAnnotation and setting a feature state simultaneously could result in an unapplied feature state.

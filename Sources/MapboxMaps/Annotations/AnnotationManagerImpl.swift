@@ -7,8 +7,6 @@ protocol AnnotationManagerImplDelegate: AnyObject {
 }
 
 protocol AnnotationManagerImplProtocol {
-    var allLayerIds: [String] { get }
-
     func destroy()
 }
 
@@ -45,7 +43,6 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
 
     private var dragId: String { "\(id)_drag" }
     private var clusterId: String?
-    var allLayerIds: [String] { [id, dragId, clusterId].compactMap { $0 } }
 
     // Private state
 

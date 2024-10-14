@@ -27,11 +27,10 @@ final class PointAnnotationClusteringExample: UIViewController, ExampleProtocol 
     func addPointAnnotations() {
         // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
         let image = UIImage(named: "fire-station-11")!
-        // Fire_Hydrants.geojson contains information about fire hydrants in Washington, D.C.
-        // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
-        // Decode the GeoJSON into a feature collection on a background thread
-        _ = Bundle.main.url(forResource: "Fire_Hydrants", withExtension: "geojson")!
         DispatchQueue.global(qos: .userInitiated).async {
+            // Fire_Hydrants.geojson contains information about fire hydrants in Washington, D.C.
+            // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
+            // Decode the GeoJSON into a feature collection on a background thread
             guard let featureCollection = try? self.decodeGeoJSON(from: "Fire_Hydrants") else {
                 return
             }

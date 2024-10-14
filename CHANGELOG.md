@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.8.0-beta.1 - 14 October, 2024
+
 * [SwiftUI] Fixed crash when ForEvery was used with duplicated IDs.
 * Introduce experimental Geofencing API. Implementation example: [GeofencingExample.swift](Apps/Examples/Examples/All%20Examples/GeofencingExample.swift)
 * Refactor of the experimental Interactions and Featuresets API:

@@ -561,6 +561,28 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertTrue(removedModels.contains("test-id-3"))
     }
 
+    func testForEveryDuplicatedIds() {
+        styleManager.hasStyleModelStub.defaultReturnValue = true
+
+        setContent {
+            ForEvery([1, 2, 1], id: \.self) { id in
+                Model(id: "test-id-\(id)", uri: .init(string: "test-URL-\(id)"))
+            }
+        }
+
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.map(\.parameters.modelId), ["test-id-1", "test-id-2", "test-id-1"])
+        XCTAssertEqual(styleManager.removeStyleModelStub.invocations.map(\.parameters.modelId), [])
+
+        setContent {
+            ForEvery([1, 2, 3], id: \.self) { id in
+                Model(id: "test-id-\(id)", uri: .init(string: "test-URL-\(id)"))
+            }
+        }
+
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.map(\.parameters.modelId), ["test-id-1", "test-id-2", "test-id-1", "test-id-3"])
+        XCTAssertEqual(styleManager.removeStyleModelStub.invocations.map(\.parameters.modelId), [])
+    }
+
     func testComponent() throws {
         sourceManager.sourceExistsStub.defaultReturnValue = true
         styleManager.styleLayerExistsStub.defaultReturnValue = true

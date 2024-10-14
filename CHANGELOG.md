@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* [SwiftUI] Fixed crash when ForEvery was used with duplicated IDs.
+
 * Refactor of the experimental Interactions and Featuresets API:
   - `InteractiveFeature` is renamed to `FeaturesetFeature`.
   - Introduce new `StandardPoiFeature`, `StandardBuildingsFeature`, `StandardPlaceLabelsFeature`.

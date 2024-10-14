@@ -91,7 +91,7 @@ extension FeaturesetDescriptor {
 
     var core: CoreFeaturesetDescriptor {
         CoreFeaturesetDescriptor(
-            __featuresetId: featuresetId,
+            featuresetId: featuresetId,
             importId: importId,
             layerId: layerId
         )

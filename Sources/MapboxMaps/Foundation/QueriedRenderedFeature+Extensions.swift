@@ -8,6 +8,6 @@ extension QueriedRenderedFeature {
     @_documentation(visibility: public)
     public var queryTargets: [FeaturesetQueryTarget] {
         // TODO: make refined for swift.
-        targets.map(FeaturesetQueryTarget.init(core:))
+        __targets.map(FeaturesetQueryTarget.init(core:))
     }
 }

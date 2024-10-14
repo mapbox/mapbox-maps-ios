@@ -95,6 +95,7 @@
 		902FD51EC410A1E8BD88941D /* NavigationSimulatorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A090EE21C9A65BE2697868F /* NavigationSimulatorExample.swift */; platformFilters = (ios, ); };
 		918F4BDCC25819DD68BC9518 /* LayerSlotExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = D058C94675BB58AE74392829 /* LayerSlotExample.swift */; platformFilters = (ios, ); };
 		94DB7E8C829041DC5F5B2300 /* InstrumentClusterCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD7661708AEADD25AB726B4 /* InstrumentClusterCarPlaySceneDelegate.swift */; platformFilters = (ios, ); };
+		9717811318AAE88DE9214307 /* GeofencingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9127909E8758EAC82E19F7 /* GeofencingExample.swift */; platformFilters = (ios, ); };
 		9A403D6AB6D6336E212726C5 /* CameraAnimatorsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDABBED8502001D17EF30F35 /* CameraAnimatorsExample.swift */; platformFilters = (ios, ); };
 		9DFE9DDE63B78393031C843E /* Examples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B30F4697545D9F02DD4425D /* Examples.swift */; platformFilters = (ios, ); };
 		A3D7C0836BFE6FEB40C3C15A /* BasicLocationPulsingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC98E9169E8E7DFE8DC1CB27 /* BasicLocationPulsingExample.swift */; platformFilters = (ios, ); };
@@ -174,6 +175,7 @@
 		083C452C7342E73F6F16A83C /* OfflineManagerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineManagerExample.swift; sourceTree = "<group>"; };
 		0A5C0A3C44715B96D646ACB7 /* PitchAndDistanceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchAndDistanceExample.swift; sourceTree = "<group>"; };
 		0AD7661708AEADD25AB726B4 /* InstrumentClusterCarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrumentClusterCarPlaySceneDelegate.swift; sourceTree = "<group>"; };
+		0F9127909E8758EAC82E19F7 /* GeofencingExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofencingExample.swift; sourceTree = "<group>"; };
 		0FBAFDF929532EDB964786F4 /* StandardInteractiveFeaturesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardInteractiveFeaturesExample.swift; sourceTree = "<group>"; };
 		10C7CEE3F343DF482D428211 /* ExampleProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleProtocol.swift; sourceTree = "<group>"; };
 		1229327C13654C370B5641FC /* OfflineRegionManagerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegionManagerExample.swift; sourceTree = "<group>"; };
@@ -522,6 +524,7 @@
 				133E4EABC7540ED460F08B8F /* ExternalVectorSourceExample.swift */,
 				6239A5CDA61892902765B843 /* FeaturesAtPointExample.swift */,
 				D3FA795972BB141B9C582ED0 /* FeatureStateExample.swift */,
+				0F9127909E8758EAC82E19F7 /* GeofencingExample.swift */,
 				384FD8FC97B9F5011AF4BD61 /* GlobeFlyToExample.swift */,
 				70922E748D003176C4A3C60A /* HeatmapLayerGlobeExample.swift */,
 				3BCB1CC4577300FEF4DE017B /* InsetMapExample.swift */,
@@ -860,6 +863,7 @@
 				FDA4B57BE32D92BB57A5B7E6 /* FeaturesAtPointExample.swift in Sources */,
 				854CE1A84AADF6FBB232CB5F /* FeaturesQueryExample.swift in Sources */,
 				AE6E90DB7B6DA4580C2DAB59 /* FrameViewAnnotationsExample.swift in Sources */,
+				9717811318AAE88DE9214307 /* GeofencingExample.swift in Sources */,
 				0414AD72988F405F5BA1D843 /* GlobeFlyToExample.swift in Sources */,
 				49F6209402BF34C06C90107A /* HeatmapLayerGlobeExample.swift in Sources */,
 				B9B1EE72E6203358F2785916 /* IconSizeChangeExample.swift in Sources */,

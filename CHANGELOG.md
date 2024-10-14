@@ -5,7 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * [SwiftUI] Fixed crash when ForEvery was used with duplicated IDs.
-
+* Introduce experimental Geofencing API. Implementation example: [GeofencingExample.swift](Apps/Examples/Examples/All%20Examples/GeofencingExample.swift)
 * Refactor of the experimental Interactions and Featuresets API:
   - `InteractiveFeature` is renamed to `FeaturesetFeature`.
   - Introduce new `StandardPoiFeature`, `StandardBuildingsFeature`, `StandardPlaceLabelsFeature`.

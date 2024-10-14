@@ -63,7 +63,7 @@ final class CircleAnnotationExample: UIViewController, ExampleProtocol {
             }
             annotation.dragEndHandler = { annotation, _ in
                 annotation.circleRadius = 12
-                annotation.circleStrokeWidth = 0
+                annotation.circleStrokeWidth = 4
                 print("annotation drag ended: \(annotation.id)")
             }
             annotations.append(annotation)

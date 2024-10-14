@@ -4,16 +4,23 @@ import Foundation
 import UIKit
 
 class AttributionDialogTests: XCTestCase {
-
     var attributionDialogManager: AttributionDialogManager!
     var mockDataSource: MockAttributionDataSource!
     var mockDelegate: MockAttributionDialogManagerDelegate!
+    private var isGeofenceActive: Bool = false
+    private var isGeofenceConsentGiven: Bool = true
 
     override func setUp() {
         super.setUp()
         mockDataSource = MockAttributionDataSource()
         mockDelegate = MockAttributionDialogManagerDelegate()
-        attributionDialogManager = AttributionDialogManager(dataSource: mockDataSource, delegate: mockDelegate)
+        attributionDialogManager = AttributionDialogManager(
+            dataSource: mockDataSource,
+            delegate: mockDelegate,
+            isGeofenceActive: { self.isGeofenceActive },
+            setGeofenceConsent: { self.isGeofenceConsentGiven = $0 },
+            getGeofenceConsent: { self.isGeofenceConsentGiven }
+        )
     }
 
     override func tearDown() {
@@ -24,9 +31,65 @@ class AttributionDialogTests: XCTestCase {
         mockDelegate = nil
     }
 
-    func testShowTelemetryDialogMetricsEnabled() throws {
+    func testShowGeofencingDialogGeofencingEnabled() throws {
+        let viewController = UIViewController()
+        let window = UIWindow()
+        window.rootViewController = viewController
+        window.makeKeyAndVisible()
+        isGeofenceConsentGiven = true
+
+        attributionDialogManager.showGeofencingAlertController(from: viewController)
+
+        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
+        let geofenceTitle = GeofencingStrings.geofencingTitle
+        XCTAssertEqual(alert.title, geofenceTitle)
+
+        let message = GeofencingStrings.geofencingMessage
+        XCTAssertEqual(alert.message, message)
+
+        guard alert.actions.count == 2 else {
+            XCTFail("Telemetry alert should have 2 actions")
+            return
+        }
+
+        let declineTitle = GeofencingStrings.geofencingEnabledOffMessage
+        XCTAssertEqual(alert.actions[0].title, declineTitle)
+
+        let participateTitle = GeofencingStrings.geofencingEnabledOnMessage
+        XCTAssertEqual(alert.actions[1].title, participateTitle)
+    }
+
+    func testShowGeofencingDialogGeofencingDisabled() throws {
         let viewController = UIViewController()
         let bundle = Bundle.mapboxMaps
+        let window = UIWindow()
+        window.rootViewController = viewController
+        window.makeKeyAndVisible()
+        isGeofenceConsentGiven = false
+
+        attributionDialogManager.showGeofencingAlertController(from: viewController)
+
+        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
+        let geofenceTitle = GeofencingStrings.geofencingTitle
+        XCTAssertEqual(alert.title, geofenceTitle)
+
+        let message = GeofencingStrings.geofencingMessage
+        XCTAssertEqual(alert.message, message)
+
+        guard alert.actions.count == 2 else {
+            XCTFail("Telemetry alert should have 2 actions")
+            return
+        }
+
+        let declineTitle = GeofencingStrings.geofencingDisabledOffMessage
+        XCTAssertEqual(alert.actions[0].title, declineTitle)
+
+        let participateTitle = GeofencingStrings.geofencingDisabledOnMessage
+        XCTAssertEqual(alert.actions[1].title, participateTitle)
+    }
+
+    func testShowTelemetryDialogMetricsEnabled() throws {
+        let viewController = UIViewController()
         let window = UIWindow()
         window.rootViewController = viewController
         window.makeKeyAndVisible()
@@ -35,16 +98,10 @@ class AttributionDialogTests: XCTestCase {
         attributionDialogManager.showTelemetryAlertController(from: viewController)
 
         let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
-        let telemetryTitle = NSLocalizedString("TELEMETRY_TITLE",
-                                               tableName: Ornaments.localizableTableName,
-                                               bundle: bundle,
-                                               comment: "")
+        let telemetryTitle = TelemetryStrings.telemetryTitle
         XCTAssertEqual(alert.title, telemetryTitle)
 
-        let message = NSLocalizedString("TELEMETRY_ENABLED_MSG",
-                                        tableName: Ornaments.localizableTableName,
-                                        bundle: bundle,
-                                        comment: "")
+        let message = TelemetryStrings.telemetryEnabledMessage
         XCTAssertEqual(alert.message, message)
 
         guard alert.actions.count == 3 else {
@@ -52,22 +109,13 @@ class AttributionDialogTests: XCTestCase {
             return
         }
 
-        let moreTitle = NSLocalizedString("TELEMETRY_MORE",
-                                          tableName: Ornaments.localizableTableName,
-                                          bundle: bundle,
-                                          comment: "")
+        let moreTitle = TelemetryStrings.telemetryMore
         XCTAssertEqual(alert.actions[0].title, moreTitle)
 
-        let declineTitle = NSLocalizedString("TELEMETRY_ENABLED_OFF",
-                                             tableName: Ornaments.localizableTableName,
-                                             bundle: bundle,
-                                             comment: "")
+        let declineTitle = TelemetryStrings.telemetryEnabledOffMessage
         XCTAssertEqual(alert.actions[1].title, declineTitle)
 
-        let participateTitle = NSLocalizedString("TELEMETRY_ENABLED_ON",
-                                                 tableName: Ornaments.localizableTableName,
-                                                 bundle: bundle,
-                                                 comment: "")
+        let participateTitle = TelemetryStrings.telemetryEnabledOnMessage
         XCTAssertEqual(alert.actions[2].title, participateTitle)
     }
 
@@ -82,16 +130,10 @@ class AttributionDialogTests: XCTestCase {
         attributionDialogManager.showTelemetryAlertController(from: viewController)
 
         let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
-        let telemetryTitle = NSLocalizedString("TELEMETRY_TITLE",
-                                               tableName: Ornaments.localizableTableName,
-                                               bundle: bundle,
-                                               comment: "")
+        let telemetryTitle = TelemetryStrings.telemetryTitle
         XCTAssertEqual(alert.title, telemetryTitle)
 
-        let message = NSLocalizedString("TELEMETRY_DISABLED_MSG",
-                                        tableName: Ornaments.localizableTableName,
-                                        bundle: bundle,
-                                        comment: "")
+        let message = TelemetryStrings.telemetryDisabledMessage
         XCTAssertEqual(alert.message, message)
 
         guard alert.actions.count == 3 else {
@@ -99,22 +141,13 @@ class AttributionDialogTests: XCTestCase {
             return
         }
 
-        let moreTitle = NSLocalizedString("TELEMETRY_MORE",
-                                          tableName: Ornaments.localizableTableName,
-                                          bundle: bundle,
-                                          comment: "")
+        let moreTitle = TelemetryStrings.telemetryMore
         XCTAssertEqual(alert.actions[0].title, moreTitle)
 
-        let declineTitle = NSLocalizedString("TELEMETRY_DISABLED_OFF",
-                                             tableName: Ornaments.localizableTableName,
-                                             bundle: bundle,
-                                             comment: "")
+        let declineTitle = TelemetryStrings.telemetryDisabledOffMessage
         XCTAssertEqual(alert.actions[1].title, declineTitle)
 
-        let participateTitle = NSLocalizedString("TELEMETRY_DISABLED_ON",
-                                                 tableName: Ornaments.localizableTableName,
-                                                 bundle: bundle,
-                                                 comment: "")
+        let participateTitle = TelemetryStrings.telemetryDisabledOnMessage
         XCTAssertEqual(alert.actions[2].title, participateTitle)
     }
 
@@ -141,10 +174,7 @@ class AttributionDialogTests: XCTestCase {
             return
         }
 
-        let telemetryTitle = NSLocalizedString("TELEMETRY_NAME",
-                                               tableName: Ornaments.localizableTableName,
-                                               bundle: bundle,
-                                               comment: "")
+        let telemetryTitle = TelemetryStrings.telemetryName
         XCTAssertEqual(alert.actions[0].title, telemetryTitle)
 
         XCTAssertEqual(alert.actions[1].title, Attribution.makePrivacyPolicyAttribution().title)

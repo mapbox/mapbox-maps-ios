@@ -7,10 +7,19 @@ class InfoButtonOrnamentTests: XCTestCase {
     var attributionDialogManager: AttributionDialogManager!
     var tapCompletion: (() -> Void)?
 
+    private var isGeofenceActive: Bool = false
+    private var isGeofenceConsentGiven: Bool = true
+
     override func setUp() {
         super.setUp()
         parentViewController = MockParentViewController()
-        attributionDialogManager = AttributionDialogManager(dataSource: self, delegate: self)
+        attributionDialogManager = AttributionDialogManager(
+            dataSource: self,
+            delegate: self,
+            isGeofenceActive: { self.isGeofenceActive },
+            setGeofenceConsent: { self.isGeofenceConsentGiven = $0 },
+            getGeofenceConsent: { self.isGeofenceConsentGiven }
+        )
     }
 
     func testInfoButtonTapped() throws {

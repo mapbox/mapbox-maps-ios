@@ -21,6 +21,8 @@ class SizeTrackingLayer: CALayer {
 
     private var sizeAnimationIsActive = false
 
+    private let loggerCategory = "SizeTrackingLayer"
+
     override func add(_ anim: CAAnimation, forKey key: String?) {
         if anim.isAnimatingBounds {
             sizeAnimationIsActive = true
@@ -30,6 +32,13 @@ class SizeTrackingLayer: CALayer {
 
     override var bounds: CGRect {
         didSet {
+            Log.debug(forMessage: """
+                \(SizeTrackingLayer.self) did resize
+                    Layer: \(self)
+                    Old size: \(oldValue.size)
+                    New size: \(bounds.size)
+                    Animation is \(sizeAnimationIsActive ? "" : "NOT ")active
+                """, category: loggerCategory)
             guard oldValue.size != bounds.size else { return }
             guard sizeAnimationIsActive else {
                 sizeTrackingDelegate?.sizeTrackingLayer(layer: self, completeResizingFrom: oldValue.size, to: bounds.size)
@@ -38,6 +47,26 @@ class SizeTrackingLayer: CALayer {
 
             CATransaction.setCompletionBlock { [bounds, weak self] in
                 guard let self else { return }
+
+                // In case there were more than one resizing in the same animation period, the last resizing should win
+                // CATransaction completionBlock's get called in the reverse mode.
+                guard self.bounds.size == bounds.size else {
+                    Log.debug(forMessage: """
+                        Skipping bounds resize completion of \(self) due to mismatched bounds.
+                            Layer: \(self)
+                            Old size: \(oldValue.size)
+                            Expected size: \(bounds.size)
+                            Actual size: \(self.bounds.size)
+                        """, category: loggerCategory)
+                    return
+                }
+
+                Log.debug(forMessage: """
+                    \(SizeTrackingLayer.self) animation completed
+                        layer: \(self)
+                        Old size: \(oldValue.size)
+                        New size: \(bounds.size)
+                    """, category: loggerCategory)
 
                 self.sizeTrackingDelegate?.sizeTrackingLayer(layer: self, completeResizingFrom: oldValue.size, to: bounds.size)
 

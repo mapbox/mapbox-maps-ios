@@ -371,6 +371,7 @@ public final class MapboxMap: StyleManager {
     /// This property allows setting a custom glyph URL at runtime, making it easier to
     /// apply custom fonts to the map without modifying the base style.
     @_spi(Experimental)
+    @_documentation(visibility: public)
     public var styleGlyphURL: String {
         get { __map.getStyleGlyphURL() }
         set { __map.setStyleGlyphURLForUrl(newValue) }

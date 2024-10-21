@@ -1924,3 +1924,6 @@ Extension FeaturesetDescriptor has removed conformance to CustomStringConvertibl
 Extension FeaturesetDescriptor has removed conformance to Hashable
 Extension FeaturesetDescriptor has removed conformance to NSObjectProtocol
 Extension FeaturesetDescriptor is no longer open for subclassing
+
+// Docs for styleGlyphURL
+Var MapboxMap.styleGlyphURL is now with @_documentation

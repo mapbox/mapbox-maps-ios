@@ -20,15 +20,15 @@ let package = Package(
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "3.0.0"),
-    ] + coreMaps.packageDependencies + common.packageDependencies,
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", branch: "a279fe7970d9ad968cdbcf14a505187cd95d6960")
+    ] + coreMaps.packageDependencies,
     targets: [
         .target(
             name: "MapboxMaps",
             dependencies: [
                 coreMaps.mapsTargetDependencies,
-                common.mapsTargetDependencies,
-                .product(name: "Turf", package: "turf-swift")
+                .product(name: "MapboxCommon", package: "mapbox-common-ios"),
+                .product(name: "TurfBinary", package: "mapbox-common-ios")
             ],
             path: mapboxMapsPath,
             exclude: [
@@ -63,7 +63,7 @@ let package = Package(
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
         )
-    ] + coreMaps.packageTargets + common.packageTargets
+    ] + coreMaps.packageTargets
 )
 
 struct MapsDependency {

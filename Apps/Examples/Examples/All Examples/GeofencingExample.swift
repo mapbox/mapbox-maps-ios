@@ -267,7 +267,7 @@ extension GeofencingExample {
         NSLayoutConstraint.activate(textLayoutConstraints)
         geofenceDisabledText = textView
 
-        let isConsentGiven = GeofencingUtils.getUserConsent()
+        let isConsentGiven = true
 
         self.geofencingBt?.isHidden = !isConsentGiven
         self.geofenceDisabledText?.isHidden = isConsentGiven

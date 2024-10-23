@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.8.0-rc.1 - 23 October, 2024
+
 * Fix the bug when MapView would ignore the new bounds size if there are more than a single resizing event in the animation.
 
 ## 11.8.0-beta.1 - 14 October, 2024

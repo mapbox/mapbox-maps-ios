@@ -117,7 +117,7 @@ final class GeofencingExample: UIViewController, ExampleProtocol, GeofencingObse
     }
 
     private func clearGeofences() {
-        geofencing.clearFeatures{ result in
+        geofencing.clearFeatures { result in
             print("Geofences cleared. Result: \(result)")
         }
     }
@@ -172,7 +172,6 @@ final class GeofencingExample: UIViewController, ExampleProtocol, GeofencingObse
         }
     }
 }
-
 
 /// Download data from internet
 extension GeofencingExample {
@@ -290,7 +289,7 @@ extension GeofencingExample {
             UIApplication.shared.open(URL(string: "https://hri.fi/data/en_GB/dataset/hsl-n-taksavyohykkeet")!, options: [:], completionHandler: nil)
         })
 
-        alert.addAction(UIAlertAction(title: "Dimiss", style: .cancel) { _ in })
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel) { _ in })
 
         present(alert, animated: true)
     }

@@ -1927,3 +1927,9 @@ Extension FeaturesetDescriptor is no longer open for subclassing
 
 // Docs for styleGlyphURL
 Var MapboxMap.styleGlyphURL is now with @_documentation
+
+// Remove experimental FeaturesetQueryTarget
+Func MapboxMap.queryRenderedFeatures(with:targets:completion:) has been removed
+Func MapboxMap.querySourceFeatures(for:completion:) has been removed
+Struct FeaturesetQueryTarget has been removed
+Var QueriedRenderedFeature.queryTargets has been removed

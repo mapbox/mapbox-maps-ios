@@ -767,7 +767,7 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
             let expectedSpaceColorExpression = Exp(.interpolate) {
                 Exp(.exponential) {
-                    1.2
+                    1.2000000476837158
                 }
                 Exp(.zoom)
                 5
@@ -788,7 +788,7 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
             let expectedHorizonBlendExpression = Exp(.interpolate) {
                 Exp(.exponential) {
-                    1.2
+                    1.2000000476837158
                 }
                 Exp(.zoom)
                 5
@@ -799,7 +799,7 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
 
             let expectedStarIntensityExpression = Exp(.interpolate) {
                 Exp(.exponential) {
-                    1.2
+                    1.2000000476837158
                 }
                 Exp(.zoom)
                 5

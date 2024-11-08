@@ -29,9 +29,9 @@
 	<key>MBXAccessToken</key>
 	<string>MAPBOX_ACCESS_TOKEN</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Get user location</string>
+	<string>Provide user location to be able to experience examples of background location capabilities.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Get user location</string>
+	<string>Location is requred for proper functioning of certain examples.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>CPSupportsDashboardNavigationScene</key>

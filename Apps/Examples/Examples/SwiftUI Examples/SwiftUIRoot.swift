@@ -35,6 +35,11 @@ struct SwiftUIRoot: View {
                 } header: { Text("Use cases") }
 
                 Section {
+                    ExampleLink("GeofencingUserLocation", note: "Set geofence on user initial location.", destination: GeofencingUserLocation())
+                    ExampleLink("GeofencingPlayground", note: "Showcase isochrone API together with geofences.", destination: GeofencingPlayground())
+                } header: { Text("Use cases") }
+
+                Section {
                     ExampleLink("Map settings", note: "Showcase of the most possible map configurations.", destination: MapSettingsExample())
                     ExampleLink("Viewport Playground", note: "Showcase of the possible viewport states.", destination: ViewportPlayground())
                     ExampleLink("Puck playground", note: "Display user location using puck.", destination: PuckPlayground())

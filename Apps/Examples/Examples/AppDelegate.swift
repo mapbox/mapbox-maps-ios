@@ -115,28 +115,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let action = content.userInfo["action"]! as! String
         os_log(.info, "AppDelegate Got %s for feature %s", action, featureId)
 
-        if #available(iOS 13.0, *) {
-            guard let navigationController = (UIApplication.shared.connectedScenes.first?.delegate as?
-                                            SceneDelegate)?.windows.first?.rootViewController as? UINavigationController else {
-                os_log(.error, "AppDelegate Navigation controller not found")
-                return
-            }
-            var geofencingViewController: GeofencingExample
-            if navigationController.topViewController is GeofencingExample {
-                geofencingViewController = navigationController.topViewController as! GeofencingExample
-            } else {
-                geofencingViewController = Examples.geofencingExample.makeViewController() as! GeofencingExample
-                navigationController.pushViewController(geofencingViewController, animated: true)
-            }
-
-            switch action {
-            case "Entered": geofencingViewController.updateEnterGeofenceId(id: featureId)
-            case "Exited": geofencingViewController.updateExitGeofenceId(id: featureId)
-            case "Dwelled": geofencingViewController.updateDwellGeofenceId(id: featureId)
-            default: os_log(.error, "AppDelegate Unknown action %s", action)
-            }
-
-        }
         // tell the app that we have finished processing the user’s action / response
         completionHandler()
     }

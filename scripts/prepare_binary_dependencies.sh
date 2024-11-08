@@ -23,11 +23,15 @@ cat <<EOF > Cartfile.MapboxCommon.json
 {"$MAPBOX_COMMON_VERSION": "https://api.mapbox.com/downloads/v2/mapbox-common/$(release_folder "$MAPBOX_COMMON_VERSION")/ios/packages/$MAPBOX_COMMON_VERSION/MapboxCommon.zip"}
 EOF
 
+cat <<EOF > Cartfile.Turf.json
+{"$MAPBOX_TURF_VERSION": "https://github.com/mapbox/turf-swift/releases/download/v$MAPBOX_TURF_VERSION/Turf.xcframework.zip"}
+EOF
+
 cat <<EOF > Cartfile
 # xcode version: $XCODE_VERSION
 binary "Cartfile.MapboxCoreMaps.json" == $MAPBOX_CORE_MAPS_VERSION
 binary "Cartfile.MapboxCommon.json" == $MAPBOX_COMMON_VERSION
-github "mapbox/turf-swift" == $MAPBOX_TURF_VERSION
+binary "Cartfile.Turf.json" == $MAPBOX_TURF_VERSION
 
 EOF
 
@@ -36,7 +40,7 @@ BUILD_LIBRARY_FOR_DISTRIBUTION=YES
 EOF
 
 mkdir -p Carthage
-CURRENT_CONFIG_HASH=$(cat Cartfile Cartfile.xcconfig Cartfile.MapboxCoreMaps.json Cartfile.MapboxCommon.json | shasum -a 256)
+CURRENT_CONFIG_HASH=$(cat Cartfile Cartfile.xcconfig Cartfile.MapboxCoreMaps.json Cartfile.MapboxCommon.json Cartfile.Turf.json | shasum -a 256)
 
 EXPECTED_CONFIG_HASH=""
 if [[ -f Carthage/config.version ]]; then
@@ -64,4 +68,4 @@ if [[ "$CURRENT_CONFIG_HASH" != "$EXPECTED_CONFIG_HASH" ]]; then
     echo "$CURRENT_CONFIG_HASH" > Carthage/config.version
 fi
 
-rm -f Cartfile Cartfile.resolved Cartfile.xcconfig Cartfile.MapboxCoreMaps.json Cartfile.MapboxCommon.json
+rm -f Cartfile Cartfile.resolved Cartfile.xcconfig Cartfile.MapboxCoreMaps.json Cartfile.MapboxCommon.json Cartfile.Turf.json

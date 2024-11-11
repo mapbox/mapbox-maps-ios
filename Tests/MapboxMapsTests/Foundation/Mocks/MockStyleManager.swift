@@ -3,8 +3,8 @@ import Foundation
 @_implementationOnly import MapboxCommon_Private
 
 class MockStyleManager: StyleManagerProtocol {
-    let getFeaturesetsStub = Stub<Void, [FeaturesetDescriptor]>(defaultReturnValue: [])
-    func getStyleFeaturesets() -> [FeaturesetDescriptor] {
+    let getFeaturesetsStub = Stub<Void, [CoreFeaturesetDescriptor]>(defaultReturnValue: [])
+    func getStyleFeaturesets() -> [CoreFeaturesetDescriptor] {
         getFeaturesetsStub.call()
     }
 

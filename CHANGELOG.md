@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.8.0 - 11 November, 2024
+
 * Add two separete Geofence examples in SwiftUI - `GeofencingPlayground` and `GeofencingUserLocation`
 
 ## 11.8.0-rc.1 - 23 October, 2024

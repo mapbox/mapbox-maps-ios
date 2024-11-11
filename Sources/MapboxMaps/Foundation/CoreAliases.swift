@@ -44,4 +44,4 @@ typealias CoreInteractionHandler = MapboxCoreMaps_Private.InteractionHandler
 typealias CoreRenderedQueryGeometry = MapboxCoreMaps_Private.RenderedQueryGeometry
 typealias CoreFeaturesetFeatureId = MapboxCoreMaps_Private.FeaturesetFeatureId
 typealias CoreFeaturesetQueryTarget = MapboxCoreMaps_Private.FeaturesetQueryTarget
-typealias CoreFeaturesetDescriptor = MapboxCoreMaps.FeaturesetDescriptor // TODO: This will be moved to _Private in Core
+typealias CoreFeaturesetDescriptor = MapboxCoreMaps_Private.FeaturesetDescriptor

@@ -1061,42 +1061,11 @@ extension MapboxMap: MapFeatureQueryable {
                                                                              concreteErrorType: MapError.self))
     }
 
-    /// Queries the map for rendered features using featureset descriptors.
-    ///
-    /// This method allows to query both featureset from imported styles and user layers in the root style.
-    /// The results can be additionally filtered per-featureset.
-    ///
-    /// ```swift
-    /// let targets = [
-    ///     FeaturesetQueryTarget(
-    ///         featureset: .layer("my-layer"),
-    ///         filter: Exp(.eq) {
-    ///             Exp(.get) { "type" }
-    ///             "hotel"
-    ///         }
-    ///     ),
-    ///     FeaturesetQueryTarget(featureset: .featureset("poi", importId: "basemap"))
-    /// ]
-    /// mapView.mapboxMap.queryRenderedFeatures(with: CGPoint(x: 0, y: 0),
-    ///                            targets: targets) { result in
-    ///     // handle features in result
-    /// }
-    /// ```
-    ///
-    /// - Important: This is a low-level method. If you need to handle basic gestures on map content, please prefer to use Interactions API (see ``MapboxMap/addInteraction(_:)``) or  ``MapboxMap/queryRenderedFeatures(with:featureset:filter:completion:)``.
-    ///
-    /// - Parameters:
-    ///   - geometry: A screen geometry to query. Can be a `CGPoint`, `CGRect`, or an array of `CGPoint`.
-    ///   - targets: An array of targets to query with.
-    ///   - completion: Callback called when the query completes.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
-    @discardableResult
-    public func queryRenderedFeatures(with geometry: some RenderedQueryGeometryConvertible,
-                                      targets: [FeaturesetQueryTarget],
-                                      completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
+    private func queryRenderedFeatures(with geometry: some RenderedQueryGeometryConvertible,
+                                       targets: [CoreFeaturesetQueryTarget],
+                                       completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
         return __map.__queryRenderedFeatures(for: geometry.geometry.core,
-                                             targets: targets.map(\.core),
+                                             targets: targets,
                                              callback: coreAPIClosureAdapter(for: completion,
                                                                              type: NSArray.self,
                                                                              concreteErrorType: MapError.self))
@@ -1133,7 +1102,7 @@ extension MapboxMap: MapFeatureQueryable {
             queryRenderedFeatures(
                 with: geometry,
                 targets: [
-                      FeaturesetQueryTarget(featureset: featureset, filter: filter)
+                    CoreFeaturesetQueryTarget(featureset: featureset.core, filter: filter?.asCore, id: nil)
                 ]) { result in
                     completion(result.map({ features in
                         features.compactMap {
@@ -1182,22 +1151,6 @@ extension MapboxMap: MapFeatureQueryable {
                                     completion: @escaping (Result<[QueriedSourceFeature], Error>) -> Void) -> Cancelable {
         return __map.__querySourceFeatures(forSourceId: sourceId,
                                   options: options,
-                                  callback: coreAPIClosureAdapter(for: completion,
-                                                                  type: NSArray.self,
-                                                                  concreteErrorType: MapError.self))
-    }
-
-    /// Queries  the source features for a given featureset.
-    ///
-    /// - Parameters:
-    ///   - target: A featureset query target.
-    ///   - completion: Callback called when the query completes.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
-    @discardableResult
-    public func querySourceFeatures(for target: FeaturesetQueryTarget,
-                                    completion: @escaping (Result<[QueriedSourceFeature], Error>) -> Void) -> Cancelable {
-        return __map.__querySourceFeatures(for: target.core,
                                   callback: coreAPIClosureAdapter(for: completion,
                                                                   type: NSArray.self,
                                                                   concreteErrorType: MapError.self))

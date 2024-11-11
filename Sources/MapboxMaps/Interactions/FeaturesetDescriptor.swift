@@ -12,9 +12,28 @@
 @_spi(Experimental)
 @_documentation(visibility: public)
 public struct FeaturesetDescriptor<FeatureType: FeaturesetFeatureType>: Equatable {
-    private let featuresetId: String?
-    private let importId: String?
-    private let layerId: String?
+    /// An optional unique identifier for the featureset within the style.
+    /// This id is used to reference a specific featureset.
+    ///
+    /// * Note: If `featuresetId` is provided and valid, it takes precedence over `layerId`,
+    /// meaning `layerId` will not be considered even if it has a valid value.
+    @_documentation(visibility: public)
+    public let featuresetId: String?
+
+    /// An optional import id that is required if the featureset is defined within an imported style.
+    /// If the featureset belongs to the current style, this field should be set to a null string.
+    ///
+    /// * Note: `importId` is only applicable when used in conjunction with `featuresetId`
+    /// and has no effect when used with `layerId`.
+    @_documentation(visibility: public)
+    public let importId: String?
+
+    /// An optional unique identifier for the layer within the current style.
+    ///
+    /// * Note: If `featuresetId` is valid, `layerId` will be ignored even if it has a valid value.
+    /// Additionally, `importId` does not apply when using `layerId`.
+    @_documentation(visibility: public)
+    public let layerId: String?
 
     private init(featuresetId: String? = nil, importId: String? = nil, layerId: String? = nil) {
         self.featuresetId = featuresetId
@@ -72,7 +91,7 @@ extension FeaturesetDescriptor {
 
     var core: CoreFeaturesetDescriptor {
         CoreFeaturesetDescriptor(
-            __featuresetId: featuresetId,
+            featuresetId: featuresetId,
             importId: importId,
             layerId: layerId
         )

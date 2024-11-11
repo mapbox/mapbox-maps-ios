@@ -232,49 +232,4 @@ final class FeaturesetsTests: IntegrationTestCase {
         let featureset = try XCTUnwrap(mapView.mapboxMap.featuresets.first)
         XCTAssertEqual(FeaturesetDescriptor.standardPoi(importId: "nested"), featureset.converted())
     }
-
-    func testLowLevelQRF() {
-        let coord = CLLocationCoordinate2D(latitude: 0.01, longitude: 0.01)
-        let point = map.point(for: coord)
-
-        let expectation = expectation(description: "Low-level QRF")
-
-        let featuresetFilter = Exp(.eq) {
-            Exp(.get) { "type" }
-            "B"
-        }
-        let layerFilter = Exp(.eq) {
-            Exp(.get) { "filter" }
-            true
-        }
-        mapView.mapboxMap.queryRenderedFeatures(
-            with: point,
-            targets: [
-                FeaturesetQueryTarget(featureset: .featureset("poi", importId: "nested"), filter: featuresetFilter, id: 1),
-                FeaturesetQueryTarget(featureset: .layer("circle-2"), filter: layerFilter, id: 2)
-            ]) { result in
-                switch result {
-                case .success(let features):
-                    XCTAssertEqual(features.count, 2)
-                    XCTAssertEqual(features[safe: 0]?.queryTargets.count, 1)
-                    XCTAssertEqual(features[safe: 0]?.queryTargets.last?.id, 2) // from circle target
-                    XCTAssertEqual(features[safe: 0]?.queryTargets.last?.featureset, .layer("circle-2"))
-                    XCTAssertEqual(features[safe: 0]?.queryTargets.last?.filter, nil)
-                    XCTAssertEqual(features[safe: 0]?.queriedFeature.feature.identifier, .number(2))
-                    XCTAssertEqual(features[safe: 0]?.queriedFeature.feature.properties?["name"]??.string, "qux")
-
-                    XCTAssertEqual(features[safe: 0]?.queryTargets.count, 1)
-                    XCTAssertEqual(features[safe: 1]?.queryTargets.last?.id, 1) // from featureset
-                    XCTAssertEqual(features[safe: 1]?.queryTargets.last?.featureset, .featureset("poi", importId: "nested"))
-                    XCTAssertEqual(features[safe: 1]?.queryTargets.last?.filter, nil)
-                    XCTAssertEqual(features[safe: 1]?.queriedFeature.feature.identifier, .number(12))
-                    XCTAssertEqual(features[safe: 1]?.queriedFeature.feature.properties?["class"]??.string, "poi")
-                    XCTAssertEqual(features[safe: 1]?.queriedFeature.feature.properties?["name"]??.string, "nest2")
-                case .failure:
-                    XCTFail("Shouldn't fail")
-                }
-                expectation.fulfill()
-            }
-        wait(for: [expectation], timeout: 1)
-    }
 }

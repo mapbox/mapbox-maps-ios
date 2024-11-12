@@ -82,6 +82,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
         assign(manager, \.fillPattern, value: fillPattern)
         assign(manager, \.fillTranslate, value: fillTranslate)
         assign(manager, \.fillTranslateAnchor, value: fillTranslateAnchor)
+        assign(manager, \.fillZOffset, value: fillZOffset)
         assign(manager, \.slot, value: slot)
     }
 
@@ -145,6 +146,15 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     /// Default value: "map".
     public func fillTranslateAnchor(_ newValue: FillTranslateAnchor) -> Self {
         with(self, setter(\.fillTranslateAnchor, newValue))
+    }
+
+    private var fillZOffset: Double?
+    /// Specifies an uniform elevation in meters. Note: If the value is zero, the layer will be rendered on the ground. Non-zero values will elevate the layer from the sea level, which can cause it to be rendered below the terrain.
+    /// Default value: 0. Minimum value: 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillZOffset(_ newValue: Double) -> Self {
+        with(self, setter(\.fillZOffset, newValue))
     }
 
     private var slot: String?

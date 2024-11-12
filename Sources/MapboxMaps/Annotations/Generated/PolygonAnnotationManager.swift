@@ -101,6 +101,13 @@ public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInter
         set { impl.layerProperties["fill-translate-anchor"] = newValue?.rawValue }
     }
 
+    /// Specifies an uniform elevation in meters. Note: If the value is zero, the layer will be rendered on the ground. Non-zero values will elevate the layer from the sea level, which can cause it to be rendered below the terrain.
+    /// Default value: 0. Minimum value: 0.
+    public var fillZOffset: Double? {
+        get { impl.layerProperties["fill-z-offset"] as? Double }
+        set { impl.layerProperties["fill-z-offset"] = newValue }
+    }
+
     /// Slot for the underlying layer.
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.

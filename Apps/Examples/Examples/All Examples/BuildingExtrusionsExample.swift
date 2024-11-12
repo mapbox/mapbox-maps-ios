@@ -1,42 +1,90 @@
 import UIKit
 @_spi(Experimental) import MapboxMaps
 
+extension UIButton {
+    static func exampleActionButton() -> UIButton {
+        let button = UIButton(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .systemBlue
+        button.tintColor = .white
+        button.layer.cornerRadius = 4
+        button.clipsToBounds = true
+        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        return button
+    }
+}
+
 final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
 
     private lazy var lightPositionButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .systemBlue
-        button.tintColor = .white
-        button.layer.cornerRadius = 4
-        button.clipsToBounds = true
-        button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
-        if #available(iOS 13.0, *) {
+        let button = UIButton.exampleActionButton()
+        if #available(iOS 13.1, *) {
             button.setImage(UIImage(systemName: "flashlight.on.fill"), for: .normal)
         } else {
             button.setTitle("Position", for: .normal)
         }
-        button.addTarget(self, action: #selector(lightPositionButtonTapped(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(lightPositionButtonTapped(_:)), for: .primaryActionTriggered)
         return button
     }()
 
     private lazy var lightColorButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .systemBlue
-        button.tintColor = .white
-        button.layer.cornerRadius = 4
-        button.clipsToBounds = true
-        button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        let button = UIButton.exampleActionButton()
         if #available(iOS 13.0, *) {
             button.setImage(UIImage(systemName: "paintbrush.fill"), for: .normal)
         } else {
             button.setTitle("Color", for: .normal)
         }
-        button.addTarget(self, action: #selector(lightColorButtonTapped(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(lightColorButtonTapped(_:)), for: .primaryActionTriggered)
         return button
     }()
+
+    private lazy var heightAlignmentButton: UIButton = {
+        let button = UIButton.exampleActionButton()
+
+        if #available(iOS 15.0, *) {
+            button.setImage(UIImage(systemName: "align.vertical.top"), for: .normal)
+            button.setImage(UIImage(systemName: "align.vertical.top.fill"), for: .selected)
+        } else {
+            button.setTitle("Height Alignment", for: .normal)
+        }
+        button.addTarget(self, action: #selector(heightAlignmentButtonTapped(_:)), for: .primaryActionTriggered)
+        return button
+    }()
+
+    private lazy var baseAlignmentButton: UIButton = {
+        let button = UIButton.exampleActionButton()
+
+        if #available(iOS 15.0, *) {
+            button.setImage(UIImage(systemName: "align.vertical.bottom"), for: .normal)
+            button.setImage(UIImage(systemName: "align.vertical.bottom.fill"), for: .selected)
+        } else {
+            button.setTitle("Height Alignment", for: .normal)
+        }
+        button.addTarget(self, action: #selector(baseAlignmentButtonTapped(_:)), for: .primaryActionTriggered)
+        return button
+    }()
+
+    private lazy var terrainSwitchButton: UIButton = {
+        let button = UIButton.exampleActionButton()
+        if #available(iOS 15.0, *) {
+            button.setImage(UIImage(systemName: "mountain.2"), for: .normal)
+            button.setImage(UIImage(systemName: "mountain.2.fill"), for: .selected)
+        } else {
+            button.setTitle("Terrain", for: .normal)
+        }
+
+        button.addTarget(self, action: #selector(terrainButtonTapped(_:)), for: .primaryActionTriggered)
+        return button
+    }()
+
+    lazy var buttons = [
+        heightAlignmentButton,
+        baseAlignmentButton,
+        lightPositionButton,
+        lightColorButton,
+        terrainSwitchButton
+    ]
 
     private var ambientLight: AmbientLight = {
         var light = AmbientLight()
@@ -68,21 +116,27 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
             self.setupExample()
         }.store(in: &cancelables)
 
-        view.addSubview(lightPositionButton)
-        view.addSubview(lightColorButton)
+
+        buttons.forEach(view.addSubview(_:))
+        terrainSwitchButton.isSelected = isTerrainEnabled
+
+        let accessoryButtonsStackView = UIStackView(arrangedSubviews: buttons)
+        accessoryButtonsStackView.axis = .vertical
+        accessoryButtonsStackView.spacing = 20
+        accessoryButtonsStackView.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(accessoryButtonsStackView)
 
         NSLayoutConstraint.activate([
-            view.trailingAnchor.constraint(equalToSystemSpacingAfter: lightPositionButton.trailingAnchor, multiplier: 1),
-            view.bottomAnchor.constraint(equalTo: lightPositionButton.bottomAnchor, constant: 100),
-            view.trailingAnchor.constraint(equalToSystemSpacingAfter: lightColorButton.trailingAnchor, multiplier: 1),
-            lightPositionButton.topAnchor.constraint(equalToSystemSpacingBelow: lightColorButton.bottomAnchor, multiplier: 1),
-            lightColorButton.widthAnchor.constraint(equalTo: lightPositionButton.widthAnchor),
-            lightColorButton.heightAnchor.constraint(equalTo: lightPositionButton.heightAnchor)
+            mapView.ornaments.attributionButton.topAnchor.constraint(equalToSystemSpacingBelow: accessoryButtonsStackView.bottomAnchor, multiplier: 1),
+            view.trailingAnchor
+                .constraint(equalToSystemSpacingAfter: accessoryButtonsStackView.trailingAnchor, multiplier: 1)
         ])
     }
 
     internal func setupExample() {
-        addBuildingExtrusions()
+        try! addTerrain()
+        try! addBuildingExtrusions()
 
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 40.7135, longitude: -74.0066),
                                           zoom: 15.5,
@@ -97,18 +151,20 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
     }
 
     // See https://docs.mapbox.com/mapbox-gl-js/example/3d-buildings/ for equivalent gl-js example
-    internal func addBuildingExtrusions() {
+    internal func addBuildingExtrusions() throws {
         let wallOnlyThreshold = 20
         let extrudeFilter = Exp(.eq) {
             Exp(.get) { "extrude" }
             "true"
         }
         var layer = FillExtrusionLayer(id: "3d-buildings", source: "composite")
+            .minZoom(15)
+            .sourceLayer("building")
+            .fillExtrusionColor(.lightGray)
+            .fillExtrusionOpacity(0.8)
+            .fillExtrusionAmbientOcclusionIntensity(0.3)
+            .fillExtrusionAmbientOcclusionRadius(3.0)
 
-        layer.minZoom                     = 15
-        layer.sourceLayer                 = "building"
-        layer.fillExtrusionColor   = .constant(StyleColor(.lightGray))
-        layer.fillExtrusionOpacity = .constant(0.6)
 
         layer.filter = Exp(.all) {
             extrudeFilter
@@ -141,13 +197,10 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
             }
         )
 
-        layer.fillExtrusionAmbientOcclusionIntensity = .constant(0.3)
-
-        layer.fillExtrusionAmbientOcclusionRadius = .constant(3.0)
-
-        try! mapView.mapboxMap.addLayer(layer)
+        try mapView.mapboxMap.addLayer(layer)
 
         var wallsOnlyExtrusionLayer = layer
+            .fillExtrusionLineWidth(2)
         wallsOnlyExtrusionLayer.id = "3d-buildings-wall"
         wallsOnlyExtrusionLayer.filter = Exp(.all) {
             extrudeFilter
@@ -157,12 +210,74 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
             }
         }
 
-        wallsOnlyExtrusionLayer.fillExtrusionLineWidth = .constant(2)
+        try mapView.mapboxMap.addLayer(wallsOnlyExtrusionLayer)
+    }
 
-        try! mapView.mapboxMap.addLayer(wallsOnlyExtrusionLayer)
+    func addTerrain() throws {
+        let terrainSourceID = "mapbox-dem"
+
+        if !mapView.mapboxMap.sourceExists(withId: terrainSourceID) {
+            try addTerrainSource(id: terrainSourceID)
+        }
+
+        try mapView.mapboxMap.setTerrain(Terrain(sourceId: terrainSourceID)
+            .exaggeration(1.5))
+    }
+
+    func addTerrainSource(id: String) throws {
+        var demSource = RasterDemSource(id: id)
+        demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
+        // Setting the `tileSize` to 514 provides better performance and adds padding around the outside
+        // of the tiles.
+        demSource.tileSize = 514
+        demSource.maxzoom = 14.0
+        try mapView.mapboxMap.addSource(demSource)
     }
 
     // MARK: - Actions
+
+    var isTerrainEnabled = true
+
+    @objc private func terrainButtonTapped(_ sender: UIButton) {
+        if isTerrainEnabled {
+            mapView.mapboxMap.removeTerrain()
+        } else {
+            try! addTerrain()
+        }
+
+        isTerrainEnabled.toggle()
+        sender.isSelected = isTerrainEnabled
+    }
+
+    var baseAlignment: FillExtrusionBaseAlignment = .flat
+    var heightAlignment: FillExtrusionHeightAlignment = .flat
+
+    @objc private func baseAlignmentButtonTapped(_ sender: UIButton) {
+        if baseAlignment == .flat {
+            baseAlignment = .terrain
+        } else {
+            baseAlignment = .flat
+        }
+        sender.backgroundColor = .systemBlue
+        sender.isSelected = baseAlignment == .terrain
+
+        try! mapView.mapboxMap.updateLayer(withId: "3d-buildings", type: FillExtrusionLayer.self) { layer in
+            layer.fillExtrusionBaseAlignment = .constant(baseAlignment)
+        }
+    }
+
+    @objc private func heightAlignmentButtonTapped(_ sender: UIButton) {
+        if heightAlignment == .flat {
+            heightAlignment = .terrain
+        } else {
+            heightAlignment = .flat
+        }
+        sender.isSelected = heightAlignment == .terrain
+
+        try! mapView.mapboxMap.updateLayer(withId: "3d-buildings", type: FillExtrusionLayer.self) { layer in
+            layer.fillExtrusionHeightAlignment = .constant(heightAlignment)
+        }
+    }
 
     @objc private func lightColorButtonTapped(_ sender: UIButton) {
         if case .constant(let color) = ambientLight.color, color == StyleColor(.red) {

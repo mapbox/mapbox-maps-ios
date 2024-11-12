@@ -92,6 +92,11 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Transition options for `fillExtrusionBase`.
     public var fillExtrusionBaseTransition: StyleTransition?
 
+    /// Controls the behavior of fill extrusion base over terrain
+    /// Default value: "terrain".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillExtrusionBaseAlignment: Value<FillExtrusionBaseAlignment>?
+
     /// The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root `light` settings. If this color is specified as `rgba` with an alpha component, the alpha component will be ignored; use `fill-extrusion-opacity` to set layer opacity.
     /// Default value: "#000000".
     public var fillExtrusionColor: Value<StyleColor>?
@@ -161,6 +166,11 @@ public struct FillExtrusionLayer: Layer, Equatable {
 
     /// Transition options for `fillExtrusionHeight`.
     public var fillExtrusionHeightTransition: StyleTransition?
+
+    /// Controls the behavior of fill extrusion height over terrain
+    /// Default value: "flat".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillExtrusionHeightAlignment: Value<FillExtrusionHeightAlignment>?
 
     /// If a non-zero value is provided, it sets the fill-extrusion layer into wall rendering mode. The value is used to render the feature with the given width over the outlines of the geometry. Note: This property is experimental and some other fill-extrusion properties might not be supported with non-zero line width.
     /// Default value: 0. Minimum value: 0.
@@ -241,6 +251,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionWallRadiusTransition, forKey: .fillExtrusionAmbientOcclusionWallRadiusTransition)
         try paintContainer.encodeIfPresent(fillExtrusionBase, forKey: .fillExtrusionBase)
         try paintContainer.encodeIfPresent(fillExtrusionBaseTransition, forKey: .fillExtrusionBaseTransition)
+        try paintContainer.encodeIfPresent(fillExtrusionBaseAlignment, forKey: .fillExtrusionBaseAlignment)
         try paintContainer.encodeIfPresent(fillExtrusionColor, forKey: .fillExtrusionColor)
         try paintContainer.encodeIfPresent(fillExtrusionColorTransition, forKey: .fillExtrusionColorTransition)
         try paintContainer.encodeIfPresent(fillExtrusionCutoffFadeRange, forKey: .fillExtrusionCutoffFadeRange)
@@ -258,6 +269,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightWallRadiusTransition, forKey: .fillExtrusionFloodLightWallRadiusTransition)
         try paintContainer.encodeIfPresent(fillExtrusionHeight, forKey: .fillExtrusionHeight)
         try paintContainer.encodeIfPresent(fillExtrusionHeightTransition, forKey: .fillExtrusionHeightTransition)
+        try paintContainer.encodeIfPresent(fillExtrusionHeightAlignment, forKey: .fillExtrusionHeightAlignment)
         try paintContainer.encodeIfPresent(fillExtrusionLineWidth, forKey: .fillExtrusionLineWidth)
         try paintContainer.encodeIfPresent(fillExtrusionLineWidthTransition, forKey: .fillExtrusionLineWidthTransition)
         try paintContainer.encodeIfPresent(fillExtrusionOpacity, forKey: .fillExtrusionOpacity)
@@ -300,6 +312,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
             fillExtrusionAmbientOcclusionWallRadiusTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionAmbientOcclusionWallRadiusTransition)
             fillExtrusionBase = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionBase)
             fillExtrusionBaseTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionBaseTransition)
+            fillExtrusionBaseAlignment = try paintContainer.decodeIfPresent(Value<FillExtrusionBaseAlignment>.self, forKey: .fillExtrusionBaseAlignment)
             fillExtrusionColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillExtrusionColor)
             fillExtrusionColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionColorTransition)
             fillExtrusionCutoffFadeRange = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionCutoffFadeRange)
@@ -317,6 +330,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
             fillExtrusionFloodLightWallRadiusTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionFloodLightWallRadiusTransition)
             fillExtrusionHeight = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionHeight)
             fillExtrusionHeightTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionHeightTransition)
+            fillExtrusionHeightAlignment = try paintContainer.decodeIfPresent(Value<FillExtrusionHeightAlignment>.self, forKey: .fillExtrusionHeightAlignment)
             fillExtrusionLineWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionLineWidth)
             fillExtrusionLineWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionLineWidthTransition)
             fillExtrusionOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionOpacity)
@@ -370,6 +384,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         case fillExtrusionAmbientOcclusionWallRadiusTransition = "fill-extrusion-ambient-occlusion-wall-radius-transition"
         case fillExtrusionBase = "fill-extrusion-base"
         case fillExtrusionBaseTransition = "fill-extrusion-base-transition"
+        case fillExtrusionBaseAlignment = "fill-extrusion-base-alignment"
         case fillExtrusionColor = "fill-extrusion-color"
         case fillExtrusionColorTransition = "fill-extrusion-color-transition"
         case fillExtrusionCutoffFadeRange = "fill-extrusion-cutoff-fade-range"
@@ -387,6 +402,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         case fillExtrusionFloodLightWallRadiusTransition = "fill-extrusion-flood-light-wall-radius-transition"
         case fillExtrusionHeight = "fill-extrusion-height"
         case fillExtrusionHeightTransition = "fill-extrusion-height-transition"
+        case fillExtrusionHeightAlignment = "fill-extrusion-height-alignment"
         case fillExtrusionLineWidth = "fill-extrusion-line-width"
         case fillExtrusionLineWidthTransition = "fill-extrusion-line-width-transition"
         case fillExtrusionOpacity = "fill-extrusion-opacity"
@@ -573,6 +589,22 @@ extension FillExtrusionLayer {
     /// Default value: 0. Minimum value: 0.
     public func fillExtrusionBase(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionBase, .expression(expression)))
+    }
+
+    /// Controls the behavior of fill extrusion base over terrain
+    /// Default value: "terrain".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillExtrusionBaseAlignment(_ constant: FillExtrusionBaseAlignment) -> Self {
+        with(self, setter(\.fillExtrusionBaseAlignment, .constant(constant)))
+    }
+
+    /// Controls the behavior of fill extrusion base over terrain
+    /// Default value: "terrain".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillExtrusionBaseAlignment(_ expression: Exp) -> Self {
+        with(self, setter(\.fillExtrusionBaseAlignment, .expression(expression)))
     }
 
     /// The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root `light` settings. If this color is specified as `rgba` with an alpha component, the alpha component will be ignored; use `fill-extrusion-opacity` to set layer opacity.
@@ -765,6 +797,22 @@ extension FillExtrusionLayer {
     /// Default value: 0. Minimum value: 0.
     public func fillExtrusionHeight(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionHeight, .expression(expression)))
+    }
+
+    /// Controls the behavior of fill extrusion height over terrain
+    /// Default value: "flat".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillExtrusionHeightAlignment(_ constant: FillExtrusionHeightAlignment) -> Self {
+        with(self, setter(\.fillExtrusionHeightAlignment, .constant(constant)))
+    }
+
+    /// Controls the behavior of fill extrusion height over terrain
+    /// Default value: "flat".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillExtrusionHeightAlignment(_ expression: Exp) -> Self {
+        with(self, setter(\.fillExtrusionHeightAlignment, .expression(expression)))
     }
 
     /// If a non-zero value is provided, it sets the fill-extrusion layer into wall rendering mode. The value is used to render the feature with the given width over the outlines of the geometry. Note: This property is experimental and some other fill-extrusion properties might not be supported with non-zero line width.

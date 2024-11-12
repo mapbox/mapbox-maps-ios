@@ -109,6 +109,27 @@ final class PolygonAnnotationTests: XCTestCase {
         XCTAssertEqual(fillPattern, annotation.fillPattern)
     }
 
+    func testFillZOffset() {
+        let polygonCoords = [
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+        ]
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
+        annotation.fillZOffset =  Double.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(fillZOffset) = layerProperties["fill-z-offset"] else {
+            return XCTFail("Layer property fill-z-offset should be set to a number.")
+        }
+        XCTAssertEqual(fillZOffset, annotation.fillZOffset)
+    }
+
     @available(*, deprecated)
     func testUserInfo() throws {
         let polygonCoords = [

@@ -49,6 +49,10 @@ public struct BackgroundLayer: Layer, Equatable {
     /// Name of image in sprite to use for drawing an image background. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var backgroundPattern: Value<ResolvedImage>?
 
+    /// Orientation of background layer.
+    /// Default value: "map".
+    public var backgroundPitchAlignment: Value<BackgroundPitchAlignment>?
+
     public init(id: String) {
         self.id = id
         self.type = LayerType.background
@@ -71,6 +75,7 @@ public struct BackgroundLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(backgroundOpacity, forKey: .backgroundOpacity)
         try paintContainer.encodeIfPresent(backgroundOpacityTransition, forKey: .backgroundOpacityTransition)
         try paintContainer.encodeIfPresent(backgroundPattern, forKey: .backgroundPattern)
+        try paintContainer.encodeIfPresent(backgroundPitchAlignment, forKey: .backgroundPitchAlignment)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encode(visibility, forKey: .visibility)
@@ -92,6 +97,7 @@ public struct BackgroundLayer: Layer, Equatable {
             backgroundOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .backgroundOpacity)
             backgroundOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .backgroundOpacityTransition)
             backgroundPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .backgroundPattern)
+            backgroundPitchAlignment = try paintContainer.decodeIfPresent(Value<BackgroundPitchAlignment>.self, forKey: .backgroundPitchAlignment)
         }
 
         var visibilityEncoded: Value<Visibility>?
@@ -123,6 +129,7 @@ public struct BackgroundLayer: Layer, Equatable {
         case backgroundOpacity = "background-opacity"
         case backgroundOpacityTransition = "background-opacity-transition"
         case backgroundPattern = "background-pattern"
+        case backgroundPitchAlignment = "background-pitch-alignment"
     }
 }
 
@@ -209,6 +216,18 @@ extension BackgroundLayer {
     /// Name of image in sprite to use for drawing an image background. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public func backgroundPattern(_ expression: Exp) -> Self {
         with(self, setter(\.backgroundPattern, .expression(expression)))
+    }
+
+    /// Orientation of background layer.
+    /// Default value: "map".
+    public func backgroundPitchAlignment(_ constant: BackgroundPitchAlignment) -> Self {
+        with(self, setter(\.backgroundPitchAlignment, .constant(constant)))
+    }
+
+    /// Orientation of background layer.
+    /// Default value: "map".
+    public func backgroundPitchAlignment(_ expression: Exp) -> Self {
+        with(self, setter(\.backgroundPitchAlignment, .expression(expression)))
     }
 }
 

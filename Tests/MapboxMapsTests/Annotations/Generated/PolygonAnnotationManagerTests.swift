@@ -263,6 +263,31 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate-anchor"] as! String, defaultValue)
     }
+    func testInitialFillZOffset() {
+        let initialValue = manager.fillZOffset
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillZOffset() {
+        let value = 50000.0
+        manager.fillZOffset = value
+        XCTAssertEqual(manager.fillZOffset, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-z-offset"] as! Double, value)
+    }
+
+    func testSetToNilFillZOffset() {
+        let newFillZOffsetProperty = 50000.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-z-offset").value as! Double
+        manager.fillZOffset = newFillZOffsetProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-z-offset"])
+        harness.triggerDisplayLink()
+
+        manager.fillZOffset = nil
+        XCTAssertNil(manager.fillZOffset)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-z-offset"] as! Double, defaultValue)
+    }
     func testInitialSlot() {
         let initialValue = manager.slot
         XCTAssertNil(initialValue)

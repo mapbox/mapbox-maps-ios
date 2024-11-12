@@ -394,6 +394,46 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillPattern, .constant(.name(StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String)))
     }
+
+    func testFillZOffset() throws {
+        let polygonCoords = [
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+        ]
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
+        // Test that the setter and getter work
+        let value = 50000.0
+        annotation.fillZOffset = value
+        XCTAssertEqual(annotation.fillZOffset, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        let fallbackValue = self.manager.fillZOffset ?? StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-z-offset").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"fill-z-offset\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.fillZOffset.toString(), expectedString)
+
+        // Test that the property can be reset to nil
+        annotation.fillZOffset = nil
+        XCTAssertNil(annotation.fillZOffset)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        XCTAssertEqual(layer.fillZOffset, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-z-offset").value as! NSNumber).doubleValue))
+    }
 }
 
 // End of generated file

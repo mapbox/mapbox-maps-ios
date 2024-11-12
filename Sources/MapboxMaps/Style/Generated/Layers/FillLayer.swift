@@ -87,6 +87,15 @@ public struct FillLayer: Layer, Equatable {
     /// Default value: "map".
     public var fillTranslateAnchor: Value<FillTranslateAnchor>?
 
+    /// Specifies an uniform elevation in meters. Note: If the value is zero, the layer will be rendered on the ground. Non-zero values will elevate the layer from the sea level, which can cause it to be rendered below the terrain.
+    /// Default value: 0. Minimum value: 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillZOffset: Value<Double>?
+
+    /// Transition options for `fillZOffset`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillZOffsetTransition: StyleTransition?
+
     public init(id: String, source: String) {
         self.source = source
         self.id = id
@@ -119,6 +128,8 @@ public struct FillLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(fillTranslate, forKey: .fillTranslate)
         try paintContainer.encodeIfPresent(fillTranslateTransition, forKey: .fillTranslateTransition)
         try paintContainer.encodeIfPresent(fillTranslateAnchor, forKey: .fillTranslateAnchor)
+        try paintContainer.encodeIfPresent(fillZOffset, forKey: .fillZOffset)
+        try paintContainer.encodeIfPresent(fillZOffsetTransition, forKey: .fillZOffsetTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encode(visibility, forKey: .visibility)
@@ -150,6 +161,8 @@ public struct FillLayer: Layer, Equatable {
             fillTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .fillTranslate)
             fillTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillTranslateTransition)
             fillTranslateAnchor = try paintContainer.decodeIfPresent(Value<FillTranslateAnchor>.self, forKey: .fillTranslateAnchor)
+            fillZOffset = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillZOffset)
+            fillZOffsetTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillZOffsetTransition)
         }
 
         var visibilityEncoded: Value<Visibility>?
@@ -192,6 +205,8 @@ public struct FillLayer: Layer, Equatable {
         case fillTranslate = "fill-translate"
         case fillTranslateTransition = "fill-translate-transition"
         case fillTranslateAnchor = "fill-translate-anchor"
+        case fillZOffset = "fill-z-offset"
+        case fillZOffsetTransition = "fill-z-offset-transition"
     }
 }
 
@@ -368,6 +383,29 @@ extension FillLayer {
     /// Default value: "map".
     public func fillTranslateAnchor(_ expression: Exp) -> Self {
         with(self, setter(\.fillTranslateAnchor, .expression(expression)))
+    }
+
+    /// Specifies an uniform elevation in meters. Note: If the value is zero, the layer will be rendered on the ground. Non-zero values will elevate the layer from the sea level, which can cause it to be rendered below the terrain.
+    /// Default value: 0. Minimum value: 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillZOffset(_ constant: Double) -> Self {
+        with(self, setter(\.fillZOffset, .constant(constant)))
+    }
+
+    /// Transition property for `fillZOffset`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillZOffsetTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillZOffsetTransition, transition))
+    }
+
+    /// Specifies an uniform elevation in meters. Note: If the value is zero, the layer will be rendered on the ground. Non-zero values will elevate the layer from the sea level, which can cause it to be rendered below the terrain.
+    /// Default value: 0. Minimum value: 0.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillZOffset(_ expression: Exp) -> Self {
+        with(self, setter(\.fillZOffset, .expression(expression)))
     }
 }
 

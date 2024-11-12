@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -36,6 +36,8 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.fillPattern = Value<ResolvedImage>.testConstantValue()
             layer.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillTranslateAnchor = Value<FillTranslateAnchor>.testConstantValue()
+            layer.fillZOffset = Value<Double>.testConstantValue()
+            layer.fillZOffsetTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
             // Add the layer
             do {

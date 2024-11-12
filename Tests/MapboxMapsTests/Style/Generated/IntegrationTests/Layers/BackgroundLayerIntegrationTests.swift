@@ -30,6 +30,7 @@ final class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.backgroundOpacity = Value<Double>.testConstantValue()
             layer.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.backgroundPattern = Value<ResolvedImage>.testConstantValue()
+            layer.backgroundPitchAlignment = Value<BackgroundPitchAlignment>.testConstantValue()
 
             // Add the layer
             do {

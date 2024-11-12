@@ -5,6 +5,9 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Add two separete Geofence examples in SwiftUI - `GeofencingPlayground` and `GeofencingUserLocation`
+* Add support for Base and Height alignment in FillExtrusionLayer.
+* Add support for `pitchAlignment` in BackgroundLayer.
+* Add support for `zOffset` in FillLayer, PolygonAnnotation[Manager] and PolygonAnnotationGroup.
 
 ## 11.8.0-rc.1 - 23 October, 2024
 

@@ -90,6 +90,7 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
         properties["fill-opacity"] = fillOpacity
         properties["fill-outline-color"] = fillOutlineColor?.rawValue
         properties["fill-pattern"] = fillPattern
+        properties["fill-z-offset"] = fillZOffset
         return properties
     }
 
@@ -137,6 +138,10 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var fillPattern: String?
 
+    /// Specifies an uniform elevation in meters. Note: If the value is zero, the layer will be rendered on the ground. Non-zero values will elevate the layer from the sea level, which can cause it to be rendered below the terrain.
+    /// Default value: 0. Minimum value: 0.
+    public var fillZOffset: Double?
+
 }
 
 extension PolygonAnnotation {
@@ -177,6 +182,12 @@ extension PolygonAnnotation {
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public func fillPattern(_ newValue: String) -> Self {
         with(self, setter(\.fillPattern, newValue))
+    }
+
+    /// Specifies an uniform elevation in meters. Note: If the value is zero, the layer will be rendered on the ground. Non-zero values will elevate the layer from the sea level, which can cause it to be rendered below the terrain.
+    /// Default value: 0. Minimum value: 0.
+    public func fillZOffset(_ newValue: Double) -> Self {
+        with(self, setter(\.fillZOffset, newValue))
     }
 
     /// Adds a handler for tap gesture on current annotation.

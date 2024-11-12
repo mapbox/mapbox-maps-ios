@@ -472,6 +472,42 @@ public struct CircleTranslateAnchor: RawRepresentable, Codable, Hashable, Sendab
 
 }
 
+// MARK: FILL_EXTRUSION_BASE_ALIGNMENT
+
+/// Controls the behavior of fill extrusion base over terrain
+public struct FillExtrusionBaseAlignment: RawRepresentable, Codable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// The fill extrusion base follows terrain slope.
+    public static let terrain = FillExtrusionBaseAlignment(rawValue: "terrain")
+
+    /// The fill extrusion base is flat over terrain.
+    public static let flat = FillExtrusionBaseAlignment(rawValue: "flat")
+
+}
+
+// MARK: FILL_EXTRUSION_HEIGHT_ALIGNMENT
+
+/// Controls the behavior of fill extrusion height over terrain
+public struct FillExtrusionHeightAlignment: RawRepresentable, Codable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// The fill extrusion height follows terrain slope.
+    public static let terrain = FillExtrusionHeightAlignment(rawValue: "terrain")
+
+    /// The fill extrusion height is flat over terrain.
+    public static let flat = FillExtrusionHeightAlignment(rawValue: "flat")
+
+}
+
 // MARK: FILL_EXTRUSION_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `fill-extrusion-translate`.
@@ -562,6 +598,24 @@ public struct ModelType: RawRepresentable, Codable, Hashable, Sendable {
 
 }
 
+// MARK: BACKGROUND_PITCH_ALIGNMENT
+
+/// Orientation of background layer.
+public struct BackgroundPitchAlignment: RawRepresentable, Codable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// The background is aligned to the plane of the map.
+    public static let map = BackgroundPitchAlignment(rawValue: "map")
+
+    /// The background is aligned to the plane of the viewport, covering the whole screen.
+    public static let viewport = BackgroundPitchAlignment(rawValue: "viewport")
+
+}
+
 // MARK: SKY_TYPE
 
 /// The type of the sky
@@ -593,7 +647,7 @@ public struct Anchor: RawRepresentable, Codable, Hashable, Sendable {
     /// The position of the light source is aligned to the rotation of the map.
     public static let map = Anchor(rawValue: "map")
 
-    /// The position of the light source is aligned to the rotation of the viewport.
+    /// The position of the light source is aligned to the rotation of the viewport. If terrain is enabled, performance regressions may occur in certain scenarios, particularly on lower-end hardware. Ensure that you test your target scenarios on the appropriate hardware to verify performance.
     public static let viewport = Anchor(rawValue: "viewport")
 
 }

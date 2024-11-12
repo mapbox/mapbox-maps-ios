@@ -414,6 +414,44 @@ extension CircleTranslateAnchor {
     }
 }
 
+// MARK: FILL_EXTRUSION_BASE_ALIGNMENT
+
+extension Value where T == FillExtrusionBaseAlignment {
+    static func testConstantValue() -> Value<FillExtrusionBaseAlignment> {
+        return .constant(FillExtrusionBaseAlignment.testConstantValue())
+    }
+}
+
+extension FillExtrusionBaseAlignment {
+    static func testConstantValue() -> FillExtrusionBaseAlignment {
+        return .terrain
+    }
+
+    static func random() -> FillExtrusionBaseAlignment {
+        let allCases: [FillExtrusionBaseAlignment] = [.terrain, .flat]
+        return allCases.randomElement()!
+    }
+}
+
+// MARK: FILL_EXTRUSION_HEIGHT_ALIGNMENT
+
+extension Value where T == FillExtrusionHeightAlignment {
+    static func testConstantValue() -> Value<FillExtrusionHeightAlignment> {
+        return .constant(FillExtrusionHeightAlignment.testConstantValue())
+    }
+}
+
+extension FillExtrusionHeightAlignment {
+    static func testConstantValue() -> FillExtrusionHeightAlignment {
+        return .terrain
+    }
+
+    static func random() -> FillExtrusionHeightAlignment {
+        let allCases: [FillExtrusionHeightAlignment] = [.terrain, .flat]
+        return allCases.randomElement()!
+    }
+}
+
 // MARK: FILL_EXTRUSION_TRANSLATE_ANCHOR
 
 extension Value where T == FillExtrusionTranslateAnchor {
@@ -505,6 +543,25 @@ extension ModelType {
 
     static func random() -> ModelType {
         let allCases: [ModelType] = [.common3d, .locationIndicator]
+        return allCases.randomElement()!
+    }
+}
+
+// MARK: BACKGROUND_PITCH_ALIGNMENT
+
+extension Value where T == BackgroundPitchAlignment {
+    static func testConstantValue() -> Value<BackgroundPitchAlignment> {
+        return .constant(BackgroundPitchAlignment.testConstantValue())
+    }
+}
+
+extension BackgroundPitchAlignment {
+    static func testConstantValue() -> BackgroundPitchAlignment {
+        return .map
+    }
+
+    static func random() -> BackgroundPitchAlignment {
+        let allCases: [BackgroundPitchAlignment] = [.map, .viewport]
         return allCases.randomElement()!
     }
 }

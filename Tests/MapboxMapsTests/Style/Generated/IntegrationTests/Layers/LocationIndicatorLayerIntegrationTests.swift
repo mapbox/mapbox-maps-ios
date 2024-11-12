@@ -38,6 +38,7 @@ final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.bearingImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.emphasisCircleColor = Value<StyleColor>.testConstantValue()
             layer.emphasisCircleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.emphasisCircleGlowRangeTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.emphasisCircleRadius = Value<Double>.testConstantValue()
             layer.emphasisCircleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.imagePitchDisplacement = Value<Double>.testConstantValue()

@@ -55,7 +55,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// Transition options for `accuracyRadiusColor`.
     public var accuracyRadiusColorTransition: StyleTransition?
 
-    /// The bearing of the location indicator.
+    /// The bearing of the location indicator. Values under 0.01 degree variation are ignored.
     /// Default value: 0.
     public var bearing: Value<Double>?
 
@@ -76,6 +76,13 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// Transition options for `emphasisCircleColor`.
     public var emphasisCircleColorTransition: StyleTransition?
 
+    /// Specifies a glow effect range of the emphasis circle, in pixels. If [0,0] values are provided, it renders the circle as a solid color. The first value specifies the start of the glow effect where it is equal to the circle's color, the second is the end, where it's fully transparent. Between the two values the effect is linearly faded out.
+    /// Default value: [0,0].
+    public var emphasisCircleGlowRange: Value<[Double]>?
+
+    /// Transition options for `emphasisCircleGlowRange`.
+    public var emphasisCircleGlowRangeTransition: StyleTransition?
+
     /// The radius, in pixel, of the circle emphasizing the indicator, drawn between the accuracy radius and the indicator shadow.
     /// Default value: 0.
     public var emphasisCircleRadius: Value<Double>?
@@ -87,7 +94,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// Default value: "0".
     public var imagePitchDisplacement: Value<Double>?
 
-    /// An array of [latitude, longitude, altitude] position of the location indicator.
+    /// An array of [latitude, longitude, altitude] position of the location indicator. Values under 0.000001 variation are ignored.
     /// Default value: [0,0,0].
     public var location: Value<[Double]>?
 
@@ -146,6 +153,8 @@ public struct LocationIndicatorLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(bearingImageSizeTransition, forKey: .bearingImageSizeTransition)
         try paintContainer.encodeIfPresent(emphasisCircleColor, forKey: .emphasisCircleColor)
         try paintContainer.encodeIfPresent(emphasisCircleColorTransition, forKey: .emphasisCircleColorTransition)
+        try paintContainer.encodeIfPresent(emphasisCircleGlowRange, forKey: .emphasisCircleGlowRange)
+        try paintContainer.encodeIfPresent(emphasisCircleGlowRangeTransition, forKey: .emphasisCircleGlowRangeTransition)
         try paintContainer.encodeIfPresent(emphasisCircleRadius, forKey: .emphasisCircleRadius)
         try paintContainer.encodeIfPresent(emphasisCircleRadiusTransition, forKey: .emphasisCircleRadiusTransition)
         try paintContainer.encodeIfPresent(imagePitchDisplacement, forKey: .imagePitchDisplacement)
@@ -187,6 +196,8 @@ public struct LocationIndicatorLayer: Layer, Equatable {
             bearingImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .bearingImageSizeTransition)
             emphasisCircleColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .emphasisCircleColor)
             emphasisCircleColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .emphasisCircleColorTransition)
+            emphasisCircleGlowRange = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .emphasisCircleGlowRange)
+            emphasisCircleGlowRangeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .emphasisCircleGlowRangeTransition)
             emphasisCircleRadius = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .emphasisCircleRadius)
             emphasisCircleRadiusTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .emphasisCircleRadiusTransition)
             imagePitchDisplacement = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .imagePitchDisplacement)
@@ -241,6 +252,8 @@ public struct LocationIndicatorLayer: Layer, Equatable {
         case bearingImageSizeTransition = "bearing-image-size-transition"
         case emphasisCircleColor = "emphasis-circle-color"
         case emphasisCircleColorTransition = "emphasis-circle-color-transition"
+        case emphasisCircleGlowRange = "emphasis-circle-glow-range"
+        case emphasisCircleGlowRangeTransition = "emphasis-circle-glow-range-transition"
         case emphasisCircleRadius = "emphasis-circle-radius"
         case emphasisCircleRadiusTransition = "emphasis-circle-radius-transition"
         case imagePitchDisplacement = "image-pitch-displacement"
@@ -367,7 +380,7 @@ extension LocationIndicatorLayer {
         with(self, setter(\.accuracyRadiusColor, .expression(expression)))
     }
 
-    /// The bearing of the location indicator.
+    /// The bearing of the location indicator. Values under 0.01 degree variation are ignored.
     /// Default value: 0.
     public func bearing(_ constant: Double) -> Self {
         with(self, setter(\.bearing, .constant(constant)))
@@ -378,7 +391,7 @@ extension LocationIndicatorLayer {
         with(self, setter(\.bearingTransition, transition))
     }
 
-    /// The bearing of the location indicator.
+    /// The bearing of the location indicator. Values under 0.01 degree variation are ignored.
     /// Default value: 0.
     public func bearing(_ expression: Exp) -> Self {
         with(self, setter(\.bearing, .expression(expression)))
@@ -424,6 +437,23 @@ extension LocationIndicatorLayer {
         with(self, setter(\.emphasisCircleColor, .expression(expression)))
     }
 
+    /// Specifies a glow effect range of the emphasis circle, in pixels. If [0,0] values are provided, it renders the circle as a solid color. The first value specifies the start of the glow effect where it is equal to the circle's color, the second is the end, where it's fully transparent. Between the two values the effect is linearly faded out.
+    /// Default value: [0,0].
+    public func emphasisCircleGlowRange(solidStart: Double, transparentEnd: Double) -> Self {
+        with(self, setter(\.emphasisCircleGlowRange, .constant([solidStart, transparentEnd])))
+    }
+
+    /// Transition property for `emphasisCircleGlowRange`
+    public func emphasisCircleGlowRangeTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.emphasisCircleGlowRangeTransition, transition))
+    }
+
+    /// Specifies a glow effect range of the emphasis circle, in pixels. If [0,0] values are provided, it renders the circle as a solid color. The first value specifies the start of the glow effect where it is equal to the circle's color, the second is the end, where it's fully transparent. Between the two values the effect is linearly faded out.
+    /// Default value: [0,0].
+    public func emphasisCircleGlowRange(_ expression: Exp) -> Self {
+        with(self, setter(\.emphasisCircleGlowRange, .expression(expression)))
+    }
+
     /// The radius, in pixel, of the circle emphasizing the indicator, drawn between the accuracy radius and the indicator shadow.
     /// Default value: 0.
     public func emphasisCircleRadius(_ constant: Double) -> Self {
@@ -453,10 +483,10 @@ extension LocationIndicatorLayer {
         with(self, setter(\.imagePitchDisplacement, .expression(expression)))
     }
 
-    /// An array of [latitude, longitude, altitude] position of the location indicator.
+    /// An array of [latitude, longitude, altitude] position of the location indicator. Values under 0.000001 variation are ignored.
     /// Default value: [0,0,0].
     public func location(_ coordinate: CLLocationCoordinate2D) -> Self {
-        with(self, setter(\.location, .constant([coordinate.latitude, coordinate.longitude])))
+        with(self, setter(\.location, .constant([coordinate.latitude, coordinate.longitude, 0])))
     }
 
     /// Transition property for `location`
@@ -464,7 +494,7 @@ extension LocationIndicatorLayer {
         with(self, setter(\.locationTransition, transition))
     }
 
-    /// An array of [latitude, longitude, altitude] position of the location indicator.
+    /// An array of [latitude, longitude, altitude] position of the location indicator. Values under 0.000001 variation are ignored.
     /// Default value: [0,0,0].
     public func location(_ expression: Exp) -> Self {
         with(self, setter(\.location, .expression(expression)))

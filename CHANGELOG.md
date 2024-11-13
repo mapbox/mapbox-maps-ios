@@ -4,12 +4,15 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-* Add two separete Geofence examples in SwiftUI - `GeofencingPlayground` and `GeofencingUserLocation`
 * Add support for Base and Height alignment in FillExtrusionLayer.
 * Add support for `pitchAlignment` in BackgroundLayer.
 * Add support for `zOffset` in FillLayer, PolygonAnnotation[Manager] and PolygonAnnotationGroup.
 * Add a property emphasisCircleGlowRange to LocationIndicatorLayer to control the glow effect of the emphasis circle – from the solid start to the fully transparent end.
 * Fix a crash on calling `LocationIndicatorLayer/location(coordinate:) function` due to missing 0 altitude value.
+
+## 11.8.0 - 11 November, 2024
+
+* Add two separated Geofence examples in SwiftUI - `GeofencingPlayground` and `GeofencingUserLocation`
 
 ## 11.8.0-rc.1 - 23 October, 2024
 

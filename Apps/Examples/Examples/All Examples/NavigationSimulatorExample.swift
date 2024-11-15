@@ -34,6 +34,8 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
+        mapView.location.interpolationRate = .fraction(0.1)
+
         // The below line is used for internal testing purposes only.
         finish()
     }

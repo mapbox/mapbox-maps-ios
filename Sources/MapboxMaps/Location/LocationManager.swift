@@ -1,6 +1,12 @@
 import CoreLocation
 import UIKit
 
+public enum InterpolationRate {
+    case disabled
+    case fraction(Double)
+    case `default`
+}
+
 /// An object responsible for notifying the map view about location-related events,
 /// such as a change in the device’s location.
 public final class LocationManager: NSObject {
@@ -30,6 +36,12 @@ public final class LocationManager: NSObject {
     public var options = LocationOptions() {
         didSet {
             syncOptions()
+        }
+    }
+
+    public var interpolationRate: InterpolationRate = .default {
+        didSet {
+            (interpolatedLocationProducer as? InterpolatedLocationProducer)?.interpolationRate = interpolationRate
         }
     }
 

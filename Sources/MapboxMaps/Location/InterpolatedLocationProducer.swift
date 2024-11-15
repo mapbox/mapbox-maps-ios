@@ -20,6 +20,7 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
 
     private let consumers = NSHashTable<PuckLocationConsumer>.weakObjects()
     private var cancelableToken: Cancelable?
+    var interpolationRate: InterpolationRate = .default
 
     internal var location: InterpolatedLocation? {
         observableInterpolatedLocation.value
@@ -97,6 +98,14 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
 
     // MARK: Interpolation.
 
+    private func roundToRate(rate: Double, value: Double) -> Double {
+        guard rate > 0, value >= 0, value <= 1 else {
+            fatalError("Rate must be positive, and value must be between 0 and 1.")
+        }
+        let multiplier = round(value / rate)
+        return multiplier * rate
+    }
+
     private func interpolatedLocation(with date: Date) -> InterpolatedLocation? {
         guard let startDate = startDate,
               let endDate = endDate,
@@ -104,10 +113,20 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
               let endLocation = endLocation else {
                   return nil
               }
-        let fraction = date.timeIntervalSince(startDate) / endDate.timeIntervalSince(startDate)
+        var fraction = date.timeIntervalSince(startDate) / endDate.timeIntervalSince(startDate)
         guard fraction < 1 else {
             return endLocation
         }
+
+        switch interpolationRate {
+        case .disabled:
+            return endLocation
+        case .fraction(let rate):
+            fraction = roundToRate(rate: rate, value: fraction)
+        case .default:
+            break
+        }
+
         return locationInterpolator.interpolate(
             from: startLocation,
             to: endLocation,

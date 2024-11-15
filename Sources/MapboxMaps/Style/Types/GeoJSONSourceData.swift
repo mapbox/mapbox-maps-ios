@@ -102,7 +102,7 @@ extension GeoJSONObject {
             return .featureCollection(collection)
         #if USING_TURF_WITH_LIBRARY_EVOLUTION
         @unknown default:
-            Log.info(forMessage: "Unexpected \(GeoJSONObject.self) type: \(self)")
+            Log.info("Unexpected \(GeoJSONObject.self) type: \(self)")
             return .featureCollection(FeatureCollection(features: []))
         #endif
         }

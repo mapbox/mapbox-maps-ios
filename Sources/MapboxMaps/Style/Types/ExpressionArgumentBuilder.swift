@@ -68,7 +68,7 @@ extension Array: ExpressionArgumentConvertible {
         } else if let validNumberArray = self as? [Double] {
             return [.numberArray(validNumberArray)]
         } else {
-            Log.warning(forMessage: "Unsupported array provided to Expression. Only [String] and [Double] are supported.", category: "Expressions")
+            Log.warning("Unsupported array provided to Expression. Only [String] and [Double] are supported.", category: "Expressions")
             return []
         }
     }

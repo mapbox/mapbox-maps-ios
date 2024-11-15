@@ -44,7 +44,7 @@ internal final class SimpleCameraAnimator: SimpleCameraAnimatorProtocol {
                 hasNilMismatch(for: \.anchor) ||
                 hasNilMismatch(for: \.bearing) ||
                 hasNilMismatch(for: \.pitch) {
-                Log.warning(forMessage: "Animator updated with differing non-nil to-value properties.", category: "maps-ios")
+                Log.warning("Animator updated with differing non-nil to-value properties.", category: "maps-ios")
             }
         }
     }

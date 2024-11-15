@@ -23,7 +23,7 @@ extension MapView {
         }
 
         guard let metalView = metalView else {
-            Log.error(forMessage: "No metal view present.", category: "MapView.snapshot")
+            Log.error("No metal view present.", category: "MapView.snapshot")
             throw SnapshotError.noMetalView
         }
 

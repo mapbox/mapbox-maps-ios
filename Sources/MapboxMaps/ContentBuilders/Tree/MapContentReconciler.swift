@@ -113,7 +113,7 @@ private extension MapContentNodeContext {
                 initialMapUniqueProperties.transition = TransitionOptions(style.styleManager.getStyleTransition())
                 return initialMapUniqueProperties
             } catch {
-                Log.warning(forMessage: "Unable to decode initial MapContentUniqueProperties \(error) from StyleJSON", category: "StyleDSL")
+                Log.warning("Unable to decode initial MapContentUniqueProperties \(error) from StyleJSON", category: "StyleDSL")
                 return nil
             }
         }

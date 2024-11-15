@@ -117,7 +117,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
                                                                       features: features.map(MapboxCommon.Feature.init))
                 }
             } catch {
-                Log.error(forMessage: "Failed to add features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
+                Log.error("Failed to add features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
             }
         }
         item.notify(queue: .main) { [weak self] in
@@ -174,7 +174,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
                                                                     features: features.map(MapboxCommon.Feature.init))
                 }
             } catch {
-                Log.error(forMessage: "Failed to update features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
+                Log.error("Failed to update features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
             }
         }
         item.notify(queue: .main) { [weak self] in
@@ -196,7 +196,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
                                                                          featureIds: featureIds)
                 }
             } catch {
-                Log.error(forMessage: "Failed to remove features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
+                Log.error("Failed to remove features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
             }
         }
         item.notify(queue: .main) { [weak self] in
@@ -301,7 +301,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             do {
                 try self?.setStyleGeoJSONSourceDataForSourceId(id, dataId: dataId, data: data)
             } catch {
-                Log.error(forMessage: "Failed to set data for source with id: \(id), error: \(error)")
+                Log.error("Failed to set data for source with id: \(id), error: \(error)")
             }
         }
 

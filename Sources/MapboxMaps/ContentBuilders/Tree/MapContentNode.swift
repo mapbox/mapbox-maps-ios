@@ -99,7 +99,7 @@ final class MapContentNode: Identifiable {
                     return
                 }
             } catch {
-                Log.error(forMessage: "\(error)", category: "StyleDSL")
+                Log.error("\(error)", category: "StyleDSL")
             }
 
         }
@@ -160,7 +160,7 @@ func wrapStyleDSLError(_ closure: () throws -> Void) {
     do {
         try closure()
     } catch {
-        Log.error(forMessage: "\(error)", category: "StyleDSL")
+        Log.error("\(error)", category: "StyleDSL")
     }
 }
 

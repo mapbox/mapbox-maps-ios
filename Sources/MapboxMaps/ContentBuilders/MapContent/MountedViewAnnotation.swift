@@ -70,7 +70,7 @@ final class MountedViewAnnotation: MapContentMountedComponent {
 
     func unmount(with context: MapContentNodeContext) throws {
         guard let remove else {
-            return Log.error(forMessage: "Could not remove the view annotation", category: "Annotations")
+            return Log.error("Could not remove the view annotation", category: "Annotations")
         }
         remove()
     }

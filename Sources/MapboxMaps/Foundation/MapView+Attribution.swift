@@ -9,11 +9,11 @@ extension MapView: AttributionDialogManagerDelegate {
     func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, didTriggerActionFor attribution: Attribution) {
         switch attribution.kind {
         case .actionable(let url):
-            Log.debug(forMessage: "Open url: \(url))", category: "Attribution")
+            Log.debug("Open url: \(url))", category: "Attribution")
             attributionUrlOpener.openAttributionURL(url)
         case .feedback:
             let url = mapboxFeedbackURL()
-            Log.debug(forMessage: "Open url: \(url))", category: "Attribution")
+            Log.debug("Open url: \(url))", category: "Attribution")
             attributionUrlOpener.openAttributionURL(url)
         case .nonActionable:
             break

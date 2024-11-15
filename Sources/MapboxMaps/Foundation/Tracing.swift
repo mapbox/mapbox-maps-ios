@@ -76,7 +76,7 @@ public struct Tracing: OptionSet {
                 switch component {
                 case "core": tracing.insert(.core)
                 case "platform": tracing.insert(.platform)
-                default: Log.info(forMessage: "Unrecognized tracing option: \(component)", category: "Tracing")
+                default: Log.info("Unrecognized tracing option: \(component)", category: "Tracing")
                 }
             })
     }

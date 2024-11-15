@@ -81,7 +81,7 @@ extension MapContentUniqueProperties {
                 case .flat:
                     lights.flat = try? lightContainer.decode(FlatLight.self)
                 default:
-                    Log.warning(forMessage: "Incorrect light configuration. Specify both directional and ambient lights OR flat light.", category: "StyleDSL")
+                    Log.warning("Incorrect light configuration. Specify both directional and ambient lights OR flat light.", category: "StyleDSL")
                 }
             }
         }
@@ -96,7 +96,7 @@ private extension MapContentUniqueProperties.Lights {
                     os_log(.debug, log: .contentDSL, "set 3d lights")
                     try style.setLights(ambient: ambient, directional: directional)
                 } else if directional != nil || ambient != nil {
-                    Log.warning(forMessage: "Incorrect 3D light configuration. Specify both directional and ambient lights.", category: "StyleDSL")
+                    Log.warning("Incorrect 3D light configuration. Specify both directional and ambient lights.", category: "StyleDSL")
                 } else if let flat = flat {
                     os_log(.debug, log: .contentDSL, "set flat light")
                     try style.setLights(flat)

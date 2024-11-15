@@ -340,7 +340,7 @@ extension AppleLocationProvider: CLLocationManagerDelegateProxyDelegate {
 #endif
 
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        Log.error(forMessage: "\(self) did fail with error: \(error)", category: "Location")
+        Log.error("\(self) did fail with error: \(error)", category: "Location")
         delegate?.appleLocationProvider(self, didFailWithError: error)
     }
 

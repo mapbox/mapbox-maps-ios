@@ -520,12 +520,12 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
 
         // Metal is unavailable on older simulators
         guard ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 13, minorVersion: 0, patchVersion: 0)) else {
-            Log.warning(forMessage: "Metal rendering is not supported on iOS versions < iOS 13. Please test on device or on iOS simulators version >= 13.", category: "MapView")
+            Log.warning("Metal rendering is not supported on iOS versions < iOS 13. Please test on device or on iOS simulators version >= 13.", category: "MapView")
             return
         }
 
         // Metal is unavailable for a different reason
-        Log.error(forMessage: "No suitable Metal simulator can be found.", category: "MapView")
+        Log.error("No suitable Metal simulator can be found.", category: "MapView")
         #endif
     }
 
@@ -576,7 +576,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         if metalView.contentScaleFactor != pixelRatio {
             // DrawableSize setter will recalculate `contentScaleFactor` if the new drawableSize doesn't fit into
             // the current bounds.size and scale.
-            Log.error(forMessage: "MetalView content scale factor \(metalView.contentScaleFactor) is not equal to pixel ratio \(pixelRatio)")
+            Log.error("MetalView content scale factor \(metalView.contentScaleFactor) is not equal to pixel ratio \(pixelRatio)")
         }
 
         // GL-Native will trigger update on `mapboxMap.size` update but it will come in the next frame.

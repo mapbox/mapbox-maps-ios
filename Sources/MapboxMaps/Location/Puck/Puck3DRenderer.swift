@@ -38,7 +38,7 @@ final class Puck3DRenderer: PuckRenderer {
             .flatMap { orientation -> [Double]? in
                 guard orientation.count == 3 else {
                     Log.warning(
-                        forMessage: "Puck3DConfiguration.model.orientation?.count must be 3 or nil. Actual orientation is \(orientation). Resetting it to [0, 0, 0].",
+                        "Puck3DConfiguration.model.orientation?.count must be 3 or nil. Actual orientation is \(orientation). Resetting it to [0, 0, 0].",
                         category: "Puck")
                     return nil
                 }
@@ -69,7 +69,7 @@ final class Puck3DRenderer: PuckRenderer {
                 try style.addSource(source)
             }
         } catch {
-            Log.error(forMessage: "Failed to update Puck3D Source properties, \(error)")
+            Log.error("Failed to update Puck3D Source properties, \(error)")
         }
     }
 
@@ -106,7 +106,7 @@ final class Puck3DRenderer: PuckRenderer {
                 try style.moveLayer(withId: Self.layerID, to: newConfiguration.layerPosition ?? .default)
             }
         } catch {
-            Log.error(forMessage: "Failed to update Puck3D Layer properties, \(error)")
+            Log.error("Failed to update Puck3D Layer properties, \(error)")
         }
     }
 }

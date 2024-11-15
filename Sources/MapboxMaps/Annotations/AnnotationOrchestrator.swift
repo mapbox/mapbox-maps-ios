@@ -170,7 +170,7 @@ public final class AnnotationOrchestrator {
 
         if let manager, warnIfRemoved {
             Log.warning(
-                forMessage: "\(type(of: manager)) with id \(id) was removed implicitly when invoking \(function) with the same id.",
+                "\(type(of: manager)) with id \(id) was removed implicitly when invoking \(function) with the same id.",
                 category: "Annotations")
         }
     }

@@ -52,7 +52,7 @@ private extension MapView {
 
             if clampedRange != initialRange {
                 Log.warning(
-                    forMessage: """
+                    """
                     Provided frame rate range was clamped from \(initialRange) to \(clampedRange).
                     Negative or zero values are not allowed.
                     """,
@@ -70,7 +70,7 @@ private extension MapView {
 
             if clampedValue != preferred {
                 Log.warning(
-                    forMessage: """
+                    """
                     Preferred frame rate was clamped from \(preferred) to \(clampedValue).
                     Negative value, zero values and values larger then Int.max are not allowed.
                     """,

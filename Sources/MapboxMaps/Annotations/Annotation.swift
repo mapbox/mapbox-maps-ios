@@ -87,7 +87,7 @@ extension Array where Element: Annotation {
         let duplicates = self.removeDuplicates(by: \.id)
         if !duplicates.isEmpty {
             let ids = duplicates.lazy.map(\.id).joined(separator: ", ")
-            Log.error(forMessage: "Duplicated annotations: \(ids)", category: "Annotations")
+            Log.error("Duplicated annotations: \(ids)", category: "Annotations")
         }
     }
 }

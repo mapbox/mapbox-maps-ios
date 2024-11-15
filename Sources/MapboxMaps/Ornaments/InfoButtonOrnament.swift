@@ -10,7 +10,7 @@ internal class InfoButtonOrnament: UIView {
     public override var isHidden: Bool {
         didSet {
             if isHidden {
-                Log.warning(forMessage: "Attribution must be enabled if you use data from sources that require it. See https://docs.mapbox.com/help/getting-started/attribution/ for more details.", category: "Ornaments")
+                Log.warning("Attribution must be enabled if you use data from sources that require it. See https://docs.mapbox.com/help/getting-started/attribution/ for more details.", category: "Ornaments")
             }
         }
     }

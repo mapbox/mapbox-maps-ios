@@ -96,7 +96,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
             do {
                 try style.moveLayer(withId: id, to: layerPosition ?? .default)
             } catch {
-                Log.error(forMessage: "Failed to mover layer to a new position. Error: \(error)", category: "Annotations")
+                Log.error("Failed to mover layer to a new position. Error: \(error)", category: "Annotations")
             }
         }
     }
@@ -135,7 +135,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(
-                forMessage: "Failed to create source / layer in \(implementationName). Error: \(error)",
+                "Failed to create source / layer in \(implementationName). Error: \(error)",
                 category: "Annotations")
         }
 
@@ -160,7 +160,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
             )
         } catch {
             Log.error(
-                forMessage: "Failed to add cluster layer in \(implementationName). Error: \(error)",
+                "Failed to add cluster layer in \(implementationName). Error: \(error)",
                 category: "Annotations")
         }
     }
@@ -197,7 +197,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
             try style.removeLayer(withId: "mapbox-iOS-cluster-text-layer-manager-" + id)
         } catch {
             Log.error(
-                forMessage: "Failed to remove cluster layer in \(implementationName). Error: \(error)",
+                "Failed to remove cluster layer in \(implementationName). Error: \(error)",
                 category: "Annotations")
         }
     }
@@ -232,7 +232,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
                 try body()
             } catch {
                 Log.warning(
-                    forMessage: "Failed to remove \(what) for \(implementationName) with id \(id) due to error: \(error)",
+                    "Failed to remove \(what) for \(implementationName) with id \(id) due to error: \(error)",
                     category: "Annotations")
             }
         }
@@ -326,7 +326,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
             }
         } catch {
             Log.error(
-                forMessage: "Could not set layer properties in PointAnnotationManager due to error \(error)",
+                "Could not set layer properties in PointAnnotationManager due to error \(error)",
                 category: "Annotations")
         }
     }
@@ -500,7 +500,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
                 try style.addSource(GeoJSONSource(id: dragId))
                 try style.addPersistentLayer(AnnotationType.makeLayer(id: dragId), layerPosition: .above(id))
             } catch {
-                Log.error(forMessage: "Add drag source/layer \(error)", category: "Annotations")
+                Log.error("Add drag source/layer \(error)", category: "Annotations")
             }
         }
     }

@@ -26,7 +26,7 @@ final class AttributionDialogManager {
         isGeofenceActive: @escaping () -> Bool = { __GeofencingUtils.isActive() },
         setGeofenceConsent: @escaping (Bool) -> Void = { isConsentGiven in
             __GeofencingUtils.setUserConsent(isConsentGiven: isConsentGiven, callback: { expected in
-                if let error = expected.error { Log.error(forMessage: "Error: \(error) occurred while changing user consent for Geofencing.") }
+                if let error = expected.error { Log.error("Error: \(error) occurred while changing user consent for Geofencing.") }
             })
         },
         getGeofenceConsent: @escaping () -> Bool = { __GeofencingUtils.getUserConsent() }
@@ -122,7 +122,7 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
 
     private func showAttributionDialog(for attributions: [Attribution]) {
         guard let viewController = delegate?.viewControllerForPresenting(self) else {
-            Log.error(forMessage: "Failed to present an attribution dialogue: no presenting view controller found.")
+            Log.error("Failed to present an attribution dialogue: no presenting view controller found.")
             return
         }
 

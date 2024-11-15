@@ -10,7 +10,7 @@ extension CoreMapsImage {
     ///   - uiImage: The source image.
     internal convenience init?(uiImage: UIImage) {
         guard let data = Data(uiImage: uiImage) else {
-            Log.warning(forMessage: "Failed to convert UIImage")
+            Log.warning("Failed to convert UIImage")
             return nil
         }
 

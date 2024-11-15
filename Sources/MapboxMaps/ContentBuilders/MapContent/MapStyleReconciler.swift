@@ -124,7 +124,7 @@ extension MapStyleReconciler {
                 }
             }
         } catch {
-            Log.error(forMessage: "Failed updating import config properties, \(error)")
+            Log.error("Failed updating import config properties, \(error)")
         }
     }
 }

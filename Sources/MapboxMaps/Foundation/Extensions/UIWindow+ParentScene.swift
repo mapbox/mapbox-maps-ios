@@ -49,7 +49,7 @@ extension UIScene {
             }
         }
 #endif
-        Log.info(forMessage: "Found no window attached to the current scene: \(self)")
+        Log.info("Found no window attached to the current scene: \(self)")
         return []
     }
 }

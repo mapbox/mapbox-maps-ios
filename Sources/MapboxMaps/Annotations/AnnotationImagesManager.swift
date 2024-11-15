@@ -60,7 +60,7 @@ internal final class AnnotationImagesManager: AnnotationImagesManagerProtocol {
             addedAnnotationImages.insert(id)
         } catch {
             Log.warning(
-                forMessage: "Could not add image to style due to error: \(error)",
+                "Could not add image to style due to error: \(error)",
                 category: "Annnotations")
         }
     }
@@ -75,7 +75,7 @@ internal final class AnnotationImagesManager: AnnotationImagesManagerProtocol {
             addedAnnotationImages.remove(imageName)
         } catch {
             Log.warning(
-                forMessage: "Could not remove image from style due to error: \(error)",
+                "Could not remove image from style due to error: \(error)",
                 category: "Annnotations")
         }
     }

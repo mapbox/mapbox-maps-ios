@@ -13,7 +13,7 @@ final class Puck2DRenderer: PuckRenderer {
                 if state == nil {
                     stopRendering()
                 }
-            } catch { Log.error(forMessage: "Failed to update Puck2D Layer properties, \(error)") }
+            } catch { Log.error("Failed to update Puck2D Layer properties, \(error)") }
         }
     }
 
@@ -57,7 +57,7 @@ final class Puck2DRenderer: PuckRenderer {
             displayLinkToken = displayLink.observe { [weak self] in
                 do {
                     try self?.renderPulsing()
-                } catch { Log.error(forMessage: "Failed to render pulsing animation, \(error)") }
+                } catch { Log.error("Failed to render pulsing animation, \(error)") }
             }
         }
     }

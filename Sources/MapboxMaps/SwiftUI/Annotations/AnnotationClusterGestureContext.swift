@@ -30,7 +30,7 @@ extension MapFeatureQueryable {
 
                 completion(.success(context))
             case let .failure(error):
-                Log.warning(forMessage: "Failed to query map annotation cluster gesture: \(error)", category: "Gestures")
+                Log.warning("Failed to query map annotation cluster gesture: \(error)", category: "Gestures")
                 completion(.failure(error))
             }
         }

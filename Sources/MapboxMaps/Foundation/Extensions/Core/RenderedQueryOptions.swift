@@ -13,7 +13,7 @@ extension RenderedQueryOptions {
             do {
                 filterJson = try filter.toJSON()
             } catch {
-                Log.error(forMessage: "Filter expression could not be encoded", category: "RenderedQueryOptions")
+                Log.error("Filter expression could not be encoded", category: "RenderedQueryOptions")
             }
         }
 
@@ -30,7 +30,7 @@ extension RenderedQueryOptions {
             let filterData = try JSONSerialization.data(withJSONObject: filter, options: [])
             filterExp = try JSONDecoder().decode(Exp.self, from: filterData)
         } catch {
-            Log.error(forMessage: "Filter expression could not be decoded", category: "RenderedQueryOptions")
+            Log.error("Filter expression could not be decoded", category: "RenderedQueryOptions")
         }
 
         return filterExp

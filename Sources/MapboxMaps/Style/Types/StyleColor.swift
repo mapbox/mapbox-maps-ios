@@ -93,7 +93,7 @@ public struct StyleColor: Codable, Hashable, Sendable, RawRepresentable, Express
             blue = components[2]
             alpha = components[3]
         } else {
-            Log.error(forMessage: "Failed to convert the color \(color) to sRGB color space. Falling back to black.")
+            Log.error("Failed to convert the color \(color) to sRGB color space. Falling back to black.")
         }
 
         self.rawValue = String(format: "rgba(%.2f, %.2f, %.2f, %.2f)", red * 255, green * 255, blue * 255, alpha)

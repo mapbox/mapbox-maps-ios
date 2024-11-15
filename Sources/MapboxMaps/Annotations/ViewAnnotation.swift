@@ -357,7 +357,7 @@ public final class ViewAnnotation {
         do {
             try body()
         } catch {
-            Log.error(forMessage: "Failed to \(action) annotation \(id): \(error)", category: "ViewAnnotation")
+            Log.error("Failed to \(action) annotation \(id): \(error)", category: "ViewAnnotation")
         }
     }
 

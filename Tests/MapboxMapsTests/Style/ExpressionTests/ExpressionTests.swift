@@ -291,4 +291,39 @@ final class ExpressionTests: XCTestCase {
         XCTAssertNoThrow(sumExpression.operator)
         XCTAssertEqual(expectedExpressionOperator, sumExpressionOperator)
     }
+
+    func testExpressionConstructorWithTrivialConvertibleArgument() throws {
+        let shortFormExpression = Exp(.get, "name")
+        let builderBasedExpression = Exp(.get) { "name" }
+
+        XCTAssertEqual(shortFormExpression, builderBasedExpression)
+    }
+
+    func testExpressionConstructorWithComplexConvertibleArgument() throws {
+        let shortFormExpression = Exp(.interpolate, Exp(.linear), Exp(.zoom), 15, 0, 15.05, 1)
+        let longFormExpression = Exp(.interpolate) {
+            Exp(.linear)
+            Exp(.zoom)
+            15
+            0
+            15.05
+            1
+        }
+
+        XCTAssertEqual(shortFormExpression, longFormExpression)
+    }
+
+    func testExpressionConstructorWithComplexNotEqualConvertibleArgument() throws {
+        let shortFormExpression = Exp(.interpolate, Exp(.linear, Exp(.zoom), 15, 0, 15.05, 1))
+        let longFormExpression = Exp(.interpolate) {
+            Exp(.linear)
+            Exp(.zoom)
+            15
+            0
+            15.05
+            1
+        }
+
+        XCTAssertNotEqual(shortFormExpression, longFormExpression)
+    }
 }

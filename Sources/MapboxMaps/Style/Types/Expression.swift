@@ -55,6 +55,11 @@ public struct Exp: Codable, CustomStringConvertible, Equatable, Sendable {
         self.init(operator: op, arguments: [])
     }
 
+    /// Initialize an expression with an operator and basic Swift types like Double, String, or even UIColor
+    public init(_ operator: Operator, _ arguments: ExpressionArgumentConvertible...) {
+        self.elements = [.operator(`operator`)] + arguments.flatMap { $0.expressionArguments }.map(Element.argument)
+    }
+
     /// Initialize an expression with an operator and arguments
     public init(operator op: Operator, arguments: [Argument]) {
         self.elements = [.operator(op)] + arguments.map { Element.argument($0) }

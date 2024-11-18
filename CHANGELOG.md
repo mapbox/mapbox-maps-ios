@@ -9,6 +9,8 @@ Mapbox welcomes participation and contributions from everyone.
 * Add support for `zOffset` in FillLayer, PolygonAnnotation[Manager] and PolygonAnnotationGroup.
 * Add a property emphasisCircleGlowRange to LocationIndicatorLayer to control the glow effect of the emphasis circle – from the solid start to the fully transparent end.
 * Fix a crash on calling `LocationIndicatorLayer/location(coordinate:) function` due to missing 0 altitude value.
+* Add a new Expression initializer `init(_ operator: Operator, _ arguments: ExpressionArgumentConvertible...)` to simplify the creation of expressions with multiple arguments.
+That initializer doesn't require to wrap arguments in `Argument` cases. For example, `Exp(.eq, Exp(.get, "extrude"), "true")`.
 
 ## 11.8.0 - 11 November, 2024
 

@@ -28,7 +28,7 @@ public final class StandardBuildingsFeature: FeaturesetFeatureType {
     /// ```
     ///
     /// To configure appearance of the states use the following configuration options: `buildingHighlightColor`, `buildingSelectColor`.
-    /// For more information see ``MapStyle/standardExperimental(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:buildingHighlightColor:buildingSelectColor:placeLabelSelectColor:placeLabelHighlightColor:)``.
+    /// For more information see ``MapStyle/standardExperimental(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:buildingHighlightColor:buildingSelectColor:placeLabelHighlightColor:placeLabelSelectColor:)``.
     @_documentation(visibility: public)
     public struct State: Codable, Equatable {
         /// When `true`, the building is highlighted. Use this state to create a temporary effect (e.g. hover).

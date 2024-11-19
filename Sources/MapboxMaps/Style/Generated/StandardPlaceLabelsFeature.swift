@@ -28,7 +28,7 @@ public final class StandardPlaceLabelsFeature: FeaturesetFeatureType {
     /// ```
     ///
     /// To configure appearance of the states use the following configuration options: `placeLabelHighlightColor`, `placeLabelSelectColor`.
-    /// For more information see ``MapStyle/standardExperimental(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:buildingHighlightColor:buildingSelectColor:placeLabelSelectColor:placeLabelHighlightColor:)``.
+    /// For more information see ``MapStyle/standardExperimental(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:buildingHighlightColor:buildingSelectColor:placeLabelHighlightColor:placeLabelSelectColor:)``.
     @_documentation(visibility: public)
     public struct State: Codable, Equatable {
         /// When `true`, hides the label. Use this state when displaying a custom annotation on top.

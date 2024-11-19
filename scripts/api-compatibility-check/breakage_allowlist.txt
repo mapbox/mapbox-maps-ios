@@ -1933,3 +1933,6 @@ Func MapboxMap.queryRenderedFeatures(with:targets:completion:) has been removed
 Func MapboxMap.querySourceFeatures(for:completion:) has been removed
 Struct FeaturesetQueryTarget has been removed
 Var QueriedRenderedFeature.queryTargets has been removed
+
+// UpdateMapStyle.standardExperimental parameters order.
+Func MapStyle.standardExperimental(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:buildingHighlightColor:buildingSelectColor:placeLabelSelectColor:placeLabelHighlightColor:) has been renamed to Func standardExperimental(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:buildingHighlightColor:buildingSelectColor:placeLabelHighlightColor:placeLabelSelectColor:)

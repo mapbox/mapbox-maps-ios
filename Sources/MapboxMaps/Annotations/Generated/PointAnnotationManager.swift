@@ -190,6 +190,14 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["symbol-avoid-edges"] = newValue }
     }
 
+    /// Selects the base of symbol-elevation.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var symbolElevationReference: SymbolElevationReference? {
+        get { impl.layerProperties["symbol-elevation-reference"].flatMap { $0 as? String }.flatMap(SymbolElevationReference.init(rawValue:)) }
+        set { impl.layerProperties["symbol-elevation-reference"] = newValue?.rawValue }
+    }
+
     /// Label placement relative to its geometry.
     /// Default value: "point".
     public var symbolPlacement: SymbolPlacement? {
@@ -452,16 +460,10 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["icon-translate-anchor"] = newValue?.rawValue }
     }
 
-    /// Selects the base of symbol-elevation.
-    /// Default value: "ground".
-    public var symbolElevationReference: SymbolElevationReference? {
-        get { impl.layerProperties["symbol-elevation-reference"].flatMap { $0 as? String }.flatMap(SymbolElevationReference.init(rawValue:)) }
-        set { impl.layerProperties["symbol-elevation-reference"] = newValue?.rawValue }
-    }
-
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
-    public var symbolZOffset: Double? {
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var symbolZOffset: Double? {
         get { impl.layerProperties["symbol-z-offset"] as? Double }
         set { impl.layerProperties["symbol-z-offset"] = newValue }
     }

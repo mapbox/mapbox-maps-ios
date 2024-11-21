@@ -76,7 +76,8 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
     }
 
     /// Vertical offset from ground, in meters. Defaults to 0. Not supported for globe projection at the moment.
-    public var lineZOffset: Double? {
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineZOffset: Double? {
         get { impl.layerProperties["line-z-offset"] as? Double }
         set { impl.layerProperties["line-z-offset"] = newValue }
     }
@@ -180,14 +181,16 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
 
     /// The color to be used for rendering the trimmed line section that is defined by the `line-trim-offset` property.
     /// Default value: "transparent".
-    public var lineTrimColor: StyleColor? {
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineTrimColor: StyleColor? {
         get { impl.layerProperties["line-trim-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
         set { impl.layerProperties["line-trim-color"] = newValue?.rawValue }
     }
 
     /// The fade range for the trim-start and trim-end points is defined by the `line-trim-offset` property. The first element of the array represents the fade range from the trim-start point toward the end of the line, while the second element defines the fade range from the trim-end point toward the beginning of the line. The fade result is achieved by interpolating between `line-trim-color` and the color specified by the `line-color` or the `line-gradient` property.
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
-    public var lineTrimFadeRange: [Double]? {
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineTrimFadeRange: [Double]? {
         get { impl.layerProperties["line-trim-fade-range"] as? [Double] }
         set { impl.layerProperties["line-trim-fade-range"] = newValue }
     }

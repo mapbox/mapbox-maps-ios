@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+⚠️⚠️⚠️ Potentially breaking changes ⚠️⚠️⚠️
+* Mark `symbolElevationReference`, `symbolZOffset`, `lineTrimColor `,  `lineTrimFadeRange`, `lineZOffset` as Experimental in AnnotationManagers. This is potentially breaking change, however those properties are not marked as experimental only in AnnotationManagers by mistake.
+In order to continue use them use the following import `@_spi(Experimental) import MapboxMaps`.
+
+* Add two separete Geofence examples in SwiftUI - `GeofencingPlayground` and `GeofencingUserLocation`
 * Add support for Base and Height alignment in FillExtrusionLayer.
 * Add support for `pitchAlignment` in BackgroundLayer.
 * Add support for `zOffset` in FillLayer, PolygonAnnotation[Manager] and PolygonAnnotationGroup.
@@ -15,6 +20,8 @@ That initializer doesn't require to wrap arguments in `Argument` cases. For exam
 ## 11.8.0 - 11 November, 2024
 
 * Add two separated Geofence examples in SwiftUI - `GeofencingPlayground` and `GeofencingUserLocation`
+* Expose `lineElevationReference`, `lineCrossSlope`, `iconSizeScaleRange`, `textSizeScaleRange` as experimental
+* Mark `ClipLayer` as stable
 
 ## 11.8.0-rc.1 - 23 October, 2024
 

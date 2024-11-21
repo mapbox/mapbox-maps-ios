@@ -1936,3 +1936,22 @@ Var QueriedRenderedFeature.queryTargets has been removed
 
 // UpdateMapStyle.standardExperimental parameters order.
 Func MapStyle.standardExperimental(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:buildingHighlightColor:buildingSelectColor:placeLabelSelectColor:placeLabelHighlightColor:) has been renamed to Func standardExperimental(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:buildingHighlightColor:buildingSelectColor:placeLabelHighlightColor:placeLabelSelectColor:)
+
+// Switch to Common with Turf
+Constructor GeofenceState.init(feature:timestamp:) has been removed 
+Constructor GeofencingEvent.init(feature:timestamp:) has been removed 
+Func GeofencingService.addFeature(feature:callback:) has been removed 
+Var GeofenceState.feature has been removed 
+Var GeofencingEvent.feature has been removed 
+
+// Fix bug in annotation managers generator to respect experimental attributes
+Var PointAnnotationManager.symbolElevationReference is now with @_documentation
+Var PointAnnotationManager.symbolElevationReference is now with @_spi
+Var PointAnnotationManager.symbolZOffset is now with @_documentation
+Var PointAnnotationManager.symbolZOffset is now with @_spi
+Var PolylineAnnotationManager.lineTrimColor is now with @_documentation
+Var PolylineAnnotationManager.lineTrimColor is now with @_spi
+Var PolylineAnnotationManager.lineTrimFadeRange is now with @_documentation
+Var PolylineAnnotationManager.lineTrimFadeRange is now with @_spi
+Var PolylineAnnotationManager.lineZOffset is now with @_documentation
+Var PolylineAnnotationManager.lineZOffset is now with @_spi

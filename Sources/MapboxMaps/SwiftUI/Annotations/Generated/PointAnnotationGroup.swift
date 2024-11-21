@@ -90,6 +90,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         assign(manager, \.iconTextFit, value: iconTextFit)
         assign(manager, \.iconTextFitPadding, value: iconTextFitPadding)
         assign(manager, \.symbolAvoidEdges, value: symbolAvoidEdges)
+        assign(manager, \.symbolElevationReference, value: symbolElevationReference)
         assign(manager, \.symbolPlacement, value: symbolPlacement)
         assign(manager, \.symbolSortKey, value: symbolSortKey)
         assign(manager, \.symbolSpacing, value: symbolSpacing)
@@ -128,7 +129,6 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         assign(manager, \.iconOpacity, value: iconOpacity)
         assign(manager, \.iconTranslate, value: iconTranslate)
         assign(manager, \.iconTranslateAnchor, value: iconTranslateAnchor)
-        assign(manager, \.symbolElevationReference, value: symbolElevationReference)
         assign(manager, \.symbolZOffset, value: symbolZOffset)
         assign(manager, \.textColor, value: textColor)
         assign(manager, \.textEmissiveStrength, value: textEmissiveStrength)
@@ -251,6 +251,15 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     /// Default value: false.
     public func symbolAvoidEdges(_ newValue: Bool) -> Self {
         with(self, setter(\.symbolAvoidEdges, newValue))
+    }
+
+    private var symbolElevationReference: SymbolElevationReference?
+    /// Selects the base of symbol-elevation.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func symbolElevationReference(_ newValue: SymbolElevationReference) -> Self {
+        with(self, setter(\.symbolElevationReference, newValue))
     }
 
     private var symbolPlacement: SymbolPlacement?
@@ -513,15 +522,6 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     /// Default value: "map".
     public func iconTranslateAnchor(_ newValue: IconTranslateAnchor) -> Self {
         with(self, setter(\.iconTranslateAnchor, newValue))
-    }
-
-    private var symbolElevationReference: SymbolElevationReference?
-    /// Selects the base of symbol-elevation.
-    /// Default value: "ground".
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func symbolElevationReference(_ newValue: SymbolElevationReference) -> Self {
-        with(self, setter(\.symbolElevationReference, newValue))
     }
 
     private var symbolZOffset: Double?

@@ -404,6 +404,31 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-avoid-edges"] as! Bool, defaultValue)
     }
+    func testInitialSymbolElevationReference() {
+        let initialValue = manager.symbolElevationReference
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetSymbolElevationReference() {
+        let value = SymbolElevationReference.testConstantValue()
+        manager.symbolElevationReference = value
+        XCTAssertEqual(manager.symbolElevationReference, value)
+        XCTAssertEqual(manager.impl.layerProperties["symbol-elevation-reference"] as! String, value.rawValue)
+    }
+
+    func testSetToNilSymbolElevationReference() {
+        let newSymbolElevationReferenceProperty = SymbolElevationReference.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-elevation-reference").value as! String
+        manager.symbolElevationReference = newSymbolElevationReferenceProperty
+        XCTAssertNotNil(manager.impl.layerProperties["symbol-elevation-reference"])
+        harness.triggerDisplayLink()
+
+        manager.symbolElevationReference = nil
+        XCTAssertNil(manager.symbolElevationReference)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-elevation-reference"] as! String, defaultValue)
+    }
     func testInitialSymbolPlacement() {
         let initialValue = manager.symbolPlacement
         XCTAssertNil(initialValue)
@@ -1362,31 +1387,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"] as! String, defaultValue)
-    }
-    func testInitialSymbolElevationReference() {
-        let initialValue = manager.symbolElevationReference
-        XCTAssertNil(initialValue)
-    }
-
-    func testSetSymbolElevationReference() {
-        let value = SymbolElevationReference.testConstantValue()
-        manager.symbolElevationReference = value
-        XCTAssertEqual(manager.symbolElevationReference, value)
-        XCTAssertEqual(manager.impl.layerProperties["symbol-elevation-reference"] as! String, value.rawValue)
-    }
-
-    func testSetToNilSymbolElevationReference() {
-        let newSymbolElevationReferenceProperty = SymbolElevationReference.testConstantValue()
-        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-elevation-reference").value as! String
-        manager.symbolElevationReference = newSymbolElevationReferenceProperty
-        XCTAssertNotNil(manager.impl.layerProperties["symbol-elevation-reference"])
-        harness.triggerDisplayLink()
-
-        manager.symbolElevationReference = nil
-        XCTAssertNil(manager.symbolElevationReference)
-        harness.triggerDisplayLink()
-
-        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-elevation-reference"] as! String, defaultValue)
     }
     func testInitialSymbolZOffset() {
         let initialValue = manager.symbolZOffset

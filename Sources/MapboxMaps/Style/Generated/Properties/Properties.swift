@@ -160,6 +160,24 @@ public struct IconTextFit: RawRepresentable, Codable, Hashable, Sendable {
 
 }
 
+// MARK: SYMBOL_ELEVATION_REFERENCE
+
+/// Selects the base of symbol-elevation.
+public struct SymbolElevationReference: RawRepresentable, Codable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Elevate symbols relative to the sea level.
+    public static let sea = SymbolElevationReference(rawValue: "sea")
+
+    /// Elevate symbols relative to the ground's height below them.
+    public static let ground = SymbolElevationReference(rawValue: "ground")
+
+}
+
 // MARK: SYMBOL_PLACEMENT
 
 /// Label placement relative to its geometry.
@@ -379,24 +397,6 @@ public struct IconTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable
 
     /// Icons are translated relative to the viewport.
     public static let viewport = IconTranslateAnchor(rawValue: "viewport")
-
-}
-
-// MARK: SYMBOL_ELEVATION_REFERENCE
-
-/// Selects the base of symbol-elevation.
-public struct SymbolElevationReference: RawRepresentable, Codable, Hashable, Sendable {
-    public let rawValue: String
-
-    public init(rawValue: String) {
-        self.rawValue = rawValue
-    }
-
-    /// Elevate symbols relative to the sea level.
-    public static let sea = SymbolElevationReference(rawValue: "sea")
-
-    /// Elevate symbols relative to the ground's height below them.
-    public static let ground = SymbolElevationReference(rawValue: "ground")
 
 }
 

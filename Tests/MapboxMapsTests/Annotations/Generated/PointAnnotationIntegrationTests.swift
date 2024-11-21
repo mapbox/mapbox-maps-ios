@@ -267,6 +267,32 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.symbolAvoidEdges, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-avoid-edges").value as! NSNumber).boolValue))
     }
 
+    func testSymbolElevationReference() throws {
+        // Test that the setter and getter work
+        let value = SymbolElevationReference.testConstantValue()
+        manager.symbolElevationReference = value
+        XCTAssertEqual(manager.symbolElevationReference, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.symbolElevationReference {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.symbolElevationReference = nil
+        XCTAssertNil(manager.symbolElevationReference)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.symbolElevationReference, .constant(SymbolElevationReference(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-elevation-reference").value as! String)))
+    }
+
     func testSymbolPlacement() throws {
         // Test that the setter and getter work
         let value = SymbolPlacement.testConstantValue()
@@ -735,32 +761,6 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
         XCTAssertEqual(layer.iconTranslateAnchor, .constant(IconTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String)))
-    }
-
-    func testSymbolElevationReference() throws {
-        // Test that the setter and getter work
-        let value = SymbolElevationReference.testConstantValue()
-        manager.symbolElevationReference = value
-        XCTAssertEqual(manager.symbolElevationReference, value)
-
-        // Test that the value is synced to the layer
-        manager.impl.syncSourceAndLayerIfNeeded()
-        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        if case .constant(let actualValue) = layer.symbolElevationReference {
-            XCTAssertEqual(actualValue, value)
-        } else {
-            XCTFail("Expected constant")
-        }
-
-        // Test that the property can be reset to nil
-        manager.symbolElevationReference = nil
-        XCTAssertNil(manager.symbolElevationReference)
-
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
-        manager.impl.syncSourceAndLayerIfNeeded()
-        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.symbolElevationReference, .constant(SymbolElevationReference(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-elevation-reference").value as! String)))
     }
 
     func testTextTranslate() throws {

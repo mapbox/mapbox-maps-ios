@@ -98,6 +98,11 @@ public struct SymbolLayer: Layer, Equatable {
     /// Default value: false.
     public var symbolAvoidEdges: Value<Bool>?
 
+    /// Selects the base of symbol-elevation.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var symbolElevationReference: Value<SymbolElevationReference>?
+
     /// Label placement relative to its geometry.
     /// Default value: "point".
     public var symbolPlacement: Value<SymbolPlacement>?
@@ -276,11 +281,6 @@ public struct SymbolLayer: Layer, Equatable {
     /// Default value: "map".
     public var iconTranslateAnchor: Value<IconTranslateAnchor>?
 
-    /// Selects the base of symbol-elevation.
-    /// Default value: "ground".
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var symbolElevationReference: Value<SymbolElevationReference>?
-
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
@@ -390,7 +390,6 @@ public struct SymbolLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(iconTranslate, forKey: .iconTranslate)
         try paintContainer.encodeIfPresent(iconTranslateTransition, forKey: .iconTranslateTransition)
         try paintContainer.encodeIfPresent(iconTranslateAnchor, forKey: .iconTranslateAnchor)
-        try paintContainer.encodeIfPresent(symbolElevationReference, forKey: .symbolElevationReference)
         try paintContainer.encodeIfPresent(symbolZOffset, forKey: .symbolZOffset)
         try paintContainer.encodeIfPresent(symbolZOffsetTransition, forKey: .symbolZOffsetTransition)
         try paintContainer.encodeIfPresent(textColor, forKey: .textColor)
@@ -428,6 +427,7 @@ public struct SymbolLayer: Layer, Equatable {
         try layoutContainer.encodeIfPresent(iconTextFit, forKey: .iconTextFit)
         try layoutContainer.encodeIfPresent(iconTextFitPadding, forKey: .iconTextFitPadding)
         try layoutContainer.encodeIfPresent(symbolAvoidEdges, forKey: .symbolAvoidEdges)
+        try layoutContainer.encodeIfPresent(symbolElevationReference, forKey: .symbolElevationReference)
         try layoutContainer.encodeIfPresent(symbolPlacement, forKey: .symbolPlacement)
         try layoutContainer.encodeIfPresent(symbolSortKey, forKey: .symbolSortKey)
         try layoutContainer.encodeIfPresent(symbolSpacing, forKey: .symbolSpacing)
@@ -490,7 +490,6 @@ public struct SymbolLayer: Layer, Equatable {
             iconTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .iconTranslate)
             iconTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconTranslateTransition)
             iconTranslateAnchor = try paintContainer.decodeIfPresent(Value<IconTranslateAnchor>.self, forKey: .iconTranslateAnchor)
-            symbolElevationReference = try paintContainer.decodeIfPresent(Value<SymbolElevationReference>.self, forKey: .symbolElevationReference)
             symbolZOffset = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .symbolZOffset)
             symbolZOffsetTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .symbolZOffsetTransition)
             textColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .textColor)
@@ -530,6 +529,7 @@ public struct SymbolLayer: Layer, Equatable {
             iconTextFit = try layoutContainer.decodeIfPresent(Value<IconTextFit>.self, forKey: .iconTextFit)
             iconTextFitPadding = try layoutContainer.decodeIfPresent(Value<[Double]>.self, forKey: .iconTextFitPadding)
             symbolAvoidEdges = try layoutContainer.decodeIfPresent(Value<Bool>.self, forKey: .symbolAvoidEdges)
+            symbolElevationReference = try layoutContainer.decodeIfPresent(Value<SymbolElevationReference>.self, forKey: .symbolElevationReference)
             symbolPlacement = try layoutContainer.decodeIfPresent(Value<SymbolPlacement>.self, forKey: .symbolPlacement)
             symbolSortKey = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .symbolSortKey)
             symbolSpacing = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .symbolSpacing)
@@ -590,6 +590,7 @@ public struct SymbolLayer: Layer, Equatable {
         case iconTextFit = "icon-text-fit"
         case iconTextFitPadding = "icon-text-fit-padding"
         case symbolAvoidEdges = "symbol-avoid-edges"
+        case symbolElevationReference = "symbol-elevation-reference"
         case symbolPlacement = "symbol-placement"
         case symbolSortKey = "symbol-sort-key"
         case symbolSpacing = "symbol-spacing"
@@ -642,7 +643,6 @@ public struct SymbolLayer: Layer, Equatable {
         case iconTranslate = "icon-translate"
         case iconTranslateTransition = "icon-translate-transition"
         case iconTranslateAnchor = "icon-translate-anchor"
-        case symbolElevationReference = "symbol-elevation-reference"
         case symbolZOffset = "symbol-z-offset"
         case symbolZOffsetTransition = "symbol-z-offset-transition"
         case textColor = "text-color"
@@ -878,6 +878,22 @@ extension SymbolLayer {
     /// Default value: false.
     public func symbolAvoidEdges(_ expression: Exp) -> Self {
         with(self, setter(\.symbolAvoidEdges, .expression(expression)))
+    }
+
+    /// Selects the base of symbol-elevation.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func symbolElevationReference(_ constant: SymbolElevationReference) -> Self {
+        with(self, setter(\.symbolElevationReference, .constant(constant)))
+    }
+
+    /// Selects the base of symbol-elevation.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func symbolElevationReference(_ expression: Exp) -> Self {
+        with(self, setter(\.symbolElevationReference, .expression(expression)))
     }
 
     /// Label placement relative to its geometry.
@@ -1388,22 +1404,6 @@ extension SymbolLayer {
     /// Default value: "map".
     public func iconTranslateAnchor(_ expression: Exp) -> Self {
         with(self, setter(\.iconTranslateAnchor, .expression(expression)))
-    }
-
-    /// Selects the base of symbol-elevation.
-    /// Default value: "ground".
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func symbolElevationReference(_ constant: SymbolElevationReference) -> Self {
-        with(self, setter(\.symbolElevationReference, .constant(constant)))
-    }
-
-    /// Selects the base of symbol-elevation.
-    /// Default value: "ground".
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func symbolElevationReference(_ expression: Exp) -> Self {
-        with(self, setter(\.symbolElevationReference, .expression(expression)))
     }
 
     /// Specifies an uniform elevation from the ground, in meters.

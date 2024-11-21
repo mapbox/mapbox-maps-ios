@@ -129,6 +129,25 @@ extension IconTextFit {
     }
 }
 
+// MARK: SYMBOL_ELEVATION_REFERENCE
+
+extension Value where T == SymbolElevationReference {
+    static func testConstantValue() -> Value<SymbolElevationReference> {
+        return .constant(SymbolElevationReference.testConstantValue())
+    }
+}
+
+extension SymbolElevationReference {
+    static func testConstantValue() -> SymbolElevationReference {
+        return .sea
+    }
+
+    static func random() -> SymbolElevationReference {
+        let allCases: [SymbolElevationReference] = [.sea, .ground]
+        return allCases.randomElement()!
+    }
+}
+
 // MARK: SYMBOL_PLACEMENT
 
 extension Value where T == SymbolPlacement {
@@ -315,25 +334,6 @@ extension IconTranslateAnchor {
 
     static func random() -> IconTranslateAnchor {
         let allCases: [IconTranslateAnchor] = [.map, .viewport]
-        return allCases.randomElement()!
-    }
-}
-
-// MARK: SYMBOL_ELEVATION_REFERENCE
-
-extension Value where T == SymbolElevationReference {
-    static func testConstantValue() -> Value<SymbolElevationReference> {
-        return .constant(SymbolElevationReference.testConstantValue())
-    }
-}
-
-extension SymbolElevationReference {
-    static func testConstantValue() -> SymbolElevationReference {
-        return .sea
-    }
-
-    static func random() -> SymbolElevationReference {
-        let allCases: [SymbolElevationReference] = [.sea, .ground]
         return allCases.randomElement()!
     }
 }

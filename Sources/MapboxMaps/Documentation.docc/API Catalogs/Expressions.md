@@ -9,5 +9,6 @@
 - ``FormatOptions``
 - ``NumberFormatOptions``
 - ``CollatorOptions``
+- ``ImageOptions``
 - ``ExpressionArgumentConvertible``
 - ``ExpressionArgumentBuilder``

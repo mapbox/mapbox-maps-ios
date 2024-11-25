@@ -1,5 +1,5 @@
 {
-    "MapboxCoreMaps": "11.9.0-SNAPSHOT.1122T1014Z.b9d442a",
-    "MapboxCommon": "24.9.0-SNAPSHOT.1112T0225Z.a361369",
+    "MapboxCoreMaps": "11.9.0-beta.1",
+    "MapboxCommon": "24.9.0-beta.1",
     "Turf": "4.0.0-beta.1"
 }

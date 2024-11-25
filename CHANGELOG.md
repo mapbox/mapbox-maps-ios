@@ -18,6 +18,8 @@ In order to continue use them use the following import `@_spi(Experimental) impo
 That initializer doesn't require to wrap arguments in `Argument` cases. For example, `Exp(.eq, Exp(.get, "extrude"), "true")`.
 * Expose a `TileStore/clearAmbientCache()` method to clear ambient cache.
 * Add new experimental `radius` parameter to `TapInteraction`, `LongPressInteraction` and interaction managers to control the radius of a tappable area.
+* Add a way to specify image expression options.
+* Bump core maps version to 11.9.0-beta.1 and common sdk to 24.9.0-beta.1
 
 ## 11.8.0 - 11 November, 2024
 

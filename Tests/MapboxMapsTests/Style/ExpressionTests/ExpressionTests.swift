@@ -326,4 +326,54 @@ final class ExpressionTests: XCTestCase {
 
         XCTAssertNotEqual(shortFormExpression, longFormExpression)
     }
+
+    func testEncodeImageOptions() throws {
+        let color = StyleColor(UIColor.black)
+        let empty = ImageOptions([:])
+        let constantValues = ImageOptions([
+            "key": .constant(StyleColor("red")),
+            "key2": .constant(color)
+
+        ])
+        let expression = Expression(.toRgba, Exp(.get, "color"))
+        let expression2 = Exp(.switchCase) {
+            Exp(.gte) {
+                Exp(.toNumber) {
+                    Exp(.get) { "point_count" }
+                }
+                4
+            }
+            "#ffffff"
+            "#000000"
+        }
+        let expressionValues = ImageOptions([
+            "key": .expression(expression),
+            "key2": .expression(expression2)
+        ])
+
+        let emptyEncoded = try DictionaryEncoder().encode(empty)
+        let constantValuesEncoded = try DictionaryEncoder().encode(constantValues)
+        let expressionValuesParamsEncoded = try DictionaryEncoder().encode(expressionValues)["params"] as? [String: Any]
+
+        XCTAssertEqual(emptyEncoded["params"] as? [String: String], [:])
+        XCTAssertEqual(constantValuesEncoded["params"] as? [String: String], ["key": "red", "key2": color.rawValue])
+        XCTAssertEqual(
+            String(data: try JSONSerialization.data(withJSONObject: expressionValuesParamsEncoded?["key"] as Any), encoding: .utf8),
+            ##"["to-rgba",["get","color"]]"##
+        )
+        XCTAssertEqual(
+            String(data: try JSONSerialization.data(withJSONObject: expressionValuesParamsEncoded?["key2"] as Any), encoding: .utf8),
+            ##"["case",[">=",["to-number",["get","point_count"]],4],"#ffffff","#000000"]"##
+        )
+    }
+
+    func testDecodeImageOptions() throws {
+        let jsonString = #"{"params": {"expression": ["get", "color"], "constant": "red", "rgb": "rgba(0, 0, 0, 1)"}}"#
+
+        let imageOptions = try JSONDecoder().decode(ImageOptions.self, from: try XCTUnwrap(jsonString.data(using: .utf8)))
+
+        XCTAssertEqual(imageOptions.options["expression"], Value.expression(Exp(.get) { "color" }))
+        XCTAssertEqual(imageOptions.options["constant"], Value.constant(StyleColor(rawValue: "red")))
+        XCTAssertEqual(imageOptions.options["rgb"], Value.constant(StyleColor("rgba(0, 0, 0, 1)")))
+    }
 }

@@ -141,10 +141,12 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         assign(manager, \.textTranslateAnchor, value: textTranslateAnchor)
         assign(manager, \.slot, value: slot)
         assign(manager, \.iconOcclusionOpacity, value: iconOcclusionOpacity)
-        assign(manager, \.textOcclusionOpacity, value: textOcclusionOpacity)    
+        assign(manager, \.textOcclusionOpacity, value: textOcclusionOpacity)
 
         manager.onClusterTap = onClusterTap
         manager.onClusterLongPress = onClusterLongPress
+        manager.tapRadius = tapRadius
+        manager.longPressRadius = longPressRadius
     }
 
     // MARK: - Common layer properties
@@ -646,6 +648,23 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     /// For more information, see the ``MapViewAnnotation/init(layerId:featureId:content:)``.
     public func layerId(_ layerId: String) -> Self {
         with(self, setter(\.layerId, layerId))
+    }
+
+    var tapRadius: CGFloat?
+    var longPressRadius: CGFloat?
+
+    /// A custom tappable area radius. Default value is 0.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func tapRadius(_ radius: CGFloat? = nil) -> Self {
+        with(self, setter(\.tapRadius, radius))
+    }
+
+    /// A custom tappable area radius. Default value is 0.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func longPressRadius(_ radius: CGFloat? = nil) -> Self {
+        with(self, setter(\.longPressRadius, radius))
     }
 }
 

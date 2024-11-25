@@ -339,48 +339,62 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
     var dragTokens: TokenPair?
     var clusterTokens: TokenPair?
 
+    var tapRadius: CGFloat? {
+        didSet { updateTapHandlers(force: tapRadius != oldValue) }
+    }
+
+    var longPressRadius: CGFloat? {
+        didSet { updateLongPressHandlers(force: longPressRadius != oldValue) }
+    }
+
     private var handlesTaps = false {
-        didSet {
-            if handlesTaps {
-                if tapTokens == nil {
-                    tapTokens = (
-                        mapboxMap.addInteraction(tapInteraction(layerId: id)).erased,
-                        mapboxMap.addInteraction(tapInteraction(layerId: dragId)).erased
-                    )
-                }
-            } else {
-                tapTokens = nil
-            }
-        }
+        didSet { updateTapHandlers() }
     }
 
     private var handlesLongPress = false {
-        didSet {
-            if handlesLongPress {
-                if longPressTokens == nil {
-                    longPressTokens = (
-                        mapboxMap.addInteraction(longPressInteraction(layerId: id)).erased,
-                        mapboxMap.addInteraction(longPressInteraction(layerId: dragId)).erased
-                    )
-                }
-            } else {
-                longPressTokens = nil
-            }
-        }
+        didSet { updateLongPressHandlers() }
     }
 
     private var handlesDrag = false {
-        didSet {
-            if handlesDrag {
-                if dragTokens == nil {
-                    dragTokens = (
-                        mapboxMap.addInteraction(dragInteraction(layerId: id)).erased,
-                        mapboxMap.addInteraction(dragInteraction(layerId: dragId)).erased
-                    )
-                }
-            } else {
-                dragTokens = nil
+        didSet { updateDragHandlers() }
+    }
+
+    private func updateTapHandlers(force: Bool = false) {
+        if handlesTaps {
+            if tapTokens == nil || force {
+                tapTokens = (
+                    mapboxMap.addInteraction(tapInteraction(layerId: id)).erased,
+                    mapboxMap.addInteraction(tapInteraction(layerId: dragId)).erased
+                )
             }
+        } else {
+            tapTokens = nil
+        }
+    }
+
+    private func updateLongPressHandlers(force: Bool = false) {
+        if handlesLongPress {
+            if longPressTokens == nil || force {
+                longPressTokens = (
+                    mapboxMap.addInteraction(longPressInteraction(layerId: id)).erased,
+                    mapboxMap.addInteraction(longPressInteraction(layerId: dragId)).erased
+                )
+            }
+        } else {
+            longPressTokens = nil
+        }
+    }
+
+    private func updateDragHandlers(force: Bool = false) {
+        if handlesDrag {
+            if dragTokens == nil || force {
+                dragTokens = (
+                    mapboxMap.addInteraction(dragInteraction(layerId: id)).erased,
+                    mapboxMap.addInteraction(dragInteraction(layerId: dragId)).erased
+                )
+            }
+        } else {
+            dragTokens = nil
         }
     }
 
@@ -406,7 +420,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
     }
 
     private func tapInteraction(layerId: String) -> TapInteraction {
-        return TapInteraction(.layer(layerId)) { [weak self] feature, context in
+        return TapInteraction(.layer(layerId), radius: tapRadius) { [weak self] feature, context in
             guard
                 let self,
                 let featureId = feature.id?.id else { return false }
@@ -430,7 +444,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
     }
 
     private func longPressInteraction(layerId: String) -> LongPressInteraction {
-        LongPressInteraction(.layer(layerId)) { [weak self] feature, context in
+        LongPressInteraction(.layer(layerId), radius: longPressRadius) { [weak self] feature, context in
             self?.annotations.first { $0.id == feature.id?.id }?.longPressHandler?(context) ?? false
         }
     }

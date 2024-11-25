@@ -236,7 +236,7 @@ final class AnnotationManagerImplTests: XCTestCase {
         harness.map.simulateInteraction(.tap, .layer(id), feature: annotations[0].feature, context: context)
 
         var result = try XCTUnwrap(delegate.annotations)
-        XCTAssertEqual(result[0].id, annotations[0].id)
+        XCTAssertEqual(result.first?.id, annotations[0].id)
 
         XCTAssertEqual(taps.count, 1)
         XCTAssertEqual(taps.first?.point, context.point)
@@ -247,7 +247,7 @@ final class AnnotationManagerImplTests: XCTestCase {
         harness.map.simulateInteraction(.tap, .layer(id), feature: annotations[1].feature, context: context)
 
         result = try XCTUnwrap(delegate.annotations)
-        XCTAssertEqual(result[0].id, annotations[1].id)
+        XCTAssertEqual(result.first?.id, annotations[1].id)
 
         // invalid id
         delegate.annotations = nil
@@ -255,6 +255,31 @@ final class AnnotationManagerImplTests: XCTestCase {
         harness.map.simulateInteraction(.tap, .layer(id), feature: invalidFeature, context: context)
 
         XCTAssertNil(delegate.annotations)
+        XCTAssertEqual(taps.count, 1)
+
+        // Tap with radius
+        delegate.annotations = nil
+        taps.removeAll()
+        me.tapRadius = 5
+
+        harness.map.simulateInteraction(.tap, .layer(id), feature: annotations[0].feature, radius: 5, context: context)
+        result = try XCTUnwrap(delegate.annotations)
+        XCTAssertEqual(taps.count, 1)
+        XCTAssertEqual(result.first?.id, annotations[0].id)
+
+        // Tap with non-matching radius
+        delegate.annotations = nil
+        taps.removeAll()
+        harness.map.simulateInteraction(.tap, .layer(id), feature: annotations[0].feature, radius: 0, context: context)
+        XCTAssertNil(delegate.annotations)
+        XCTAssertEqual(taps.count, 0)
+
+        // removing tap radius
+        me.tapRadius = nil
+        taps.removeAll()
+        delegate.annotations = nil
+        harness.map.simulateInteraction(.tap, .layer(id), feature: annotations[0].feature, context: context)
+
         XCTAssertEqual(taps.count, 1)
     }
 
@@ -280,6 +305,25 @@ final class AnnotationManagerImplTests: XCTestCase {
         // invalid id
         let invalidFeature = Feature(geometry: nil)
         harness.map.simulateInteraction(.longPress, .layer(id), feature: invalidFeature, context: context)
+
+        XCTAssertEqual(taps.count, 1)
+
+        // LongPress with radius
+        taps.removeAll()
+        me.longPressRadius = 5
+
+        harness.map.simulateInteraction(.longPress, .layer(id), feature: annotations[0].feature, radius: 5, context: context)
+        XCTAssertEqual(taps.count, 1)
+
+        // Tap with non-matching radius
+        taps.removeAll()
+        harness.map.simulateInteraction(.longPress, .layer(id), feature: annotations[0].feature, radius: 0, context: context)
+        XCTAssertEqual(taps.count, 0)
+
+        // removing longPress radius
+        me.longPressRadius = nil
+        taps.removeAll()
+        harness.map.simulateInteraction(.longPress, .layer(id), feature: annotations[0].feature, context: context)
 
         XCTAssertEqual(taps.count, 1)
     }

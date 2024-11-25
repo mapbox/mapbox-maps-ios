@@ -64,10 +64,11 @@ extension CoreInteraction {
                 featureset: featureset,
                 onBegin: impl.onBegin,
                 onChange: impl.onChange,
-                onEnd: impl.onEnd))
+                onEnd: impl.onEnd),
+            radius: impl.radius.map { NSNumber(value: $0) })
     }
 
     convenience init(layerId: String, type: CoreInteractionType, handler: @escaping MapLayerGestureHandler) {
-        self.init(featureset: FeaturesetDescriptor.layer(layerId).core, filter: nil, type: type, handler: HandlerImpl(handler: handler))
+        self.init(featureset: FeaturesetDescriptor.layer(layerId).core, filter: nil, type: type, handler: HandlerImpl(handler: handler), radius: nil)
     }
 }

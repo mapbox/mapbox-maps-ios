@@ -103,6 +103,7 @@
 		A6389C28B8AAC39878591AD0 /* PitchAndDistanceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5C0A3C44715B96D646ACB7 /* PitchAndDistanceExample.swift */; platformFilters = (ios, ); };
 		A6A68B4ED674A924ACBD8FA2 /* UIColor+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000C4D3B6FC70FA9607E3A3 /* UIColor+Random.swift */; platformFilters = (ios, ); };
 		A972D3306BC53DEC9798C60D /* ExternalVectorSourceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 133E4EABC7540ED460F08B8F /* ExternalVectorSourceExample.swift */; platformFilters = (ios, ); };
+		AD0922FA7F69AEE4C23F2351 /* InteractionsPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388932B3A65BB7E9B59FDBE0 /* InteractionsPlayground.swift */; };
 		AE51E276DCD8CF89AB339224 /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB76F486D80FED88678B04D /* LongTapAnimationExample.swift */; platformFilters = (ios, ); };
 		AE6E90DB7B6DA4580C2DAB59 /* FrameViewAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0F09FF1EF1A88BC1C6545 /* FrameViewAnnotationsExample.swift */; platformFilters = (ios, ); };
 		B304BACFCD08802A740E8919 /* PuckPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CC67084BA1191D0B179A94 /* PuckPlayground.swift */; };
@@ -204,6 +205,7 @@
 		3595A6E8FB1FD9F41DEB5C6F /* AnnotationsOrderTestExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsOrderTestExample.swift; sourceTree = "<group>"; };
 		370DFCA52EB6C7F119BF81DA /* MapEventsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapEventsExample.swift; sourceTree = "<group>"; };
 		384FD8FC97B9F5011AF4BD61 /* GlobeFlyToExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobeFlyToExample.swift; sourceTree = "<group>"; };
+		388932B3A65BB7E9B59FDBE0 /* InteractionsPlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionsPlayground.swift; sourceTree = "<group>"; };
 		3BCB1CC4577300FEF4DE017B /* InsetMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetMapExample.swift; sourceTree = "<group>"; };
 		3BDE7738CA55957F3FAC3ECE /* LineAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineAnnotationExample.swift; sourceTree = "<group>"; };
 		3E2F68B22AFF73A71F86CABC /* ExamplesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExamplesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -341,6 +343,7 @@
 			children = (
 				3595A6E8FB1FD9F41DEB5C6F /* AnnotationsOrderTestExample.swift */,
 				7A77AEDBF679F223D4412FEE /* AttributionDialogueExamples.swift */,
+				388932B3A65BB7E9B59FDBE0 /* InteractionsPlayground.swift */,
 				65535FB9F190778001AB847A /* MapScrollExample.swift */,
 				E6E875420B5C674C8CCAB9B1 /* MapSettingsExample.swift */,
 				C0CC67084BA1191D0B179A94 /* PuckPlayground.swift */,
@@ -877,6 +880,7 @@
 				B9B1EE72E6203358F2785916 /* IconSizeChangeExample.swift in Sources */,
 				423A42B555DD0B3AD4856FCF /* InsetMapExample.swift in Sources */,
 				94DB7E8C829041DC5F5B2300 /* InstrumentClusterCarPlaySceneDelegate.swift in Sources */,
+				AD0922FA7F69AEE4C23F2351 /* InteractionsPlayground.swift in Sources */,
 				8B4085733CCABE3BE3D16F7E /* LayerPositionExample.swift in Sources */,
 				918F4BDCC25819DD68BC9518 /* LayerSlotExample.swift in Sources */,
 				C04160BF66055F7DE9315395 /* Lights3DExample.swift in Sources */,

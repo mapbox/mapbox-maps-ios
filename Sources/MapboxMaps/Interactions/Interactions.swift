@@ -63,14 +63,16 @@ public struct TapInteraction: Interaction {
     /// - Parameters:
     ///    - featureset: A featureset descriptor denoting the featureset id or layer.
     ///    - filter: An optional filter of features that should trigger the interaction.
+    ///    - radius: Radius of a tappable area, in points.
     ///    - action: An interaction action.
     @_documentation(visibility: public)
     public init<T: FeaturesetFeatureType>(
         _ featureset: FeaturesetDescriptor<T>,
         filter: Exp? = nil,
+        radius: CGFloat? = nil,
         action: @escaping (T, InteractionContext) -> Bool
     ) {
-        self.impl = InteractionImpl(.tap, featureset, filter, action)
+        self.impl = InteractionImpl(.tap, featureset, filter, radius, action)
     }
 }
 
@@ -121,14 +123,16 @@ public struct LongPressInteraction: Interaction {
     /// - Parameters:
     ///    - featureset: A featureset descriptor denoting the featureset id or layer.
     ///    - filter: An optional filter of features that should trigger the interaction.
+    ///    - radius: Radius of a tappable area, in points.
     ///    - action: An interaction action.
     @_documentation(visibility: public)
     public init<T: FeaturesetFeatureType>(
         _ featureset: FeaturesetDescriptor<T>,
         filter: Exp? = nil,
+        radius: CGFloat? = nil,
         action: @escaping (T, InteractionContext) -> Bool
     ) {
-        self.impl = InteractionImpl(.longPress, featureset, filter, action)
+        self.impl = InteractionImpl(.longPress, featureset, filter, radius, action)
     }
 }
 
@@ -177,6 +181,7 @@ public struct InteractionImpl {
     let onBegin: (FeaturesetFeature?, InteractionContext) -> Bool
     let onChange: ((InteractionContext) -> Void)?
     let onEnd: ((InteractionContext) -> Void)?
+    let radius: CGFloat?
 
     init(_ type: InteractionType, _ action: @escaping (InteractionContext) -> Bool) {
         target = nil
@@ -187,11 +192,13 @@ public struct InteractionImpl {
         }
         onChange = nil
         onEnd = nil
+        radius = nil
     }
 
     init(
         featureset: FeaturesetDescriptor<FeaturesetFeature>,
         filter: Exp?,
+        radius: CGFloat? = nil,
         type: InteractionType,
         onBegin: @escaping (FeaturesetFeature, InteractionContext) -> Bool,
         onChange: ((InteractionContext) -> Void)? = nil,
@@ -207,12 +214,20 @@ public struct InteractionImpl {
         }
         self.onEnd = onEnd
         self.onChange = onChange
+        self.radius = radius
     }
 
-    init<T: FeaturesetFeatureType>(_ type: InteractionType, _ featureset: FeaturesetDescriptor<T>, _ filter: Exp? = nil, _ action: @escaping (T, InteractionContext) -> Bool) {
+    init<T: FeaturesetFeatureType>(
+        _ type: InteractionType,
+        _ featureset: FeaturesetDescriptor<T>,
+        _ filter: Exp? = nil,
+        _ radius: CGFloat? = nil,
+        _ action: @escaping (T, InteractionContext) -> Bool
+    ) {
         self.init(
             featureset: featureset.converted(),
             filter: filter,
+            radius: radius,
             type: type,
             onBegin: { feature, context in
                 if let converted = T(from: feature) {

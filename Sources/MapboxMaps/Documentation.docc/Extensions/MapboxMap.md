@@ -74,7 +74,6 @@
 ### Querying map features
 
 - ``MapboxMap/queryRenderedFeatures(with:options:completion:)``
-- ``MapboxMap/querySourceFeatures(for:options:completion:)``
 - ``MapboxMap/getGeoJsonClusterLeaves(forSourceId:feature:limit:offset:completion:)``
 - ``MapboxMap/getGeoJsonClusterChildren(forSourceId:feature:completion:)``
 - ``MapboxMap/getGeoJsonClusterExpansionZoom(forSourceId:feature:completion:)``

@@ -132,6 +132,34 @@ final class InteractionsTests: IntegrationTestCase {
         wait(for: [anyLongPressExpectation], timeout: 2.0)
     }
 
+    func testTapInteractionWithRadius() {
+        let tap1 = expectation(description: "tap 1")
+        let tap2 = expectation(description: "tap 2")
+        let tap3 = expectation(description: "tap 3")
+        tap3.isInverted = true
+
+        var queue = [tap3, tap2, tap1]
+
+        map.addInteraction(TapInteraction(.featureset("poi", importId: "nested"), radius: 5) { _, _ in
+            queue.popLast()?.fulfill()
+            return true
+        })
+
+        let coord = CLLocationCoordinate2D(latitude: 0.01, longitude: 0.01)
+        var point = map.point(for: coord)
+        map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
+        wait(for: [tap1], timeout: 2.0)
+
+        // circle radius is 5, adding 3 to check tap with the radius
+        point.x += 8
+        map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
+        wait(for: [tap2], timeout: 2.0)
+
+        point.x += 5
+        map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
+        wait(for: [tap3], timeout: 2.0)
+    }
+
     func testTapWithFilter() {
         let coord = CLLocationCoordinate2D(latitude: 0.01, longitude: 0.01)
         let point = map.point(for: coord)

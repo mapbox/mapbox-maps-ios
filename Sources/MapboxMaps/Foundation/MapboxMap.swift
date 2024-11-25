@@ -1046,7 +1046,7 @@ extension MapboxMap: MapFeatureQueryable {
     ///
     /// If the `geometry` parameter is CGPoint, only that point is queried. When it's a `CGRect` or an array of `CGPoint`, the shape is queried.
     ///
-    /// - Important: If you need to handle basic gestures on map content, please prefer to use Interactions API (see ``MapboxMap/addInteraction(_:)``). If you need to query a featureset from an imported style, use ``queryRenderedFeatures(with:targets:completion:)`` instead.
+    /// - Important: If you need to handle basic gestures on map content, please prefer to use Interactions API (see ``MapboxMap/addInteraction(_:)``). If you need to query a featureset from an imported style, use ``queryRenderedFeatures(with:featureset:filter:completion:)`` instead.
     ///
     /// - Parameters:
     ///   - geometry: A screen geometry to query. Can be a `CGPoint`, `CGRect`, or an array of `CGPoint`.

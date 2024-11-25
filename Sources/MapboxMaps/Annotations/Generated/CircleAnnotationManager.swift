@@ -18,6 +18,22 @@ public class CircleAnnotationManager: AnnotationManager, AnnotationManagerIntern
         set { impl.annotations = newValue }
     }
 
+    /// A custom tappable area radius. Default value is 0.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public var tapRadius: CGFloat? {
+        get { impl.tapRadius }
+        set { impl.tapRadius = newValue }
+    }
+
+    /// A custom tappable area radius. Default value is 0.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public var longPressRadius: CGFloat? {
+        get { impl.longPressRadius }
+        set { impl.longPressRadius = newValue }
+    }
+
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
     /// - NOTE: This annotation manager listens to tap events via the ``GestureManager/singleTapGestureRecognizer``.
     @available(*, deprecated, message: "Use tapHandler property of Annotation")

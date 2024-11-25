@@ -295,7 +295,7 @@ final class MockMapboxMap: MapboxMapProtocol {
         }
     }
 
-    func simulateInteraction(_ type: InteractionType, _ featureset: FeaturesetDescriptor<FeaturesetFeature>?, feature: Feature?, context: InteractionContext) {
+    func simulateInteraction(_ type: InteractionType, _ featureset: FeaturesetDescriptor<FeaturesetFeature>?, feature: Feature?, radius: CGFloat? = nil, context: InteractionContext) {
         let featuresetFeature: FeaturesetFeature? = if let featureset, let feature {
             FeaturesetFeature(
                 id: feature.identifier?.string.map { FeaturesetFeatureId(id: $0) },
@@ -306,13 +306,19 @@ final class MockMapboxMap: MapboxMapProtocol {
             nil
         }
 
-        simulateInteraction(type: type, feature: featuresetFeature, context: context)
+        simulateInteraction(type: type, feature: featuresetFeature, radius: radius, context: context)
     }
 
-    func simulateInteraction(type: InteractionType, feature: FeaturesetFeature?, context: InteractionContext) {
+    func simulateInteraction(type: InteractionType, feature: FeaturesetFeature?, radius: CGFloat?, context: InteractionContext) {
         for (_, interaction) in interactions.reversed() {
             guard type.canHandle(interaction),
-                  feature?.featureset == interaction.target?.0 else { continue }
+                  feature?.featureset == interaction.target?.0 else {
+                continue
+            }
+
+            guard radius == interaction.radius else {
+                continue
+            }
 
             var handled = false
             switch type {

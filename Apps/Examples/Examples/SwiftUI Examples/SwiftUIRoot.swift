@@ -41,6 +41,7 @@ struct SwiftUIRoot: View {
 
                 Section {
                     ExampleLink("Map settings", note: "Showcase of the most possible map configurations.", destination: MapSettingsExample())
+                    ExampleLink("Interactions playground", note: "Interactions edge cases", destination: InteractionsPlayground())
                     ExampleLink("Viewport Playground", note: "Showcase of the possible viewport states.", destination: ViewportPlayground())
                     ExampleLink("Puck playground", note: "Display user location using puck.", destination: PuckPlayground())
                     ExampleLink("Annotation Order", destination: AnnotationsOrderTestExample())

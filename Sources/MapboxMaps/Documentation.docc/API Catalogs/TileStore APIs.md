@@ -35,6 +35,7 @@
 - ``MapboxCommon/TileRegionEstimateProgressCallback``
 - ``MapboxCommon/CacheClearingError``
 - ``MapboxCommon/CacheClearingErrorType``
+- ``ClearCacheError``
 
 ### Style pack
 

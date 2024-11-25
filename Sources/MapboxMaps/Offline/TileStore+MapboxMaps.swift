@@ -241,6 +241,32 @@ extension TileStore: TileStoreProtocol {
     public func removeRegion(forId id: String, completion: @escaping (Result<TileRegion, Error>) -> Void) {
         __removeTileRegion(forId: id, callback: tileStoreClosureAdapter(for: completion, type: TileRegion.self))
     }
+
+    /// Clears the ambient cache data.
+    ///
+    /// Ambient cache data is anything not associated with an offline region or a stylepack,
+    /// including predictively cached data. Use to quickly clear data e.g. for a system update.
+    ///
+    /// Note: Do not use this method to clear cache data unless strictly
+    /// necessary as previously cached data will need to be re-downloaded,
+    /// leading to increased network usage.
+    /// If you want general control of the size of the Tile Store.
+    ///
+    /// - Note: This function is blocking the Tile Store until completed.
+    /// - Parameter completion: The `UInt32` value represents how many bytes were cleared from the cache.
+    public func clearAmbientCache(
+        completion: @escaping (Result<UInt32, any Error>) -> Void
+    ) {
+        clearAmbientCache(
+            forCallback: coreAPIClosureAdapter(
+                for: completion,
+                type: NSNumber.self,
+                concreteErrorType: ClearCacheError.self,
+                converter: { $0.uint32Value }
+            )
+        )
+    }
+
 }
 
 private func tileStoreClosureAdapter<T, ObjCType>(

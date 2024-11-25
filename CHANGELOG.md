@@ -16,6 +16,7 @@ In order to continue use them use the following import `@_spi(Experimental) impo
 * Fix a crash on calling `LocationIndicatorLayer/location(coordinate:) function` due to missing 0 altitude value.
 * Add a new Expression initializer `init(_ operator: Operator, _ arguments: ExpressionArgumentConvertible...)` to simplify the creation of expressions with multiple arguments.
 That initializer doesn't require to wrap arguments in `Argument` cases. For example, `Exp(.eq, Exp(.get, "extrude"), "true")`.
+* Expose a `TileStore/clearAmbientCache()` method to clear ambient cache.
 * Add new experimental `radius` parameter to `TapInteraction`, `LongPressInteraction` and interaction managers to control the radius of a tappable area.
 
 ## 11.8.0 - 11 November, 2024

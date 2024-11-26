@@ -160,6 +160,7 @@ class MockStyleManager: StyleManagerProtocol {
         setStyleLightPropertyForIdStub.call(with: .init(id: id, property: property, value: value))
     }
 
+    // MARK: Terrain
     let getStyleTerrainPropertyStub = Stub<String, MapboxCoreMaps.StylePropertyValue>(
         defaultReturnValue: .init(value: "stub", kind: .undefined)
     )
@@ -167,12 +168,37 @@ class MockStyleManager: StyleManagerProtocol {
         getStyleTerrainPropertyStub.call(with: property)
     }
 
+    // MARK: Projection
     let getStyleProjectionPropertyStub = Stub<String, MapboxCoreMaps.StylePropertyValue>(
         defaultReturnValue: .init(value: "stub", kind: .undefined)
     )
     func getStyleProjectionProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue {
         getStyleProjectionPropertyStub.call(with: property)
     }
+
+    // MARK: Precipitation
+
+    let setStyleSnowForPropertiesStub = Stub<Any, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func setStyleSnowForProperties(_ properties: Any) -> Expected<NSNull, NSString> {
+        setStyleSnowForPropertiesStub.call(with: properties)
+    }
+
+    let getStyleSnowPropertyStub = Stub<String, StylePropertyValue>(defaultReturnValue: .init(value: "stub", kind: .undefined))
+    func getStyleSnowProperty(forProperty: String) -> StylePropertyValue {
+        getStyleSnowPropertyStub.call(with: forProperty)
+    }
+
+    let setStyleRainForPropertiesStub = Stub<Any, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func setStyleRainForProperties(_ properties: Any) -> Expected<NSNull, NSString> {
+        setStyleRainForPropertiesStub.call(with: properties)
+    }
+
+    let getStyleRainPropertyStub = Stub<String, StylePropertyValue>(defaultReturnValue: .init(value: "stub", kind: .undefined))
+    func getStyleRainProperty(forProperty: String) -> StylePropertyValue {
+        getStyleRainPropertyStub.call(with: forProperty)
+    }
+
+    // MARK: Style Images
 
     let getStyleImageStub = Stub<String, CoreMapsImage?>(defaultReturnValue: nil)
     func getStyleImage(forImageId imageId: String) -> CoreMapsImage? {

@@ -150,6 +150,7 @@
 		F5E96E5798947CA56FD77CF9 /* Fire_Hydrants.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 02DA2CC04980F807255D646B /* Fire_Hydrants.geojson */; };
 		F613749DCDDDDC6F041032A0 /* SimpleMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78811E5A3185D2D32495870A /* SimpleMapExample.swift */; };
 		F6E3EF9BE4F1D2F58DE1BED2 /* radar1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 8BD8BADE1108B0D380D9BEF8 /* radar1.gif */; };
+		FA077DC5A6CF295906536DF1 /* PrecipitationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDBCA79855B58FE84333124 /* PrecipitationsExample.swift */; };
 		FA53EEA88DB29D4D5AC58514 /* StandardInteractiveFeaturesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FBAFDF929532EDB964786F4 /* StandardInteractiveFeaturesExample.swift */; };
 		FDA4B57BE32D92BB57A5B7E6 /* FeaturesAtPointExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6239A5CDA61892902765B843 /* FeaturesAtPointExample.swift */; platformFilters = (ios, ); };
 /* End PBXBuildFile section */
@@ -287,6 +288,7 @@
 		B33F64CDBA98B91EE819B2C4 /* AddMarkersSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMarkersSymbolExample.swift; sourceTree = "<group>"; };
 		B7A7586D05B960928AB17A0D /* MultipleGeometriesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleGeometriesExample.swift; sourceTree = "<group>"; };
 		BE18E37A8652B4807D2459F1 /* ExamplesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamplesUITests.swift; sourceTree = "<group>"; };
+		BFDBCA79855B58FE84333124 /* PrecipitationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrecipitationsExample.swift; sourceTree = "<group>"; };
 		C0CC67084BA1191D0B179A94 /* PuckPlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckPlayground.swift; sourceTree = "<group>"; };
 		C47942F80A50166AC823012B /* sportcar.glb */ = {isa = PBXFileReference; path = sportcar.glb; sourceTree = "<group>"; };
 		C61CC711054A032EE0446036 /* DynamicStylingExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicStylingExample.swift; sourceTree = "<group>"; };
@@ -402,6 +404,7 @@
 				DD3A816C6E4D7A0A532EEE84 /* GeofencingUserLocation.swift */,
 				62DA0608D44DEF6C4A82777C /* LocateMeExample.swift */,
 				45B39AE24486FED5ED30392D /* LocationOverrideExample.swift */,
+				BFDBCA79855B58FE84333124 /* PrecipitationsExample.swift */,
 				6CD7ADCCB774239AA0090C46 /* RasterParticleExample.swift */,
 				AC5A8729C9AEA4711B56B5F0 /* SnapshotMapExample.swift */,
 				E97E057D9FFB1DE3E16F1F0B /* StandardInteractiveBuildingsExample.swift */,
@@ -723,6 +726,7 @@
 			mainGroup = AFDB1EA82615CFDF02CE1D4D;
 			packageReferences = (
 				B50D5CC28BF0DFBA55456D89 /* XCRemoteSwiftPackageReference "Fingertips" */,
+				F97B927925CFCEE0B8496DE3 /* XCLocalSwiftPackageReference "../../" */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -904,6 +908,7 @@
 				F48BF087BB56B0A44D8B16F3 /* PointAnnotationClusteringExample.swift in Sources */,
 				4417BB8A356335BC8421A19B /* PointClusteringExample.swift in Sources */,
 				6661DB69D4980E24BCA18AB2 /* PolygonAnnotationExample.swift in Sources */,
+				FA077DC5A6CF295906536DF1 /* PrecipitationsExample.swift in Sources */,
 				B304BACFCD08802A740E8919 /* PuckPlayground.swift in Sources */,
 				0E191B29AE31584DCFDC3821 /* RasterColorExample.swift in Sources */,
 				F492E2C8D35572B4CF48FE68 /* RasterParticleExample.swift in Sources */,
@@ -1338,6 +1343,13 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		F97B927925CFCEE0B8496DE3 /* XCLocalSwiftPackageReference "../../" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../;
+		};
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		0AF5F744C6369BF1FB233FB6 /* MapboxMaps */ = {

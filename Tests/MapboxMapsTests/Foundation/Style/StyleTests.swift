@@ -52,6 +52,48 @@ final class StyleManagerTests: XCTestCase {
         XCTAssertNil(style.projection?.name)
     }
 
+    func testSetSnow() throws {
+        let snow = Snow()
+            .density(0.5)
+            .intensity(0.8)
+        try style.setSnow(snow)
+        XCTAssertEqual(styleManager.setStyleSnowForPropertiesStub.invocations.count, 1)
+
+        let parameters = try XCTUnwrap(styleManager.setStyleSnowForPropertiesStub.invocations.last?.parameters as? [String: Any])
+        XCTAssertEqual(parameters[Snow.CodingKeys.density.rawValue] as? Double, 0.5)
+        XCTAssertEqual(parameters[Snow.CodingKeys.intensity.rawValue] as? Double, 0.8)
+        XCTAssertEqual(parameters.count, 2)
+    }
+
+    func testRemoveSnow() throws {
+        try style.removeSnow()
+        XCTAssertEqual(styleManager.setStyleSnowForPropertiesStub.invocations.count, 1)
+
+        let parameter = try XCTUnwrap(styleManager.setStyleSnowForPropertiesStub.invocations.last?.parameters as? NSNull)
+        XCTAssertEqual(parameter, NSNull())
+    }
+
+    func testSetRain() throws {
+        let rain = Rain()
+            .density(0.5)
+            .intensity(0.8)
+        try style.setRain(rain)
+        XCTAssertEqual(styleManager.setStyleRainForPropertiesStub.invocations.count, 1)
+
+        let parameters = try XCTUnwrap(styleManager.setStyleRainForPropertiesStub.invocations.last?.parameters as? [String: Any])
+        XCTAssertEqual(parameters[Snow.CodingKeys.density.rawValue] as? Double, 0.5)
+        XCTAssertEqual(parameters[Snow.CodingKeys.intensity.rawValue] as? Double, 0.8)
+        XCTAssertEqual(parameters.count, 2)
+    }
+
+    func testRemoveRain() throws {
+        try style.removeRain()
+        XCTAssertEqual(styleManager.setStyleRainForPropertiesStub.invocations.count, 1)
+
+        let parameter = try XCTUnwrap(styleManager.setStyleRainForPropertiesStub.invocations.last?.parameters as? NSNull)
+        XCTAssertEqual(parameter, NSNull())
+    }
+
     func testStyleIsLoaded() {
         let isStyleLoaded = Bool.random()
         styleManager.isStyleLoadedStub.defaultReturnValue = isStyleLoaded

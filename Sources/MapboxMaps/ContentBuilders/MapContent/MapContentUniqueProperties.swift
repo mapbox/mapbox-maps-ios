@@ -13,6 +13,8 @@ struct MapContentUniqueProperties: Decodable {
     var terrain: Terrain?
     var atmosphere: Atmosphere?
     var projection: StyleProjection?
+    var snow: Snow?
+    var rain: Rain?
     var transition: TransitionOptions?
     var location: LocationOptions?
     var lights = Lights()
@@ -38,6 +40,8 @@ struct MapContentUniqueProperties: Decodable {
         update("atmosphere", old: old.atmosphere, new: atmosphere, initial: initial?.atmosphere, setter: style.setStyleAtmosphereForProperties(_:))
         update("projection", old: old.projection, new: projection, initial: initial?.projection, setter: style.setStyleProjectionForProperties(_:))
         update("terrain", old: old.terrain, new: terrain, initial: initial?.terrain, setter: style.setStyleTerrainForProperties(_:))
+        update("snow", old: old.snow, new: snow, initial: initial?.snow, setter: style.setStyleSnowForProperties(_:))
+        update("rain", old: old.rain, new: rain, initial: initial?.rain, setter: style.setStyleRainForProperties(_:))
 
         lights.update(from: old.lights, style: style, initialLights: initial?.lights)
 
@@ -59,6 +63,8 @@ extension MapContentUniqueProperties {
         case terrain
         case atmosphere = "fog"
         case projection
+        case snow
+        case rain
         case lights = "lights"
     }
 
@@ -68,6 +74,8 @@ extension MapContentUniqueProperties {
         self.terrain = try container.decodeIfPresent(Terrain.self, forKey: .terrain)
         self.atmosphere = try container.decodeIfPresent(Atmosphere.self, forKey: .atmosphere)
         self.projection = try container.decodeIfPresent(StyleProjection.self, forKey: .projection)
+        self.snow = try container.decodeIfPresent(Snow.self, forKey: .snow)
+        self.rain = try container.decodeIfPresent(Rain.self, forKey: .rain)
         if var lightContainer = try? container.nestedUnkeyedContainer(forKey: .lights) {
             while !lightContainer.isAtEnd {
                 var lightInfoContainer = lightContainer

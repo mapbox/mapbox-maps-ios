@@ -25,6 +25,8 @@
 - ``StyleProjectionName``
 - ``CancelError``
 - ``TransitionOptions-struct``
+- ``Rain``
+- ``Snow``
 
 ### Declarative Map Styling
 

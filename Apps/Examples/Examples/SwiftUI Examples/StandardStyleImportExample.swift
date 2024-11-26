@@ -101,7 +101,7 @@ struct StandardStyleImportExample: View {
     }
 }
 
-@available (iOS 14.0, *)
+@available(iOS 14.0, *)
 private struct HotelCallout: View {
     var feature: FeaturesetFeature
 

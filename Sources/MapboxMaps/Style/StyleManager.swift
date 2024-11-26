@@ -1623,6 +1623,51 @@ extension StyleManager {
     }
 }
 
+// MARK: - Precipitation
+
+extension StyleManager {
+    /// Set the snow parameters to animate snowfall.
+    /// ``Snow`` object can be used to set the snow parameters.
+    @_spi(Experimental) public func setSnow(_ snow: Snow) throws {
+        let snowDictionary = try snow.allStyleProperties()
+        let expected = styleManager.setStyleSnowForProperties(snowDictionary)
+
+        if expected.isError() {
+            throw StyleError(message: expected.error as String)
+        }
+    }
+
+    /// Remove snow effect from the style.
+    @_spi(Experimental) public func removeSnow() throws {
+        let expected = styleManager.setStyleSnowForProperties(NSNull())
+
+        if expected.isError() {
+            throw StyleError(message: expected.error as String)
+        }
+    }
+
+    /// Set the rain parameters to animate rain drops.
+    /// ``Rain`` object can be used to set the rain parameters.
+    @_spi(Experimental) public func setRain(_ rain: Rain) throws {
+        let rainDictionary = try rain.allStyleProperties()
+        let expected = styleManager.setStyleRainForProperties(rainDictionary)
+
+        if expected.isError() {
+            throw StyleError(message: expected.error as String)
+        }
+    }
+
+    /// Remove rain effect from the style.
+    @_spi(Experimental) public func removeRain() throws {
+        let expected = styleManager.setStyleRainForProperties(NSNull())
+
+        if expected.isError() {
+            throw StyleError(message: expected.error as String)
+        }
+    }
+
+}
+
 // MARK: - Featuresets
 
 extension StyleManager {

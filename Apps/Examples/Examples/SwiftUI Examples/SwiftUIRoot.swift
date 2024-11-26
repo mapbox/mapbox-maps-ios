@@ -58,6 +58,7 @@ struct SwiftUIRoot: View {
                         ExampleLink("Attribution dialog with presented sheet", destination: AttributionDialogueWithSheet())
                     }
 #endif
+                    ExampleLink("Precipitation", note: "Show show and rain", destination: PrecipitationExample())
 
                 } header: { Text("Testing Examples") }
             }

@@ -8,7 +8,6 @@ protocol AttributionDataSource: AnyObject {
 
 protocol AttributionDialogManagerDelegate: AnyObject {
     func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController?
-    func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, didTriggerActionFor attribution: Attribution)
 }
 
 final class AttributionDialogManager {
@@ -16,92 +15,29 @@ final class AttributionDialogManager {
     private weak var delegate: AttributionDialogManagerDelegate?
     private var inProcessOfParsingAttributions: Bool = false
 
-    private let isGeofenceActive: () -> Bool
-    private let setGeofenceConsent: (Bool) -> Void
-    private let getGeofenceConsent: () -> Bool
+    private let attributionMenu: AttributionMenu
 
     init(
         dataSource: AttributionDataSource,
         delegate: AttributionDialogManagerDelegate?,
-        isGeofenceActive: @escaping () -> Bool = { __GeofencingUtils.isActive() },
-        setGeofenceConsent: @escaping (Bool) -> Void = { isConsentGiven in
-            __GeofencingUtils.setUserConsent(isConsentGiven: isConsentGiven, callback: { expected in
-                if let error = expected.error { Log.error("Error: \(error) occurred while changing user consent for Geofencing.") }
-            })
-        },
-        getGeofenceConsent: @escaping () -> Bool = { __GeofencingUtils.getUserConsent() }
+        attributionMenu: AttributionMenu
     ) {
         self.dataSource = dataSource
         self.delegate = delegate
-        self.isGeofenceActive = isGeofenceActive
-        self.setGeofenceConsent = setGeofenceConsent
-        self.getGeofenceConsent = getGeofenceConsent
-    }
-
-    var isMetricsEnabled: Bool {
-        get { UserDefaults.standard.MGLMapboxMetricsEnabled }
-        set { UserDefaults.standard.MGLMapboxMetricsEnabled = newValue }
-    }
-
-    func showGeofencingAlertController(from viewController: UIViewController) {
-        let telemetryTitle = GeofencingStrings.geofencingTitle
-        let message = GeofencingStrings.geofencingMessage
-        let participateTitle: String
-        let declineTitle: String
-
-        if getGeofenceConsent() {
-            participateTitle = GeofencingStrings.geofencingEnabledOnMessage
-            declineTitle = GeofencingStrings.geofencingEnabledOffMessage
-        } else {
-            participateTitle = GeofencingStrings.geofencingDisabledOnMessage
-            declineTitle = GeofencingStrings.geofencingDisabledOffMessage
-        }
-
-        showAlertController(from: viewController, title: telemetryTitle, message: message, actions: [
-            UIAlertAction(title: declineTitle, style: .default, handler: { _ in self.setGeofenceConsent(false) }),
-            UIAlertAction(title: participateTitle, style: .cancel, handler: { _ in self.setGeofenceConsent(true) })
-        ])
-    }
-
-    func showTelemetryAlertController(from viewController: UIViewController) {
-        let telemetryTitle = TelemetryStrings.telemetryTitle
-        let message: String
-        let participateTitle: String
-        let declineTitle: String
-
-        if isMetricsEnabled {
-            message = TelemetryStrings.telemetryEnabledMessage
-            participateTitle = TelemetryStrings.telemetryEnabledOnMessage
-            declineTitle = TelemetryStrings.telemetryEnabledOffMessage
-        } else {
-            message = TelemetryStrings.telemetryDisabledMessage
-            participateTitle = TelemetryStrings.telemetryDisabledOnMessage
-            declineTitle = TelemetryStrings.telemetryDisabledOffMessage
-        }
-
-        let openTelemetryURL: (UIAlertAction) -> Void = { _ in
-            guard let url = URL(string: Ornaments.telemetryURL) else { return }
-            self.delegate?.attributionDialogManager(self, didTriggerActionFor: Attribution(title: "", url: url))
-        }
-
-        showAlertController(from: viewController, title: telemetryTitle, message: message, actions: [
-            UIAlertAction(title: TelemetryStrings.telemetryMore, style: .default, handler: openTelemetryURL),
-            UIAlertAction(title: declineTitle, style: .default, handler: { _ in self.isMetricsEnabled = false }),
-            UIAlertAction(title: participateTitle, style: .cancel, handler: { _ in self.isMetricsEnabled = true })
-        ])
+        self.attributionMenu = attributionMenu
     }
 
     func showAlertController(
         from viewController: UIViewController,
-        title: String,
-        message: String,
-        actions: [UIAlertAction]
+        title: String? = nil,
+        message: String? = nil,
+        actions: [UIAlertAction] = []
     ) {
-        let alert = if UIDevice.current.userInterfaceIdiom == .pad {
-            UIAlertController(title: title, message: message, preferredStyle: .alert)
-        } else {
-            UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-        }
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: UIDevice.current.userInterfaceIdiom == .pad ? .alert : .actionSheet
+        )
 
         actions.forEach(alert.addAction)
         viewController.present(alert, animated: true)
@@ -114,76 +50,47 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
         guard inProcessOfParsingAttributions == false else { return }
 
         inProcessOfParsingAttributions = true
+
         dataSource?.loadAttributions { [weak self] attributions in
-            self?.showAttributionDialog(for: attributions)
-            self?.inProcessOfParsingAttributions = false
+            guard let self else { return }
+            var menu = self.attributionMenu.menu(from: attributions)
+            if let filter = self.attributionMenu.filter {
+                menu.filter(filter)
+            }
+            showAttributionDialog(for: menu)
+            self.inProcessOfParsingAttributions = false
         }
     }
 
-    private func showAttributionDialog(for attributions: [Attribution]) {
+    private func showAttributionDialog(for menu: AttributionMenuSection) {
         guard let viewController = delegate?.viewControllerForPresenting(self) else {
             Log.error("Failed to present an attribution dialogue: no presenting view controller found.")
             return
         }
 
-        let title = Bundle.mapboxMaps.localizedString(forKey: "SDK_NAME", value: "Powered by Mapbox", table: Ornaments.localizableTableName)
-
-        let alert: UIAlertController
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        } else {
-            alert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
-        }
-
-        let bundle = Bundle.mapboxMaps
-
-        // Non actionable single item gets displayed as alert's message
-        if attributions.count == 1, let attribution = attributions.first, attribution.kind == .nonActionable {
-            alert.message = attribution.localizedTitle
-        } else {
-            for attribution in attributions {
-                let action = UIAlertAction(title: attribution.localizedTitle, style: .default) { _ in
-                    self.delegate?.attributionDialogManager(self, didTriggerActionFor: attribution)
+        let actions = menu.elements.compactMap { element in
+            switch element {
+            case .item(let item):
+                let action = UIAlertAction(title: item.title, style: item.style.uiActionStyle) { _ in
+                    item.action?()
                 }
-                action.isEnabled = attribution.kind != .nonActionable
-                alert.addAction(action)
+                action.isEnabled = item.action != nil
+                return action
+            case .section(let section):
+                if section.elements.isEmpty {
+                    return nil
+                }
+                return UIAlertAction(title: section.actionTitle, style: .default) { _ in
+                    self.showAttributionDialog(for: section)
+                }
             }
         }
 
-        let telemetryAction = UIAlertAction(title: TelemetryStrings.telemetryName, style: .default) { _ in
-            self.showTelemetryAlertController(from: viewController)
-        }
-
-        alert.addAction(telemetryAction)
-
-        if isGeofenceActive() || !getGeofenceConsent() {
-            let geofencingAction = UIAlertAction(title: GeofencingStrings.geofencingName, style: .default) { _ in
-                self.showGeofencingAlertController(from: viewController)
-            }
-            alert.addAction(geofencingAction)
-        }
-
-        let privacyPolicyAttribution = Attribution.makePrivacyPolicyAttribution()
-        let privacyPolicyAction = UIAlertAction(title: privacyPolicyAttribution.title, style: .default) { _ in
-            self.delegate?.attributionDialogManager(self, didTriggerActionFor: privacyPolicyAttribution)
-        }
-
-        alert.addAction(privacyPolicyAction)
-
-        let cancelTitle = NSLocalizedString("ATTRIBUTION_CANCEL",
-                                            tableName: Ornaments.localizableTableName,
-                                            bundle: bundle,
-                                            value: "Cancel",
-                                            comment: "Title of button for dismissing attribution action sheet")
-
-        alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel))
-
-        viewController.present(alert, animated: true, completion: nil)
+        showAlertController(from: viewController, title: menu.title, message: menu.subtitle, actions: actions)
     }
 }
 
-private extension Attribution {
+internal extension Attribution {
     var localizedTitle: String {
         NSLocalizedString(
             title,

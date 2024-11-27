@@ -1,167 +1,135 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Restricted) @testable import MapboxMaps
 import Foundation
 import UIKit
 
 class AttributionDialogTests: XCTestCase {
+    var parentViewController: MockParentViewController!
     var attributionDialogManager: AttributionDialogManager!
+    var attributionMenu: AttributionMenu!
+    var urlOpener: AttributionURLOpener!
     var mockDataSource: MockAttributionDataSource!
-    var mockDelegate: MockAttributionDialogManagerDelegate!
+    var isGeofencingActive = false
     private var isGeofenceActive: Bool = false
     private var isGeofenceConsentGiven: Bool = true
 
     override func setUp() {
         super.setUp()
+
+        parentViewController = MockParentViewController()
         mockDataSource = MockAttributionDataSource()
-        mockDelegate = MockAttributionDialogManagerDelegate()
+        urlOpener = MockAttributionURLOpener()
+        attributionMenu = AttributionMenu(
+            urlOpener: urlOpener,
+            feedbackURLRef: Ref { nil },
+            geofencingIsActiveRef: Ref { [unowned self] in self.isGeofenceActive }
+        )
+        attributionMenu.isGeofencingEnabled = true
         attributionDialogManager = AttributionDialogManager(
             dataSource: mockDataSource,
-            delegate: mockDelegate,
-            isGeofenceActive: { self.isGeofenceActive },
-            setGeofenceConsent: { self.isGeofenceConsentGiven = $0 },
-            getGeofenceConsent: { self.isGeofenceConsentGiven }
+            delegate: self,
+            attributionMenu: attributionMenu
         )
     }
 
     override func tearDown() {
         super.tearDown()
 
+        attributionMenu.isGeofencingEnabled = true
+        isGeofenceActive = false
+        parentViewController = nil
+        attributionMenu = nil
+        urlOpener = nil
         attributionDialogManager = nil
         mockDataSource = nil
-        mockDelegate = nil
     }
 
-    func testShowGeofencingDialogGeofencingEnabled() throws {
-        let viewController = UIViewController()
-        let window = UIWindow()
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        isGeofenceConsentGiven = true
-
-        attributionDialogManager.showGeofencingAlertController(from: viewController)
-
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
-        let geofenceTitle = GeofencingStrings.geofencingTitle
-        XCTAssertEqual(alert.title, geofenceTitle)
-
-        let message = GeofencingStrings.geofencingMessage
-        XCTAssertEqual(alert.message, message)
-
-        guard alert.actions.count == 2 else {
-            XCTFail("Telemetry alert should have 2 actions")
-            return
-        }
-
-        let declineTitle = GeofencingStrings.geofencingEnabledOffMessage
-        XCTAssertEqual(alert.actions[0].title, declineTitle)
-
-        let participateTitle = GeofencingStrings.geofencingEnabledOnMessage
-        XCTAssertEqual(alert.actions[1].title, participateTitle)
-    }
-
-    func testShowGeofencingDialogGeofencingDisabled() throws {
-        let viewController = UIViewController()
-        let bundle = Bundle.mapboxMaps
-        let window = UIWindow()
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        isGeofenceConsentGiven = false
-
-        attributionDialogManager.showGeofencingAlertController(from: viewController)
-
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
-        let geofenceTitle = GeofencingStrings.geofencingTitle
-        XCTAssertEqual(alert.title, geofenceTitle)
-
-        let message = GeofencingStrings.geofencingMessage
-        XCTAssertEqual(alert.message, message)
-
-        guard alert.actions.count == 2 else {
-            XCTFail("Telemetry alert should have 2 actions")
-            return
-        }
-
-        let declineTitle = GeofencingStrings.geofencingDisabledOffMessage
-        XCTAssertEqual(alert.actions[0].title, declineTitle)
-
-        let participateTitle = GeofencingStrings.geofencingDisabledOnMessage
-        XCTAssertEqual(alert.actions[1].title, participateTitle)
-    }
-
-    func testShowTelemetryDialogMetricsEnabled() throws {
-        let viewController = UIViewController()
-        let window = UIWindow()
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        attributionDialogManager.isMetricsEnabled = true
-
-        attributionDialogManager.showTelemetryAlertController(from: viewController)
-
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
-        let telemetryTitle = TelemetryStrings.telemetryTitle
-        XCTAssertEqual(alert.title, telemetryTitle)
-
-        let message = TelemetryStrings.telemetryEnabledMessage
-        XCTAssertEqual(alert.message, message)
-
-        guard alert.actions.count == 3 else {
-            XCTFail("Telemetry alert should have 3 actions")
-            return
-        }
-
-        let moreTitle = TelemetryStrings.telemetryMore
-        XCTAssertEqual(alert.actions[0].title, moreTitle)
-
-        let declineTitle = TelemetryStrings.telemetryEnabledOffMessage
-        XCTAssertEqual(alert.actions[1].title, declineTitle)
-
-        let participateTitle = TelemetryStrings.telemetryEnabledOnMessage
-        XCTAssertEqual(alert.actions[2].title, participateTitle)
-    }
-
-    func testShowTelemetryDialogMetricsDisabled() throws {
-        let viewController = UIViewController()
-        let bundle = Bundle.mapboxMaps
-        let window = UIWindow()
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        attributionDialogManager.isMetricsEnabled = false
-
-        attributionDialogManager.showTelemetryAlertController(from: viewController)
-
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
-        let telemetryTitle = TelemetryStrings.telemetryTitle
-        XCTAssertEqual(alert.title, telemetryTitle)
-
-        let message = TelemetryStrings.telemetryDisabledMessage
-        XCTAssertEqual(alert.message, message)
-
-        guard alert.actions.count == 3 else {
-            XCTFail("Telemetry alert should have 3 actions")
-            return
-        }
-
-        let moreTitle = TelemetryStrings.telemetryMore
-        XCTAssertEqual(alert.actions[0].title, moreTitle)
-
-        let declineTitle = TelemetryStrings.telemetryDisabledOffMessage
-        XCTAssertEqual(alert.actions[1].title, declineTitle)
-
-        let participateTitle = TelemetryStrings.telemetryDisabledOnMessage
-        XCTAssertEqual(alert.actions[2].title, participateTitle)
-    }
-
-    func testShowAttributionDialogNoAttributions() throws {
-        let viewController = UIViewController()
-        let bundle = Bundle.mapboxMaps
-        let window = UIWindow()
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        mockDelegate.viewControllerForPresentingStub.defaultReturnValue = viewController
+    func testGeofencingOptIn() throws {
+        attributionMenu.isGeofencingEnabled = false
+        isGeofenceActive = true
+        attributionMenu.filter = { $0.category == .geofencing }
 
         attributionDialogManager.didTap(InfoButtonOrnament())
 
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
+        var infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
+        XCTAssertNotNil(infoAlert)
+        infoAlert.tapButton(atIndex: 0)
+
+        var geofencingAlert = try XCTUnwrap(parentViewController.currentAlert, "The geofencing alert controller could not be found.")
+
+        XCTAssertEqual(geofencingAlert.title, GeofencingStrings.geofencingTitle)
+        XCTAssertEqual(geofencingAlert.message, GeofencingStrings.geofencingMessage)
+
+        guard geofencingAlert.actions.count == 2 else {
+            XCTFail("Geofencing alert should have 2 actions")
+            return
+        }
+
+        XCTAssertEqual(GeofencingStrings.geofencingDisabledOffMessage, geofencingAlert.actions[0].title)
+        XCTAssertEqual(GeofencingStrings.geofencingDisabledOnMessage, geofencingAlert.actions[1].title)
+        XCTAssertFalse(attributionMenu.isGeofencingEnabled)
+
+        geofencingAlert.tapButton(atIndex: 1)
+        XCTAssertTrue(attributionMenu.isGeofencingEnabled)
+
+        attributionDialogManager.didTap(InfoButtonOrnament())
+
+        infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
+        infoAlert.tapButton(atIndex: 0)
+        geofencingAlert = try XCTUnwrap(parentViewController.currentAlert, "The geofencing alert controller could not be found.")
+
+        XCTAssertEqual(GeofencingStrings.geofencingEnabledOffMessage, geofencingAlert.actions[0].title)
+        XCTAssertEqual(GeofencingStrings.geofencingEnabledOnMessage, geofencingAlert.actions[1].title)
+
+        geofencingAlert.tapButton(atIndex: 1)
+        XCTAssertTrue(attributionMenu.isGeofencingEnabled)
+    }
+
+    func testGeofencingOptOut() throws {
+        attributionMenu.isGeofencingEnabled = true
+        isGeofenceActive = true
+        attributionMenu.filter = { $0.category == .geofencing }
+
+        attributionDialogManager.didTap(InfoButtonOrnament())
+
+        var infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
+        XCTAssertNotNil(infoAlert)
+        infoAlert.tapButton(atIndex: 0)
+
+        var geofencingAlert = try XCTUnwrap(parentViewController.currentAlert, "The geofencing alert controller could not be found.")
+
+        XCTAssertEqual(geofencingAlert.title, GeofencingStrings.geofencingTitle)
+        XCTAssertEqual(geofencingAlert.message, GeofencingStrings.geofencingMessage)
+
+        guard geofencingAlert.actions.count == 2 else {
+            XCTFail("Geofencing alert should have 2 actions")
+            return
+        }
+
+        XCTAssertEqual(GeofencingStrings.geofencingEnabledOffMessage, geofencingAlert.actions[0].title)
+        XCTAssertEqual(GeofencingStrings.geofencingEnabledOnMessage, geofencingAlert.actions[1].title)
+        XCTAssertTrue(attributionMenu.isGeofencingEnabled)
+
+        geofencingAlert.tapButton(atIndex: 0)
+        XCTAssertFalse(attributionMenu.isGeofencingEnabled)
+
+        attributionDialogManager.didTap(InfoButtonOrnament())
+
+        infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
+        infoAlert.tapButton(atIndex: 0)
+        geofencingAlert = try XCTUnwrap(parentViewController.currentAlert, "The geofencing alert controller could not be found.")
+
+        XCTAssertEqual(GeofencingStrings.geofencingDisabledOffMessage, geofencingAlert.actions[0].title)
+        XCTAssertEqual(GeofencingStrings.geofencingDisabledOnMessage, geofencingAlert.actions[1].title)
+
+        geofencingAlert.tapButton(atIndex: 0)
+        XCTAssertFalse(attributionMenu.isGeofencingEnabled)
+    }
+
+    func testShowAttributionDialogNoAttributions() throws {
+        attributionDialogManager.didTap(InfoButtonOrnament())
+
+        let alert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
         let alertTitle = NSLocalizedString("SDK_NAME",
                                            tableName: nil,
                                            value: "Powered by Mapbox Maps",
@@ -181,26 +149,21 @@ class AttributionDialogTests: XCTestCase {
 
         let cancelTitle = NSLocalizedString("CANCEL",
                                             tableName: Ornaments.localizableTableName,
-                                            bundle: bundle,
+                                            bundle: .mapboxMaps,
                                             value: "Cancel",
                                             comment: "")
         XCTAssertEqual(alert.actions[2].title, cancelTitle)
     }
 
     func testShowAttributionDialogSingleNonActionableAttribution() throws {
-        let viewController = UIViewController()
-        let window = UIWindow()
+//        attributionMenu.filter = { $0.id == .copyright }
         let attribution = Attribution(title: String.randomASCII(withLength: 10), url: nil)
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        mockDataSource.loadAttributionsStub.defaultSideEffect = { invocation in
-            invocation.parameters([attribution])
-        }
-        mockDelegate.viewControllerForPresentingStub.defaultReturnValue = viewController
+
+        mockDataSource.attributions = [attribution]
 
         attributionDialogManager.didTap(InfoButtonOrnament())
 
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
+        let alert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
         let alertTitle = NSLocalizedString("SDK_NAME",
                                            tableName: nil,
                                            value: "Powered by Mapbox Maps",
@@ -218,21 +181,14 @@ class AttributionDialogTests: XCTestCase {
     }
 
     func testShowAttributionDialogTwoAttributions() throws {
-        let viewController = UIViewController()
-        let window = UIWindow()
         let attribution0 = Attribution(title: String.randomASCII(withLength: 10), url: nil)
         let attribution1 = Attribution(title: String.randomASCII(withLength: 10), url: URL(string: "http://example.com")!)
 
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        mockDataSource.loadAttributionsStub.defaultSideEffect = { invocation in
-            invocation.parameters([attribution0, attribution1])
-        }
-        mockDelegate.viewControllerForPresentingStub.defaultReturnValue = viewController
+        mockDataSource.attributions = [attribution0, attribution1]
 
         attributionDialogManager.didTap(InfoButtonOrnament())
 
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
+        let alert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
         let alertTitle = NSLocalizedString("SDK_NAME",
                                            tableName: nil,
                                            value: "Powered by Mapbox Maps",
@@ -249,5 +205,64 @@ class AttributionDialogTests: XCTestCase {
 
         XCTAssertEqual(alert.actions[0].title, attribution0.title)
         XCTAssertEqual(alert.actions[1].title, attribution1.title)
+    }
+
+    func testAttributionFilteringID() throws {
+        let attribution0 = Attribution(title: String.randomASCII(withLength: 10), url: nil)
+        let attribution1 = Attribution(title: String.randomASCII(withLength: 10), url: URL(string: "http://example.com")!)
+
+        mockDataSource.attributions = [attribution0, attribution1]
+
+        attributionMenu.filter = { $0.id == .copyright || $0.id == .privacyPolicy }
+
+        attributionDialogManager.didTap(.init())
+
+        let alert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
+
+        // Single, non-actionable attributions should be displayed as alert's actions along the telemetry and cancel actions
+        guard alert.actions.count == 3 else {
+            XCTFail("Telemetry alert should have 3 actions")
+            return
+        }
+
+        let privacyPolicyTitle = NSLocalizedString("ATTRIBUTION_PRIVACY_POLICY",
+                                                   tableName: Ornaments.localizableTableName,
+                                                   bundle: .mapboxMaps,
+                                                   value: "Mapbox Privacy Policy",
+                                                   comment: "Privacy policy action in attribution sheet")
+
+        XCTAssertEqual(alert.actions[0].title, attribution0.title)
+        XCTAssertEqual(alert.actions[1].title, attribution1.title)
+        XCTAssertEqual(alert.actions[2].title, privacyPolicyTitle)
+    }
+
+    func testAttributionFilteringCategory() throws {
+        isGeofenceActive = true
+        let attribution0 = Attribution(title: String.randomASCII(withLength: 10), url: nil)
+        let attribution1 = Attribution(title: String.randomASCII(withLength: 10), url: URL(string: "http://example.com")!)
+
+        mockDataSource.attributions = [attribution0, attribution1]
+
+        attributionMenu.filter = { $0.category == .telemetry || $0.category == .geofencing }
+
+        attributionDialogManager.didTap(.init())
+
+        let alert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
+
+        // Single, non-actionable attributions should be displayed as alert's actions along the telemetry and cancel actions
+        guard alert.actions.count == 2 else {
+            XCTFail("Telemetry alert should have 2 actions")
+            return
+        }
+
+        XCTAssertEqual(alert.actions[0].title, TelemetryStrings.telemetryName)
+        XCTAssertEqual(alert.actions[1].title, GeofencingStrings.geofencingName)
+    }
+
+}
+
+extension AttributionDialogTests: AttributionDialogManagerDelegate {
+    func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController? {
+        return parentViewController
     }
 }

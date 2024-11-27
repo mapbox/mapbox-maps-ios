@@ -1,6 +1,6 @@
 import UIKit
 import SwiftUI
-@_spi(Experimental) @testable import MapboxMaps
+@_spi(Experimental) @_spi(Restricted) @testable import MapboxMaps
 
 @available(iOS 13.0, *)
 struct MockMapView {
@@ -9,7 +9,7 @@ struct MockMapView {
     var gestures = MockGestureManager()
     var viewportManager = MockViewportManager()
     var ornaments = MockOrnamentsManager()
-
+    var attributionMenu = AttributionMenu(urlOpener: MockAttributionURLOpener(), feedbackURLRef: Ref { nil })
     var makeViewportTransitionStub = Stub<ViewportAnimation, ViewportTransition>(defaultReturnValue: MockViewportTransition())
     struct MakeViewportParameters {
         var viewport: Viewport
@@ -29,6 +29,7 @@ struct MockMapView {
             isOpaque: false,
             presentationTransactionMode: .automatic,
             frameRate: Map.FrameRate(),
+            attributionMenu: attributionMenu,
             makeViewportTransition: makeViewportTransitionStub.call(with:),
             makeViewportState: { [makeViewportStateStub] viewport, layoutDirection in
                 makeViewportStateStub.call(with: MakeViewportParameters(viewport: viewport, layoutDirection: layoutDirection))

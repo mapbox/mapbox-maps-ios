@@ -15,10 +15,6 @@ internal class InfoButtonOrnament: UIView {
         }
     }
 
-    internal var isMetricsEnabled: Bool {
-        return UserDefaults.standard.MGLMapboxMetricsEnabled
-    }
-
     internal weak var delegate: InfoButtonOrnamentDelegate?
 
     internal init() {

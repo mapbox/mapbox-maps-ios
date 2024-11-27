@@ -21,6 +21,7 @@ struct MapDependencies {
     var additionalSafeArea = SwiftUI.EdgeInsets()
     var viewportOptions = ViewportOptions(transitionsToIdleUponUserInteraction: true, usesSafeAreaInsetsAsPadding: true)
     var performanceStatisticsParameters: Map.PerformanceStatisticsParameters?
+    var attributionMenuFilter: ((AttributionMenuItem) -> Bool)?
 
     var onMapTap: ((InteractionContext) -> Void)?
     var onMapLongPress: ((InteractionContext) -> Void)?

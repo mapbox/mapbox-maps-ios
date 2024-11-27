@@ -1,5 +1,5 @@
 import XCTest
-@testable @_spi(Metrics) import MapboxMaps
+@testable @_spi(Metrics) @_spi(Restricted) import MapboxMaps
 
 final class MapViewTests: XCTestCase {
 
@@ -352,12 +352,17 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(notificationCenter.addObserverStub.invocations[5].parameters.name, UIApplication.didReceiveMemoryWarningNotification)
     }
 
-    func testURLOpener() {
-        let manager = AttributionDialogManager(dataSource: MockAttributionDataSource(), delegate: MockAttributionDialogManagerDelegate())
+    func testURLOpener() throws {
+        let attributionMenu = AttributionMenu(urlOpener: attributionURLOpener, feedbackURLRef: Ref { nil })
         let url = URL(string: "http://example.com")!
         let attribution = Attribution(title: .randomASCII(withLength: 10), url: url)
 
-        mapView.attributionDialogManager(manager, didTriggerActionFor: attribution)
+        let menu = attributionMenu.menu(from: [attribution])
+        guard let item = menu.elements.first, case let AttributionMenuElement.item(menuItem) = item else {
+            XCTFail("Failed to unwrap AttributionMenuElement.item")
+            return
+        }
+        menuItem.action?()
 
         XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.count, 1)
         XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.first?.parameters, url)

@@ -21,6 +21,7 @@ That initializer doesn't require to wrap arguments in `Argument` cases. For exam
 * Add a way to specify image expression options.
 * Bump core maps version to 11.9.0-beta.1 and common sdk to 24.9.0-beta.1
 * Add new experimental APIs to control precipitation rendering. Snow and Rain are available now with an `@_spi(Experimental)` import prefix.
+* Add a way to filter attribution menu items.
 
 ## 11.8.0 - 11 November, 2024
 

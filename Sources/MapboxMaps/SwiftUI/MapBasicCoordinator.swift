@@ -99,6 +99,7 @@ final class MapBasicCoordinator {
 
         cameraChangeHandlers = deps.cameraChangeHandlers
         mapView.gestureManager.gestureHandlers = deps.gestureHandlers
+        mapView.attributionMenu.filter = deps.attributionMenuFilter
 
         shortLivedSubscriptions.removeAll()
 

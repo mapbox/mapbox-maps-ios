@@ -222,6 +222,14 @@ extension Map {
 
 @available(iOS 13.0, *)
 public extension Map {
+
+    /// Filters attribution menu items
+    /// Restricted API. Please contact Mapbox to discuss your use case if you intend to use this property.
+    @_spi(Restricted)
+    func attributionMenuFilter(_ filter: @escaping (AttributionMenuItem) -> Bool) -> Self {
+        copyAssigned(self, \.mapDependencies.attributionMenuFilter, filter)
+    }
+
     /// Sets camera bounds.
     func cameraBounds(_ cameraBounds: CameraBoundsOptions) -> Self {
         copyAssigned(self, \.mapDependencies.cameraBounds, cameraBounds)

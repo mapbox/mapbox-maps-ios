@@ -31,20 +31,18 @@ git checkout -b "$BRANCH_NAME"
 generate_config() {
   local project=$1
   local version=$2
-  local suffix=$3
 
   if [ -d "$HOME" ]; then
-    cat <<- EOF > "config/$project$suffix/$version.yaml"
+    cat <<- EOF > "config/$project/$version.yaml"
 		api-downloads: v2
 
 		bundles:
-		  ios: MapboxMaps$suffix
+		  ios: MapboxMaps
 		EOF
   fi
 }
 
-generate_config "$PROJECT_ROOT" "$VERSION" ""
-generate_config "$PROJECT_ROOT" "$VERSION" "-static"
+generate_config "$PROJECT_ROOT" "$VERSION"
 
 #
 # Commit to branch

@@ -565,7 +565,51 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
 
         metalView?.center = CGPoint(x: bounds.midX, y: bounds.midY)
         safeAreaSignalSubject.value = self.safeAreaInsets
+
+        if let metalView, metalView.autoResizeDrawable {
+            metalView.frame = bounds
+            mapboxMap.size = metalView.bounds.size
+        }
     }
+
+#if !os(visionOS)
+    /// Control the resizing animation behavior of the map view.
+    /// The default value is ``ResizingAnimation-swift.enum/automatic``.
+    public enum ResizingAnimation {
+        /// Change the default behaviour to have a nice looking resizing animation.
+        ///
+        /// The map plane would fulfil the MapView sized all the time.
+        /// Custom implementation.
+        case automatic
+
+        /// Default UIView behaviour. The map plane would be resized immediately leading to gaps renderer when assign higher size values.
+        case none
+
+        init?(autoResizeDrawable: Bool?) {
+            guard let autoResizeDrawable else { return nil }
+            self = autoResizeDrawable ? .none : .automatic
+        }
+
+        var autoResizeDrawable: Bool {
+            switch self {
+            case .automatic: return false
+            case .none: return true
+            }
+        }
+    }
+
+    /// Control resizing animation behavior of the map view.
+    public var resizingAnimation: ResizingAnimation = .automatic {
+        didSet {
+            syncResizingAnimation()
+        }
+    }
+
+    private func syncResizingAnimation() {
+        // VisionOS doesn't support autoResizeDrawable
+        metalView?.autoResizeDrawable = resizingAnimation.autoResizeDrawable
+    }
+#endif
 
     /// Synchronize size updates with GL-Native and UIKit
     ///
@@ -739,6 +783,10 @@ extension MapView: DelegatingMapClientDelegate {
         insertSubview(metalView, at: 0)
 
         self.metalView = metalView
+
+#if !os(visionOS)
+        syncResizingAnimation()
+#endif
 
         return metalView
     }

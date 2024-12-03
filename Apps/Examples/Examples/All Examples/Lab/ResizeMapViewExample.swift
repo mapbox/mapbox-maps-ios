@@ -36,6 +36,15 @@ final class ResizeMapViewExample: UIViewController, ExampleProtocol {
 
         setupDefaultCamera()
         applyAutolayout()
+
+        let animationBehaviourButton = UIBarButtonItem(
+            title: nil,
+            style: .done,
+            target: self,
+            action: #selector(toggleAnimationBehaviour(_:))
+        )
+        navigationItem.rightBarButtonItem = animationBehaviourButton
+        syncAnimationBehaviourButton(animationBehaviourButton)
     }
 
     func mapStyleDidLoad() {
@@ -126,6 +135,39 @@ final class ResizeMapViewExample: UIViewController, ExampleProtocol {
         os_log(.default, "%@ without animation", lastManualResizingDirection == .shrinking ? "Shrinking" : "Expanding")
 
         lastManualResizingDirection.toggle()
+    }
+
+    var animationBehaviour: MapView.ResizingAnimation = .automatic {
+        didSet {
+            mapboxMapView.resizingAnimation = animationBehaviour
+        }
+    }
+
+    @objc
+    private func toggleAnimationBehaviour(_ sender: UIBarButtonItem) {
+        switch animationBehaviour {
+        case .automatic:
+            animationBehaviour = .none
+        case .none:
+            animationBehaviour = .automatic
+        }
+
+        syncAnimationBehaviourButton(sender)
+    }
+
+    private func syncAnimationBehaviourButton(_ button: UIBarButtonItem) {
+        switch animationBehaviour {
+        case .automatic:
+            if #available(iOS 13.0, *) {
+                button.image = UIImage(systemName: "arrow.up.arrow.down.circle.fill")
+            }
+            button.title = "Automatic"
+        case .none:
+            if #available(iOS 13.0, *) {
+                button.image = UIImage(systemName: "arrow.up.arrow.down.circle")
+            }
+            button.title = "None"
+        }
     }
 
     // MARK: -

@@ -133,7 +133,7 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
             Exp(.interpolate) {
                 Exp(.linear)
                 Exp(.zoom)
-                7  // Literal numeric zoom level
+                7
                 Exp(.interpolate) {
                     Exp(.linear)
                     Exp(.get) { "mag" }
@@ -142,7 +142,7 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
                     6
                     4
                 }
-                16 // Literal numeric zoom level
+                16
                 Exp(.interpolate) {
                     Exp(.linear)
                     Exp(.get) { "mag" }
@@ -196,7 +196,7 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         do {
             try mapView.mapboxMap.addLayer(circleLayer, layerPosition: .below(self.heatmapLayerId))
         } catch {
-            print("Ran into an error adding a circle layer: \(error)")
+            print("Ran into an error adding a layer: \(error)")
         }
     }
 

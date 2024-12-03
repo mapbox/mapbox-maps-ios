@@ -129,6 +129,7 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         // Add circle layer
         var circleLayer = CircleLayer(id: self.circleLayerId, source: self.earthquakeSourceId)
 
+        // Adjust the circle layer radius by zoom level
         circleLayer.circleRadius = .expression(
             Exp(.interpolate) {
                 Exp(.linear)

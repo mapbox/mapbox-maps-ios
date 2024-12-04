@@ -2,7 +2,6 @@ import SwiftUI
 import UIKit
 import MapboxMaps
 
-@available(iOS 14.0, *)
 struct SwiftUIRoot: View {
     var body: some View {
         ExamplesNavigationView {
@@ -66,7 +65,6 @@ struct SwiftUIRoot: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct ExampleLink<S, Destination>: View where S: StringProtocol, Destination: View {
     var title: S
     var note: S?
@@ -90,7 +88,6 @@ struct ExampleLink<S, Destination>: View where S: StringProtocol, Destination: V
     }
 }
 
-@available(iOS 14.0, *)
 private struct ToolbarContentWhenPresented<T: ToolbarContent>: ViewModifier {
     @Environment(\.presentationMode) var presentationMode
     var toolbarContent: (@escaping () -> Void) -> T
@@ -105,7 +102,6 @@ private struct ToolbarContentWhenPresented<T: ToolbarContent>: ViewModifier {
     }
 }
 
-@available(iOS 14.0, *)
 struct SwiftUIWrapper: View {
     // A model for StandardStyleLocationsExample.
     @StateObject var locationsModel = StandardStyleLocationsModel()
@@ -115,7 +111,6 @@ struct SwiftUIWrapper: View {
     }
 }
 
-@available(iOS 14.0, *)
 func createSwiftUIExamplesController() -> UIViewController {
     let controller =  UIHostingController(rootView: SwiftUIWrapper())
     controller.title = title
@@ -123,7 +118,6 @@ func createSwiftUIExamplesController() -> UIViewController {
     return controller
 }
 
-@available(iOS 14.0, *)
 struct ExamplesNavigationView<Content>: View where Content: View {
     let content: Content
 
@@ -146,7 +140,6 @@ struct ExamplesNavigationView<Content>: View where Content: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct ExampleView<Content>: View where Content: View {
     @State private var isNavigationBarHidden = false
     let content: Content

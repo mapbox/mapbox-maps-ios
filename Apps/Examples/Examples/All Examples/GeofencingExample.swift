@@ -296,7 +296,7 @@ extension GeofencingExample {
 
     private func showSpinnerIfNeeded() {
         if geofencingSpinner == nil {
-            let spinner = UIActivityIndicatorView(style: .whiteLarge)
+            let spinner = UIActivityIndicatorView(style: .large)
 
             spinner.translatesAutoresizingMaskIntoConstraints = false
             spinner.startAnimating()

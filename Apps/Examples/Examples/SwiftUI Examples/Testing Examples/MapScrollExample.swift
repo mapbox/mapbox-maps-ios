@@ -2,7 +2,6 @@ import Foundation
 import SwiftUI
 import MapboxMaps
 
-@available(iOS 14.0, *)
 struct MapScrollExample: View {
     var body: some View {
         List {
@@ -20,7 +19,6 @@ struct MapScrollExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct MapScrollExample_Previews: PreviewProvider {
     static var previews: some View {
         MapScrollExample()

@@ -1,7 +1,6 @@
 import SwiftUI
 import MapboxMaps
 
-@available(iOS 14.0, *)
 struct ViewportPlayground: View {
     @State var viewport: Viewport = .styleDefault
     @State var mapStyle: MapStyle = .standard
@@ -101,7 +100,6 @@ struct ViewportPlayground: View {
     }
 }
 
-@available(iOS 13.0, *)
 private struct MiniToggle: View {
     var title: String
     @Binding var isOn: Bool
@@ -116,7 +114,6 @@ private struct MiniToggle: View {
     }
 }
 
-@available(iOS 14.0, *)
 private struct ViewportMenu: View {
     @Binding var viewport: Viewport
 
@@ -232,7 +229,6 @@ private let maineBoundaries = Polygon([[
     CLLocationCoordinate2D(latitude: 45.13745, longitude: -67.13734)
 ]])
 
-@available(iOS 14.0, *)
 struct MapViewportExample_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {

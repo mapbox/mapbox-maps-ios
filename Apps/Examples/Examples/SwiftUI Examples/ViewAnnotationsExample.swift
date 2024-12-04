@@ -2,7 +2,6 @@ import SwiftUI
 import Turf
 import MapboxMaps
 
-@available(iOS 14.0, *)
 struct ViewAnnotationsExample: View {
     @State private var taps: [Tap] = []
     @State private var allowOverlap: Bool = false
@@ -105,7 +104,6 @@ struct ViewAnnotationsExample: View {
     }
 }
 
-@available(iOS 13.0, *)
 private struct Tap: Equatable, Identifiable {
     var id = UUID()
     var coordinate: CLLocationCoordinate2D
@@ -113,7 +111,6 @@ private struct Tap: Equatable, Identifiable {
     var selectedAnchor: ViewAnnotationAnchorConfig?
 }
 
-@available(iOS 14.0, *)
 private struct ViewAnnotationContent: View {
     var tap: Tap
     var onRemove: () -> Void
@@ -164,7 +161,6 @@ private let routeCoordinates: [CLLocationCoordinate2D] = [
     .init(latitude: 60.4538050749446, longitude: 22.270812516066485)
 ]
 
-@available(iOS 14.0, *)
 struct ViewAnnotationsExample_Previews: PreviewProvider {
     static var previews: some View {
         ViewAnnotationsExample()

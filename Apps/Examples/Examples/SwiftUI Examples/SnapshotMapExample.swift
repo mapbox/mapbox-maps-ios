@@ -1,7 +1,6 @@
 import SwiftUI
 import MapboxMaps
 
-@available(iOS 14.0, *)
 struct SnapshotMapExample: View {
     @State var image: UIImage?
 
@@ -54,7 +53,6 @@ struct SnapshotMapExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct SnapshotView: View {
     var snapshot: UIImage?
 
@@ -67,12 +65,10 @@ struct SnapshotView: View {
     }
 }
 
-@available(iOS 13.0, *)
 private extension Viewport {
     static let helsinkiOverview = Self.overview(geometry: Polygon(center: .helsinki, radius: 10000, vertices: 30))
 }
 
-@available(iOS 14.0, *)
 struct SnapshotMapExample_Preview: PreviewProvider {
     static var previews: some View {
         SnapshotMapExample()

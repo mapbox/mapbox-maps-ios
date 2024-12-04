@@ -52,7 +52,6 @@ final class ExampleTableViewController: UITableViewController {
         UserDefaults.standard.removeObject(forKey: startingExampleTitleKey)
     }
 
-    @available(iOS 14.0, *)
     @objc func openSwiftUI() {
         present(createSwiftUIExamplesController(), animated: true)
     }

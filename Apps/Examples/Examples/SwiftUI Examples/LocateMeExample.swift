@@ -1,7 +1,6 @@
 import SwiftUI
 import MapboxMaps
 
-@available(iOS 14.0, *)
 struct LocateMeExample: View {
     @State var viewport: Viewport = .followPuck(zoom: 13, bearing: .constant(0))
 
@@ -17,7 +16,6 @@ struct LocateMeExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct LocateMeButton: View {
     @Binding var viewport: Viewport
 
@@ -59,7 +57,6 @@ struct LocateMeButton: View {
     }
 }
 
-@available(iOS 13.0, *)
 private extension View {
     func safeContentTransition() -> some View {
         if #available(iOS 17, *) {
@@ -69,7 +66,6 @@ private extension View {
     }
 }
 
-@available(iOS 14.0, *)
 struct LocateMeExample_Preview: PreviewProvider {
     static var previews: some View {
         LocateMeExample()

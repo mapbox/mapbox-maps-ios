@@ -1,7 +1,6 @@
 import CarPlay
 import MapboxMaps
 
-@available(iOS 15.4, *)
 class InstrumentClusterCarPlaySceneDelegate: NSObject,
                                                 CPTemplateApplicationInstrumentClusterSceneDelegate,
                                                 CPInstrumentClusterControllerDelegate {

@@ -1,6 +1,5 @@
 import CarPlay
 
-@available(iOS 13.0, *)
 class ApplicationCarPlaySceneDelegage: NSObject, CPTemplateApplicationSceneDelegate {
     let applicationVC = CarPlayRootVC()
 
@@ -19,7 +18,7 @@ class ApplicationCarPlaySceneDelegage: NSObject, CPTemplateApplicationSceneDeleg
                 }
             ]
         }
-        interfaceController.setRootTemplate(mapTemplate, animated: false)
+        interfaceController.setRootTemplate(mapTemplate, animated: false, completion: nil)
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {

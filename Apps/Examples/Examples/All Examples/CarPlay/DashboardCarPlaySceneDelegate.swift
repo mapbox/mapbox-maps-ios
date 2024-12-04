@@ -1,6 +1,5 @@
 import CarPlay
 
-@available(iOS 13.4, *)
 class DashboardCarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate, CPTemplateApplicationDashboardSceneDelegate {
     let dashboardVC = CarPlayRootVC()
 

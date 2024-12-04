@@ -105,7 +105,6 @@ final class BasicLocationPulsingExample: UIViewController, ExampleProtocol {
         present(controller, animated: true)
     }
 
-    @available(iOS 14.0, *)
     private func updateMenu() {
         let state = mapView.location.options.puckType.map { type -> PuckCircle? in
             if case PuckType.puck2D(let config) = type {

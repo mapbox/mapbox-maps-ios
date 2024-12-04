@@ -8,7 +8,6 @@ private struct WeatherData: Identifiable, Equatable {
     let iconName: String
 }
 
-@available(iOS 14.0, *)
 struct WeatherAnnotationExample: View {
     @State private var viewport: Viewport = .camera(center: .berlin, zoom: 1.5)
 
@@ -38,7 +37,6 @@ struct WeatherAnnotationExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 private struct WeatherIconView: View {
     var data: WeatherData
     @Binding var selectedData: WeatherData?
@@ -75,7 +73,6 @@ private struct WeatherIconView: View {
         }
     }
 }
-@available(iOS 14.0, *)
 struct WeatherAnnotationExample_Preview: PreviewProvider {
 
     static var previews: some View {

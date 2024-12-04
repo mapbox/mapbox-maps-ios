@@ -1,7 +1,6 @@
 import SwiftUI
 @_spi(Experimental) import MapboxMaps
 
-@available(iOS 14, *)
 struct StandardInteractiveBuildingsExample: View {
     @State var selectedBuildings = [StandardBuildingsFeature]()
     @State var lightPreset = StandardLightPreset.day

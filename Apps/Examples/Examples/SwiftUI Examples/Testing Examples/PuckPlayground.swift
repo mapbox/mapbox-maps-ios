@@ -1,7 +1,6 @@
 import SwiftUI
 import MapboxMaps
 
-@available(iOS 14.0, *)
 struct PuckPlayground: View {
     enum PuckType: String, CaseIterable, CustomStringConvertible {
         case d2
@@ -120,7 +119,6 @@ struct PuckPlayground: View {
     }
 }
 
-@available(iOS 13.0, *)
 private struct RadioButtonSettingView<Value>: View
     where Value: CaseIterable, Value: Hashable, Value.AllCases: RandomAccessCollection {
     var title: String
@@ -138,7 +136,6 @@ private struct RadioButtonSettingView<Value>: View
     }
 }
 
-@available(iOS 13.0, *)
 private struct SliderSettingView: View {
     var title: String
     @Binding var value: Double
@@ -237,14 +234,12 @@ private extension Model {
     )
 }
 
-@available(iOS 14.0, *)
 struct PuckPlayground_Preview: PreviewProvider {
     static var previews: some View {
         PuckPlayground()
     }
 }
 
-@available(iOS 13.0, *)
 private struct TestLayer: MapStyleContent {
     var id: String
     var radius: LocationDistance

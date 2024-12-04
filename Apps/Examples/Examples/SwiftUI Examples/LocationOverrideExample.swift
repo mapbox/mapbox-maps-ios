@@ -2,7 +2,6 @@ import SwiftUI
 import MapboxMaps
 
 /// The example demonstrates how to override the default location provider using SwiftUI and Combine.
-@available(iOS 14.0, *)
 struct LocationOverrideExample: View {
     private class LocationProvider {
         @Published var location = Location(coordinate: .zero)

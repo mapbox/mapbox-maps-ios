@@ -28,17 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let appearance = UINavigationBar.appearance()
         appearance.prefersLargeTitles = true
-
-        if #available(iOS 13.0, *) {
-            appearance.scrollEdgeAppearance = UINavigationBarAppearance()
-        }
-
-        if #unavailable(iOS 13.0) {
-            let examplesTableViewController = ExampleTableViewController()
-            let navigationController = UINavigationController(rootViewController: examplesTableViewController)
-            window?.rootViewController = navigationController
-            window?.makeKeyAndVisible()
-        }
+        appearance.scrollEdgeAppearance = UINavigationBarAppearance()
 
         return true
     }
@@ -97,7 +87,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     // This function will be called when the app receive notification
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         // show the notification alert (banner), and with sound
-        completionHandler([.alert, .sound])
+        completionHandler([.banner, .sound])
     }
 
     // This function will be called right after user tap on the notification
@@ -120,7 +110,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 }
 
-@available(iOS 13.0, *)
 final class SceneDelegate: NSObject, UISceneDelegate {
     var windows: [UIWindow] = []
 

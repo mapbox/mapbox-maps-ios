@@ -9,7 +9,6 @@ extension UIWindow {
      }
 }
 
-@available(iOS 13.0, *)
 struct DeviceShakeViewModifier: ViewModifier {
     let action: () -> Void
 
@@ -22,7 +21,6 @@ struct DeviceShakeViewModifier: ViewModifier {
     }
 }
 
-@available(iOS 13.0, *)
 extension View {
     func onShake(perform action: @escaping () -> Void) -> some View {
         modifier(DeviceShakeViewModifier(action: action))

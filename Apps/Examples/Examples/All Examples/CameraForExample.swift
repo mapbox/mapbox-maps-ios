@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@available(iOS 13.0, *)
 final class CameraForExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()

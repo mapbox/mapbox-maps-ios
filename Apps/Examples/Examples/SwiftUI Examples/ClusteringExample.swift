@@ -8,7 +8,6 @@ private enum Id {
     static let source = "fire-hydrant-source"
 }
 
-@available(iOS 14.0, *)
 struct ClusteringExample: View {
     struct Detail: Identifiable {
         var id = UUID()
@@ -47,7 +46,6 @@ struct ClusteringExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 extension ClusteringExample.Detail {
     init(title: String, message: String) {
         self.title = title
@@ -71,7 +69,6 @@ extension ClusteringExample.Detail {
     }
 }
 
-@available(iOS 14.0, *)
 private func setupClusteringLayer(_ map: MapboxMap) throws {
     // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
     // In order to recolor an image, you need to add a template image to the map's style.
@@ -109,7 +106,6 @@ private func setupClusteringLayer(_ map: MapboxMap) throws {
     try map.addLayer(clusterCountLayer)
 }
 
-@available(iOS 14.0, *)
 private func createClusteredLayer() -> CircleLayer {
     // Create a symbol layer to represent the clustered points.
     var clusteredLayer = CircleLayer(id: Id.clusterCircle, source: Id.source)
@@ -136,7 +132,6 @@ private func createClusteredLayer() -> CircleLayer {
     return clusteredLayer
 }
 
-@available(iOS 14.0, *)
 private func createUnclusteredLayer() -> SymbolLayer {
     // Create a symbol layer to represent the points that aren't clustered.
     var unclusteredLayer = SymbolLayer(id: Id.point, source: Id.source)
@@ -159,7 +154,6 @@ private func createUnclusteredLayer() -> SymbolLayer {
     return unclusteredLayer
 }
 
-@available(iOS 14.0, *)
 private func createNumberLayer() -> SymbolLayer {
     var numberLayer = SymbolLayer(id: Id.count, source: Id.source)
 
@@ -172,7 +166,6 @@ private func createNumberLayer() -> SymbolLayer {
     return numberLayer
 }
 
-@available(iOS 14.0, *)
 struct ClusteringExample_Preview: PreviewProvider {
     static var previews: some View {
         ClusteringExample()

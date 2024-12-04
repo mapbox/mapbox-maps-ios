@@ -4,7 +4,6 @@ import SwiftUI
 @_spi(Experimental) import MapboxCommon
 
 /// This is an Example for Experimental API that is subject to change.
-@available(iOS 14.0, *)
 struct GeofencingPlayground: View {
     @State private var showInfoSheet = false
     @State private var isochrone: Turf.Feature?
@@ -42,7 +41,6 @@ struct GeofencingPlayground: View {
     }
 }
 
-@available(iOS 14.0, *)
 private struct Isochrone: MapStyleContent {
     var id: String
     var feature: Turf.Feature
@@ -58,7 +56,6 @@ private struct Isochrone: MapStyleContent {
     }
 }
 
-@available(iOS 14.0, *)
 private struct LoggingView: View {
     var hasUserConsent: Bool
     var lastEvent: GeofenceEvent?
@@ -92,7 +89,6 @@ private struct LoggingView: View {
     }
 }
 
-@available(iOS 14.0, *)
 private struct InfoView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -118,7 +114,6 @@ private struct InfoView: View {
     }
 }
 
-@available(iOS 14.0, *)
 private final class InitialLocationProvider {
     private var cancellables = Set<AnyCancelable>()
 
@@ -134,7 +129,6 @@ private final class InitialLocationProvider {
     }
 }
 
-@available(iOS 14.0, *)
 private final class Geofencing: ObservableObject {
     @Published var lastEvent: GeofenceEvent?
     @Published var hasUserConsent: Bool = GeofencingUtils.getUserConsent()
@@ -187,7 +181,6 @@ private extension GeoJSONSourceData {
     }
 }
 
-@available(iOS 14.0, *)
 extension Geofencing: GeofencingObserver {
     func onEntry(event: GeofencingEvent) {
         DispatchQueue.main.async { self.lastEvent = GeofenceEvent(type: .entry, feature: event.feature) }
@@ -208,7 +201,6 @@ extension Geofencing: GeofencingObserver {
     func onError(error: GeofencingError) {}
 }
 
-@available(iOS 14.0, *)
 private struct GeofenceEvent {
     enum GeofenceEventType {
         case entry
@@ -286,7 +278,6 @@ private extension Turf.Feature {
     }
 }
 
-@available(iOS 14.0, *)
 struct InfoButton: View {
     var action: () -> Void
 
@@ -302,7 +293,6 @@ struct InfoButton: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct OvalButton: View {
     var title: String
     var action: () -> Void
@@ -319,7 +309,6 @@ struct OvalButton: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct IndicativeLog: View {
     var color: Color
     var text: String

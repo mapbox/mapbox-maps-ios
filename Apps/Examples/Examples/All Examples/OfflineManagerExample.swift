@@ -311,7 +311,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
     private func resetUI() {
         logger?.reset()
         logView.textContainerInset.bottom = view.safeAreaInsets.bottom
-        logView.scrollIndicatorInsets.bottom = view.safeAreaInsets.bottom
+        logView.verticalScrollIndicatorInsets.bottom = view.safeAreaInsets.bottom
 
         progressContainer.isHidden = false
         stylePackProgressView.progress = 0.0

@@ -2,7 +2,6 @@ import SwiftUI
 import MapboxMaps
 
 /// This example shows how to use `MapReader` in order to access underlying `MapboxMap` API in SwiftUI.
-@available(iOS 14.0, *)
 struct FeaturesQueryExample: View {
     @StateObject private var model = Model()
     var body: some View {
@@ -32,7 +31,6 @@ struct FeaturesQueryExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 private class Model: ObservableObject {
     struct Location: Identifiable {
         var id = UUID()
@@ -73,7 +71,6 @@ private class Model: ObservableObject {
     }
 }
 
-@available(iOS 14.0, *)
 struct QueryResult: Identifiable {
     struct Feature: Identifiable {
         var id = UUID()
@@ -105,7 +102,6 @@ struct QueryResult: Identifiable {
     }
 }
 
-@available(iOS 14.0, *)
 struct ResultView: View {
     let result: QueryResult
     var body: some View {
@@ -125,7 +121,6 @@ struct ResultView: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct FeaturesQueryExample_Preview: PreviewProvider {
     static var previews: some View {
         FeaturesQueryExample()

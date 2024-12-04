@@ -4,7 +4,6 @@ import SwiftUI
 @_spi(Experimental) import MapboxCommon
 
 /// This is an Example for Experimental API that is subject to change.
-@available(iOS 14.0, *)
 struct GeofencingUserLocation: View {
     @State private var initialLocation: CLLocationCoordinate2D?
     @ObservedObject private var geofencing = Geofencing()
@@ -35,7 +34,6 @@ struct GeofencingUserLocation: View {
     }
 }
 
-@available(iOS 14.0, *)
 private struct GeofenceCircle: MapStyleContent {
     var id: String
     var location: CLLocationCoordinate2D
@@ -64,7 +62,6 @@ private struct GeofenceCircle: MapStyleContent {
     }
 }
 
-@available(iOS 14.0, *)
 private final class InitialLocationProvider {
     private var cancellables = Set<AnyCancelable>()
 
@@ -80,7 +77,6 @@ private final class InitialLocationProvider {
     }
 }
 
-@available(iOS 14.0, *)
 private final class Geofencing: ObservableObject {
     @Published var lastEvent: GeofenceEvent?
 
@@ -115,7 +111,6 @@ private final class Geofencing: ObservableObject {
     }
 }
 
-@available(iOS 14.0, *)
 extension Geofencing: GeofencingObserver {
     func onEntry(event: GeofencingEvent) {
         DispatchQueue.main.async { self.lastEvent = GeofenceEvent(type: .entry, feature: event.feature) }

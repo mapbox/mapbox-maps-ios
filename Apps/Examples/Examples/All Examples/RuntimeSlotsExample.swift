@@ -3,7 +3,6 @@ import MapboxMaps
 
 /// This example shows how to use a slot from the Standard style and use another custom slot added at runtime
 /// to split the former into two parts.
-@available(iOS 13.0, *)
 final class RuntimeSlotsExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
 

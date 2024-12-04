@@ -1,7 +1,6 @@
 import SwiftUI
 @_spi(Experimental) import MapboxMaps
 
-@available(iOS 14.0, *)
 struct DynamicStylingExample: View {
     enum CityCollection: CaseIterable {
         case northern
@@ -157,7 +156,6 @@ struct DynamicStylingExample: View {
     }
 }
 
-@available(iOS 13.0, *)
 struct ConnectionComponent: MapStyleContent {
     enum Kind: String, CaseIterable {
         case line
@@ -203,7 +201,6 @@ struct ConnectionComponent: MapStyleContent {
 }
 
 /// Implements the route line component
-@available(iOS 13.0, *)
 struct RouteLine: MapStyleContent {
     var id: String
     var featureRef: FeaturesRef
@@ -236,7 +233,6 @@ struct RouteLine: MapStyleContent {
 }
 
 /// Implements a GeoJSON source that is updated when the reference to features is changed.
-@available(iOS 13.0, *)
 struct LazyGeoJSON: MapStyleContent {
     let id: String
     let features: FeaturesRef
@@ -254,7 +250,6 @@ class FeaturesRef {
     init(_ features: [Feature]) { self.features = features }
 }
 
-@available(iOS 13.0, *)
 struct ModelsComponent: MapStyleContent {
     var body: some MapStyleContent {
         /// Add models
@@ -292,7 +287,6 @@ struct ModelsComponent: MapStyleContent {
     }
 }
 
-@available(iOS 14.0, *)
 extension DynamicStylingExample.CityCollection {
     var pinFeatures: FeaturesRef {
         switch self {
@@ -321,7 +315,6 @@ extension DynamicStylingExample.CityCollection {
     }
 }
 
-@available(iOS 13.0, *)
 private struct RadioButtonSettingView<Value>: View
 where Value: CaseIterable, Value: Hashable, Value.AllCases: RandomAccessCollection {
     var title: String
@@ -339,7 +332,6 @@ where Value: CaseIterable, Value: Hashable, Value.AllCases: RandomAccessCollecti
     }
 }
 
-@available(iOS 13.0, *)
 private extension Viewport {
     static var exampleOverview: Viewport = .camera(center: .init(latitude: 46.80, longitude: 11.18), zoom: 3, pitch: 45)
     static var modelsOverview: Viewport = .camera(center: .init(latitude: 60.172, longitude: 24.94), zoom: 13.32, pitch: 45)

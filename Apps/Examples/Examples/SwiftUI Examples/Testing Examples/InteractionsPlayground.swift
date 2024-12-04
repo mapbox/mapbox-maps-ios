@@ -1,7 +1,6 @@
 @_spi(Experimental) import MapboxMaps
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct InteractionsPlayground: View {
     @State private var text: String?
     @State private var tap: Tap?
@@ -140,7 +139,6 @@ private struct Tap {
     var radius: Double?
 }
 
-@available(iOS 14.0, *)
 private struct TapView: View {
     var tap: Tap
     var color: Color

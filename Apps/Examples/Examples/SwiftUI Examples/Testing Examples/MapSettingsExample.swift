@@ -27,7 +27,6 @@ struct Settings {
     }
 }
 
-@available(iOS 14.0, *)
 struct MapSettingsExample: View {
     @State private var settingsOpened = false
     @State private var settings = Settings()
@@ -82,7 +81,6 @@ struct MapSettingsExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct SettingsView: View {
     @Binding var settings: Settings
     #if os(visionOS)
@@ -175,7 +173,6 @@ struct SettingsView: View {
     }
 }
 
-@available(iOS 13.0, *)
 private extension Binding where Value: OptionSet {
     func contains(option: Value.Element) -> Binding<Bool> {
         Binding<Bool> {
@@ -191,7 +188,6 @@ private extension Binding where Value: OptionSet {
     }
 }
 
-@available(iOS 15.0, *)
 struct MapSettingsExample_Preveiw: PreviewProvider {
     static var previews: some View {
         NavigationView {

@@ -1,7 +1,6 @@
 import SwiftUI
 import MapboxMaps
 
-@available(iOS 14.0, *)
 struct MapFloatingButtonStyle: ButtonStyle {
     @ViewBuilder
     func makeBody(configuration: Configuration) -> some View {
@@ -14,7 +13,6 @@ struct MapFloatingButtonStyle: ButtonStyle {
     }
 }
 
-@available(iOS 14.0, *)
 struct FloatingStyle <S: Shape>: ViewModifier {
     var padding: CGFloat
     var shape: S
@@ -28,7 +26,6 @@ struct FloatingStyle <S: Shape>: ViewModifier {
     }
 }
 
-@available(iOS 13.0, *)
 extension View {
     @ViewBuilder
     func regularMaterialBackground() -> some View {
@@ -40,7 +37,6 @@ extension View {
     }
 }
 
-@available(iOS 14.0, *)
 extension View {
     func floating<S>(padding: CGFloat = 5, _ shape: S) -> some View where S: Shape {
         modifier(FloatingStyle(padding: padding, shape: shape))
@@ -51,7 +47,6 @@ extension View {
     }
 }
 
-@available(iOS 14.0, *)
 struct MapStyleSelectorButton: View {
     @Binding var mapStyle: MapStyle
     var styles: [(String, MapStyle)] = [

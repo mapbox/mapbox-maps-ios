@@ -1,7 +1,6 @@
 import MapboxMaps
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct StandardStyleLocationsExample: View {
     /// This model is created in root application views for each platform:
     ///
@@ -70,7 +69,6 @@ struct StandardStyleLocationsExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 class StandardStyleLocationsModel: ObservableObject {
     @Published var lightPreset: StandardLightPreset = .day
     @Published var poi = true
@@ -112,7 +110,6 @@ class StandardStyleLocationsModel: ObservableObject {
     }
 }
 
-@available(iOS 14.0, *)
 struct StandardStyleLocationsSettings: View {
     @EnvironmentObject var model: StandardStyleLocationsModel
     var body: some View {
@@ -204,7 +201,6 @@ struct StandardStyleLocationsSettings: View {
 
 }
 
-@available(iOS 13.0, *)
 private struct SelectorView<T, Content>: View where T: RandomAccessCollection, T.Element: Identifiable, Content: View {
     var data: T
     @Binding
@@ -247,7 +243,6 @@ private struct Pair<First, Second> {
 }
 extension Pair: Equatable where First: Equatable, Second: Equatable {}
 
-@available(iOS 14.0, *)
 struct StandardStyleLocationsExample_Previews: PreviewProvider {
     static var previews: some View {
             StandardStyleLocationsExample()

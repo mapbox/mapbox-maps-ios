@@ -13,6 +13,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
+        IPHONEOS_DEPLOYMENT_TARGET: 16.0
         SWIFT_OBJC_BRIDGING_HEADER: $(MAPBOXMAPS_PATH)/Apps/Examples/Examples/Examples-Bridging-Header.h
     sources:
       - path: ../Apps/Examples/Examples
@@ -55,6 +56,7 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
+        IPHONEOS_DEPLOYMENT_TARGET: 16.0
     sources:
       - path: ../Tests/ExamplesTests
         destinationFilters: [iOS] # no-op on visionOS
@@ -69,6 +71,7 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: "mapbox.ExamplesUITests"
+        IPHONEOS_DEPLOYMENT_TARGET: 16.0
     sources:
       - path: ../Tests/ExamplesUITests
         destinationFilters: [iOS] # no-op on visionOS

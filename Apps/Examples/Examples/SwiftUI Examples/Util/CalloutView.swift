@@ -1,14 +1,12 @@
 import SwiftUI
 import MapboxMaps
 
-@available(iOS 14.0, *)
 extension View {
     func callout(anchor: ViewAnnotationAnchor, color: Color, tailSize: Double = 8.0) -> some View {
         modifier(CalloutViewModifier(anchor: anchor, color: color, tailSize: tailSize))
     }
 }
 
-@available(iOS 14.0, *)
 struct CalloutViewModifier: ViewModifier {
     var anchor: ViewAnnotationAnchor
     var color: Color
@@ -26,7 +24,6 @@ struct CalloutViewModifier: ViewModifier {
     }
 }
 
-@available(iOS 14.0, *)
 struct CalloutShape: Shape {
     var anchor: ViewAnnotationAnchor
     var tailSize: CGFloat

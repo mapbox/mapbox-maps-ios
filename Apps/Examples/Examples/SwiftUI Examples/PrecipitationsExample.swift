@@ -1,7 +1,6 @@
 import SwiftUI
 @_spi(Experimental) import MapboxMaps
 
-@available(iOS 14.0, *)
 struct PrecipitationExample: View {
     @State var viewport: Viewport = .camera(center: CLLocationCoordinate2D(latitude: 37.33464837343596, longitude: -122.00896178062911), zoom: 18, pitch: 80)
 
@@ -93,7 +92,6 @@ struct PrecipitationExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct PrecipitationExample_Preview: PreviewProvider {
     static var previews: some View {
         PrecipitationExample()

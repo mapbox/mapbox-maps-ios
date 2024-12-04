@@ -1,7 +1,6 @@
 import SwiftUI
 import MapboxMaps
 
-@available(iOS 15, *)
 struct AttributionEnvironmentURLOpen: View {
     @State private var alert: String?
     var body: some View {
@@ -31,7 +30,6 @@ struct AttributionDialogueWithSheet: View {
         }
 }
 
-@available(iOS 13, *)
 struct AttributionManualURLOpen: View {
     @State private var alert: String?
     var body: some View {

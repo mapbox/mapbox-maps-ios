@@ -1,7 +1,6 @@
 @_spi(Experimental) import MapboxMaps
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct AnnotationsOrderTestExample: View {
     @State var bluePolygon = true
     @State var greenPolygon = true
@@ -96,7 +95,6 @@ struct AnnotationsOrderTestExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct AnnotationsContent: MapContent {
     let bluePolygon: Bool
     let greenPolygon: Bool
@@ -142,7 +140,6 @@ struct AnnotationsContent: MapContent {
     }
 }
 
-@available(iOS 14.0, *)
 struct TestContent: MapContent {
     let redPolygon: Bool
 
@@ -163,7 +160,6 @@ struct TestContent: MapContent {
     }
 }
 
-@available(iOS 14.0, *)
 struct PolygonContent: MapContent {
     let polygon: Polygon
     let color: UIColor
@@ -187,13 +183,11 @@ struct PolygonContent: MapContent {
     }
 }
 
-@available(iOS 13.0, *)
 private struct Tap: Equatable, Identifiable {
     var id = UUID()
     var coordinate: CLLocationCoordinate2D
 }
 
-@available(iOS 14.0, *)
 private struct TapsContent: MapContent {
     var taps: [Tap]
 
@@ -214,7 +208,6 @@ private struct TapsContent: MapContent {
     }
 }
 
-@available(iOS 13.0, *)
 private struct TestLayer: MapStyleContent {
     var id: String
     var radius: LocationDistance
@@ -235,7 +228,6 @@ private struct TestLayer: MapStyleContent {
     }
 }
 
-@available(iOS 13.0, *)
 private struct FadingCircle: MapStyleContent {
     var body: some MapStyleContent {
         GeoJSONSource(id: "source-id")
@@ -254,7 +246,6 @@ private func gestureMessage(_ label: String, context: InteractionContext) -> Str
     return "\(label) (\(coordinate))"
 }
 
-@available(iOS 14.0, *)
 private struct ColorButton: View {
     let color1: UIColor
     let color2: UIColor

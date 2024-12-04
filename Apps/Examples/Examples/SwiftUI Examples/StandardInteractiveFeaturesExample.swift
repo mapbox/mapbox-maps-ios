@@ -1,7 +1,6 @@
 import SwiftUI
 @_spi(Experimental) import MapboxMaps
 
-@available(iOS 14, *)
 struct StandardInteractiveFeaturesExample: View {
     @State var selectedPoi: StandardPoiFeature?
     @State var selectedBuildings = [StandardBuildingsFeature]()

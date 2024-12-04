@@ -1,6 +1,5 @@
 import SwiftUI
 
-@available(iOS 13.0, *)
 struct PinView: View {
     var text: String
     var type: String?

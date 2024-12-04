@@ -4,7 +4,6 @@ import Combine
 import Turf
 
 /// This examples shows how to use Combine framework to drive the Puck's location and heading.
-@available(iOS 13.0, *)
 final class CombineLocationExample: UIViewController, ExampleProtocol {
     @Published
     private var location = Location(coordinate: CLLocationCoordinate2D(latitude: 60.17195694011002, longitude: 24.945389069265598))

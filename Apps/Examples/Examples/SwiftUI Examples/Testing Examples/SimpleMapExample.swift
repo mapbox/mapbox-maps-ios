@@ -1,7 +1,6 @@
 import SwiftUI
 import MapboxMaps
 
-@available(iOS 14.0, *)
 struct SimpleMapExample: View {
     @Environment(\.colorScheme) var colorScheme
 
@@ -13,7 +12,6 @@ struct SimpleMapExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct SimpleMapExample_Previews: PreviewProvider {
     static var previews: some View {
         SimpleMapExample()

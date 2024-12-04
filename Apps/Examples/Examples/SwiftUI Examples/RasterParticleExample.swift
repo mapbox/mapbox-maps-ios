@@ -1,7 +1,6 @@
 import SwiftUI
 @_spi(Experimental) import MapboxMaps
 
-@available(iOS 14.0, *)
 struct RasterParticleExample: View {
     @State var mapStyle = MapStyle.dark
     @State var rasterParticleCount: Double = 2048
@@ -43,7 +42,6 @@ struct RasterParticleExample: View {
     }
 }
 
-@available(iOS 13.0, *)
 private struct SliderSettingView: View {
     var title: String
     @Binding var value: Double

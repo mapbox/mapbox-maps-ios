@@ -1,7 +1,6 @@
 import MapboxMaps
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct AnnotationsExample: View {
     struct Tap: Identifiable {
         var coordinate: CLLocationCoordinate2D

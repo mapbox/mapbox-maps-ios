@@ -3,7 +3,6 @@ import MapboxMaps
 import Combine
 
 /// This examples shows how to use Map events with Combine framework.
-@available(iOS 13.0, *)
 final class CombineExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var tokens = Set<AnyCancellable>()

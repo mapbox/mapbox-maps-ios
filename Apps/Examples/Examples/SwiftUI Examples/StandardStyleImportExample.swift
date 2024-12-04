@@ -1,7 +1,6 @@
 import SwiftUI
 @_spi(Experimental) import MapboxMaps
 
-@available(iOS 14.0, *)
 struct StandardStyleImportExample: View {
     @State private var lightPreset: StandardLightPreset? = .night
     @State private var theme: StandardTheme? = .default
@@ -101,7 +100,6 @@ struct StandardStyleImportExample: View {
     }
 }
 
-@available(iOS 14.0, *)
 private struct HotelCallout: View {
     var feature: FeaturesetFeature
 
@@ -128,7 +126,6 @@ private struct HotelCallout: View {
     }
 }
 
-@available(iOS 13.0, *)
 private struct NYNJBorder: MapContent {
     var body: some MapContent {
         GeoJSONSource(id: "border")
@@ -155,7 +152,6 @@ private extension FeaturesetFeature {
 
 private let styleURL = Bundle.main.url(forResource: "fragment-realestate-NY", withExtension: "json")!
 
-@available(iOS 14.0, *)
 struct StandardStyleImportExample_Previews: PreviewProvider {
     static var previews: some View {
         StandardStyleImportExample()

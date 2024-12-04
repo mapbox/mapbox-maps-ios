@@ -1,6 +1,5 @@
 import SwiftUI
 
-@available(iOS 14.0, *)
 extension View {
     @ViewBuilder
     func safeOverlay<V: View>(alignment: Alignment, @ViewBuilder content: () -> V) -> some View {
@@ -60,12 +59,10 @@ extension View {
     }
 }
 
-@available(iOS 14.0, *)
 extension Font {
     static let safeMonospaced: Font = .system(.footnote, design: .monospaced)
 }
 
-@available(iOS 13.0, *)
 extension Color {
     /// Utility helper for visually debug SwiftUI's draw calls.
     ///
@@ -76,7 +73,6 @@ extension Color {
     }
 }
 
-@available(iOS 13.0, *)
 extension View {
     func fixedMenuOrder() -> some View {
         if #available(iOS 16.0, *) {
@@ -87,7 +83,6 @@ extension View {
     }
 }
 
-@available(iOS 13.0, *)
 extension View {
     func simpleAlert(message: Binding<String?>, title: String = "Alert") -> some View {
         return alert(item: message) { item in
@@ -100,14 +95,12 @@ extension String: Identifiable {
     public var id: String { self }
 }
 
-@available(iOS 13.0, *)
 extension View {
     func onChangeOfSize(perform action: @escaping (CGSize) -> Void) -> some View {
         modifier(OnSizeChangeModifier(action: action))
     }
 }
 
-@available(iOS 13.0, *)
 private struct OnSizeChangeModifier: ViewModifier {
     let action: (CGSize) -> Void
 

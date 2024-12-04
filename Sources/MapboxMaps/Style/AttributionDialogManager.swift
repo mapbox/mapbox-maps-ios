@@ -5,7 +5,6 @@ internal protocol AttributionDataSource: AnyObject {
 
 internal protocol AttributionDialogManagerDelegate: AnyObject {
     func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController?
-    func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, didTriggerActionFor attribution: Attribution)
 }
 
 internal class AttributionDialogManager {
@@ -14,94 +13,30 @@ internal class AttributionDialogManager {
     private weak var delegate: AttributionDialogManagerDelegate?
     private var inProcessOfParsingAttributions: Bool = false
 
-    internal init(dataSource: AttributionDataSource, delegate: AttributionDialogManagerDelegate?) {
+    private let attributionMenu: AttributionMenu
+
+    init(
+        dataSource: AttributionDataSource,
+        delegate: AttributionDialogManagerDelegate?,
+        attributionMenu: AttributionMenu
+    ) {
         self.dataSource = dataSource
         self.delegate = delegate
+        self.attributionMenu = attributionMenu
     }
 
-    internal var isMetricsEnabled: Bool {
-        get {
-            UserDefaults.standard.MGLMapboxMetricsEnabled
-        }
-        set {
-            UserDefaults.standard.MGLMapboxMetricsEnabled = newValue
-        }
-    }
-
-    //swiftlint:disable:next function_body_length
-    internal func showTelemetryAlertController(from viewController: UIViewController) {
-        let alert: UIAlertController
-        let bundle = Bundle.mapboxMaps
-        let telemetryTitle = NSLocalizedString("TELEMETRY_TITLE",
-                                               tableName: Ornaments.localizableTableName,
-                                               bundle: bundle,
-                                               value: "Make Mapbox Maps Better",
-                                               comment: "Telemetry prompt title")
-
-        let message: String
-        let participateTitle: String
-        let declineTitle: String
-
-        if isMetricsEnabled {
-            message = NSLocalizedString("TELEMETRY_ENABLED_MSG",
-                                        tableName: Ornaments.localizableTableName,
-                                        bundle: bundle,
-                                        value: """
-                                      You are helping to make OpenStreetMap and
-                                      Mapbox maps better by contributing anonymous usage data.
-                                    """,
-                                        comment: "Telemetry prompt message")
-            participateTitle = NSLocalizedString("TELEMETRY_ENABLED_ON",
-                                                 tableName: Ornaments.localizableTableName,
-                                                 bundle: bundle,
-                                                 value: "Keep Participating",
-                                                 comment: "Telemetry prompt button")
-            declineTitle = NSLocalizedString("TELEMETRY_ENABLED_OFF",
-                                             tableName: Ornaments.localizableTableName,
-                                             bundle: bundle,
-                                             value: "Stop Participating",
-                                             comment: "Telemetry prompt button")
-        } else {
-            message = NSLocalizedString("TELEMETRY_DISABLED_MSG",
-                                        tableName: Ornaments.localizableTableName,
-                                        bundle: bundle, value: """
-                                        You can help make OpenStreetMap and Mapbox maps better
-                                        by contributing anonymous usage data.
-                                    """,
-                                        comment: "Telemetry prompt message")
-            participateTitle = NSLocalizedString("TELEMETRY_DISABLED_ON",
-                                                 tableName: Ornaments.localizableTableName,
-                                                 bundle: bundle, value: "Participate",
-                                                 comment: "Telemetry prompt button")
-            declineTitle = NSLocalizedString("TELEMETRY_DISABLED_OFF",
-                                             tableName: Ornaments.localizableTableName,
-                                             bundle: bundle, value: "Don’t Participate",
-                                             comment: "Telemetry prompt button")
-        }
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            alert = UIAlertController(title: telemetryTitle, message: message, preferredStyle: .alert)
-        } else {
-            alert = UIAlertController(title: telemetryTitle, message: message, preferredStyle: .actionSheet)
-        }
-
-        let moreTitle = NSLocalizedString("TELEMETRY_MORE",
-                                          tableName: Ornaments.localizableTableName,
-                                          bundle: bundle, value: "Tell Me More",
-                                          comment: "Telemetry prompt button")
-        let moreAction = UIAlertAction(title: moreTitle, style: .default) { _ in
-            guard let url = URL(string: Ornaments.telemetryURL) else { return }
-            self.delegate?.attributionDialogManager(self, didTriggerActionFor: Attribution(title: "", url: url))
-        }
-        alert.addAction(moreAction)
-
-        alert.addAction(UIAlertAction(title: declineTitle, style: .default) { _ in
-            self.isMetricsEnabled = false
-        })
-
-        alert.addAction(UIAlertAction(title: participateTitle, style: .cancel) { _ in
-            self.isMetricsEnabled = true
-        })
+    func showAlertController(
+        from viewController: UIViewController,
+        title: String? = nil,
+        message: String? = nil,
+        actions: [UIAlertAction] = []
+    ) {
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: UIDevice.current.userInterfaceIdiom == .pad ? .alert : .actionSheet
+        )
+        actions.forEach(alert.addAction)
 
         viewController.present(alert, animated: true)
     }
@@ -113,74 +48,47 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
         guard inProcessOfParsingAttributions == false else { return }
 
         inProcessOfParsingAttributions = true
+
         dataSource?.loadAttributions { [weak self] attributions in
-            self?.showAttributionDialog(for: attributions)
-            self?.inProcessOfParsingAttributions = false
+            guard let self else { return }
+            var menu = self.attributionMenu.menu(from: attributions)
+            if let filter = self.attributionMenu.filter {
+                menu.filter(filter)
+            }
+            showAttributionDialog(for: menu)
+            self.inProcessOfParsingAttributions = false
         }
     }
 
-    private func showAttributionDialog(for attributions: [Attribution]) {
+    private func showAttributionDialog(for menu: AttributionMenuSection) {
         guard let viewController = delegate?.viewControllerForPresenting(self) else {
             Log.error(forMessage: "Failed to present an attribution dialogue: no presenting view controller found.")
             return
         }
 
-        let title = Bundle.mapboxMaps.localizedString(forKey: "SDK_NAME", value: "Powered by Mapbox", table: Ornaments.localizableTableName)
-
-        let alert: UIAlertController
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        } else {
-            alert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
-        }
-
-        let bundle = Bundle.mapboxMaps
-
-        // Non actionable single item gets displayed as alert's message
-        if attributions.count == 1, let attribution = attributions.first, attribution.kind == .nonActionable {
-            alert.message = attribution.localizedTitle
-        } else {
-            for attribution in attributions {
-                let action = UIAlertAction(title: attribution.localizedTitle, style: .default) { _ in
-                    self.delegate?.attributionDialogManager(self, didTriggerActionFor: attribution)
+        let actions = menu.elements.compactMap { element in
+            switch element {
+            case .item(let item):
+                let action = UIAlertAction(title: item.title, style: item.style.uiActionStyle) { _ in
+                    item.action?()
                 }
-                action.isEnabled = attribution.kind != .nonActionable
-                alert.addAction(action)
+                action.isEnabled = item.action != nil
+                return action
+            case .section(let section):
+                if section.elements.isEmpty {
+                    return nil
+                }
+                return UIAlertAction(title: section.actionTitle, style: .default) { _ in
+                    self.showAttributionDialog(for: section)
+                }
             }
         }
 
-        let telemetryTitle = NSLocalizedString("TELEMETRY_NAME",
-                                               tableName: Ornaments.localizableTableName,
-                                               bundle: bundle,
-                                               value: "Mapbox Telemetry",
-                                               comment: "Action in attribution sheet")
-        let telemetryAction = UIAlertAction(title: telemetryTitle, style: .default) { _ in
-            self.showTelemetryAlertController(from: viewController)
-        }
-
-        alert.addAction(telemetryAction)
-
-        let privacyPolicyAttribution = Attribution.makePrivacyPolicyAttribution()
-        let privacyPolicyAction = UIAlertAction(title: privacyPolicyAttribution.title, style: .default) { _ in
-            self.delegate?.attributionDialogManager(self, didTriggerActionFor: privacyPolicyAttribution)
-        }
-
-        alert.addAction(privacyPolicyAction)
-
-        let cancelTitle = NSLocalizedString("ATTRIBUTION_CANCEL",
-                                            tableName: Ornaments.localizableTableName,
-                                            bundle: bundle,
-                                            value: "Cancel",
-                                            comment: "Title of button for dismissing attribution action sheet")
-
-        alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel))
-
-        viewController.present(alert, animated: true, completion: nil)
+        showAlertController(from: viewController, title: menu.title, message: menu.subtitle, actions: actions)
     }
 }
 
-private extension Attribution {
+internal extension Attribution {
     var localizedTitle: String {
         NSLocalizedString(
             title,
@@ -190,4 +98,84 @@ private extension Attribution {
             comment: "Attribution from sources."
         )
     }
+}
+
+enum TelemetryStrings {
+    static let telemetryName = NSLocalizedString(
+        "TELEMETRY_NAME",
+        tableName: Ornaments.localizableTableName,
+        bundle: .mapboxMaps,
+        value: "Mapbox Telemetry",
+        comment: "Action in attribution sheet"
+    )
+
+    static let telemetryTitle = NSLocalizedString(
+        "TELEMETRY_TITLE",
+        tableName: Ornaments.localizableTableName,
+        bundle: .mapboxMaps,
+        value: "Make Mapbox Maps Better",
+        comment: "Telemetry prompt title"
+    )
+
+    static let telemetryEnabledMessage = NSLocalizedString(
+        "TELEMETRY_ENABLED_MSG",
+        tableName: Ornaments.localizableTableName,
+        bundle: .mapboxMaps,
+        value: """
+        You are helping to make OpenStreetMap and
+        Mapbox maps better by contributing anonymous usage data.
+        """,
+        comment: "Telemetry prompt message"
+    )
+
+    static let telemetryDisabledMessage = NSLocalizedString(
+        "TELEMETRY_DISABLED_MSG",
+        tableName: Ornaments.localizableTableName,
+        bundle: .mapboxMaps,
+        value: """
+        You can help make OpenStreetMap and Mapbox maps better
+        by contributing anonymous usage data.
+        """,
+        comment: "Telemetry prompt message"
+    )
+
+    static let telemetryEnabledOnMessage = NSLocalizedString(
+        "TELEMETRY_ENABLED_ON",
+        tableName: Ornaments.localizableTableName,
+        bundle: .mapboxMaps,
+        value: "Keep Participating",
+        comment: "Telemetry prompt button"
+    )
+
+    static let telemetryEnabledOffMessage = NSLocalizedString(
+        "TELEMETRY_ENABLED_OFF",
+        tableName: Ornaments.localizableTableName,
+        bundle: .mapboxMaps,
+        value: "Stop Participating",
+        comment: "Telemetry prompt button"
+    )
+
+    static let telemetryDisabledOnMessage = NSLocalizedString(
+        "TELEMETRY_DISABLED_ON",
+        tableName: Ornaments.localizableTableName,
+        bundle: .mapboxMaps,
+        value: "Participate",
+        comment: "Telemetry prompt button"
+    )
+
+    static let telemetryDisabledOffMessage = NSLocalizedString(
+        "TELEMETRY_DISABLED_OFF",
+        tableName: Ornaments.localizableTableName,
+        bundle: .mapboxMaps,
+        value: "Don’t Participate",
+        comment: "Telemetry prompt button"
+    )
+
+    static let telemetryMore = NSLocalizedString(
+        "TELEMETRY_MORE",
+        tableName: Ornaments.localizableTableName,
+        bundle: .mapboxMaps,
+        value: "Tell Me More",
+        comment: "Telemetry prompt button"
+    )
 }

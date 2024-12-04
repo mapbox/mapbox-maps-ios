@@ -1,134 +1,46 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Restricted) @testable import MapboxMaps
 import Foundation
 import UIKit
 
 class AttributionDialogTests: XCTestCase {
-
+    var parentViewController: MockParentViewController!
     var attributionDialogManager: AttributionDialogManager!
+    var attributionMenu: AttributionMenu!
+    var urlOpener: AttributionURLOpener!
     var mockDataSource: MockAttributionDataSource!
-    var mockDelegate: MockAttributionDialogManagerDelegate!
 
     override func setUp() {
         super.setUp()
+
+        parentViewController = MockParentViewController()
         mockDataSource = MockAttributionDataSource()
-        mockDelegate = MockAttributionDialogManagerDelegate()
-        attributionDialogManager = AttributionDialogManager(dataSource: mockDataSource, delegate: mockDelegate)
+        urlOpener = MockAttributionURLOpener()
+        attributionMenu = AttributionMenu(
+            urlOpener: urlOpener,
+            feedbackURLRef: Ref { nil }
+        )
+        attributionDialogManager = AttributionDialogManager(
+            dataSource: mockDataSource,
+            delegate: self,
+            attributionMenu: attributionMenu
+        )
     }
 
     override func tearDown() {
         super.tearDown()
 
+        parentViewController = nil
+        attributionMenu = nil
+        urlOpener = nil
         attributionDialogManager = nil
         mockDataSource = nil
-        mockDelegate = nil
-    }
-
-    func testShowTelemetryDialogMetricsEnabled() throws {
-        let viewController = UIViewController()
-        let bundle = Bundle.mapboxMaps
-        let window = UIWindow()
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        attributionDialogManager.isMetricsEnabled = true
-
-        attributionDialogManager.showTelemetryAlertController(from: viewController)
-
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
-        let telemetryTitle = NSLocalizedString("TELEMETRY_TITLE",
-                                               tableName: Ornaments.localizableTableName,
-                                               bundle: bundle,
-                                               comment: "")
-        XCTAssertEqual(alert.title, telemetryTitle)
-
-        let message = NSLocalizedString("TELEMETRY_ENABLED_MSG",
-                                        tableName: Ornaments.localizableTableName,
-                                        bundle: bundle,
-                                        comment: "")
-        XCTAssertEqual(alert.message, message)
-
-        guard alert.actions.count == 3 else {
-            XCTFail("Telemetry alert should have 3 actions")
-            return
-        }
-
-        let moreTitle = NSLocalizedString("TELEMETRY_MORE",
-                                          tableName: Ornaments.localizableTableName,
-                                          bundle: bundle,
-                                          comment: "")
-        XCTAssertEqual(alert.actions[0].title, moreTitle)
-
-        let declineTitle = NSLocalizedString("TELEMETRY_ENABLED_OFF",
-                                             tableName: Ornaments.localizableTableName,
-                                             bundle: bundle,
-                                             comment: "")
-        XCTAssertEqual(alert.actions[1].title, declineTitle)
-
-        let participateTitle = NSLocalizedString("TELEMETRY_ENABLED_ON",
-                                                 tableName: Ornaments.localizableTableName,
-                                                 bundle: bundle,
-                                                 comment: "")
-        XCTAssertEqual(alert.actions[2].title, participateTitle)
-    }
-
-    func testShowTelemetryDialogMetricsDisabled() throws {
-        let viewController = UIViewController()
-        let bundle = Bundle.mapboxMaps
-        let window = UIWindow()
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        attributionDialogManager.isMetricsEnabled = false
-
-        attributionDialogManager.showTelemetryAlertController(from: viewController)
-
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
-        let telemetryTitle = NSLocalizedString("TELEMETRY_TITLE",
-                                               tableName: Ornaments.localizableTableName,
-                                               bundle: bundle,
-                                               comment: "")
-        XCTAssertEqual(alert.title, telemetryTitle)
-
-        let message = NSLocalizedString("TELEMETRY_DISABLED_MSG",
-                                        tableName: Ornaments.localizableTableName,
-                                        bundle: bundle,
-                                        comment: "")
-        XCTAssertEqual(alert.message, message)
-
-        guard alert.actions.count == 3 else {
-            XCTFail("Telemetry alert should have 3 actions")
-            return
-        }
-
-        let moreTitle = NSLocalizedString("TELEMETRY_MORE",
-                                          tableName: Ornaments.localizableTableName,
-                                          bundle: bundle,
-                                          comment: "")
-        XCTAssertEqual(alert.actions[0].title, moreTitle)
-
-        let declineTitle = NSLocalizedString("TELEMETRY_DISABLED_OFF",
-                                             tableName: Ornaments.localizableTableName,
-                                             bundle: bundle,
-                                             comment: "")
-        XCTAssertEqual(alert.actions[1].title, declineTitle)
-
-        let participateTitle = NSLocalizedString("TELEMETRY_DISABLED_ON",
-                                                 tableName: Ornaments.localizableTableName,
-                                                 bundle: bundle,
-                                                 comment: "")
-        XCTAssertEqual(alert.actions[2].title, participateTitle)
     }
 
     func testShowAttributionDialogNoAttributions() throws {
-        let viewController = UIViewController()
-        let bundle = Bundle.mapboxMaps
-        let window = UIWindow()
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        mockDelegate.viewControllerForPresentingStub.defaultReturnValue = viewController
-
         attributionDialogManager.didTap(InfoButtonOrnament())
 
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
+        let alert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
         let alertTitle = NSLocalizedString("SDK_NAME",
                                            tableName: nil,
                                            value: "Powered by Mapbox Maps",
@@ -143,7 +55,7 @@ class AttributionDialogTests: XCTestCase {
 
         let telemetryTitle = NSLocalizedString("TELEMETRY_NAME",
                                                tableName: Ornaments.localizableTableName,
-                                               bundle: bundle,
+                                               bundle: .mapboxMaps,
                                                comment: "")
         XCTAssertEqual(alert.actions[0].title, telemetryTitle)
 
@@ -151,26 +63,20 @@ class AttributionDialogTests: XCTestCase {
 
         let cancelTitle = NSLocalizedString("CANCEL",
                                             tableName: Ornaments.localizableTableName,
-                                            bundle: bundle,
+                                            bundle: .mapboxMaps,
                                             value: "Cancel",
                                             comment: "")
         XCTAssertEqual(alert.actions[2].title, cancelTitle)
     }
 
     func testShowAttributionDialogSingleNonActionableAttribution() throws {
-        let viewController = UIViewController()
-        let window = UIWindow()
         let attribution = Attribution(title: String.randomASCII(withLength: 10), url: nil)
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        mockDataSource.loadAttributionsStub.defaultSideEffect = { invocation in
-            invocation.parameters([attribution])
-        }
-        mockDelegate.viewControllerForPresentingStub.defaultReturnValue = viewController
+
+        mockDataSource.attributions = [attribution]
 
         attributionDialogManager.didTap(InfoButtonOrnament())
 
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
+        let alert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
         let alertTitle = NSLocalizedString("SDK_NAME",
                                            tableName: nil,
                                            value: "Powered by Mapbox Maps",
@@ -188,21 +94,14 @@ class AttributionDialogTests: XCTestCase {
     }
 
     func testShowAttributionDialogTwoAttributions() throws {
-        let viewController = UIViewController()
-        let window = UIWindow()
         let attribution0 = Attribution(title: String.randomASCII(withLength: 10), url: nil)
         let attribution1 = Attribution(title: String.randomASCII(withLength: 10), url: URL(string: "http://example.com")!)
 
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        mockDataSource.loadAttributionsStub.defaultSideEffect = { invocation in
-            invocation.parameters([attribution0, attribution1])
-        }
-        mockDelegate.viewControllerForPresentingStub.defaultReturnValue = viewController
+        mockDataSource.attributions = [attribution0, attribution1]
 
         attributionDialogManager.didTap(InfoButtonOrnament())
 
-        let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
+        let alert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
         let alertTitle = NSLocalizedString("SDK_NAME",
                                            tableName: nil,
                                            value: "Powered by Mapbox Maps",
@@ -219,5 +118,62 @@ class AttributionDialogTests: XCTestCase {
 
         XCTAssertEqual(alert.actions[0].title, attribution0.title)
         XCTAssertEqual(alert.actions[1].title, attribution1.title)
+    }
+
+    func testAttributionFilteringID() throws {
+        let attribution0 = Attribution(title: String.randomASCII(withLength: 10), url: nil)
+        let attribution1 = Attribution(title: String.randomASCII(withLength: 10), url: URL(string: "http://example.com")!)
+
+        mockDataSource.attributions = [attribution0, attribution1]
+
+        attributionMenu.filter = { $0.id == .copyright || $0.id == .privacyPolicy }
+
+        attributionDialogManager.didTap(.init())
+
+        let alert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
+
+        // Single, non-actionable attributions should be displayed as alert's actions along the telemetry and cancel actions
+        guard alert.actions.count == 3 else {
+            XCTFail("Telemetry alert should have 3 actions")
+            return
+        }
+
+        let privacyPolicyTitle = NSLocalizedString("ATTRIBUTION_PRIVACY_POLICY",
+                                                   tableName: Ornaments.localizableTableName,
+                                                   bundle: .mapboxMaps,
+                                                   value: "Mapbox Privacy Policy",
+                                                   comment: "Privacy policy action in attribution sheet")
+
+        XCTAssertEqual(alert.actions[0].title, attribution0.title)
+        XCTAssertEqual(alert.actions[1].title, attribution1.title)
+        XCTAssertEqual(alert.actions[2].title, privacyPolicyTitle)
+    }
+
+    func testAttributionFilteringCategory() throws {
+        let attribution0 = Attribution(title: String.randomASCII(withLength: 10), url: nil)
+        let attribution1 = Attribution(title: String.randomASCII(withLength: 10), url: URL(string: "http://example.com")!)
+
+        mockDataSource.attributions = [attribution0, attribution1]
+
+        attributionMenu.filter = { $0.category == .telemetry || $0.category == .geofencing }
+
+        attributionDialogManager.didTap(.init())
+
+        let alert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
+
+        // Single, non-actionable attributions should be displayed as alert's actions along the telemetry and cancel actions
+        guard alert.actions.count == 1 else {
+            XCTFail("Telemetry alert should have 1 action")
+            return
+        }
+
+        XCTAssertEqual(alert.actions[0].title, TelemetryStrings.telemetryName)
+    }
+
+}
+
+extension AttributionDialogTests: AttributionDialogManagerDelegate {
+    func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController? {
+        return parentViewController
     }
 }

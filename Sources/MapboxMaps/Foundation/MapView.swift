@@ -7,6 +7,11 @@ import MetalKit
 // swiftlint:disable:next type_body_length
 open class MapView: UIView, SizeTrackingLayerDelegate {
 
+    /// Handles attribution menu customization
+    /// Restricted API. Please contact Mapbox to discuss your use case if you intend to use this property.
+    @_spi(Restricted)
+    public private(set) var attributionMenu: AttributionMenu!
+
     open override class var layerClass: AnyClass { SizeTrackingLayer.self }
 
     // `mapboxMap` depends on `MapInitOptions`, which is not available until
@@ -379,10 +384,15 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
             annotations: annotationsImpl,
             cameraAnimationsManager: internalCamera)
 
-        // Initialize the attribution manager
+        // Initialize the attribution manager and menu
+        attributionMenu = AttributionMenu(
+            urlOpener: attributionUrlOpener,
+            feedbackURLRef: Ref { [weak mapboxMap] in mapboxMap?.mapboxFeedbackURL() }
+        )
         attributionDialogManager = AttributionDialogManager(
             dataSource: mapboxMap,
-            delegate: self)
+            delegate: self,
+            attributionMenu: attributionMenu)
 
         // Initialize/Configure ornaments manager
         ornaments = OrnamentsManager(

@@ -1,16 +1,32 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Restricted) @testable import MapboxMaps
 
 class InfoButtonOrnamentTests: XCTestCase {
 
     var parentViewController: MockParentViewController!
     var attributionDialogManager: AttributionDialogManager!
+    var urlOpener: AttributionURLOpener!
+    var attributionMenu: AttributionMenu!
     var tapCompletion: (() -> Void)?
 
     override func setUp() {
         super.setUp()
         parentViewController = MockParentViewController()
-        attributionDialogManager = AttributionDialogManager(dataSource: self, delegate: self)
+        urlOpener = MockAttributionURLOpener()
+        attributionMenu = AttributionMenu(urlOpener: urlOpener, feedbackURLRef: Ref { nil })
+        attributionDialogManager = AttributionDialogManager(
+            dataSource: self,
+            delegate: self,
+            attributionMenu: attributionMenu
+        )
+    }
+
+    override func tearDown() {
+        urlOpener = nil
+        attributionMenu = nil
+        parentViewController = nil
+        attributionDialogManager = nil
+        super.tearDown()
     }
 
     func testInfoButtonTapped() throws {
@@ -52,13 +68,13 @@ class InfoButtonOrnamentTests: XCTestCase {
         let participatingTitle = NSLocalizedString("Keep Participating", comment: "Telemetry prompt button")
         XCTAssertEqual(participatingTitle, telemetryAlert.actions[2].title, "The third action should be a 'Keep Participating' button.")
 
-        XCTAssertTrue(infoButton.isMetricsEnabled)
+        XCTAssertTrue(attributionMenu.isMetricsEnabled)
 
         let stopParticipatingTitle = NSLocalizedString("Stop Participating", comment: "Telemetry prompt button")
         XCTAssertEqual(stopParticipatingTitle, telemetryAlert.actions[1].title, "The second action should be a 'Stop Participating' button.")
 
         telemetryAlert.tapButton(atIndex: 1)
-        XCTAssertFalse(infoButton.isMetricsEnabled, "Metrics should not be enabled after selecting 'Stop participating'.")
+        XCTAssertFalse(attributionMenu.isMetricsEnabled, "Metrics should not be enabled after selecting 'Stop participating'.")
 
         infoButton.infoTapped()
         infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
@@ -68,7 +84,7 @@ class InfoButtonOrnamentTests: XCTestCase {
         let dontParticipateTitle = NSLocalizedString("Don’t Participate", comment: "Telemetry prompt button")
         XCTAssertEqual(dontParticipateTitle, telemetryAlert.actions[1].title, "The second action should be a 'Don't Participate' button.")
         telemetryAlert.tapButton(atIndex: 1)
-        XCTAssertFalse(infoButton.isMetricsEnabled, "Metrics should not be enabled after selecting 'Don't Participate'.")
+        XCTAssertFalse(attributionMenu.isMetricsEnabled, "Metrics should not be enabled after selecting 'Don't Participate'.")
     }
 
     func testTelemetryOptIn() throws {
@@ -90,13 +106,13 @@ class InfoButtonOrnamentTests: XCTestCase {
         let participatingTitle = NSLocalizedString("Participate", comment: "Telemetry prompt button")
         XCTAssertEqual(participatingTitle, telemetryAlert.actions[2].title, "The third action should be a 'Participate' button.")
 
-        XCTAssertFalse(infoButton.isMetricsEnabled)
+        XCTAssertFalse(attributionMenu.isMetricsEnabled)
 
         let dontParticipateTitle = NSLocalizedString("Don’t Participate", comment: "Telemetry prompt button")
         XCTAssertEqual(dontParticipateTitle, telemetryAlert.actions[1].title, "The second action should be a 'Don't Participate' button.")
 
         telemetryAlert.tapButton(atIndex: 2)
-        XCTAssertTrue(infoButton.isMetricsEnabled, "Metrics should be enabled after selecting 'Participate'.")
+        XCTAssertTrue(attributionMenu.isMetricsEnabled, "Metrics should be enabled after selecting 'Participate'.")
 
         infoButton.infoTapped()
         infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
@@ -105,7 +121,7 @@ class InfoButtonOrnamentTests: XCTestCase {
         let keepParticipatingTitle = NSLocalizedString("Keep Participating", comment: "Telemetry prompt button")
         XCTAssertEqual(keepParticipatingTitle, telemetryAlert.actions[2].title, "The third action should be a 'Keep Participating' button.")
         telemetryAlert.tapButton(atIndex: 2)
-        XCTAssertTrue(infoButton.isMetricsEnabled, "Metrics should be enabled after selecting 'Keep Participating'.")
+        XCTAssertTrue(attributionMenu.isMetricsEnabled, "Metrics should be enabled after selecting 'Keep Participating'.")
     }
 }
 

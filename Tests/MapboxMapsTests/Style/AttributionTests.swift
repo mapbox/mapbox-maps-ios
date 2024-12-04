@@ -179,7 +179,7 @@ class AttributionTests: XCTestCase {
         let expectedURL = try XCTUnwrap(URL(string: "https://apps.mapbox.com/feedback/?referrer=\(Bundle.main.bundleIdentifier!)&owner=mapbox&id=standard&access_token=test-token&map_sdk_version=\(metadata.version)#/2.00000/1.00000/3.00/4.0/5"))
 
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions)
-        let url = mapView.mapboxFeedbackURL(accessToken: "test-token")
+        let url = mapView.mapboxMap.mapboxFeedbackURL(accessToken: "test-token")
 
         XCTAssertEqual(expectedURL, url)
     }

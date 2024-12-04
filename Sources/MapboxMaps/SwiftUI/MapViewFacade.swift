@@ -17,6 +17,7 @@ struct MapViewFacade {
     var presentsWithTransaction: Bool
     @MutableRef
     var frameRate: Map.FrameRate
+    var attributionMenu: AttributionMenu
 
     var makeViewportTransition: (ViewportAnimation) -> ViewportTransition
     var makeViewportState: (Viewport, LayoutDirection) -> ViewportState?
@@ -34,7 +35,7 @@ extension MapViewFacade {
         _isOpaque = MutableRef(root: mapView, keyPath: \.isOpaque)
         _presentsWithTransaction = MutableRef(root: mapView, keyPath: \.presentsWithTransaction)
         _frameRate = MutableRef(get: mapView.getFrameRate, set: mapView.set(frameRate:))
-
+        attributionMenu = mapView.attributionMenu
         makeViewportTransition = { animation in
             animation.makeViewportTransition(mapView)
         }

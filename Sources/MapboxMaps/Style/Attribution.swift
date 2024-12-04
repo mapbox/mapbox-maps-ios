@@ -1,5 +1,6 @@
 import Foundation
 import WebKit
+@_implementationOnly import MapboxCommon_Private
 
 struct Attribution: Hashable {
 
@@ -21,7 +22,7 @@ struct Attribution: Hashable {
         "https://www.mapbox.com/map-feedback/",
         "https://apps.mapbox.com/feedback/"
     ]
-    private static let privacyPolicyURL = URL(string: "https://www.mapbox.com/legal/privacy#product-privacy-policy")
+    internal static let privacyPolicyURL = URL(string: "https://www.mapbox.com/legal/privacy#product-privacy-policy")!
 
     var title: String
     var kind: Kind

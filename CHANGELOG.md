@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 11.5.3 - 4 December, 2024
+
+* Add a way to filter attribution menu items.
+
+
 ## 11.5.2 - 29 July, 2024
 
 * Update CoreMaps to the 11.5.3 version to fix crash on iOS simulators when using symbols with occlusion.

@@ -5,23 +5,11 @@ extension MapView: AttributionDialogManagerDelegate {
     func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController? {
         parentViewController?.topmostPresentedViewController
     }
+}
 
-    func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, didTriggerActionFor attribution: Attribution) {
-        switch attribution.kind {
-        case .actionable(let url):
-            Log.debug(forMessage: "Open url: \(url))", category: "Attribution")
-            attributionUrlOpener.openAttributionURL(url)
-        case .feedback:
-            let url = mapboxFeedbackURL()
-            Log.debug(forMessage: "Open url: \(url))", category: "Attribution")
-            attributionUrlOpener.openAttributionURL(url)
-        case .nonActionable:
-            break
-        }
-    }
-
-    internal func mapboxFeedbackURL(accessToken: String = MapboxOptions.accessToken) -> URL {
-        let cameraState = self.mapboxMap.cameraState
+internal extension MapboxMap {
+    func mapboxFeedbackURL(accessToken: String = MapboxOptions.accessToken) -> URL {
+        let cameraState = self.cameraState
 
         var components = URLComponents(string: "https://apps.mapbox.com/feedback/")!
         components.fragment = String(format: "/%.5f/%.5f/%.2f/%.1f/%i",
@@ -38,7 +26,7 @@ extension MapView: AttributionDialogManagerDelegate {
 
         let sdkVersion = Bundle.mapboxMapsMetadata.version
 
-        if let styleURIString = mapboxMap.styleURI?.rawValue,
+        if let styleURIString = styleURI?.rawValue,
            let styleURL = URL(string: styleURIString),
            styleURL.scheme == "mapbox",
            styleURL.host == "styles" {

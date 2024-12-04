@@ -280,7 +280,7 @@
 		A615EFC3D6CF2A25C9864086 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		A6B06A1D70F479D8DC5C375A /* FeaturesQueryExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesQueryExample.swift; sourceTree = "<group>"; };
 		A8359ECB5024BEF3722C3CA1 /* PointAnnotationClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotationClusteringExample.swift; sourceTree = "<group>"; };
-		A8700CFE38DA4F1333F9E0F9 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "mapbox-maps-ios"; path = ../..; sourceTree = SOURCE_ROOT; };
+		A8700CFE38DA4F1333F9E0F9 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "mapbox-maps-ios"; path = .; sourceTree = SOURCE_ROOT; };
 		A9A26CBC58F3271DBFD2EE7D /* CustomLayerShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomLayerShaderTypes.h; sourceTree = "<group>"; };
 		AC5A8729C9AEA4711B56B5F0 /* SnapshotMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMapExample.swift; sourceTree = "<group>"; };
 		B05B410135D0B466B73C0765 /* annotations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = annotations.json; sourceTree = "<group>"; };
@@ -389,7 +389,8 @@
 				846FF5BF97AEEAC876994DF3 /* Models */,
 				55E0EEEC0D91AF2DFDCD9A33 /* SwiftUI Examples */,
 			);
-			path = Examples;
+			name = Examples;
+			path = Sources/Examples;
 			sourceTree = "<group>";
 		};
 		55E0EEEC0D91AF2DFDCD9A33 /* SwiftUI Examples */ = {
@@ -578,7 +579,7 @@
 				BE18E37A8652B4807D2459F1 /* ExamplesUITests.swift */,
 			);
 			name = ExamplesUITests;
-			path = ../../Tests/ExamplesUITests;
+			path = Tests/ExamplesUITests;
 			sourceTree = "<group>";
 		};
 		AFDB1EA82615CFDF02CE1D4D = {
@@ -619,7 +620,7 @@
 				9CB74046A2FC03770B62B9E6 /* TestableExampleTests.swift */,
 			);
 			name = ExamplesTests;
-			path = ../../Tests/ExamplesTests;
+			path = Tests/ExamplesTests;
 			sourceTree = "<group>";
 		};
 		F4E57BB1463BD6558C9EE37A /* Lab */ = {
@@ -726,7 +727,7 @@
 			mainGroup = AFDB1EA82615CFDF02CE1D4D;
 			packageReferences = (
 				B50D5CC28BF0DFBA55456D89 /* XCRemoteSwiftPackageReference "Fingertips" */,
-				F97B927925CFCEE0B8496DE3 /* XCLocalSwiftPackageReference "../../" */,
+				4F0A03F138FCA51E80A1893D /* XCLocalSwiftPackageReference "." */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -1121,7 +1122,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				INFOPLIST_FILE = Examples/Info.plist;
+				INFOPLIST_FILE = Sources/Examples/Info.plist;
 				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -1129,7 +1130,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MAPBOXMAPS_PATH = ../../;
+				MAPBOXMAPS_PATH = ./;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
 				SDKROOT = auto;
@@ -1138,7 +1139,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(MAPBOXMAPS_PATH)/Apps/Examples/Examples/Examples-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(MAPBOXMAPS_PATH)/Sources/Examples/Examples-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
@@ -1236,7 +1237,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				INFOPLIST_FILE = Examples/Info.plist;
+				INFOPLIST_FILE = Sources/Examples/Info.plist;
 				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -1244,7 +1245,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MAPBOXMAPS_PATH = ../../;
+				MAPBOXMAPS_PATH = ./;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
 				SDKROOT = auto;
@@ -1253,7 +1254,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(MAPBOXMAPS_PATH)/Apps/Examples/Examples/Examples-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(MAPBOXMAPS_PATH)/Sources/Examples/Examples-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
@@ -1349,9 +1350,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		F97B927925CFCEE0B8496DE3 /* XCLocalSwiftPackageReference "../../" */ = {
+		4F0A03F138FCA51E80A1893D /* XCLocalSwiftPackageReference "." */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../;
+			relativePath = .;
 		};
 /* End XCLocalSwiftPackageReference section */
 

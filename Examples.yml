@@ -1,19 +1,19 @@
 name: Examples
 include:
-  - ../../xcodegen/Examples.yml
+  - xcodegen/Examples.yml
 packages:
   MapboxMaps:
-    path: ../../
+    path: .
 targets:
   Examples:
     settings:
       base:
-        MAPBOXMAPS_PATH: ../../
+        MAPBOXMAPS_PATH: ./
     scheme:
       testPlans:
-        - path: ../../Tests/TestPlans/Examples.xctestplan
+        - path: Tests/TestPlans/Examples.xctestplan
           defaultPlan: true
-        - path: ../../Tests/TestPlans/Examples no unit tests.xctestplan
+        - path: Tests/TestPlans/Examples no unit tests.xctestplan
           defaultPlan: true
 
 targetTemplates:

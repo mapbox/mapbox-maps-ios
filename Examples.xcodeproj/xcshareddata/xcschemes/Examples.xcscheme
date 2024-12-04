@@ -32,10 +32,10 @@
       <TestPlans>
          <TestPlanReference
             default = "YES"
-            reference = "container:../../Tests/TestPlans/Examples.xctestplan">
+            reference = "container:Tests/TestPlans/Examples.xctestplan">
          </TestPlanReference>
          <TestPlanReference
-            reference = "container:../../Tests/TestPlans/Examples no unit tests.xctestplan">
+            reference = "container:Tests/TestPlans/Examples no unit tests.xctestplan">
          </TestPlanReference>
       </TestPlans>
       <MacroExpansion>

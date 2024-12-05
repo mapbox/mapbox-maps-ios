@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Add a new API to disable custom resizing implementation of the MapView. To disable the custom resizing implementation, set `MapView.resizingAnimation` to `.none`.
+* Add `to-hsla` expression support.
+
 ## 11.9.0-beta.1
 
 ⚠️⚠️⚠️ Potentially breaking changes ⚠️⚠️⚠️

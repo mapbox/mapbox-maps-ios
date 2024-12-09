@@ -126,16 +126,6 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
 
     func createCircleLayer() {
 
-        var circleLayerSource = GeoJSONSource(id: self.earthquakeSourceId)
-        circleLayerSource.data = .url(self.earthquakeURL)
-        circleLayerSource.generateId = true
-
-        do {
-            try mapView.mapboxMap.addSource(circleLayerSource)
-        } catch {
-            print("Ran into an error adding a source: \(error)")
-        }
-
         // Add circle layer
         var circleLayer = CircleLayer(id: self.circleLayerId, source: self.earthquakeSourceId)
 
@@ -144,23 +134,19 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
             Exp(.interpolate) {
                 Exp(.linear)
                 Exp(.zoom)
-                Exp(.literal) {
-                    7
-                }
+                7
                 Exp(.interpolate) {
                     Exp(.linear)
-                    Exp(.get) {"mag"}
+                    Exp(.get) { "mag" }
                     1
                     1
                     6
                     4
                 }
-                Exp(.literal) {
-                    16
-                }
+                16
                 Exp(.interpolate) {
                     Exp(.linear)
-                    Exp(.get) {"mag"}
+                    Exp(.get) { "mag" }
                     1
                     5
                     6
@@ -168,6 +154,7 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
                 }
             }
         )
+
         circleLayer.circleRadiusTransition = StyleTransition(duration: 0.5, delay: 0)
         circleLayer.circleStrokeColor = .constant(StyleColor(.black))
         circleLayer.circleStrokeWidth = .constant(1)
@@ -179,7 +166,7 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
                 Exp(.get) { "mag" }
                 1
                 "rgba(33.0, 102.0, 172.0, 0.0)"
-                1
+                2
                 "rgb(102.0, 169.0, 207.0)"
                 3
                 "rgb(209.0, 229.0, 240.0)"

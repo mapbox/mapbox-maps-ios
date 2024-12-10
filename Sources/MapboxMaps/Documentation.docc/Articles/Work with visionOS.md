@@ -4,7 +4,7 @@ Use Mapbox Maps in native applications for Apple Vision Pro.
 
 ## Overview
 
-Starting from version `11.2.0-beta.1` of Mapbox Maps, you can use the Mapbox Maps SDK in your native application for Apple Vision Pro. Check out the code samples in our [Examples](https://github.com/mapbox/mapbox-maps-ios/tree/main/Apps/Examples) application on visionOS.
+Starting from version `11.2.0-beta.1` of Mapbox Maps, you can use the Mapbox Maps SDK in your native application for Apple Vision Pro. Check out the code samples in our [Examples](https://github.com/mapbox/mapbox-maps-ios/tree/main/Sources/Examples) application on visionOS.
 
 ![Standard Style on visionOS](https://static-assets.mapbox.com/maps/ios/documentation/maps_vision_os_locations.png)
 

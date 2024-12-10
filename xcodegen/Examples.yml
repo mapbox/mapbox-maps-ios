@@ -14,20 +14,20 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
         IPHONEOS_DEPLOYMENT_TARGET: 16.0
-        SWIFT_OBJC_BRIDGING_HEADER: $(MAPBOXMAPS_PATH)/Apps/Examples/Examples/Examples-Bridging-Header.h
+        SWIFT_OBJC_BRIDGING_HEADER: $(MAPBOXMAPS_PATH)/Sources/Examples/Examples-Bridging-Header.h
     sources:
-      - path: ../Apps/Examples/Examples
+      - path: ../Sources/Examples
         excludes:
           - VisionOSMain.swift
           - "SwiftUI Examples/**"
           - "All Examples/Sample Data/**"
           - "Assets.xcassets/**"
         destinationFilters: [iOS]
-      - path: ../Apps/Examples/Examples
+      - path: ../Sources/Examples
         includes:
           - VisionOSMain.swift
         destinationFilters: [visionOS]
-      - path: ../Apps/Examples/Examples
+      - path: ../Sources/Examples
         includes:
           - "SwiftUI Examples/**"
           - "All Examples/Sample Data/**"

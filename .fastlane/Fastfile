@@ -39,7 +39,7 @@ platform :ios do
     sync_code_signing
     update_code_signing_settings(
       use_automatic_signing: false,
-      path: "Apps/Examples/Examples.xcodeproj",
+      path: "Examples.xcodeproj",
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["mapbox.ExamplesUITests.xctrunner"],
       targets: ["ExamplesUITests"],
@@ -47,14 +47,14 @@ platform :ios do
     )
     update_code_signing_settings(
       use_automatic_signing: false,
-      path: "Apps/Examples/Examples.xcodeproj",
+      path: "Examples.xcodeproj",
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
       targets: ["Examples"],
       code_sign_identity: "Apple Development: Created via API",
     )
     run_tests(
-      workspace: 'Apps/Apps.xcworkspace',
+      project: 'Examples.xcodeproj',
       scheme: 'Examples',                  # XCTest scheme
       clean: true,                        # Recommended: This would ensure the build would not include unnecessary files
       # Use the Debug mode here to avoid the compiler crash
@@ -99,7 +99,7 @@ platform :ios do
     api_key_if_needed # Generate API Token
     increment_build_number(
       build_number: latest_testflight_build_number + 1,
-      xcodeproj: 'Apps/Examples/Examples.xcodeproj'
+      xcodeproj: 'Examples.xcodeproj'
     )
     build_and_submit
   end
@@ -111,7 +111,7 @@ platform :ios do
     sync_code_signing(type: "development")
     update_code_signing_settings(
       use_automatic_signing: false,
-      path: "Apps/Examples/Examples.xcodeproj",
+      path: "Examples.xcodeproj",
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
       targets: ["Examples"],
@@ -121,7 +121,7 @@ platform :ios do
     sync_code_signing(type: "appstore")
     build_app(
       scheme: "Examples",
-      workspace: "Apps/Apps.xcworkspace",
+      project: "Examples.xcodeproj",
       xcargs: "SWIFT_TREAT_WARNINGS_AS_ERRORS=NO COMPILER_INDEX_STORE_ENABLE=NO" # Disable to bypass Deprecated error on OfflineManager example
     )
     upload_to_testflight(

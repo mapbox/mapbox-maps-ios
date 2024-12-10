@@ -148,7 +148,7 @@ own `UIWindow` and root view controller, before adding the MapView to it.
 
 ## Making an Example
 
-* Check out this [doc](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/README.md)
+* Check out this [project](https://github.com/mapbox/mapbox-maps-ios/blob/main/Examples.xcodeproj)
   to get more information about adding examples to our project.
 
 ## Tracing map performance

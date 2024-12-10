@@ -103,7 +103,7 @@ To import a style, you should add an "imports" section to your [Style JSON](http
 ...
 ```
 
-For a full example of importing a style, please check out our [Standard Style Example](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/StandardStyleExample.swift). This example imports the Standard style into another style [Real Estate New York](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Sample%20Data/fragment-realestate-NY.json). It then modifies the configurations for the imported Standard style at runtime using the following APIs we've introduced on the ``StyleManager-46yjd`` object:
+For a full example of importing a style, please check out our [Standard Style Example](https://github.com/mapbox/mapbox-maps-ios/blob/main/Sources/Examples/All%20Examples/StandardStyleExample.swift). This example imports the Standard style into another style [Real Estate New York](https://github.com/mapbox/mapbox-maps-ios/blob/main/Sources/Examples/All%20Examples/Sample%20Data/fragment-realestate-NY.json). It then modifies the configurations for the imported Standard style at runtime using the following APIs we've introduced on the ``StyleManager-46yjd`` object:
 
 - ``StyleManager/styleImports``, which returns all of the styles you have imported into your main style
 - ``StyleManager/removeStyleImport(for:)``, which removes the style import with the passed Id
@@ -300,7 +300,7 @@ The TileStore also no longer accepts access token as part of its options.
 
 ### 2.7 New 3D Lighting API
 
-In v11 we've introduced new experimental lighting APIs to give you control of lighting and shadows in your map when using 3D objects: ``AmbientLight`` and ``DirectionalLight``. We've also added new APIs on ``FillExtrusionLayer`` and ``LineLayer``s to support this 3D lighting styling and enhance your ability to work with 3D model layers. Together, these properties can illuminate your 3D objects such as buildings and terrain to provide a more realistic and immersive map experience for your users. These properties can be set at runtime to follow the time of day, a particular mood, or other lighting goals in your map. Check out our example [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/Lights3DExample.swift) for implementation recommendations.
+In v11 we've introduced new experimental lighting APIs to give you control of lighting and shadows in your map when using 3D objects: ``AmbientLight`` and ``DirectionalLight``. We've also added new APIs on ``FillExtrusionLayer`` and ``LineLayer``s to support this 3D lighting styling and enhance your ability to work with 3D model layers. Together, these properties can illuminate your 3D objects such as buildings and terrain to provide a more realistic and immersive map experience for your users. These properties can be set at runtime to follow the time of day, a particular mood, or other lighting goals in your map. Check out our example [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Sources/Examples/All%20Examples/Lab/Lights3DExample.swift) for implementation recommendations.
 
 ### 2.8 Location API
 
@@ -404,7 +404,7 @@ class Example {
     }
 ```
 
-Please check out a more detailed example [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/CombineLocationExample.swift).
+Please check out a more detailed example [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Sources/Examples/All%20Examples/Lab/CombineLocationExample.swift).
 
 ### 2.9 Camera API
 
@@ -466,7 +466,7 @@ MAPBOX_MAPS_SIGNPOSTS_ENABLED=core,platform
 
 ### 2.11 Mapbox Maps Recorder
 
-``MapRecorder`` provides an experimental API to record and replay map interaction sessions. Such recordings can be used to debug issues which require multiple steps to reproduce. Usage example can be found [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/MapRecorderExample.swift).
+``MapRecorder`` provides an experimental API to record and replay map interaction sessions. Such recordings can be used to debug issues which require multiple steps to reproduce. Usage example can be found [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Sources/Examples/All%20Examples/Lab/MapRecorderExample.swift).
 
 ### 2.12 Other minor ergonomic improvements
 

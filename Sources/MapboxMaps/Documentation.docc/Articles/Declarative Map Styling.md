@@ -345,4 +345,4 @@ struct MyView: View {
 }
 ```
 
-For reference, see the [DynamicStylingExample](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/Swift%20UI%20Examples/DynamicStyleExample.swift) in the Examples application.
+For reference, see the [DynamicStylingExample](https://github.com/mapbox/mapbox-maps-ios/blob/main/Sources/Examples/Swift%20UI%20Examples/DynamicStyleExample.swift) in the Examples application.

@@ -12,5 +12,5 @@ jobs:
   analyze:
     uses: ./.github/workflows/analyze.yml
     with:
-      project-path: Apps/Examples/Examples.xcodeproj
+      project-path: Examples.xcodeproj
     secrets: inherit

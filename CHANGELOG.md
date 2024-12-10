@@ -41,7 +41,7 @@ That initializer doesn't require to wrap arguments in `Argument` cases. For exam
 ## 11.8.0-beta.1 - 14 October, 2024
 
 * [SwiftUI] Fixed crash when ForEvery was used with duplicated IDs.
-* Introduce experimental Geofencing API. Implementation example: [GeofencingExample.swift](Apps/Examples/Examples/All%20Examples/GeofencingExample.swift)
+* Introduce experimental Geofencing API. Implementation example: [GeofencingExample.swift](Sources/Examples/All%20Examples/GeofencingExample.swift)
 * Refactor of the experimental Interactions and Featuresets API:
   - `InteractiveFeature` is renamed to `FeaturesetFeature`.
   - Introduce new `StandardPoiFeature`, `StandardBuildingsFeature`, `StandardPlaceLabelsFeature`.

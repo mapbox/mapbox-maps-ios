@@ -7,7 +7,7 @@ manifests:
       - MapboxCoreMaps
       - MapboxCommon
   - type: Package.resolved
-    path: Apps/Apps.xcworkspace/xcshareddata/swiftpm/Package.resolved
+    path: Examples.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
     omit_for:
     # Temporarily disabled since we use .binaryTarget instead of SPM dependency for MapboxCoreMaps
       - MapboxCoreMaps

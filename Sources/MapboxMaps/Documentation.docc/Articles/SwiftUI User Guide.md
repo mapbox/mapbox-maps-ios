@@ -6,7 +6,7 @@ Use Mapbox Maps in SwiftUI applications.
 
 The Mapbox Maps SDK has a complete support of SwiftUI. This guide demonstrates how to easily integrate Mapbox Maps into your SwiftUI application.
 
-You can find working [SwiftUI examples](https://github.com/mapbox/mapbox-maps-ios/tree/main/Apps/Examples/Examples/SwiftUI%20Examples) in the [Examples](https://github.com/mapbox/mapbox-maps-ios/tree/main/Apps/Examples) application.
+You can find working [SwiftUI examples](https://github.com/mapbox/mapbox-maps-ios/tree/main/Sources/Examples/SwiftUI%20Examples) in the [Examples](https://github.com/mapbox/mapbox-maps-ios/tree/main/Sources/Examples) application.
 
 ### Feature support
 

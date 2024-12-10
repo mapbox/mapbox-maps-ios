@@ -24,7 +24,7 @@ process_template() {
 build_doc() {
     pushd "$public_repo_root/"
     xcodegen
-    xcodebuild docbuild -config Release -scheme MapboxMaps -destination "generic/platform=iOS" \
+    xcodebuild -project MapboxMaps.xcodeproj docbuild -config Release -scheme MapboxMaps -destination "generic/platform=iOS" \
         COMPILER_INDEX_STORE_ENABLE=NO OTHER_DOCC_FLAGS_UNIFIED="--experimental-enable-custom-templates --output-path $docc_archive --hosting-base-path $hosting_base_path"
     popd
 }

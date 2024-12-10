@@ -1,0 +1,25 @@
+name: Examples
+include:
+  - xcodegen/Examples.yml
+packages:
+  MapboxMaps:
+    path: .
+targets:
+  Examples:
+    settings:
+      base:
+        MAPBOXMAPS_PATH: ./
+    scheme:
+      testPlans:
+        - path: Tests/TestPlans/Examples.xctestplan
+          defaultPlan: true
+        - path: Tests/TestPlans/Examples no unit tests.xctestplan
+          defaultPlan: true
+
+targetTemplates:
+  map-library:REPLACE:
+    dependencies:
+      - package: MapboxMaps
+
+  maps-dependencies:
+    dependencies:

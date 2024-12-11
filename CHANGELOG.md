@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+# 10.19.1 - December 11, 2024
+
+* Update MapboxCoreMaps to 10.19.2
+* Update MapboxCommon to 23.11.2
+
 # 10.19.0 - September 24, 2024
 
 * Remove bitcode from framework binaries across the stack

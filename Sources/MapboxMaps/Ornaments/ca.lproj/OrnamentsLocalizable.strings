@@ -51,3 +51,23 @@
 "Improve this map" = "Millora aquest mapa";
 
 "OpenStreetMap contributors" = "Col·laboradors d'OpenStreetMap";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "Permet que aquesta aplicació utilitzi Geofencing";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "Aquesta aplicació utilitza Mapbox Geofencing per detectar la presència del vostre dispositiu a les àrees que el desenvolupador de l'aplicació ha definit. Només el desenvolupador d'aplicacions pot veure on es troben aquestes àrees. Teniu l'opció de desactivar Mapbox Geofencing, que pot afectar la funcionalitat de l'aplicació.";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "Manteniu el geofencing habilitat";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "Desactiva el geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "Activa el geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "Mantenir el geofencing desactivat";

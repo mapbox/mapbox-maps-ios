@@ -51,3 +51,23 @@
 "Improve this map" = "Vylepšete tuto mapu";
 
 "OpenStreetMap contributors" = "Přispěvatelé OpenStreetMap";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "Povolit této aplikaci používat Geofencing";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "Tato aplikace používá Mapbox Geofencing ke zjištění přítomnosti vašeho zařízení v oblastech, které definoval vývojář aplikace. Pouze vývojář aplikace vidí, kde se tyto oblasti nacházejí. Máte možnost deaktivovat Mapbox Geofencing, což může ovlivnit funkčnost aplikace.";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "Ponechte funkci Geofencing povolenou";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "Zakázat Geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "Povolit Geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "Ponechat geofencing vypnutý";

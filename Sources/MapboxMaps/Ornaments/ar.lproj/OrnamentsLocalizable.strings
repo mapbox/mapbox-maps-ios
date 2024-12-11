@@ -51,3 +51,23 @@
 "Improve this map" = "تحسين هذه الخريطة";
 
 "OpenStreetMap contributors" = "المساهمين في OpenStreetMap";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "السماح لهذا التطبيق باستخدام Geofencing";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "يستخدم هذا التطبيق Mapbox Geofencing للكشف عن وجود جهازك في المناطق التي حددها مطور التطبيق. يمكن لمطور التطبيق فقط معرفة مكان تلك المناطق. لديك خيار تعطيل Mapbox Geofencing، والذي قد يؤثر على وظائف التطبيق.";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "إبقاء Geofencing ممكّنًا";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "تعطيل السياج الجغرافي";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "تمكين تحديد المواقع الجغرافية";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "إبقاء ميزة Geofencing معطلة";

@@ -51,3 +51,23 @@
 "Improve this map" = "Migliora questa mappa";
 
 "OpenStreetMap contributors" = "Contributori di OpenStreetMap";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "Consenti a questa app di utilizzare il geofencing";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "Questa app usa Mapbox Geofencing per rilevare la presenza del tuo dispositivo nelle aree definite dallo sviluppatore dell'app. Solo lo sviluppatore dell'app può vedere dove si trovano tali aree. Hai la possibilità di disattivare Mapbox Geofencing, il che potrebbe influire sulla funzionalità dell'app.";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "Mantieni abilitato il geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "Disattivare il geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "Abilita Geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "Mantieni il geofencing disabilitato";

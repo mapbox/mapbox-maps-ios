@@ -51,3 +51,23 @@
 "Improve this map" = "이 지도를 개선하세요";
 
 "OpenStreetMap contributors" = "OpenStreetMap 기여자";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "이 앱이 지오펜싱을 사용하도록 허용";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "이 앱은 Mapbox Geofencing을 사용하여 앱 개발자가 정의한 영역에서 기기의 존재를 감지합니다. 앱 개발자만 해당 영역의 위치를 볼 수 있습니다. 앱 기능에 영향을 줄 수 있는 Mapbox Geofencing을 비활성화할 수 있습니다.";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "지오펜싱을 활성화 상태로 유지하세요";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "지오펜싱 비활성화";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "지오펜싱 활성화";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "지오펜싱을 비활성화 상태로 유지";

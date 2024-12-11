@@ -51,3 +51,24 @@
 "Improve this map" = "讓 Mapbox 地圖變得更好";
 
 "OpenStreetMap contributors" = "OpenStreetMap 貢獻者";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "允許此應用程式使用地理圍欄";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "此應用程式使用 Mapbox 地理圍欄來偵測您的裝置是否存在於應用程式開發人員定義的區域中。只有應用程式開發人員才能看到這些區域的位置。您可以選擇停用 Mapbox 地理圍欄，這可能會影響應用程式功能。";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "保持地理圍籬啟用";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "禁用地理圍欄";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "啟用地理圍欄";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "保持地理圍欄禁用";
+

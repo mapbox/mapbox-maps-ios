@@ -51,3 +51,23 @@
 "Improve this map" = "שפר את המפה הזו";
 
 "OpenStreetMap contributors" = "תורמים של OpenStreetMap";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "אפשר לאפליקציה הזו להשתמש ב-Geofencing";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "אפליקציה זו משתמשת ב- Mapbox Geofencing כדי לזהות את נוכחות המכשיר שלך באזורים שמפתח האפליקציה הגדיר. רק מפתח האפליקציה יכול לראות היכן נמצאים האזורים הללו. יש לך אפשרות להשבית את Mapbox Geofencing, מה שעשוי להשפיע על פונקציונליות האפליקציה.";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "השאר גיאופנסינג מופעל";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "השבת גיאופנסינג";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "אפשר גיאופנסינג";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "השאר גיאופנסינג מושבת";

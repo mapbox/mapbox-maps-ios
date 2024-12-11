@@ -51,3 +51,23 @@
 "Improve this map" = "让 Mapbox 地图变得更好";
 
 "OpenStreetMap contributors" = "OpenStreetMap 贡献者";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "允许此应用使用地理围栏";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "此应用使用 Mapbox 地理围栏来检测您的设备是否位于应用开发人员定义的区域中。只有应用开发人员才能看到这些区域的位置。您可以选择禁用 Mapbox 地理围栏，但这可能会影响应用功能。";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "保持地理围栏处于启用状态";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "禁用地理围栏";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "启用地理围栏";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "保持地理围栏禁用";

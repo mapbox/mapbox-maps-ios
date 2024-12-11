@@ -51,3 +51,23 @@
 "Improve this map" = "Подобрете тази карта";
 
 "OpenStreetMap contributors" = "Сътрудници на OpenStreetMap";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "Разрешете на това приложение да използва Geofencing";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "Това приложение използва Mapbox Geofencing, за да открие присъствието на вашето устройство в области, дефинирани от разработчика на приложението. Само разработчикът на приложението може да види къде са тези области. Имате възможност да деактивирате Mapbox Geofencing, което може да повлияе на функционалността на приложението.";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "Поддържайте Geofencing активиран";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "Деактивирайте Geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "Активирайте Geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "Поддържайте Geofencing деактивирано";

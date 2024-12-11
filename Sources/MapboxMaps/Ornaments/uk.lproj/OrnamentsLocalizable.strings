@@ -51,3 +51,23 @@
 "Improve this map" = "Поліпшити цю мапу";
 
 "OpenStreetMap contributors" = "Учасники OpenStreetMap";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "Дозволити цій програмі використовувати геофенсинг";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "Ця програма використовує Mapbox Геофенсинг для виявлення присутності вашого пристрою в зонах, визначених розробником програми.";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "Залишити геофенсинг увімкнутим";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "Вимкнути геофенсинг";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "Увімкнути геофенсинг";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "Залишити геофенсинг вимкненим";

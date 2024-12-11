@@ -51,3 +51,23 @@
 "Improve this map" = "Patobulinkite šį žemėlapį";
 
 "OpenStreetMap contributors" = "OpenStreetMap bendradarbiai";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "Leiskite šiai programai naudoti geofencing";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "Ši programa naudoja „Mapbox Geofencing“, kad nustatytų jūsų įrenginio buvimą programos kūrėjo nustatytose srityse. Tik programos kūrėjas gali matyti, kur yra šios sritys. Turite galimybę išjungti „Mapbox Geofencing“, kuri gali turėti įtakos programos funkcionalumui.";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "Laikykite įjungtą geotvorą";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "Išjungti geotvorą";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "Įgalinti Geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "Išjunkite geotvorą";

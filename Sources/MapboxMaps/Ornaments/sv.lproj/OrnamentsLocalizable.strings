@@ -51,3 +51,23 @@
 "Improve this map" = "Förbättra den här kartan";
 
 "OpenStreetMap contributors" = "OpenStreetMap-bidragsgivare";
+
+// MARK: - Geofencing
+
+/* Geofencing prompt title */
+"GEOFENCING_TITLE" = "Tillåt den här appen att använda Geofencing";
+
+/* Geofencing prompt message */
+"GEOFENCING_MSG" = "Den här appen använder Mapbox Geofencing för att upptäcka din enhets närvaro i områden som apputvecklaren har definierat. Endast apputvecklaren kan se var dessa områden finns. Du har möjlighet att inaktivera Mapbox Geofencing, vilket kan påverka appens funktionalitet.";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_ON" = "Håll Geofencing aktiverat";
+
+/* Geofencing prompt button */
+"GEOFENCING_ENABLED_OFF" = "Inaktivera Geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_ON" = "Aktivera Geofencing";
+
+/* Geofencing prompt button */
+"GEOFENCING_DISABLED_OFF" = "Håll Geofencing inaktiverat";

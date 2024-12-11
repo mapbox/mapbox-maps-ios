@@ -1,6 +1,5 @@
 import UIKit
 
-@_spi(Experimental)
 /// An image to be used in the Style
 public struct StyleImage: Equatable, Sendable {
 
@@ -36,7 +35,7 @@ extension StyleImage: MapStyleContent, PrimitiveMapContent {
 
 extension StyleImage {
     /// Initialize a StyleImage from an existing UIImage
-    init?(named name: String, sdf: Bool = false, contentInsets: UIEdgeInsets = .zero) {
+    public init?(named name: String, sdf: Bool = false, contentInsets: UIEdgeInsets = .zero) {
         guard let image = UIImage(named: name) else { return nil }
         self.init(id: name, image: image, sdf: sdf, contentInsets: contentInsets)
     }

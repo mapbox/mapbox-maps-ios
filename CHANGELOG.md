@@ -4,10 +4,21 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Localize geofencing attribution dialog.
+
+## 11.9.0 - 18 December, 2024
+
+* Remove experimental SPI from `StyleImage`.
+* Promote ClipLayer to stable.
+* Fix the encoding/decoding key for `Rain/centerThinning` and `Snow/centerThinning`.
+* Update CoreMaps to 11.9.0 and Common to 24.9.0.
+
+## 11.9.0-beta.1 - 9 December, 2024
+
 * Add a new API to disable custom resizing implementation of the MapView. To disable the custom resizing implementation, set `MapView.resizingAnimation` to `.none`.
 * Add `to-hsla` expression support.
 
-## 11.9.0-beta.1
+## 11.9.0-beta.1 - 28 November, 2024
 
 ⚠️⚠️⚠️ Potentially breaking changes ⚠️⚠️⚠️
 * Mark `symbolElevationReference`, `symbolZOffset`, `lineTrimColor `,  `lineTrimFadeRange`, `lineZOffset` as Experimental in AnnotationManagers. This is potentially breaking change, however those properties are not marked as experimental only in AnnotationManagers by mistake.

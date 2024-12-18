@@ -15,6 +15,7 @@
 - ``StyleDecodable``
 - ``StyleEncodable``
 - ``StyleError``
+- ``StyleImage``
 - ``TypeConversionError``
 - ``LightInfo``
 - ``LightType``

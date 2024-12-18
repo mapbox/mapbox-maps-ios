@@ -19,7 +19,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var centerThinning: Value<Double>?
 
-    /// Transition options for centerThinning
+    /// Transition options for center-thinning
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var centerThinningTransition: StyleTransition?
@@ -91,8 +91,8 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     public var vignetteTransition: StyleTransition?
 
     public enum CodingKeys: String, CodingKey {
-        case centerThinning = "centerThinning"
-        case centerThinningTransition = "centerThinning-transition"
+        case centerThinning = "center-thinning"
+        case centerThinningTransition = "center-thinning-transition"
         case color = "color"
         case colorTransition = "color-transition"
         case density = "density"

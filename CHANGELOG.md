@@ -5,6 +5,8 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 * Localize geofencing attribution dialog.
 * Remove experimental SPI from `StyleImage`.
+* Promote ClipLayer to stable.
+* Fix the encoding/decoding key for `Rain/centerThinning` and `Snow/centerThinning`.
 
 ## 11.9.0-beta.1
 

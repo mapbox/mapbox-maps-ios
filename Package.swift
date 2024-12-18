@@ -4,9 +4,9 @@
 import PackageDescription
 import Foundation
 
-let coreMaps = MapsDependency.coreMaps(version: "11.9.0-rc.1")
+let coreMaps = MapsDependency.coreMaps(version: "11.9.0")
 
-let common = MapsDependency.common(version: "24.9.0-rc.1")
+let common = MapsDependency.common(version: "24.9.0")
 
 let mapboxMapsPath: String? = nil
 
@@ -21,7 +21,7 @@ let package = Package(
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0-beta.1"),
+        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
     ] + coreMaps.packageDependencies + common.packageDependencies,
     targets: [
         .target(

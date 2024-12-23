@@ -1959,3 +1959,6 @@ Var PolylineAnnotationManager.lineZOffset is now with @_spi
 # Add new Radius field
 Constructor LongPressInteraction.init(_:filter:action:) has been removed
 Constructor TapInteraction.init(_:filter:action:) has been removed
+
+# Expression dictionary literal support
+Accessor Dictionary.expressionArguments.Get() has generic signature change from <Key, Value where Key == Swift.Double, Value : MapboxMaps.ExpressionArgumentConvertible> to <Key, Value where Key : Swift.Hashable>

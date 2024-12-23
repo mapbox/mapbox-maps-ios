@@ -10,7 +10,7 @@ extension JSONDecoder.KeyDecodingStrategy {
     }
 }
 
-private struct AnyKey: CodingKey {
+struct AnyKey: CodingKey {
     var stringValue: String
     var intValue: Int?
 

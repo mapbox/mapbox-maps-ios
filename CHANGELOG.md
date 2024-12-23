@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Localize geofencing attribution dialog.
+* Support dictionary expression literals.
 
 ## 11.9.0 - 18 December, 2024
 

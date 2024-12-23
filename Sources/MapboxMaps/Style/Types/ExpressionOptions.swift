@@ -80,6 +80,22 @@ public struct FormatOptions: Codable, Equatable, Sendable, ExpressionArgumentCon
     }
 
     public init() {}
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        lazy var isEmptyContainer = (try? decoder.container(keyedBy: AnyKey.self).allKeys.isEmpty) ?? container.allKeys.isEmpty
+
+        guard container.containsAnyKey() ||
+                isEmptyContainer // Preserve behavior of format options swallowing empty dictionaries
+        else {
+            throw ExpDecodingError.noKeysFound
+        }
+
+        fontScale = try container.decodeIfPresent(Value<Double>.self, forKey: .fontScale)
+        textFont = try container.decodeIfPresent(Value<[String]>.self, forKey: .textFont)
+        textColor = try container.decodeIfPresent(Value<StyleColor>.self, forKey: .textColor)
+    }
+
 }
 
 public struct NumberFormatOptions: Codable, Equatable, ExpressionArgumentConvertible, Sendable {
@@ -154,6 +170,18 @@ public struct CollatorOptions: Codable, Equatable, ExpressionArgumentConvertible
         self.caseSensitive = caseSensitive
         self.diacriticSensitive = diacriticSensitive
         self.locale = locale
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        guard container.containsAnyKey() else {
+            throw ExpDecodingError.noKeysFound
+        }
+
+        caseSensitive = try container.decodeIfPresent(Bool.self, forKey: .caseSensitive)
+        diacriticSensitive = try container.decodeIfPresent(Bool.self, forKey: .diacriticSensitive)
+        locale = try container.decodeIfPresent(String.self, forKey: .locale)
     }
 }
 

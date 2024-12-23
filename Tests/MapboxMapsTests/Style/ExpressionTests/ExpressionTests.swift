@@ -376,4 +376,31 @@ final class ExpressionTests: XCTestCase {
         XCTAssertEqual(imageOptions.options["constant"], Value.constant(StyleColor(rawValue: "red")))
         XCTAssertEqual(imageOptions.options["rgb"], Value.constant(StyleColor("rgba(0, 0, 0, 1)")))
     }
+
+    func testEncodeLiteralDictionary() throws {
+        let expression = Exp(.literal) { ["opacity": 0.5] }
+
+        let encoded = try JSONEncoder().encode(expression)
+
+        XCTAssertEqual(
+            String(data: encoded, encoding: .utf8),
+            "[\"literal\",{\"opacity\":0.5}]"
+            )
+    }
+
+    func testDecodeLiteralDictionary() {
+        let expressionString =
+            """
+                ["literal",
+                    {
+                        "opacity":0.5,
+                        "bkey":"bval",
+                    }
+                ]
+            """
+
+        let expression = try! XCTUnwrap(JSONDecoder().decode(Expression.self, from: expressionString.data(using: .utf8)!))
+
+        XCTAssertEqual(expression, Exp(.literal) { ["opacity": 0.5, "bkey": "bval"] })
+    }
 }

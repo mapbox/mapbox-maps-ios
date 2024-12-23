@@ -84,17 +84,22 @@ extension Exp: ExpressionArgumentConvertible {
 
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
-extension Dictionary: ExpressionArgumentConvertible where Key == Double,
-                                                    Value: ExpressionArgumentConvertible {
+extension Dictionary: ExpressionArgumentConvertible {
     public var expressionArguments: [Exp.Argument] {
-        var arguments = [Exp.Argument]()
-        for key in Array(keys).sorted(by: <) {
-            guard key >= 0, let value = self[key] else {
-                fatalError("Invalid stops dictionary.")
+        if let stopsDictionary = self as? [Double: ExpressionArgumentConvertible] {
+            var arguments = [Exp.Argument]()
+            for key in Array(stopsDictionary.keys).sorted(by: <) {
+                guard key >= 0, let value = stopsDictionary[key] else {
+                    fatalError("Invalid stops dictionary.")
+                }
+                arguments = arguments + key.expressionArguments + value.expressionArguments
             }
-            arguments = arguments + key.expressionArguments + value.expressionArguments
+            return arguments
+        } else if let dict = self as? [String: ExpressionArgumentConvertible] {
+            return [.dictionary(dict.compactMapValues(\.expressionArguments.first))]
         }
-        return arguments
+
+        return []
     }
 }
 

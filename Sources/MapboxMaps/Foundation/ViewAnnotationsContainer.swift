@@ -9,10 +9,16 @@ final class ViewAnnotationsContainer: UIView {
         }
     }
 
+    var hitTestOverride: ((UIView, CGPoint, UIEvent?) -> UIView?)?
+
     /// Forwards all touch events to its subviews
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let view = super.hitTest(point, with: event)
-        return view == self ? nil : view
+        if let hitTestOverride {
+          return hitTestOverride(self, point, event)
+        } else {
+          let view = super.hitTest(point, with: event)
+          return view == self ? nil : view
+        }
     }
 
     override func didAddSubview(_ subview: UIView) {

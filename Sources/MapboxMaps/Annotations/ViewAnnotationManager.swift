@@ -50,6 +50,11 @@ public protocol ViewAnnotationUpdateObserver: AnyObject {
 /// View annotations are invariant to map camera transformations however such properties as size, visibility etc
 /// could be controlled by the user using update operation.
 public final class ViewAnnotationManager {
+    public var hitTestOverride: ((UIView, CGPoint, UIEvent?) -> UIView?)? {
+        didSet {
+            (containerView as? ViewAnnotationsContainer)?.hitTestOverride = hitTestOverride
+        }
+    }
     private let containerView: UIView
     private let mapboxMap: MapboxMapProtocol
     private var displayLink: Signal<Void>

@@ -44,6 +44,10 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
     /// Transition property for `shadowIntensity`
     public var shadowIntensityTransition: StyleTransition?
 
+    /// Determines the quality of the shadows on the map. A value of 1 ensures the highest quality and is the default value.
+    /// Default value: 1. Value range: [0, 1]
+    @_spi(Experimental) public var shadowQuality: Value<Double>?
+
     /// Creates a new Directional light.
     public init(id: String = UUID().uuidString) {
         self.id = id
@@ -64,6 +68,7 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
         try propertiesContainer.encodeIfPresent(intensityTransition, forKey: .intensityTransition)
         try propertiesContainer.encodeIfPresent(shadowIntensity, forKey: .shadowIntensity)
         try propertiesContainer.encodeIfPresent(shadowIntensityTransition, forKey: .shadowIntensityTransition)
+        try propertiesContainer.encodeIfPresent(shadowQuality, forKey: .shadowQuality)
     }
 
     public init(from decoder: Decoder) throws {
@@ -80,6 +85,7 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
             self.intensityTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .intensityTransition)
             self.shadowIntensity = try propertiesContainer.decodeIfPresent(Value<Double>.self, forKey: .shadowIntensity)
             self.shadowIntensityTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .shadowIntensityTransition)
+            self.shadowQuality = try propertiesContainer.decodeIfPresent(Value<Double>.self, forKey: .shadowQuality)
         }
     }
 
@@ -99,6 +105,7 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
         case intensityTransition = "intensity-transition"
         case shadowIntensity = "shadow-intensity"
         case shadowIntensityTransition = "shadow-intensity-transition"
+        case shadowQuality = "shadow-quality"
     }
 }
 
@@ -187,6 +194,22 @@ extension DirectionalLight {
     /// Default value: 1. Value range: [0, 1]
     public func shadowIntensity(_ expression: Exp) -> Self {
         with(self, setter(\.shadowIntensity, .expression(expression)))
+    }
+
+    /// Determines the quality of the shadows on the map. A value of 1 ensures the highest quality and is the default value.
+    /// Default value: 1. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func shadowQuality(_ constant: Double) -> Self {
+        with(self, setter(\.shadowQuality, .constant(constant)))
+    }
+
+    /// Determines the quality of the shadows on the map. A value of 1 ensures the highest quality and is the default value.
+    /// Default value: 1. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func shadowQuality(_ expression: Exp) -> Self {
+        with(self, setter(\.shadowQuality, .expression(expression)))
     }
 }
 

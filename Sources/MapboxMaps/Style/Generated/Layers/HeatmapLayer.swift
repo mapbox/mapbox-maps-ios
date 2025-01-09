@@ -58,7 +58,7 @@ public struct HeatmapLayer: Layer, Equatable {
     public var heatmapOpacityTransition: StyleTransition?
 
     /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
-    /// Default value: 30. Minimum value: 1.
+    /// Default value: 30. Minimum value: 1. The unit of heatmapRadius is in pixels.
     public var heatmapRadius: Value<Double>?
 
     /// Transition options for `heatmapRadius`.
@@ -248,7 +248,7 @@ extension HeatmapLayer {
     }
 
     /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
-    /// Default value: 30. Minimum value: 1.
+    /// Default value: 30. Minimum value: 1. The unit of heatmapRadius is in pixels.
     public func heatmapRadius(_ constant: Double) -> Self {
         with(self, setter(\.heatmapRadius, .constant(constant)))
     }
@@ -259,7 +259,7 @@ extension HeatmapLayer {
     }
 
     /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
-    /// Default value: 30. Minimum value: 1.
+    /// Default value: 30. Minimum value: 1. The unit of heatmapRadius is in pixels.
     public func heatmapRadius(_ expression: Exp) -> Self {
         with(self, setter(\.heatmapRadius, .expression(expression)))
     }

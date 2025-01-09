@@ -39,6 +39,11 @@ public struct FillLayer: Layer, Equatable {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>
 
+    /// Selects the base of fill-elevation. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "none".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillElevationReference: Value<FillElevationReference>?
+
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var fillSortKey: Value<Double>?
 
@@ -54,7 +59,7 @@ public struct FillLayer: Layer, Equatable {
     public var fillColorTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillEmissiveStrength is in intensity.
     public var fillEmissiveStrength: Value<Double>?
 
     /// Transition options for `fillEmissiveStrength`.
@@ -77,7 +82,7 @@ public struct FillLayer: Layer, Equatable {
     public var fillPattern: Value<ResolvedImage>?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of fillTranslate is in pixels.
     public var fillTranslate: Value<[Double]>?
 
     /// Transition options for `fillTranslate`.
@@ -133,6 +138,7 @@ public struct FillLayer: Layer, Equatable {
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encode(visibility, forKey: .visibility)
+        try layoutContainer.encodeIfPresent(fillElevationReference, forKey: .fillElevationReference)
         try layoutContainer.encodeIfPresent(fillSortKey, forKey: .fillSortKey)
     }
 
@@ -168,6 +174,7 @@ public struct FillLayer: Layer, Equatable {
         var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
             visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            fillElevationReference = try layoutContainer.decodeIfPresent(Value<FillElevationReference>.self, forKey: .fillElevationReference)
             fillSortKey = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .fillSortKey)
         }
         visibility = visibilityEncoded ?? .constant(.visible)
@@ -187,6 +194,7 @@ public struct FillLayer: Layer, Equatable {
     }
 
     enum LayoutCodingKeys: String, CodingKey {
+        case fillElevationReference = "fill-elevation-reference"
         case fillSortKey = "fill-sort-key"
         case visibility = "visibility"
     }
@@ -247,6 +255,22 @@ extension FillLayer {
         with(self, setter(\.maxZoom, newValue))
     }
 
+    /// Selects the base of fill-elevation. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "none".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillElevationReference(_ constant: FillElevationReference) -> Self {
+        with(self, setter(\.fillElevationReference, .constant(constant)))
+    }
+
+    /// Selects the base of fill-elevation. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "none".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillElevationReference(_ expression: Exp) -> Self {
+        with(self, setter(\.fillElevationReference, .expression(expression)))
+    }
+
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public func fillSortKey(_ constant: Double) -> Self {
         with(self, setter(\.fillSortKey, .constant(constant)))
@@ -293,7 +317,7 @@ extension FillLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillEmissiveStrength is in intensity.
     public func fillEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.fillEmissiveStrength, .constant(constant)))
     }
@@ -304,7 +328,7 @@ extension FillLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillEmissiveStrength is in intensity.
     public func fillEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.fillEmissiveStrength, .expression(expression)))
     }
@@ -357,7 +381,7 @@ extension FillLayer {
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of fillTranslate is in pixels.
     public func fillTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.fillTranslate, .constant([x, y])))
     }
@@ -368,7 +392,7 @@ extension FillLayer {
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of fillTranslate is in pixels.
     public func fillTranslate(_ expression: Exp) -> Self {
         with(self, setter(\.fillTranslate, .expression(expression)))
     }

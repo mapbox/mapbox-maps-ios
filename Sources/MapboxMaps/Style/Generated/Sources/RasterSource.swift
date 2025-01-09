@@ -28,7 +28,7 @@ public struct RasterSource: Source {
     public var maxzoom: Double?
 
     /// The minimum visual size to display tiles for this layer. Only configurable for raster layers.
-    /// Default value: 512.
+    /// Default value: 512. The unit of tileSize is in pixels.
     public var tileSize: Double?
 
     /// Influences the y direction of the tile coordinates. The global-mercator (aka Spherical Mercator) profile is assumed.

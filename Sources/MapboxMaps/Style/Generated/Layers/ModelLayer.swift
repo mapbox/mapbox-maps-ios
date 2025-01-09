@@ -122,7 +122,7 @@ import UIKit
     public var modelReceiveShadows: Value<Bool>?
 
     /// The rotation of the model in euler angles [lon, lat, z].
-    /// Default value: [0,0,0].
+    /// Default value: [0,0,0]. The unit of modelRotation is in degrees.
     @_documentation(visibility: public)
     public var modelRotation: Value<[Double]>?
 
@@ -560,7 +560,7 @@ extension ModelLayer {
     }
 
     /// The rotation of the model in euler angles [lon, lat, z].
-    /// Default value: [0,0,0].
+    /// Default value: [0,0,0]. The unit of modelRotation is in degrees.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelRotation(x: Double, y: Double, z: Double) -> Self {
@@ -575,7 +575,7 @@ extension ModelLayer {
     }
 
     /// The rotation of the model in euler angles [lon, lat, z].
-    /// Default value: [0,0,0].
+    /// Default value: [0,0,0]. The unit of modelRotation is in degrees.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func modelRotation(_ expression: Exp) -> Self {

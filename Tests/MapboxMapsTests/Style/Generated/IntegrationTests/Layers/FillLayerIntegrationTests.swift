@@ -23,6 +23,7 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
+            layer.fillElevationReference = Value<FillElevationReference>.testConstantValue()
             layer.fillSortKey = Value<Double>.testConstantValue()
             layer.fillAntialias = Value<Bool>.testConstantValue()
             layer.fillColor = Value<StyleColor>.testConstantValue()

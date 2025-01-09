@@ -36,7 +36,7 @@ import Foundation
     public var maxzoom: Double?
 
     /// The minimum visual size to display tiles for this layer. Only configurable for raster layers.
-    /// Default value: 512.
+    /// Default value: 512. The unit of tileSize is in pixels.
     @_documentation(visibility: public)
     public private(set) var tileSize: Double?
 

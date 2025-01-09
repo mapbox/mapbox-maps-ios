@@ -2,15 +2,37 @@
 import Foundation
 
 public enum Visibility: String, Codable, Sendable {
-
-    /// The layer is shown.
+    /// The layer is visible.
     case visible = "visible"
 
-    /// The layer is not shown.
+    /// The layer is hidden.
     case none = "none"
 }
 
-// MARK: LINE_CAP
+/// Selects the base of fill-elevation. Some modes might require precomputed elevation data in the tileset.
+@_documentation(visibility: public)
+@_spi(Experimental)
+public struct FillElevationReference: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
+    public let rawValue: String
+
+    @_documentation(visibility: public)
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Elevated rendering is disabled.
+    @_documentation(visibility: public)
+    public static let none = FillElevationReference(rawValue: "none")
+
+    /// Elevate geometry relative to HD roads. Use this mode to describe base polygons of the road networks.
+    @_documentation(visibility: public)
+    public static let hdRoadBase = FillElevationReference(rawValue: "hd-road-base")
+
+    /// Elevated rendering is enabled. Use this mode to describe additive and stackable features such as 'hatched areas' that should exist only on top of road polygons.
+    @_documentation(visibility: public)
+    public static let hdRoadMarkup = FillElevationReference(rawValue: "hd-road-markup")
+}
 
 /// The display of line endings.
 public struct LineCap: RawRepresentable, Codable, Hashable, Sendable {
@@ -28,10 +50,36 @@ public struct LineCap: RawRepresentable, Codable, Hashable, Sendable {
 
     /// A cap with a squared-off end which is drawn beyond the endpoint of the line at a distance of one-half of the line's width.
     public static let square = LineCap(rawValue: "square")
-
 }
 
-// MARK: LINE_JOIN
+/// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.
+@_documentation(visibility: public)
+@_spi(Experimental)
+public struct LineElevationReference: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
+    public let rawValue: String
+
+    @_documentation(visibility: public)
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Elevated rendering is disabled.
+    @_documentation(visibility: public)
+    public static let none = LineElevationReference(rawValue: "none")
+
+    /// Elevated rendering is enabled. Use this mode to elevate lines relative to the sea level.
+    @_documentation(visibility: public)
+    public static let sea = LineElevationReference(rawValue: "sea")
+
+    /// Elevated rendering is enabled. Use this mode to elevate lines relative to the ground's height below them.
+    @_documentation(visibility: public)
+    public static let ground = LineElevationReference(rawValue: "ground")
+
+    /// Elevated rendering is enabled. Use this mode to describe additive and stackable features that should exist only on top of road polygons.
+    @_documentation(visibility: public)
+    public static let hdRoadMarkup = LineElevationReference(rawValue: "hd-road-markup")
+}
 
 /// The display of lines when joining.
 public struct LineJoin: RawRepresentable, Codable, Hashable, Sendable {
@@ -52,10 +100,28 @@ public struct LineJoin: RawRepresentable, Codable, Hashable, Sendable {
 
     /// Line segments are not joined together, each one creates a separate line. Useful in combination with line-pattern. Line-cap property is not respected. Can't be used with data-driven styling.
     public static let none = LineJoin(rawValue: "none")
-
 }
 
-// MARK: ICON_ANCHOR
+/// Selects the unit of line-width. The same unit is automatically used for line-blur and line-offset. Note: This is an experimental property and might be removed in a future release.
+@_documentation(visibility: public)
+@_spi(Experimental)
+public struct LineWidthUnit: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
+    public let rawValue: String
+
+    @_documentation(visibility: public)
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Width is rendered in pixels.
+    @_documentation(visibility: public)
+    public static let pixels = LineWidthUnit(rawValue: "pixels")
+
+    /// Width is rendered in meters.
+    @_documentation(visibility: public)
+    public static let meters = LineWidthUnit(rawValue: "meters")
+}
 
 /// Part of the icon placed closest to the anchor.
 public struct IconAnchor: RawRepresentable, Codable, Hashable, Sendable {
@@ -91,10 +157,7 @@ public struct IconAnchor: RawRepresentable, Codable, Hashable, Sendable {
 
     /// The bottom right corner of the icon is placed closest to the anchor.
     public static let bottomRight = IconAnchor(rawValue: "bottom-right")
-
 }
-
-// MARK: ICON_PITCH_ALIGNMENT
 
 /// Orientation of icon when map is pitched.
 public struct IconPitchAlignment: RawRepresentable, Codable, Hashable, Sendable {
@@ -110,12 +173,9 @@ public struct IconPitchAlignment: RawRepresentable, Codable, Hashable, Sendable 
     /// The icon is aligned to the plane of the viewport.
     public static let viewport = IconPitchAlignment(rawValue: "viewport")
 
-    /// Automatically matches the value of {@link ICON_ROTATION_ALIGNMENT}.
+    /// Automatically matches the value of ``IconRotationAlignment``.
     public static let auto = IconPitchAlignment(rawValue: "auto")
-
 }
-
-// MARK: ICON_ROTATION_ALIGNMENT
 
 /// In combination with `symbol-placement`, determines the rotation behavior of icons.
 public struct IconRotationAlignment: RawRepresentable, Codable, Hashable, Sendable {
@@ -125,18 +185,15 @@ public struct IconRotationAlignment: RawRepresentable, Codable, Hashable, Sendab
         self.rawValue = rawValue
     }
 
-    /// When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_POINT}, aligns icons east-west. When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_LINE} or {@link Property#SYMBOL_PLACEMENT_LINE_CENTER}, aligns icon x-axes with the line.
+    /// When ``SymbolPlacement`` is set to ``SymbolPlacement/point``, aligns icons east-west. When ``SymbolPlacement`` is set to ``SymbolPlacement/line`` or ``SymbolPlacement/lineCenter`` aligns icon x-axes with the line.
     public static let map = IconRotationAlignment(rawValue: "map")
 
-    /// Produces icons whose x-axes are aligned with the x-axis of the viewport, regardless of the value of {@link SYMBOL_PLACEMENT}.
+    /// Produces icons whose x-axes are aligned with the x-axis of the viewport, regardless of the value of ``SymbolPlacement``.
     public static let viewport = IconRotationAlignment(rawValue: "viewport")
 
-    /// When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_POINT}, this is equivalent to {@link Property#ICON_ROTATION_ALIGNMENT_VIEWPORT}. When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_LINE} or {@link Property#SYMBOL_PLACEMENT_LINE_CENTER}, this is equivalent to {@link Property#ICON_ROTATION_ALIGNMENT_MAP}.
+    /// When ``SymbolPlacement`` is set to ``SymbolPlacement/point``, this is equivalent to ``IconRotationAlignment/viewport``. When ``SymbolPlacement`` is set to ``SymbolPlacement/line`` or ``SymbolPlacement/lineCenter`` this is equivalent to ``IconRotationAlignment/map``.
     public static let auto = IconRotationAlignment(rawValue: "auto")
-
 }
-
-// MARK: ICON_TEXT_FIT
 
 /// Scales the icon to fit around the associated text.
 public struct IconTextFit: RawRepresentable, Codable, Hashable, Sendable {
@@ -157,28 +214,32 @@ public struct IconTextFit: RawRepresentable, Codable, Hashable, Sendable {
 
     /// The icon is scaled in both x- and y-dimensions.
     public static let both = IconTextFit(rawValue: "both")
-
 }
 
-// MARK: SYMBOL_ELEVATION_REFERENCE
-
 /// Selects the base of symbol-elevation.
+@_documentation(visibility: public)
+@_spi(Experimental)
 public struct SymbolElevationReference: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
     public let rawValue: String
 
+    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// Elevate symbols relative to the sea level.
+    @_documentation(visibility: public)
     public static let sea = SymbolElevationReference(rawValue: "sea")
 
     /// Elevate symbols relative to the ground's height below them.
+    @_documentation(visibility: public)
     public static let ground = SymbolElevationReference(rawValue: "ground")
 
+    /// Use this mode to enable elevated behavior for features that are rendered on top of 3D road polygons. The feature is currently being developed.
+    @_documentation(visibility: public)
+    public static let hdRoadMarkup = SymbolElevationReference(rawValue: "hd-road-markup")
 }
-
-// MARK: SYMBOL_PLACEMENT
 
 /// Label placement relative to its geometry.
 public struct SymbolPlacement: RawRepresentable, Codable, Hashable, Sendable {
@@ -191,15 +252,12 @@ public struct SymbolPlacement: RawRepresentable, Codable, Hashable, Sendable {
     /// The label is placed at the point where the geometry is located.
     public static let point = SymbolPlacement(rawValue: "point")
 
-    /// The label is placed along the line of the geometry. Can only be used on LineString and Polygon geometries.
+    /// The label is placed along the line of the geometry. Can only be used on `LineString` and `Polygon` geometries.
     public static let line = SymbolPlacement(rawValue: "line")
 
-    /// The label is placed at the center of the line of the geometry. Can only be used on LineString and Polygon geometries. Note that a single feature in a vector tile may contain multiple line geometries.
+    /// The label is placed at the center of the line of the geometry. Can only be used on `LineString` and `Polygon` geometries. Note that a single feature in a vector tile may contain multiple line geometries.
     public static let lineCenter = SymbolPlacement(rawValue: "line-center")
-
 }
-
-// MARK: SYMBOL_Z_ORDER
 
 /// Determines whether overlapping symbols in the same layer are rendered in the order that they appear in the data source or by their y-position relative to the viewport. To control the order and prioritization of symbols otherwise, use `symbol-sort-key`.
 public struct SymbolZOrder: RawRepresentable, Codable, Hashable, Sendable {
@@ -209,18 +267,15 @@ public struct SymbolZOrder: RawRepresentable, Codable, Hashable, Sendable {
         self.rawValue = rawValue
     }
 
-    /// Sorts symbols by symbol sort key if set. Otherwise, sorts symbols by their y-position relative to the viewport if {@link ICON_ALLOW_OVERLAP} or {@link TEXT_ALLOW_OVERLAP} is set to {@link TRUE} or {@link ICON_IGNORE_PLACEMENT} or {@link TEXT_IGNORE_PLACEMENT} is {@link FALSE}.
+    /// Sorts symbols by `symbol-sort-key` if set. Otherwise, sorts symbols by their y-position relative to the viewport if `icon-allow-overlap` or `text-allow-overlap` is set to `true` or `icon-ignore-placement` or `text-ignore-placement` is `false`.
     public static let auto = SymbolZOrder(rawValue: "auto")
 
-    /// Sorts symbols by their y-position relative to the viewport if {@link ICON_ALLOW_OVERLAP} or {@link TEXT_ALLOW_OVERLAP} is set to {@link TRUE} or {@link ICON_IGNORE_PLACEMENT} or {@link TEXT_IGNORE_PLACEMENT} is {@link FALSE}.
+    /// Sorts symbols by their y-position relative to the viewport if any of the following is set to `true`: `icon-allow-overlap`, `text-allow-overlap`, `icon-ignore-placement`, `text-ignore-placement`.
     public static let viewportY = SymbolZOrder(rawValue: "viewport-y")
 
-    /// Sorts symbols by symbol sort key if set. Otherwise, no sorting is applied; symbols are rendered in the same order as the source data.
+    /// Sorts symbols by `symbol-sort-key` if set. Otherwise, no sorting is applied; symbols are rendered in the same order as the source data.
     public static let source = SymbolZOrder(rawValue: "source")
-
 }
-
-// MARK: TEXT_ANCHOR
 
 /// Part of the text placed closest to the anchor.
 public struct TextAnchor: RawRepresentable, Codable, Hashable, Sendable {
@@ -256,10 +311,7 @@ public struct TextAnchor: RawRepresentable, Codable, Hashable, Sendable {
 
     /// The bottom right corner of the text is placed closest to the anchor.
     public static let bottomRight = TextAnchor(rawValue: "bottom-right")
-
 }
-
-// MARK: TEXT_JUSTIFY
 
 /// Text justification options.
 public struct TextJustify: RawRepresentable, Codable, Hashable, Sendable {
@@ -280,10 +332,7 @@ public struct TextJustify: RawRepresentable, Codable, Hashable, Sendable {
 
     /// The text is aligned to the right.
     public static let right = TextJustify(rawValue: "right")
-
 }
-
-// MARK: TEXT_PITCH_ALIGNMENT
 
 /// Orientation of text when map is pitched.
 public struct TextPitchAlignment: RawRepresentable, Codable, Hashable, Sendable {
@@ -299,12 +348,9 @@ public struct TextPitchAlignment: RawRepresentable, Codable, Hashable, Sendable 
     /// The text is aligned to the plane of the viewport.
     public static let viewport = TextPitchAlignment(rawValue: "viewport")
 
-    /// Automatically matches the value of {@link TEXT_ROTATION_ALIGNMENT}.
+    /// Automatically matches the value of ``TextRotationAlignment``.
     public static let auto = TextPitchAlignment(rawValue: "auto")
-
 }
-
-// MARK: TEXT_ROTATION_ALIGNMENT
 
 /// In combination with `symbol-placement`, determines the rotation behavior of the individual glyphs forming the text.
 public struct TextRotationAlignment: RawRepresentable, Codable, Hashable, Sendable {
@@ -314,18 +360,15 @@ public struct TextRotationAlignment: RawRepresentable, Codable, Hashable, Sendab
         self.rawValue = rawValue
     }
 
-    /// When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_POINT}, aligns text east-west. When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_LINE} or {@link Property#SYMBOL_PLACEMENT_LINE_CENTER}, aligns text x-axes with the line.
+    /// When ``SymbolPlacement`` is set to ``SymbolPlacement/point``, aligns text east-west. When ``SymbolPlacement`` is set to ``SymbolPlacement/line`` or ``SymbolPlacement/lineCenter`` aligns text x-axes with the line.
     public static let map = TextRotationAlignment(rawValue: "map")
 
-    /// Produces glyphs whose x-axes are aligned with the x-axis of the viewport, regardless of the value of {@link SYMBOL_PLACEMENT}.
+    /// Produces glyphs whose x-axes are aligned with the x-axis of the viewport, regardless of the value of ``SymbolPlacement``.
     public static let viewport = TextRotationAlignment(rawValue: "viewport")
 
-    /// When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_POINT}, this is equivalent to {@link Property#TEXT_ROTATION_ALIGNMENT_VIEWPORT}. When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_LINE} or {@link Property#SYMBOL_PLACEMENT_LINE_CENTER}, this is equivalent to {@link Property#TEXT_ROTATION_ALIGNMENT_MAP}.
+    /// When ``SymbolPlacement`` is set to ``SymbolPlacement/point``, this is equivalent to ``TextRotationAlignment/viewport``. When ``SymbolPlacement`` is set to ``SymbolPlacement/line`` or ``SymbolPlacement/lineCenter`` this is equivalent to ``TextRotationAlignment/map``.
     public static let auto = TextRotationAlignment(rawValue: "auto")
-
 }
-
-// MARK: TEXT_TRANSFORM
 
 /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
 public struct TextTransform: RawRepresentable, Codable, Hashable, Sendable {
@@ -343,10 +386,7 @@ public struct TextTransform: RawRepresentable, Codable, Hashable, Sendable {
 
     /// Forces all letters to be displayed in lowercase.
     public static let lowercase = TextTransform(rawValue: "lowercase")
-
 }
-
-// MARK: FILL_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `fill-translate`.
 public struct FillTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
@@ -361,10 +401,7 @@ public struct FillTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable
 
     /// The fill is translated relative to the viewport.
     public static let viewport = FillTranslateAnchor(rawValue: "viewport")
-
 }
-
-// MARK: LINE_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `line-translate`.
 public struct LineTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
@@ -379,10 +416,7 @@ public struct LineTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable
 
     /// The line is translated relative to the viewport.
     public static let viewport = LineTranslateAnchor(rawValue: "viewport")
-
 }
-
-// MARK: ICON_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `icon-translate`.
 public struct IconTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
@@ -397,10 +431,7 @@ public struct IconTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable
 
     /// Icons are translated relative to the viewport.
     public static let viewport = IconTranslateAnchor(rawValue: "viewport")
-
 }
-
-// MARK: TEXT_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `text-translate`.
 public struct TextTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
@@ -415,10 +446,7 @@ public struct TextTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable
 
     /// The text is translated relative to the viewport.
     public static let viewport = TextTranslateAnchor(rawValue: "viewport")
-
 }
-
-// MARK: CIRCLE_PITCH_ALIGNMENT
 
 /// Orientation of circle when map is pitched.
 public struct CirclePitchAlignment: RawRepresentable, Codable, Hashable, Sendable {
@@ -433,10 +461,7 @@ public struct CirclePitchAlignment: RawRepresentable, Codable, Hashable, Sendabl
 
     /// The circle is aligned to the plane of the viewport.
     public static let viewport = CirclePitchAlignment(rawValue: "viewport")
-
 }
-
-// MARK: CIRCLE_PITCH_SCALE
 
 /// Controls the scaling behavior of the circle when the map is pitched.
 public struct CirclePitchScale: RawRepresentable, Codable, Hashable, Sendable {
@@ -451,10 +476,7 @@ public struct CirclePitchScale: RawRepresentable, Codable, Hashable, Sendable {
 
     /// Circles are not scaled.
     public static let viewport = CirclePitchScale(rawValue: "viewport")
-
 }
-
-// MARK: CIRCLE_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `circle-translate`.
 public struct CircleTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
@@ -469,46 +491,49 @@ public struct CircleTranslateAnchor: RawRepresentable, Codable, Hashable, Sendab
 
     /// The circle is translated relative to the viewport.
     public static let viewport = CircleTranslateAnchor(rawValue: "viewport")
-
 }
 
-// MARK: FILL_EXTRUSION_BASE_ALIGNMENT
-
 /// Controls the behavior of fill extrusion base over terrain
+@_documentation(visibility: public)
+@_spi(Experimental)
 public struct FillExtrusionBaseAlignment: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
     public let rawValue: String
 
+    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// The fill extrusion base follows terrain slope.
+    @_documentation(visibility: public)
     public static let terrain = FillExtrusionBaseAlignment(rawValue: "terrain")
 
     /// The fill extrusion base is flat over terrain.
+    @_documentation(visibility: public)
     public static let flat = FillExtrusionBaseAlignment(rawValue: "flat")
-
 }
 
-// MARK: FILL_EXTRUSION_HEIGHT_ALIGNMENT
-
 /// Controls the behavior of fill extrusion height over terrain
+@_documentation(visibility: public)
+@_spi(Experimental)
 public struct FillExtrusionHeightAlignment: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
     public let rawValue: String
 
+    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// The fill extrusion height follows terrain slope.
+    @_documentation(visibility: public)
     public static let terrain = FillExtrusionHeightAlignment(rawValue: "terrain")
 
     /// The fill extrusion height is flat over terrain.
+    @_documentation(visibility: public)
     public static let flat = FillExtrusionHeightAlignment(rawValue: "flat")
-
 }
-
-// MARK: FILL_EXTRUSION_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `fill-extrusion-translate`.
 public struct FillExtrusionTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
@@ -523,10 +548,7 @@ public struct FillExtrusionTranslateAnchor: RawRepresentable, Codable, Hashable,
 
     /// The fill extrusion is translated relative to the viewport.
     public static let viewport = FillExtrusionTranslateAnchor(rawValue: "viewport")
-
 }
-
-// MARK: RASTER_RESAMPLING
 
 /// The resampling/interpolation method to use for overscaling, also known as texture magnification filter
 public struct RasterResampling: RawRepresentable, Codable, Hashable, Sendable {
@@ -541,10 +563,7 @@ public struct RasterResampling: RawRepresentable, Codable, Hashable, Sendable {
 
     /// Nearest neighbor filtering interpolates pixel values using the nearest original source pixel creating a sharp but pixelated look when overscaled
     public static let nearest = RasterResampling(rawValue: "nearest")
-
 }
-
-// MARK: HILLSHADE_ILLUMINATION_ANCHOR
 
 /// Direction of light source when map is rotated.
 public struct HillshadeIlluminationAnchor: RawRepresentable, Codable, Hashable, Sendable {
@@ -559,64 +578,70 @@ public struct HillshadeIlluminationAnchor: RawRepresentable, Codable, Hashable, 
 
     /// The hillshade illumination is relative to the top of the viewport.
     public static let viewport = HillshadeIlluminationAnchor(rawValue: "viewport")
-
 }
 
-// MARK: MODEL_SCALE_MODE
-
 /// Defines scaling mode. Only applies to location-indicator type layers.
+@_documentation(visibility: public)
+@_spi(Experimental)
 public struct ModelScaleMode: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
     public let rawValue: String
 
+    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// Model is scaled so that it's always the same size relative to other map features. The property model-scale specifies how many meters each unit in the model file should cover.
+    @_documentation(visibility: public)
     public static let map = ModelScaleMode(rawValue: "map")
 
     /// Model is scaled so that it's always the same size on the screen. The property model-scale specifies how many pixels each unit in model file should cover.
+    @_documentation(visibility: public)
     public static let viewport = ModelScaleMode(rawValue: "viewport")
-
 }
 
-// MARK: MODEL_TYPE
-
 /// Defines rendering behavior of model in respect to other 3D scene objects.
+@_documentation(visibility: public)
+@_spi(Experimental)
 public struct ModelType: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
     public let rawValue: String
 
+    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// Integrated to 3D scene, using depth testing, along with terrain, fill-extrusions and custom layer.
+    @_documentation(visibility: public)
     public static let common3d = ModelType(rawValue: "common-3d")
 
     /// Displayed over other 3D content, occluded by terrain.
+    @_documentation(visibility: public)
     public static let locationIndicator = ModelType(rawValue: "location-indicator")
-
 }
 
-// MARK: BACKGROUND_PITCH_ALIGNMENT
-
 /// Orientation of background layer.
+@_documentation(visibility: public)
+@_spi(Experimental)
 public struct BackgroundPitchAlignment: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
     public let rawValue: String
 
+    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// The background is aligned to the plane of the map.
+    @_documentation(visibility: public)
     public static let map = BackgroundPitchAlignment(rawValue: "map")
 
-    /// The background is aligned to the plane of the viewport, covering the whole screen.
+    /// The background is aligned to the plane of the viewport, covering the whole screen. Note: This mode disables the automatic reordering of the layer when terrain or globe projection is used.
+    @_documentation(visibility: public)
     public static let viewport = BackgroundPitchAlignment(rawValue: "viewport")
-
 }
-
-// MARK: SKY_TYPE
 
 /// The type of the sky
 public struct SkyType: RawRepresentable, Codable, Hashable, Sendable {
@@ -626,15 +651,12 @@ public struct SkyType: RawRepresentable, Codable, Hashable, Sendable {
         self.rawValue = rawValue
     }
 
-    /// Renders the sky with a gradient that can be configured with {@link SKY_GRADIENT_RADIUS} and {@link SKY_GRADIENT}.
+    /// Renders the sky with a gradient that can be configured with `sky-gradient-radius` and `sky-gradient`.
     public static let gradient = SkyType(rawValue: "gradient")
 
-    /// Renders the sky with a simulated atmospheric scattering algorithm, the sun direction can be attached to the light position or explicitly set through {@link SKY_ATMOSPHERE_SUN}.
+    /// Renders the sky with a simulated atmospheric scattering algorithm, the sun direction can be attached to the light position or explicitly set through `sky-atmosphere-sun`.
     public static let atmosphere = SkyType(rawValue: "atmosphere")
-
 }
-
-// MARK: ANCHOR
 
 /// Whether extruded geometries are lit relative to the map or viewport.
 public struct Anchor: RawRepresentable, Codable, Hashable, Sendable {
@@ -649,10 +671,7 @@ public struct Anchor: RawRepresentable, Codable, Hashable, Sendable {
 
     /// The position of the light source is aligned to the rotation of the viewport. If terrain is enabled, performance regressions may occur in certain scenarios, particularly on lower-end hardware. Ensure that you test your target scenarios on the appropriate hardware to verify performance.
     public static let viewport = Anchor(rawValue: "viewport")
-
 }
-
-// MARK: NAME
 
 /// The name of the projection to be used for rendering the map.
 public struct StyleProjectionName: RawRepresentable, Codable, Hashable, Sendable {
@@ -667,10 +686,7 @@ public struct StyleProjectionName: RawRepresentable, Codable, Hashable, Sendable
 
     /// A globe projection.
     public static let globe = StyleProjectionName(rawValue: "globe")
-
 }
-
-// MARK: TEXT_WRITING_MODE
 
 /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. For symbol with point placement, the order of elements in an array define priority order for the placement of an orientation variant. For symbol with line placement, the default text writing mode is either ['horizontal', 'vertical'] or ['vertical', 'horizontal'], the order doesn't affect the placement.
 public struct TextWritingMode: RawRepresentable, Codable, Hashable, Sendable {
@@ -685,25 +701,25 @@ public struct TextWritingMode: RawRepresentable, Codable, Hashable, Sendable {
 
     /// If a text's language supports vertical writing mode, symbols would be laid out vertically.
     public static let vertical = TextWritingMode(rawValue: "vertical")
-
 }
 
-// MARK: CLIP_LAYER_TYPES
-
 /// Layer types that will also be removed if fallen below this clip layer.
+@_documentation(visibility: public)
+@_spi(Experimental)
 public struct ClipLayerTypes: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
     public let rawValue: String
 
+    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// If present the clip layer would remove all 3d model layers below it. Currently only instanced models (e.g. trees) are removed.
+    @_documentation(visibility: public)
     public static let model = ClipLayerTypes(rawValue: "model")
 
     /// If present the clip layer would remove all symbol layers below it.
+    @_documentation(visibility: public)
     public static let symbol = ClipLayerTypes(rawValue: "symbol")
-
 }
-
-// End of generated file.

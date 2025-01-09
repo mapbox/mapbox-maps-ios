@@ -24,8 +24,8 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var centerThinningTransition: StyleTransition?
 
-    ///
-    /// Default value: "#ffffff".
+    /// Individual rain particle dorplets color.
+    /// Default value: "#919191".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var color: Value<StyleColor>?
@@ -35,7 +35,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var colorTransition: StyleTransition?
 
-    /// Rain particles density.
+    /// Rain particles density. Controls the overall screen density of the rain.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -46,7 +46,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var densityTransition: StyleTransition?
 
-    /// Main rain particles direction. Heading & pitch
+    /// Main rain particles direction. Azimuth and polar angles.
     /// Default value: [0,80]. Value range: [0, 360]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -57,7 +57,29 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var directionTransition: StyleTransition?
 
-    /// Rain particles movement factor.
+    /// Rain particles screen-space distortion strength.
+    /// Default value: 0.5. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var distortionStrength: Value<Double>?
+
+    /// Transition options for distortion-strength
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var distortionStrengthTransition: StyleTransition?
+
+    /// Rain droplet size. x - normal to direction, y - along direction
+    /// Default value: [1,10]. Value range: [0, 20]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var dropletSize: Value<[Double]>?
+
+    /// Transition options for droplet-size
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var dropletSizeTransition: StyleTransition?
+
+    /// Rain particles movement factor. Controls the overall rain particles speed
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -69,7 +91,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     public var intensityTransition: StyleTransition?
 
     /// Rain particles opacity.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: 0.19. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var opacity: Value<Double>?
@@ -79,8 +101,8 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var opacityTransition: StyleTransition?
 
-    /// Rain vignette screen-space effect.
-    /// Default value: 0. Value range: [0, 1]
+    /// Screen-space vignette rain tinting effect intensity.
+    /// Default value: 0.3. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignette: Value<Double>?
@@ -89,6 +111,17 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteTransition: StyleTransition?
+
+    /// Rain vignette screen-space corners tint color.
+    /// Default value: "#ffffff".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var vignetteColor: Value<StyleColor>?
+
+    /// Transition options for vignette-color
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var vignetteColorTransition: StyleTransition?
 
     public enum CodingKeys: String, CodingKey {
         case centerThinning = "center-thinning"
@@ -99,12 +132,18 @@ public struct Rain: Codable, Equatable, StyleEncodable {
         case densityTransition = "density-transition"
         case direction = "direction"
         case directionTransition = "direction-transition"
+        case distortionStrength = "distortion-strength"
+        case distortionStrengthTransition = "distortion-strength-transition"
+        case dropletSize = "droplet-size"
+        case dropletSizeTransition = "droplet-size-transition"
         case intensity = "intensity"
         case intensityTransition = "intensity-transition"
         case opacity = "opacity"
         case opacityTransition = "opacity-transition"
         case vignette = "vignette"
         case vignetteTransition = "vignette-transition"
+        case vignetteColor = "vignette-color"
+        case vignetteColorTransition = "vignette-color-transition"
     }
 }
 
@@ -132,16 +171,16 @@ extension Rain {
         with(self, setter(\.centerThinning, .expression(expression)))
     }
 
-    ///
-    /// Default value: "#ffffff".
+    /// Individual rain particle dorplets color.
+    /// Default value: "#919191".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func color(_ constant: StyleColor) -> Self {
         with(self, setter(\.color, .constant(constant)))
     }
 
-    ///
-    /// Default value: "#ffffff".
+    /// Individual rain particle dorplets color.
+    /// Default value: "#919191".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func color(_ color: UIColor) -> Self {
@@ -155,15 +194,15 @@ extension Rain {
         with(self, setter(\.colorTransition, transition))
     }
 
-    ///
-    /// Default value: "#ffffff".
+    /// Individual rain particle dorplets color.
+    /// Default value: "#919191".
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func color(_ expression: Exp) -> Self {
         with(self, setter(\.color, .expression(expression)))
     }
 
-    /// Rain particles density.
+    /// Rain particles density. Controls the overall screen density of the rain.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -178,7 +217,7 @@ extension Rain {
         with(self, setter(\.densityTransition, transition))
     }
 
-    /// Rain particles density.
+    /// Rain particles density. Controls the overall screen density of the rain.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -186,7 +225,7 @@ extension Rain {
         with(self, setter(\.density, .expression(expression)))
     }
 
-    /// Main rain particles direction. Heading & pitch
+    /// Main rain particles direction. Azimuth and polar angles.
     /// Default value: [0,80]. Value range: [0, 360]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -201,7 +240,7 @@ extension Rain {
         with(self, setter(\.directionTransition, transition))
     }
 
-    /// Main rain particles direction. Heading & pitch
+    /// Main rain particles direction. Azimuth and polar angles.
     /// Default value: [0,80]. Value range: [0, 360]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -209,7 +248,53 @@ extension Rain {
         with(self, setter(\.direction, .expression(expression)))
     }
 
-    /// Rain particles movement factor.
+    /// Rain particles screen-space distortion strength.
+    /// Default value: 0.5. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func distortionStrength(_ constant: Double) -> Self {
+        with(self, setter(\.distortionStrength, .constant(constant)))
+    }
+
+    /// Transition property for `distortionStrength`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func distortionStrengthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.distortionStrengthTransition, transition))
+    }
+
+    /// Rain particles screen-space distortion strength.
+    /// Default value: 0.5. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func distortionStrength(_ expression: Exp) -> Self {
+        with(self, setter(\.distortionStrength, .expression(expression)))
+    }
+
+    /// Rain droplet size. x - normal to direction, y - along direction
+    /// Default value: [1,10]. Value range: [0, 20]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func dropletSize(normalToDirection: Double, alongDirection: Double) -> Self {
+        with(self, setter(\.dropletSize, .constant([normalToDirection, alongDirection])))
+    }
+
+    /// Transition property for `dropletSize`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func dropletSizeTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.dropletSizeTransition, transition))
+    }
+
+    /// Rain droplet size. x - normal to direction, y - along direction
+    /// Default value: [1,10]. Value range: [0, 20]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func dropletSize(_ expression: Exp) -> Self {
+        with(self, setter(\.dropletSize, .expression(expression)))
+    }
+
+    /// Rain particles movement factor. Controls the overall rain particles speed
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -224,7 +309,7 @@ extension Rain {
         with(self, setter(\.intensityTransition, transition))
     }
 
-    /// Rain particles movement factor.
+    /// Rain particles movement factor. Controls the overall rain particles speed
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -233,7 +318,7 @@ extension Rain {
     }
 
     /// Rain particles opacity.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: 0.19. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func opacity(_ constant: Double) -> Self {
@@ -248,15 +333,15 @@ extension Rain {
     }
 
     /// Rain particles opacity.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: 0.19. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func opacity(_ expression: Exp) -> Self {
         with(self, setter(\.opacity, .expression(expression)))
     }
 
-    /// Rain vignette screen-space effect.
-    /// Default value: 0. Value range: [0, 1]
+    /// Screen-space vignette rain tinting effect intensity.
+    /// Default value: 0.3. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func vignette(_ constant: Double) -> Self {
@@ -270,12 +355,43 @@ extension Rain {
         with(self, setter(\.vignetteTransition, transition))
     }
 
-    /// Rain vignette screen-space effect.
-    /// Default value: 0. Value range: [0, 1]
+    /// Screen-space vignette rain tinting effect intensity.
+    /// Default value: 0.3. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func vignette(_ expression: Exp) -> Self {
         with(self, setter(\.vignette, .expression(expression)))
+    }
+
+    /// Rain vignette screen-space corners tint color.
+    /// Default value: "#ffffff".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.vignetteColor, .constant(constant)))
+    }
+
+    /// Rain vignette screen-space corners tint color.
+    /// Default value: "#ffffff".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColor(_ color: UIColor) -> Self {
+        with(self, setter(\.vignetteColor, .constant(StyleColor(color))))
+    }
+
+    /// Transition property for `vignetteColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.vignetteColorTransition, transition))
+    }
+
+    /// Rain vignette screen-space corners tint color.
+    /// Default value: "#ffffff".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColor(_ expression: Exp) -> Self {
+        with(self, setter(\.vignetteColor, .expression(expression)))
     }
 
 }

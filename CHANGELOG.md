@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Mark `SymbolElevationReference`, `FillExtrusionBaseAlignment`, `FillExtrusionHeightAlignment`,  `ModelScaleMode`, `ModelType`, `ClipLayerTypes`, `BackgroundPitchAlignment` types as Experimental. Initially they were exposed as stable by mistake. If you use them, please import `MapboxMaps` with `Experimental` SPI:
+```
+@_spi(Experimental) import MapboxMaps
+```
+
 * Localize geofencing attribution dialog.
 * Support dictionary expression literals.
 

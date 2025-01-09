@@ -27,12 +27,18 @@ final class RainIntegrationTests: MapViewIntegrationTestCase {
                 .densityTransition(.testConstantValue())
                 .direction(azimuthal: 0, polar: 1)
                 .directionTransition(.testConstantValue())
+                .distortionStrength(Double.testConstantValue())
+                .distortionStrengthTransition(.testConstantValue())
+                .dropletSize(normalToDirection: 0, alongDirection: 1)
+                .dropletSizeTransition(.testConstantValue())
                 .intensity(Double.testConstantValue())
                 .intensityTransition(.testConstantValue())
                 .opacity(Double.testConstantValue())
                 .opacityTransition(.testConstantValue())
                 .vignette(Double.testConstantValue())
                 .vignetteTransition(.testConstantValue())
+                .vignetteColor(StyleColor.testConstantValue())
+                .vignetteColorTransition(.testConstantValue())
 
             // Add the Rain
             do {

@@ -33,7 +33,7 @@ public struct BackgroundLayer: Layer, Equatable {
     public var backgroundColorTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of backgroundEmissiveStrength is in intensity.
     public var backgroundEmissiveStrength: Value<Double>?
 
     /// Transition options for `backgroundEmissiveStrength`.
@@ -51,7 +51,8 @@ public struct BackgroundLayer: Layer, Equatable {
 
     /// Orientation of background layer.
     /// Default value: "map".
-    public var backgroundPitchAlignment: Value<BackgroundPitchAlignment>?
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var backgroundPitchAlignment: Value<BackgroundPitchAlignment>?
 
     public init(id: String) {
         self.id = id
@@ -175,7 +176,7 @@ extension BackgroundLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of backgroundEmissiveStrength is in intensity.
     public func backgroundEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.backgroundEmissiveStrength, .constant(constant)))
     }
@@ -186,7 +187,7 @@ extension BackgroundLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of backgroundEmissiveStrength is in intensity.
     public func backgroundEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.backgroundEmissiveStrength, .expression(expression)))
     }
@@ -220,12 +221,16 @@ extension BackgroundLayer {
 
     /// Orientation of background layer.
     /// Default value: "map".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
     public func backgroundPitchAlignment(_ constant: BackgroundPitchAlignment) -> Self {
         with(self, setter(\.backgroundPitchAlignment, .constant(constant)))
     }
 
     /// Orientation of background layer.
     /// Default value: "map".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
     public func backgroundPitchAlignment(_ expression: Exp) -> Self {
         with(self, setter(\.backgroundPitchAlignment, .expression(expression)))
     }

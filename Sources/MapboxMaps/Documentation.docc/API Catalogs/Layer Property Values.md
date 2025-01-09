@@ -45,6 +45,9 @@
 - ``BackgroundPitchAlignment``
 - ``FillExtrusionBaseAlignment``
 - ``FillExtrusionHeightAlignment``
+- ``FillElevationReference``
+- ``LineElevationReference``
+- ``LineWidthUnit``
 
 <!-- Next two are arguable regarding it's category -->
 - ``ImageContent``

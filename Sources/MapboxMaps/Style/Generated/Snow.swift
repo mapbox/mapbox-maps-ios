@@ -35,7 +35,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var colorTransition: StyleTransition?
 
-    /// Snow particles density.
+    /// Snow particles density. Controls the overall particles number.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -46,7 +46,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var densityTransition: StyleTransition?
 
-    /// Main snow particles direction. Heading & pitch
+    /// Main snow particles direction. Azimuth and polar angles
     /// Default value: [0,90]. Value range: [0, 360]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -57,7 +57,18 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var directionTransition: StyleTransition?
 
-    /// Snow particles movement factor.
+    /// Snow flake particle size. Correlates with individual particle screen size
+    /// Default value: 1. Value range: [0, 5]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var flakeSize: Value<Double>?
+
+    /// Transition options for flake-size
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var flakeSizeTransition: StyleTransition?
+
+    /// Snow particles movement factor. Controls the overall particles movement speed.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -69,7 +80,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     public var intensityTransition: StyleTransition?
 
     /// Snow particles opacity.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: 0.9. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var opacity: Value<Double>?
@@ -79,8 +90,8 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var opacityTransition: StyleTransition?
 
-    /// Snow vignette screen-space effect.
-    /// Default value: 0. Value range: [0, 1]
+    /// Snow vignette screen-space effect. Adds snow tint to screen corners
+    /// Default value: 0.3. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignette: Value<Double>?
@@ -89,6 +100,17 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteTransition: StyleTransition?
+
+    /// Snow vignette screen-space corners tint color.
+    /// Default value: "#ffffff".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var vignetteColor: Value<StyleColor>?
+
+    /// Transition options for vignette-color
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var vignetteColorTransition: StyleTransition?
 
     public enum CodingKeys: String, CodingKey {
         case centerThinning = "center-thinning"
@@ -99,12 +121,16 @@ public struct Snow: Codable, Equatable, StyleEncodable {
         case densityTransition = "density-transition"
         case direction = "direction"
         case directionTransition = "direction-transition"
+        case flakeSize = "flake-size"
+        case flakeSizeTransition = "flake-size-transition"
         case intensity = "intensity"
         case intensityTransition = "intensity-transition"
         case opacity = "opacity"
         case opacityTransition = "opacity-transition"
         case vignette = "vignette"
         case vignetteTransition = "vignette-transition"
+        case vignetteColor = "vignette-color"
+        case vignetteColorTransition = "vignette-color-transition"
     }
 }
 
@@ -163,7 +189,7 @@ extension Snow {
         with(self, setter(\.color, .expression(expression)))
     }
 
-    /// Snow particles density.
+    /// Snow particles density. Controls the overall particles number.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -178,7 +204,7 @@ extension Snow {
         with(self, setter(\.densityTransition, transition))
     }
 
-    /// Snow particles density.
+    /// Snow particles density. Controls the overall particles number.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -186,7 +212,7 @@ extension Snow {
         with(self, setter(\.density, .expression(expression)))
     }
 
-    /// Main snow particles direction. Heading & pitch
+    /// Main snow particles direction. Azimuth and polar angles
     /// Default value: [0,90]. Value range: [0, 360]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -201,7 +227,7 @@ extension Snow {
         with(self, setter(\.directionTransition, transition))
     }
 
-    /// Main snow particles direction. Heading & pitch
+    /// Main snow particles direction. Azimuth and polar angles
     /// Default value: [0,90]. Value range: [0, 360]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -209,7 +235,30 @@ extension Snow {
         with(self, setter(\.direction, .expression(expression)))
     }
 
-    /// Snow particles movement factor.
+    /// Snow flake particle size. Correlates with individual particle screen size
+    /// Default value: 1. Value range: [0, 5]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func flakeSize(_ constant: Double) -> Self {
+        with(self, setter(\.flakeSize, .constant(constant)))
+    }
+
+    /// Transition property for `flakeSize`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func flakeSizeTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.flakeSizeTransition, transition))
+    }
+
+    /// Snow flake particle size. Correlates with individual particle screen size
+    /// Default value: 1. Value range: [0, 5]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func flakeSize(_ expression: Exp) -> Self {
+        with(self, setter(\.flakeSize, .expression(expression)))
+    }
+
+    /// Snow particles movement factor. Controls the overall particles movement speed.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -224,7 +273,7 @@ extension Snow {
         with(self, setter(\.intensityTransition, transition))
     }
 
-    /// Snow particles movement factor.
+    /// Snow particles movement factor. Controls the overall particles movement speed.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -233,7 +282,7 @@ extension Snow {
     }
 
     /// Snow particles opacity.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: 0.9. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func opacity(_ constant: Double) -> Self {
@@ -248,15 +297,15 @@ extension Snow {
     }
 
     /// Snow particles opacity.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: 0.9. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func opacity(_ expression: Exp) -> Self {
         with(self, setter(\.opacity, .expression(expression)))
     }
 
-    /// Snow vignette screen-space effect.
-    /// Default value: 0. Value range: [0, 1]
+    /// Snow vignette screen-space effect. Adds snow tint to screen corners
+    /// Default value: 0.3. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func vignette(_ constant: Double) -> Self {
@@ -270,12 +319,43 @@ extension Snow {
         with(self, setter(\.vignetteTransition, transition))
     }
 
-    /// Snow vignette screen-space effect.
-    /// Default value: 0. Value range: [0, 1]
+    /// Snow vignette screen-space effect. Adds snow tint to screen corners
+    /// Default value: 0.3. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func vignette(_ expression: Exp) -> Self {
         with(self, setter(\.vignette, .expression(expression)))
+    }
+
+    /// Snow vignette screen-space corners tint color.
+    /// Default value: "#ffffff".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.vignetteColor, .constant(constant)))
+    }
+
+    /// Snow vignette screen-space corners tint color.
+    /// Default value: "#ffffff".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColor(_ color: UIColor) -> Self {
+        with(self, setter(\.vignetteColor, .constant(StyleColor(color))))
+    }
+
+    /// Transition property for `vignetteColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.vignetteColorTransition, transition))
+    }
+
+    /// Snow vignette screen-space corners tint color.
+    /// Default value: "#ffffff".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColor(_ expression: Exp) -> Self {
+        with(self, setter(\.vignetteColor, .expression(expression)))
     }
 
 }

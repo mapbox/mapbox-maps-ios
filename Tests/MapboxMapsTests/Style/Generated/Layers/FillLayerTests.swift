@@ -52,6 +52,7 @@ final class FillLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = FillLayer(id: "test-id", source: "source")
         layer.visibility = .constant(.visible)
+        layer.fillElevationReference = Value<FillElevationReference>.testConstantValue()
         layer.fillSortKey = Value<Double>.testConstantValue()
 
         var data: Data?
@@ -69,6 +70,7 @@ final class FillLayerTests: XCTestCase {
         do {
             let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
             XCTAssert(decodedLayer.visibility == .constant(.visible))
+            XCTAssertEqual(layer.fillElevationReference, Value<FillElevationReference>.testConstantValue())
             XCTAssertEqual(layer.fillSortKey, Value<Double>.testConstantValue())
         } catch {
             XCTFail("Failed to decode FillLayer")
@@ -130,6 +132,7 @@ final class FillLayerTests: XCTestCase {
             .slot(Slot.testConstantValue())
             .minZoom(Double.testConstantValue())
             .maxZoom(Double.testConstantValue())
+            .fillElevationReference(FillElevationReference.testConstantValue())
             .fillSortKey(Double.testConstantValue())
             .fillAntialias(Bool.testConstantValue())
             .fillColor(StyleColor.testConstantValue())
@@ -147,6 +150,7 @@ final class FillLayerTests: XCTestCase {
         XCTAssertEqual(layer.slot, Slot.testConstantValue())
         XCTAssertEqual(layer.minZoom, Double.testConstantValue())
         XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.fillElevationReference, Value.constant(FillElevationReference.testConstantValue()))
         XCTAssertEqual(layer.fillSortKey, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.fillAntialias, Value.constant(Bool.testConstantValue()))
         XCTAssertEqual(layer.fillColor, Value.constant(StyleColor.testConstantValue()))

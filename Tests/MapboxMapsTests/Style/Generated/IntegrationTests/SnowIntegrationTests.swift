@@ -27,12 +27,16 @@ final class SnowIntegrationTests: MapViewIntegrationTestCase {
                 .densityTransition(.testConstantValue())
                 .direction(azimuthal: 0, polar: 1)
                 .directionTransition(.testConstantValue())
+                .flakeSize(Double.testConstantValue())
+                .flakeSizeTransition(.testConstantValue())
                 .intensity(Double.testConstantValue())
                 .intensityTransition(.testConstantValue())
                 .opacity(Double.testConstantValue())
                 .opacityTransition(.testConstantValue())
                 .vignette(Double.testConstantValue())
                 .vignetteTransition(.testConstantValue())
+                .vignetteColor(StyleColor.testConstantValue())
+                .vignetteColorTransition(.testConstantValue())
 
             // Add the Snow
             do {

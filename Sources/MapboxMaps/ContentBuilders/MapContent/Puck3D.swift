@@ -48,6 +48,8 @@ public struct Puck3D: MapContent, PrimitiveMapContent {
     }
 
     /// Defines scaling mode. Only applies to location-indicator type layers. Defaults to ``ModelScaleMode/viewport``.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
     public func modelScaleMode(_ modelScaleMode: ModelScaleMode) -> Puck3D {
         copyAssigned(self, \.configuration.modelScaleMode, .constant(modelScaleMode))
     }

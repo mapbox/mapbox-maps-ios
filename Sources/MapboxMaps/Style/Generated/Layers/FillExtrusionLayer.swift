@@ -86,7 +86,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     @_spi(Experimental) public var fillExtrusionAmbientOcclusionWallRadiusTransition: StyleTransition?
 
     /// The height with which to extrude the base of this layer. Must be less than or equal to `fill-extrusion-height`.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionBase is in meters.
     public var fillExtrusionBase: Value<Double>?
 
     /// Transition options for `fillExtrusionBase`.
@@ -109,7 +109,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     public var fillExtrusionCutoffFadeRange: Value<Double>?
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionEmissiveStrength is in intensity.
     public var fillExtrusionEmissiveStrength: Value<Double>?
 
     /// Transition options for `fillExtrusionEmissiveStrength`.
@@ -134,7 +134,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     @_spi(Experimental) public var fillExtrusionFloodLightGroundAttenuationTransition: StyleTransition?
 
     /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
-    /// Default value: 0.
+    /// Default value: 0. The unit of fillExtrusionFloodLightGroundRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionFloodLightGroundRadius: Value<Double>?
 
@@ -152,7 +152,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     @_spi(Experimental) public var fillExtrusionFloodLightIntensityTransition: StyleTransition?
 
     /// The extent of the flood light effect on the walls of the extruded buildings in meters.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionFloodLightWallRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionFloodLightWallRadius: Value<Double>?
 
@@ -161,7 +161,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     @_spi(Experimental) public var fillExtrusionFloodLightWallRadiusTransition: StyleTransition?
 
     /// The height with which to extrude this layer.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionHeight is in meters.
     public var fillExtrusionHeight: Value<Double>?
 
     /// Transition options for `fillExtrusionHeight`.
@@ -173,7 +173,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     @_spi(Experimental) public var fillExtrusionHeightAlignment: Value<FillExtrusionHeightAlignment>?
 
     /// If a non-zero value is provided, it sets the fill-extrusion layer into wall rendering mode. The value is used to render the feature with the given width over the outlines of the geometry. Note: This property is experimental and some other fill-extrusion properties might not be supported with non-zero line width.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionLineWidth is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionLineWidth: Value<Double>?
 
@@ -197,7 +197,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     @_spi(Experimental) public var fillExtrusionRoundedRoof: Value<Bool>?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of fillExtrusionTranslate is in pixels.
     public var fillExtrusionTranslate: Value<[Double]>?
 
     /// Transition options for `fillExtrusionTranslate`.
@@ -575,7 +575,7 @@ extension FillExtrusionLayer {
     }
 
     /// The height with which to extrude the base of this layer. Must be less than or equal to `fill-extrusion-height`.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionBase is in meters.
     public func fillExtrusionBase(_ constant: Double) -> Self {
         with(self, setter(\.fillExtrusionBase, .constant(constant)))
     }
@@ -586,7 +586,7 @@ extension FillExtrusionLayer {
     }
 
     /// The height with which to extrude the base of this layer. Must be less than or equal to `fill-extrusion-height`.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionBase is in meters.
     public func fillExtrusionBase(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionBase, .expression(expression)))
     }
@@ -643,7 +643,7 @@ extension FillExtrusionLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionEmissiveStrength is in intensity.
     public func fillExtrusionEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.fillExtrusionEmissiveStrength, .constant(constant)))
     }
@@ -654,7 +654,7 @@ extension FillExtrusionLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionEmissiveStrength is in intensity.
     public func fillExtrusionEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionEmissiveStrength, .expression(expression)))
     }
@@ -714,7 +714,7 @@ extension FillExtrusionLayer {
     }
 
     /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
-    /// Default value: 0.
+    /// Default value: 0. The unit of fillExtrusionFloodLightGroundRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func fillExtrusionFloodLightGroundRadius(_ constant: Double) -> Self {
@@ -729,7 +729,7 @@ extension FillExtrusionLayer {
     }
 
     /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
-    /// Default value: 0.
+    /// Default value: 0. The unit of fillExtrusionFloodLightGroundRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func fillExtrusionFloodLightGroundRadius(_ expression: Exp) -> Self {
@@ -760,7 +760,7 @@ extension FillExtrusionLayer {
     }
 
     /// The extent of the flood light effect on the walls of the extruded buildings in meters.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionFloodLightWallRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func fillExtrusionFloodLightWallRadius(_ constant: Double) -> Self {
@@ -775,7 +775,7 @@ extension FillExtrusionLayer {
     }
 
     /// The extent of the flood light effect on the walls of the extruded buildings in meters.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionFloodLightWallRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func fillExtrusionFloodLightWallRadius(_ expression: Exp) -> Self {
@@ -783,7 +783,7 @@ extension FillExtrusionLayer {
     }
 
     /// The height with which to extrude this layer.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionHeight is in meters.
     public func fillExtrusionHeight(_ constant: Double) -> Self {
         with(self, setter(\.fillExtrusionHeight, .constant(constant)))
     }
@@ -794,7 +794,7 @@ extension FillExtrusionLayer {
     }
 
     /// The height with which to extrude this layer.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionHeight is in meters.
     public func fillExtrusionHeight(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionHeight, .expression(expression)))
     }
@@ -816,7 +816,7 @@ extension FillExtrusionLayer {
     }
 
     /// If a non-zero value is provided, it sets the fill-extrusion layer into wall rendering mode. The value is used to render the feature with the given width over the outlines of the geometry. Note: This property is experimental and some other fill-extrusion properties might not be supported with non-zero line width.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionLineWidth is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func fillExtrusionLineWidth(_ constant: Double) -> Self {
@@ -831,7 +831,7 @@ extension FillExtrusionLayer {
     }
 
     /// If a non-zero value is provided, it sets the fill-extrusion layer into wall rendering mode. The value is used to render the feature with the given width over the outlines of the geometry. Note: This property is experimental and some other fill-extrusion properties might not be supported with non-zero line width.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillExtrusionLineWidth is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func fillExtrusionLineWidth(_ expression: Exp) -> Self {
@@ -882,7 +882,7 @@ extension FillExtrusionLayer {
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of fillExtrusionTranslate is in pixels.
     public func fillExtrusionTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.fillExtrusionTranslate, .constant([x, y])))
     }
@@ -893,7 +893,7 @@ extension FillExtrusionLayer {
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of fillExtrusionTranslate is in pixels.
     public func fillExtrusionTranslate(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionTranslate, .expression(expression)))
     }

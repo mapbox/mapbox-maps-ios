@@ -24,10 +24,13 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
             layer.lineCap = Value<LineCap>.testConstantValue()
+            layer.lineCrossSlope = Value<Double>.testConstantValue()
+            layer.lineElevationReference = Value<LineElevationReference>.testConstantValue()
             layer.lineJoin = Value<LineJoin>.testConstantValue()
             layer.lineMiterLimit = Value<Double>.testConstantValue()
             layer.lineRoundLimit = Value<Double>.testConstantValue()
             layer.lineSortKey = Value<Double>.testConstantValue()
+            layer.lineWidthUnit = Value<LineWidthUnit>.testConstantValue()
             layer.lineZOffset = Value<Double>.testConstantValue()
             layer.lineBlur = Value<Double>.testConstantValue()
             layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)

@@ -1,5 +1,5 @@
 import UIKit
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 internal extension Value where T == Double {
     static func testConstantValue() -> Value<Double> {

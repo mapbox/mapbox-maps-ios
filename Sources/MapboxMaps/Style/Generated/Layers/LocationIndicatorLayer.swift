@@ -35,7 +35,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     public var topImage: Value<ResolvedImage>?
 
     /// The accuracy, in meters, of the position source used to retrieve the position of the location indicator.
-    /// Default value: 0.
+    /// Default value: 0. The unit of accuracyRadius is in meters.
     public var accuracyRadius: Value<Double>?
 
     /// Transition options for `accuracyRadius`.
@@ -56,14 +56,14 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     public var accuracyRadiusColorTransition: StyleTransition?
 
     /// The bearing of the location indicator. Values under 0.01 degree variation are ignored.
-    /// Default value: 0.
+    /// Default value: 0. The unit of bearing is in degrees.
     public var bearing: Value<Double>?
 
     /// Transition options for `bearing`.
     public var bearingTransition: StyleTransition?
 
     /// The size of the bearing image, as a scale factor applied to the size of the specified image.
-    /// Default value: 1.
+    /// Default value: 1. The unit of bearingImageSize is in factor of the original icon size.
     public var bearingImageSize: Value<Double>?
 
     /// Transition options for `bearingImageSize`.
@@ -84,14 +84,14 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     public var emphasisCircleGlowRangeTransition: StyleTransition?
 
     /// The radius, in pixel, of the circle emphasizing the indicator, drawn between the accuracy radius and the indicator shadow.
-    /// Default value: 0.
+    /// Default value: 0. The unit of emphasisCircleRadius is in pixels.
     public var emphasisCircleRadius: Value<Double>?
 
     /// Transition options for `emphasisCircleRadius`.
     public var emphasisCircleRadiusTransition: StyleTransition?
 
     /// The displacement off the center of the top image and the shadow image when the pitch of the map is greater than 0. This helps producing a three-dimensional appearence.
-    /// Default value: "0".
+    /// Default value: "0". The unit of imagePitchDisplacement is in pixels.
     public var imagePitchDisplacement: Value<Double>?
 
     /// An array of [latitude, longitude, altitude] position of the location indicator. Values under 0.000001 variation are ignored.
@@ -113,14 +113,14 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     public var perspectiveCompensation: Value<Double>?
 
     /// The size of the shadow image, as a scale factor applied to the size of the specified image.
-    /// Default value: 1.
+    /// Default value: 1. The unit of shadowImageSize is in factor of the original icon size.
     public var shadowImageSize: Value<Double>?
 
     /// Transition options for `shadowImageSize`.
     public var shadowImageSizeTransition: StyleTransition?
 
     /// The size of the top image, as a scale factor applied to the size of the specified image.
-    /// Default value: 1.
+    /// Default value: 1. The unit of topImageSize is in factor of the original icon size.
     public var topImageSize: Value<Double>?
 
     /// Transition options for `topImageSize`.
@@ -318,7 +318,7 @@ extension LocationIndicatorLayer {
     }
 
     /// The accuracy, in meters, of the position source used to retrieve the position of the location indicator.
-    /// Default value: 0.
+    /// Default value: 0. The unit of accuracyRadius is in meters.
     public func accuracyRadius(_ constant: Double) -> Self {
         with(self, setter(\.accuracyRadius, .constant(constant)))
     }
@@ -329,7 +329,7 @@ extension LocationIndicatorLayer {
     }
 
     /// The accuracy, in meters, of the position source used to retrieve the position of the location indicator.
-    /// Default value: 0.
+    /// Default value: 0. The unit of accuracyRadius is in meters.
     public func accuracyRadius(_ expression: Exp) -> Self {
         with(self, setter(\.accuracyRadius, .expression(expression)))
     }
@@ -381,7 +381,7 @@ extension LocationIndicatorLayer {
     }
 
     /// The bearing of the location indicator. Values under 0.01 degree variation are ignored.
-    /// Default value: 0.
+    /// Default value: 0. The unit of bearing is in degrees.
     public func bearing(_ constant: Double) -> Self {
         with(self, setter(\.bearing, .constant(constant)))
     }
@@ -392,13 +392,13 @@ extension LocationIndicatorLayer {
     }
 
     /// The bearing of the location indicator. Values under 0.01 degree variation are ignored.
-    /// Default value: 0.
+    /// Default value: 0. The unit of bearing is in degrees.
     public func bearing(_ expression: Exp) -> Self {
         with(self, setter(\.bearing, .expression(expression)))
     }
 
     /// The size of the bearing image, as a scale factor applied to the size of the specified image.
-    /// Default value: 1.
+    /// Default value: 1. The unit of bearingImageSize is in factor of the original icon size.
     public func bearingImageSize(_ constant: Double) -> Self {
         with(self, setter(\.bearingImageSize, .constant(constant)))
     }
@@ -409,7 +409,7 @@ extension LocationIndicatorLayer {
     }
 
     /// The size of the bearing image, as a scale factor applied to the size of the specified image.
-    /// Default value: 1.
+    /// Default value: 1. The unit of bearingImageSize is in factor of the original icon size.
     public func bearingImageSize(_ expression: Exp) -> Self {
         with(self, setter(\.bearingImageSize, .expression(expression)))
     }
@@ -455,7 +455,7 @@ extension LocationIndicatorLayer {
     }
 
     /// The radius, in pixel, of the circle emphasizing the indicator, drawn between the accuracy radius and the indicator shadow.
-    /// Default value: 0.
+    /// Default value: 0. The unit of emphasisCircleRadius is in pixels.
     public func emphasisCircleRadius(_ constant: Double) -> Self {
         with(self, setter(\.emphasisCircleRadius, .constant(constant)))
     }
@@ -466,19 +466,19 @@ extension LocationIndicatorLayer {
     }
 
     /// The radius, in pixel, of the circle emphasizing the indicator, drawn between the accuracy radius and the indicator shadow.
-    /// Default value: 0.
+    /// Default value: 0. The unit of emphasisCircleRadius is in pixels.
     public func emphasisCircleRadius(_ expression: Exp) -> Self {
         with(self, setter(\.emphasisCircleRadius, .expression(expression)))
     }
 
     /// The displacement off the center of the top image and the shadow image when the pitch of the map is greater than 0. This helps producing a three-dimensional appearence.
-    /// Default value: "0".
+    /// Default value: "0". The unit of imagePitchDisplacement is in pixels.
     public func imagePitchDisplacement(_ constant: Double) -> Self {
         with(self, setter(\.imagePitchDisplacement, .constant(constant)))
     }
 
     /// The displacement off the center of the top image and the shadow image when the pitch of the map is greater than 0. This helps producing a three-dimensional appearence.
-    /// Default value: "0".
+    /// Default value: "0". The unit of imagePitchDisplacement is in pixels.
     public func imagePitchDisplacement(_ expression: Exp) -> Self {
         with(self, setter(\.imagePitchDisplacement, .expression(expression)))
     }
@@ -530,7 +530,7 @@ extension LocationIndicatorLayer {
     }
 
     /// The size of the shadow image, as a scale factor applied to the size of the specified image.
-    /// Default value: 1.
+    /// Default value: 1. The unit of shadowImageSize is in factor of the original icon size.
     public func shadowImageSize(_ constant: Double) -> Self {
         with(self, setter(\.shadowImageSize, .constant(constant)))
     }
@@ -541,13 +541,13 @@ extension LocationIndicatorLayer {
     }
 
     /// The size of the shadow image, as a scale factor applied to the size of the specified image.
-    /// Default value: 1.
+    /// Default value: 1. The unit of shadowImageSize is in factor of the original icon size.
     public func shadowImageSize(_ expression: Exp) -> Self {
         with(self, setter(\.shadowImageSize, .expression(expression)))
     }
 
     /// The size of the top image, as a scale factor applied to the size of the specified image.
-    /// Default value: 1.
+    /// Default value: 1. The unit of topImageSize is in factor of the original icon size.
     public func topImageSize(_ constant: Double) -> Self {
         with(self, setter(\.topImageSize, .constant(constant)))
     }
@@ -558,7 +558,7 @@ extension LocationIndicatorLayer {
     }
 
     /// The size of the top image, as a scale factor applied to the size of the specified image.
-    /// Default value: 1.
+    /// Default value: 1. The unit of topImageSize is in factor of the original icon size.
     public func topImageSize(_ expression: Exp) -> Self {
         with(self, setter(\.topImageSize, .expression(expression)))
     }

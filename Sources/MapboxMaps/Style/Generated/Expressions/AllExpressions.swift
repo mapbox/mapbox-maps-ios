@@ -168,7 +168,7 @@ public extension Exp {
         /// Binds expressions to named variables, which can then be referenced in the result expression using ["var", "variable_name"].
         public static let letExpression = Operator(rawValue: "let")
 
-        /// Returns the progress along a gradient line. Can only be used in the `line-gradient` property.
+        /// Returns the progress along a gradient line. Can only be used in the `line-gradient` and `line-z-offset` properties.
         public static let lineProgress = Operator(rawValue: "line-progress")
 
         /// Provides a literal array or object value.

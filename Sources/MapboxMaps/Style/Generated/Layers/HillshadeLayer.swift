@@ -47,7 +47,7 @@ public struct HillshadeLayer: Layer, Equatable {
     public var hillshadeAccentColorTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of hillshadeEmissiveStrength is in intensity.
     public var hillshadeEmissiveStrength: Value<Double>?
 
     /// Transition options for `hillshadeEmissiveStrength`.
@@ -245,7 +245,7 @@ extension HillshadeLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of hillshadeEmissiveStrength is in intensity.
     public func hillshadeEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.hillshadeEmissiveStrength, .constant(constant)))
     }
@@ -256,7 +256,7 @@ extension HillshadeLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of hillshadeEmissiveStrength is in intensity.
     public func hillshadeEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.hillshadeEmissiveStrength, .expression(expression)))
     }

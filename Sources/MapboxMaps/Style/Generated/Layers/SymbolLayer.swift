@@ -67,7 +67,7 @@ public struct SymbolLayer: Layer, Equatable {
     public var iconOptional: Value<Bool>?
 
     /// Size of the additional area around the icon bounding box used for detecting symbol collisions.
-    /// Default value: 2. Minimum value: 0.
+    /// Default value: 2. Minimum value: 0. The unit of iconPadding is in pixels.
     public var iconPadding: Value<Double>?
 
     /// Orientation of icon when map is pitched.
@@ -75,7 +75,7 @@ public struct SymbolLayer: Layer, Equatable {
     public var iconPitchAlignment: Value<IconPitchAlignment>?
 
     /// Rotates the icon clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of iconRotate is in degrees.
     public var iconRotate: Value<Double>?
 
     /// In combination with `symbol-placement`, determines the rotation behavior of icons.
@@ -83,15 +83,20 @@ public struct SymbolLayer: Layer, Equatable {
     public var iconRotationAlignment: Value<IconRotationAlignment>?
 
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconSize is in factor of the original icon size.
     public var iconSize: Value<Double>?
+
+    /// Defines the minimum and maximum scaling factors for icon related properties like `icon-size`, `icon-halo-width`, `icon-halo-blur`
+    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var iconSizeScaleRange: Value<[Double]>?
 
     /// Scales the icon to fit around the associated text.
     /// Default value: "none".
     public var iconTextFit: Value<IconTextFit>?
 
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    /// Default value: [0,0,0,0].
+    /// Default value: [0,0,0,0]. The unit of iconTextFitPadding is in pixels.
     public var iconTextFitPadding: Value<[Double]>?
 
     /// If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Mapbox GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.
@@ -111,7 +116,7 @@ public struct SymbolLayer: Layer, Equatable {
     public var symbolSortKey: Value<Double>?
 
     /// Distance between two symbol anchors.
-    /// Default value: 250. Minimum value: 1.
+    /// Default value: 250. Minimum value: 1. The unit of symbolSpacing is in pixels.
     public var symbolSpacing: Value<Double>?
 
     /// Position symbol on buildings (both fill extrusions and models) rooftops. In order to have minimal impact on performance, this is supported only when `fill-extrusion-height` is not zoom-dependent and remains unchanged. For fading in buildings when zooming in, fill-extrusion-vertical-scale should be used and symbols would raise with building rooftops. Symbols are sorted by elevation, except in cases when `viewport-y` sorting or `symbol-sort-key` are applied.
@@ -150,23 +155,23 @@ public struct SymbolLayer: Layer, Equatable {
     public var textKeepUpright: Value<Bool>?
 
     /// Text tracking amount.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textLetterSpacing is in ems.
     public var textLetterSpacing: Value<Double>?
 
     /// Text leading value for multi-line text.
-    /// Default value: 1.2.
+    /// Default value: 1.2. The unit of textLineHeight is in ems.
     public var textLineHeight: Value<Double>?
 
     /// Maximum angle change between adjacent characters.
-    /// Default value: 45.
+    /// Default value: 45. The unit of textMaxAngle is in degrees.
     public var textMaxAngle: Value<Double>?
 
     /// The maximum line width for text wrapping.
-    /// Default value: 10. Minimum value: 0.
+    /// Default value: 10. Minimum value: 0. The unit of textMaxWidth is in ems.
     public var textMaxWidth: Value<Double>?
 
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of textOffset is in ems.
     public var textOffset: Value<[Double]>?
 
     /// If true, icons will display without their corresponding text when the text collides with other symbols and the icon does not.
@@ -174,7 +179,7 @@ public struct SymbolLayer: Layer, Equatable {
     public var textOptional: Value<Bool>?
 
     /// Size of the additional area around the text bounding box used for detecting symbol collisions.
-    /// Default value: 2. Minimum value: 0.
+    /// Default value: 2. Minimum value: 0. The unit of textPadding is in pixels.
     public var textPadding: Value<Double>?
 
     /// Orientation of text when map is pitched.
@@ -182,11 +187,11 @@ public struct SymbolLayer: Layer, Equatable {
     public var textPitchAlignment: Value<TextPitchAlignment>?
 
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRadialOffset is in ems.
     public var textRadialOffset: Value<Double>?
 
     /// Rotates the text clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRotate is in degrees.
     public var textRotate: Value<Double>?
 
     /// In combination with `symbol-placement`, determines the rotation behavior of the individual glyphs forming the text.
@@ -194,8 +199,13 @@ public struct SymbolLayer: Layer, Equatable {
     public var textRotationAlignment: Value<TextRotationAlignment>?
 
     /// Font size.
-    /// Default value: 16. Minimum value: 0.
+    /// Default value: 16. Minimum value: 0. The unit of textSize is in pixels.
     public var textSize: Value<Double>?
+
+    /// Defines the minimum and maximum scaling factors for text related properties like `text-size`, `text-max-width`, `text-halo-width`, `font-size`
+    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var textSizeScaleRange: Value<[Double]>?
 
     /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
     /// Default value: "none".
@@ -222,14 +232,14 @@ public struct SymbolLayer: Layer, Equatable {
     public var iconColorSaturationTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconEmissiveStrength is in intensity.
     public var iconEmissiveStrength: Value<Double>?
 
     /// Transition options for `iconEmissiveStrength`.
     public var iconEmissiveStrengthTransition: StyleTransition?
 
     /// Fade out the halo towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloBlur is in pixels.
     public var iconHaloBlur: Value<Double>?
 
     /// Transition options for `iconHaloBlur`.
@@ -243,7 +253,7 @@ public struct SymbolLayer: Layer, Equatable {
     public var iconHaloColorTransition: StyleTransition?
 
     /// Distance of halo to the icon outline.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloWidth is in pixels.
     public var iconHaloWidth: Value<Double>?
 
     /// Transition options for `iconHaloWidth`.
@@ -271,7 +281,7 @@ public struct SymbolLayer: Layer, Equatable {
     public var iconOpacityTransition: StyleTransition?
 
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of iconTranslate is in pixels.
     public var iconTranslate: Value<[Double]>?
 
     /// Transition options for `iconTranslate`.
@@ -298,14 +308,14 @@ public struct SymbolLayer: Layer, Equatable {
     public var textColorTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of textEmissiveStrength is in intensity.
     public var textEmissiveStrength: Value<Double>?
 
     /// Transition options for `textEmissiveStrength`.
     public var textEmissiveStrengthTransition: StyleTransition?
 
     /// The halo's fadeout distance towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloBlur is in pixels.
     public var textHaloBlur: Value<Double>?
 
     /// Transition options for `textHaloBlur`.
@@ -319,7 +329,7 @@ public struct SymbolLayer: Layer, Equatable {
     public var textHaloColorTransition: StyleTransition?
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloWidth is in pixels.
     public var textHaloWidth: Value<Double>?
 
     /// Transition options for `textHaloWidth`.
@@ -340,7 +350,7 @@ public struct SymbolLayer: Layer, Equatable {
     public var textOpacityTransition: StyleTransition?
 
     /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of textTranslate is in pixels.
     public var textTranslate: Value<[Double]>?
 
     /// Transition options for `textTranslate`.
@@ -424,6 +434,7 @@ public struct SymbolLayer: Layer, Equatable {
         try layoutContainer.encodeIfPresent(iconRotate, forKey: .iconRotate)
         try layoutContainer.encodeIfPresent(iconRotationAlignment, forKey: .iconRotationAlignment)
         try layoutContainer.encodeIfPresent(iconSize, forKey: .iconSize)
+        try layoutContainer.encodeIfPresent(iconSizeScaleRange, forKey: .iconSizeScaleRange)
         try layoutContainer.encodeIfPresent(iconTextFit, forKey: .iconTextFit)
         try layoutContainer.encodeIfPresent(iconTextFitPadding, forKey: .iconTextFitPadding)
         try layoutContainer.encodeIfPresent(symbolAvoidEdges, forKey: .symbolAvoidEdges)
@@ -452,6 +463,7 @@ public struct SymbolLayer: Layer, Equatable {
         try layoutContainer.encodeIfPresent(textRotate, forKey: .textRotate)
         try layoutContainer.encodeIfPresent(textRotationAlignment, forKey: .textRotationAlignment)
         try layoutContainer.encodeIfPresent(textSize, forKey: .textSize)
+        try layoutContainer.encodeIfPresent(textSizeScaleRange, forKey: .textSizeScaleRange)
         try layoutContainer.encodeIfPresent(textTransform, forKey: .textTransform)
         try layoutContainer.encodeIfPresent(textVariableAnchor, forKey: .textVariableAnchor)
         try layoutContainer.encodeIfPresent(textWritingMode, forKey: .textWritingMode)
@@ -526,6 +538,7 @@ public struct SymbolLayer: Layer, Equatable {
             iconRotate = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .iconRotate)
             iconRotationAlignment = try layoutContainer.decodeIfPresent(Value<IconRotationAlignment>.self, forKey: .iconRotationAlignment)
             iconSize = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .iconSize)
+            iconSizeScaleRange = try layoutContainer.decodeIfPresent(Value<[Double]>.self, forKey: .iconSizeScaleRange)
             iconTextFit = try layoutContainer.decodeIfPresent(Value<IconTextFit>.self, forKey: .iconTextFit)
             iconTextFitPadding = try layoutContainer.decodeIfPresent(Value<[Double]>.self, forKey: .iconTextFitPadding)
             symbolAvoidEdges = try layoutContainer.decodeIfPresent(Value<Bool>.self, forKey: .symbolAvoidEdges)
@@ -554,6 +567,7 @@ public struct SymbolLayer: Layer, Equatable {
             textRotate = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .textRotate)
             textRotationAlignment = try layoutContainer.decodeIfPresent(Value<TextRotationAlignment>.self, forKey: .textRotationAlignment)
             textSize = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .textSize)
+            textSizeScaleRange = try layoutContainer.decodeIfPresent(Value<[Double]>.self, forKey: .textSizeScaleRange)
             textTransform = try layoutContainer.decodeIfPresent(Value<TextTransform>.self, forKey: .textTransform)
             textVariableAnchor = try layoutContainer.decodeIfPresent(Value<[TextAnchor]>.self, forKey: .textVariableAnchor)
             textWritingMode = try layoutContainer.decodeIfPresent(Value<[TextWritingMode]>.self, forKey: .textWritingMode)
@@ -587,6 +601,7 @@ public struct SymbolLayer: Layer, Equatable {
         case iconRotate = "icon-rotate"
         case iconRotationAlignment = "icon-rotation-alignment"
         case iconSize = "icon-size"
+        case iconSizeScaleRange = "icon-size-scale-range"
         case iconTextFit = "icon-text-fit"
         case iconTextFitPadding = "icon-text-fit-padding"
         case symbolAvoidEdges = "symbol-avoid-edges"
@@ -615,6 +630,7 @@ public struct SymbolLayer: Layer, Equatable {
         case textRotate = "text-rotate"
         case textRotationAlignment = "text-rotation-alignment"
         case textSize = "text-size"
+        case textSizeScaleRange = "text-size-scale-range"
         case textTransform = "text-transform"
         case textVariableAnchor = "text-variable-anchor"
         case textWritingMode = "text-writing-mode"
@@ -785,13 +801,13 @@ extension SymbolLayer {
     }
 
     /// Size of the additional area around the icon bounding box used for detecting symbol collisions.
-    /// Default value: 2. Minimum value: 0.
+    /// Default value: 2. Minimum value: 0. The unit of iconPadding is in pixels.
     public func iconPadding(_ constant: Double) -> Self {
         with(self, setter(\.iconPadding, .constant(constant)))
     }
 
     /// Size of the additional area around the icon bounding box used for detecting symbol collisions.
-    /// Default value: 2. Minimum value: 0.
+    /// Default value: 2. Minimum value: 0. The unit of iconPadding is in pixels.
     public func iconPadding(_ expression: Exp) -> Self {
         with(self, setter(\.iconPadding, .expression(expression)))
     }
@@ -809,13 +825,13 @@ extension SymbolLayer {
     }
 
     /// Rotates the icon clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of iconRotate is in degrees.
     public func iconRotate(_ constant: Double) -> Self {
         with(self, setter(\.iconRotate, .constant(constant)))
     }
 
     /// Rotates the icon clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of iconRotate is in degrees.
     public func iconRotate(_ expression: Exp) -> Self {
         with(self, setter(\.iconRotate, .expression(expression)))
     }
@@ -833,15 +849,31 @@ extension SymbolLayer {
     }
 
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconSize is in factor of the original icon size.
     public func iconSize(_ constant: Double) -> Self {
         with(self, setter(\.iconSize, .constant(constant)))
     }
 
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconSize is in factor of the original icon size.
     public func iconSize(_ expression: Exp) -> Self {
         with(self, setter(\.iconSize, .expression(expression)))
+    }
+
+    /// Defines the minimum and maximum scaling factors for icon related properties like `icon-size`, `icon-halo-width`, `icon-halo-blur`
+    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func iconSizeScaleRange(min: Double, max: Double) -> Self {
+        with(self, setter(\.iconSizeScaleRange, .constant([min, max])))
+    }
+
+    /// Defines the minimum and maximum scaling factors for icon related properties like `icon-size`, `icon-halo-width`, `icon-halo-blur`
+    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func iconSizeScaleRange(_ expression: Exp) -> Self {
+        with(self, setter(\.iconSizeScaleRange, .expression(expression)))
     }
 
     /// Scales the icon to fit around the associated text.
@@ -857,13 +889,13 @@ extension SymbolLayer {
     }
 
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    /// Default value: [0,0,0,0].
+    /// Default value: [0,0,0,0]. The unit of iconTextFitPadding is in pixels.
     public func iconTextFitPadding(_ padding: UIEdgeInsets) -> Self {
         with(self, setter(\.iconTextFitPadding, .constant([padding.top, padding.right, padding.bottom, padding.left])))
     }
 
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    /// Default value: [0,0,0,0].
+    /// Default value: [0,0,0,0]. The unit of iconTextFitPadding is in pixels.
     public func iconTextFitPadding(_ expression: Exp) -> Self {
         with(self, setter(\.iconTextFitPadding, .expression(expression)))
     }
@@ -919,13 +951,13 @@ extension SymbolLayer {
     }
 
     /// Distance between two symbol anchors.
-    /// Default value: 250. Minimum value: 1.
+    /// Default value: 250. Minimum value: 1. The unit of symbolSpacing is in pixels.
     public func symbolSpacing(_ constant: Double) -> Self {
         with(self, setter(\.symbolSpacing, .constant(constant)))
     }
 
     /// Distance between two symbol anchors.
-    /// Default value: 250. Minimum value: 1.
+    /// Default value: 250. Minimum value: 1. The unit of symbolSpacing is in pixels.
     public func symbolSpacing(_ expression: Exp) -> Self {
         with(self, setter(\.symbolSpacing, .expression(expression)))
     }
@@ -1037,61 +1069,61 @@ extension SymbolLayer {
     }
 
     /// Text tracking amount.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textLetterSpacing is in ems.
     public func textLetterSpacing(_ constant: Double) -> Self {
         with(self, setter(\.textLetterSpacing, .constant(constant)))
     }
 
     /// Text tracking amount.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textLetterSpacing is in ems.
     public func textLetterSpacing(_ expression: Exp) -> Self {
         with(self, setter(\.textLetterSpacing, .expression(expression)))
     }
 
     /// Text leading value for multi-line text.
-    /// Default value: 1.2.
+    /// Default value: 1.2. The unit of textLineHeight is in ems.
     public func textLineHeight(_ constant: Double) -> Self {
         with(self, setter(\.textLineHeight, .constant(constant)))
     }
 
     /// Text leading value for multi-line text.
-    /// Default value: 1.2.
+    /// Default value: 1.2. The unit of textLineHeight is in ems.
     public func textLineHeight(_ expression: Exp) -> Self {
         with(self, setter(\.textLineHeight, .expression(expression)))
     }
 
     /// Maximum angle change between adjacent characters.
-    /// Default value: 45.
+    /// Default value: 45. The unit of textMaxAngle is in degrees.
     public func textMaxAngle(_ constant: Double) -> Self {
         with(self, setter(\.textMaxAngle, .constant(constant)))
     }
 
     /// Maximum angle change between adjacent characters.
-    /// Default value: 45.
+    /// Default value: 45. The unit of textMaxAngle is in degrees.
     public func textMaxAngle(_ expression: Exp) -> Self {
         with(self, setter(\.textMaxAngle, .expression(expression)))
     }
 
     /// The maximum line width for text wrapping.
-    /// Default value: 10. Minimum value: 0.
+    /// Default value: 10. Minimum value: 0. The unit of textMaxWidth is in ems.
     public func textMaxWidth(_ constant: Double) -> Self {
         with(self, setter(\.textMaxWidth, .constant(constant)))
     }
 
     /// The maximum line width for text wrapping.
-    /// Default value: 10. Minimum value: 0.
+    /// Default value: 10. Minimum value: 0. The unit of textMaxWidth is in ems.
     public func textMaxWidth(_ expression: Exp) -> Self {
         with(self, setter(\.textMaxWidth, .expression(expression)))
     }
 
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of textOffset is in ems.
     public func textOffset(x: Double, y: Double) -> Self {
         with(self, setter(\.textOffset, .constant([x, y])))
     }
 
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of textOffset is in ems.
     public func textOffset(_ expression: Exp) -> Self {
         with(self, setter(\.textOffset, .expression(expression)))
     }
@@ -1109,13 +1141,13 @@ extension SymbolLayer {
     }
 
     /// Size of the additional area around the text bounding box used for detecting symbol collisions.
-    /// Default value: 2. Minimum value: 0.
+    /// Default value: 2. Minimum value: 0. The unit of textPadding is in pixels.
     public func textPadding(_ constant: Double) -> Self {
         with(self, setter(\.textPadding, .constant(constant)))
     }
 
     /// Size of the additional area around the text bounding box used for detecting symbol collisions.
-    /// Default value: 2. Minimum value: 0.
+    /// Default value: 2. Minimum value: 0. The unit of textPadding is in pixels.
     public func textPadding(_ expression: Exp) -> Self {
         with(self, setter(\.textPadding, .expression(expression)))
     }
@@ -1133,25 +1165,25 @@ extension SymbolLayer {
     }
 
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRadialOffset is in ems.
     public func textRadialOffset(_ constant: Double) -> Self {
         with(self, setter(\.textRadialOffset, .constant(constant)))
     }
 
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRadialOffset is in ems.
     public func textRadialOffset(_ expression: Exp) -> Self {
         with(self, setter(\.textRadialOffset, .expression(expression)))
     }
 
     /// Rotates the text clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRotate is in degrees.
     public func textRotate(_ constant: Double) -> Self {
         with(self, setter(\.textRotate, .constant(constant)))
     }
 
     /// Rotates the text clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRotate is in degrees.
     public func textRotate(_ expression: Exp) -> Self {
         with(self, setter(\.textRotate, .expression(expression)))
     }
@@ -1169,15 +1201,31 @@ extension SymbolLayer {
     }
 
     /// Font size.
-    /// Default value: 16. Minimum value: 0.
+    /// Default value: 16. Minimum value: 0. The unit of textSize is in pixels.
     public func textSize(_ constant: Double) -> Self {
         with(self, setter(\.textSize, .constant(constant)))
     }
 
     /// Font size.
-    /// Default value: 16. Minimum value: 0.
+    /// Default value: 16. Minimum value: 0. The unit of textSize is in pixels.
     public func textSize(_ expression: Exp) -> Self {
         with(self, setter(\.textSize, .expression(expression)))
+    }
+
+    /// Defines the minimum and maximum scaling factors for text related properties like `text-size`, `text-max-width`, `text-halo-width`, `font-size`
+    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func textSizeScaleRange(min: Double, max: Double) -> Self {
+        with(self, setter(\.textSizeScaleRange, .constant([min, max])))
+    }
+
+    /// Defines the minimum and maximum scaling factors for text related properties like `text-size`, `text-max-width`, `text-halo-width`, `font-size`
+    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func textSizeScaleRange(_ expression: Exp) -> Self {
+        with(self, setter(\.textSizeScaleRange, .expression(expression)))
     }
 
     /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
@@ -1253,7 +1301,7 @@ extension SymbolLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconEmissiveStrength is in intensity.
     public func iconEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.iconEmissiveStrength, .constant(constant)))
     }
@@ -1264,13 +1312,13 @@ extension SymbolLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconEmissiveStrength is in intensity.
     public func iconEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.iconEmissiveStrength, .expression(expression)))
     }
 
     /// Fade out the halo towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloBlur is in pixels.
     public func iconHaloBlur(_ constant: Double) -> Self {
         with(self, setter(\.iconHaloBlur, .constant(constant)))
     }
@@ -1281,7 +1329,7 @@ extension SymbolLayer {
     }
 
     /// Fade out the halo towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloBlur is in pixels.
     public func iconHaloBlur(_ expression: Exp) -> Self {
         with(self, setter(\.iconHaloBlur, .expression(expression)))
     }
@@ -1310,7 +1358,7 @@ extension SymbolLayer {
     }
 
     /// Distance of halo to the icon outline.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloWidth is in pixels.
     public func iconHaloWidth(_ constant: Double) -> Self {
         with(self, setter(\.iconHaloWidth, .constant(constant)))
     }
@@ -1321,7 +1369,7 @@ extension SymbolLayer {
     }
 
     /// Distance of halo to the icon outline.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloWidth is in pixels.
     public func iconHaloWidth(_ expression: Exp) -> Self {
         with(self, setter(\.iconHaloWidth, .expression(expression)))
     }
@@ -1378,7 +1426,7 @@ extension SymbolLayer {
     }
 
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of iconTranslate is in pixels.
     public func iconTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.iconTranslate, .constant([x, y])))
     }
@@ -1389,7 +1437,7 @@ extension SymbolLayer {
     }
 
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of iconTranslate is in pixels.
     public func iconTranslate(_ expression: Exp) -> Self {
         with(self, setter(\.iconTranslate, .expression(expression)))
     }
@@ -1453,7 +1501,7 @@ extension SymbolLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of textEmissiveStrength is in intensity.
     public func textEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.textEmissiveStrength, .constant(constant)))
     }
@@ -1464,13 +1512,13 @@ extension SymbolLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of textEmissiveStrength is in intensity.
     public func textEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.textEmissiveStrength, .expression(expression)))
     }
 
     /// The halo's fadeout distance towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloBlur is in pixels.
     public func textHaloBlur(_ constant: Double) -> Self {
         with(self, setter(\.textHaloBlur, .constant(constant)))
     }
@@ -1481,7 +1529,7 @@ extension SymbolLayer {
     }
 
     /// The halo's fadeout distance towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloBlur is in pixels.
     public func textHaloBlur(_ expression: Exp) -> Self {
         with(self, setter(\.textHaloBlur, .expression(expression)))
     }
@@ -1510,7 +1558,7 @@ extension SymbolLayer {
     }
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloWidth is in pixels.
     public func textHaloWidth(_ constant: Double) -> Self {
         with(self, setter(\.textHaloWidth, .constant(constant)))
     }
@@ -1521,7 +1569,7 @@ extension SymbolLayer {
     }
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloWidth is in pixels.
     public func textHaloWidth(_ expression: Exp) -> Self {
         with(self, setter(\.textHaloWidth, .expression(expression)))
     }
@@ -1561,7 +1609,7 @@ extension SymbolLayer {
     }
 
     /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of textTranslate is in pixels.
     public func textTranslate(x: Double, y: Double) -> Self {
         with(self, setter(\.textTranslate, .constant([x, y])))
     }
@@ -1572,7 +1620,7 @@ extension SymbolLayer {
     }
 
     /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of textTranslate is in pixels.
     public func textTranslate(_ expression: Exp) -> Self {
         with(self, setter(\.textTranslate, .expression(expression)))
     }

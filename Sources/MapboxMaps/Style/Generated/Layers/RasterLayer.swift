@@ -90,18 +90,18 @@ public struct RasterLayer: Layer, Equatable {
     @_spi(Experimental) public var rasterElevationTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of rasterEmissiveStrength is in intensity.
     public var rasterEmissiveStrength: Value<Double>?
 
     /// Transition options for `rasterEmissiveStrength`.
     public var rasterEmissiveStrengthTransition: StyleTransition?
 
     /// Fade duration when a new tile is added.
-    /// Default value: 300. Minimum value: 0.
+    /// Default value: 300. Minimum value: 0. The unit of rasterFadeDuration is in milliseconds.
     public var rasterFadeDuration: Value<Double>?
 
     /// Rotates hues around the color wheel.
-    /// Default value: 0.
+    /// Default value: 0. The unit of rasterHueRotate is in degrees.
     public var rasterHueRotate: Value<Double>?
 
     /// Transition options for `rasterHueRotate`.
@@ -436,7 +436,7 @@ extension RasterLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of rasterEmissiveStrength is in intensity.
     public func rasterEmissiveStrength(_ constant: Double) -> Self {
         with(self, setter(\.rasterEmissiveStrength, .constant(constant)))
     }
@@ -447,25 +447,25 @@ extension RasterLayer {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of rasterEmissiveStrength is in intensity.
     public func rasterEmissiveStrength(_ expression: Exp) -> Self {
         with(self, setter(\.rasterEmissiveStrength, .expression(expression)))
     }
 
     /// Fade duration when a new tile is added.
-    /// Default value: 300. Minimum value: 0.
+    /// Default value: 300. Minimum value: 0. The unit of rasterFadeDuration is in milliseconds.
     public func rasterFadeDuration(_ constant: Double) -> Self {
         with(self, setter(\.rasterFadeDuration, .constant(constant)))
     }
 
     /// Fade duration when a new tile is added.
-    /// Default value: 300. Minimum value: 0.
+    /// Default value: 300. Minimum value: 0. The unit of rasterFadeDuration is in milliseconds.
     public func rasterFadeDuration(_ expression: Exp) -> Self {
         with(self, setter(\.rasterFadeDuration, .expression(expression)))
     }
 
     /// Rotates hues around the color wheel.
-    /// Default value: 0.
+    /// Default value: 0. The unit of rasterHueRotate is in degrees.
     public func rasterHueRotate(_ constant: Double) -> Self {
         with(self, setter(\.rasterHueRotate, .constant(constant)))
     }
@@ -476,7 +476,7 @@ extension RasterLayer {
     }
 
     /// Rotates hues around the color wheel.
-    /// Default value: 0.
+    /// Default value: 0. The unit of rasterHueRotate is in degrees.
     public func rasterHueRotate(_ expression: Exp) -> Self {
         with(self, setter(\.rasterHueRotate, .expression(expression)))
     }

@@ -1,7 +1,7 @@
 // This file is generated.
 // swiftlint:disable file_length
 import Foundation
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 extension Value where T == Visibility {
     static func testConstantValue() -> Value<Visibility> {
@@ -12,6 +12,25 @@ extension Value where T == Visibility {
 extension Visibility {
     static func testConstantValue() -> Visibility {
         return .visible
+    }
+}
+
+// MARK: FILL_ELEVATION_REFERENCE
+
+extension Value where T == FillElevationReference {
+    static func testConstantValue() -> Value<FillElevationReference> {
+        return .constant(FillElevationReference.testConstantValue())
+    }
+}
+
+extension FillElevationReference {
+    static func testConstantValue() -> FillElevationReference {
+        return .none
+    }
+
+    static func random() -> FillElevationReference {
+        let allCases: [FillElevationReference] = [.none, .hdRoadBase, .hdRoadMarkup]
+        return allCases.randomElement()!
     }
 }
 
@@ -34,6 +53,25 @@ extension LineCap {
     }
 }
 
+// MARK: LINE_ELEVATION_REFERENCE
+
+extension Value where T == LineElevationReference {
+    static func testConstantValue() -> Value<LineElevationReference> {
+        return .constant(LineElevationReference.testConstantValue())
+    }
+}
+
+extension LineElevationReference {
+    static func testConstantValue() -> LineElevationReference {
+        return .none
+    }
+
+    static func random() -> LineElevationReference {
+        let allCases: [LineElevationReference] = [.none, .sea, .ground, .hdRoadMarkup]
+        return allCases.randomElement()!
+    }
+}
+
 // MARK: LINE_JOIN
 
 extension Value where T == LineJoin {
@@ -49,6 +87,25 @@ extension LineJoin {
 
     static func random() -> LineJoin {
         let allCases: [LineJoin] = [.bevel, .round, .miter, .none]
+        return allCases.randomElement()!
+    }
+}
+
+// MARK: LINE_WIDTH_UNIT
+
+extension Value where T == LineWidthUnit {
+    static func testConstantValue() -> Value<LineWidthUnit> {
+        return .constant(LineWidthUnit.testConstantValue())
+    }
+}
+
+extension LineWidthUnit {
+    static func testConstantValue() -> LineWidthUnit {
+        return .pixels
+    }
+
+    static func random() -> LineWidthUnit {
+        let allCases: [LineWidthUnit] = [.pixels, .meters]
         return allCases.randomElement()!
     }
 }
@@ -143,7 +200,7 @@ extension SymbolElevationReference {
     }
 
     static func random() -> SymbolElevationReference {
-        let allCases: [SymbolElevationReference] = [.sea, .ground]
+        let allCases: [SymbolElevationReference] = [.sea, .ground, .hdRoadMarkup]
         return allCases.randomElement()!
     }
 }

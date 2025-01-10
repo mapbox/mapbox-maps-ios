@@ -173,11 +173,11 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     public var iconOffset: [Double]?
 
     /// Rotates the icon clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of iconRotate is in degrees.
     public var iconRotate: Double?
 
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconSize is in factor of the original icon size.
     public var iconSize: Double?
 
     /// Scales the icon to fit around the associated text.
@@ -185,7 +185,7 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     public var iconTextFit: IconTextFit?
 
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    /// Default value: [0,0,0,0].
+    /// Default value: [0,0,0,0]. The unit of iconTextFitPadding is in pixels.
     public var iconTextFitPadding: [Double]?
 
     /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first. When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
@@ -204,31 +204,31 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     public var textJustify: TextJustify?
 
     /// Text tracking amount.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textLetterSpacing is in ems.
     public var textLetterSpacing: Double?
 
     /// Text leading value for multi-line text.
-    /// Default value: 1.2.
+    /// Default value: 1.2. The unit of textLineHeight is in ems.
     public var textLineHeight: Double?
 
     /// The maximum line width for text wrapping.
-    /// Default value: 10. Minimum value: 0.
+    /// Default value: 10. Minimum value: 0. The unit of textMaxWidth is in ems.
     public var textMaxWidth: Double?
 
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of textOffset is in ems.
     public var textOffset: [Double]?
 
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRadialOffset is in ems.
     public var textRadialOffset: Double?
 
     /// Rotates the text clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRotate is in degrees.
     public var textRotate: Double?
 
     /// Font size.
-    /// Default value: 16. Minimum value: 0.
+    /// Default value: 16. Minimum value: 0. The unit of textSize is in pixels.
     public var textSize: Double?
 
     /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
@@ -240,11 +240,11 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     public var iconColor: StyleColor?
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconEmissiveStrength is in intensity.
     public var iconEmissiveStrength: Double?
 
     /// Fade out the halo towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloBlur is in pixels.
     public var iconHaloBlur: Double?
 
     /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
@@ -252,7 +252,7 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     public var iconHaloColor: StyleColor?
 
     /// Distance of halo to the icon outline.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloWidth is in pixels.
     public var iconHaloWidth: Double?
 
     /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
@@ -276,11 +276,11 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     public var textColor: StyleColor?
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of textEmissiveStrength is in intensity.
     public var textEmissiveStrength: Double?
 
     /// The halo's fadeout distance towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloBlur is in pixels.
     public var textHaloBlur: Double?
 
     /// The color of the text's halo, which helps it stand out from backgrounds.
@@ -288,7 +288,7 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     public var textHaloColor: StyleColor?
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloWidth is in pixels.
     public var textHaloWidth: Double?
 
     /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
@@ -328,13 +328,13 @@ extension PointAnnotation {
     }
 
     /// Rotates the icon clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of iconRotate is in degrees.
     public func iconRotate(_ newValue: Double) -> Self {
         with(self, setter(\.iconRotate, newValue))
     }
 
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconSize is in factor of the original icon size.
     public func iconSize(_ newValue: Double) -> Self {
         with(self, setter(\.iconSize, newValue))
     }
@@ -346,7 +346,7 @@ extension PointAnnotation {
     }
 
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    /// Default value: [0,0,0,0].
+    /// Default value: [0,0,0,0]. The unit of iconTextFitPadding is in pixels.
     public func iconTextFitPadding(_ padding: UIEdgeInsets) -> Self {
         with(self, setter(\.iconTextFitPadding, [padding.top, padding.right, padding.bottom, padding.left]))
     }
@@ -375,43 +375,43 @@ extension PointAnnotation {
     }
 
     /// Text tracking amount.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textLetterSpacing is in ems.
     public func textLetterSpacing(_ newValue: Double) -> Self {
         with(self, setter(\.textLetterSpacing, newValue))
     }
 
     /// Text leading value for multi-line text.
-    /// Default value: 1.2.
+    /// Default value: 1.2. The unit of textLineHeight is in ems.
     public func textLineHeight(_ newValue: Double) -> Self {
         with(self, setter(\.textLineHeight, newValue))
     }
 
     /// The maximum line width for text wrapping.
-    /// Default value: 10. Minimum value: 0.
+    /// Default value: 10. Minimum value: 0. The unit of textMaxWidth is in ems.
     public func textMaxWidth(_ newValue: Double) -> Self {
         with(self, setter(\.textMaxWidth, newValue))
     }
 
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of textOffset is in ems.
     public func textOffset(x: Double, y: Double) -> Self {
         with(self, setter(\.textOffset, [x, y]))
     }
 
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRadialOffset is in ems.
     public func textRadialOffset(_ newValue: Double) -> Self {
         with(self, setter(\.textRadialOffset, newValue))
     }
 
     /// Rotates the text clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRotate is in degrees.
     public func textRotate(_ newValue: Double) -> Self {
         with(self, setter(\.textRotate, newValue))
     }
 
     /// Font size.
-    /// Default value: 16. Minimum value: 0.
+    /// Default value: 16. Minimum value: 0. The unit of textSize is in pixels.
     public func textSize(_ newValue: Double) -> Self {
         with(self, setter(\.textSize, newValue))
     }
@@ -435,13 +435,13 @@ extension PointAnnotation {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconEmissiveStrength is in intensity.
     public func iconEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.iconEmissiveStrength, newValue))
     }
 
     /// Fade out the halo towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloBlur is in pixels.
     public func iconHaloBlur(_ newValue: Double) -> Self {
         with(self, setter(\.iconHaloBlur, newValue))
     }
@@ -459,7 +459,7 @@ extension PointAnnotation {
     }
 
     /// Distance of halo to the icon outline.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloWidth is in pixels.
     public func iconHaloWidth(_ newValue: Double) -> Self {
         with(self, setter(\.iconHaloWidth, newValue))
     }
@@ -501,13 +501,13 @@ extension PointAnnotation {
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of textEmissiveStrength is in intensity.
     public func textEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.textEmissiveStrength, newValue))
     }
 
     /// The halo's fadeout distance towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloBlur is in pixels.
     public func textHaloBlur(_ newValue: Double) -> Self {
         with(self, setter(\.textHaloBlur, newValue))
     }
@@ -525,7 +525,7 @@ extension PointAnnotation {
     }
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloWidth is in pixels.
     public func textHaloWidth(_ newValue: Double) -> Self {
         with(self, setter(\.textHaloWidth, newValue))
     }

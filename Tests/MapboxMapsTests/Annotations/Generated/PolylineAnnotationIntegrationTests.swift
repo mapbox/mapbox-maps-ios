@@ -86,6 +86,58 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.lineCap, .constant(LineCap(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cap").value as! String)))
     }
 
+    func testLineCrossSlope() throws {
+        // Test that the setter and getter work
+        let value = 0.0
+        manager.lineCrossSlope = value
+        XCTAssertEqual(manager.lineCrossSlope, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        if case .constant(let actualValue) = layer.lineCrossSlope {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.lineCrossSlope = nil
+        XCTAssertNil(manager.lineCrossSlope)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineCrossSlope, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cross-slope").value as! NSNumber).doubleValue))
+    }
+
+    func testLineElevationReference() throws {
+        // Test that the setter and getter work
+        let value = LineElevationReference.testConstantValue()
+        manager.lineElevationReference = value
+        XCTAssertEqual(manager.lineElevationReference, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        if case .constant(let actualValue) = layer.lineElevationReference {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.lineElevationReference = nil
+        XCTAssertNil(manager.lineElevationReference)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineElevationReference, .constant(LineElevationReference(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-elevation-reference").value as! String)))
+    }
+
     func testLineMiterLimit() throws {
         // Test that the setter and getter work
         let value = 0.0
@@ -136,6 +188,32 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineRoundLimit, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-round-limit").value as! NSNumber).doubleValue))
+    }
+
+    func testLineWidthUnit() throws {
+        // Test that the setter and getter work
+        let value = LineWidthUnit.testConstantValue()
+        manager.lineWidthUnit = value
+        XCTAssertEqual(manager.lineWidthUnit, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        if case .constant(let actualValue) = layer.lineWidthUnit {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.lineWidthUnit = nil
+        XCTAssertNil(manager.lineWidthUnit)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineWidthUnit, .constant(LineWidthUnit(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-width-unit").value as! String)))
     }
 
     func testLineDasharray() throws {

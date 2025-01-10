@@ -57,6 +57,14 @@ public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInter
 
     // MARK: - Common layer properties
 
+    /// Selects the base of fill-elevation. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "none".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillElevationReference: FillElevationReference? {
+        get { impl.layerProperties["fill-elevation-reference"].flatMap { $0 as? String }.flatMap(FillElevationReference.init(rawValue:)) }
+        set { impl.layerProperties["fill-elevation-reference"] = newValue?.rawValue }
+    }
+
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var fillSortKey: Double? {
         get { impl.layerProperties["fill-sort-key"] as? Double }
@@ -78,7 +86,7 @@ public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInter
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillEmissiveStrength is in intensity.
     public var fillEmissiveStrength: Double? {
         get { impl.layerProperties["fill-emissive-strength"] as? Double }
         set { impl.layerProperties["fill-emissive-strength"] = newValue }
@@ -104,7 +112,7 @@ public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInter
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of fillTranslate is in pixels.
     public var fillTranslate: [Double]? {
         get { impl.layerProperties["fill-translate"] as? [Double] }
         set { impl.layerProperties["fill-translate"] = newValue }

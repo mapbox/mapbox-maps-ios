@@ -55,6 +55,56 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cap"] as! String, defaultValue)
     }
+    func testInitialLineCrossSlope() {
+        let initialValue = manager.lineCrossSlope
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineCrossSlope() {
+        let value = 0.0
+        manager.lineCrossSlope = value
+        XCTAssertEqual(manager.lineCrossSlope, value)
+        XCTAssertEqual(manager.impl.layerProperties["line-cross-slope"] as! Double, value)
+    }
+
+    func testSetToNilLineCrossSlope() {
+        let newLineCrossSlopeProperty = 0.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cross-slope").value as! Double
+        manager.lineCrossSlope = newLineCrossSlopeProperty
+        XCTAssertNotNil(manager.impl.layerProperties["line-cross-slope"])
+        harness.triggerDisplayLink()
+
+        manager.lineCrossSlope = nil
+        XCTAssertNil(manager.lineCrossSlope)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cross-slope"] as! Double, defaultValue)
+    }
+    func testInitialLineElevationReference() {
+        let initialValue = manager.lineElevationReference
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineElevationReference() {
+        let value = LineElevationReference.testConstantValue()
+        manager.lineElevationReference = value
+        XCTAssertEqual(manager.lineElevationReference, value)
+        XCTAssertEqual(manager.impl.layerProperties["line-elevation-reference"] as! String, value.rawValue)
+    }
+
+    func testSetToNilLineElevationReference() {
+        let newLineElevationReferenceProperty = LineElevationReference.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-elevation-reference").value as! String
+        manager.lineElevationReference = newLineElevationReferenceProperty
+        XCTAssertNotNil(manager.impl.layerProperties["line-elevation-reference"])
+        harness.triggerDisplayLink()
+
+        manager.lineElevationReference = nil
+        XCTAssertNil(manager.lineElevationReference)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-elevation-reference"] as! String, defaultValue)
+    }
     func testInitialLineJoin() {
         let initialValue = manager.lineJoin
         XCTAssertNil(initialValue)
@@ -154,6 +204,31 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-sort-key"] as! Double, defaultValue)
+    }
+    func testInitialLineWidthUnit() {
+        let initialValue = manager.lineWidthUnit
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineWidthUnit() {
+        let value = LineWidthUnit.testConstantValue()
+        manager.lineWidthUnit = value
+        XCTAssertEqual(manager.lineWidthUnit, value)
+        XCTAssertEqual(manager.impl.layerProperties["line-width-unit"] as! String, value.rawValue)
+    }
+
+    func testSetToNilLineWidthUnit() {
+        let newLineWidthUnitProperty = LineWidthUnit.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-width-unit").value as! String
+        manager.lineWidthUnit = newLineWidthUnitProperty
+        XCTAssertNotNil(manager.impl.layerProperties["line-width-unit"])
+        harness.triggerDisplayLink()
+
+        manager.lineWidthUnit = nil
+        XCTAssertNil(manager.lineWidthUnit)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-width-unit"] as! String, defaultValue)
     }
     func testInitialLineZOffset() {
         let initialValue = manager.lineZOffset

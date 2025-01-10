@@ -73,6 +73,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     }
 
     private func updateProperties(manager: PolygonAnnotationManager) {
+        assign(manager, \.fillElevationReference, value: fillElevationReference)
         assign(manager, \.fillSortKey, value: fillSortKey)
         assign(manager, \.fillAntialias, value: fillAntialias)
         assign(manager, \.fillColor, value: fillColor)
@@ -89,6 +90,15 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     }
 
     // MARK: - Common layer properties
+
+    private var fillElevationReference: FillElevationReference?
+    /// Selects the base of fill-elevation. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "none".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillElevationReference(_ newValue: FillElevationReference) -> Self {
+        with(self, setter(\.fillElevationReference, newValue))
+    }
 
     private var fillSortKey: Double?
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
@@ -112,7 +122,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
 
     private var fillEmissiveStrength: Double?
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of fillEmissiveStrength is in intensity.
     public func fillEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.fillEmissiveStrength, newValue))
     }
@@ -138,9 +148,9 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
 
     private var fillTranslate: [Double]?
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-    /// Default value: [0,0].
-    public func fillTranslate(_ newValue: [Double]) -> Self {
-        with(self, setter(\.fillTranslate, newValue))
+    /// Default value: [0,0]. The unit of fillTranslate is in pixels.
+    public func fillTranslate(x: Double, y: Double) -> Self {
+        with(self, setter(\.fillTranslate, [x, y]))
     }
 
     private var fillTranslateAnchor: FillTranslateAnchor?

@@ -150,7 +150,7 @@ public struct CircleAnnotation: Annotation, Equatable, AnnotationInternal {
     public var circleOpacity: Double?
 
     /// Circle radius.
-    /// Default value: 5. Minimum value: 0.
+    /// Default value: 5. Minimum value: 0. The unit of circleRadius is in pixels.
     public var circleRadius: Double?
 
     /// The stroke color of the circle.
@@ -162,7 +162,7 @@ public struct CircleAnnotation: Annotation, Equatable, AnnotationInternal {
     public var circleStrokeOpacity: Double?
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of circleStrokeWidth is in pixels.
     public var circleStrokeWidth: Double?
 
 }
@@ -199,7 +199,7 @@ extension CircleAnnotation {
     }
 
     /// Circle radius.
-    /// Default value: 5. Minimum value: 0.
+    /// Default value: 5. Minimum value: 0. The unit of circleRadius is in pixels.
     public func circleRadius(_ newValue: Double) -> Self {
         with(self, setter(\.circleRadius, newValue))
     }
@@ -223,7 +223,7 @@ extension CircleAnnotation {
     }
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of circleStrokeWidth is in pixels.
     public func circleStrokeWidth(_ newValue: Double) -> Self {
         with(self, setter(\.circleStrokeWidth, newValue))
     }

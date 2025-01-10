@@ -151,7 +151,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Size of the additional area around the icon bounding box used for detecting symbol collisions.
-    /// Default value: 2. Minimum value: 0.
+    /// Default value: 2. Minimum value: 0. The unit of iconPadding is in pixels.
     public var iconPadding: Double? {
         get { impl.layerProperties["icon-padding"] as? Double }
         set { impl.layerProperties["icon-padding"] = newValue }
@@ -165,7 +165,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Rotates the icon clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of iconRotate is in degrees.
     public var iconRotate: Double? {
         get { impl.layerProperties["icon-rotate"] as? Double }
         set { impl.layerProperties["icon-rotate"] = newValue }
@@ -179,10 +179,18 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconSize is in factor of the original icon size.
     public var iconSize: Double? {
         get { impl.layerProperties["icon-size"] as? Double }
         set { impl.layerProperties["icon-size"] = newValue }
+    }
+
+    /// Defines the minimum and maximum scaling factors for icon related properties like `icon-size`, `icon-halo-width`, `icon-halo-blur`
+    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var iconSizeScaleRange: [Double]? {
+        get { impl.layerProperties["icon-size-scale-range"] as? [Double] }
+        set { impl.layerProperties["icon-size-scale-range"] = newValue }
     }
 
     /// Scales the icon to fit around the associated text.
@@ -193,7 +201,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    /// Default value: [0,0,0,0].
+    /// Default value: [0,0,0,0]. The unit of iconTextFitPadding is in pixels.
     public var iconTextFitPadding: [Double]? {
         get { impl.layerProperties["icon-text-fit-padding"] as? [Double] }
         set { impl.layerProperties["icon-text-fit-padding"] = newValue }
@@ -228,7 +236,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Distance between two symbol anchors.
-    /// Default value: 250. Minimum value: 1.
+    /// Default value: 250. Minimum value: 1. The unit of symbolSpacing is in pixels.
     public var symbolSpacing: Double? {
         get { impl.layerProperties["symbol-spacing"] as? Double }
         set { impl.layerProperties["symbol-spacing"] = newValue }
@@ -297,35 +305,35 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Text tracking amount.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textLetterSpacing is in ems.
     public var textLetterSpacing: Double? {
         get { impl.layerProperties["text-letter-spacing"] as? Double }
         set { impl.layerProperties["text-letter-spacing"] = newValue }
     }
 
     /// Text leading value for multi-line text.
-    /// Default value: 1.2.
+    /// Default value: 1.2. The unit of textLineHeight is in ems.
     public var textLineHeight: Double? {
         get { impl.layerProperties["text-line-height"] as? Double }
         set { impl.layerProperties["text-line-height"] = newValue }
     }
 
     /// Maximum angle change between adjacent characters.
-    /// Default value: 45.
+    /// Default value: 45. The unit of textMaxAngle is in degrees.
     public var textMaxAngle: Double? {
         get { impl.layerProperties["text-max-angle"] as? Double }
         set { impl.layerProperties["text-max-angle"] = newValue }
     }
 
     /// The maximum line width for text wrapping.
-    /// Default value: 10. Minimum value: 0.
+    /// Default value: 10. Minimum value: 0. The unit of textMaxWidth is in ems.
     public var textMaxWidth: Double? {
         get { impl.layerProperties["text-max-width"] as? Double }
         set { impl.layerProperties["text-max-width"] = newValue }
     }
 
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of textOffset is in ems.
     public var textOffset: [Double]? {
         get { impl.layerProperties["text-offset"] as? [Double] }
         set { impl.layerProperties["text-offset"] = newValue }
@@ -339,7 +347,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Size of the additional area around the text bounding box used for detecting symbol collisions.
-    /// Default value: 2. Minimum value: 0.
+    /// Default value: 2. Minimum value: 0. The unit of textPadding is in pixels.
     public var textPadding: Double? {
         get { impl.layerProperties["text-padding"] as? Double }
         set { impl.layerProperties["text-padding"] = newValue }
@@ -353,14 +361,14 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRadialOffset is in ems.
     public var textRadialOffset: Double? {
         get { impl.layerProperties["text-radial-offset"] as? Double }
         set { impl.layerProperties["text-radial-offset"] = newValue }
     }
 
     /// Rotates the text clockwise.
-    /// Default value: 0.
+    /// Default value: 0. The unit of textRotate is in degrees.
     public var textRotate: Double? {
         get { impl.layerProperties["text-rotate"] as? Double }
         set { impl.layerProperties["text-rotate"] = newValue }
@@ -374,10 +382,18 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Font size.
-    /// Default value: 16. Minimum value: 0.
+    /// Default value: 16. Minimum value: 0. The unit of textSize is in pixels.
     public var textSize: Double? {
         get { impl.layerProperties["text-size"] as? Double }
         set { impl.layerProperties["text-size"] = newValue }
+    }
+
+    /// Defines the minimum and maximum scaling factors for text related properties like `text-size`, `text-max-width`, `text-halo-width`, `font-size`
+    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var textSizeScaleRange: [Double]? {
+        get { impl.layerProperties["text-size-scale-range"] as? [Double] }
+        set { impl.layerProperties["text-size-scale-range"] = newValue }
     }
 
     /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
@@ -414,14 +430,14 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of iconEmissiveStrength is in intensity.
     public var iconEmissiveStrength: Double? {
         get { impl.layerProperties["icon-emissive-strength"] as? Double }
         set { impl.layerProperties["icon-emissive-strength"] = newValue }
     }
 
     /// Fade out the halo towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloBlur is in pixels.
     public var iconHaloBlur: Double? {
         get { impl.layerProperties["icon-halo-blur"] as? Double }
         set { impl.layerProperties["icon-halo-blur"] = newValue }
@@ -435,7 +451,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Distance of halo to the icon outline.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of iconHaloWidth is in pixels.
     public var iconHaloWidth: Double? {
         get { impl.layerProperties["icon-halo-width"] as? Double }
         set { impl.layerProperties["icon-halo-width"] = newValue }
@@ -463,7 +479,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of iconTranslate is in pixels.
     public var iconTranslate: [Double]? {
         get { impl.layerProperties["icon-translate"] as? [Double] }
         set { impl.layerProperties["icon-translate"] = newValue }
@@ -492,14 +508,14 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of textEmissiveStrength is in intensity.
     public var textEmissiveStrength: Double? {
         get { impl.layerProperties["text-emissive-strength"] as? Double }
         set { impl.layerProperties["text-emissive-strength"] = newValue }
     }
 
     /// The halo's fadeout distance towards the outside.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloBlur is in pixels.
     public var textHaloBlur: Double? {
         get { impl.layerProperties["text-halo-blur"] as? Double }
         set { impl.layerProperties["text-halo-blur"] = newValue }
@@ -513,7 +529,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of textHaloWidth is in pixels.
     public var textHaloWidth: Double? {
         get { impl.layerProperties["text-halo-width"] as? Double }
         set { impl.layerProperties["text-halo-width"] = newValue }
@@ -534,7 +550,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
-    /// Default value: [0,0].
+    /// Default value: [0,0]. The unit of textTranslate is in pixels.
     public var textTranslate: [Double]? {
         get { impl.layerProperties["text-translate"] as? [Double] }
         set { impl.layerProperties["text-translate"] = newValue }

@@ -36,6 +36,31 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         super.tearDown()
     }
 
+    func testInitialFillElevationReference() {
+        let initialValue = manager.fillElevationReference
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillElevationReference() {
+        let value = FillElevationReference.testConstantValue()
+        manager.fillElevationReference = value
+        XCTAssertEqual(manager.fillElevationReference, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-elevation-reference"] as! String, value.rawValue)
+    }
+
+    func testSetToNilFillElevationReference() {
+        let newFillElevationReferenceProperty = FillElevationReference.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-elevation-reference").value as! String
+        manager.fillElevationReference = newFillElevationReferenceProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-elevation-reference"])
+        harness.triggerDisplayLink()
+
+        manager.fillElevationReference = nil
+        XCTAssertNil(manager.fillElevationReference)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-elevation-reference"] as! String, defaultValue)
+    }
     func testInitialFillSortKey() {
         let initialValue = manager.fillSortKey
         XCTAssertNil(initialValue)

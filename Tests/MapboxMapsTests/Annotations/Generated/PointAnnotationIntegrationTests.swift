@@ -241,6 +241,34 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.iconRotationAlignment, .constant(IconRotationAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String)))
     }
 
+    func testIconSizeScaleRange() throws {
+        // Test that the setter and getter work
+        let value = [0.0, 0.0]
+        manager.iconSizeScaleRange = value
+        XCTAssertEqual(manager.iconSizeScaleRange, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.iconSizeScaleRange {
+            for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.iconSizeScaleRange = nil
+        XCTAssertNil(manager.iconSizeScaleRange)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.iconSizeScaleRange, .constant(StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-size-scale-range").value as! [Double]))
+    }
+
     func testSymbolAvoidEdges() throws {
         // Test that the setter and getter work
         let value = true
@@ -629,6 +657,34 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
         XCTAssertEqual(layer.textRotationAlignment, .constant(TextRotationAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String)))
+    }
+
+    func testTextSizeScaleRange() throws {
+        // Test that the setter and getter work
+        let value = [0.0, 0.0]
+        manager.textSizeScaleRange = value
+        XCTAssertEqual(manager.textSizeScaleRange, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.textSizeScaleRange {
+            for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.textSizeScaleRange = nil
+        XCTAssertNil(manager.textSizeScaleRange)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.textSizeScaleRange, .constant(StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-size-scale-range").value as! [Double]))
     }
 
     func testTextVariableAnchor() throws {

@@ -329,6 +329,31 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-size"] as! Double, defaultValue)
     }
+    func testInitialIconSizeScaleRange() {
+        let initialValue = manager.iconSizeScaleRange
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconSizeScaleRange() {
+        let value = [0.0, 0.0]
+        manager.iconSizeScaleRange = value
+        XCTAssertEqual(manager.iconSizeScaleRange, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-size-scale-range"] as! [Double], value)
+    }
+
+    func testSetToNilIconSizeScaleRange() {
+        let newIconSizeScaleRangeProperty = [0.0, 0.0]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-size-scale-range").value as! [Double]
+        manager.iconSizeScaleRange = newIconSizeScaleRangeProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-size-scale-range"])
+        harness.triggerDisplayLink()
+
+        manager.iconSizeScaleRange = nil
+        XCTAssertNil(manager.iconSizeScaleRange)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-size-scale-range"] as! [Double], defaultValue)
+    }
     func testInitialIconTextFit() {
         let initialValue = manager.iconTextFit
         XCTAssertNil(initialValue)
@@ -1033,6 +1058,31 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-size"] as! Double, defaultValue)
+    }
+    func testInitialTextSizeScaleRange() {
+        let initialValue = manager.textSizeScaleRange
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetTextSizeScaleRange() {
+        let value = [0.0, 0.0]
+        manager.textSizeScaleRange = value
+        XCTAssertEqual(manager.textSizeScaleRange, value)
+        XCTAssertEqual(manager.impl.layerProperties["text-size-scale-range"] as! [Double], value)
+    }
+
+    func testSetToNilTextSizeScaleRange() {
+        let newTextSizeScaleRangeProperty = [0.0, 0.0]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-size-scale-range").value as! [Double]
+        manager.textSizeScaleRange = newTextSizeScaleRangeProperty
+        XCTAssertNotNil(manager.impl.layerProperties["text-size-scale-range"])
+        harness.triggerDisplayLink()
+
+        manager.textSizeScaleRange = nil
+        XCTAssertNil(manager.textSizeScaleRange)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-size-scale-range"] as! [Double], defaultValue)
     }
     func testInitialTextTransform() {
         let initialValue = manager.textTransform

@@ -140,11 +140,19 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var lineSortKey: Double?
 
-    /// Vertical offset from ground, in meters. Defaults to 0. Not supported for globe projection at the moment.
+    /// Vertical offset from ground, in meters. Defaults to 0. This is an experimental property with some known issues:
+    ///  - Not supported for globe projection at the moment
+    ///  - Elevated line discontinuity is possible on tile borders with terrain enabled
+    ///  - Rendering artifacts can happen near line joins and line caps depending on the line styling
+    ///  - Rendering artifacts relating to `line-opacity` and `line-blur`
+    ///  - Elevated line visibility is determined by layer order
+    ///  - Z-fighting issues can happen with intersecting elevated lines
+    ///  - Elevated lines don't cast shadows
+    /// Default value: 0.
     public var lineZOffset: Double?
 
     /// Blur applied to the line, in pixels.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of lineBlur is in pixels.
     public var lineBlur: Double?
 
     /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
@@ -160,11 +168,11 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
     public var lineColor: StyleColor?
 
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of lineGapWidth is in pixels.
     public var lineGapWidth: Double?
 
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
-    /// Default value: 0.
+    /// Default value: 0. The unit of lineOffset is in pixels.
     public var lineOffset: Double?
 
     /// The opacity at which the line will be drawn.
@@ -175,7 +183,7 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
     public var linePattern: String?
 
     /// Stroke thickness.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of lineWidth is in pixels.
     public var lineWidth: Double?
 
 }
@@ -193,13 +201,21 @@ extension PolylineAnnotation {
         with(self, setter(\.lineSortKey, newValue))
     }
 
-    /// Vertical offset from ground, in meters. Defaults to 0. Not supported for globe projection at the moment.
+    /// Vertical offset from ground, in meters. Defaults to 0. This is an experimental property with some known issues:
+    ///  - Not supported for globe projection at the moment
+    ///  - Elevated line discontinuity is possible on tile borders with terrain enabled
+    ///  - Rendering artifacts can happen near line joins and line caps depending on the line styling
+    ///  - Rendering artifacts relating to `line-opacity` and `line-blur`
+    ///  - Elevated line visibility is determined by layer order
+    ///  - Z-fighting issues can happen with intersecting elevated lines
+    ///  - Elevated lines don't cast shadows
+    /// Default value: 0.
     public func lineZOffset(_ newValue: Double) -> Self {
         with(self, setter(\.lineZOffset, newValue))
     }
 
     /// Blur applied to the line, in pixels.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of lineBlur is in pixels.
     public func lineBlur(_ newValue: Double) -> Self {
         with(self, setter(\.lineBlur, newValue))
     }
@@ -235,13 +251,13 @@ extension PolylineAnnotation {
     }
 
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of lineGapWidth is in pixels.
     public func lineGapWidth(_ newValue: Double) -> Self {
         with(self, setter(\.lineGapWidth, newValue))
     }
 
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
-    /// Default value: 0.
+    /// Default value: 0. The unit of lineOffset is in pixels.
     public func lineOffset(_ newValue: Double) -> Self {
         with(self, setter(\.lineOffset, newValue))
     }
@@ -258,7 +274,7 @@ extension PolylineAnnotation {
     }
 
     /// Stroke thickness.
-    /// Default value: 1. Minimum value: 0.
+    /// Default value: 1. Minimum value: 0. The unit of lineWidth is in pixels.
     public func lineWidth(_ newValue: Double) -> Self {
         with(self, setter(\.lineWidth, newValue))
     }

@@ -119,7 +119,7 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
 
     private var circleEmissiveStrength: Double?
     /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of circleEmissiveStrength is in intensity.
     public func circleEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.circleEmissiveStrength, newValue))
     }
@@ -147,7 +147,7 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
 
     private var circleRadius: Double?
     /// Circle radius.
-    /// Default value: 5. Minimum value: 0.
+    /// Default value: 5. Minimum value: 0. The unit of circleRadius is in pixels.
     public func circleRadius(_ newValue: Double) -> Self {
         with(self, setter(\.circleRadius, newValue))
     }
@@ -168,16 +168,16 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
 
     private var circleStrokeWidth: Double?
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of circleStrokeWidth is in pixels.
     public func circleStrokeWidth(_ newValue: Double) -> Self {
         with(self, setter(\.circleStrokeWidth, newValue))
     }
 
     private var circleTranslate: [Double]?
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-    /// Default value: [0,0].
-    public func circleTranslate(_ newValue: [Double]) -> Self {
-        with(self, setter(\.circleTranslate, newValue))
+    /// Default value: [0,0]. The unit of circleTranslate is in pixels.
+    public func circleTranslate(x: Double, y: Double) -> Self {
+        with(self, setter(\.circleTranslate, [x, y]))
     }
 
     private var circleTranslateAnchor: CircleTranslateAnchor?

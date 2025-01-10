@@ -66,6 +66,32 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         waitForExpectations(timeout: 2, handler: nil)
     }
 
+    func testFillElevationReference() throws {
+        // Test that the setter and getter work
+        let value = FillElevationReference.testConstantValue()
+        manager.fillElevationReference = value
+        XCTAssertEqual(manager.fillElevationReference, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        if case .constant(let actualValue) = layer.fillElevationReference {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.fillElevationReference = nil
+        XCTAssertNil(manager.fillElevationReference)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        XCTAssertEqual(layer.fillElevationReference, .constant(FillElevationReference(rawValue: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-elevation-reference").value as! String)))
+    }
+
     func testFillAntialias() throws {
         // Test that the setter and getter work
         let value = true

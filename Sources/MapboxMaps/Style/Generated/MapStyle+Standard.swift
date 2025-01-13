@@ -4,14 +4,21 @@ extension MapStyle {
     /// [Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) is a general-purpose style with 3D visualization.
     ///
     /// - Parameters:
-    ///   - theme: Switch between 3 themes: default, faded and monochrome Default value: `default`.
+    ///   - theme: Switch between predefined themes or set a custom theme. Default value: `default`.
     ///   - lightPreset: Switch between 4 time-of-day states: dusk, dawn, day and night. Default value: `day`.
     ///   - font: Defines font family for the style from predefined options. Default value: `DIN Pro`.
     ///   - showPointOfInterestLabels: Shows or hides all POI icons and text. Default value: `true`.
     ///   - showTransitLabels: Shows or hides all transit icons and text. Default value: `true`.
-    ///   - showPlaceLabels: Shows and hides place label layers.  Default value: `true`.
+    ///   - showPlaceLabels: Shows and hides place label layers. Default value: `true`.
     ///   - showRoadLabels: Shows and hides all road labels, including road shields. Default value: `true`.
+    ///   - showPedestrianRoads: Shows and hides all pedestrian roads, paths, trails. Default value: `true`.
     ///   - show3dObjects: Shows or hides all 3d layers (3D buildings, landmarks, trees, etc.) including shadows, ambient occlusion, and flood lights. Default value: `true`.
+    ///   - colorMotorways: Set a custom color for motorway roads. Default value: `hsl(214, 23%, 70%)`.
+    ///   - colorPlaceLabelHighlight: Place label color used when setting highlight state. Default value: `hsl(4, 43%, 55%)`.
+    ///   - colorPlaceLabelSelect: Place label color used when setting select state. Default value: `hsl(4, 53%, 42%)`.
+    ///   - colorRoads: Set a custom color for other roads. Default value: `hsl(224, 25%, 80%)`.
+    ///   - colorTrunks: Set a custom color for trunk roads. Default value: `hsl(235, 20%, 70%)`.
+    ///   - themeData: Set a custom theme based on a look-up table (LUT).
     public static func standard(
         theme: StandardTheme? = nil,
         lightPreset: StandardLightPreset? = nil,
@@ -20,7 +27,14 @@ extension MapStyle {
         showTransitLabels: Bool? = nil,
         showPlaceLabels: Bool? = nil,
         showRoadLabels: Bool? = nil,
-        show3dObjects: Bool? = nil
+        showPedestrianRoads: Bool? = nil,
+        show3dObjects: Bool? = nil,
+        colorMotorways: StyleColor? = nil,
+        colorPlaceLabelHighlight: StyleColor? = nil,
+        colorPlaceLabelSelect: StyleColor? = nil,
+        colorRoads: StyleColor? = nil,
+        colorTrunks: StyleColor? = nil,
+        themeData: String? = nil
     ) -> MapStyle {
         var config = JSONObject()
         config.encode(key: "theme", value: theme)
@@ -30,7 +44,14 @@ extension MapStyle {
         config.encode(key: "showTransitLabels", value: showTransitLabels)
         config.encode(key: "showPlaceLabels", value: showPlaceLabels)
         config.encode(key: "showRoadLabels", value: showRoadLabels)
+        config.encode(key: "showPedestrianRoads", value: showPedestrianRoads)
         config.encode(key: "show3dObjects", value: show3dObjects)
+        config.encode(key: "colorMotorways", value: colorMotorways)
+        config.encode(key: "colorPlaceLabelHighlight", value: colorPlaceLabelHighlight)
+        config.encode(key: "colorPlaceLabelSelect", value: colorPlaceLabelSelect)
+        config.encode(key: "colorRoads", value: colorRoads)
+        config.encode(key: "colorTrunks", value: colorTrunks)
+        config.encode(key: "theme-data", value: themeData)
         return MapStyle(uri: .standard, configuration: config)
     }
 
@@ -43,7 +64,7 @@ extension StyleURI {
     public static var standard: StyleURI { StyleURI(rawValue: "mapbox://styles/mapbox/standard")! }
 }
 
-/// Switch between 3 themes: default, faded and monochrome
+/// Switch between predefined themes or set a custom theme.
 public struct StandardTheme: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
 
@@ -59,6 +80,9 @@ public struct StandardTheme: RawRepresentable, Hashable, Sendable {
 
     /// Monochrome theme.
     public static let monochrome = StandardTheme(rawValue: "monochrome")
+
+    /// Custom theme.
+    public static let custom = StandardTheme(rawValue: "custom")
 }
 
 /// Switch between 4 time-of-day states: dusk, dawn, day and night.

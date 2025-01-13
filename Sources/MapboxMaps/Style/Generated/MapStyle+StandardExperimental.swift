@@ -17,8 +17,8 @@ extension MapStyle {
     ///   - buildingSelectColor: Building color used when setting select state. Default value: `hsl(214, 94%, 59%)`.
     ///   - placeLabelHighlightColor: Place label color used when setting highlight state. Default value: `hsl(4, 43%, 55%)`.
     ///   - placeLabelSelectColor: Place label color used when setting select state. Default value: `hsl(4, 53%, 42%)`.
-    @_spi(Experimental)
     @_documentation(visibility: public)
+    @_spi(Experimental)
     public static func standardExperimental(
         theme: StandardTheme? = nil,
         lightPreset: StandardLightPreset? = nil,
@@ -51,7 +51,7 @@ extension MapStyle {
 
     /// NOT FOR PRODUCTION USE. An experimental version of the Mapbox Standard style.
     /// This style is used for testing new features and changes to the Mapbox Standard style. The style may change or be removed at any time.
-    @_spi(Experimental)
     @_documentation(visibility: public)
+    @_spi(Experimental)
     public static var standardExperimental: MapStyle { MapStyle(uri: StyleURI(rawValue: "mapbox://styles/mapbox-map-design/standard-experimental-ime")!) }
 }

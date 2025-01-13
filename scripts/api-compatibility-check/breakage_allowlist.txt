@@ -2050,3 +2050,7 @@ Var BackgroundPitchAlignment.rawValue is now with @_documentation
 Var BackgroundPitchAlignment.rawValue is now with @_spi
 Var BackgroundPitchAlignment.viewport is now with @_documentation
 Var BackgroundPitchAlignment.viewport is now with @_spi
+
+#Update Standard and Standard Satellite config properties
+Func MapStyle.standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:) has been renamed to Func standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:themeData:)
+Func MapStyle.standardSatellite(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showRoadsAndTransit:showPedestrianRoads:) has been renamed to Func standardSatellite(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showRoadsAndTransit:showPedestrianRoads:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:)

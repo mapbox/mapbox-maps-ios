@@ -25,7 +25,8 @@ struct StandardStyleLocationsExample: View {
                 showTransitLabels: model.transitLabels,
                 showPlaceLabels: model.placeLabels,
                 showRoadLabels: model.roadLabels,
-                show3dObjects: model.show3DObjects)
+                show3dObjects: model.show3DObjects,
+                colorRoads: StyleColor(UIColor(cgColor: model.roadsColor.cgColor!)))
         case .standardSatellite:
             .standardSatellite(
                     lightPreset: model.lightPreset,
@@ -35,7 +36,8 @@ struct StandardStyleLocationsExample: View {
                     showPlaceLabels: model.placeLabels,
                     showRoadLabels: model.roadLabels,
                     showRoadsAndTransit: model.showRoadsAndTransit,
-                    showPedestrianRoads: model.showPedestrianRoads)
+                    showPedestrianRoads: model.showPedestrianRoads,
+                    colorRoads: StyleColor(UIColor(cgColor: model.roadsColor.cgColor!)))
         }
     }
 
@@ -83,6 +85,7 @@ class StandardStyleLocationsModel: ObservableObject {
     @Published var style: Style = .standard
     @Published var theme: StandardTheme = .default
     @Published var font: StandardFont = .dinPro
+    @Published var roadsColor = Color(hue: 224, saturation: 0.25, brightness: 0.8)
 
     enum Style {
         case standard
@@ -174,6 +177,8 @@ struct StandardStyleLocationsSettings: View {
                     Text("Ubuntu").tag(StandardFont.ubuntu)
                 }.pickerStyle(.menu)
             }
+
+            ColorPicker("Roads Color", selection: $model.roadsColor)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {

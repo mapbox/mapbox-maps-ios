@@ -48,7 +48,6 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
-        IPHONEOS_DEPLOYMENT_TARGET: 13.0
         GENERATE_INFOPLIST_FILE: YES
     sources:
       - path: "../Tests/MapboxMapsTests"

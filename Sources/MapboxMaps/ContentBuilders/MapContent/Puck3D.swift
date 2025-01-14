@@ -54,6 +54,14 @@ public struct Puck3D: MapContent, PrimitiveMapContent {
         copyAssigned(self, \.configuration.modelScaleMode, .constant(modelScaleMode))
     }
 
+    /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelElevationReference(_ value: ModelElevationReference) -> Puck3D {
+        copyAssigned(self, \.configuration.modelElevationReference, .constant(value))
+    }
+
     /// Strength of the emission.
     ///
     /// There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. windows).

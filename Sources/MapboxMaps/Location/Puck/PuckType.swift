@@ -170,15 +170,24 @@ public struct Puck3DConfiguration: Equatable, Sendable {
     ///
     ///  - Note: Shadows may impose extra performance costs and lead to extra rendering.
     @_documentation(visibility: public)
-    @_spi(Experimental) public var modelCastShadows: Value<Bool>?
+    @_spi(Experimental)
+    public var modelCastShadows: Value<Bool>?
 
     /// Enable/disable shadow receiving for the puck model
     @_documentation(visibility: public)
-    @_spi(Experimental) public var modelReceiveShadows: Value<Bool>?
+    @_spi(Experimental)
+    public var modelReceiveShadows: Value<Bool>?
 
     /// Defines scaling mode. Only applies to location-indicator type layers. Default to ``ModelScaleMode/viewport``.
     @_documentation(visibility: public)
-    @_spi(Experimental) public var modelScaleMode: Value<ModelScaleMode>?
+    @_spi(Experimental)
+    public var modelScaleMode: Value<ModelScaleMode>?
+
+    /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var modelElevationReference: Value<ModelElevationReference>?
 
     /// Strength of the emission.
     ///

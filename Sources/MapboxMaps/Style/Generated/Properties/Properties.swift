@@ -580,6 +580,27 @@ public struct HillshadeIlluminationAnchor: RawRepresentable, Codable, Hashable, 
     public static let viewport = HillshadeIlluminationAnchor(rawValue: "viewport")
 }
 
+/// Selects the base of the model. Some modes might require precomputed elevation data in the tileset.
+@_documentation(visibility: public)
+@_spi(Experimental)
+public struct ModelElevationReference: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
+    public let rawValue: String
+
+    @_documentation(visibility: public)
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Elevated rendering is enabled. Use this mode to elevate lines relative to the sea level.
+    @_documentation(visibility: public)
+    public static let sea = ModelElevationReference(rawValue: "sea")
+
+    /// Elevated rendering is enabled. Use this mode to elevate lines relative to the ground's height below them.
+    @_documentation(visibility: public)
+    public static let ground = ModelElevationReference(rawValue: "ground")
+}
+
 /// Defines scaling mode. Only applies to location-indicator type layers.
 @_documentation(visibility: public)
 @_spi(Experimental)

@@ -89,6 +89,11 @@ import UIKit
     @_documentation(visibility: public)
     public var modelCutoffFadeRange: Value<Double>?
 
+    /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    public var modelElevationReference: Value<ModelElevationReference>?
+
     /// Strength of the emission. There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. doors). Expressions that depend on measure-light are not supported when using GeoJSON or vector tile as the model layer source.
     /// Default value: 0. Value range: [0, 5]
     @_documentation(visibility: public)
@@ -195,6 +200,7 @@ import UIKit
         try paintContainer.encodeIfPresent(modelColorMixIntensity, forKey: .modelColorMixIntensity)
         try paintContainer.encodeIfPresent(modelColorMixIntensityTransition, forKey: .modelColorMixIntensityTransition)
         try paintContainer.encodeIfPresent(modelCutoffFadeRange, forKey: .modelCutoffFadeRange)
+        try paintContainer.encodeIfPresent(modelElevationReference, forKey: .modelElevationReference)
         try paintContainer.encodeIfPresent(modelEmissiveStrength, forKey: .modelEmissiveStrength)
         try paintContainer.encodeIfPresent(modelEmissiveStrengthTransition, forKey: .modelEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(modelHeightBasedEmissiveStrengthMultiplier, forKey: .modelHeightBasedEmissiveStrengthMultiplier)
@@ -238,6 +244,7 @@ import UIKit
             modelColorMixIntensity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelColorMixIntensity)
             modelColorMixIntensityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelColorMixIntensityTransition)
             modelCutoffFadeRange = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelCutoffFadeRange)
+            modelElevationReference = try paintContainer.decodeIfPresent(Value<ModelElevationReference>.self, forKey: .modelElevationReference)
             modelEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelEmissiveStrength)
             modelEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelEmissiveStrengthTransition)
             modelHeightBasedEmissiveStrengthMultiplier = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelHeightBasedEmissiveStrengthMultiplier)
@@ -292,6 +299,7 @@ import UIKit
         case modelColorMixIntensity = "model-color-mix-intensity"
         case modelColorMixIntensityTransition = "model-color-mix-intensity-transition"
         case modelCutoffFadeRange = "model-cutoff-fade-range"
+        case modelElevationReference = "model-elevation-reference"
         case modelEmissiveStrength = "model-emissive-strength"
         case modelEmissiveStrengthTransition = "model-emissive-strength-transition"
         case modelHeightBasedEmissiveStrengthMultiplier = "model-height-based-emissive-strength-multiplier"
@@ -472,6 +480,22 @@ extension ModelLayer {
     @_spi(Experimental)
     public func modelCutoffFadeRange(_ expression: Exp) -> Self {
         with(self, setter(\.modelCutoffFadeRange, .expression(expression)))
+    }
+
+    /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelElevationReference(_ constant: ModelElevationReference) -> Self {
+        with(self, setter(\.modelElevationReference, .constant(constant)))
+    }
+
+    /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "ground".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelElevationReference(_ expression: Exp) -> Self {
+        with(self, setter(\.modelElevationReference, .expression(expression)))
     }
 
     /// Strength of the emission. There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. doors). Expressions that depend on measure-light are not supported when using GeoJSON or vector tile as the model layer source.

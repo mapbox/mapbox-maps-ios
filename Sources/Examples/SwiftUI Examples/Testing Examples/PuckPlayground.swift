@@ -1,5 +1,5 @@
 import SwiftUI
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 struct PuckPlayground: View {
     enum PuckType: String, CaseIterable, CustomStringConvertible {
@@ -45,6 +45,7 @@ struct PuckPlayground: View {
                     .modelScale(x: scale, y: scale, z: scale)
                     .modelOpacity(opacity)
                     .modelEmissiveStrength(puck3dSettings.emission)
+                    .modelElevationReference(puck3dSettings.elevationReference)
                     .slot(slot)
             }
         }
@@ -85,6 +86,7 @@ struct PuckPlayground: View {
                 SliderSettingView(title: "Light emission", value: $puck3dSettings.emission, range: 0...2, step: 0.1)
                 RadioButtonSettingView(title: "Bearing", value: $bearingType)
                 SliderSettingView(title: "Opacity", value: $opacity, range: 0...1, step: 0.1)
+                RadioButtonSettingView(title: "Elevation Reference", value: $puck3dSettings.elevationReference)
                 slotSettings
             case .none:
                 EmptyView()
@@ -177,6 +179,7 @@ private struct Puck3DSettings {
     var scale = 1.0
     var modelType = ModelType.sportcar
     var emission = 1.0
+    var elevationReference = ModelElevationReference.ground
 }
 
 private struct Puck2DSettings {
@@ -221,6 +224,13 @@ private struct Puck2DSettings {
 
 extension PuckBearing: CaseIterable {
     public static var allCases: [PuckBearing] = [.course, .heading]
+}
+
+extension ModelElevationReference: CaseIterable, CustomStringConvertible {
+    public static var allCases: [ModelElevationReference] = [.ground, .sea]
+    public var description: String {
+        return rawValue
+    }
 }
 
 private extension Model {

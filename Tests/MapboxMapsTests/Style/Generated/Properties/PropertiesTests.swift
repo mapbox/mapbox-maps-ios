@@ -566,6 +566,25 @@ extension HillshadeIlluminationAnchor {
     }
 }
 
+// MARK: MODEL_ELEVATION_REFERENCE
+
+extension Value where T == ModelElevationReference {
+    static func testConstantValue() -> Value<ModelElevationReference> {
+        return .constant(ModelElevationReference.testConstantValue())
+    }
+}
+
+extension ModelElevationReference {
+    static func testConstantValue() -> ModelElevationReference {
+        return .sea
+    }
+
+    static func random() -> ModelElevationReference {
+        let allCases: [ModelElevationReference] = [.sea, .ground]
+        return allCases.randomElement()!
+    }
+}
+
 // MARK: MODEL_SCALE_MODE
 
 extension Value where T == ModelScaleMode {

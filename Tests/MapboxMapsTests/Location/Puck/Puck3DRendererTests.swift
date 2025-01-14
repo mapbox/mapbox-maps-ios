@@ -148,6 +148,7 @@ final class Puck3DRendererTests: XCTestCase {
         XCTAssertEqual(actualLayer.modelCastShadows, configuration.modelCastShadows)
         XCTAssertEqual(actualLayer.modelReceiveShadows, configuration.modelReceiveShadows)
         XCTAssertEqual(actualLayer.modelEmissiveStrength, configuration.modelEmissiveStrength)
+        XCTAssertEqual(actualLayer.modelElevationReference, configuration.modelElevationReference)
         XCTAssertEqual(actualLayer.slot, configuration.slot)
     }
 

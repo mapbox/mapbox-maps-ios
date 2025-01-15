@@ -129,9 +129,8 @@ In UIKit applications, use ``MapboxMap/setFeatureState(_:state:callback:)`` and 
 - ``LongPressInteraction``
 
 ### Featuresets
-- ``FeaturesetDescriptor-struct``
+- ``FeaturesetDescriptor``
 - ``FeaturesetFeatureId``
-- ``FeaturesetQueryTarget``
 
 ### Feature types
 - ``FeaturesetFeatureType``

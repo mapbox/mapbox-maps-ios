@@ -4,7 +4,7 @@ import SwiftUI
 struct StandardStyleLocationsExample: View {
     /// This model is created in root application views for each platform:
     ///
-    /// - ``VisionOSMain`` for visionOS
+    /// - `VisionOSMain` for visionOS
     /// - ``SwiftUIWrapper`` view for iOS
     @EnvironmentObject var model: StandardStyleLocationsModel
     @State private var settingsHeight: CGFloat = 0

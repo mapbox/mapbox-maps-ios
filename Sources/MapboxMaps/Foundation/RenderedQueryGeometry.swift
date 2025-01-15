@@ -1,6 +1,6 @@
 /// A geometry to define a portion of screen that should be queried for rendered features.
 ///
-/// See ``MapboxMap/queryRenderedFeatures(with:targets:completion:)`` and ``MapboxMap/queryRenderedFeatures(with:options:completion:)`` for more information.
+/// See ``MapboxMap/queryRenderedFeatures(featureset:filter:completion:)`` and ``MapboxMap/queryRenderedFeatures(with:options:completion:)`` for more information.
 public struct RenderedQueryGeometry {
     let core: CoreRenderedQueryGeometry
 

@@ -220,7 +220,7 @@ struct RouteLine: MapStyleContent {
             .lineColor("#57A9FB")
             .lineBorderColor("#327AC2")
             .lineEmissiveStrength(1)
-            .slot("middle")
+            .slot(.middle)
 
         LineLayer(id: "\(sourceId)-layer-casing", source: sourceId)
             .lineCap(.round)
@@ -230,7 +230,7 @@ struct RouteLine: MapStyleContent {
             .lineColor("#57A9FB")
             .lineBorderColor("#327AC2")
             .lineEmissiveStrength(1)
-            .slot("middle")
+            .slot(.middle)
     }
 }
 

@@ -16,7 +16,7 @@
 ///            .fillColor("blue")
 ///    }
 /// }
-/// .slot("bottom")
+/// .slot(.bottom)
 /// ```
 ///
 /// When the number of annotations is static, you use static that groups one or more annotations:
@@ -28,7 +28,7 @@
 ///             .fillColor("blue")
 ///     }
 ///     .layerId("parking")
-///     .slot("bottom")
+///     .slot(.bottom)
 /// }
 /// ```
 import UIKit
@@ -174,8 +174,17 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
     /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+    @available(*, deprecated, message: "Use Slot type instead of string")
     public func slot(_ newValue: String) -> Self {
         with(self, setter(\.slot, newValue))
+    }
+
+    /// Slot for the underlying layer.
+    ///
+    /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
+    /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+    public func slot(_ newValue: Slot?) -> Self {
+        with(self, setter(\.slot, newValue?.rawValue))
     }
 
     private var layerId: String?

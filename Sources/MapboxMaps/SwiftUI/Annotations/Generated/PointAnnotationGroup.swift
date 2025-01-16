@@ -16,7 +16,7 @@
 ///       .image(named: "star")
 ///   }
 ///   .clusterOptions(ClusterOptions(...))
-///   .slot("top")
+///   .slot(.top)
 /// }
 /// ```
 ///
@@ -30,7 +30,7 @@
 ///         PointAnnotation(coordinate: endCoordinate)
 ///             .image(named: "end-icon")
 ///     }
-///     .slot("top")
+///     .slot(.top)
 /// }
 /// ```
 import UIKit
@@ -623,8 +623,17 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
     /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+    @available(*, deprecated, message: "Use Slot type instead of string")
     public func slot(_ newValue: String) -> Self {
         with(self, setter(\.slot, newValue))
+    }
+
+    /// Slot for the underlying layer.
+    ///
+    /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
+    /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+    public func slot(_ newValue: Slot?) -> Self {
+        with(self, setter(\.slot, newValue?.rawValue))
     }
 
     private var clusterOptions: ClusterOptions?

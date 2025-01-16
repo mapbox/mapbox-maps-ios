@@ -12,6 +12,16 @@ Mapbox welcomes participation and contributions from everyone.
 * Localize geofencing attribution dialog.
 * Support dictionary expression literals.
 * Bump minimal deployment target from 12.0 to 14.0.
+* [SwiftUI] Expose new `slot()` method on annotation groups that takes `Slot` instead of `String`. Use the type with annotationGroups:
+
+swift
+```
+CircleAnnotationGroup {}
+  // old
+  .slot("middle")
+  // new
+  .slot(.middle)
+```
 
 ## 11.9.0 - 18 December, 2024
 

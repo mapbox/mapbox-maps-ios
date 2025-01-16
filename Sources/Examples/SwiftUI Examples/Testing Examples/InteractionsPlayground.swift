@@ -28,7 +28,7 @@ struct InteractionsPlayground: View {
                         }
                 }
                 .layerId("polygon")
-                .slot("bottom")
+                .slot(.bottom)
 
                 PolylineAnnotationGroup(routes) { route in
                     PolylineAnnotation(lineString: route.line)
@@ -52,7 +52,7 @@ struct InteractionsPlayground: View {
                 .lineWidth(10)
                 .lineBorderWidth(2)
                 .lineCap(.round)
-                .slot("middle")
+                .slot(.middle)
 
                 TapInteraction(.standardPoi, radius: 0) { feature, ctx in
                     text = "Tap poi \(feature.name ?? "-"), r: 0"

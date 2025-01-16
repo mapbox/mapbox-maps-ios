@@ -100,6 +100,7 @@ struct AnnotationsExample: View {
                         viewport = .camera(center: context.coordinate, zoom: context.expansionZoom)
                     }
                 }
+                .slot(.middle)
             }
             .onMapTapGesture { context in
                 taps.append(Tap(coordinate: context.coordinate))

@@ -17,7 +17,7 @@
 ///             .circleRadius(10)
 ///     }
 /// }
-/// .slot("top")
+/// .slot(.top)
 /// ```
 ///
 /// When the number of annotations is static, you use static that groups one or more annotations:
@@ -32,7 +32,7 @@
 ///             .circleColor("gray")
 ///             .circleRadius(10)
 ///     }
-///     .slot("top")
+///     .slot(.top)
 /// }
 /// ```
 import UIKit
@@ -192,8 +192,17 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     ///
     /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
     /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+    @available(*, deprecated, message: "Use Slot type instead of string")
     public func slot(_ newValue: String) -> Self {
         with(self, setter(\.slot, newValue))
+    }
+
+    /// Slot for the underlying layer.
+    ///
+    /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
+    /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+    public func slot(_ newValue: Slot?) -> Self {
+        with(self, setter(\.slot, newValue?.rawValue))
     }
 
     private var layerId: String?

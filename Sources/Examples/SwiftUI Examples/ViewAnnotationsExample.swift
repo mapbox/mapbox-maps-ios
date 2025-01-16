@@ -64,7 +64,7 @@ struct ViewAnnotationsExample: View {
             }
             .layerId(routeLayer) // Specify id for underlying line layer.
             .lineCap(.round)
-            .slot("middle") // Display above roads and below 3D buildings and labels (for Standard Style).
+            .slot(.middle) // Display above roads and below 3D buildings and labels (for Standard Style).
 
             MapViewAnnotation(layerId: routeLayer, featureId: routeFeature) {
                 Text("1h 30m")

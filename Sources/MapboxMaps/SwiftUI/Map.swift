@@ -43,7 +43,6 @@ import SwiftUI
 /// ```
 ///
 /// Check out the <doc:SwiftUI-User-Guide> for more information about ``Map`` capabilities, and the <doc:Map-Content-Gestures-User-Guide> for more information about gesture handling.
-@available(iOS 13.0, *)
 public struct Map: UIViewControllerRepresentable {
     var mapDependencies = MapDependencies()
     private var viewport: ConstantOrBinding<Viewport>
@@ -148,7 +147,6 @@ public struct Map: UIViewControllerRepresentable {
     }
 }
 
-@available(iOS 13.0, *)
 extension Map {
 
     /// Creates a map with a viewport binding.
@@ -220,7 +218,6 @@ extension Map {
     }
 }
 
-@available(iOS 13.0, *)
 public extension Map {
 
     /// Filters attribution menu items
@@ -374,7 +371,6 @@ public extension Map {
     }
 }
 
-@available(iOS 13.0, *)
 extension Map {
 
     /// Map Coordinator.
@@ -417,14 +413,12 @@ extension Map {
     }
 }
 
-@available(iOS 13.0, *)
 private extension Binding {
     var setter: (Value) -> Void {
         { self.wrappedValue = $0 }
     }
 }
 
-@available(iOS 13.0, *)
 private extension ConstantOrBinding {
     var setter: ((T) -> Void)? {
         switch self {

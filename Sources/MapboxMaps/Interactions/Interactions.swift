@@ -240,9 +240,7 @@ public struct InteractionImpl {
 
 @_spi(Experimental)
 @_documentation(visibility: public)
-@available(iOS 13.0, *)
 extension TapInteraction: MapContent, PrimitiveMapContent {
-    @available(iOS 13.0, *)
     func visit(_ node: MapContentNode) {
         node.mount(MountedInteraction(interaction: self.impl))
     }
@@ -250,9 +248,7 @@ extension TapInteraction: MapContent, PrimitiveMapContent {
 
 @_spi(Experimental)
 @_documentation(visibility: public)
-@available(iOS 13.0, *)
 extension LongPressInteraction: MapContent, PrimitiveMapContent {
-    @available(iOS 13.0, *)
     func visit(_ node: MapContentNode) {
         node.mount(MountedInteraction(interaction: self.impl))
     }

@@ -1,7 +1,6 @@
 /// Sets the feature state to a feature in the SwiftUI  ``Map``.
 @_spi(Experimental)
 @_documentation(visibility: public)
-@available(iOS 13.0, *)
 public struct FeatureState<T: FeaturesetFeatureType>: Equatable, MapContent, PrimitiveMapContent {
     var featureset: FeaturesetDescriptor<T>
     var featureId: FeaturesetFeatureId?

@@ -22,7 +22,7 @@ struct ClipLayerExample: View {
                 .clipLayerTypes(settings.clipLayerTypes)
         }
         .ignoresSafeArea()
-        .safeOverlay(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
             VStack(alignment: .center) {
                 Toggle("Clip Models", isOn: $settings.clipModels)
                 Toggle("Clip Symbols", isOn: $settings.clipSymbols)

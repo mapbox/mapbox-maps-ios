@@ -2,7 +2,6 @@ import UIKit
 import SwiftUI
 @_spi(Experimental) @_spi(Restricted) @testable import MapboxMaps
 
-@available(iOS 13.0, *)
 struct MockMapView {
     var style = MockStyle()
     var mapboxMap = MockMapboxMap()

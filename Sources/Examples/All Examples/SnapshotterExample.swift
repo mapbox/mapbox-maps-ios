@@ -41,16 +41,8 @@ final class SnapshotterExample: UIViewController, ExampleProtocol {
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
-        if #available(iOS 15.0, *) {
-            view.backgroundColor = .systemMint
-        } else {
-            view.backgroundColor = .systemGray
-        }
-        if #available(iOS 13.0, *) {
-            snapshotView.backgroundColor = .systemGray4
-        } else {
-            snapshotView.backgroundColor = .systemGray
-        }
+        view.backgroundColor = .systemMint
+        snapshotView.backgroundColor = .systemGray4
     }
 
     public override func viewDidLayoutSubviews() {

@@ -1,7 +1,6 @@
 import XCTest
 @_spi(Experimental) @testable import MapboxMaps
 
-@available(iOS 13.0, *)
 final class MapContentReconcilerTests: XCTestCase {
     var me: MapContentReconciler!
     var styleManager: MockStyleManager!
@@ -693,7 +692,6 @@ final class MapContentReconcilerTests: XCTestCase {
     }
 }
 
-@available(iOS 13.0, *)
 func verifyAnnotationOptions(
     _ annotation: ViewAnnotation?,
     _ mapViewAnnotation: MapViewAnnotation

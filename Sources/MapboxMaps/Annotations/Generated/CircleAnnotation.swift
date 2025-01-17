@@ -271,7 +271,6 @@ extension CircleAnnotation {
     }
 }
 
-@available(iOS 13.0, *)
 extension CircleAnnotation: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         CircleAnnotationGroup { self }.visit(node)

@@ -1,6 +1,5 @@
 import Combine
 
-@available(iOS 13.0, *)
 extension Signal: Combine.Publisher {
     public typealias Output = Payload
     public typealias Failure = Never
@@ -11,7 +10,6 @@ extension Signal: Combine.Publisher {
     }
 }
 
-@available(iOS 13.0, *)
 private extension Signal {
     private class Subscription<S: Subscriber>: Combine.Subscription where S.Input == Payload {
         private let signal: Signal
@@ -36,7 +34,6 @@ private extension Signal {
     }
 }
 
-@available(iOS 13.0, *)
 extension Publisher where Failure == Never {
     /// Wraps this publisher into a signal.
     public func eraseToSignal() -> Signal<Output> {

@@ -2,7 +2,6 @@ import XCTest
 import SwiftUI
 @testable import MapboxMaps
 
-@available(iOS 13.0, *)
 class SwiftUIEdgeInsetsTests: XCTestCase {
 
     func testInitUIEdgeInsets() {

@@ -133,7 +133,7 @@ public final class AppleLocationProvider {
             if isLocationUpdating {
                 /// Get permissions if needed
                 if mayRequestWhenInUseAuthorization,
-                   locationManager.compatibleAuthorizationStatus == .notDetermined {
+                   locationManager.authorizationStatus == .notDetermined {
                     locationManager.requestWhenInUseAuthorization()
                 }
                 locationManager.startUpdatingLocation()
@@ -202,7 +202,7 @@ public final class AppleLocationProvider {
                   locationManagerDelegateProxy: CLLocationManagerDelegateProxy) {
         self.locationManager = locationManager
         self.mayRequestWhenInUseAuthorization = mayRequestWhenInUseAuthorization
-        self.latestLocationAndAccuracyAuth = ([], locationManager.compatibleAccuracyAuthorization)
+        self.latestLocationAndAccuracyAuth = ([], locationManager.accuracyAuthorization)
         self.interfaceOrientation = interfaceOrientation
 #if !(swift(>=5.9) && os(visionOS))
         self.headingOrientation = locationManager.headingOrientation
@@ -230,7 +230,6 @@ public final class AppleLocationProvider {
     }
 
     /// Requests permission to temporarily use location services with full accuracy.
-    @available(iOS 14.0, *)
     public func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
         locationManager.requestTemporaryFullAccuracyAuthorization(withPurposeKey: purposeKey)
     }
@@ -345,10 +344,9 @@ extension AppleLocationProvider: CLLocationManagerDelegateProxyDelegate {
     }
 
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        let accuracyAuthorization = locationManager.compatibleAccuracyAuthorization
-        if #available(iOS 14.0, *),
-           isLocationUpdating,
-           locationManager.compatibleAuthorizationStatus.isAuthorized,
+        let accuracyAuthorization = locationManager.accuracyAuthorization
+        if isLocationUpdating,
+           locationManager.authorizationStatus.isAuthorized,
            accuracyAuthorization == .reducedAccuracy {
             locationManager.requestTemporaryFullAccuracyAuthorization(
                 withPurposeKey: "LocationAccuracyAuthorizationDescription")

@@ -1,6 +1,5 @@
 import os
 
-@available(iOS 13.0, *)
 final class MapContentReconciler {
     var content: any MapContent = EmptyMapContent() {
         didSet {
@@ -64,7 +63,6 @@ final class MapContentReconciler {
     }
 }
 
-@available(iOS 13.0, *)
 private extension MapContentNodeContext {
     func update(mapContent: any MapContent, root: MapContentNode) {
         let oldProperties = uniqueProperties

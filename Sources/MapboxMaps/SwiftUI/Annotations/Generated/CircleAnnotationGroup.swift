@@ -37,7 +37,6 @@
 /// ```
 import UIKit
 
-@available(iOS 13.0, *)
 public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     let annotations: [(ID, CircleAnnotation)]
 
@@ -58,7 +57,6 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     /// - Parameters:
     ///     - data: Collection of identifiable data.
     ///     - content: A closure that creates annotation for a given data item.
-    @available(iOS 13.0, *)
     public init(_ data: Data, content: @escaping (Data.Element) -> CircleAnnotation) where Data.Element: Identifiable, Data.Element.ID == ID {
         self.init(data, id: \.id, content: content)
     }
@@ -233,7 +231,6 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     }
 }
 
-@available(iOS 13.0, *)
 extension CircleAnnotationGroup: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         let group = MountedAnnotationGroup(

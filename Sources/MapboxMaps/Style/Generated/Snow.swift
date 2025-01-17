@@ -360,7 +360,6 @@ extension Snow {
 
 }
 
-@available(iOS 13.0, *)
 extension Snow: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedUniqueProperty(keyPath: \.snow, value: self))

@@ -20,7 +20,6 @@ import SwiftUI
 ///
 /// - Note: View Annotations appear above all content of MapView (e.g. layers, annotations, puck). If you need to display annotation between layers or below puck, use ``PointAnnotation``.
 
-@available(iOS 13.0, *)
 public struct MapViewAnnotation {
     struct Actions {
         var visibility: ((Bool) -> Void)?
@@ -44,7 +43,6 @@ public struct MapViewAnnotation {
     /// - Parameters:
     ///   - coordinate: Coordinate the view annotation is bound to.
     ///   - content: The view to place on the map.
-    @available(iOS 13.0, *)
     public init<Content: View>(
         coordinate: CLLocationCoordinate2D,
         @ViewBuilder content: @escaping () -> Content
@@ -58,7 +56,6 @@ public struct MapViewAnnotation {
     ///   - layerId: Layer identifier which renders the feature.
     ///   - featureId: Feature identifier. If not specified, the annotation will appear on any feature from that layer.
     ///   - content: The view to place on the map.
-    @available(iOS 13.0, *)
     public init<Content: View>(
         layerId: String,
         featureId: String? = nil,
@@ -72,7 +69,6 @@ public struct MapViewAnnotation {
     /// - Parameters:
     ///   - annotatedFeature: Associates the view annotation with the feature geometry. The geometry may be any `Geometry`, or a feature rendered on a specified layer.
     ///   - content: The view to place on the map.
-    @available(iOS 13.0, *)
     public init<Content: View>(
         annotatedFeature: AnnotatedFeature,
         @ViewBuilder content: @escaping () -> Content
@@ -162,7 +158,6 @@ public struct MapViewAnnotation {
     }
 }
 
-@available(iOS 13.0, *)
 extension MapViewAnnotation: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedViewAnnotation(mapViewAnnotation: self))

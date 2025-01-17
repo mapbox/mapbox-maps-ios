@@ -2,7 +2,6 @@ import SwiftUI
 import UIKit
 
 /// Abstraction around MapView which makes unit testing possible.
-@available(iOS 13.0, *)
 struct MapViewFacade {
     var styleManager: StyleProtocol
     var mapboxMap: MapboxMapProtocol
@@ -23,7 +22,6 @@ struct MapViewFacade {
     var makeViewportState: (Viewport, LayoutDirection) -> ViewportState?
 }
 
-@available(iOS 13.0, *)
 extension MapViewFacade {
     init(from mapView: MapView) {
         styleManager = mapView.mapboxMap
@@ -46,7 +44,6 @@ extension MapViewFacade {
 }
 
 private extension MapView {
-    @available(iOS 13.0, *)
     func set(frameRate: Map.FrameRate) {
         if #available(iOS 15.0, *), let initialRange = frameRate.range {
             let clampedRange = initialRange.clamped(to: 1...initialRange.upperBound)
@@ -83,7 +80,6 @@ private extension MapView {
         }
     }
 
-    @available(iOS 13.0, *)
     func getFrameRate() -> Map.FrameRate {
         if #available(iOS 15.0, *) {
             return Map.FrameRate(

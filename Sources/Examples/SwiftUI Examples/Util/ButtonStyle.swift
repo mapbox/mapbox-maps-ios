@@ -29,11 +29,7 @@ struct FloatingStyle <S: Shape>: ViewModifier {
 extension View {
     @ViewBuilder
     func regularMaterialBackground() -> some View {
-        if #available(iOS 15.0, *) {
-            self.background(.regularMaterial)
-        } else {
-            self.background(Color(UIColor.systemBackground))
-        }
+        self.background(.regularMaterial)
     }
 }
 
@@ -73,7 +69,7 @@ struct MapStyleSelectorButton: View {
                 .floating(Circle())
         }
 #if !swift(>=5.9) || !os(visionOS)
-        .fixedMenuOrder()
+        .menuOrder(.fixed)
 #endif
     }
 }

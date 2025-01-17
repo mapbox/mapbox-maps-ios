@@ -1,6 +1,5 @@
 /// A result builder that creates map and style content from closures you provide.
 /// Allows to mix content which is used in  StyleDSL API <doc:Declarative-Map-Styling> and in SwiftUI API <doc:SwiftUI-User-Guide>
-@available(iOS 13.0, *)
 @resultBuilder
 public struct MapContentBuilder {
     /// Builds an expression within the map content builder.

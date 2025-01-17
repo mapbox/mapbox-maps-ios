@@ -63,7 +63,6 @@ extension SlotLayer {
 
 }
 
-@available(iOS 13.0, *)
 extension SlotLayer: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))

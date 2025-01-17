@@ -36,7 +36,6 @@
 /// ```
 import UIKit
 
-@available(iOS 13.0, *)
 public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     let annotations: [(ID, PolylineAnnotation)]
 
@@ -57,7 +56,6 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     /// - Parameters:
     ///     - data: Collection of identifiable data.
     ///     - content: A closure that creates annotation for a given data item.
-    @available(iOS 13.0, *)
     public init(_ data: Data, content: @escaping (Data.Element) -> PolylineAnnotation) where Data.Element: Identifiable, Data.Element.ID == ID {
         self.init(data, id: \.id, content: content)
     }
@@ -363,7 +361,6 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 }
 
-@available(iOS 13.0, *)
 extension PolylineAnnotationGroup: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         let group = MountedAnnotationGroup(

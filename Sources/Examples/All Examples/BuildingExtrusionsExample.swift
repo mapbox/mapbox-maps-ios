@@ -19,22 +19,14 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
 
     private lazy var lightPositionButton: UIButton = {
         let button = UIButton.exampleActionButton()
-        if #available(iOS 13.1, *) {
-            button.setImage(UIImage(systemName: "flashlight.on.fill"), for: .normal)
-        } else {
-            button.setTitle("Position", for: .normal)
-        }
+        button.setImage(UIImage(systemName: "flashlight.on.fill"), for: .normal)
         button.addTarget(self, action: #selector(lightPositionButtonTapped(_:)), for: .primaryActionTriggered)
         return button
     }()
 
     private lazy var lightColorButton: UIButton = {
         let button = UIButton.exampleActionButton()
-        if #available(iOS 13.0, *) {
-            button.setImage(UIImage(systemName: "paintbrush.fill"), for: .normal)
-        } else {
-            button.setTitle("Color", for: .normal)
-        }
+        button.setImage(UIImage(systemName: "paintbrush.fill"), for: .normal)
         button.addTarget(self, action: #selector(lightColorButtonTapped(_:)), for: .primaryActionTriggered)
         return button
     }()
@@ -42,12 +34,8 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
     private lazy var heightAlignmentButton: UIButton = {
         let button = UIButton.exampleActionButton()
 
-        if #available(iOS 15.0, *) {
-            button.setImage(UIImage(systemName: "align.vertical.top"), for: .normal)
-            button.setImage(UIImage(systemName: "align.vertical.top.fill"), for: .selected)
-        } else {
-            button.setTitle("Height Alignment", for: .normal)
-        }
+        button.setImage(UIImage(systemName: "align.vertical.top"), for: .normal)
+        button.setImage(UIImage(systemName: "align.vertical.top.fill"), for: .selected)
         button.addTarget(self, action: #selector(heightAlignmentButtonTapped(_:)), for: .primaryActionTriggered)
         return button
     }()
@@ -55,24 +43,16 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
     private lazy var baseAlignmentButton: UIButton = {
         let button = UIButton.exampleActionButton()
 
-        if #available(iOS 15.0, *) {
-            button.setImage(UIImage(systemName: "align.vertical.bottom"), for: .normal)
-            button.setImage(UIImage(systemName: "align.vertical.bottom.fill"), for: .selected)
-        } else {
-            button.setTitle("Height Alignment", for: .normal)
-        }
+        button.setImage(UIImage(systemName: "align.vertical.bottom"), for: .normal)
+        button.setImage(UIImage(systemName: "align.vertical.bottom.fill"), for: .selected)
         button.addTarget(self, action: #selector(baseAlignmentButtonTapped(_:)), for: .primaryActionTriggered)
         return button
     }()
 
     private lazy var terrainSwitchButton: UIButton = {
         let button = UIButton.exampleActionButton()
-        if #available(iOS 15.0, *) {
-            button.setImage(UIImage(systemName: "mountain.2"), for: .normal)
-            button.setImage(UIImage(systemName: "mountain.2.fill"), for: .selected)
-        } else {
-            button.setTitle("Terrain", for: .normal)
-        }
+        button.setImage(UIImage(systemName: "mountain.2"), for: .normal)
+        button.setImage(UIImage(systemName: "mountain.2.fill"), for: .selected)
 
         button.addTarget(self, action: #selector(terrainButtonTapped(_:)), for: .primaryActionTriggered)
         return button

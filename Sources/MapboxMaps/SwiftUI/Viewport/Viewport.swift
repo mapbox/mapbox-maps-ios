@@ -51,7 +51,6 @@ import Turf
 /// See ``withViewportAnimation(_:body:completion:)`` and ``ViewportAnimation`` for more details about viewport animation.
 ///
 /// The ``Viewport`` allows you to read only the values that you set. If you need to read the actual camera state values, subscribe to ``Map/onCameraChanged(action:)`` event.
-@available(iOS 13.0, *)
 public struct Viewport: Equatable, Sendable {
     enum Storage: Equatable, Sendable {
         case idle
@@ -258,7 +257,6 @@ public struct Viewport: Equatable, Sendable {
     }
 }
 
-@available(iOS 13.0, *)
 extension Viewport {
     func makeState(with mapView: MapView, layoutDirection: LayoutDirection) -> ViewportState? {
         let padding = UIEdgeInsets(insets: padding, layoutDirection: layoutDirection)
@@ -280,7 +278,6 @@ extension Viewport {
     }
 }
 
-@available(iOS 13.0, *)
 extension Viewport.OverviewOptions {
     func resolve(layoutDirection: LayoutDirection, padding: UIEdgeInsets) -> OverviewViewportStateOptions {
         let geometryPadding = UIEdgeInsets(insets: geometryPadding, layoutDirection: layoutDirection)
@@ -296,7 +293,6 @@ extension Viewport.OverviewOptions {
     }
 }
 
-@available(iOS 13.0, *)
 extension Viewport.FollowPuckOptions {
     func resolve(padding: UIEdgeInsets) -> FollowPuckViewportStateOptions {
         FollowPuckViewportStateOptions(

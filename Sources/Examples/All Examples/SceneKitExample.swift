@@ -71,7 +71,6 @@ final class SceneKitExampleCustomLayerHost: NSObject, CustomLayerHost {
     var modelNode: SCNNode!
     var cameraNode: SCNNode!
     var textNode: SCNNode!
-    var useCPUOcclusion = false
     let renderingWillEndHandler: () -> Void
 
     init(modelOrigin: CLLocationCoordinate2D, renderingWillEndHandler: @escaping () -> Void) {
@@ -96,12 +95,7 @@ final class SceneKitExampleCustomLayerHost: NSObject, CustomLayerHost {
         renderer.pointOfView = cameraNode
         self.setupLight()
         // In order to use depth occlusion, align with gl-native Z handling (doesn't use reverse Z).
-        if #available(iOS 13.0, *) {
-            renderer.usesReverseZ = false
-        } else {
-            // Fallback on earlier versions, disable depth in render()
-            self.useCPUOcclusion = true
-        }
+        renderer.usesReverseZ = false
     }
 
     func setupLight() {
@@ -215,15 +209,6 @@ final class SceneKitExampleCustomLayerHost: NSObject, CustomLayerHost {
         // there's need to use transform matrix in this frame (not to have it used with delay).
         SCNTransaction.flush()
 
-        if self.useCPUOcclusion {
-            mtlRenderPassDescriptor.depthAttachment = nil
-            mtlRenderPassDescriptor.stencilAttachment = nil
-            // Example uses depth buffer to occlude model when e.g. behind the hill.
-            // If depth buffer (SCNRenderer.usesReverseZ = false) is not available, or if wished to
-            // to indicate that model is occluded or e.g. implement fade out / fade in model occlusion,
-            // the example here needs to provide CPU side occlusion implementation, too.
-            // TODO: this is blocked on https://github.com/mapbox/mapbox-maps-ios/issues/155
-        }
         renderer.render(withViewport: CGRect(x: 0, y: 0, width: CGFloat(colorTexture.width), height: CGFloat(colorTexture.height)), commandBuffer: mtlCommandBuffer, passDescriptor: mtlRenderPassDescriptor)
 
     }

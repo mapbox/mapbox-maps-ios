@@ -86,7 +86,7 @@ struct ViewAnnotationsExample: View {
         // Add bottom padding for the bottom config panel, View Annotations won't appear there.
         .additionalSafeAreaInsets(.bottom, overlayHeight)
         .ignoresSafeArea(edges: ignoreAllSafeArea ? [.all] : [.horizontal, .bottom])
-        .safeOverlay(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
             VStack(alignment: .leading) {
                 Text("Tap to add annotations")
                 Toggle("Allow overlap", isOn: $allowOverlap)

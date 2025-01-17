@@ -322,7 +322,6 @@ extension PolylineAnnotation {
     }
 }
 
-@available(iOS 13.0, *)
 extension PolylineAnnotation: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         PolylineAnnotationGroup { self }.visit(node)

@@ -1,7 +1,6 @@
 import SwiftUI
 
 /// A proxy for access map interfaces on underlying Mapbox Map.
-@available(iOS 13.0, *)
 public struct MapProxy {
     private var provider: MapViewProvider
 

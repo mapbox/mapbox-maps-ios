@@ -97,7 +97,7 @@ struct InteractionsPlayground: View {
             }
         }
         .ignoresSafeArea()
-        .safeOverlay(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
             VStack {
                 if let text {
                     Text(text)

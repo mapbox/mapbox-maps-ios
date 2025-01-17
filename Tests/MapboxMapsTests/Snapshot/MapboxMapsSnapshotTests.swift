@@ -95,7 +95,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     // Testing snapshot overlay
-    @available(iOS 13.0, *)
     func testSnapshotOverlay() throws {
         let options = try snapshotterOptions()
         let snapshotter = Snapshotter(options: options)
@@ -136,7 +135,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
         wait(for: [expectation], timeout: 10)
     }
 
-    @available(iOS 13.0, *)
     func testSnapshotLogoVisibility() throws {
         let options = try snapshotterOptions()
         let snapshotterNew = Snapshotter(options: options)
@@ -182,7 +180,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
         wait(for: [expectation], timeout: 10.0)
     }
 
-    @available(iOS 13.0, *)
     func testSnapshotAttribution() throws {
         // Test range of widths
         for imageWidth in stride(from: 50, through: 300, by: 50) {
@@ -213,13 +210,11 @@ class MapboxMapsSnapshotTests: XCTestCase {
         }
     }
 
-    @available(iOS 13.0, *)
     func testShowsLogoAndAttribution() throws {
         let options = try snapshotterOptions()
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
-    @available(iOS 13.0, *)
     func testDoesNotShowLogo() throws {
         var options = try snapshotterOptions()
         options.showsLogo = false
@@ -227,7 +222,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
-    @available(iOS 13.0, *)
     func testDoesNotShowAttribution() throws {
         var options = try snapshotterOptions()
         options.showsAttribution = false
@@ -235,7 +229,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
-    @available(iOS 13.0, *)
     func testDoesNotShowLogoAndAttribution() throws {
         var options = try snapshotterOptions()
         options.showsLogo = false
@@ -244,7 +237,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
-    @available(iOS 13.0, *)
     private func showLogoAttributionHelper(options: MapSnapshotOptions, fileName: String, file: StaticString = #filePath, line: UInt = #line) {
         let snapshotter = Snapshotter(options: options)
 

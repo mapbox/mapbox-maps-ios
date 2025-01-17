@@ -1,4 +1,3 @@
-@available(iOS 13.0, *)
 public extension Map {
     /// Adds an action to perform when the map is loaded.
     func onMapLoaded(action: @escaping (MapLoaded) -> Void) -> Self {

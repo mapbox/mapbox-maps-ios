@@ -56,7 +56,7 @@ struct StandardStyleLocationsExample: View {
             }
 #else
             // On iOS the settings pane will be placed in an overlay view.
-            .safeOverlay(alignment: .bottom) {
+            .overlay(alignment: .bottom) {
                 StandardStyleLocationsSettings()
                     .floating(RoundedRectangle(cornerRadius: 10))
                     .limitPaneWidth()
@@ -198,7 +198,7 @@ struct StandardStyleLocationsSettings: View {
                     }
                     .fixedSize()
                     .font(.footnote)
-                }.toggleStyleButton()
+                }.toggleStyle(.button)
             }
         }
         .padding(10)

@@ -106,7 +106,7 @@ struct AnnotationsExample: View {
                 taps.append(Tap(coordinate: context.coordinate))
             }
             .ignoresSafeArea()
-            .safeOverlay(alignment: .bottom) {
+            .overlay(alignment: .bottom) {
                 Text("Tap on map to add annotations")
                     .floating()
                     .padding(.bottom, 30)

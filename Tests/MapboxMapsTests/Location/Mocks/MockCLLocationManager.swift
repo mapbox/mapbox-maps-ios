@@ -6,9 +6,9 @@ final class MockCLLocationManager: CLLocationManagerProtocol {
     @Stubbed var desiredAccuracy: CLLocationAccuracy = 0
     @Stubbed var activityType: CLActivityType = .other
 
-    var compatibleAuthorizationStatus: CLAuthorizationStatus = .notDetermined
+    var authorizationStatus: CLAuthorizationStatus = .notDetermined
 
-    var compatibleAccuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy
+    var accuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy
 
     @Stubbed var delegate: CLLocationManagerDelegate?
 

@@ -1,7 +1,6 @@
 import SwiftUI
 import MapboxCoreMaps
 
-@available(iOS 13.0, *)
 struct MapDependencies {
     var cameraBounds = CameraBoundsOptions()
     var mapStyle: MapStyle = .standard
@@ -44,7 +43,6 @@ struct AnyEventSubscription {
     }
 }
 
-@available(iOS 13.0, *)
 extension Map {
     struct PerformanceStatisticsParameters {
         var options: PerformanceStatisticsOptions
@@ -52,7 +50,6 @@ extension Map {
     }
 }
 
-@available(iOS 13.0, *)
 extension Map {
     struct FrameRate: Equatable {
         var range: ClosedRange<Float>?

@@ -596,7 +596,6 @@ extension PointAnnotation {
     }
 }
 
-@available(iOS 13.0, *)
 extension PointAnnotation: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         PointAnnotationGroup { self }.visit(node)

@@ -73,7 +73,7 @@ struct PrecipitationExample: View {
         }
         .mapStyle(.standard)
         .ignoresSafeArea()
-        .safeOverlay(alignment: .trailing) {
+        .overlay(alignment: .trailing) {
             VStack {
                 Button {
                     snowState.toggle()

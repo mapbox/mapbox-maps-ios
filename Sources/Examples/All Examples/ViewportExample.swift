@@ -49,11 +49,7 @@ final class ViewportExample: UIViewController, ExampleProtocol {
                     vertices: 100)))
 
         viewportButton.translatesAutoresizingMaskIntoConstraints = false
-        if #available(iOS 13.0, *) {
-            viewportButton.backgroundColor = .systemBackground
-        } else {
-            viewportButton.backgroundColor = .white
-        }
+        viewportButton.backgroundColor = .systemBackground
         viewportButton.contentEdgeInsets = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
         view.addSubview(viewportButton)
         NSLayoutConstraint.activate([

@@ -1,7 +1,6 @@
 import SwiftUI
 import UIKit
 
-@available(iOS 13.0, *)
 extension SwiftUI.EdgeInsets {
     init(uiInsets: UIEdgeInsets, layoutDirection: LayoutDirection) {
         let top = uiInsets.top
@@ -26,7 +25,6 @@ extension SwiftUI.EdgeInsets {
     }
 }
 
-@available(iOS 13.0, *)
 extension UIEdgeInsets {
     init(insets: SwiftUI.EdgeInsets, layoutDirection: LayoutDirection) {
         let top = insets.top
@@ -45,7 +43,6 @@ extension UIEdgeInsets {
     }
 }
 
-@available(iOS 13.0, *)
 private let edgeToInsetMapping: [(Edge.Set, WritableKeyPath<SwiftUI.EdgeInsets, CGFloat>)] = [
     (.top, \.top),
     (.bottom, \.bottom),

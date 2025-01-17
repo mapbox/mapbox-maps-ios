@@ -158,14 +158,10 @@ final class ResizeMapViewExample: UIViewController, ExampleProtocol {
     private func syncAnimationBehaviourButton(_ button: UIBarButtonItem) {
         switch animationBehaviour {
         case .automatic:
-            if #available(iOS 13.0, *) {
-                button.image = UIImage(systemName: "arrow.up.arrow.down.circle.fill")
-            }
+            button.image = UIImage(systemName: "arrow.up.arrow.down.circle.fill")
             button.title = "Automatic"
         case .none:
-            if #available(iOS 13.0, *) {
-                button.image = UIImage(systemName: "arrow.up.arrow.down.circle")
-            }
+            button.image = UIImage(systemName: "arrow.up.arrow.down.circle")
             button.title = "None"
         }
     }

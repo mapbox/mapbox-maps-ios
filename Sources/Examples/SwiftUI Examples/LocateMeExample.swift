@@ -10,7 +10,7 @@ struct LocateMeExample: View {
         }
             .mapStyle(.standard)
             .ignoresSafeArea()
-            .safeOverlay(alignment: .trailing) {
+            .overlay(alignment: .trailing) {
                 LocateMeButton(viewport: $viewport)
             }
     }

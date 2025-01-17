@@ -1,7 +1,6 @@
 import XCTest
 import MapboxMaps
 
-@available(iOS 13.0, *)
 class GeoJSONUpdateIntegrationTests: MapViewIntegrationTestCase {
     static let sourceId = "source"
     static let dataId = "geojson_id"

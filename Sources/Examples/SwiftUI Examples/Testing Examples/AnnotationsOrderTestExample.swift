@@ -60,10 +60,10 @@ struct AnnotationsOrderTestExample: View {
             longPressMessage = gestureMessage("Map", context: context)
         }
         .ignoresSafeArea()
-        .safeOverlay(alignment: .trailing) {
+        .overlay(alignment: .trailing) {
             MapStyleSelectorButton(mapStyle: $mapStyle)
         }
-        .safeOverlay(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
             VStack(alignment: .center) {
                 Group {
                     if tapMessage != nil || longPressMessage != nil {
@@ -86,7 +86,7 @@ struct AnnotationsOrderTestExample: View {
                         ColorButton(color: .purple, isOn: $purpleLayer)
                         ColorButton(color: .yellow, isOn: $yellowLayer)
                     }
-                    .toggleStyleButton()
+                    .toggleStyle(.button)
                 }
                 .floating()
             }

@@ -8,7 +8,6 @@ protocol UpdatableSource {
 }
 
 @_spi(Experimental)
-@available(iOS 13.0, *)
 extension VectorSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: VectorSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
@@ -29,7 +28,6 @@ extension VectorSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
 }
 
 @_spi(Experimental)
-@available(iOS 13.0, *)
 extension RasterSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: RasterSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
@@ -50,7 +48,6 @@ extension RasterSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
 }
 
 @_spi(Experimental)
-@available(iOS 13.0, *)
 extension RasterDemSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: RasterDemSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
@@ -71,7 +68,6 @@ extension RasterDemSource: UpdatableSource, MapStyleContent, PrimitiveMapContent
 }
 
 @_spi(Experimental)
-@available(iOS 13.0, *)
 extension RasterArraySource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: RasterArraySource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
@@ -91,7 +87,6 @@ extension RasterArraySource: UpdatableSource, MapStyleContent, PrimitiveMapConte
 }
 
 @_spi(Experimental)
-@available(iOS 13.0, *)
 extension ImageSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: ImageSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
@@ -109,7 +104,6 @@ extension ImageSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
 }
 
 @_spi(Experimental)
-@available(iOS 13.0, *)
 extension GeoJSONSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: GeoJSONSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
@@ -125,7 +119,6 @@ extension GeoJSONSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     }
 }
 
-@available(iOS 13.0, *)
 extension CustomGeometrySource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: CustomGeometrySource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)
@@ -136,7 +129,6 @@ extension CustomGeometrySource: UpdatableSource, MapStyleContent, PrimitiveMapCo
     }
 }
 
-@available(iOS 13.0, *)
 extension CustomRasterSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: CustomRasterSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)

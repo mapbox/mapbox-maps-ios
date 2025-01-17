@@ -71,27 +71,15 @@ final class StandardStyleExample: UIViewController, ExampleProtocol {
     }
 
     private func changeLightButton() -> UIBarButtonItem {
-        if #available(iOS 13, *) {
-            return UIBarButtonItem(image: UIImage(systemName: "sun.max.fill"), style: .plain, target: self, action: #selector(changeLightSetting))
-        } else {
-            return UIBarButtonItem(title: "Sun", style: .plain, target: self, action: #selector(changeLightSetting))
-        }
+        return UIBarButtonItem(image: UIImage(systemName: "sun.max.fill"), style: .plain, target: self, action: #selector(changeLightSetting))
     }
 
     private func changeLabelsButton() -> UIBarButtonItem {
-        if #available(iOS 13, *) {
-            return UIBarButtonItem(image: UIImage(systemName: "signpost.right"), style: .plain, target: self, action: #selector(changeLabelsSetting))
-        } else {
-            return UIBarButtonItem(title: "star", style: .plain, target: self, action: #selector(changeLabelsSetting))
-        }
+        return UIBarButtonItem(image: UIImage(systemName: "signpost.right"), style: .plain, target: self, action: #selector(changeLabelsSetting))
     }
 
     private func changeRealEstateButton() -> UIBarButtonItem {
-        if #available(iOS 13, *) {
-            return UIBarButtonItem(image: UIImage(systemName: "building.2.fill"), style: .plain, target: self, action: #selector(changeRealEstateSettings))
-        } else {
-            return UIBarButtonItem(title: "Build", style: .plain, target: self, action: #selector(changeLabelsSetting))
-        }
+        return UIBarButtonItem(image: UIImage(systemName: "building.2.fill"), style: .plain, target: self, action: #selector(changeRealEstateSettings))
     }
 
     @objc private func changeLightSetting() {

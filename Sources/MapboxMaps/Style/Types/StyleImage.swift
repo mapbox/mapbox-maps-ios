@@ -26,7 +26,6 @@ public struct StyleImage: Equatable, Sendable {
     }
 }
 
-@available(iOS 13.0, *)
 extension StyleImage: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedImage(image: self))

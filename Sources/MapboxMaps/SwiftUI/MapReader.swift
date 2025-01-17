@@ -14,7 +14,6 @@ import SwiftUI
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct MapReader<Content: View>: View {
     public typealias ContentProvider = (MapProxy) -> Content
     @State private var mapViewProvider = MapViewProvider()
@@ -30,12 +29,10 @@ public struct MapReader<Content: View>: View {
     }
 }
 
-@available(iOS 13.0, *)
 internal struct MapViewProviderKey: EnvironmentKey {
     static var defaultValue: MapViewProvider?
 }
 
-@available(iOS 13.0, *)
 extension EnvironmentValues {
     var mapViewProvider: MapViewProvider? {
         get { self[MapViewProviderKey.self] }

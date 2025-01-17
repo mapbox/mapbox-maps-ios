@@ -1,7 +1,6 @@
 import CoreGraphics
 import SwiftUI
 
-@available(iOS 13.0, *)
 extension View {
 
     func onChangeOfSize(perform action: @escaping (CGSize) -> Void) -> some View {
@@ -9,7 +8,6 @@ extension View {
     }
 }
 
-@available(iOS 13.0, *)
 private struct OnSizeChangeModifier: ViewModifier {
     let action: (CGSize) -> Void
 

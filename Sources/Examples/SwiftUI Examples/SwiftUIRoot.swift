@@ -49,9 +49,7 @@ struct SwiftUIRoot: View {
                     ExampleLink("Attribution url via callback", note: "Works on iOS 13+", destination: AttributionManualURLOpen())
                     ExampleLink("Raster particles", note: "Rendering of raster particles.", destination: RasterParticleExample())
                     ExampleLink("Clip Layer", note: "Usage of clip layer to hide 3D models at some areas on the map", destination: ClipLayerExample())
-                    if #available(iOS 15.0, *) {
-                        ExampleLink("Attribution url open via environment", note: "Works on iOS 15+", destination: AttributionEnvironmentURLOpen())
-                    }
+                    ExampleLink("Attribution url open via environment", note: "Works on iOS 15+", destination: AttributionEnvironmentURLOpen())
 #if !os(visionOS)
                     if #available(iOS 16.5, *) {
                         ExampleLink("Attribution dialog with presented sheet", destination: AttributionDialogueWithSheet())

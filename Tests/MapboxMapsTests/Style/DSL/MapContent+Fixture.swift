@@ -1,7 +1,6 @@
 import SwiftUI
 @_spi(Experimental) @testable import MapboxMaps
 
-@available(iOS 13.0, *)
 struct MapContentFixture: MapContent {
     class Route {
         let json: String

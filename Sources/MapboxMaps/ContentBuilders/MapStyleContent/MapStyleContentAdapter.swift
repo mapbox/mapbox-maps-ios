@@ -1,9 +1,7 @@
 ///The adapter allows representing any instance of ``MapStyleContent`` as ``MapContent``.
 
-@available(iOS 13.0, *)
 protocol AdaptingMapContent: PrimitiveMapContent {}
 
-@available(iOS 13.0, *)
 struct MapStyleContentAdapter<S: MapStyleContent>: MapContent, AdaptingMapContent {
     private let subject: S
 

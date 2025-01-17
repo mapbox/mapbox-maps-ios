@@ -19,13 +19,7 @@ final class CameraDebugView: UIView {
         layer.shadowOffset = CGSize(width: 0, height: 0.7)
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.3
-        let effect: UIBlurEffect
-        if #available(iOS 13.0, *) {
-            effect = UIBlurEffect(style: .systemThinMaterial)
-        } else {
-            effect = UIBlurEffect(style: .regular)
-        }
-        let backdropView = UIVisualEffectView(effect: effect)
+        let backdropView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
         backdropView.layer.cornerRadius = 5
         backdropView.clipsToBounds = true
         addConstrained(child: backdropView)
@@ -43,7 +37,7 @@ final class CameraDebugView: UIView {
 private extension NSAttributedString {
     private static func logString(_ text: String, bold: Bool = false) -> NSAttributedString {
         NSAttributedString(string: text, attributes: [
-            .font: UIFont.safeMonospacedSystemFont(size: 13, weight: bold ? .bold : .regular)
+            .font: UIFont.monospacedSystemFont(ofSize: 13, weight: bold ? .bold : .regular)
         ])
     }
 

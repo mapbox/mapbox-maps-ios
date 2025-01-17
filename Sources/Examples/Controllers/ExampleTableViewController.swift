@@ -20,9 +20,7 @@ final class ExampleTableViewController: UITableViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
-        if #available(iOS 14.0, *) {
-            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "SwiftUI", style: .plain, target: self, action: #selector(openSwiftUI))
-        }
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "SwiftUI", style: .plain, target: self, action: #selector(openSwiftUI))
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
 
         navigationController?.delegate = self
@@ -112,11 +110,7 @@ extension ExampleTableViewController {
         cell.textLabel?.numberOfLines = 2
         cell.detailTextLabel?.text = example.description.trimmingCharacters(in: .whitespacesAndNewlines)
         cell.detailTextLabel?.numberOfLines = 2
-        if #available(iOS 13.0, *) {
-            cell.detailTextLabel?.textColor = .secondaryLabel
-        } else {
-            cell.detailTextLabel?.textColor = .lightGray
-        }
+        cell.detailTextLabel?.textColor = .secondaryLabel
         return cell
     }
 

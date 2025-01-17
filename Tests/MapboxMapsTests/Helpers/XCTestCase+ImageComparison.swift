@@ -6,7 +6,6 @@ extension XCTestCase {
         return 5
     }
 
-    @available(iOS 13.0, *)
     func compare(observedImage: UIImage, expectedImageNamed expectedImageName: String, expectedImageScale: CGFloat, attachmentName: String? = nil, file: StaticString = #filePath, line: UInt = #line) {
         do {
             let attachment = XCTAttachment(image: observedImage, quality: .original)
@@ -48,7 +47,6 @@ extension XCTestCase {
 }
 
 extension UIImage {
-    @available(iOS 13.0, *)
     func visionImageFeaturePrint() throws -> VNFeaturePrintObservation {
         let imageRequestHandler = VNImageRequestHandler(cgImage: try XCTUnwrap(cgImage),
                                                                 options: [:])

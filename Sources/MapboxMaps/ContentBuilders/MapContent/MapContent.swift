@@ -3,7 +3,6 @@ import os.log
 /// A protocol used to create any type of ``Map`` content, such as annotations, location indicator, layers, sources, lights, and more.
 ///
 /// Implement this protocol to create higher level content components. Any type of ``MapStyleContent`` can be used as `MapContent`.
-@available(iOS 13.0, *)
 public protocol MapContent {
     /// Represents the composite type of the body content.
     associatedtype Body: MapContent
@@ -13,7 +12,6 @@ public protocol MapContent {
     var body: Body { get }
 }
 
-@available(iOS 13.0, *)
 public struct TupleMapContent<T>: MapContent, PrimitiveMapContent {
     var _visit: (MapContentNode) -> Void
 
@@ -31,7 +29,6 @@ public struct TupleMapContent<T>: MapContent, PrimitiveMapContent {
     }
 }
 
-@available(iOS 13.0, *)
 public struct ConditionalMapContent<F: MapContent, S: MapContent>: MapContent, PrimitiveMapContent {
     private enum Storage {
         case first(F)
@@ -61,7 +58,6 @@ public struct ConditionalMapContent<F: MapContent, S: MapContent>: MapContent, P
     }
 }
 
-@available(iOS 13.0, *)
 public struct EmptyMapContent: MapContent, PrimitiveMapContent {
     public init() {}
 
@@ -70,7 +66,6 @@ public struct EmptyMapContent: MapContent, PrimitiveMapContent {
     }
 }
 
-@available(iOS 13.0, *)
 public struct OptionalMapContent<T: MapContent>: MapContent, PrimitiveMapContent {
     var content: T?
     func visit(_ node: MapContentNode) {
@@ -84,7 +79,6 @@ public struct OptionalMapContent<T: MapContent>: MapContent, PrimitiveMapContent
     }
 }
 
-@available(iOS 13.0, *)
 extension MapContent {
     func update(_ node: MapContentNode) {
         if let adapter = self as? AdaptingMapContent {

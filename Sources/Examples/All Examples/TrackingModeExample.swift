@@ -91,11 +91,7 @@ final class TrackingModeExample: UIViewController, ExampleProtocol {
     private func setupLocationButton() {
         trackingButton.addTarget(self, action: #selector(switchTracking), for: .touchUpInside)
 
-        if #available(iOS 13.0, *) {
-            trackingButton.setImage(UIImage(systemName: "location.fill"), for: .normal)
-        } else {
-            trackingButton.setTitle("No tracking", for: .normal)
-        }
+        trackingButton.setImage(UIImage(systemName: "location.fill"), for: .normal)
 
         let buttonWidth = 44.0
         trackingButton.translatesAutoresizingMaskIntoConstraints = false
@@ -135,19 +131,11 @@ final class TrackingModeExample: UIViewController, ExampleProtocol {
                 duration: 1.3)
         }
 
-        if #available(iOS 13.0, *) {
-            trackingButton.setImage(UIImage(systemName: "location.fill"), for: .normal)
-        } else {
-            trackingButton.setTitle("No tracking", for: .normal)
-        }
+        trackingButton.setImage(UIImage(systemName: "location.fill"), for: .normal)
     }
 
     func stopTracking() {
-        if #available(iOS 13.0, *) {
-            trackingButton.setImage(UIImage(systemName: "location"), for: .normal)
-        } else {
-            trackingButton.setTitle("Track", for: .normal)
-        }
+        trackingButton.setImage(UIImage(systemName: "location"), for: .normal)
         locationTrackingCancellation = nil
     }
 

@@ -30,7 +30,7 @@ final class PaddingDebugView: UIView {
             label.translatesAutoresizingMaskIntoConstraints = false
             label.backgroundColor = color
             label.textColor = .white
-            label.font = .safeMonospacedSystemFont(size: 10)
+            label.font = .monospacedSystemFont(ofSize: 10, weight: .regular)
             frameView.addSubview(label)
         }
 

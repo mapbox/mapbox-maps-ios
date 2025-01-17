@@ -25,10 +25,10 @@ struct RasterParticleExample: View {
         .mapStyle(mapStyle)
         .debugOptions(.camera)
         .ignoresSafeArea()
-        .safeOverlay(alignment: .trailing) {
+        .overlay(alignment: .trailing) {
             MapStyleSelectorButton(mapStyle: $mapStyle)
         }
-        .safeOverlay(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
             VStack(alignment: .center) {
                 SliderSettingView(title: "Particle Count", value: $rasterParticleCount, range: 1...4096, step: 1)
                 SliderSettingView(title: "Opacity Factor", value: $rasterParticleFadeOpacityFactor, range: 0...1, step: 0.01)

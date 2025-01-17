@@ -21,13 +21,7 @@ internal extension Encodable {
     /// - Throws: Errors occurring during conversion.
     /// - Returns: A string with JSON representing the object.
     func toString(encoding: String.Encoding = .utf8) throws -> String {
-        let data: Data
-        if #available(iOS 13.0, *) {
-            data = try JSONEncoder().encode(self)
-        } else {
-            // JSONEncoder doesn't support fragments on older iOS versions https://github.com/apple/swift-corelibs-foundation/issues/4402
-            data = try JSONSerialization.data(withJSONObject: self.toJSON(), options: .fragmentsAllowed)
-        }
+        let data = try JSONEncoder().encode(self)
 
         guard let result = String(data: data, encoding: encoding) else {
             throw TypeConversionError.unsuccessfulConversion

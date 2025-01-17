@@ -1,10 +1,8 @@
 import SwiftUI
 
 /// Handles url opening.
-@available(iOS 13, *)
 public typealias MapURLOpener = (URL) -> Void
 
-@available(iOS 13.0, *)
 internal final class ClosureURLOpener: AttributionURLOpener {
     var openURL: MapURLOpener?
 
@@ -13,7 +11,6 @@ internal final class ClosureURLOpener: AttributionURLOpener {
     }
 }
 
-@available(iOS 13.0, *)
 struct URLOpenerProvider {
     private let urlOpener: MapURLOpener
     private let preferEnvironment: Bool
@@ -30,7 +27,7 @@ struct URLOpenerProvider {
     }
 
     func resolve(in environmentValues: EnvironmentValues) -> MapURLOpener? {
-        if preferEnvironment, #available(iOS 14.0, *) {
+        if preferEnvironment {
             return { environmentValues.openURL($0) }
         }
         return urlOpener

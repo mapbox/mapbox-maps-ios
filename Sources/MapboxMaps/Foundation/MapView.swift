@@ -448,26 +448,18 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
     }
 
     private func subscribeToLifecycleNotifications() {
-        if #available(iOS 13.0, *) {
-            notificationCenter.addObserver(self,
-                                           selector: #selector(sceneDidEnterBackground(_:)),
-                                           name: UIScene.didEnterBackgroundNotification,
-                                           object: window?.parentScene)
-            notificationCenter.addObserver(self,
-                                           selector: #selector(sceneWillDeactivate(_:)),
-                                           name: UIScene.willDeactivateNotification,
-                                           object: window?.parentScene)
-            notificationCenter.addObserver(self,
-                                           selector: #selector(sceneDidActivate(_:)),
-                                           name: UIScene.didActivateNotification,
-                                           object: window?.parentScene)
-        } else {
-            notificationCenter.addObserver(self,
-                                           selector: #selector(appDidBecomeActive),
-                                           name: UIApplication.didBecomeActiveNotification,
-                                           object: nil)
-        }
-
+        notificationCenter.addObserver(self,
+                                        selector: #selector(sceneDidEnterBackground(_:)),
+                                        name: UIScene.didEnterBackgroundNotification,
+                                        object: window?.parentScene)
+        notificationCenter.addObserver(self,
+                                        selector: #selector(sceneWillDeactivate(_:)),
+                                        name: UIScene.willDeactivateNotification,
+                                        object: window?.parentScene)
+        notificationCenter.addObserver(self,
+                                        selector: #selector(sceneDidActivate(_:)),
+                                        name: UIScene.didActivateNotification,
+                                        object: window?.parentScene)
         notificationCenter.addObserver(self,
                                        selector: #selector(appDidEnterBackground),
                                        name: UIApplication.didEnterBackgroundNotification,
@@ -483,29 +475,22 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         reduceMemoryUse()
     }
 
-    @objc private func appDidBecomeActive() {
-        displayLink?.isPaused = false
-    }
-
     @objc private func appWillResignActive() {
         displayLink?.isPaused = true
     }
 
-    @available(iOS 13.0, *)
     @objc private func sceneDidActivate(_ notification: Notification) {
         guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
         displayLink?.isPaused = false
     }
 
-    @available(iOS 13, *)
     @objc private func sceneWillDeactivate(_ notification: Notification) {
         guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
         displayLink?.isPaused = true
     }
 
-    @available(iOS 13, *)
     @objc private func sceneDidEnterBackground(_ notification: Notification) {
         guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
@@ -738,7 +723,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
             return true
         }
 
-        if #available(iOS 13, *), let scene = window.parentScene, scene.activationState != .foregroundActive {
+        if let scene = window.parentScene, scene.activationState != .foregroundActive {
             return true
         }
 

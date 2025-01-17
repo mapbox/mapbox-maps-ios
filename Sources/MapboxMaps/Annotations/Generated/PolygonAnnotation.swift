@@ -233,7 +233,6 @@ extension PolygonAnnotation {
     }
 }
 
-@available(iOS 13.0, *)
 extension PolygonAnnotation: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         PolygonAnnotationGroup { self }.visit(node)

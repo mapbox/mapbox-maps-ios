@@ -16,11 +16,7 @@ final class MapEventsExample: UIViewController, ExampleProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if #available(iOS 13, *) {
-            view.backgroundColor = .systemBackground
-        } else {
-            view.backgroundColor = .white
-        }
+        view.backgroundColor = .systemBackground
 
         mapView = MapView(frame: view.bounds)
         mapView.ornaments.options.scaleBar.visibility = .visible
@@ -145,9 +141,7 @@ extension LogableEvent {
 private extension NSAttributedString {
     static func logString(_ text: String, bold: Bool = false) -> NSAttributedString {
         var attributes = [NSAttributedString.Key: Any]()
-        if #available(iOS 13.0, *) {
-            attributes[.font] = UIFont.monospacedSystemFont(ofSize: 13, weight: bold ? .bold : .regular)
-        }
+        attributes[.font] = UIFont.monospacedSystemFont(ofSize: 13, weight: bold ? .bold : .regular)
         return NSAttributedString(string: text, attributes: attributes)
     }
 
@@ -306,11 +300,7 @@ private extension UILabel {
     static func makeCameraLabel() -> UILabel {
         let label = UILabel()
         label.numberOfLines = 0
-        if #available(iOS 13.0, *) {
-            label.backgroundColor = UIColor.systemBackground
-        } else {
-            label.backgroundColor = .white
-        }
+        label.backgroundColor = UIColor.systemBackground
         label.layer.cornerRadius = 5
         label.layer.masksToBounds = true
         return label

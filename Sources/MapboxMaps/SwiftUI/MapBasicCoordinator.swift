@@ -2,7 +2,6 @@ import SwiftUI
 import UIKit
 import Combine
 
-@available(iOS 13.0, *)
 final class MapBasicCoordinator {
     typealias ViewportSetter = (Viewport) -> Void
 
@@ -195,7 +194,6 @@ private final class IdleViewportObserver: ViewportStatusObserver {
     }
 }
 
-@available(iOS 13.0, *)
 extension MapBasicCoordinator {
     final class PerformanceStatisticsState {
         private var token: AnyCancelable?

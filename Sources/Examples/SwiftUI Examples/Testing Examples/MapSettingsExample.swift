@@ -54,7 +54,7 @@ struct MapSettingsExample: View {
                     SettingsView(settings: $settings)
                         .defaultDetents()
                 }
-                .safeOverlay(alignment: .trailing) {
+                .overlay(alignment: .trailing) {
                     MapStyleSelectorButton(mapStyle: $settings.mapStyle)
                 }
                 .toolbar {

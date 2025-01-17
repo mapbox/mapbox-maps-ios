@@ -2,33 +2,8 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
-    func safeOverlay<V: View>(alignment: Alignment, @ViewBuilder content: () -> V) -> some View {
-        if #available(iOS 16.0, *) {
-            overlay(alignment: alignment, content: content)
-        } else {
-            overlay(content(), alignment: alignment)
-        }
-    }
-
-    @ViewBuilder
     func defaultDetents() -> some View {
-        if #available(iOS 16, *) {
-            presentationDetents([.fraction(0.33), .large])
-        }
-    }
-
-    @ViewBuilder
-    func prominentButton() -> some View {
-        if #available(iOS 15, *) {
-            buttonStyle(.borderedProminent)
-        }
-    }
-
-    @ViewBuilder
-    func toggleStyleButton() -> some View {
-        if #available(iOS 15, *) {
-            toggleStyle(.button)
-        }
+        presentationDetents([.fraction(0.33), .large])
     }
 
     func debug(_ closure: () -> Void) -> some View {
@@ -48,9 +23,7 @@ extension View {
     /// More info: https://twitter.com/luka_bernardi/status/1402045202714435585
     ///
     func debugPrintChanges() -> some View {
-        if #available(iOS 15.0, *) {
-            Self._printChanges()
-        }
+        Self._printChanges()
         return EmptyView()
     }
 
@@ -70,16 +43,6 @@ extension Color {
     /// the body of a view.
     static var random: Color {
         Color(red: .random(in: 0...1), green: .random(in: 0...1), blue: .random(in: 0...1))
-    }
-}
-
-extension View {
-    func fixedMenuOrder() -> some View {
-        if #available(iOS 16.0, *) {
-            return self.menuOrder(.fixed)
-        } else {
-            return AnyView(self)
-        }
     }
 }
 

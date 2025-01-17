@@ -32,16 +32,8 @@ final class BasicLocationPulsingExample: UIViewController, ExampleProtocol {
             mapView.mapboxMap.setCamera(to: .init(center: location.coordinate, zoom: 18))
         }.store(in: &cancelables)
 
-        if #available(iOS 14.0, *) {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .action)
-            updateMenu()
-        } else {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(
-                barButtonSystemItem: .action,
-                target: self,
-                action: #selector(showOptions)
-            )
-        }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .action)
+        updateMenu()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -73,36 +65,6 @@ final class BasicLocationPulsingExample: UIViewController, ExampleProtocol {
 
     private func disablePulsing() {
         mapView.location.options.puckType = .puck2D(.makeDefault())
-    }
-
-    @objc private func showOptions() {
-        let constantPulseAction = UIAlertAction(title: "Pulse with constant radius", style: .default) { _ in
-            self.enablePulsingWithConstantRadius()
-        }
-        let accuracyPulseAction = UIAlertAction(title: "Pulse with accuracy radius", style: .default) { _ in
-            self.enablePulsingWithAccuracyRadius()
-        }
-        let stopPulseAction = UIAlertAction(title: "None", style: .default) { _ in
-            self.disablePulsing()
-        }
-
-        let staticAccuracyRingAction = UIAlertAction(title: "Static with accuracy radius", style: .default) { _ in
-            self.enableStaticAccuracyCircle()
-        }
-
-        let cancelAction = UIAlertAction(title: "Dismiss", style: .cancel)
-
-        let controller = UIAlertController(title: "Puck circle", message: nil, preferredStyle: .actionSheet)
-        controller.modalPresentationStyle = .popover
-        if #available(iOS 16.0, *) {
-            controller.popoverPresentationController?.sourceItem = navigationItem.rightBarButtonItem
-        } else {
-            controller.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
-        }
-        [constantPulseAction, accuracyPulseAction, staticAccuracyRingAction, stopPulseAction, cancelAction]
-            .forEach(controller.addAction)
-
-        present(controller, animated: true)
     }
 
     private func updateMenu() {

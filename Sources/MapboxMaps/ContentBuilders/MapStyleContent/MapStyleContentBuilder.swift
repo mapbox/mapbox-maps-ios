@@ -1,7 +1,6 @@
 /// A result builder that creates map style content from closures you provide.
 ///
 /// See more information in the <doc:Declarative-Map-Styling>.
-@available(iOS 13.0, *)
 @resultBuilder
 public struct MapStyleContentBuilder {
     /// Builds an expression within the map style content builder.

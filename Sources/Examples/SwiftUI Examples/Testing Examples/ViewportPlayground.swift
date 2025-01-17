@@ -35,7 +35,7 @@ struct ViewportPlayground: View {
         .usesSafeAreaInsetsAsPadding(useSafeAreaAsPaddings)
         .additionalSafeAreaInsets(.bottom, additionalBottomSafeArea)
         .ignoresSafeArea()
-        .safeOverlay(alignment: .bottomLeading) {
+        .overlay(alignment: .bottomLeading) {
             VStack(alignment: .leading, spacing: 0) {
                 Text("Viewport sate: \(viewportShortDescription)")
                 MiniToggle(title: "Use safe area as padding", isOn: $useSafeAreaAsPaddings)
@@ -47,7 +47,7 @@ struct ViewportPlayground: View {
                 settingsHeight = size.height
             }
         }
-        .safeOverlay(alignment: .trailing) {
+        .overlay(alignment: .trailing) {
             MapStyleSelectorButton(mapStyle: $mapStyle)
         }
         .toolbar {

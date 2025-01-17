@@ -277,7 +277,6 @@ extension HeatmapLayer {
     }
 }
 
-@available(iOS 13.0, *)
 extension HeatmapLayer: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))

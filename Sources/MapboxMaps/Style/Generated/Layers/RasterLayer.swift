@@ -528,7 +528,6 @@ extension RasterLayer {
     }
 }
 
-@available(iOS 13.0, *)
 extension RasterLayer: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))

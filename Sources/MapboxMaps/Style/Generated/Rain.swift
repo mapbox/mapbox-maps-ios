@@ -396,7 +396,6 @@ extension Rain {
 
 }
 
-@available(iOS 13.0, *)
 extension Rain: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedUniqueProperty(keyPath: \.rain, value: self))

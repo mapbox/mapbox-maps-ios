@@ -150,7 +150,6 @@ struct ViewportAnimationData {
 /// ```
 ///
 /// See ``Viewport`` and ``ViewportAnimation`` documentation for more details.
-@available(iOS 13.0, *)
 public func withViewportAnimation<Result>(
     _ animation: ViewportAnimation = .default,
     body: () throws -> Result,
@@ -170,7 +169,6 @@ private struct MapAnimationTransactionKey: TransactionKey {
 
 #endif
 
-@available(iOS 13.0, *)
 extension Transaction {
     var viewportAnimationData: ViewportAnimationData? {
         get {

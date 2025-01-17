@@ -1638,7 +1638,6 @@ extension SymbolLayer {
     }
 }
 
-@available(iOS 13.0, *)
 extension SymbolLayer: MapStyleContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
         node.mount(MountedLayer(layer: self))

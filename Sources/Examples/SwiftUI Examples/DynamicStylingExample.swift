@@ -86,11 +86,11 @@ struct DynamicStylingExample: View {
         }
         .debugOptions(.camera)
         .ignoresSafeArea()
-        .safeOverlay(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
             settingsBody
                 .onChangeOfSize { settingsHeight = $0.height }
         }
-        .safeOverlay(alignment: .trailing) {
+        .overlay(alignment: .trailing) {
             MapStyleSelectorButton(mapStyle: $mapStyle)
         }
         .onChange(of: cities) { _ in updateFeatures() }

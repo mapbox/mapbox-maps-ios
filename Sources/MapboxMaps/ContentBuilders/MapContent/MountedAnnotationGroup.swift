@@ -1,6 +1,5 @@
 import os.log
 
-@available(iOS 13.0, *)
 struct MountedAnnotationGroup<Manager: AnnotationManagerInternal>: MapContentMountedComponent {
     private let annotations: [(AnyHashable, Manager.AnnotationType)]
     private let layerId: String

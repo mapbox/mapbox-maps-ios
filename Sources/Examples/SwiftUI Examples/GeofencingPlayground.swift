@@ -26,11 +26,11 @@ struct GeofencingPlayground: View {
             }
             .onMapLoaded { _ in geofencing.start() }
             .ignoresSafeArea()
-            .safeOverlay(alignment: .trailing) {
+            .overlay(alignment: .trailing) {
                 InfoButton(action: { showInfoSheet = true })
                     .padding(.all)
             }
-            .safeOverlay(alignment: .bottom) {
+            .overlay(alignment: .bottom) {
                 LoggingView(hasUserConsent: geofencing.hasUserConsent, lastEvent: geofencing.lastEvent, isochrone: isochrone)
             }
             .sheet(isPresented: $showInfoSheet) {

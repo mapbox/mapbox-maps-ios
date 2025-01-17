@@ -2,7 +2,6 @@ import UIKit
 import SwiftUI
 import os.log
 
-@available(iOS 13.0, *)
 final class MountedFeatureState<T: FeaturesetFeatureType>: MapContentMountedComponent {
     var state: FeatureState<T>
 

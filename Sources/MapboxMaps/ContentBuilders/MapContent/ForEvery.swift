@@ -27,7 +27,6 @@
 ///
 ///
 /// - Note: `ForEvery` is similar to SwiftUI `ForEach`, but works with ``MapContent``.
-@available(iOS 13.0, *)
 public struct ForEvery<Content, Data: RandomAccessCollection, ID: Hashable> {
     /// The collection of underlying identified data that is used to create views dynamically.
     var data: Data
@@ -40,7 +39,6 @@ public struct ForEvery<Content, Data: RandomAccessCollection, ID: Hashable> {
         self.id = id
     }
 
-    @available(iOS 13.0, *)
     init(data: Data, content: @escaping (Data.Element) -> Content) where Data.Element: Identifiable, ID == Data.Element.ID {
         self.init(data: data, id: \.id, content: content)
     }
@@ -52,7 +50,6 @@ public struct ForEvery<Content, Data: RandomAccessCollection, ID: Hashable> {
     }
 }
 
-@available(iOS 13.0, *)
 extension ForEvery: MapContent, PrimitiveMapContent where Content: MapContent {
     /// Creates instance that identified data by given key path.
     ///
@@ -63,7 +60,6 @@ extension ForEvery: MapContent, PrimitiveMapContent where Content: MapContent {
     }
 
     /// Creates instance that uses identifiable data.
-    @available(iOS 13.0, *)
     public init(_ data: Data, @MapContentBuilder content: @escaping (Data.Element) -> Content) where Data.Element: Identifiable, Data.Element.ID == ID {
         self.init(data: data, content: content)
     }

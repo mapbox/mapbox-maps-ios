@@ -8,9 +8,7 @@ protocol StyleProtocol: AnyObject {
     var styleDefaultCamera: CameraOptions { get }
     var uri: StyleURI? { get set }
     var mapStyle: MapStyle? { get set }
-    @available(iOS 13.0, *)
     func setMapContent(_ content: () -> any MapContent)
-    @available(iOS 13.0, *)
     func setMapContentDependencies(_ dependencies: MapContentDependencies)
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
@@ -77,15 +75,11 @@ public class StyleManager {
         self.sourceManager = sourceManager
         self.styleManager = styleManager
         self.styleReconciler = MapStyleReconciler(styleManager: styleManager)
-        self.contentReconciler = if #available(iOS 13.0, *) {
-            MapContentReconciler(
-                styleManager: styleManager,
-                sourceManager: sourceManager,
-                styleIsLoaded: styleReconciler.isStyleRootLoaded
-            )
-        } else {
-            nil
-        }
+        self.contentReconciler = MapContentReconciler(
+            styleManager: styleManager,
+            sourceManager: sourceManager,
+            styleIsLoaded: styleReconciler.isStyleRootLoaded
+        )
     }
 
     // MARK: - Layers
@@ -448,21 +442,18 @@ public class StyleManager {
     /// - Warning: Avoind having strong references to `MapboxMap` or `MapView` in your custom content as it will lead to strong reference cycles.
     ///
     /// See more information in the <doc:Declarative-Map-Styling>.
-    @available(iOS 13.0, *)
     public func setMapStyleContent(@MapStyleContentBuilder content: () -> some MapStyleContent) {
         setMapContent({
             MapStyleContentAdapter(content())
         })
     }
 
-    @available(iOS 13.0, *)
     func setMapContent(_ content: () -> any MapContent) {
         if let contentReconciler = contentReconciler as? MapContentReconciler {
             contentReconciler.content = content()
         }
     }
 
-    @available(iOS 13.0, *)
     func setMapContentDependencies(_ dependencies: MapContentDependencies) {
         if let contentReconciler = contentReconciler as? MapContentReconciler {
             contentReconciler.setMapContentDependencies(dependencies)

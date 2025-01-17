@@ -1,7 +1,6 @@
 import UIKit
 import SwiftUI
 
-@available(iOS 13.0, *)
 final class MountedInteraction: MapContentMountedComponent {
     let interaction: InteractionImpl
     var token: AnyCancelable?

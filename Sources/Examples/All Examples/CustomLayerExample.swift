@@ -25,12 +25,10 @@ final class CustomLayerExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(cameraOptions: cameraOptions))
         mapView.mapboxMap.mapStyle = .streets
-        if #available(iOS 13.0, *) {
-            mapView.mapboxMap.setMapStyleContent {
-                StyleProjection(name: .mercator)
-                CustomLayer(id: "custom-layer-example", renderer: renderer)
-                    .position(.below("waterway"))
-            }
+        mapView.mapboxMap.setMapStyleContent {
+            StyleProjection(name: .mercator)
+            CustomLayer(id: "custom-layer-example", renderer: renderer)
+                .position(.below("waterway"))
         }
 
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

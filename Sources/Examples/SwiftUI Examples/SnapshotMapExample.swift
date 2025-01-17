@@ -29,7 +29,7 @@ struct SnapshotMapExample: View {
             }
         }
         .ignoresSafeArea()
-        .safeOverlay(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
             Button("Make snapshot via Snapshotter") {
                 snapshotter.start(overlayHandler: nil) { result in
                     switch result {

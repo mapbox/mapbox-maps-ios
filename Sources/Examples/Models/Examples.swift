@@ -119,11 +119,9 @@ struct Examples {
         Example(title: "Add an inset map",
                 description: "Add a smaller inset map that visualizes the viewport of the main map.",
                 type: InsetMapExample.self)
-        if #available(iOS 13.0, *) {
-            Example(title: "Use camera(for:) bounding coordinates",
-                    description: "Use camera(for:) bounding coordinaters",
-                    type: CameraForExample.self)
-        }
+        Example(title: "Use camera(for:) bounding coordinates",
+                description: "Use camera(for:) bounding coordinaters",
+                type: CameraForExample.self)
     }
 
     // Miscellaneous examples
@@ -140,14 +138,12 @@ struct Examples {
         Example(title: "Resize MapView",
                 description: "Support smooth MapView resizing animations",
                 type: ResizeMapViewExample.self)
-        if #available(iOS 13.0, *) {
-            Example(title: "Combine",
+        Example(title: "Combine",
                 description: "Shows how to use map events with Combine framework.",
                 type: CombineExample.self)
-            Example(title: "Combine location",
+        Example(title: "Combine location",
                 description: "Shows how to use Combine framework to drive the location puck.",
                 type: CombineLocationExample.self)
-        }
     }
 
     public static let geofencingExample = Example(title: "Geofencing", description: "Showcase geofencing detection", type: GeofencingExample.self)
@@ -262,15 +258,12 @@ struct Examples {
         Example(title: "Use a distance expression",
                 description: "Use a distance style expression to show features within a specific radius.",
                 type: DistanceExpressionExample.self)
-        Example(
-            title: "Add custom raster source",
-            description: "Load a custom raster source to Style and display it on a map as animated weather data using RasterLayer.",
-            type: CustomRasterSourceExample.self)
-        if #available(iOS 13.0, *) {
-            Example(title: "Runtime slots example",
-                    description: "Shows shows how to use the runtime slots.",
-                    type: RuntimeSlotsExample.self)
-        }
+        Example(title: "Add custom raster source",
+                description: "Load a custom raster source to Style and display it on a map as animated weather data using RasterLayer.",
+                type: CustomRasterSourceExample.self)
+        Example(title: "Runtime slots example",
+                description: "Shows shows how to use the runtime slots.",
+                type: RuntimeSlotsExample.self)
     }
 
     // Examples that show use cases related to user interaction with the map.

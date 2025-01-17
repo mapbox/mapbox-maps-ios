@@ -27,7 +27,6 @@ public struct MapGestureHandlers {
     }
 }
 
-@available(iOS 13.0, *)
 public extension Map {
     /// Adds a tap gesture handler to the map.
     ///

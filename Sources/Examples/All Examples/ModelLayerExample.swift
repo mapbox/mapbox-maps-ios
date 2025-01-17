@@ -25,25 +25,23 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
         var carFeature = Feature(geometry: Constants.mapboxHelsinki)
         carFeature.properties = [Constants.modelIdKey: .string(Constants.carModelId)]
 
-        if #available(iOS 13, *) {
-            mapView.mapboxMap.setMapStyleContent {
-                /// Add Models for both the duck and car using an id and a URL to the resource
-                Model(id: Constants.duckModelId, uri: Constants.duck)
-                Model(id: Constants.carModelId, uri: Constants.car)
+        mapView.mapboxMap.setMapStyleContent {
+            /// Add Models for both the duck and car using an id and a URL to the resource
+            Model(id: Constants.duckModelId, uri: Constants.duck)
+            Model(id: Constants.carModelId, uri: Constants.car)
 
-                /// Add a GeoJSONSource to the map and add the two features with geometry information
-                GeoJSONSource(id: Constants.sourceId)
-                    .data(.featureCollection(FeatureCollection(features: [duckFeature, carFeature])))
+            /// Add a GeoJSONSource to the map and add the two features with geometry information
+            GeoJSONSource(id: Constants.sourceId)
+                .data(.featureCollection(FeatureCollection(features: [duckFeature, carFeature])))
 
-                /// Add a Model visualization layer which displays the two models stored in the GeoJSONSource according to the set properties
-                ModelLayer(id: "model-layer-id", source: Constants.sourceId)
-                    .modelId(Exp(.get) { Constants.modelIdKey })
-                    .modelType(.common3d)
-                    .modelScale(x: 40, y: 40, z: 40)
-                    .modelTranslation(x: 0, y: 0, z: 0)
-                    .modelRotation(x: 0, y: 0, z: 90)
-                    .modelOpacity(0.7)
-            }
+            /// Add a Model visualization layer which displays the two models stored in the GeoJSONSource according to the set properties
+            ModelLayer(id: "model-layer-id", source: Constants.sourceId)
+                .modelId(Exp(.get) { Constants.modelIdKey })
+                .modelType(.common3d)
+                .modelScale(x: 40, y: 40, z: 40)
+                .modelTranslation(x: 0, y: 0, z: 0)
+                .modelRotation(x: 0, y: 0, z: 90)
+                .modelOpacity(0.7)
         }
 
         view.addSubview(mapView)

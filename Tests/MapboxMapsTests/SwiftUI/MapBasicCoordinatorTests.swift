@@ -3,7 +3,6 @@ import CoreLocation
 
 import XCTest
 
-@available(iOS 13.0, *)
 final class MapBasicCoordinatorTests: XCTestCase {
     var mapView: MockMapView!
     var setViewportStub: Stub<Viewport, Void>!
@@ -245,7 +244,6 @@ final class MapBasicCoordinatorTests: XCTestCase {
     }
 }
 
-@available(iOS 13.0, *)
 extension Map.PerformanceStatisticsParameters {
     static func fixture(
         options: PerformanceStatisticsOptions = PerformanceStatisticsOptions([.cumulative]),

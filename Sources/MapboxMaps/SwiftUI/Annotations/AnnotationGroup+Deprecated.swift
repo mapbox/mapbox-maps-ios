@@ -2,7 +2,6 @@ import UIKit
 
 // This file contains old methods that were public before rich type support.
 
-@available(iOS 13.0, *)
 extension CircleAnnotationGroup {
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     @available(*, deprecated, renamed: "circleTranslate(x:y:)")
@@ -14,7 +13,6 @@ extension CircleAnnotationGroup {
     }
 }
 
-@available(iOS 13.0, *)
 extension PointAnnotationGroup {
     /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
         /// Default value: [0,0].
@@ -64,7 +62,6 @@ extension PointAnnotationGroup {
     }
 }
 
-@available(iOS 13.0, *)
 extension PolygonAnnotationGroup {
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     @available(*, deprecated, renamed: "fillTranslate(x:y:)")
@@ -76,7 +73,6 @@ extension PolygonAnnotationGroup {
     }
 }
 
-@available(iOS 13.0, *)
 extension PolylineAnnotationGroup {
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     @available(*, deprecated, renamed: "lineTranslate(x:y:)")

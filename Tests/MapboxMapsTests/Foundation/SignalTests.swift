@@ -243,7 +243,6 @@ final class SignalTests: XCTestCase {
         token.cancel()
     }
 
-    @available(iOS 13.0, *)
     func testCombineSupport() {
         var tokens = Set<AnyCancellable>()
 
@@ -395,7 +394,6 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(received, [1, 2])
     }
 
-    @available(iOS 13.0, *)
     func testCombineSupportWithOperators() {
         var tokens = Set<AnyCancellable>()
 
@@ -426,7 +424,6 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(values, ["2", "4"])
     }
 
-    @available(iOS 13.0, *)
     func testEraseToSignal() throws {
         let subject = CurrentValueSubject<Int?, Never>(1)
         let signal = subject

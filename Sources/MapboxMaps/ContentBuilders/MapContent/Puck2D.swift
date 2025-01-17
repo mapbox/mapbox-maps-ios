@@ -10,7 +10,6 @@ import UIKit
 ///         .showsAccuracyRing(true)
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct Puck2D: MapContent, PrimitiveMapContent {
     private var configuration: Puck2DConfiguration
     private var bearing: PuckBearing?
@@ -80,7 +79,6 @@ public struct Puck2D: MapContent, PrimitiveMapContent {
         copyAssigned(self, \.configuration.slot, slot)
     }
 
-    @available(iOS 13.0, *)
     func visit(_ node: MapContentNode) {
         let locationOptions = LocationOptions(
             puckType: .puck2D(configuration),

@@ -32,7 +32,7 @@ struct StandardInteractiveBuildingsExample: View {
         .mapStyle(.standardExperimental(theme: theme, lightPreset: lightPreset, buildingSelectColor: buildingSelectColor))
         .ignoresSafeArea()
         /// Debug panel
-        .safeOverlay(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
             VStack {
                 HStack {
                     Text("Building Select")

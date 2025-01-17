@@ -137,7 +137,6 @@ extension CustomLayer {
 }
 
 @_spi(Experimental)
-@available(iOS 13.0, *)
 extension CustomLayer: MapStyleContent, PrimitiveMapContent {
     /// Positions this layer at a specified position.
     ///

@@ -6,7 +6,6 @@ import UIKit
 extension UIWindow {
 
     /// The `UIScene` containing this window.
-    @available(iOS 13.0, *)
     internal var parentScene: UIScene? {
 #if canImport(CarPlay)
         switch self {
@@ -29,7 +28,6 @@ extension UIWindow {
     }
 }
 
-@available(iOS 13.0, *)
 extension UIScene {
 
     internal var allWindows: [UIWindow] {
@@ -39,7 +37,7 @@ extension UIScene {
 #if canImport(CarPlay)
         if let carPlayScene = self as? CPTemplateApplicationScene {
             return [carPlayScene.carWindow]
-        } else if #available(iOS 13.4, *), let carPlayDashboardScene = self as? CPTemplateApplicationDashboardScene {
+        } else if let carPlayDashboardScene = self as? CPTemplateApplicationDashboardScene {
             return [carPlayDashboardScene.dashboardWindow]
         } else if #available(iOS 15.4, *), let carPlayInstrumentClusterScene = self as? CPTemplateApplicationInstrumentClusterScene {
             if let instrumentClusterWindow = carPlayInstrumentClusterScene.instrumentClusterController.instrumentClusterWindow {

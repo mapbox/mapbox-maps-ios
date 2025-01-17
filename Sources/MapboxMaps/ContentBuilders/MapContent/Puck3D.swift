@@ -11,7 +11,6 @@
 ///     Puck3D(model: model, bearing: .course)
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct Puck3D: MapContent, PrimitiveMapContent {
     private var configuration: Puck3DConfiguration
     private var bearing: PuckBearing?
@@ -117,7 +116,6 @@ public struct Puck3D: MapContent, PrimitiveMapContent {
         copyAssigned(self, \.configuration.slot, slot)
     }
 
-    @available(iOS 13.0, *)
     func visit(_ node: MapContentNode) {
         let locationOptions = LocationOptions(
             puckType: .puck3D(configuration),

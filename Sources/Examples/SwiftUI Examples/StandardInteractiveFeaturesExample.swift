@@ -89,7 +89,7 @@ struct StandardInteractiveFeaturesExample: View {
         }
         .ignoresSafeArea()
         /// Debug panel
-        .safeOverlay(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
             VStack(alignment: .leading) {
                 if let selectedPoi {
                     VStack(alignment: .leading) {

@@ -8,13 +8,11 @@ final class MockStyle: StyleProtocol {
     var mapStyle: MapStyle?
 
     private(set)var isMapContentSet: Bool = false
-    @available(iOS 13.0, *)
     func setMapContent(_ content: () -> any MapContent) {
         isMapContentSet.toggle()
     }
 
     let setMapContentDependenciesStub = Stub<MapContentDependencies, Void>()
-    @available(iOS 13.0, *)
     func setMapContentDependencies(_ dependencies: MapContentDependencies) {
         setMapContentDependenciesStub.call(with: dependencies)
     }

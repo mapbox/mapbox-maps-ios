@@ -64,7 +64,7 @@ struct StandardStyleImportExample: View {
             show3dObjects: show3DObjects))
         .additionalSafeAreaInsets(.bottom, panelHeight)
         .ignoresSafeArea()
-        .safeOverlay(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
             settingsPanel.onChangeOfSize { panelHeight = $0.height }
         }
     }

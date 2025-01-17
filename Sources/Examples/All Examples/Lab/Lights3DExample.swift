@@ -30,34 +30,28 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
     }
 
     func sunAnimationButton() -> UIBarButtonItem {
-        if #available(iOS 13, *) {
-            return UIBarButtonItem(image: UIImage(systemName: "sunrise"), style: .plain, target: self, action: #selector(startSunAnimation))
-        } else {
-            return UIBarButtonItem(title: "Sun", style: .plain, target: self, action: #selector(startSunAnimation))
-        }
+        return UIBarButtonItem(image: UIImage(systemName: "sunrise"), style: .plain, target: self, action: #selector(startSunAnimation))
     }
 
     func updateMapState(azimuth: Double = 210, polarAngle: Double = 30, ambientColor: UIColor = .lightGray) {
-        if #available(iOS 13.0, *) {
-            /// We use the new experimental style content feature to set the lights.
-            mapView.mapboxMap.setMapStyleContent {
-                Atmosphere()
-                    .range(start: 0, end: 12)
-                    .horizonBlend(0.1)
-                    .starIntensity(0.2)
-                    .color(StyleColor(red: 240, green: 196, blue: 152, alpha: 1)!)
-                    .highColor(StyleColor(red: 221, green: 209, blue: 197, alpha: 1)!)
-                    .spaceColor(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!)
-                DirectionalLight(id: directionalLightId)
-                    .intensity(0.5)
-                    .direction(azimuthal: azimuth, polar: polarAngle)
-                    .directionTransition(.zero)
-                    .castShadows(true)
-                    .shadowIntensity(1)
-                AmbientLight(id: ambientLightId)
-                    .color(ambientColor)
-                    .intensity(0.5)
-            }
+        /// We use the new experimental style content feature to set the lights.
+        mapView.mapboxMap.setMapStyleContent {
+            Atmosphere()
+                .range(start: 0, end: 12)
+                .horizonBlend(0.1)
+                .starIntensity(0.2)
+                .color(StyleColor(red: 240, green: 196, blue: 152, alpha: 1)!)
+                .highColor(StyleColor(red: 221, green: 209, blue: 197, alpha: 1)!)
+                .spaceColor(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!)
+            DirectionalLight(id: directionalLightId)
+                .intensity(0.5)
+                .direction(azimuthal: azimuth, polar: polarAngle)
+                .directionTransition(.zero)
+                .castShadows(true)
+                .shadowIntensity(1)
+            AmbientLight(id: ambientLightId)
+                .color(ambientColor)
+                .intensity(0.5)
         }
     }
 

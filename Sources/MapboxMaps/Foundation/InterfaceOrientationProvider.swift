@@ -48,12 +48,8 @@ internal final class DefaultInterfaceOrientationProvider {
     }
 
     private func calculateInterfaceOrientation() -> UIInterfaceOrientation {
-        if #available(iOS 13.0, *), let view = view?.value {
-            if let orientation = view.window?.windowScene?.interfaceOrientation {
-                return orientation
-            }
-        }
-        return UIInterfaceOrientation(deviceOrientation: device.orientation)
+        let sceneOrientation = view?.value?.window?.windowScene?.interfaceOrientation
+        return sceneOrientation ?? UIInterfaceOrientation(deviceOrientation: device.orientation)
     }
 }
 

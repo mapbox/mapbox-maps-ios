@@ -6,7 +6,6 @@ protocol ViewAnnotationsManaging: AnyObject {
     func add(_ annotation: ViewAnnotation)
 }
 
-@available(iOS 13.0, *)
 final class MountedViewAnnotation: MapContentMountedComponent {
     let mapViewAnnotation: MapViewAnnotation
     var update: ((MapViewAnnotation) -> Void)?
@@ -90,7 +89,6 @@ final class MountedViewAnnotation: MapContentMountedComponent {
     func updateMetadata(with: MapContentNodeContext) {}
 }
 
-@available(iOS 13.0, *)
 private extension UIHostingController {
     func disableSafeArea() {
         if #available(iOS 16.4, *) {

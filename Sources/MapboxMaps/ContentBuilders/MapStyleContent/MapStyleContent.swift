@@ -6,7 +6,6 @@ import os.log
 /// Implement this protocol to create higher level content components.
 ///
 /// - Note: In `SwiftUI` applications prefer to use ``MapContent`` instead.
-@available(iOS 13.0, *)
 public protocol MapStyleContent {
     /// Represents the composite type of the body content.
     associatedtype Body: MapStyleContent
@@ -17,7 +16,6 @@ public protocol MapStyleContent {
 }
 
 /// Defines an empty map style content.
-@available(iOS 13.0, *)
 public struct EmptyMapStyleContent: MapStyleContent, PrimitiveMapContent {
     public init() {}
 
@@ -29,7 +27,6 @@ public struct EmptyMapStyleContent: MapStyleContent, PrimitiveMapContent {
 /// A map style content composed of multiple values.
 ///
 /// Use ``MapStyleContentBuilder`` to initialize this type.
-@available(iOS 13.0, *)
 public struct TupleMapStyleContent<T>: MapStyleContent, PrimitiveMapContent {
     var _visit: (MapContentNode) -> Void
 
@@ -45,7 +42,6 @@ public struct TupleMapStyleContent<T>: MapStyleContent, PrimitiveMapContent {
 /// Conditional map style content.
 ///
 /// Use ``MapStyleContentBuilder`` to initialize this type.
-@available(iOS 13.0, *)
 public struct ConditionalMapStyleContent<F: MapStyleContent, S: MapStyleContent>: MapStyleContent, PrimitiveMapContent {
     private let subject: ConditionalMapContent<MapStyleContentAdapter<F>, MapStyleContentAdapter<S>>
 
@@ -65,7 +61,6 @@ public struct ConditionalMapStyleContent<F: MapStyleContent, S: MapStyleContent>
 /// Optional map style content.
 ///
 /// Use ``MapStyleContentBuilder`` to initialize this type.
-@available(iOS 13.0, *)
 public struct OptionalMapStyleContent<T: MapStyleContent>: MapStyleContent, PrimitiveMapContent {
     private let subject: OptionalMapContent<MapStyleContentAdapter<T>>
 

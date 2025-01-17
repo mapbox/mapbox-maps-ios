@@ -2,7 +2,6 @@ import Foundation
 import UIKit
 import SwiftUI
 
-@available(iOS 13.0, *)
 enum ConstantOrBinding<T> {
     case constant(T)
     case binding(Binding<T>)

@@ -53,7 +53,7 @@ struct PuckPlayground: View {
         .debugOptions(.padding)
         .additionalSafeAreaInsets(sidePanel ? .trailing : .bottom, settingsHeight)
         .ignoresSafeArea()
-        .safeOverlay(alignment: sidePanel ? .trailing : .bottom) {
+        .overlay(alignment: sidePanel ? .trailing : .bottom) {
             settingsBody
                 .frame(maxWidth: sidePanel ? 300 : .infinity)
                 .onChangeOfSize { settingsHeight = sidePanel ? $0.width : $0.height }

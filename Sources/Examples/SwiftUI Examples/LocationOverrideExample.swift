@@ -30,7 +30,7 @@ struct LocationOverrideExample: View {
             }
         }
         .ignoresSafeArea()
-        .safeOverlay(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
             Text("Tap on map to move the puck")
                 .floating()
                 .padding(.bottom, 30)

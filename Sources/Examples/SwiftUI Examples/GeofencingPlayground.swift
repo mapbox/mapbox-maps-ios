@@ -265,7 +265,7 @@ private func requestNotificationPermission() {
 }
 
 private func requestLocationAuthorization() {
-    CLLocationManager().requestAlwaysAuthorization()
+    CLLocationManager().requestWhenInUseAuthorization()
     print("Location request finished.")
 }
 

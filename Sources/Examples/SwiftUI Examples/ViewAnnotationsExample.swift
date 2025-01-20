@@ -28,7 +28,7 @@ struct ViewAnnotationsExample: View {
                     }
             }
             .allowOverlap(allowOverlap)
-            .selected(selected)
+            .priority(1)
 
             // Dynamic view annotations, appeared on tap.
             // The anchor can point to bottom, top, left, or right direction.
@@ -48,6 +48,8 @@ struct ViewAnnotationsExample: View {
                     guard let idx = taps.firstIndex(where: { $0.id == tap.id }) else { return }
                     taps[idx].selectedAnchor = config
                 }
+                .priority(-1)
+                .minZoom(5)
             }
 
             // A Dynamic View Annotation annotation, that is attached to the Polyline annotation.
@@ -78,7 +80,8 @@ struct ViewAnnotationsExample: View {
             .allowZElevate(allowZElevate)
             .variableAnchors(.all) // Allow all directions for anchor
             .onAnchorChanged { self.etaAnnotationAnchor = $0.anchor }
-            .selected(true)
+            .priority(2)
+            .minZoom(5)
         }
         .onMapTapGesture { context in
             taps.append(Tap(coordinate: context.coordinate))

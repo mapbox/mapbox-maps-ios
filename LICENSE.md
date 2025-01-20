@@ -31,13 +31,13 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### MapboxCoreMaps,11.9.0,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### MapboxCoreMaps,11.10.0-beta.2,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Core Maps version 11.0
 Mapbox Core Maps SDK
 
-Copyright (c) 2024 Mapbox
+Copyright (c) 2025 Mapbox
 
 All rights reserved.
 

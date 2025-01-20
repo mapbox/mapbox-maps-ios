@@ -108,9 +108,25 @@ public final class ViewAnnotation {
     /// Specifies if this view annotation is selected meaning it should be placed on top of others.
     ///
     /// The property is `false` by default.
+    @available(*, deprecated, message: "Use priority instead.")
     public var selected: Bool {
         get { property(\.selected, default: false) }
         set { setProperty(\.selected, value: newValue, oldValue: selected) }
+    }
+
+    /// Sorts annotations in descending order based on this value.
+    ///
+    /// A replacement for the deprecated `selected` field.
+    /// Simultaneous use of `priority` and `selected` fileds should be avoided.
+    /// Annotations with higher priority keys are drawn and placed first.
+    /// When equal priorities, less-anchor-options and least-recently-added sequentially used for annotations placement order.
+    /// `priority` field defaults to 0 when not set explicitly.
+    /// Negative, 0, positive values could be used in `priority` field.
+    ///
+    /// When updating existing annotations, if `priority` is not explicitly set, the current value will be retained.
+    public var priority: Int? {
+        get { options.priority }
+        set { setProperty(\.priority, value: newValue, oldValue: priority)}
     }
 
     /// A list of anchor configurations available.
@@ -179,6 +195,21 @@ public final class ViewAnnotation {
             guard let anchorCoordinate, anchorCoordinate != oldValue else { return }
             onAnchorCoordinateChanged?(anchorCoordinate)
         }
+    }
+
+    /// Minimum zoom value in range [0, 22] to display View Annotation.
+    /// If not provided or is out of range, defaults to 0.
+    public var minZoom: Double {
+        get { property(\.minZoom, default: 0) }
+        set { setProperty(\.minZoom, value: newValue, oldValue: minZoom) }
+    }
+
+    /// Maximum zoom value in range [0, 22] to display View Annotation.
+    /// Should be greater than or equal to minZoom.
+    /// If not provided or is out of range, defaults to 22.
+    public var maxZoom: Double {
+        get { property(\.maxZoom, default: 22) }
+        set { setProperty(\.maxZoom, value: newValue, oldValue: maxZoom) }
     }
 
     let id = UUID().uuidString

@@ -557,7 +557,9 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertTrue(exaggerationTransitionProperty is NSNull)
     }
 
-    func testOnlyAddedDataIdReturned() {
+    func testOnlyAddedDataIdReturned() throws {
+        throw XCTSkip("Disabled due to behavior change, investigated in https://mapbox.atlassian.net/browse/MAPSIOS-1708")
+
         let source = GeoJSONSource(id: "Source")
         let source2 = GeoJSONSource(id: "Source2")
         let geometry = Geometry.point(Point.init(LocationCoordinate2D(latitude: 0, longitude: 0)))

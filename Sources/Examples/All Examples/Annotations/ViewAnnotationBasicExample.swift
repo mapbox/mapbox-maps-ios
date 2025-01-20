@@ -35,7 +35,7 @@ final class ViewAnnotationBasicExample: UIViewController, ExampleProtocol {
         annotation.allowOverlap = true
         annotationView.onClose = { [weak annotation] in annotation?.remove() }
         annotationView.onSelect = { [weak annotation] selected in
-            annotation?.selected = selected
+            annotation?.priority = selected ? 1 : 0
             annotation?.setNeedsUpdateSize()
         }
         mapView.viewAnnotations.add(annotation)

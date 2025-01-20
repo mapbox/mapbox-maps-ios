@@ -47,6 +47,15 @@ public struct ViewAnnotationOptions: Equatable {
     /// If visible is null, default value `true` will be applied.
     public var visible: Bool?
 
+    /// A list of anchor configurations available.
+    ///
+    /// The annotation will automatically pick the first best anchor position depending on position
+    /// relative to other elements on the map.
+    ///
+    /// The ``ViewAnnotation/onAnchorChanged`` is called when the
+    /// effective position is updated.
+    ///
+    /// If not specified, the annotation will be placed in center.
     public var variableAnchors: [ViewAnnotationAnchorConfig]?
 
     /// Anchor describing where the view annotation will be located relatively to given geometry.
@@ -66,10 +75,32 @@ public struct ViewAnnotationOptions: Equatable {
 
     /// Specifies if this view annotation is selected meaning it should be placed on top of others.
     /// If selected in null, default value `false` will be applied.
+    @available(*, deprecated, message: "Use priority instead.")
     public var selected: Bool?
+
+    /// Sorts annotations in descending order based on this value.
+    ///
+    /// A replacement for the deprecated `selected` field.
+    /// Simultaneous use of `priority` and `selected` fileds should be avoided.
+    /// Annotations with higher priority keys are drawn and placed first.
+    /// When equal priorities, less-anchor-options and least-recently-added sequentially used for annotations placement order.
+    /// `priority` field defaults to 0 when not set explicitly.
+    /// Negative, 0, positive values could be used in `priority` field.
+    ///
+    /// When updating existing annotations, if `priority` is not explicitly set, the current value will be retained.
+    public var priority: Int?
 
     /// When `false`, the annotation will be displayed even if it go beyond camera padding.
     public var ignoreCameraPadding: Bool?
+
+    /// Minimum zoom value in range [0, 22] to display View Annotation.
+    /// If not provided or is out of range, defaults to 0.
+    public var minZoom: Double?
+
+    /// Maximum zoom value in range [0, 22] to display View Annotation.
+    /// Should be greater than or equal to minZoom.
+    /// If not provided or is out of range, defaults to 22.
+    public var maxZoom: Double?
 
     /// Initializes a `ViewAnnotationOptions`
     public init(
@@ -79,9 +110,72 @@ public struct ViewAnnotationOptions: Equatable {
         allowOverlap: Bool? = nil,
         allowOverlapWithPuck: Bool? = nil,
         visible: Bool? = nil,
-        selected: Bool? = nil,
+        priority: Int? = nil,
         variableAnchors: [ViewAnnotationAnchorConfig]? = nil,
-        ignoreCameraPadding: Bool? = nil
+        ignoreCameraPadding: Bool? = nil,
+        minZoom: Double? = nil,
+        maxZoom: Double? = nil
+    ) {
+        self.init(
+            annotatedFeature: annotatedFeature,
+            width: width,
+            height: height,
+            allowOverlap: allowOverlap,
+            allowOverlapWithPuck: allowOverlapWithPuck,
+            visible: visible,
+            selected: nil,
+            priority: priority,
+            variableAnchors: variableAnchors,
+            ignoreCameraPadding: ignoreCameraPadding,
+            minZoom: minZoom,
+            maxZoom: maxZoom
+        )
+    }
+
+    @available(*, deprecated, message: "Use priority instead.")
+    /// Initializes a `ViewAnnotationOptions`
+    public init(
+        annotatedFeature: AnnotatedFeature? = nil,
+        width: CGFloat? = nil,
+        height: CGFloat? = nil,
+        allowOverlap: Bool? = nil,
+        allowOverlapWithPuck: Bool? = nil,
+        visible: Bool? = nil,
+        selected: Bool?,
+        variableAnchors: [ViewAnnotationAnchorConfig]? = nil,
+        ignoreCameraPadding: Bool? = nil,
+        minZoom: Double? = nil,
+        maxZoom: Double? = nil
+    ) {
+        self.init(
+            annotatedFeature: annotatedFeature,
+            width: width,
+            height: height,
+            allowOverlap: allowOverlap,
+            allowOverlapWithPuck: allowOverlapWithPuck,
+            visible: visible,
+            selected: selected,
+            priority: nil,
+            variableAnchors: variableAnchors,
+            ignoreCameraPadding: ignoreCameraPadding,
+            minZoom: minZoom,
+            maxZoom: maxZoom
+        )
+    }
+
+    private init(
+        annotatedFeature: AnnotatedFeature? = nil,
+        width: CGFloat? = nil,
+        height: CGFloat? = nil,
+        allowOverlap: Bool? = nil,
+        allowOverlapWithPuck: Bool? = nil,
+        visible: Bool? = nil,
+        selected: Bool? = nil,
+        priority: Int? = nil,
+        variableAnchors: [ViewAnnotationAnchorConfig]? = nil,
+        ignoreCameraPadding: Bool? = nil,
+        minZoom: Double? = nil,
+        maxZoom: Double? = nil
     ) {
         self.annotatedFeature = annotatedFeature
         self.width = width
@@ -91,7 +185,10 @@ public struct ViewAnnotationOptions: Equatable {
         self.allowOverlapWithPuck = allowOverlapWithPuck
         self.visible = visible
         self.selected = selected
+        self.priority = priority
         self.ignoreCameraPadding = ignoreCameraPadding
+        self.minZoom = minZoom
+        self.maxZoom = maxZoom
     }
 
     /// Initializes a `ViewAnnotationOptions` with geometry.
@@ -134,8 +231,11 @@ public struct ViewAnnotationOptions: Equatable {
             allowOverlapWithPuck: objcValue.__allowOverlapWithPuck?.boolValue,
             visible: objcValue.__visible?.boolValue,
             selected: objcValue.__selected?.boolValue,
+            priority: objcValue.__priority?.intValue,
             variableAnchors: objcValue.variableAnchors,
-            ignoreCameraPadding: objcValue.__ignoreCameraPadding?.boolValue
+            ignoreCameraPadding: objcValue.__ignoreCameraPadding?.boolValue,
+            minZoom: objcValue.__minZoom?.doubleValue,
+            maxZoom: objcValue.__maxZoom?.doubleValue
         )
     }
 
@@ -185,6 +285,10 @@ extension CoreViewAnnotationOptions {
                   visible: swiftValue.visible as NSNumber?,
                   variableAnchors: swiftValue.variableAnchors,
                   selected: swiftValue.selected as NSNumber?,
-                  ignoreCameraPadding: swiftValue.ignoreCameraPadding as NSNumber?)
+                  priority: swiftValue.priority as NSNumber?,
+                  ignoreCameraPadding: swiftValue.ignoreCameraPadding as NSNumber?,
+                  minZoom: swiftValue.minZoom as NSNumber?,
+                  maxZoom: swiftValue.maxZoom as NSNumber?
+        )
     }
 }

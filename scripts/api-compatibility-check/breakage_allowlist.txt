@@ -2054,3 +2054,6 @@ Var BackgroundPitchAlignment.viewport is now with @_spi
 #Update Standard and Standard Satellite config properties
 Func MapStyle.standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:) has been renamed to Func standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:themeData:)
 Func MapStyle.standardSatellite(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showRoadsAndTransit:showPedestrianRoads:) has been renamed to Func standardSatellite(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showRoadsAndTransit:showPedestrianRoads:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:)
+
+# Add ViewAnnotationOptions.min/maxZoom to the constructor
+Constructor ViewAnnotationOptions.init(annotatedFeature:width:height:allowOverlap:allowOverlapWithPuck:visible:selected:variableAnchors:ignoreCameraPadding:) has been removed

@@ -70,8 +70,7 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
             annotation?.remove()
             self?.annotation = nil
         }
-        annotationView.onSelect = { [weak annotation] selected in
-            annotation?.selected = selected
+        annotationView.onSelect = { [weak annotation] _ in
             annotation?.setNeedsUpdateSize()
         }
         self.annotation = annotation

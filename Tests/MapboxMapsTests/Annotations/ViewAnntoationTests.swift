@@ -38,7 +38,7 @@ final class ViewAnnotationTests: XCTestCase {
         let va = ViewAnnotation(annotatedFeature: .geometry(point), view: view)
         va.allowOverlap = true
         va.visible = true
-        va.selected = true
+        va.priority = 4
         va.allowZElevate = true
         let variableAnchors = [ViewAnnotationAnchorConfig(anchor: .bottom, offsetX: 10, offsetY: 20)]
         va.variableAnchors = variableAnchors
@@ -47,7 +47,7 @@ final class ViewAnnotationTests: XCTestCase {
 
         XCTAssertEqual(va.allowOverlap, true)
         XCTAssertEqual(va.visible, true)
-        XCTAssertEqual(va.selected, true)
+        XCTAssertEqual(va.priority, 4)
         XCTAssertEqual(va.allowZElevate, true)
 
         // Add annotation
@@ -66,7 +66,7 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(addParameters.options.allowOverlapWithPuck, true)
         XCTAssertEqual(addParameters.options.allowZElevate, true)
         XCTAssertEqual(addParameters.options.ignoreCameraPadding, true)
-        XCTAssertEqual(addParameters.options.selected, true)
+        XCTAssertEqual(addParameters.options.priority, 4)
         XCTAssertEqual(addParameters.options.visible, true)
         XCTAssertEqual(addParameters.options.variableAnchors, variableAnchors)
 
@@ -76,11 +76,11 @@ final class ViewAnnotationTests: XCTestCase {
         va.annotatedFeature = .layerFeature(layerId: "foo", featureId: "bar")
         va.allowOverlap = true // no update
         va.visible = false
-        va.selected = false
+        va.priority = -1
         va.allowZElevate = false
         XCTAssertEqual(va.allowOverlap, true)
         XCTAssertEqual(va.visible, false)
-        XCTAssertEqual(va.selected, false)
+        XCTAssertEqual(va.priority, -1)
         XCTAssertEqual(va.allowZElevate, false)
 
         // no update without display link
@@ -93,7 +93,7 @@ final class ViewAnnotationTests: XCTestCase {
         var expectedOptions = ViewAnnotationOptions(
             annotatedFeature: .layerFeature(layerId: "foo", featureId: "bar"),
             visible: false,
-            selected: false)
+            priority: -1)
         expectedOptions.allowZElevate = false
         XCTAssertEqual(updParameters.options, expectedOptions)
 
@@ -117,7 +117,7 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(addParameters2.options.height, actualSize.height)
         XCTAssertEqual(addParameters2.options.allowOverlap, true)
         XCTAssertEqual(addParameters2.options.allowZElevate, false)
-        XCTAssertEqual(addParameters2.options.selected, false)
+        XCTAssertEqual(addParameters2.options.priority, -1)
         XCTAssertEqual(addParameters2.options.visible, false)
         XCTAssertEqual(addParameters2.options.variableAnchors, variableAnchors)
     }

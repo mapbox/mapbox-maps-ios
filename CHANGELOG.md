@@ -22,6 +22,10 @@ CircleAnnotationGroup {}
   // new
   .slot(.middle)
 ```
+* Introduce `ViewAnnotation.priority`, deprecate `ViewAnnotation.selected`.
+Use this property to define view annotation sort order.
+* Introduce `ViewAnnotation.minZoom` and `ViewAnnotation.maxZoom`. Use these properties to configure zoom-level specific view annotations.
+* Update CoreMaps to 11.10.0-beta.2 and Common to 24.10.0-beta.2.
 
 ## 11.9.0 - 18 December, 2024
 

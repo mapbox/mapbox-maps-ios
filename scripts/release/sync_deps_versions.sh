@@ -25,6 +25,6 @@ sed -i '' -E "s/(.*MapsDependency.common.*):.*/\1: \"$COMMON_VERSION\"\)/"  Pack
 
 info "Resolve SPM dependencies"
 swift package update
-xcodebuild -resolvePackageDependencies -workspace Apps/Apps.xcworkspace -scheme MapboxMaps
+xcodebuild -resolvePackageDependencies -project Examples.xcodeproj -scheme MapboxMaps
 
 finish "Updated dependency versions"

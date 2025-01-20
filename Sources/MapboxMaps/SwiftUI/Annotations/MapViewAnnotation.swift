@@ -31,6 +31,9 @@ public struct MapViewAnnotation {
     var visible = true
     var allowHitTesting = true
     var selected = false
+    var priority = 0
+    var minZoom = 0.0
+    var maxZoom = 22.0
     var allowOverlapWithPuck = false
     var allowZElevate: Bool?
     var ignoreCameraPadding = false
@@ -117,8 +120,23 @@ public struct MapViewAnnotation {
     }
 
     /// Specifies if this view annotation is selected meaning it should be placed on top of others. Defaults to `false`.
+    @available(*, deprecated, message: "Use priority instead.")
     public func selected(_ selected: Bool = false) -> MapViewAnnotation {
         with(self, setter(\.selected, selected))
+    }
+
+    /// Sorts annotations in descending order based on this value.
+    ///
+    /// A replacement for the deprecated `selected` field.
+    /// Simultaneous use of `priority` and `selected` fileds should be avoided.
+    /// Annotations with higher priority keys are drawn and placed first.
+    /// When equal priorities, less-anchor-options and least-recently-added sequentially used for annotations placement order.
+    /// `priority` field defaults to 0 when not set explicitly.
+    /// Negative, 0, positive values could be used in `priority` field.
+    ///
+    /// When updating existing annotations, if `priority` is not explicitly set, the current value will be retained.
+    public func priority(_ priority: Int) -> MapViewAnnotation {
+        with(self, setter(\.priority, priority))
     }
 
     /// A list of anchor configurations available.
@@ -155,6 +173,19 @@ public struct MapViewAnnotation {
     /// Called when geographical coordinate of annotation anchor is changed.
     public func onAnchorCoordinateChanged(action: @escaping (CLLocationCoordinate2D) -> Void) -> MapViewAnnotation {
         with(self, setter(\.actions.anchorCoordinate, action))
+    }
+
+    /// Minimum zoom value in range [0, 22] to display View Annotation.
+    /// If not provided or is out of range, defaults to 0.
+    public func minZoom(_ minZoom: Double) -> MapViewAnnotation {
+        with(self, setter(\.minZoom, minZoom))
+    }
+
+    /// Maximum zoom value in range [0, 22] to display View Annotation.
+    /// Should be greater than or equal to minZoom.
+    /// If not provided or is out of range, defaults to 22.
+    public func maxZoom(_ maxZoom: Double) -> MapViewAnnotation {
+        with(self, setter(\.maxZoom, maxZoom))
     }
 }
 

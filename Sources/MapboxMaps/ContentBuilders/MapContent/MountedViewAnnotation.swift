@@ -50,10 +50,13 @@ final class MountedViewAnnotation: MapContentMountedComponent {
             weakViewAnnotation?.ignoreCameraPadding = mapViewAnnotation.ignoreCameraPadding
             weakViewAnnotation?.visible = mapViewAnnotation.visible
             weakViewAnnotation?.selected = mapViewAnnotation.selected
+            weakViewAnnotation?.priority = mapViewAnnotation.priority
             weakViewAnnotation?.variableAnchors = mapViewAnnotation.variableAnchors
             weakViewAnnotation?.onAnchorChanged = mapViewAnnotation.actions.anchor
             weakViewAnnotation?.onVisibilityChanged = mapViewAnnotation.actions.visibility
             weakViewAnnotation?.onAnchorCoordinateChanged = mapViewAnnotation.actions.anchorCoordinate
+            weakViewAnnotation?.minZoom = mapViewAnnotation.minZoom
+            weakViewAnnotation?.maxZoom = mapViewAnnotation.maxZoom
             os_log(.debug, log: .contentDSL, "view annotation update %s", weakViewAnnotation?.id ?? "<nil>")
         }
 

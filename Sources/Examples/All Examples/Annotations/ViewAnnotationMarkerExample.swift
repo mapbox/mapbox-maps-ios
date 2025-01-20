@@ -7,6 +7,11 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
     private var pointList: [Feature] = []
     private var markerId = 0
     private var annotations = [String: ViewAnnotation]()
+    private var _topPriority = 0
+    private var topPriority: Int {
+        _topPriority += 1
+        return _topPriority
+    }
 
     private let image = UIImage(named: "intermediate-pin")!
     private lazy var markerHeight: CGFloat = image.size.height
@@ -68,7 +73,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         guard case let .string(id) = feature.identifier else { return false }
 
         if let annotation = annotations[id] {
-            annotation.visible.toggle()
+            annotation.priority = topPriority
             return true
         }
         return addViewAnnotation(to: feature)
@@ -141,8 +146,9 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
             annotation?.remove()
             self?.annotations.removeValue(forKey: id)
         }
-        annotationView.onSelect = { [weak annotation] selected in
-            annotation?.selected = selected
+        annotationView.onSelect = { [weak annotation, weak self] _ in
+            guard let self else { return }
+            annotation?.priority = self.topPriority
             annotation?.setNeedsUpdateSize()
         }
 

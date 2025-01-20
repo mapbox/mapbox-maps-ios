@@ -79,10 +79,12 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
 
         addParkingAnnotation(
             coordinate: CLLocationCoordinate2D(latitude: 37.445, longitude: -122.1704),
-            text: "$6.99/hr")
+            text: "$6.99/hr",
+            minZoom: 12)
         addParkingAnnotation(
             coordinate: CLLocationCoordinate2D(latitude: 37.4441, longitude: -122.1691),
-            text: "$5.99/hr")
+            text: "$5.99/hr",
+            minZoom: 10)
     }
 
     private func loadRoutes() {
@@ -161,16 +163,17 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
         }
     }
 
-    private func addParkingAnnotation(coordinate: CLLocationCoordinate2D, text: String) {
+    private func addParkingAnnotation(coordinate: CLLocationCoordinate2D, text: String, minZoom: Double) {
         let view = ParkingAnnotationView(text: text)
 
         let annotation = ViewAnnotation(coordinate: coordinate, view: view)
         annotation.allowOverlap = true
+        annotation.minZoom = minZoom
         mapView.viewAnnotations.add(annotation)
 
         view.onTap = { [unowned view, unowned annotation] in
-            annotation.selected.toggle()
-            view.selected = annotation.selected
+            view.selected.toggle()
+            annotation.priority = view.selected ? 1 : 0
             annotation.setNeedsUpdateSize()
         }
     }
@@ -261,6 +264,7 @@ private final class Route {
             etaView.anchor = config.anchor
         }
         etaAnnotation.variableAnchors = .all
+        etaAnnotation.minZoom = 8
         etaView.onTap = { [weak self] in self?.onTap?() }
 
         self.etaAnnotation = etaAnnotation
@@ -290,7 +294,7 @@ private final class Route {
     }
 
     private func updateSelected() {
-        etaAnnotation?.selected = selected
+        etaAnnotation?.priority = selected ? 1 : 0
         etaView?.selected = selected
         mapView?.mapboxMap.setFeatureState(sourceId: layerId, featureId: name, state: ["selected": selected]) {_ in}
 

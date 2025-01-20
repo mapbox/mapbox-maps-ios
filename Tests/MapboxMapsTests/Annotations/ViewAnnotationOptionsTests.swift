@@ -15,7 +15,9 @@ final class ViewAnnotationOptionsTests: XCTestCase {
     let anchor: ViewAnnotationAnchor = .right
     let offsetX: CGFloat = 100.0
     let offsetY: CGFloat = 200.0
-    let selected: Bool = true
+    let priority: Int = 43
+    let minZoom: Double = 10.0
+    let maxZoom: Double = 20.0
     var variableAnchors: [ViewAnnotationAnchorConfig] {
         [ViewAnnotationAnchorConfig(anchor: anchor, offsetX: offsetX, offsetY: offsetY)]
     }
@@ -27,7 +29,7 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             height: height,
             allowOverlap: allowOverlap,
             visible: visible,
-            selected: selected,
+            priority: priority,
             variableAnchors: variableAnchors)
 
         XCTAssertEqual(options.annotatedFeature, annotatedLayerFeature)
@@ -38,7 +40,7 @@ final class ViewAnnotationOptionsTests: XCTestCase {
         XCTAssertEqual(options.variableAnchors?.first?.anchor, anchor)
         XCTAssertEqual(options.variableAnchors?.first?.offsetX, offsetX)
         XCTAssertEqual(options.variableAnchors?.first?.offsetY, offsetY)
-        XCTAssertEqual(options.selected, selected)
+        XCTAssertEqual(options.priority, priority)
     }
 
     func testCoreInit() {
@@ -49,9 +51,12 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             allowOverlap: allowOverlap,
             allowOverlapWithPuck: allowOverlapWithPuck,
             visible: visible,
-            selected: selected,
+            priority: priority,
             variableAnchors: [ViewAnnotationAnchorConfig(anchor: anchor, offsetX: offsetX, offsetY: offsetY)],
-            ignoreCameraPadding: ignoreCameraPadding)
+            ignoreCameraPadding: ignoreCameraPadding,
+            minZoom: minZoom,
+            maxZoom: maxZoom
+        )
 
         let objcValue = CoreViewAnnotationOptions(
             __annotatedFeature: .fromGeometry(MapboxCommon.Geometry(point)),
@@ -62,8 +67,11 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             allowZElevate: allowZElevate as NSNumber?,
             visible: visible as NSNumber?,
             variableAnchors: variableAnchors,
-            selected: selected as NSNumber?,
-            ignoreCameraPadding: ignoreCameraPadding as NSNumber?
+            selected: nil,
+            priority: priority as NSNumber?,
+            ignoreCameraPadding: ignoreCameraPadding as NSNumber?,
+            minZoom: minZoom as NSNumber?,
+            maxZoom: maxZoom as NSNumber?
         )
 
         let convertedOptions = ViewAnnotationOptions(objcValue)

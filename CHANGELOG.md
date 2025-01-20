@@ -2,9 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 11.9.1 - 20 January, 2025
 
-* Localize geofencing attribution dialog.
+* Update CoreMaps to 11.9.2.
 
 ## 11.9.0 - 18 December, 2024
 

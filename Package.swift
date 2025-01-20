@@ -4,7 +4,7 @@
 import PackageDescription
 import Foundation
 
-let coreMaps = MapsDependency.coreMaps(version: "11.9.0")
+let coreMaps = MapsDependency.coreMaps(version: "11.9.2")
 
 let common = MapsDependency.common(version: "24.9.0")
 

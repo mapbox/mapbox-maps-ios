@@ -3,6 +3,18 @@ import Foundation
 @_implementationOnly import MapboxCommon_Private
 
 class MockStyleManager: StyleManagerProtocol {
+    let setStyleColorThemeForStub = Stub<CoreColorTheme?, Expected<NSNull, NSString>>(
+        defaultReturnValue: .init(value: NSNull())
+    )
+    func setStyleColorThemeFor(_ colorTheme: CoreColorTheme?) -> Expected<NSNull, NSString> {
+        setStyleColorThemeForStub(with: colorTheme)
+    }
+
+    let setInitialStyleColorThemeStub = Stub<Void, Void>()
+    func setInitialStyleColorTheme() {
+        setInitialStyleColorThemeStub()
+    }
+
     let getFeaturesetsStub = Stub<Void, [CoreFeaturesetDescriptor]>(defaultReturnValue: [])
     func getStyleFeaturesets() -> [CoreFeaturesetDescriptor] {
         getFeaturesetsStub.call()

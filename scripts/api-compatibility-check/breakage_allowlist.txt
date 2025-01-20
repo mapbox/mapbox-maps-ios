@@ -2057,3 +2057,9 @@ Func MapStyle.standardSatellite(lightPreset:font:showPointOfInterestLabels:showT
 
 # Add ViewAnnotationOptions.min/maxZoom to the constructor
 Constructor ViewAnnotationOptions.init(annotatedFeature:width:height:allowOverlap:allowOverlapWithPuck:visible:selected:variableAnchors:ignoreCameraPadding:) has been removed
+
+# Add missed @_documentation annotations
+Func StyleManager.removeRain() is now with @_documentation
+Func StyleManager.removeSnow() is now with @_documentation
+Func StyleManager.setRain(_:) is now with @_documentation
+Func StyleManager.setSnow(_:) is now with @_documentation

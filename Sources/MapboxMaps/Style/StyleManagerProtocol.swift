@@ -211,6 +211,9 @@ internal protocol StyleManagerProtocol {
                                      featureIds: [String]) -> Expected<NSNull, NSString>
 
     func getStyleFeaturesets() -> [CoreFeaturesetDescriptor]
+
+    func setStyleColorThemeFor(_ colorTheme: CoreColorTheme?) -> Expected<NSNull, NSString>
+    func setInitialStyleColorTheme()
 }
 
 // MARK: Conformance

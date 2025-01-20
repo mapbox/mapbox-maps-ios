@@ -1619,7 +1619,9 @@ extension StyleManager {
 extension StyleManager {
     /// Set the snow parameters to animate snowfall.
     /// ``Snow`` object can be used to set the snow parameters.
-    @_spi(Experimental) public func setSnow(_ snow: Snow) throws {
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func setSnow(_ snow: Snow) throws {
         let snowDictionary = try snow.allStyleProperties()
         let expected = styleManager.setStyleSnowForProperties(snowDictionary)
 
@@ -1629,7 +1631,9 @@ extension StyleManager {
     }
 
     /// Remove snow effect from the style.
-    @_spi(Experimental) public func removeSnow() throws {
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func removeSnow() throws {
         let expected = styleManager.setStyleSnowForProperties(NSNull())
 
         if expected.isError() {
@@ -1639,7 +1643,9 @@ extension StyleManager {
 
     /// Set the rain parameters to animate rain drops.
     /// ``Rain`` object can be used to set the rain parameters.
-    @_spi(Experimental) public func setRain(_ rain: Rain) throws {
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func setRain(_ rain: Rain) throws {
         let rainDictionary = try rain.allStyleProperties()
         let expected = styleManager.setStyleRainForProperties(rainDictionary)
 
@@ -1649,7 +1655,9 @@ extension StyleManager {
     }
 
     /// Remove rain effect from the style.
-    @_spi(Experimental) public func removeRain() throws {
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func removeRain() throws {
         let expected = styleManager.setStyleRainForProperties(NSNull())
 
         if expected.isError() {
@@ -1657,6 +1665,36 @@ extension StyleManager {
         }
     }
 
+    /// Set color theme for style.
+    /// ``ColorTheme`` is unique per style and setting a new one will effectively overwrite any previous theme.
+    /// - Parameters:
+    ///  - colorTheme: Color theme to apply on the style.
+    /// - Throws: ``StyleError`` if the color theme could not be applied.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func setColorTheme(_ colorTheme: ColorTheme) throws {
+        guard let coreTheme = colorTheme.core else {
+            throw StyleError(message: "Cannot construct UIImage object.")
+        }
+
+        let expected = styleManager.setStyleColorThemeFor(coreTheme)
+
+        if expected.isError() {
+            throw StyleError(message: expected.error as String)
+        }
+    }
+
+    /// Remove color theme from the style.
+    /// - Throws: ``StyleError`` if the color theme could not be removed.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func removeColorTheme() throws {
+        let expected = styleManager.setStyleColorThemeFor(nil)
+
+        if expected.isError() {
+            throw StyleError(message: expected.error as String)
+        }
+    }
 }
 
 // MARK: - Featuresets

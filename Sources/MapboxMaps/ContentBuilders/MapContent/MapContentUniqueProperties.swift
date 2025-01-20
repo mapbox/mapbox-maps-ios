@@ -15,8 +15,10 @@ struct MapContentUniqueProperties: Decodable {
     var projection: StyleProjection?
     var snow: Snow?
     var rain: Rain?
+    var colorTheme: ColorTheme?
     var transition: TransitionOptions?
     var location: LocationOptions?
+
     var lights = Lights()
 
     private func update<T: Equatable & Encodable>(_ label: String, old: T?, new: T?, initial: T?, setter: (Any) -> Expected<NSNull, NSString>) {
@@ -42,8 +44,8 @@ struct MapContentUniqueProperties: Decodable {
         update("terrain", old: old.terrain, new: terrain, initial: initial?.terrain, setter: style.setStyleTerrainForProperties(_:))
         update("snow", old: old.snow, new: snow, initial: initial?.snow, setter: style.setStyleSnowForProperties(_:))
         update("rain", old: old.rain, new: rain, initial: initial?.rain, setter: style.setStyleRainForProperties(_:))
-
         lights.update(from: old.lights, style: style, initialLights: initial?.lights)
+        update(from: old.colorTheme, to: colorTheme, style: style)
 
         if old.location != location {
             locationManager?.options = location ?? LocationOptions()
@@ -90,6 +92,20 @@ extension MapContentUniqueProperties {
                     lights.flat = try? lightContainer.decode(FlatLight.self)
                 default:
                     Log.warning("Incorrect light configuration. Specify both directional and ambient lights OR flat light.", category: "StyleDSL")
+                }
+            }
+        }
+    }
+}
+
+private extension MapContentUniqueProperties {
+    func update(from oldColorTheme: ColorTheme?, to newColorTheme: ColorTheme?, style: StyleManagerProtocol) {
+        wrapStyleDSLError {
+            if newColorTheme != oldColorTheme {
+                if let newColorTheme {
+                    try handleExpected { style.setStyleColorThemeFor(newColorTheme.core) }
+                } else {
+                    style.setInitialStyleColorTheme()
                 }
             }
         }

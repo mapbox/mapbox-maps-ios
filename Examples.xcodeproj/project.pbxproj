@@ -131,6 +131,7 @@
 		D9297596469F9B31C2350B43 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A615EFC3D6CF2A25C9864086 /* UIViewController+Extensions.swift */; platformFilters = (ios, ); };
 		D94672F30272E31087AB5DDD /* NavigationSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC5980DD30479F30127BA71 /* NavigationSimulator.swift */; platformFilters = (ios, ); };
 		D98624793DA36578289F02FF /* MapScrollExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65535FB9F190778001AB847A /* MapScrollExample.swift */; };
+		DA109856E64BBD8071DF0619 /* ColorThemeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DD4C2F0049E575A6B5BF66 /* ColorThemeExample.swift */; };
 		DA69CB0BD9F0DDA0FD1387B0 /* DataJoinExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D0CD9C2D04EA5B12E7F84C /* DataJoinExample.swift */; platformFilters = (ios, ); };
 		DCA54F7383085A8FD822F0BF /* GeofencingPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7613C4E19DCD679A2620223C /* GeofencingPlayground.swift */; };
 		DFC64A62538E787D57B6514D /* DynamicViewAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3333EF3E0F1C789809F385AF /* DynamicViewAnnotationExample.swift */; platformFilters = (ios, ); };
@@ -198,6 +199,7 @@
 		274D496EC7E47F63FD0D1337 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		289434058C4AB25A17655FEF /* PointClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointClusteringExample.swift; sourceTree = "<group>"; };
 		28CE7DA39D29A8311E4A58A4 /* 34M_17.dae */ = {isa = PBXFileReference; lastKnownFileType = text.xml.dae; path = 34M_17.dae; sourceTree = "<group>"; };
+		29DD4C2F0049E575A6B5BF66 /* ColorThemeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorThemeExample.swift; sourceTree = "<group>"; };
 		2C957F9CA07061B793C2DD4A /* Custom3DPuckExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom3DPuckExample.swift; sourceTree = "<group>"; };
 		2D91A8B64951711546335530 /* VoiceOverAccessibilityExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceOverAccessibilityExample.swift; sourceTree = "<group>"; };
 		2DD8B1D25297B7433F4AAF35 /* GradientLine.geojson */ = {isa = PBXFileReference; path = GradientLine.geojson; sourceTree = "<group>"; };
@@ -402,6 +404,7 @@
 				F890746B56E20150A053B41B /* AnnotationsExample.swift */,
 				63A3027A7DA59E090DAD25F1 /* ClipLayerExample.swift */,
 				46CE3D9C2873C0767DD76D85 /* ClusteringExample.swift */,
+				29DD4C2F0049E575A6B5BF66 /* ColorThemeExample.swift */,
 				C61CC711054A032EE0446036 /* DynamicStylingExample.swift */,
 				A6B06A1D70F479D8DC5C375A /* FeaturesQueryExample.swift */,
 				7613C4E19DCD679A2620223C /* GeofencingPlayground.swift */,
@@ -730,7 +733,6 @@
 			mainGroup = AFDB1EA82615CFDF02CE1D4D;
 			packageReferences = (
 				B50D5CC28BF0DFBA55456D89 /* XCRemoteSwiftPackageReference "Fingertips" */,
-				4F0A03F138FCA51E80A1893D /* XCLocalSwiftPackageReference "." */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -856,6 +858,7 @@
 				3B4862E6832F23CB115D444A /* ClipLayerExample.swift in Sources */,
 				1DAE02D73D16E543777C2025 /* ClusteringExample.swift in Sources */,
 				5A28C124249725578389175A /* ColorExpressionExample.swift in Sources */,
+				DA109856E64BBD8071DF0619 /* ColorThemeExample.swift in Sources */,
 				C664365A373267B564EC84EE /* CombineExample.swift in Sources */,
 				215230836B6AD1040D3DA547 /* CombineLocationExample.swift in Sources */,
 				3E515D1DD1D9CA02F3E95AA2 /* Constants.swift in Sources */,
@@ -1352,13 +1355,6 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		4F0A03F138FCA51E80A1893D /* XCLocalSwiftPackageReference "." */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = .;
-		};
-/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		0AF5F744C6369BF1FB233FB6 /* MapboxMaps */ = {

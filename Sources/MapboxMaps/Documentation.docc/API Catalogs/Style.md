@@ -28,6 +28,7 @@
 - ``TransitionOptions-struct``
 - ``Rain``
 - ``Snow``
+- ``ColorTheme``
 
 ### Declarative Map Styling
 

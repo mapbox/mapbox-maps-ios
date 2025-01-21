@@ -116,7 +116,7 @@ platform :ios do
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
       targets: ["Examples"],
       code_sign_identity: "Apple Development: Created via API",
-      entitlements_file_path: "Examples/Examples_CarPlay.entitlements"
+      entitlements_file_path: "Sources/Examples/Examples_CarPlay.entitlements"
     )
     sync_code_signing(type: "appstore")
     build_app(

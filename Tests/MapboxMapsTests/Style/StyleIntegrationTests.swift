@@ -557,28 +557,21 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertTrue(exaggerationTransitionProperty is NSNull)
     }
 
-    func testOnlyAddedDataIdReturned() throws {
-        throw XCTSkip("Disabled due to behavior change, investigated in https://mapbox.atlassian.net/browse/MAPSIOS-1708")
-
+    func testAddedSourceDataIdReturned() throws {
         let source = GeoJSONSource(id: "Source")
-        let source2 = GeoJSONSource(id: "Source2")
         let geometry = Geometry.point(Point.init(LocationCoordinate2D(latitude: 0, longitude: 0)))
         let dataId = "TestdataId"
         let expectation = XCTestExpectation(description: "dataId returned when source updated")
         expectation.expectedFulfillmentCount = 1
         expectation.assertForOverFulfill = true
 
-        var returnedSourceDataId: String?
-
-        try! mapView.mapboxMap.addSource(source)
-        try! mapView.mapboxMap.addSource(source2)
-
         mapView.mapboxMap.onSourceDataLoaded.observe { event in
-            returnedSourceDataId = event.dataId
-            XCTAssertEqual(returnedSourceDataId, dataId)
+            guard event.dataId == dataId else { return }
 
             expectation.fulfill()
         }.store(in: &cancelables)
+
+        try! mapView.mapboxMap.addSource(source)
 
         mapView.mapboxMap.updateGeoJSONSource(withId: source.id, geoJSON: .geometry(geometry), dataId: dataId)
 

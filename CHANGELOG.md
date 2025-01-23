@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+# 10.19.2 - January 23, 2025
+
+* Update MapboxCommon to 23.11.3
+
 # 10.19.1 - December 11, 2024
 
 * Update MapboxCoreMaps to 10.19.2

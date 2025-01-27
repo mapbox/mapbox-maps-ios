@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Added support for the `maxOverscaleFactorForParentTiles` property in `CustomRasterSource`, allowing greater control over tile overscaling behavior when rendering custom raster tiles.
+
 ## 11.10.0-beta.1 - 20 January, 2025
 
 * Mark `SymbolElevationReference`, `FillExtrusionBaseAlignment`, `FillExtrusionHeightAlignment`,  `ModelScaleMode`, `ModelType`, `ClipLayerTypes`, `BackgroundPitchAlignment` types as Experimental. Initially they were exposed as stable by mistake. If you use them, please import `MapboxMaps` with `Experimental` SPI:

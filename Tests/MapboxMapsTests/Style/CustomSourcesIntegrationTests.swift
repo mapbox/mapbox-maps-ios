@@ -53,9 +53,18 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
         mapView.mapboxMap.styleURI = .standard
+        let maxOverscaleFactorForParentTiles = UInt8(83)
 
         didFinishLoadingStyle = { mapView in
-            var source = CustomGeometrySource(id: "test-source", options: CustomGeometrySourceOptions(fetchTileFunction: { _ in }, cancelTileFunction: { _ in }, tileOptions: TileOptions()))
+            var source = CustomGeometrySource(
+                id: "test-source",
+                options: CustomGeometrySourceOptions(
+                    fetchTileFunction: { _ in },
+                    cancelTileFunction: { _ in },
+                    tileOptions: TileOptions()
+                ),
+                maxOverscaleFactorForParentTiles: maxOverscaleFactorForParentTiles
+            )
             source.tileCacheBudget = .testSourceValue(.megabytes(7))
 
             // Add source
@@ -70,6 +79,7 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
             do {
                 let retrievedSource = try mapView.mapboxMap.source(withId: "test-source", type: CustomGeometrySource.self)
                 XCTAssertEqual(retrievedSource.tileCacheBudget, .testSourceValue(.megabytes(7)))
+                XCTAssertEqual(retrievedSource.maxOverscaleFactorForParentTiles, maxOverscaleFactorForParentTiles)
 
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {

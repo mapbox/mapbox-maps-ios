@@ -19,10 +19,15 @@ public struct CustomGeometrySource: Source {
     /// - Note: Current implementation does not take into account resources allocated by the visible tiles.
     public var tileCacheBudget: TileCacheBudgetSize?
 
-    public init(id: String, options: CustomGeometrySourceOptions) {
+    /// When a set of tiles for a current zoom level is being rendered and some of the ideal tiles that cover the screen are not yet loaded, parent tiles could be used instead. Note that this might introduce unwanted rendering side-effects, especially for raster tiles that are overscaled multiple times. This property sets the maximum limit for how much a parent tile can be overscaled.
+    @_documentation(visibility: public)
+    public var maxOverscaleFactorForParentTiles: UInt8?
+
+    public init(id: String, options: CustomGeometrySourceOptions, maxOverscaleFactorForParentTiles: UInt8? = nil) {
         self.type = .customGeometry
         self.id = id
         self.options = options
+        self.maxOverscaleFactorForParentTiles = maxOverscaleFactorForParentTiles
     }
 }
 
@@ -31,6 +36,7 @@ extension CustomGeometrySource {
         case id
         case type
         case tileCacheBudget = "tile-cache-budget"
+        case maxOverscaleFactorForParentTiles = "max-overscale-factor-for-parent-tiles"
     }
 
     /// Init from a decoder, note that the CustomGeometrySourceOptions are not decodable and need to be set separately
@@ -40,6 +46,7 @@ extension CustomGeometrySource {
         type = try container.decode(SourceType.self, forKey: .type)
         tileCacheBudget = try container.decodeIfPresent(TileCacheBudgetSize.self, forKey: .tileCacheBudget)
         options = nil
+        maxOverscaleFactorForParentTiles = try container.decodeIfPresent(UInt8.self, forKey: .maxOverscaleFactorForParentTiles)
     }
 
     /// Encode, note that options will not be included
@@ -58,6 +65,7 @@ extension CustomGeometrySource {
 
     private func encodeVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
         try container.encodeIfPresent(tileCacheBudget, forKey: .tileCacheBudget)
+        try container.encodeIfPresent(maxOverscaleFactorForParentTiles, forKey: .maxOverscaleFactorForParentTiles)
     }
 
     private func encodeNonVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {

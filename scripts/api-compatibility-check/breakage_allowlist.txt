@@ -2064,5 +2064,6 @@ Func StyleManager.removeSnow() is now with @_documentation
 Func StyleManager.setRain(_:) is now with @_documentation
 Func StyleManager.setSnow(_:) is now with @_documentation
 
-# Add maxOverscaleFactorForParentTiles to CustomRasterSource constructor
+# Add maxOverscaleFactorForParentTiles to CustomRasterSource and CustomGeometrySource constructors
 Constructor CustomRasterSource.init(id:options:) has been removed
+Constructor CustomGeometrySource.init(id:options:) has been removed

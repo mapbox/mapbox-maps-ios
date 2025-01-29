@@ -5,7 +5,7 @@ repos:
     rev: v3.2.0
     hooks:
     - id: trailing-whitespace
-      exclude: LICENSE.md
+      exclude: ^(LICENSE.md|.*\.swiftinterface)$
     - id: end-of-file-fixer
       exclude: ".*.list"
     - id: check-yaml

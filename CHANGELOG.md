@@ -8,6 +8,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Remove experimental `DirectionalLight.shadowQuality`.
 * Add support for the `maxOverscaleFactorForParentTiles` property in `CustomRasterSource` and `CustomGeometrySource`, allowing greater control over tile overscaling behavior when rendering custom raster tiles.
 * Add support for experimental *-use-theme propert that allow to override the color theme set on the Map. This is experimental and have several limitations - currently expressions are not supported. Color properties in Lights, Rain, Snow are not supported. *-use-theme for layer applied only after zoom level change.
+* Update CoreMaps to 11.10.0-rc.1 and Common to 24.10.0-rc.1.
 
 ## 11.10.0-beta.1 - 20 January, 2025
 

@@ -65,6 +65,7 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.textWritingMode = Value<[TextWritingMode]>.testConstantValue()
             layer.iconColor = Value<StyleColor>.testConstantValue()
             layer.iconColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.iconColorUseTheme = .none
             layer.iconColorSaturation = Value<Double>.testConstantValue()
             layer.iconColorSaturationTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconEmissiveStrength = Value<Double>.testConstantValue()
@@ -73,6 +74,7 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.iconHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconHaloColor = Value<StyleColor>.testConstantValue()
             layer.iconHaloColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.iconHaloColorUseTheme = .none
             layer.iconHaloWidth = Value<Double>.testConstantValue()
             layer.iconHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconImageCrossFade = Value<Double>.testConstantValue()
@@ -87,12 +89,14 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.symbolZOffsetTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textColor = Value<StyleColor>.testConstantValue()
             layer.textColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.textColorUseTheme = .none
             layer.textEmissiveStrength = Value<Double>.testConstantValue()
             layer.textEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textHaloBlur = Value<Double>.testConstantValue()
             layer.textHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textHaloColor = Value<StyleColor>.testConstantValue()
             layer.textHaloColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.textHaloColorUseTheme = .none
             layer.textHaloWidth = Value<Double>.testConstantValue()
             layer.textHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textOcclusionOpacity = Value<Double>.testConstantValue()

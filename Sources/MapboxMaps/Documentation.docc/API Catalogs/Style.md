@@ -29,6 +29,7 @@
 - ``Rain``
 - ``Snow``
 - ``ColorTheme``
+- ``ColorUseTheme``
 
 ### Declarative Map Styling
 

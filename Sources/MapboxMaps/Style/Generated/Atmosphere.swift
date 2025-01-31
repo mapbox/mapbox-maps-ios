@@ -13,12 +13,22 @@ public struct Atmosphere: Codable, Equatable {
     /// Transition property for `color`
     public var colorTransition: StyleTransition?
 
+    /// This property defines whether the  color uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var colorUseTheme: Value<ColorUseTheme>?
+
     /// The color of the atmosphere region above the horizon, `high-color` extends further above the horizon than the `color` property and its spread can be controlled with `horizon-blend`. The opacity can be set to `0` to remove the high atmosphere color contribution.
     /// Default value: "#245cdf".
     public var highColor: Value<StyleColor>?
 
     /// Transition property for `highColor`
     public var highColorTransition: StyleTransition?
+
+    /// This property defines whether the  highColor uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var highColorUseTheme: Value<ColorUseTheme>?
 
     /// Horizon blend applies a smooth fade from the color of the atmosphere to the color of space. A value of zero leaves a sharp transition from atmosphere to space. Increasing the value blends the color of atmosphere into increasingly high angles of the sky.
     /// Default value: "["interpolate",["linear"],["zoom"],4,0.2,7,0.1]". Value range: [0, 1]
@@ -27,12 +37,14 @@ public struct Atmosphere: Codable, Equatable {
     /// Transition property for `horizonBlend`
     public var horizonBlendTransition: StyleTransition?
 
+
     /// The start and end distance range in which fog fades from fully transparent to fully opaque. The distance to the point at the center of the map is defined as zero, so that negative range values are closer to the camera, and positive values are farther away.
     /// Default value: [0.5,10]. Value range: [-20, 20]
     public var range: Value<[Double]>?
 
     /// Transition property for `range`
     public var rangeTransition: StyleTransition?
+
 
     /// The color of the region above the horizon and after the end of the `horizon-blend` contribution. The opacity can be set to `0` to have a transparent background.
     /// Default value: "["interpolate",["linear"],["zoom"],4,"#010b19",7,"#367ab9"]".
@@ -41,12 +53,18 @@ public struct Atmosphere: Codable, Equatable {
     /// Transition property for `spaceColor`
     public var spaceColorTransition: StyleTransition?
 
+    /// This property defines whether the  spaceColor uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var spaceColorUseTheme: Value<ColorUseTheme>?
+
     /// A value controlling the star intensity where `0` will show no stars and `1` will show stars at their maximum intensity.
     /// Default value: "["interpolate",["linear"],["zoom"],5,0.35,6,0]". Value range: [0, 1]
     public var starIntensity: Value<Double>?
 
     /// Transition property for `starIntensity`
     public var starIntensityTransition: StyleTransition?
+
 
     /// An array of two number values, specifying the vertical range, measured in meters, over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
     /// Default value: [0,0]. Minimum value: 0.
@@ -55,19 +73,23 @@ public struct Atmosphere: Codable, Equatable {
     /// Transition property for `verticalRange`
     public var verticalRangeTransition: StyleTransition?
 
+
     public init() {}
 
     enum CodingKeys: String, CodingKey {
         case color = "color"
         case colorTransition = "color-transition"
+        case colorUseTheme = "color-use-theme"
         case highColor = "high-color"
         case highColorTransition = "high-color-transition"
+        case highColorUseTheme = "high-color-use-theme"
         case horizonBlend = "horizon-blend"
         case horizonBlendTransition = "horizon-blend-transition"
         case range = "range"
         case rangeTransition = "range-transition"
         case spaceColor = "space-color"
         case spaceColorTransition = "space-color-transition"
+        case spaceColorUseTheme = "space-color-use-theme"
         case starIntensity = "star-intensity"
         case starIntensityTransition = "star-intensity-transition"
         case verticalRange = "vertical-range"
@@ -105,6 +127,22 @@ extension Atmosphere {
         with(self, setter(\.color, .expression(expression)))
     }
 
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.colorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.colorUseTheme, .expression(expression)))
+    }
+
     /// The color of the atmosphere region above the horizon, `high-color` extends further above the horizon than the `color` property and its spread can be controlled with `horizon-blend`. The opacity can be set to `0` to remove the high atmosphere color contribution.
     /// Default value: "#245cdf".
     public func highColor(_ constant: StyleColor) -> Self {
@@ -126,6 +164,22 @@ extension Atmosphere {
     /// Default value: "#245cdf".
     public func highColor(_ expression: Exp) -> Self {
         with(self, setter(\.highColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `highColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func highColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.highColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `highColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func highColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.highColorUseTheme, .expression(expression)))
     }
 
     /// Horizon blend applies a smooth fade from the color of the atmosphere to the color of space. A value of zero leaves a sharp transition from atmosphere to space. Increasing the value blends the color of atmosphere into increasingly high angles of the sky.
@@ -183,6 +237,22 @@ extension Atmosphere {
     /// Default value: "["interpolate",["linear"],["zoom"],4,"#010b19",7,"#367ab9"]".
     public func spaceColor(_ expression: Exp) -> Self {
         with(self, setter(\.spaceColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `spaceColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func spaceColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.spaceColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `spaceColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func spaceColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.spaceColorUseTheme, .expression(expression)))
     }
 
     /// A value controlling the star intensity where `0` will show no stars and `1` will show stars at their maximum intensity.

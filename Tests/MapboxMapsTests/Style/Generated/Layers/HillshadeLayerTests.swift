@@ -77,16 +77,19 @@ final class HillshadeLayerTests: XCTestCase {
        var layer = HillshadeLayer(id: "test-id", source: "source")
        layer.hillshadeAccentColor = Value<StyleColor>.testConstantValue()
        layer.hillshadeAccentColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.hillshadeAccentColorUseTheme = .none
        layer.hillshadeEmissiveStrength = Value<Double>.testConstantValue()
        layer.hillshadeEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.hillshadeExaggeration = Value<Double>.testConstantValue()
        layer.hillshadeExaggerationTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.hillshadeHighlightColor = Value<StyleColor>.testConstantValue()
        layer.hillshadeHighlightColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.hillshadeHighlightColorUseTheme = .none
        layer.hillshadeIlluminationAnchor = Value<HillshadeIlluminationAnchor>.testConstantValue()
        layer.hillshadeIlluminationDirection = Value<Double>.testConstantValue()
        layer.hillshadeShadowColor = Value<StyleColor>.testConstantValue()
        layer.hillshadeShadowColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.hillshadeShadowColorUseTheme = .none
 
        var data: Data?
        do {

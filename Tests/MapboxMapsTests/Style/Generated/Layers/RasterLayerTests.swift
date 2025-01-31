@@ -81,6 +81,7 @@ final class RasterLayerTests: XCTestCase {
        layer.rasterBrightnessMin = Value<Double>.testConstantValue()
        layer.rasterBrightnessMinTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.rasterColor = Value<StyleColor>.testConstantValue()
+       layer.rasterColorUseTheme = .none
        layer.rasterColorMix = Value<[Double]>.testConstantValue()
        layer.rasterColorMixTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.rasterColorRange = Value<[Double]>.testConstantValue()

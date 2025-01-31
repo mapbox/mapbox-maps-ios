@@ -141,6 +141,9 @@ struct Examples {
         Example(title: "Combine",
                 description: "Shows how to use map events with Combine framework.",
                 type: CombineExample.self)
+        Example(title: "Color Theme Example",
+                description: "Shows how to use color theme",
+                type: ColorThemeMapExample.self)
         Example(title: "Combine location",
                 description: "Shows how to use Combine framework to drive the location puck.",
                 type: CombineLocationExample.self)

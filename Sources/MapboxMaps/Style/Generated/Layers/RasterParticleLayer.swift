@@ -56,6 +56,10 @@ import UIKit
     /// Defines a color map by which to colorize a raster particle layer, parameterized by the `["raster-particle-speed"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-particle-max-speed`.
     @_documentation(visibility: public)
     public var rasterParticleColor: Value<StyleColor>?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var rasterParticleColorUseTheme: Value<ColorUseTheme>?
 
     /// Defines the amount of particles per tile.
     /// Default value: 512. Minimum value: 1.
@@ -112,6 +116,7 @@ import UIKit
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         try paintContainer.encodeIfPresent(rasterParticleArrayBand, forKey: .rasterParticleArrayBand)
         try paintContainer.encodeIfPresent(rasterParticleColor, forKey: .rasterParticleColor)
+        try paintContainer.encodeIfPresent(rasterParticleColorUseTheme, forKey: .rasterParticleColorUseTheme)
         try paintContainer.encodeIfPresent(rasterParticleCount, forKey: .rasterParticleCount)
         try paintContainer.encodeIfPresent(rasterParticleFadeOpacityFactor, forKey: .rasterParticleFadeOpacityFactor)
         try paintContainer.encodeIfPresent(rasterParticleFadeOpacityFactorTransition, forKey: .rasterParticleFadeOpacityFactorTransition)
@@ -138,6 +143,7 @@ import UIKit
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             rasterParticleArrayBand = try paintContainer.decodeIfPresent(Value<String>.self, forKey: .rasterParticleArrayBand)
             rasterParticleColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .rasterParticleColor)
+            rasterParticleColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .rasterParticleColorUseTheme)
             rasterParticleCount = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterParticleCount)
             rasterParticleFadeOpacityFactor = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterParticleFadeOpacityFactor)
             rasterParticleFadeOpacityFactorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterParticleFadeOpacityFactorTransition)
@@ -174,6 +180,7 @@ import UIKit
     enum PaintCodingKeys: String, CodingKey {
         case rasterParticleArrayBand = "raster-particle-array-band"
         case rasterParticleColor = "raster-particle-color"
+        case rasterParticleColorUseTheme = "raster-particle-color-use-theme"
         case rasterParticleCount = "raster-particle-count"
         case rasterParticleFadeOpacityFactor = "raster-particle-fade-opacity-factor"
         case rasterParticleFadeOpacityFactorTransition = "raster-particle-fade-opacity-factor-transition"
@@ -254,6 +261,22 @@ extension RasterParticleLayer {
     @_spi(Experimental)
     public func rasterParticleColor(_ expression: Exp) -> Self {
         with(self, setter(\.rasterParticleColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `rasterParticleColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func rasterParticleColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.rasterParticleColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `rasterParticleColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func rasterParticleColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.rasterParticleColorUseTheme, .expression(expression)))
     }
 
     /// Defines the amount of particles per tile.

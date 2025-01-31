@@ -99,6 +99,10 @@ public struct LineLayer: Layer, Equatable {
 
     /// Transition options for `lineBorderColor`.
     public var lineBorderColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var lineBorderColorUseTheme: Value<ColorUseTheme>?
 
     /// The width of the line border. A value of zero means no border.
     /// Default value: 0. Minimum value: 0.
@@ -113,6 +117,10 @@ public struct LineLayer: Layer, Equatable {
 
     /// Transition options for `lineColor`.
     public var lineColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var lineColorUseTheme: Value<ColorUseTheme>?
 
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     /// Minimum value: 0. The unit of lineDasharray is in line widths.
@@ -141,6 +149,10 @@ public struct LineLayer: Layer, Equatable {
 
     /// A gradient used to color a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
     public var lineGradient: Value<StyleColor>?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var lineGradientUseTheme: Value<ColorUseTheme>?
 
     /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
     /// Default value: 0. Value range: [0, 1]
@@ -185,6 +197,10 @@ public struct LineLayer: Layer, Equatable {
     /// Transition options for `lineTrimColor`.
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineTrimColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var lineTrimColorUseTheme: Value<ColorUseTheme>?
 
     /// The fade range for the trim-start and trim-end points is defined by the `line-trim-offset` property. The first element of the array represents the fade range from the trim-start point toward the end of the line, while the second element defines the fade range from the trim-end point toward the beginning of the line. The fade result is achieved by interpolating between `line-trim-color` and the color specified by the `line-color` or the `line-gradient` property.
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
@@ -225,10 +241,12 @@ public struct LineLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(lineBlurTransition, forKey: .lineBlurTransition)
         try paintContainer.encodeIfPresent(lineBorderColor, forKey: .lineBorderColor)
         try paintContainer.encodeIfPresent(lineBorderColorTransition, forKey: .lineBorderColorTransition)
+        try paintContainer.encodeIfPresent(lineBorderColorUseTheme, forKey: .lineBorderColorUseTheme)
         try paintContainer.encodeIfPresent(lineBorderWidth, forKey: .lineBorderWidth)
         try paintContainer.encodeIfPresent(lineBorderWidthTransition, forKey: .lineBorderWidthTransition)
         try paintContainer.encodeIfPresent(lineColor, forKey: .lineColor)
         try paintContainer.encodeIfPresent(lineColorTransition, forKey: .lineColorTransition)
+        try paintContainer.encodeIfPresent(lineColorUseTheme, forKey: .lineColorUseTheme)
         try paintContainer.encodeIfPresent(lineDasharray, forKey: .lineDasharray)
         try paintContainer.encodeIfPresent(lineDepthOcclusionFactor, forKey: .lineDepthOcclusionFactor)
         try paintContainer.encodeIfPresent(lineDepthOcclusionFactorTransition, forKey: .lineDepthOcclusionFactorTransition)
@@ -237,6 +255,7 @@ public struct LineLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(lineGapWidth, forKey: .lineGapWidth)
         try paintContainer.encodeIfPresent(lineGapWidthTransition, forKey: .lineGapWidthTransition)
         try paintContainer.encodeIfPresent(lineGradient, forKey: .lineGradient)
+        try paintContainer.encodeIfPresent(lineGradientUseTheme, forKey: .lineGradientUseTheme)
         try paintContainer.encodeIfPresent(lineOcclusionOpacity, forKey: .lineOcclusionOpacity)
         try paintContainer.encodeIfPresent(lineOcclusionOpacityTransition, forKey: .lineOcclusionOpacityTransition)
         try paintContainer.encodeIfPresent(lineOffset, forKey: .lineOffset)
@@ -249,6 +268,7 @@ public struct LineLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(lineTranslateAnchor, forKey: .lineTranslateAnchor)
         try paintContainer.encodeIfPresent(lineTrimColor, forKey: .lineTrimColor)
         try paintContainer.encodeIfPresent(lineTrimColorTransition, forKey: .lineTrimColorTransition)
+        try paintContainer.encodeIfPresent(lineTrimColorUseTheme, forKey: .lineTrimColorUseTheme)
         try paintContainer.encodeIfPresent(lineTrimFadeRange, forKey: .lineTrimFadeRange)
         try paintContainer.encodeIfPresent(lineTrimOffset, forKey: .lineTrimOffset)
         try paintContainer.encodeIfPresent(lineWidth, forKey: .lineWidth)
@@ -283,10 +303,12 @@ public struct LineLayer: Layer, Equatable {
             lineBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineBlurTransition)
             lineBorderColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineBorderColor)
             lineBorderColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineBorderColorTransition)
+            lineBorderColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .lineBorderColorUseTheme)
             lineBorderWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineBorderWidth)
             lineBorderWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineBorderWidthTransition)
             lineColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineColor)
             lineColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineColorTransition)
+            lineColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .lineColorUseTheme)
             lineDasharray = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineDasharray)
             lineDepthOcclusionFactor = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineDepthOcclusionFactor)
             lineDepthOcclusionFactorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineDepthOcclusionFactorTransition)
@@ -295,6 +317,7 @@ public struct LineLayer: Layer, Equatable {
             lineGapWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineGapWidth)
             lineGapWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineGapWidthTransition)
             lineGradient = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineGradient)
+            lineGradientUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .lineGradientUseTheme)
             lineOcclusionOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineOcclusionOpacity)
             lineOcclusionOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineOcclusionOpacityTransition)
             lineOffset = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineOffset)
@@ -307,6 +330,7 @@ public struct LineLayer: Layer, Equatable {
             lineTranslateAnchor = try paintContainer.decodeIfPresent(Value<LineTranslateAnchor>.self, forKey: .lineTranslateAnchor)
             lineTrimColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineTrimColor)
             lineTrimColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineTrimColorTransition)
+            lineTrimColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .lineTrimColorUseTheme)
             lineTrimFadeRange = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineTrimFadeRange)
             lineTrimOffset = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineTrimOffset)
             lineWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineWidth)
@@ -360,10 +384,12 @@ public struct LineLayer: Layer, Equatable {
         case lineBlurTransition = "line-blur-transition"
         case lineBorderColor = "line-border-color"
         case lineBorderColorTransition = "line-border-color-transition"
+        case lineBorderColorUseTheme = "line-border-color-use-theme"
         case lineBorderWidth = "line-border-width"
         case lineBorderWidthTransition = "line-border-width-transition"
         case lineColor = "line-color"
         case lineColorTransition = "line-color-transition"
+        case lineColorUseTheme = "line-color-use-theme"
         case lineDasharray = "line-dasharray"
         case lineDepthOcclusionFactor = "line-depth-occlusion-factor"
         case lineDepthOcclusionFactorTransition = "line-depth-occlusion-factor-transition"
@@ -372,6 +398,7 @@ public struct LineLayer: Layer, Equatable {
         case lineGapWidth = "line-gap-width"
         case lineGapWidthTransition = "line-gap-width-transition"
         case lineGradient = "line-gradient"
+        case lineGradientUseTheme = "line-gradient-use-theme"
         case lineOcclusionOpacity = "line-occlusion-opacity"
         case lineOcclusionOpacityTransition = "line-occlusion-opacity-transition"
         case lineOffset = "line-offset"
@@ -384,6 +411,7 @@ public struct LineLayer: Layer, Equatable {
         case lineTranslateAnchor = "line-translate-anchor"
         case lineTrimColor = "line-trim-color"
         case lineTrimColorTransition = "line-trim-color-transition"
+        case lineTrimColorUseTheme = "line-trim-color-use-theme"
         case lineTrimFadeRange = "line-trim-fade-range"
         case lineTrimOffset = "line-trim-offset"
         case lineWidth = "line-width"
@@ -606,6 +634,22 @@ extension LineLayer {
         with(self, setter(\.lineBorderColor, .expression(expression)))
     }
 
+    /// This property defines whether the `lineBorderColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineBorderColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.lineBorderColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `lineBorderColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineBorderColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.lineBorderColorUseTheme, .expression(expression)))
+    }
+
     /// The width of the line border. A value of zero means no border.
     /// Default value: 0. Minimum value: 0.
     public func lineBorderWidth(_ constant: Double) -> Self {
@@ -644,6 +688,22 @@ extension LineLayer {
     /// Default value: "#000000".
     public func lineColor(_ expression: Exp) -> Self {
         with(self, setter(\.lineColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `lineColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.lineColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `lineColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.lineColorUseTheme, .expression(expression)))
     }
 
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
@@ -722,6 +782,22 @@ extension LineLayer {
     /// A gradient used to color a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
     public func lineGradient(_ expression: Exp) -> Self {
         with(self, setter(\.lineGradient, .expression(expression)))
+    }
+
+    /// This property defines whether the `lineGradient` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineGradientUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.lineGradientUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `lineGradient` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineGradientUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.lineGradientUseTheme, .expression(expression)))
     }
 
     /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
@@ -843,6 +919,22 @@ extension LineLayer {
     @_spi(Experimental)
     public func lineTrimColor(_ expression: Exp) -> Self {
         with(self, setter(\.lineTrimColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `lineTrimColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineTrimColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.lineTrimColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `lineTrimColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineTrimColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.lineTrimColorUseTheme, .expression(expression)))
     }
 
     /// The fade range for the trim-start and trim-end points is defined by the `line-trim-offset` property. The first element of the array represents the fade range from the trim-start point toward the end of the line, while the second element defines the fade range from the trim-end point toward the beginning of the line. The fade result is achieved by interpolating between `line-trim-color` and the color specified by the `line-color` or the `line-gradient` property.

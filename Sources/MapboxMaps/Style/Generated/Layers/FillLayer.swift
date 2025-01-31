@@ -57,6 +57,10 @@ public struct FillLayer: Layer, Equatable {
 
     /// Transition options for `fillColor`.
     public var fillColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var fillColorUseTheme: Value<ColorUseTheme>?
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0. The unit of fillEmissiveStrength is in intensity.
@@ -77,6 +81,10 @@ public struct FillLayer: Layer, Equatable {
 
     /// Transition options for `fillOutlineColor`.
     public var fillOutlineColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var fillOutlineColorUseTheme: Value<ColorUseTheme>?
 
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var fillPattern: Value<ResolvedImage>?
@@ -123,12 +131,14 @@ public struct FillLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(fillAntialias, forKey: .fillAntialias)
         try paintContainer.encodeIfPresent(fillColor, forKey: .fillColor)
         try paintContainer.encodeIfPresent(fillColorTransition, forKey: .fillColorTransition)
+        try paintContainer.encodeIfPresent(fillColorUseTheme, forKey: .fillColorUseTheme)
         try paintContainer.encodeIfPresent(fillEmissiveStrength, forKey: .fillEmissiveStrength)
         try paintContainer.encodeIfPresent(fillEmissiveStrengthTransition, forKey: .fillEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(fillOpacity, forKey: .fillOpacity)
         try paintContainer.encodeIfPresent(fillOpacityTransition, forKey: .fillOpacityTransition)
         try paintContainer.encodeIfPresent(fillOutlineColor, forKey: .fillOutlineColor)
         try paintContainer.encodeIfPresent(fillOutlineColorTransition, forKey: .fillOutlineColorTransition)
+        try paintContainer.encodeIfPresent(fillOutlineColorUseTheme, forKey: .fillOutlineColorUseTheme)
         try paintContainer.encodeIfPresent(fillPattern, forKey: .fillPattern)
         try paintContainer.encodeIfPresent(fillTranslate, forKey: .fillTranslate)
         try paintContainer.encodeIfPresent(fillTranslateTransition, forKey: .fillTranslateTransition)
@@ -157,12 +167,14 @@ public struct FillLayer: Layer, Equatable {
             fillAntialias = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .fillAntialias)
             fillColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillColor)
             fillColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillColorTransition)
+            fillColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .fillColorUseTheme)
             fillEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillEmissiveStrength)
             fillEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillEmissiveStrengthTransition)
             fillOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillOpacity)
             fillOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillOpacityTransition)
             fillOutlineColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillOutlineColor)
             fillOutlineColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillOutlineColorTransition)
+            fillOutlineColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .fillOutlineColorUseTheme)
             fillPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .fillPattern)
             fillTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .fillTranslate)
             fillTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillTranslateTransition)
@@ -203,12 +215,14 @@ public struct FillLayer: Layer, Equatable {
         case fillAntialias = "fill-antialias"
         case fillColor = "fill-color"
         case fillColorTransition = "fill-color-transition"
+        case fillColorUseTheme = "fill-color-use-theme"
         case fillEmissiveStrength = "fill-emissive-strength"
         case fillEmissiveStrengthTransition = "fill-emissive-strength-transition"
         case fillOpacity = "fill-opacity"
         case fillOpacityTransition = "fill-opacity-transition"
         case fillOutlineColor = "fill-outline-color"
         case fillOutlineColorTransition = "fill-outline-color-transition"
+        case fillOutlineColorUseTheme = "fill-outline-color-use-theme"
         case fillPattern = "fill-pattern"
         case fillTranslate = "fill-translate"
         case fillTranslateTransition = "fill-translate-transition"
@@ -316,6 +330,22 @@ extension FillLayer {
         with(self, setter(\.fillColor, .expression(expression)))
     }
 
+    /// This property defines whether the `fillColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `fillColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.fillColorUseTheme, .expression(expression)))
+    }
+
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0. The unit of fillEmissiveStrength is in intensity.
     public func fillEmissiveStrength(_ constant: Double) -> Self {
@@ -368,6 +398,22 @@ extension FillLayer {
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
     public func fillOutlineColor(_ expression: Exp) -> Self {
         with(self, setter(\.fillOutlineColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `fillOutlineColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillOutlineColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillOutlineColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `fillOutlineColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillOutlineColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.fillOutlineColorUseTheme, .expression(expression)))
     }
 
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.

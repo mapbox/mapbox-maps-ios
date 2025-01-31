@@ -45,6 +45,10 @@ public struct HillshadeLayer: Layer, Equatable {
 
     /// Transition options for `hillshadeAccentColor`.
     public var hillshadeAccentColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var hillshadeAccentColorUseTheme: Value<ColorUseTheme>?
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0. The unit of hillshadeEmissiveStrength is in intensity.
@@ -66,6 +70,10 @@ public struct HillshadeLayer: Layer, Equatable {
 
     /// Transition options for `hillshadeHighlightColor`.
     public var hillshadeHighlightColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var hillshadeHighlightColorUseTheme: Value<ColorUseTheme>?
 
     /// Direction of light source when map is rotated.
     /// Default value: "viewport".
@@ -81,6 +89,10 @@ public struct HillshadeLayer: Layer, Equatable {
 
     /// Transition options for `hillshadeShadowColor`.
     public var hillshadeShadowColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var hillshadeShadowColorUseTheme: Value<ColorUseTheme>?
 
     public init(id: String, source: String) {
         self.source = source
@@ -103,16 +115,19 @@ public struct HillshadeLayer: Layer, Equatable {
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         try paintContainer.encodeIfPresent(hillshadeAccentColor, forKey: .hillshadeAccentColor)
         try paintContainer.encodeIfPresent(hillshadeAccentColorTransition, forKey: .hillshadeAccentColorTransition)
+        try paintContainer.encodeIfPresent(hillshadeAccentColorUseTheme, forKey: .hillshadeAccentColorUseTheme)
         try paintContainer.encodeIfPresent(hillshadeEmissiveStrength, forKey: .hillshadeEmissiveStrength)
         try paintContainer.encodeIfPresent(hillshadeEmissiveStrengthTransition, forKey: .hillshadeEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(hillshadeExaggeration, forKey: .hillshadeExaggeration)
         try paintContainer.encodeIfPresent(hillshadeExaggerationTransition, forKey: .hillshadeExaggerationTransition)
         try paintContainer.encodeIfPresent(hillshadeHighlightColor, forKey: .hillshadeHighlightColor)
         try paintContainer.encodeIfPresent(hillshadeHighlightColorTransition, forKey: .hillshadeHighlightColorTransition)
+        try paintContainer.encodeIfPresent(hillshadeHighlightColorUseTheme, forKey: .hillshadeHighlightColorUseTheme)
         try paintContainer.encodeIfPresent(hillshadeIlluminationAnchor, forKey: .hillshadeIlluminationAnchor)
         try paintContainer.encodeIfPresent(hillshadeIlluminationDirection, forKey: .hillshadeIlluminationDirection)
         try paintContainer.encodeIfPresent(hillshadeShadowColor, forKey: .hillshadeShadowColor)
         try paintContainer.encodeIfPresent(hillshadeShadowColorTransition, forKey: .hillshadeShadowColorTransition)
+        try paintContainer.encodeIfPresent(hillshadeShadowColorUseTheme, forKey: .hillshadeShadowColorUseTheme)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encode(visibility, forKey: .visibility)
@@ -132,16 +147,19 @@ public struct HillshadeLayer: Layer, Equatable {
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             hillshadeAccentColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .hillshadeAccentColor)
             hillshadeAccentColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeAccentColorTransition)
+            hillshadeAccentColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .hillshadeAccentColorUseTheme)
             hillshadeEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .hillshadeEmissiveStrength)
             hillshadeEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeEmissiveStrengthTransition)
             hillshadeExaggeration = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .hillshadeExaggeration)
             hillshadeExaggerationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeExaggerationTransition)
             hillshadeHighlightColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .hillshadeHighlightColor)
             hillshadeHighlightColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeHighlightColorTransition)
+            hillshadeHighlightColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .hillshadeHighlightColorUseTheme)
             hillshadeIlluminationAnchor = try paintContainer.decodeIfPresent(Value<HillshadeIlluminationAnchor>.self, forKey: .hillshadeIlluminationAnchor)
             hillshadeIlluminationDirection = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .hillshadeIlluminationDirection)
             hillshadeShadowColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .hillshadeShadowColor)
             hillshadeShadowColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeShadowColorTransition)
+            hillshadeShadowColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .hillshadeShadowColorUseTheme)
         }
 
         var visibilityEncoded: Value<Visibility>?
@@ -171,16 +189,19 @@ public struct HillshadeLayer: Layer, Equatable {
     enum PaintCodingKeys: String, CodingKey {
         case hillshadeAccentColor = "hillshade-accent-color"
         case hillshadeAccentColorTransition = "hillshade-accent-color-transition"
+        case hillshadeAccentColorUseTheme = "hillshade-accent-color-use-theme"
         case hillshadeEmissiveStrength = "hillshade-emissive-strength"
         case hillshadeEmissiveStrengthTransition = "hillshade-emissive-strength-transition"
         case hillshadeExaggeration = "hillshade-exaggeration"
         case hillshadeExaggerationTransition = "hillshade-exaggeration-transition"
         case hillshadeHighlightColor = "hillshade-highlight-color"
         case hillshadeHighlightColorTransition = "hillshade-highlight-color-transition"
+        case hillshadeHighlightColorUseTheme = "hillshade-highlight-color-use-theme"
         case hillshadeIlluminationAnchor = "hillshade-illumination-anchor"
         case hillshadeIlluminationDirection = "hillshade-illumination-direction"
         case hillshadeShadowColor = "hillshade-shadow-color"
         case hillshadeShadowColorTransition = "hillshade-shadow-color-transition"
+        case hillshadeShadowColorUseTheme = "hillshade-shadow-color-use-theme"
     }
 }
 
@@ -244,6 +265,22 @@ extension HillshadeLayer {
         with(self, setter(\.hillshadeAccentColor, .expression(expression)))
     }
 
+    /// This property defines whether the `hillshadeAccentColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func hillshadeAccentColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.hillshadeAccentColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `hillshadeAccentColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func hillshadeAccentColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.hillshadeAccentColorUseTheme, .expression(expression)))
+    }
+
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0. The unit of hillshadeEmissiveStrength is in intensity.
     public func hillshadeEmissiveStrength(_ constant: Double) -> Self {
@@ -301,6 +338,22 @@ extension HillshadeLayer {
         with(self, setter(\.hillshadeHighlightColor, .expression(expression)))
     }
 
+    /// This property defines whether the `hillshadeHighlightColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func hillshadeHighlightColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.hillshadeHighlightColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `hillshadeHighlightColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func hillshadeHighlightColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.hillshadeHighlightColorUseTheme, .expression(expression)))
+    }
+
     /// Direction of light source when map is rotated.
     /// Default value: "viewport".
     public func hillshadeIlluminationAnchor(_ constant: HillshadeIlluminationAnchor) -> Self {
@@ -346,6 +399,22 @@ extension HillshadeLayer {
     /// Default value: "#000000".
     public func hillshadeShadowColor(_ expression: Exp) -> Self {
         with(self, setter(\.hillshadeShadowColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `hillshadeShadowColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func hillshadeShadowColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.hillshadeShadowColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `hillshadeShadowColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func hillshadeShadowColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.hillshadeShadowColorUseTheme, .expression(expression)))
     }
 }
 

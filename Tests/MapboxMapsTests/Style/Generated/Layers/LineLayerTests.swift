@@ -97,10 +97,12 @@ final class LineLayerTests: XCTestCase {
        layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineBorderColor = Value<StyleColor>.testConstantValue()
        layer.lineBorderColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.lineBorderColorUseTheme = .none
        layer.lineBorderWidth = Value<Double>.testConstantValue()
        layer.lineBorderWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineColor = Value<StyleColor>.testConstantValue()
        layer.lineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.lineColorUseTheme = .none
        layer.lineDasharray = Value<[Double]>.testConstantValue()
        layer.lineDepthOcclusionFactor = Value<Double>.testConstantValue()
        layer.lineDepthOcclusionFactorTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -109,6 +111,7 @@ final class LineLayerTests: XCTestCase {
        layer.lineGapWidth = Value<Double>.testConstantValue()
        layer.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineGradient = Value<StyleColor>.testConstantValue()
+       layer.lineGradientUseTheme = .none
        layer.lineOcclusionOpacity = Value<Double>.testConstantValue()
        layer.lineOcclusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineOffset = Value<Double>.testConstantValue()
@@ -121,6 +124,7 @@ final class LineLayerTests: XCTestCase {
        layer.lineTranslateAnchor = Value<LineTranslateAnchor>.testConstantValue()
        layer.lineTrimColor = Value<StyleColor>.testConstantValue()
        layer.lineTrimColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.lineTrimColorUseTheme = .none
        layer.lineTrimFadeRange = Value<[Double]>.testConstantValue()
        layer.lineTrimOffset = Value<[Double]>.testConstantValue()
        layer.lineWidth = Value<Double>.testConstantValue()

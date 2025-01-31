@@ -47,6 +47,10 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Transition options for `accuracyRadiusBorderColor`.
     public var accuracyRadiusBorderColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var accuracyRadiusBorderColorUseTheme: Value<ColorUseTheme>?
 
     /// The color for drawing the accuracy radius, as a circle. To adjust transparency, set the alpha component of the color accordingly.
     /// Default value: "#ffffff".
@@ -54,6 +58,10 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Transition options for `accuracyRadiusColor`.
     public var accuracyRadiusColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var accuracyRadiusColorUseTheme: Value<ColorUseTheme>?
 
     /// The bearing of the location indicator. Values under 0.01 degree variation are ignored.
     /// Default value: 0. The unit of bearing is in degrees.
@@ -75,6 +83,10 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Transition options for `emphasisCircleColor`.
     public var emphasisCircleColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var emphasisCircleColorUseTheme: Value<ColorUseTheme>?
 
     /// Specifies a glow effect range of the emphasis circle, in pixels. If [0,0] values are provided, it renders the circle as a solid color. The first value specifies the start of the glow effect where it is equal to the circle's color, the second is the end, where it's fully transparent. Between the two values the effect is linearly faded out.
     /// Default value: [0,0].
@@ -145,14 +157,17 @@ public struct LocationIndicatorLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(accuracyRadiusTransition, forKey: .accuracyRadiusTransition)
         try paintContainer.encodeIfPresent(accuracyRadiusBorderColor, forKey: .accuracyRadiusBorderColor)
         try paintContainer.encodeIfPresent(accuracyRadiusBorderColorTransition, forKey: .accuracyRadiusBorderColorTransition)
+        try paintContainer.encodeIfPresent(accuracyRadiusBorderColorUseTheme, forKey: .accuracyRadiusBorderColorUseTheme)
         try paintContainer.encodeIfPresent(accuracyRadiusColor, forKey: .accuracyRadiusColor)
         try paintContainer.encodeIfPresent(accuracyRadiusColorTransition, forKey: .accuracyRadiusColorTransition)
+        try paintContainer.encodeIfPresent(accuracyRadiusColorUseTheme, forKey: .accuracyRadiusColorUseTheme)
         try paintContainer.encodeIfPresent(bearing, forKey: .bearing)
         try paintContainer.encodeIfPresent(bearingTransition, forKey: .bearingTransition)
         try paintContainer.encodeIfPresent(bearingImageSize, forKey: .bearingImageSize)
         try paintContainer.encodeIfPresent(bearingImageSizeTransition, forKey: .bearingImageSizeTransition)
         try paintContainer.encodeIfPresent(emphasisCircleColor, forKey: .emphasisCircleColor)
         try paintContainer.encodeIfPresent(emphasisCircleColorTransition, forKey: .emphasisCircleColorTransition)
+        try paintContainer.encodeIfPresent(emphasisCircleColorUseTheme, forKey: .emphasisCircleColorUseTheme)
         try paintContainer.encodeIfPresent(emphasisCircleGlowRange, forKey: .emphasisCircleGlowRange)
         try paintContainer.encodeIfPresent(emphasisCircleGlowRangeTransition, forKey: .emphasisCircleGlowRangeTransition)
         try paintContainer.encodeIfPresent(emphasisCircleRadius, forKey: .emphasisCircleRadius)
@@ -188,14 +203,17 @@ public struct LocationIndicatorLayer: Layer, Equatable {
             accuracyRadiusTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .accuracyRadiusTransition)
             accuracyRadiusBorderColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .accuracyRadiusBorderColor)
             accuracyRadiusBorderColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .accuracyRadiusBorderColorTransition)
+            accuracyRadiusBorderColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .accuracyRadiusBorderColorUseTheme)
             accuracyRadiusColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .accuracyRadiusColor)
             accuracyRadiusColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .accuracyRadiusColorTransition)
+            accuracyRadiusColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .accuracyRadiusColorUseTheme)
             bearing = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .bearing)
             bearingTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .bearingTransition)
             bearingImageSize = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .bearingImageSize)
             bearingImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .bearingImageSizeTransition)
             emphasisCircleColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .emphasisCircleColor)
             emphasisCircleColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .emphasisCircleColorTransition)
+            emphasisCircleColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .emphasisCircleColorUseTheme)
             emphasisCircleGlowRange = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .emphasisCircleGlowRange)
             emphasisCircleGlowRangeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .emphasisCircleGlowRangeTransition)
             emphasisCircleRadius = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .emphasisCircleRadius)
@@ -244,14 +262,17 @@ public struct LocationIndicatorLayer: Layer, Equatable {
         case accuracyRadiusTransition = "accuracy-radius-transition"
         case accuracyRadiusBorderColor = "accuracy-radius-border-color"
         case accuracyRadiusBorderColorTransition = "accuracy-radius-border-color-transition"
+        case accuracyRadiusBorderColorUseTheme = "accuracy-radius-border-color-use-theme"
         case accuracyRadiusColor = "accuracy-radius-color"
         case accuracyRadiusColorTransition = "accuracy-radius-color-transition"
+        case accuracyRadiusColorUseTheme = "accuracy-radius-color-use-theme"
         case bearing = "bearing"
         case bearingTransition = "bearing-transition"
         case bearingImageSize = "bearing-image-size"
         case bearingImageSizeTransition = "bearing-image-size-transition"
         case emphasisCircleColor = "emphasis-circle-color"
         case emphasisCircleColorTransition = "emphasis-circle-color-transition"
+        case emphasisCircleColorUseTheme = "emphasis-circle-color-use-theme"
         case emphasisCircleGlowRange = "emphasis-circle-glow-range"
         case emphasisCircleGlowRangeTransition = "emphasis-circle-glow-range-transition"
         case emphasisCircleRadius = "emphasis-circle-radius"
@@ -357,6 +378,22 @@ extension LocationIndicatorLayer {
         with(self, setter(\.accuracyRadiusBorderColor, .expression(expression)))
     }
 
+    /// This property defines whether the `accuracyRadiusBorderColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func accuracyRadiusBorderColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.accuracyRadiusBorderColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `accuracyRadiusBorderColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func accuracyRadiusBorderColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.accuracyRadiusBorderColorUseTheme, .expression(expression)))
+    }
+
     /// The color for drawing the accuracy radius, as a circle. To adjust transparency, set the alpha component of the color accordingly.
     /// Default value: "#ffffff".
     public func accuracyRadiusColor(_ constant: StyleColor) -> Self {
@@ -378,6 +415,22 @@ extension LocationIndicatorLayer {
     /// Default value: "#ffffff".
     public func accuracyRadiusColor(_ expression: Exp) -> Self {
         with(self, setter(\.accuracyRadiusColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `accuracyRadiusColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func accuracyRadiusColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.accuracyRadiusColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `accuracyRadiusColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func accuracyRadiusColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.accuracyRadiusColorUseTheme, .expression(expression)))
     }
 
     /// The bearing of the location indicator. Values under 0.01 degree variation are ignored.
@@ -435,6 +488,22 @@ extension LocationIndicatorLayer {
     /// Default value: "#ffffff".
     public func emphasisCircleColor(_ expression: Exp) -> Self {
         with(self, setter(\.emphasisCircleColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `emphasisCircleColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func emphasisCircleColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.emphasisCircleColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `emphasisCircleColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func emphasisCircleColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.emphasisCircleColorUseTheme, .expression(expression)))
     }
 
     /// Specifies a glow effect range of the emphasis circle, in pixels. If [0,0] values are provided, it renders the circle as a solid color. The first value specifies the start of the glow effect where it is equal to the circle's color, the second is the end, where it's fully transparent. Between the two values the effect is linearly faded out.

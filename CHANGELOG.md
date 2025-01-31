@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 11.10.0-rc.1 - 31 January, 2025
 
 * Promote `ClipLayer.clipLayerTypes` and `ClipLayer.clipLayerScope` to stable.
 * Remove experimental `DirectionalLight.shadowQuality`.

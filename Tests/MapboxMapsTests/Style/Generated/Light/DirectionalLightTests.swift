@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@_spi(Experimental) @testable import MapboxMaps
+@testable import MapboxMaps
 
 final class DirectionalLightTests: XCTestCase {
 
@@ -16,8 +16,7 @@ final class DirectionalLightTests: XCTestCase {
         light.intensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
          light.shadowIntensity = Value<Double>.testConstantValue()
         light.shadowIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-         light.shadowQuality = Value<Double>.testConstantValue()
- 
+
         let data = try JSONEncoder().encode(light)
         XCTAssertFalse(data.isEmpty)
 
@@ -37,7 +36,6 @@ final class DirectionalLightTests: XCTestCase {
         XCTAssertEqual(decodedLight.shadowIntensity, Value<Double>.testConstantValue())
         XCTAssertEqual(decodedLight.shadowIntensityTransition?.duration, 10)
         XCTAssertEqual(decodedLight.shadowIntensityTransition?.delay, 10)
-        XCTAssertEqual(decodedLight.shadowQuality, Value<Double>.testConstantValue())
     }
 }
 

@@ -439,7 +439,7 @@ public class StyleManager {
     /// }
     /// ```
     ///
-    /// - Warning: Avoind having strong references to `MapboxMap` or `MapView` in your custom content as it will lead to strong reference cycles.
+    /// - Warning: Avoid having strong references to `MapboxMap` or `MapView` in your custom content as it will lead to strong reference cycles.
     ///
     /// See more information in the <doc:Declarative-Map-Styling>.
     public func setMapStyleContent(@MapStyleContentBuilder content: () -> some MapStyleContent) {

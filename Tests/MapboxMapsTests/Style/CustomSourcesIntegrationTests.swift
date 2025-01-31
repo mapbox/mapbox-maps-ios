@@ -15,9 +15,14 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
         let rasterOptions = CustomRasterSourceOptions(
             clientCallback: CustomRasterSourceClient.fromCustomRasterSourceTileStatusChangedCallback { _, _ in }
         )
+        let maxOverscaleFactorForParentTiles = UInt8(83)
 
         didFinishLoadingStyle = { mapView in
-            let source = CustomRasterSource(id: "test-source", options: rasterOptions)
+            let source = CustomRasterSource(
+                id: "test-source",
+                options: rasterOptions,
+                maxOverscaleFactorForParentTiles: maxOverscaleFactorForParentTiles
+            )
 
             // Add source
             do {
@@ -29,8 +34,9 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the source
             do {
-                _ = try mapView.mapboxMap.source(withId: "test-source", type: CustomRasterSource.self)
+                let retrievedSource = try mapView.mapboxMap.source(withId: "test-source", type: CustomRasterSource.self)
 
+                XCTAssertEqual(retrievedSource.maxOverscaleFactorForParentTiles, maxOverscaleFactorForParentTiles)
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve CustomRasterSource because of error: \(error)")
@@ -47,9 +53,18 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
         mapView.mapboxMap.styleURI = .standard
+        let maxOverscaleFactorForParentTiles = UInt8(83)
 
         didFinishLoadingStyle = { mapView in
-            var source = CustomGeometrySource(id: "test-source", options: CustomGeometrySourceOptions(fetchTileFunction: { _ in }, cancelTileFunction: { _ in }, tileOptions: TileOptions()))
+            var source = CustomGeometrySource(
+                id: "test-source",
+                options: CustomGeometrySourceOptions(
+                    fetchTileFunction: { _ in },
+                    cancelTileFunction: { _ in },
+                    tileOptions: TileOptions()
+                ),
+                maxOverscaleFactorForParentTiles: maxOverscaleFactorForParentTiles
+            )
             source.tileCacheBudget = .testSourceValue(.megabytes(7))
 
             // Add source
@@ -64,6 +79,7 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
             do {
                 let retrievedSource = try mapView.mapboxMap.source(withId: "test-source", type: CustomGeometrySource.self)
                 XCTAssertEqual(retrievedSource.tileCacheBudget, .testSourceValue(.megabytes(7)))
+                XCTAssertEqual(retrievedSource.maxOverscaleFactorForParentTiles, maxOverscaleFactorForParentTiles)
 
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {

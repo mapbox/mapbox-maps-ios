@@ -41,13 +41,11 @@ public struct ClipLayer: Layer, Equatable {
 
     /// Removes content from layers with the specified scope. By default all layers are affected. For example specifying `basemap` will only remove content from the Mapbox Standard style layers which have the same scope
     /// Default value: [].
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var clipLayerScope: Value<[String]>?
+    public var clipLayerScope: Value<[String]>?
 
     /// Layer types that will also be removed if fallen below this clip layer.
     /// Default value: [].
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var clipLayerTypes: Value<[ClipLayerTypes]>?
+    public var clipLayerTypes: Value<[ClipLayerTypes]>?
 
     public init(id: String, source: String) {
         self.source = source
@@ -152,32 +150,24 @@ extension ClipLayer {
 
     /// Removes content from layers with the specified scope. By default all layers are affected. For example specifying `basemap` will only remove content from the Mapbox Standard style layers which have the same scope
     /// Default value: [].
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func clipLayerScope(_ constant: [String]) -> Self {
         with(self, setter(\.clipLayerScope, .constant(constant)))
     }
 
     /// Removes content from layers with the specified scope. By default all layers are affected. For example specifying `basemap` will only remove content from the Mapbox Standard style layers which have the same scope
     /// Default value: [].
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func clipLayerScope(_ expression: Exp) -> Self {
         with(self, setter(\.clipLayerScope, .expression(expression)))
     }
 
     /// Layer types that will also be removed if fallen below this clip layer.
     /// Default value: [].
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func clipLayerTypes(_ constant: [ClipLayerTypes]) -> Self {
         with(self, setter(\.clipLayerTypes, .constant(constant)))
     }
 
     /// Layer types that will also be removed if fallen below this clip layer.
     /// Default value: [].
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func clipLayerTypes(_ expression: Exp) -> Self {
         with(self, setter(\.clipLayerTypes, .expression(expression)))
     }

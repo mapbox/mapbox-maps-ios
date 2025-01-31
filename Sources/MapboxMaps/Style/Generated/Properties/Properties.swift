@@ -725,22 +725,16 @@ public struct TextWritingMode: RawRepresentable, Codable, Hashable, Sendable {
 }
 
 /// Layer types that will also be removed if fallen below this clip layer.
-@_documentation(visibility: public)
-@_spi(Experimental)
 public struct ClipLayerTypes: RawRepresentable, Codable, Hashable, Sendable {
-    @_documentation(visibility: public)
     public let rawValue: String
 
-    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// If present the clip layer would remove all 3d model layers below it. Currently only instanced models (e.g. trees) are removed.
-    @_documentation(visibility: public)
     public static let model = ClipLayerTypes(rawValue: "model")
 
     /// If present the clip layer would remove all symbol layers below it.
-    @_documentation(visibility: public)
     public static let symbol = ClipLayerTypes(rawValue: "symbol")
 }

@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 
 final class ViewAnnotationManagerTests: XCTestCase {
 
@@ -435,6 +435,13 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let innerBounds = parameters.coordinateBounds
 
         XCTAssertTrue(bounds.contains(forArea: innerBounds, wrappedCoordinates: true))
+    }
+
+    func testAvoidLayers() throws {
+        let layers: Set<String> = ["my-symbol-layer", "my-fill-layer"]
+        manager.viewAnnotationAvoidLayers = layers
+
+        XCTAssertEqual(manager.viewAnnotationAvoidLayers, layers)
     }
 
     // MARK: - Helper functions

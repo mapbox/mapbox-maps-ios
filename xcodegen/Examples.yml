@@ -19,6 +19,7 @@ targets:
       - path: ../Sources/Examples
         excludes:
           - VisionOSMain.swift
+          - "Extensions/**"
           - "SwiftUI Examples/**"
           - "All Examples/Sample Data/**"
           - "Assets.xcassets/**"
@@ -30,6 +31,7 @@ targets:
       - path: ../Sources/Examples
         includes:
           - "SwiftUI Examples/**"
+          - "Extensions/**"
           - "All Examples/Sample Data/**"
           - "Assets.xcassets/**"
         # destinationFilters: [iOS, visionOS]

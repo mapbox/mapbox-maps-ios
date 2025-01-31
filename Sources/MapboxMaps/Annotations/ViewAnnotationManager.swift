@@ -82,6 +82,15 @@ public final class ViewAnnotationManager {
         Array(objectAnnotations.values)
     }
 
+    /// Specify layers that view annotations should avoid. This applies to ALL view annotations associated to any layer.
+    /// The API currently only supports line layers.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public var viewAnnotationAvoidLayers: Set<String> {
+        get { mapboxMap.viewAnnotationAvoidLayers }
+        set { mapboxMap.viewAnnotationAvoidLayers = newValue }
+    }
+
     /// The complete list of annotations associated with the receiver.
     @available(*, deprecated, renamed: "allAnnotations", message: "Please use allAnnotations instead, or directly access ViewAnnotation itself")
     public var annotations: [UIView: ViewAnnotationOptions] {

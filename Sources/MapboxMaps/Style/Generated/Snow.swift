@@ -14,7 +14,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     public init() { }
 
     /// Thinning factor of snow particles from center. 0 - no thinning. 1 - maximal central area thinning.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: 0.4. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var centerThinning: Value<Double>?
@@ -44,7 +44,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     public var colorUseTheme: Value<ColorUseTheme>?
 
     /// Snow particles density. Controls the overall particles number.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: "["interpolate",["linear"],["zoom"],11,0,13,0.85]". Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var density: Value<Double>?
@@ -59,7 +59,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     public var densityUseTheme: Value<ColorUseTheme>?
 
     /// Main snow particles direction. Azimuth and polar angles
-    /// Default value: [0,90]. Value range: [0, 360]
+    /// Default value: [0,50]. Value range: [0, 360]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var direction: Value<[Double]>?
@@ -74,7 +74,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     public var directionUseTheme: Value<ColorUseTheme>?
 
     /// Snow flake particle size. Correlates with individual particle screen size
-    /// Default value: 1. Value range: [0, 5]
+    /// Default value: 0.71. Value range: [0, 5]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var flakeSize: Value<Double>?
@@ -104,7 +104,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     public var intensityUseTheme: Value<ColorUseTheme>?
 
     /// Snow particles opacity.
-    /// Default value: 0.9. Value range: [0, 1]
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var opacity: Value<Double>?
@@ -119,7 +119,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     public var opacityUseTheme: Value<ColorUseTheme>?
 
     /// Snow vignette screen-space effect. Adds snow tint to screen corners
-    /// Default value: 0.3. Value range: [0, 1]
+    /// Default value: "["interpolate",["linear"],["zoom"],11,0,13,0.3]". Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignette: Value<Double>?
@@ -172,7 +172,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
 
 extension Snow {
     /// Thinning factor of snow particles from center. 0 - no thinning. 1 - maximal central area thinning.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: 0.4. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func centerThinning(_ constant: Double) -> Self {
@@ -187,7 +187,7 @@ extension Snow {
     }
 
     /// Thinning factor of snow particles from center. 0 - no thinning. 1 - maximal central area thinning.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: 0.4. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func centerThinning(_ expression: Exp) -> Self {
@@ -242,7 +242,7 @@ extension Snow {
     }
 
     /// Snow particles density. Controls the overall particles number.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: "["interpolate",["linear"],["zoom"],11,0,13,0.85]". Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func density(_ constant: Double) -> Self {
@@ -257,7 +257,7 @@ extension Snow {
     }
 
     /// Snow particles density. Controls the overall particles number.
-    /// Default value: 1. Value range: [0, 1]
+    /// Default value: "["interpolate",["linear"],["zoom"],11,0,13,0.85]". Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func density(_ expression: Exp) -> Self {
@@ -265,7 +265,7 @@ extension Snow {
     }
 
     /// Main snow particles direction. Azimuth and polar angles
-    /// Default value: [0,90]. Value range: [0, 360]
+    /// Default value: [0,50]. Value range: [0, 360]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func direction(azimuthal: Double, polar: Double) -> Self {
@@ -280,7 +280,7 @@ extension Snow {
     }
 
     /// Main snow particles direction. Azimuth and polar angles
-    /// Default value: [0,90]. Value range: [0, 360]
+    /// Default value: [0,50]. Value range: [0, 360]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func direction(_ expression: Exp) -> Self {
@@ -288,7 +288,7 @@ extension Snow {
     }
 
     /// Snow flake particle size. Correlates with individual particle screen size
-    /// Default value: 1. Value range: [0, 5]
+    /// Default value: 0.71. Value range: [0, 5]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func flakeSize(_ constant: Double) -> Self {
@@ -303,7 +303,7 @@ extension Snow {
     }
 
     /// Snow flake particle size. Correlates with individual particle screen size
-    /// Default value: 1. Value range: [0, 5]
+    /// Default value: 0.71. Value range: [0, 5]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func flakeSize(_ expression: Exp) -> Self {
@@ -334,7 +334,7 @@ extension Snow {
     }
 
     /// Snow particles opacity.
-    /// Default value: 0.9. Value range: [0, 1]
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func opacity(_ constant: Double) -> Self {
@@ -349,7 +349,7 @@ extension Snow {
     }
 
     /// Snow particles opacity.
-    /// Default value: 0.9. Value range: [0, 1]
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func opacity(_ expression: Exp) -> Self {
@@ -357,7 +357,7 @@ extension Snow {
     }
 
     /// Snow vignette screen-space effect. Adds snow tint to screen corners
-    /// Default value: 0.3. Value range: [0, 1]
+    /// Default value: "["interpolate",["linear"],["zoom"],11,0,13,0.3]". Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func vignette(_ constant: Double) -> Self {
@@ -372,7 +372,7 @@ extension Snow {
     }
 
     /// Snow vignette screen-space effect. Adds snow tint to screen corners
-    /// Default value: 0.3. Value range: [0, 1]
+    /// Default value: "["interpolate",["linear"],["zoom"],11,0,13,0.3]". Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func vignette(_ expression: Exp) -> Self {

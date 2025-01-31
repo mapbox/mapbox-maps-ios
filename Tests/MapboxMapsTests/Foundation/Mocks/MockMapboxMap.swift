@@ -3,6 +3,7 @@ import CoreLocation
 import UIKit
 
 final class MockMapboxMap: MapboxMapProtocol {
+    var viewAnnotationAvoidLayers = Set<String>()
     var options: MapOptions = MapOptions()
 
     let events = MapEvents(makeGenericSubject: { _ in

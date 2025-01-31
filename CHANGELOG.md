@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Promote `ClipLayer.clipLayerTypes` and `ClipLayer.clipLayerScope` to stable.
+* Remove experimental `DirectionalLight.shadowQuality`.
 * Add support for the `maxOverscaleFactorForParentTiles` property in `CustomRasterSource` and `CustomGeometrySource`, allowing greater control over tile overscaling behavior when rendering custom raster tiles.
 * Add support for experimental *-use-theme propert that allow to override the color theme set on the Map. This is experimental and have several limitations - currently expressions are not supported. Color properties in Lights, Rain, Snow are not supported. *-use-theme for layer applied only after zoom level change.
 

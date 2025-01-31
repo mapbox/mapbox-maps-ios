@@ -508,4 +508,13 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(CGPoint(x: 102, y: 1).fit(to: size), CGPoint(x: -1, y: -1))
         XCTAssertEqual(CGPoint(x: 1, y: 101).fit(to: size), CGPoint(x: -1, y: -1))
     }
+
+    func testViewAnnotationAvoidLayers() {
+        let layers: Set<String> = ["my-symbol-layer", "my-fill-layer"]
+
+        mapboxMap.viewAnnotationAvoidLayers = layers
+
+        XCTAssertEqual(mapboxMap.viewAnnotationAvoidLayers, layers)
+        XCTAssertEqual(mapboxMap.__testingMap.getViewAnnotationAvoidLayers(), layers)
+    }
 }

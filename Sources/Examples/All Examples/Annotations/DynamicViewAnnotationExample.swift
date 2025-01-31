@@ -12,6 +12,8 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
     private var routes = [Route]() {
         didSet {
             oldValue.forEach { $0.remove() }
+            // prevent eta labels from showing up on overlapped parts of the route
+            mapView.viewAnnotations.viewAnnotationAvoidLayers = Set(routes.map(\.layerId))
             routes.forEach { route in
                 route.mapView = mapView
                 route.display()

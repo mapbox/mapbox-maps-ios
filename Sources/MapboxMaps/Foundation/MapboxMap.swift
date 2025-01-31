@@ -5,6 +5,7 @@ import MapboxCoreMaps
 import Turf
 
 protocol MapboxMapProtocol: AnyObject {
+    var viewAnnotationAvoidLayers: Set<String> { get set }
     var cameraBounds: CameraBounds { get }
     var cameraState: CameraState { get }
     var size: CGSize { get }
@@ -1666,6 +1667,11 @@ extension MapboxMap {
 // MARK: - View Annotations
 
 extension MapboxMap {
+    var viewAnnotationAvoidLayers: Set<String> {
+        get { __map.getViewAnnotationAvoidLayers() }
+        set { __map.setViewAnnotationAvoidLayersForLayerIds(newValue) }
+    }
+
     func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?) {
         __map.setViewAnnotationPositionsUpdateListenerFor(callback.map {
             ViewAnnotationPositionsUpdateListenerImpl(callback: $0)

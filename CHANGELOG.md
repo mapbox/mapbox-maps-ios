@@ -4,6 +4,15 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 11.10.0-rc.1 - 31 January, 2025
 
+* Expose experimental ColorTheme API to set style wide color theme. A color theme modifies the global colors of a style using a LUT (lookup table) for color grading.
+Pass the image either as a base64-encoded string or as UIImage:
+```swift
+let mapView = MapView()
+mapView.mapboxMap.setMapStyleContent {
+   ColorTheme(base64: "base64EncodedImage") // or use an uiimage shortcut ColorTheme(uiimage: lutImage)
+}
+```
+Note: Each style can have only one `ColorTheme`. Setting a new theme overwrites the previous one. Further details can be fouund in documentation for `ColorTheme`
 * Promote `ClipLayer.clipLayerTypes` and `ClipLayer.clipLayerScope` to stable.
 * Remove experimental `DirectionalLight.shadowQuality`.
 * Add experimental `ViewAnnotationManager.viewAnnotationAvoidLayers` for specifying layers that view annotations should avoid. The API currently only supports line layers.

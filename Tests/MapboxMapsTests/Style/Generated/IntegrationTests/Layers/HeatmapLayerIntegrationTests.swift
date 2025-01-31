@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -24,6 +24,7 @@ final class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
             layer.heatmapColor = Value<StyleColor>.testConstantValue()
+            layer.heatmapColorUseTheme = .none
             layer.heatmapIntensity = Value<Double>.testConstantValue()
             layer.heatmapIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.heatmapOpacity = Value<Double>.testConstantValue()

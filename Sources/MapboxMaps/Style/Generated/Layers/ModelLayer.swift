@@ -74,6 +74,10 @@ import UIKit
     /// Transition options for `modelColor`.
     @_documentation(visibility: public)
     public var modelColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var modelColorUseTheme: Value<ColorUseTheme>?
 
     /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.
     /// Default value: 0. Value range: [0, 1]
@@ -197,6 +201,7 @@ import UIKit
         try paintContainer.encodeIfPresent(modelCastShadows, forKey: .modelCastShadows)
         try paintContainer.encodeIfPresent(modelColor, forKey: .modelColor)
         try paintContainer.encodeIfPresent(modelColorTransition, forKey: .modelColorTransition)
+        try paintContainer.encodeIfPresent(modelColorUseTheme, forKey: .modelColorUseTheme)
         try paintContainer.encodeIfPresent(modelColorMixIntensity, forKey: .modelColorMixIntensity)
         try paintContainer.encodeIfPresent(modelColorMixIntensityTransition, forKey: .modelColorMixIntensityTransition)
         try paintContainer.encodeIfPresent(modelCutoffFadeRange, forKey: .modelCutoffFadeRange)
@@ -241,6 +246,7 @@ import UIKit
             modelCastShadows = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .modelCastShadows)
             modelColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .modelColor)
             modelColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelColorTransition)
+            modelColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .modelColorUseTheme)
             modelColorMixIntensity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelColorMixIntensity)
             modelColorMixIntensityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelColorMixIntensityTransition)
             modelCutoffFadeRange = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelCutoffFadeRange)
@@ -296,6 +302,7 @@ import UIKit
         case modelCastShadows = "model-cast-shadows"
         case modelColor = "model-color"
         case modelColorTransition = "model-color-transition"
+        case modelColorUseTheme = "model-color-use-theme"
         case modelColorMixIntensity = "model-color-mix-intensity"
         case modelColorMixIntensityTransition = "model-color-mix-intensity-transition"
         case modelCutoffFadeRange = "model-cutoff-fade-range"
@@ -441,6 +448,22 @@ extension ModelLayer {
     @_spi(Experimental)
     public func modelColor(_ expression: Exp) -> Self {
         with(self, setter(\.modelColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `modelColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.modelColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `modelColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.modelColorUseTheme, .expression(expression)))
     }
 
     /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.

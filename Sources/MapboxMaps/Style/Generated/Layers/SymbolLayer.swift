@@ -223,6 +223,10 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `iconColor`.
     public var iconColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var iconColorUseTheme: Value<ColorUseTheme>?
 
     /// Increase or reduce the saturation of the symbol icon.
     /// Default value: 0. Value range: [-1, 1]
@@ -251,6 +255,10 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `iconHaloColor`.
     public var iconHaloColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var iconHaloColorUseTheme: Value<ColorUseTheme>?
 
     /// Distance of halo to the icon outline.
     /// Default value: 0. Minimum value: 0. The unit of iconHaloWidth is in pixels.
@@ -306,6 +314,10 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `textColor`.
     public var textColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var textColorUseTheme: Value<ColorUseTheme>?
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 1. Minimum value: 0. The unit of textEmissiveStrength is in intensity.
@@ -327,6 +339,10 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `textHaloColor`.
     public var textHaloColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var textHaloColorUseTheme: Value<ColorUseTheme>?
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
     /// Default value: 0. Minimum value: 0. The unit of textHaloWidth is in pixels.
@@ -381,6 +397,7 @@ public struct SymbolLayer: Layer, Equatable {
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         try paintContainer.encodeIfPresent(iconColor, forKey: .iconColor)
         try paintContainer.encodeIfPresent(iconColorTransition, forKey: .iconColorTransition)
+        try paintContainer.encodeIfPresent(iconColorUseTheme, forKey: .iconColorUseTheme)
         try paintContainer.encodeIfPresent(iconColorSaturation, forKey: .iconColorSaturation)
         try paintContainer.encodeIfPresent(iconColorSaturationTransition, forKey: .iconColorSaturationTransition)
         try paintContainer.encodeIfPresent(iconEmissiveStrength, forKey: .iconEmissiveStrength)
@@ -389,6 +406,7 @@ public struct SymbolLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(iconHaloBlurTransition, forKey: .iconHaloBlurTransition)
         try paintContainer.encodeIfPresent(iconHaloColor, forKey: .iconHaloColor)
         try paintContainer.encodeIfPresent(iconHaloColorTransition, forKey: .iconHaloColorTransition)
+        try paintContainer.encodeIfPresent(iconHaloColorUseTheme, forKey: .iconHaloColorUseTheme)
         try paintContainer.encodeIfPresent(iconHaloWidth, forKey: .iconHaloWidth)
         try paintContainer.encodeIfPresent(iconHaloWidthTransition, forKey: .iconHaloWidthTransition)
         try paintContainer.encodeIfPresent(iconImageCrossFade, forKey: .iconImageCrossFade)
@@ -404,12 +422,14 @@ public struct SymbolLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(symbolZOffsetTransition, forKey: .symbolZOffsetTransition)
         try paintContainer.encodeIfPresent(textColor, forKey: .textColor)
         try paintContainer.encodeIfPresent(textColorTransition, forKey: .textColorTransition)
+        try paintContainer.encodeIfPresent(textColorUseTheme, forKey: .textColorUseTheme)
         try paintContainer.encodeIfPresent(textEmissiveStrength, forKey: .textEmissiveStrength)
         try paintContainer.encodeIfPresent(textEmissiveStrengthTransition, forKey: .textEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(textHaloBlur, forKey: .textHaloBlur)
         try paintContainer.encodeIfPresent(textHaloBlurTransition, forKey: .textHaloBlurTransition)
         try paintContainer.encodeIfPresent(textHaloColor, forKey: .textHaloColor)
         try paintContainer.encodeIfPresent(textHaloColorTransition, forKey: .textHaloColorTransition)
+        try paintContainer.encodeIfPresent(textHaloColorUseTheme, forKey: .textHaloColorUseTheme)
         try paintContainer.encodeIfPresent(textHaloWidth, forKey: .textHaloWidth)
         try paintContainer.encodeIfPresent(textHaloWidthTransition, forKey: .textHaloWidthTransition)
         try paintContainer.encodeIfPresent(textOcclusionOpacity, forKey: .textOcclusionOpacity)
@@ -483,6 +503,7 @@ public struct SymbolLayer: Layer, Equatable {
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             iconColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .iconColor)
             iconColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconColorTransition)
+            iconColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .iconColorUseTheme)
             iconColorSaturation = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconColorSaturation)
             iconColorSaturationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconColorSaturationTransition)
             iconEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconEmissiveStrength)
@@ -491,6 +512,7 @@ public struct SymbolLayer: Layer, Equatable {
             iconHaloBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconHaloBlurTransition)
             iconHaloColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .iconHaloColor)
             iconHaloColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconHaloColorTransition)
+            iconHaloColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .iconHaloColorUseTheme)
             iconHaloWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconHaloWidth)
             iconHaloWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconHaloWidthTransition)
             iconImageCrossFade = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconImageCrossFade)
@@ -506,12 +528,14 @@ public struct SymbolLayer: Layer, Equatable {
             symbolZOffsetTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .symbolZOffsetTransition)
             textColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .textColor)
             textColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textColorTransition)
+            textColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .textColorUseTheme)
             textEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textEmissiveStrength)
             textEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textEmissiveStrengthTransition)
             textHaloBlur = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textHaloBlur)
             textHaloBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textHaloBlurTransition)
             textHaloColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .textHaloColor)
             textHaloColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textHaloColorTransition)
+            textHaloColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .textHaloColorUseTheme)
             textHaloWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textHaloWidth)
             textHaloWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textHaloWidthTransition)
             textOcclusionOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textOcclusionOpacity)
@@ -640,6 +664,7 @@ public struct SymbolLayer: Layer, Equatable {
     enum PaintCodingKeys: String, CodingKey {
         case iconColor = "icon-color"
         case iconColorTransition = "icon-color-transition"
+        case iconColorUseTheme = "icon-color-use-theme"
         case iconColorSaturation = "icon-color-saturation"
         case iconColorSaturationTransition = "icon-color-saturation-transition"
         case iconEmissiveStrength = "icon-emissive-strength"
@@ -648,6 +673,7 @@ public struct SymbolLayer: Layer, Equatable {
         case iconHaloBlurTransition = "icon-halo-blur-transition"
         case iconHaloColor = "icon-halo-color"
         case iconHaloColorTransition = "icon-halo-color-transition"
+        case iconHaloColorUseTheme = "icon-halo-color-use-theme"
         case iconHaloWidth = "icon-halo-width"
         case iconHaloWidthTransition = "icon-halo-width-transition"
         case iconImageCrossFade = "icon-image-cross-fade"
@@ -663,12 +689,14 @@ public struct SymbolLayer: Layer, Equatable {
         case symbolZOffsetTransition = "symbol-z-offset-transition"
         case textColor = "text-color"
         case textColorTransition = "text-color-transition"
+        case textColorUseTheme = "text-color-use-theme"
         case textEmissiveStrength = "text-emissive-strength"
         case textEmissiveStrengthTransition = "text-emissive-strength-transition"
         case textHaloBlur = "text-halo-blur"
         case textHaloBlurTransition = "text-halo-blur-transition"
         case textHaloColor = "text-halo-color"
         case textHaloColorTransition = "text-halo-color-transition"
+        case textHaloColorUseTheme = "text-halo-color-use-theme"
         case textHaloWidth = "text-halo-width"
         case textHaloWidthTransition = "text-halo-width-transition"
         case textOcclusionOpacity = "text-occlusion-opacity"
@@ -1283,6 +1311,22 @@ extension SymbolLayer {
         with(self, setter(\.iconColor, .expression(expression)))
     }
 
+    /// This property defines whether the `iconColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func iconColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.iconColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `iconColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func iconColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.iconColorUseTheme, .expression(expression)))
+    }
+
     /// Increase or reduce the saturation of the symbol icon.
     /// Default value: 0. Value range: [-1, 1]
     public func iconColorSaturation(_ constant: Double) -> Self {
@@ -1355,6 +1399,22 @@ extension SymbolLayer {
     /// Default value: "rgba(0, 0, 0, 0)".
     public func iconHaloColor(_ expression: Exp) -> Self {
         with(self, setter(\.iconHaloColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `iconHaloColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func iconHaloColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.iconHaloColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `iconHaloColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func iconHaloColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.iconHaloColorUseTheme, .expression(expression)))
     }
 
     /// Distance of halo to the icon outline.
@@ -1500,6 +1560,22 @@ extension SymbolLayer {
         with(self, setter(\.textColor, .expression(expression)))
     }
 
+    /// This property defines whether the `textColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func textColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.textColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `textColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func textColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.textColorUseTheme, .expression(expression)))
+    }
+
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 1. Minimum value: 0. The unit of textEmissiveStrength is in intensity.
     public func textEmissiveStrength(_ constant: Double) -> Self {
@@ -1555,6 +1631,22 @@ extension SymbolLayer {
     /// Default value: "rgba(0, 0, 0, 0)".
     public func textHaloColor(_ expression: Exp) -> Self {
         with(self, setter(\.textHaloColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `textHaloColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func textHaloColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.textHaloColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `textHaloColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func textHaloColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.textHaloColorUseTheme, .expression(expression)))
     }
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.

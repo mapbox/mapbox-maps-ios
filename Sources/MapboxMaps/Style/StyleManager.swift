@@ -1757,3 +1757,24 @@ public struct StyleTransition: Codable, Equatable, Sendable {
 }
 
 extension StyleManager: StyleProtocol {}
+
+/// Use theme property for colors, defines whether the color will be affected by map theme or will be used as is.
+@_spi(Experimental)
+@_documentation(visibility: public)
+public struct ColorUseTheme: Hashable, Codable, RawRepresentable, ExpressibleByStringLiteral, Sendable {
+    /// Color property will be affected by currently set map theme.
+    public static let `default` = ColorUseTheme(rawValue: "default")!
+
+    /// Color property will not be affected by the map theme and will always appear exactly as specified.
+    public static let none = ColorUseTheme(rawValue: "none")!
+
+    public let rawValue: String
+
+    public init?(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    public init(stringLiteral value: String) {
+        self.rawValue = value
+    }
+}

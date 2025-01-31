@@ -70,6 +70,7 @@
 		634BA74F4E553C53EE906F5A /* OfflineManagerExample.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 000D0E4CEFB6D5AF02518807 /* OfflineManagerExample.storyboard */; platformFilters = (ios, ); };
 		64F4FA139388DB34564AD42D /* CLLocationCoordinate2D+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C0B9F01316D0FF38ED62B /* CLLocationCoordinate2D+Random.swift */; platformFilters = (ios, ); };
 		655105BD0FAFF4C4BA65DC32 /* ExamplesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE19F00E87B31FDE5481D56 /* ExamplesTests.swift */; platformFilters = (ios, ); };
+		65E9F2B993AEB394FC2D0080 /* ColorThemeMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F519EC4AF0B4BEE0FDCABC /* ColorThemeMapExample.swift */; platformFilters = (ios, ); };
 		6661DB69D4980E24BCA18AB2 /* PolygonAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCBE4524A8793B4DE950533 /* PolygonAnnotationExample.swift */; platformFilters = (ios, ); };
 		68FD9E1F4606B2729BA1E6DC /* SnapshotterExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588FD640D91E9DD366703F7B /* SnapshotterExample.swift */; platformFilters = (ios, ); };
 		6B040F65241ABF600D70D14D /* Custom3DPuckExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C957F9CA07061B793C2DD4A /* Custom3DPuckExample.swift */; platformFilters = (ios, ); };
@@ -225,6 +226,7 @@
 		4DCBE814694CF08A9C2E4A42 /* AddOneMarkerSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOneMarkerSymbolExample.swift; sourceTree = "<group>"; };
 		4EE19F00E87B31FDE5481D56 /* ExamplesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamplesTests.swift; sourceTree = "<group>"; };
 		50618B3CF42CCF735CCAE9B4 /* fragment-realestate-NY.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "fragment-realestate-NY.json"; sourceTree = "<group>"; };
+		50F519EC4AF0B4BEE0FDCABC /* ColorThemeMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorThemeMapExample.swift; sourceTree = "<group>"; };
 		524D79FF01638A0E8A3C1248 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		588FD640D91E9DD366703F7B /* SnapshotterExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotterExample.swift; sourceTree = "<group>"; };
 		590D83805AA598D2B0A7638A /* ExamplesTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExamplesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -632,6 +634,7 @@
 		F4E57BB1463BD6558C9EE37A /* Lab */ = {
 			isa = PBXGroup;
 			children = (
+				50F519EC4AF0B4BEE0FDCABC /* ColorThemeMapExample.swift */,
 				8DBF737C9C7FBF46BB5F7B78 /* CombineExample.swift */,
 				A4EE8F38428A64B5B9D4DBBE /* CombineLocationExample.swift */,
 				60A8CD8A69D3429FCF8ACBDD /* Lights3DExample.swift */,
@@ -859,6 +862,7 @@
 				1DAE02D73D16E543777C2025 /* ClusteringExample.swift in Sources */,
 				5A28C124249725578389175A /* ColorExpressionExample.swift in Sources */,
 				DA109856E64BBD8071DF0619 /* ColorThemeExample.swift in Sources */,
+				65E9F2B993AEB394FC2D0080 /* ColorThemeMapExample.swift in Sources */,
 				C664365A373267B564EC84EE /* CombineExample.swift in Sources */,
 				215230836B6AD1040D3DA547 /* CombineLocationExample.swift in Sources */,
 				3E515D1DD1D9CA02F3E95AA2 /* Constants.swift in Sources */,

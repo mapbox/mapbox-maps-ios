@@ -23,6 +23,10 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var centerThinningTransition: StyleTransition?
+    /// Use theme flag for center-thinning
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var centerThinningUseTheme: Value<ColorUseTheme>?
 
     /// Snow particles color.
     /// Default value: "#ffffff".
@@ -34,6 +38,10 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var colorTransition: StyleTransition?
+    /// Use theme flag for color
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var colorUseTheme: Value<ColorUseTheme>?
 
     /// Snow particles density. Controls the overall particles number.
     /// Default value: 1. Value range: [0, 1]
@@ -45,6 +53,10 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var densityTransition: StyleTransition?
+    /// Use theme flag for density
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var densityUseTheme: Value<ColorUseTheme>?
 
     /// Main snow particles direction. Azimuth and polar angles
     /// Default value: [0,90]. Value range: [0, 360]
@@ -56,6 +68,10 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var directionTransition: StyleTransition?
+    /// Use theme flag for direction
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var directionUseTheme: Value<ColorUseTheme>?
 
     /// Snow flake particle size. Correlates with individual particle screen size
     /// Default value: 1. Value range: [0, 5]
@@ -67,6 +83,10 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var flakeSizeTransition: StyleTransition?
+    /// Use theme flag for flake-size
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var flakeSizeUseTheme: Value<ColorUseTheme>?
 
     /// Snow particles movement factor. Controls the overall particles movement speed.
     /// Default value: 1. Value range: [0, 1]
@@ -78,6 +98,10 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var intensityTransition: StyleTransition?
+    /// Use theme flag for intensity
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var intensityUseTheme: Value<ColorUseTheme>?
 
     /// Snow particles opacity.
     /// Default value: 0.9. Value range: [0, 1]
@@ -89,6 +113,10 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var opacityTransition: StyleTransition?
+    /// Use theme flag for opacity
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var opacityUseTheme: Value<ColorUseTheme>?
 
     /// Snow vignette screen-space effect. Adds snow tint to screen corners
     /// Default value: 0.3. Value range: [0, 1]
@@ -100,6 +128,10 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteTransition: StyleTransition?
+    /// Use theme flag for vignette
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var vignetteUseTheme: Value<ColorUseTheme>?
 
     /// Snow vignette screen-space corners tint color.
     /// Default value: "#ffffff".
@@ -111,6 +143,10 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteColorTransition: StyleTransition?
+    /// Use theme flag for vignette-color
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var vignetteColorUseTheme: Value<ColorUseTheme>?
 
     public enum CodingKeys: String, CodingKey {
         case centerThinning = "center-thinning"
@@ -187,6 +223,22 @@ extension Snow {
     @_spi(Experimental)
     public func color(_ expression: Exp) -> Self {
         with(self, setter(\.color, .expression(expression)))
+    }
+
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.colorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.colorUseTheme, .expression(expression)))
     }
 
     /// Snow particles density. Controls the overall particles number.
@@ -356,6 +408,22 @@ extension Snow {
     @_spi(Experimental)
     public func vignetteColor(_ expression: Exp) -> Self {
         with(self, setter(\.vignetteColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `vignetteColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.vignetteColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `vignetteColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.vignetteColorUseTheme, .expression(expression)))
     }
 
 }

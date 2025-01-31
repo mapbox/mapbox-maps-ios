@@ -77,6 +77,7 @@ final class RasterParticleLayerTests: XCTestCase {
        var layer = RasterParticleLayer(id: "test-id", source: "source")
        layer.rasterParticleArrayBand = Value<String>.testConstantValue()
        layer.rasterParticleColor = Value<StyleColor>.testConstantValue()
+       layer.rasterParticleColorUseTheme = .none
        layer.rasterParticleCount = Value<Double>.testConstantValue()
        layer.rasterParticleFadeOpacityFactor = Value<Double>.testConstantValue()
        layer.rasterParticleFadeOpacityFactorTransition = StyleTransition(duration: 10.0, delay: 10.0)

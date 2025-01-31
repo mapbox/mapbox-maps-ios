@@ -25,6 +25,7 @@ final class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.visibility = .constant(.visible)
             layer.backgroundColor = Value<StyleColor>.testConstantValue()
             layer.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.backgroundColorUseTheme = .none
             layer.backgroundEmissiveStrength = Value<Double>.testConstantValue()
             layer.backgroundEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.backgroundOpacity = Value<Double>.testConstantValue()

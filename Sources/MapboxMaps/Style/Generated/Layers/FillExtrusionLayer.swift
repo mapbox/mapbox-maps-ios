@@ -103,6 +103,10 @@ public struct FillExtrusionLayer: Layer, Equatable {
 
     /// Transition options for `fillExtrusionColor`.
     public var fillExtrusionColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var fillExtrusionColorUseTheme: Value<ColorUseTheme>?
 
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff on pitched map views. Fade out is implemented by scaling down and removing buildings in the fade range in a staggered fashion. Opacity is not changed. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
     /// Default value: 0. Value range: [0, 1]
@@ -123,6 +127,10 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Transition options for `fillExtrusionFloodLightColor`.
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionFloodLightColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var fillExtrusionFloodLightColorUseTheme: Value<ColorUseTheme>?
 
     /// Provides a control to futher fine-tune the look of the flood light on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother.
     /// Default value: 0.69. Value range: [0, 1]
@@ -254,11 +262,13 @@ public struct FillExtrusionLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(fillExtrusionBaseAlignment, forKey: .fillExtrusionBaseAlignment)
         try paintContainer.encodeIfPresent(fillExtrusionColor, forKey: .fillExtrusionColor)
         try paintContainer.encodeIfPresent(fillExtrusionColorTransition, forKey: .fillExtrusionColorTransition)
+        try paintContainer.encodeIfPresent(fillExtrusionColorUseTheme, forKey: .fillExtrusionColorUseTheme)
         try paintContainer.encodeIfPresent(fillExtrusionCutoffFadeRange, forKey: .fillExtrusionCutoffFadeRange)
         try paintContainer.encodeIfPresent(fillExtrusionEmissiveStrength, forKey: .fillExtrusionEmissiveStrength)
         try paintContainer.encodeIfPresent(fillExtrusionEmissiveStrengthTransition, forKey: .fillExtrusionEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightColor, forKey: .fillExtrusionFloodLightColor)
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightColorTransition, forKey: .fillExtrusionFloodLightColorTransition)
+        try paintContainer.encodeIfPresent(fillExtrusionFloodLightColorUseTheme, forKey: .fillExtrusionFloodLightColorUseTheme)
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightGroundAttenuation, forKey: .fillExtrusionFloodLightGroundAttenuation)
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightGroundAttenuationTransition, forKey: .fillExtrusionFloodLightGroundAttenuationTransition)
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightGroundRadius, forKey: .fillExtrusionFloodLightGroundRadius)
@@ -315,11 +325,13 @@ public struct FillExtrusionLayer: Layer, Equatable {
             fillExtrusionBaseAlignment = try paintContainer.decodeIfPresent(Value<FillExtrusionBaseAlignment>.self, forKey: .fillExtrusionBaseAlignment)
             fillExtrusionColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillExtrusionColor)
             fillExtrusionColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionColorTransition)
+            fillExtrusionColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .fillExtrusionColorUseTheme)
             fillExtrusionCutoffFadeRange = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionCutoffFadeRange)
             fillExtrusionEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionEmissiveStrength)
             fillExtrusionEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionEmissiveStrengthTransition)
             fillExtrusionFloodLightColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillExtrusionFloodLightColor)
             fillExtrusionFloodLightColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionFloodLightColorTransition)
+            fillExtrusionFloodLightColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .fillExtrusionFloodLightColorUseTheme)
             fillExtrusionFloodLightGroundAttenuation = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionFloodLightGroundAttenuation)
             fillExtrusionFloodLightGroundAttenuationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionFloodLightGroundAttenuationTransition)
             fillExtrusionFloodLightGroundRadius = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionFloodLightGroundRadius)
@@ -387,11 +399,13 @@ public struct FillExtrusionLayer: Layer, Equatable {
         case fillExtrusionBaseAlignment = "fill-extrusion-base-alignment"
         case fillExtrusionColor = "fill-extrusion-color"
         case fillExtrusionColorTransition = "fill-extrusion-color-transition"
+        case fillExtrusionColorUseTheme = "fill-extrusion-color-use-theme"
         case fillExtrusionCutoffFadeRange = "fill-extrusion-cutoff-fade-range"
         case fillExtrusionEmissiveStrength = "fill-extrusion-emissive-strength"
         case fillExtrusionEmissiveStrengthTransition = "fill-extrusion-emissive-strength-transition"
         case fillExtrusionFloodLightColor = "fill-extrusion-flood-light-color"
         case fillExtrusionFloodLightColorTransition = "fill-extrusion-flood-light-color-transition"
+        case fillExtrusionFloodLightColorUseTheme = "fill-extrusion-flood-light-color-use-theme"
         case fillExtrusionFloodLightGroundAttenuation = "fill-extrusion-flood-light-ground-attenuation"
         case fillExtrusionFloodLightGroundAttenuationTransition = "fill-extrusion-flood-light-ground-attenuation-transition"
         case fillExtrusionFloodLightGroundRadius = "fill-extrusion-flood-light-ground-radius"
@@ -630,6 +644,22 @@ extension FillExtrusionLayer {
         with(self, setter(\.fillExtrusionColor, .expression(expression)))
     }
 
+    /// This property defines whether the `fillExtrusionColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillExtrusionColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillExtrusionColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `fillExtrusionColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillExtrusionColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.fillExtrusionColorUseTheme, .expression(expression)))
+    }
+
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff on pitched map views. Fade out is implemented by scaling down and removing buildings in the fade range in a staggered fashion. Opacity is not changed. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
     /// Default value: 0. Value range: [0, 1]
     public func fillExtrusionCutoffFadeRange(_ constant: Double) -> Self {
@@ -688,6 +718,22 @@ extension FillExtrusionLayer {
     @_spi(Experimental)
     public func fillExtrusionFloodLightColor(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionFloodLightColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `fillExtrusionFloodLightColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillExtrusionFloodLightColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillExtrusionFloodLightColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `fillExtrusionFloodLightColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillExtrusionFloodLightColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.fillExtrusionFloodLightColorUseTheme, .expression(expression)))
     }
 
     /// Provides a control to futher fine-tune the look of the flood light on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother.

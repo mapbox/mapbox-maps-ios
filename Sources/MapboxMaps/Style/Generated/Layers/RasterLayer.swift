@@ -59,6 +59,10 @@ public struct RasterLayer: Layer, Equatable {
 
     /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
     public var rasterColor: Value<StyleColor>?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var rasterColorUseTheme: Value<ColorUseTheme>?
 
     /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r - src.r + mix.g - src.g + mix.b - src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is -not- multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
     /// Default value: [0.2126,0.7152,0.0722,0].
@@ -150,6 +154,7 @@ public struct RasterLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(rasterBrightnessMin, forKey: .rasterBrightnessMin)
         try paintContainer.encodeIfPresent(rasterBrightnessMinTransition, forKey: .rasterBrightnessMinTransition)
         try paintContainer.encodeIfPresent(rasterColor, forKey: .rasterColor)
+        try paintContainer.encodeIfPresent(rasterColorUseTheme, forKey: .rasterColorUseTheme)
         try paintContainer.encodeIfPresent(rasterColorMix, forKey: .rasterColorMix)
         try paintContainer.encodeIfPresent(rasterColorMixTransition, forKey: .rasterColorMixTransition)
         try paintContainer.encodeIfPresent(rasterColorRange, forKey: .rasterColorRange)
@@ -191,6 +196,7 @@ public struct RasterLayer: Layer, Equatable {
             rasterBrightnessMin = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterBrightnessMin)
             rasterBrightnessMinTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterBrightnessMinTransition)
             rasterColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .rasterColor)
+            rasterColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .rasterColorUseTheme)
             rasterColorMix = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .rasterColorMix)
             rasterColorMixTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterColorMixTransition)
             rasterColorRange = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .rasterColorRange)
@@ -242,6 +248,7 @@ public struct RasterLayer: Layer, Equatable {
         case rasterBrightnessMin = "raster-brightness-min"
         case rasterBrightnessMinTransition = "raster-brightness-min-transition"
         case rasterColor = "raster-color"
+        case rasterColorUseTheme = "raster-color-use-theme"
         case rasterColorMix = "raster-color-mix"
         case rasterColorMixTransition = "raster-color-mix-transition"
         case rasterColorRange = "raster-color-range"
@@ -361,6 +368,22 @@ extension RasterLayer {
     /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
     public func rasterColor(_ expression: Exp) -> Self {
         with(self, setter(\.rasterColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `rasterColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func rasterColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.rasterColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `rasterColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func rasterColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.rasterColorUseTheme, .expression(expression)))
     }
 
     /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r - src.r + mix.g - src.g + mix.b - src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is -not- multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.

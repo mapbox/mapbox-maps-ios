@@ -75,10 +75,13 @@ final class SkyLayerTests: XCTestCase {
     func testEncodingAndDecodingOfPaintProperties() {
        var layer = SkyLayer(id: "test-id")
        layer.skyAtmosphereColor = Value<StyleColor>.testConstantValue()
+       layer.skyAtmosphereColorUseTheme = .none
        layer.skyAtmosphereHaloColor = Value<StyleColor>.testConstantValue()
+       layer.skyAtmosphereHaloColorUseTheme = .none
        layer.skyAtmosphereSun = Value<[Double]>.testConstantValue()
        layer.skyAtmosphereSunIntensity = Value<Double>.testConstantValue()
        layer.skyGradient = Value<StyleColor>.testConstantValue()
+       layer.skyGradientUseTheme = .none
        layer.skyGradientCenter = Value<[Double]>.testConstantValue()
        layer.skyGradientRadius = Value<Double>.testConstantValue()
        layer.skyOpacity = Value<Double>.testConstantValue()

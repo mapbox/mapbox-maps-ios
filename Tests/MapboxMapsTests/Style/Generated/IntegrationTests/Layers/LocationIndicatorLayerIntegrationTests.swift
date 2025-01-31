@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -30,14 +30,17 @@ final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.accuracyRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.accuracyRadiusBorderColor = Value<StyleColor>.testConstantValue()
             layer.accuracyRadiusBorderColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.accuracyRadiusBorderColorUseTheme = .none
             layer.accuracyRadiusColor = Value<StyleColor>.testConstantValue()
             layer.accuracyRadiusColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.accuracyRadiusColorUseTheme = .none
             layer.bearing = Value<Double>.testConstantValue()
             layer.bearingTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.bearingImageSize = Value<Double>.testConstantValue()
             layer.bearingImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.emphasisCircleColor = Value<StyleColor>.testConstantValue()
             layer.emphasisCircleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.emphasisCircleColorUseTheme = .none
             layer.emphasisCircleGlowRangeTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.emphasisCircleRadius = Value<Double>.testConstantValue()
             layer.emphasisCircleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)

@@ -55,6 +55,10 @@ public struct CircleLayer: Layer, Equatable {
 
     /// Transition options for `circleColor`.
     public var circleColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var circleColorUseTheme: Value<ColorUseTheme>?
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0. The unit of circleEmissiveStrength is in intensity.
@@ -91,6 +95,10 @@ public struct CircleLayer: Layer, Equatable {
 
     /// Transition options for `circleStrokeColor`.
     public var circleStrokeColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var circleStrokeColorUseTheme: Value<ColorUseTheme>?
 
     /// The opacity of the circle's stroke.
     /// Default value: 1. Value range: [0, 1]
@@ -140,6 +148,7 @@ public struct CircleLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(circleBlurTransition, forKey: .circleBlurTransition)
         try paintContainer.encodeIfPresent(circleColor, forKey: .circleColor)
         try paintContainer.encodeIfPresent(circleColorTransition, forKey: .circleColorTransition)
+        try paintContainer.encodeIfPresent(circleColorUseTheme, forKey: .circleColorUseTheme)
         try paintContainer.encodeIfPresent(circleEmissiveStrength, forKey: .circleEmissiveStrength)
         try paintContainer.encodeIfPresent(circleEmissiveStrengthTransition, forKey: .circleEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(circleOpacity, forKey: .circleOpacity)
@@ -150,6 +159,7 @@ public struct CircleLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(circleRadiusTransition, forKey: .circleRadiusTransition)
         try paintContainer.encodeIfPresent(circleStrokeColor, forKey: .circleStrokeColor)
         try paintContainer.encodeIfPresent(circleStrokeColorTransition, forKey: .circleStrokeColorTransition)
+        try paintContainer.encodeIfPresent(circleStrokeColorUseTheme, forKey: .circleStrokeColorUseTheme)
         try paintContainer.encodeIfPresent(circleStrokeOpacity, forKey: .circleStrokeOpacity)
         try paintContainer.encodeIfPresent(circleStrokeOpacityTransition, forKey: .circleStrokeOpacityTransition)
         try paintContainer.encodeIfPresent(circleStrokeWidth, forKey: .circleStrokeWidth)
@@ -179,6 +189,7 @@ public struct CircleLayer: Layer, Equatable {
             circleBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleBlurTransition)
             circleColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .circleColor)
             circleColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleColorTransition)
+            circleColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .circleColorUseTheme)
             circleEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleEmissiveStrength)
             circleEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleEmissiveStrengthTransition)
             circleOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleOpacity)
@@ -189,6 +200,7 @@ public struct CircleLayer: Layer, Equatable {
             circleRadiusTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleRadiusTransition)
             circleStrokeColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .circleStrokeColor)
             circleStrokeColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleStrokeColorTransition)
+            circleStrokeColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .circleStrokeColorUseTheme)
             circleStrokeOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleStrokeOpacity)
             circleStrokeOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleStrokeOpacityTransition)
             circleStrokeWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleStrokeWidth)
@@ -229,6 +241,7 @@ public struct CircleLayer: Layer, Equatable {
         case circleBlurTransition = "circle-blur-transition"
         case circleColor = "circle-color"
         case circleColorTransition = "circle-color-transition"
+        case circleColorUseTheme = "circle-color-use-theme"
         case circleEmissiveStrength = "circle-emissive-strength"
         case circleEmissiveStrengthTransition = "circle-emissive-strength-transition"
         case circleOpacity = "circle-opacity"
@@ -239,6 +252,7 @@ public struct CircleLayer: Layer, Equatable {
         case circleRadiusTransition = "circle-radius-transition"
         case circleStrokeColor = "circle-stroke-color"
         case circleStrokeColorTransition = "circle-stroke-color-transition"
+        case circleStrokeColorUseTheme = "circle-stroke-color-use-theme"
         case circleStrokeOpacity = "circle-stroke-opacity"
         case circleStrokeOpacityTransition = "circle-stroke-opacity-transition"
         case circleStrokeWidth = "circle-stroke-width"
@@ -334,6 +348,22 @@ extension CircleLayer {
     /// Default value: "#000000".
     public func circleColor(_ expression: Exp) -> Self {
         with(self, setter(\.circleColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `circleColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func circleColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.circleColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `circleColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func circleColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.circleColorUseTheme, .expression(expression)))
     }
 
     /// Controls the intensity of light emitted on the source features.
@@ -432,6 +462,22 @@ extension CircleLayer {
     /// Default value: "#000000".
     public func circleStrokeColor(_ expression: Exp) -> Self {
         with(self, setter(\.circleStrokeColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `circleStrokeColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func circleStrokeColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.circleStrokeColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `circleStrokeColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func circleStrokeColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.circleStrokeColorUseTheme, .expression(expression)))
     }
 
     /// The opacity of the circle's stroke.

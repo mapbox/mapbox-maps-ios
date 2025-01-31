@@ -76,6 +76,7 @@ final class HeatmapLayerTests: XCTestCase {
     func testEncodingAndDecodingOfPaintProperties() {
        var layer = HeatmapLayer(id: "test-id", source: "source")
        layer.heatmapColor = Value<StyleColor>.testConstantValue()
+       layer.heatmapColorUseTheme = .none
        layer.heatmapIntensity = Value<Double>.testConstantValue()
        layer.heatmapIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.heatmapOpacity = Value<Double>.testConstantValue()

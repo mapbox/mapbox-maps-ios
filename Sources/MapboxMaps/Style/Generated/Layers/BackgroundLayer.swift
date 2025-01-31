@@ -31,6 +31,10 @@ public struct BackgroundLayer: Layer, Equatable {
 
     /// Transition options for `backgroundColor`.
     public var backgroundColorTransition: StyleTransition?
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var backgroundColorUseTheme: Value<ColorUseTheme>?
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 0. Minimum value: 0. The unit of backgroundEmissiveStrength is in intensity.
@@ -71,6 +75,7 @@ public struct BackgroundLayer: Layer, Equatable {
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         try paintContainer.encodeIfPresent(backgroundColor, forKey: .backgroundColor)
         try paintContainer.encodeIfPresent(backgroundColorTransition, forKey: .backgroundColorTransition)
+        try paintContainer.encodeIfPresent(backgroundColorUseTheme, forKey: .backgroundColorUseTheme)
         try paintContainer.encodeIfPresent(backgroundEmissiveStrength, forKey: .backgroundEmissiveStrength)
         try paintContainer.encodeIfPresent(backgroundEmissiveStrengthTransition, forKey: .backgroundEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(backgroundOpacity, forKey: .backgroundOpacity)
@@ -93,6 +98,7 @@ public struct BackgroundLayer: Layer, Equatable {
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             backgroundColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .backgroundColor)
             backgroundColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .backgroundColorTransition)
+            backgroundColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .backgroundColorUseTheme)
             backgroundEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .backgroundEmissiveStrength)
             backgroundEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .backgroundEmissiveStrengthTransition)
             backgroundOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .backgroundOpacity)
@@ -125,6 +131,7 @@ public struct BackgroundLayer: Layer, Equatable {
     enum PaintCodingKeys: String, CodingKey {
         case backgroundColor = "background-color"
         case backgroundColorTransition = "background-color-transition"
+        case backgroundColorUseTheme = "background-color-use-theme"
         case backgroundEmissiveStrength = "background-emissive-strength"
         case backgroundEmissiveStrengthTransition = "background-emissive-strength-transition"
         case backgroundOpacity = "background-opacity"
@@ -173,6 +180,22 @@ extension BackgroundLayer {
     /// Default value: "#000000".
     public func backgroundColor(_ expression: Exp) -> Self {
         with(self, setter(\.backgroundColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `backgroundColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func backgroundColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.backgroundColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `backgroundColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func backgroundColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.backgroundColorUseTheme, .expression(expression)))
     }
 
     /// Controls the intensity of light emitted on the source features.

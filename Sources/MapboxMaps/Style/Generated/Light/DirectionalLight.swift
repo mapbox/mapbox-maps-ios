@@ -97,16 +97,16 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
 
     enum PropertiesCodingKeys: String, CodingKey {
         case castShadows = "cast-shadows"
-        case color = "color"
+         case color = "color"
         case colorTransition = "color-transition"
-        case direction = "direction"
+         case direction = "direction"
         case directionTransition = "direction-transition"
-        case intensity = "intensity"
+         case intensity = "intensity"
         case intensityTransition = "intensity-transition"
-        case shadowIntensity = "shadow-intensity"
+         case shadowIntensity = "shadow-intensity"
         case shadowIntensityTransition = "shadow-intensity-transition"
-        case shadowQuality = "shadow-quality"
-    }
+         case shadowQuality = "shadow-quality"
+     }
 }
 
 extension DirectionalLight {

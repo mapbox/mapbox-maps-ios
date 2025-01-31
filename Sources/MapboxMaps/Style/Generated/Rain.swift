@@ -23,6 +23,10 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var centerThinningTransition: StyleTransition?
+    /// Use theme flag for center-thinning
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var centerThinningUseTheme: Value<ColorUseTheme>?
 
     /// Individual rain particle dorplets color.
     /// Default value: "#919191".
@@ -34,6 +38,10 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var colorTransition: StyleTransition?
+    /// Use theme flag for color
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var colorUseTheme: Value<ColorUseTheme>?
 
     /// Rain particles density. Controls the overall screen density of the rain.
     /// Default value: 1. Value range: [0, 1]
@@ -45,6 +53,10 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var densityTransition: StyleTransition?
+    /// Use theme flag for density
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var densityUseTheme: Value<ColorUseTheme>?
 
     /// Main rain particles direction. Azimuth and polar angles.
     /// Default value: [0,80]. Value range: [0, 360]
@@ -56,6 +68,10 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var directionTransition: StyleTransition?
+    /// Use theme flag for direction
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var directionUseTheme: Value<ColorUseTheme>?
 
     /// Rain particles screen-space distortion strength.
     /// Default value: 0.5. Value range: [0, 1]
@@ -67,6 +83,10 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var distortionStrengthTransition: StyleTransition?
+    /// Use theme flag for distortion-strength
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var distortionStrengthUseTheme: Value<ColorUseTheme>?
 
     /// Rain droplet size. x - normal to direction, y - along direction
     /// Default value: [1,10]. Value range: [0, 20]
@@ -78,6 +98,10 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var dropletSizeTransition: StyleTransition?
+    /// Use theme flag for droplet-size
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var dropletSizeUseTheme: Value<ColorUseTheme>?
 
     /// Rain particles movement factor. Controls the overall rain particles speed
     /// Default value: 1. Value range: [0, 1]
@@ -89,6 +113,10 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var intensityTransition: StyleTransition?
+    /// Use theme flag for intensity
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var intensityUseTheme: Value<ColorUseTheme>?
 
     /// Rain particles opacity.
     /// Default value: 0.19. Value range: [0, 1]
@@ -100,6 +128,10 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var opacityTransition: StyleTransition?
+    /// Use theme flag for opacity
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var opacityUseTheme: Value<ColorUseTheme>?
 
     /// Screen-space vignette rain tinting effect intensity.
     /// Default value: 0.3. Value range: [0, 1]
@@ -111,6 +143,10 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteTransition: StyleTransition?
+    /// Use theme flag for vignette
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var vignetteUseTheme: Value<ColorUseTheme>?
 
     /// Rain vignette screen-space corners tint color.
     /// Default value: "#ffffff".
@@ -122,6 +158,10 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteColorTransition: StyleTransition?
+    /// Use theme flag for vignette-color
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var vignetteColorUseTheme: Value<ColorUseTheme>?
 
     public enum CodingKeys: String, CodingKey {
         case centerThinning = "center-thinning"
@@ -200,6 +240,22 @@ extension Rain {
     @_spi(Experimental)
     public func color(_ expression: Exp) -> Self {
         with(self, setter(\.color, .expression(expression)))
+    }
+
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.colorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.colorUseTheme, .expression(expression)))
     }
 
     /// Rain particles density. Controls the overall screen density of the rain.
@@ -392,6 +448,22 @@ extension Rain {
     @_spi(Experimental)
     public func vignetteColor(_ expression: Exp) -> Self {
         with(self, setter(\.vignetteColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `vignetteColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.vignetteColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `vignetteColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func vignetteColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.vignetteColorUseTheme, .expression(expression)))
     }
 
 }

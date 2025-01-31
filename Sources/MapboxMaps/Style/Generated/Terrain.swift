@@ -19,6 +19,7 @@ public struct Terrain: Codable, Equatable {
     /// Transition options for `Exaggeration`.
     public var exaggerationTransition: StyleTransition?
 
+
     enum CodingKeys: String, CodingKey {
         case source = "source"
         case exaggeration = "exaggeration"

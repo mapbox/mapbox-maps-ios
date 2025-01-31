@@ -82,12 +82,14 @@ final class FillLayerTests: XCTestCase {
        layer.fillAntialias = Value<Bool>.testConstantValue()
        layer.fillColor = Value<StyleColor>.testConstantValue()
        layer.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.fillColorUseTheme = .none
        layer.fillEmissiveStrength = Value<Double>.testConstantValue()
        layer.fillEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillOpacity = Value<Double>.testConstantValue()
        layer.fillOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillOutlineColor = Value<StyleColor>.testConstantValue()
        layer.fillOutlineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.fillOutlineColorUseTheme = .none
        layer.fillPattern = Value<ResolvedImage>.testConstantValue()
        layer.fillTranslate = Value<[Double]>.testConstantValue()
        layer.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)

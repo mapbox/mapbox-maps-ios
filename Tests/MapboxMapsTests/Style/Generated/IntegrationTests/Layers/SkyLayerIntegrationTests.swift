@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -24,9 +24,12 @@ final class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
             layer.skyAtmosphereColor = Value<StyleColor>.testConstantValue()
+            layer.skyAtmosphereColorUseTheme = .none
             layer.skyAtmosphereHaloColor = Value<StyleColor>.testConstantValue()
+            layer.skyAtmosphereHaloColorUseTheme = .none
             layer.skyAtmosphereSunIntensity = Value<Double>.testConstantValue()
             layer.skyGradient = Value<StyleColor>.testConstantValue()
+            layer.skyGradientUseTheme = .none
             layer.skyGradientRadius = Value<Double>.testConstantValue()
             layer.skyOpacity = Value<Double>.testConstantValue()
             layer.skyOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)

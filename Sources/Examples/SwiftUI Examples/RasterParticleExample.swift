@@ -11,7 +11,7 @@ struct RasterParticleExample: View {
     var body: some View {
         Map(initialViewport: .camera(zoom: 1)) {
             RasterArraySource(id: "wind-mrt-source")
-                .url("mapbox://rasterarrayexamples.gfs-winds")
+                .url("mapbox://mapbox.gfs-winds")
 
             RasterParticleLayer(id: "layer_particles", source: "wind-mrt-source")
                 .sourceLayer("10winds")

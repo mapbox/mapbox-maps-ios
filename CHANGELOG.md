@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 11.9.2 - 5 February, 2025
+
+* Update CoreMaps to 11.9.3.
+
 ## 11.10.0-rc.1 - 31 January, 2025
 
 * Expose experimental ColorTheme API to set style wide color theme. A color theme modifies the global colors of a style using a LUT (lookup table) for color grading.

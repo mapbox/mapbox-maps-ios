@@ -8,6 +8,7 @@ private let simulatedCoordinate = CLLocationCoordinate2D(latitude: 37.6421, long
 final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
+    private var puckRenderCancellable: AnyCancelable?
 
     private var routes = [Route]() {
         didSet {
@@ -21,8 +22,8 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
                     self?.select(route: route)
                 }
             }
-            if let last = routes.last {
-                select(route: last, animated: false)
+            if let first = routes.first {
+                select(route: first, animated: false)
             }
         }
     }
@@ -56,13 +57,6 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
 
         updateModeButton()
 
-        mapView.location.override(
-            locationProvider: Signal(just: [
-                Location(
-                    coordinate: simulatedCoordinate,
-                    bearing: 168.8)
-            ]),
-            headingProvider: Signal(just: Heading(direction: 180, accuracy: 0)))
         mapView.location.options = LocationOptions(puckType: .puck2D(.init(topImage: UIImage(named: "dash-puck"))), puckBearing: .heading, puckBearingEnabled: true)
 
         mapView.viewport.options.usesSafeAreaInsetsAsPadding = true
@@ -101,6 +95,49 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
         }
     }
 
+    private func setupLocationSimulation(route: Route) {
+        guard case Turf.Geometry.lineString(let line) = route.feature.geometry! else {
+            return
+        }
+
+        var coordinates = line.coordinates
+        var lastLocation: CLLocationCoordinate2D = coordinates.first!
+
+        var locationHandler: (([Location]) -> Void)?
+        var headingHandler: ((Heading) -> Void)?
+        var timer: Timer?
+        let locationSignal: Signal<[Location]> = Signal { handler in
+            locationHandler = handler
+            return AnyCancelable {
+                timer?.invalidate()
+            }
+        }
+        let headingSignal: Signal<Heading> = Signal { handler in
+            headingHandler = handler
+            return AnyCancelable {}
+        }
+
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            guard !coordinates.isEmpty else {
+                timer.invalidate()
+                return
+            }
+            let currentLocation = coordinates.removeFirst()
+            let currentDirection = lastLocation.direction(to: currentLocation)
+
+            locationHandler?([Location(coordinate: lastLocation)])
+            headingHandler?(Heading(direction: currentDirection, accuracy: 0))
+
+            lastLocation = currentLocation
+        }
+
+        mapView.location.override(locationProvider: locationSignal, headingProvider: headingSignal)
+
+        puckRenderCancellable = mapView.location.onPuckRender.observe { data in
+            route.updateProgress(with: data.location.coordinate)
+        }
+    }
+
     private func select(route: Route, animated: Bool = true) {
         // Move selected route layer on top of unselected route layers
         let routeLayersIds = Set(routes.map(\.layerId))
@@ -118,35 +155,36 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
         if !driveMode {
             updateViewport(animated: animated)
         }
+        setupLocationSimulation(route: route)
     }
 
     @objc private func changeMode() {
         self.driveMode.toggle()
         updateModeButton()
 
-        hideAnnotations(true)
         updateViewport(animated: true) { [weak self] in
-            self?.hideAnnotations(false)
-        }
-        routes.forEach {
-            $0.updateProgress(with: driveMode ? simulatedCoordinate : nil)
+            guard let self else { return }
+
+            self.hideInactiveRoutes(self.driveMode)
         }
     }
 
     private func updateModeButton() {
-        modeButton.setTitle("Mode: \(driveMode ? "Drive" : "Overview")", for: .normal)
+        modeButton.setTitle("Mode: \(driveMode ? "Overview" : "Drive")", for: .normal)
     }
 
-    private func hideAnnotations(_ hidden: Bool) {
+    private func hideInactiveRoutes(_ hidden: Bool) {
         routes.forEach {
-            $0.etaAnnotation?.visible = !hidden
+            $0.visible = $0.selected || hidden
         }
     }
 
     private func updateViewport(animated: Bool, completion: (() -> Void)? = nil) {
         var viewportState: ViewportState?
         if driveMode {
-            viewportState = mapView.viewport.makeFollowPuckViewportState(options: .init(zoom: 17, bearing: .course, pitch: 49))
+            viewportState = mapView.viewport.makeFollowPuckViewportState(options:
+                    .init(padding: .init(top: 100, left: 100, bottom: 100, right: 100), zoom: 18, bearing: .heading, pitch: 70)
+            )
         } else {
             if let route = routes.first(where: \.selected), let geometry = route.feature.geometry {
                 let coordPadding = UIEdgeInsets(allEdges: 20)
@@ -199,6 +237,9 @@ private final class Route {
     var selected: Bool = false {
         didSet { updateSelected() }
     }
+    var visible = true {
+        didSet { updateVisible() }
+    }
     var layerId: String { "route-\(name)" }
     private(set) var etaAnnotation: ViewAnnotation?
     private var etaView: ETAView?
@@ -220,7 +261,7 @@ private final class Route {
            case let .lineString(s) = feature.geometry,
            let doneDistance = s.distance(to: coordinate),
            let length = s.distance() {
-            progress = doneDistance / length + 0.0005
+            progress = doneDistance / length
         }
 
         try? mapView?.mapboxMap.setLayerProperty(for: layerId, property: "line-trim-offset", value: [0, progress])
@@ -302,6 +343,10 @@ private final class Route {
 
         etaView?.hint = selected ? nil : hint
         etaAnnotation?.setNeedsUpdateSize()
+    }
+
+    private func updateVisible() {
+        try? mapView?.mapboxMap.setLayerProperty(for: layerId, property: "visibility", value: visible ? "visible" : "none")
     }
 
     static func load(name: String, time: String) -> Route {

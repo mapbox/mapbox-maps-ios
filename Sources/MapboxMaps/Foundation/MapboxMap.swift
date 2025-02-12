@@ -1781,6 +1781,28 @@ extension MapboxMap {
     internal var __testingMap: CoreMap {
         return __map
     }
+
+    /// For internal use only
+    /// Triggers a gesture of the provided type at the specified screen coordinates
+    @_spi(Experimental)
+    @_spi(Internal)
+    public func dispatch(gesture: String, screenCoordinateX: Double, screenCoordinateY: Double) {
+        var eventType = CorePlatformEventType.click
+        switch gesture {
+        case "click":
+            eventType = .click
+        case "longClick":
+            eventType = .longClick
+        case "drag":
+            eventType = .drag
+        case "dragBeing":
+            eventType = .dragBegin
+        case "dragEnd":
+            eventType = .dragEnd
+        default: break
+        }
+        dispatch(event: CorePlatformEventInfo(type: eventType, screenCoordinate: CoreScreenCoordinate(x: CGFloat(screenCoordinateX), y: CGFloat(screenCoordinateY))))
+    }
 }
 
 extension CGPoint {

@@ -2,9 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## 11.9.2 - 5 February, 2025
+## 11.10.0 - 13 February, 2025
 
-* Update CoreMaps to 11.9.3.
+* Update CoreMaps to 11.10.0.
 
 ## 11.10.0-rc.1 - 31 January, 2025
 
@@ -49,6 +49,10 @@ CircleAnnotationGroup {}
 Use this property to define view annotation sort order.
 * Introduce `ViewAnnotation.minZoom` and `ViewAnnotation.maxZoom`. Use these properties to configure zoom-level specific view annotations.
 * Update CoreMaps to 11.10.0-beta.2 and Common to 24.10.0-beta.2.
+
+## 11.9.2 - 5 February, 2025
+
+* Update CoreMaps to 11.9.3.
 
 ## 11.9.1 - 20 January, 2025
 

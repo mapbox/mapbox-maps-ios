@@ -271,6 +271,9 @@ struct Examples {
 
     // Examples that show use cases related to user interaction with the map.
     static let userInteractionExamples: [Example] = .init {
+        Example(title: "Standard Style Interactions",
+                description: "Showcase of Standard style interactions.",
+                type: StandardStyleInteractionsExample.self)
         Example(title: "Find features at a point",
                 description: "Query the map for rendered features belonging to a specific layer.",
                 type: FeaturesAtPointExample.self)

@@ -28,7 +28,7 @@ struct StandardStyleImportExample: View {
                     return true
                 }
 
-                /// An interaction without specified featureset handles all corresponding events that were haven't been handled by other interactions.
+                /// An interaction without specified featureset handles all corresponding events that haven't been handled by other interactions.
                 TapInteraction { _ in
                     /// When the user taps the map outside of the price labels, deselect the latest selected label.
                     selectedPriceLabel = nil

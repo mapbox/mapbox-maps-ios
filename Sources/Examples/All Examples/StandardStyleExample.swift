@@ -1,5 +1,5 @@
 import UIKit
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 final class StandardStyleExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
@@ -7,6 +7,7 @@ final class StandardStyleExample: UIViewController, ExampleProtocol {
     private var lightPreset = StandardLightPreset.night
     private var labelsSetting = true
     private var showRealEstate = true
+    private var selectedPriceLabel: FeaturesetFeature?
 
     private var mapStyle: MapStyle {
         .standard(
@@ -30,7 +31,7 @@ final class StandardStyleExample: UIViewController, ExampleProtocol {
 
         // When the style has finished loading add a line layer representing the border between New York and New Jersey
         mapView.mapboxMap.onStyleLoaded.observe { [weak self] _ in
-            guard let self else { return }
+            guard let self = self else { return }
 
             // Create and apply basic styling to the line layer, assign the layer to the "bottom" slot
             var layer = LineLayer(id: "line-layer", source: "line-layer")
@@ -62,6 +63,33 @@ final class StandardStyleExample: UIViewController, ExampleProtocol {
             // The below line is used for internal testing purposes only.
             finish()
         }.store(in: &cancelables)
+
+        /// The contents of the imported style are private, meaning all the implementation details such as layers and sources are not accessible at runtime.
+        /// However the style defines a "hotels-price" featureset that represents a portion of features available for interaction.
+        /// Using the Interactions API you can add interactions to featuresets.
+        /// See `fragment-realestate-NY.json` for more information.
+        mapView.mapboxMap.addInteraction(TapInteraction(.featureset("hotels-price", importId: "real-estate-fragment")) { [weak self] priceLabel, _ in
+            guard let self = self else { return false }
+            /// Select a price label when it's clicked
+            self.selectedPriceLabel = priceLabel
+
+            /// When there's a selected price label, we use it to set a feature state.
+            /// The `hidden` state is implemented in `fragment-realestate-NY.json` and hides the label and icon.
+            self.mapView.mapboxMap.setFeatureState(priceLabel, state: ["hidden": true])
+
+            self.updateViewAnnotation()
+            return true
+        })
+
+        /// An interaction without specified featureset handles all corresponding events that haven't been handled by other interactions.
+        mapView.mapboxMap.addInteraction(TapInteraction { [weak self] _ in
+            guard let self = self else { return false }
+            /// When the user taps the map outside of the price labels, deselect the latest selected label.
+            self.selectedPriceLabel = nil
+            self.mapView.mapboxMap.resetFeatureStates(featureset: .featureset("hotels-price", importId: "real-estate-fragment"), callback: nil)
+            self.updateViewAnnotation()
+            return true
+        })
 
         // Add buttons to control the light presets and labels
         let lightButton = changeLightButton()
@@ -108,14 +136,67 @@ final class StandardStyleExample: UIViewController, ExampleProtocol {
     private func toggleRealEstate(isOn: Bool) {
         do {
             if isOn {
-                try mapView.mapboxMap.addStyleImport(withId: "real-estate", uri: StyleURI(url: styleURL)!)
+                try mapView.mapboxMap.addStyleImport(withId: "real-estate-fragment", uri: StyleURI(url: styleURL)!)
             } else {
-                try mapView.mapboxMap.removeStyleImport(withId: "real-estate")
+                try mapView.mapboxMap.removeStyleImport(withId: "real-estate-fragment")
             }
         } catch {
             print(error)
         }
     }
+
+    private func updateViewAnnotation() {
+        mapView.viewAnnotations.removeAll()
+
+        if let selectedPriceLabel = selectedPriceLabel, let coordinate = selectedPriceLabel.geometry.point?.coordinates {
+            let calloutView = createCalloutView(for: selectedPriceLabel)
+            let annotation = ViewAnnotation(coordinate: coordinate, view: calloutView)
+            annotation.variableAnchors = [.init(anchor: .bottom)]
+            mapView.viewAnnotations.add(annotation)
+        }
+    }
+
+    private func createCalloutView(for feature: FeaturesetFeature) -> UIView {
+        let calloutView = UIView()
+        calloutView.backgroundColor = .white
+        calloutView.layer.cornerRadius = 8
+        calloutView.layer.shadowColor = UIColor.black.cgColor
+        calloutView.layer.shadowOpacity = 0.2
+        calloutView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        calloutView.layer.shadowRadius = 4
+
+        let nameLabel = UILabel()
+        nameLabel.text = feature.name ?? "—"
+        nameLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let priceLabel = UILabel()
+        priceLabel.text = feature.price ?? "—"
+        priceLabel.font = UIFont.systemFont(ofSize: 14)
+        priceLabel.textColor = .gray
+        priceLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        calloutView.addSubview(nameLabel)
+        calloutView.addSubview(priceLabel)
+
+        NSLayoutConstraint.activate([
+            nameLabel.topAnchor.constraint(equalTo: calloutView.topAnchor, constant: 8),
+            nameLabel.leadingAnchor.constraint(equalTo: calloutView.leadingAnchor, constant: 8),
+            nameLabel.trailingAnchor.constraint(equalTo: calloutView.trailingAnchor, constant: -8),
+
+            priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
+            priceLabel.leadingAnchor.constraint(equalTo: calloutView.leadingAnchor, constant: 8),
+            priceLabel.trailingAnchor.constraint(equalTo: calloutView.trailingAnchor, constant: -8),
+            priceLabel.bottomAnchor.constraint(equalTo: calloutView.bottomAnchor, constant: -8)
+        ])
+
+        return calloutView
+    }
+}
+
+private extension FeaturesetFeature {
+    var price: String? { properties["price"]??.number.map { "$ \($0)" } }
+    var name: String? { properties["name"]??.string }
 }
 
 private let styleURL = Bundle.main.url(forResource: "fragment-realestate-NY", withExtension: "json")!

@@ -21,72 +21,68 @@ struct StandardInteractiveFeaturesExample: View {
 
     var body: some View {
         let cameraCenter = CLLocationCoordinate2D(latitude: 60.1718, longitude: 24.9453)
-        MapReader { proxy in
-            Map(initialViewport: .camera(center: cameraCenter, zoom: 16.35, bearing: 49.92, pitch: 40)) {
-                if let selectedPoi {
-                    /// When there is a currently selected poi: (1) display the PinView as a ViewAnnotation.
-                    MapViewAnnotation(coordinate: selectedPoi.coordinate) {
-                        PinView(text: selectedPoi.name ?? "", type: selectedPoi.class)
-                            .id(selectedPoi.id)
-                    }
-                    .allowZElevate(true)
-                    .variableAnchors([
-                        ViewAnnotationAnchorConfig(anchor: .top, offsetX: 0, offsetY: 50)
-                    ])
+        Map(initialViewport: .camera(center: cameraCenter, zoom: 16.35, bearing: 49.92, pitch: 40)) {
+            /// 1.) Add tap interactions targeting featuresets in the Mapbox Standard style
 
-                    /// And (2): Hide the selected POI via feature state.
-                    FeatureState(selectedPoi, .init(hide: true))
-                }
-
-                /// Each selected building is colored using the `selected` state.
-                ForEvery(selectedBuildings, id: \.id) { building in
-                    FeatureState(building, .init(select: true))
-                }
-
-                if let selectedPlace {
-                    FeatureState(selectedPlace, .init(select: true))
-                }
-
-                /// When the POI featureset is tapped, set that feature as selected.
-                TapInteraction(.standardPoi) { poi, _ in
-                    selectedPoi = poi
-
-                    /// Query all buildings in the viewport that are below the selected POI coordinate (distance between poi and building footprint <= 0).
-                    proxy.map?.queryRenderedFeatures(
-                        featureset: .standardBuildings,
-                        filter: Exp(.lte) {
-                            Exp(.distance) { poi.geometry.geoJSONObject }
-                            0
-                        }) { result in
-                            switch result {
-                            case .success(let features):
-                                // TODO: MAPSIOS-1596 Fix crash in ForEvery for buildings with the same id.
-                                self.selectedBuildings = features
-                            case .failure(let failure):
-                                print("error: \(failure)")
-                            }
-                    }
-                    return true
-                }
-
-                TapInteraction(.standardPlaceLabels) { placeLabel, _ in
-                    selectedPlace = placeLabel
-                    return true
-                }
-
-                /// When the map is tapped, besides the feature, reset the selection.
-                TapInteraction { _ in
-                    selectedBuildings = []
-                    selectedPoi = nil
-                    selectedPlace = nil
-
-                    return true
-                }
+            /// When a POI feature in the Standard POI featureset is tapped, set that feature as selected.
+            TapInteraction(.standardPoi) { poi, _ in
+                selectedPoi = poi
+                return true /// Returning true stops propagation to features below or the map itself.
             }
-            /// DON'T USE Standard Experimental style in production, it will break over time.
-            /// Currently this feature is in preview.
-            .mapStyle(.standardExperimental(theme: theme, lightPreset: lightPreset, buildingSelectColor: buildingSelectColor))
+
+            /// When a building in the Standard Buildings featureset is tapped, set that building as selected.
+            TapInteraction(.standardBuildings) { building, _ in
+                selectedBuildings.append(building)
+                return true
+            }
+
+            /// When a place label in the Standard Place Labels featureset is tapped, set that place label as selected
+            TapInteraction(.standardPlaceLabels) { placeLabel, _ in
+                selectedPlace = placeLabel
+                return true
+            }
+
+            /// When the map is long-pressed, reset all selections
+            LongPressInteraction { _ in
+                selectedBuildings = []
+                selectedPoi = nil
+                selectedPlace = nil
+                return true
+            }
+
+            /// 2.) Define behavior for POI, Building, and Place Label features when a user selects them
+
+            /// Select POIs have the standard pin icon replaced by a more detailed icon. Additionally, information
+            /// about the POI is displayed in a box in the lower left corner
+            if let selectedPoi {
+                /// When there is a currently selected poi: (1) display the PinView as a ViewAnnotation.
+                MapViewAnnotation(coordinate: selectedPoi.coordinate) {
+                    PinView(text: selectedPoi.name ?? "", type: selectedPoi.class)
+                        .id(selectedPoi.id)
+                }
+                .allowZElevate(true)
+                .variableAnchors([
+                    ViewAnnotationAnchorConfig(anchor: .top, offsetX: 0, offsetY: 50)
+                ])
+
+                /// And (2): Hide the selected POI via feature state.
+                FeatureState(selectedPoi, .init(hide: true))
+            }
+
+            /// Each selected building is colored using the `selected` state.
+            ForEvery(selectedBuildings, id: \.id) { building in
+                FeatureState(building, .init(select: true))
+            }
+
+            /// The selected label is colored and information about the place is displaed in the lower left corner
+            if let selectedPlace {
+                FeatureState(selectedPlace, .init(select: true))
+            }
         }
+
+        /// DON'T USE Standard Experimental style in production, it will break over time.
+        /// Currently this feature is in preview.
+        .mapStyle(.standardExperimental(theme: theme, lightPreset: lightPreset, buildingSelectColor: buildingSelectColor))
         .ignoresSafeArea()
         /// Debug panel
         .overlay(alignment: .bottom) {

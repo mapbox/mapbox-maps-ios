@@ -4,7 +4,7 @@ include:
   - targets.yml
 packages:
   Fingertips:
-    url: git@github.com:mapbox/Fingertips.git
+    url: https://github.com/mapbox/Fingertips.git
     from: 0.6.0
 targets:
   Examples:

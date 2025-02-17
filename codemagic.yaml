@@ -1,0 +1,28 @@
+workflows: 
+ios-app: 
+name: iOS Build 
+max_build_duration: 60 
+environment: ios_signing: 
+distribution_type: app_store # Oppure ad-hoc, se vuoi solo testare 
+xcode: latest 
+scripts: 
+- name: Install dependencies 
+  script: | 
+      pod install # Se usi CocoaPods, altrimenti rimuovi questa riga 
+  - name: Build iOS app 
+  script: | 
+    xcodebuild  -workspace NomeProgetto.xcworkspace \ 
+                -scheme NomeSchema \ 
+                -sdk iphoneos \ 
+                -configuration Release \ 
+                -archivePath $CM_BUILD_DIR/NomeProgetto.xcarchive \ 
+                archive 
+    - name: Export IPA 
+    script: | 
+    xcodebuild -exportArchive \ 
+    -archivePath $CM_BUILD_DIR/NomeProgetto.xcarchive \ 
+    -exportOptionsPlist exportOptions.plist \ 
+    -exportPath $CM_BUILD_DIR/build 
+artifacts: 
+- build/**/*.ipa 
+- $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM.zip

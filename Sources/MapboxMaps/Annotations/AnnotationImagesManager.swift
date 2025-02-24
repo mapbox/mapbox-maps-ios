@@ -15,10 +15,12 @@ extension PointAnnotation {
     public struct Image: Hashable, Sendable {
         public var image: UIImage
         public var name: String
+        public var sdf: Bool
 
-        public init(image: UIImage, name: String) {
+        public init(image: UIImage, name: String, sdf: Bool = false) {
             self.image = image
             self.name = name
+            self.sdf = sdf
         }
     }
 }

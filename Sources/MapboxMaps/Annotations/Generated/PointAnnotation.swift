@@ -548,9 +548,9 @@ extension PointAnnotation {
     }
 
     /// Sets named image as icon.
-    public func image(named name: String) -> Self {
+    public func image(named name: String, sdf: Bool = false) -> Self {
         let uiImage = UIImage(named: name)!
-        return image(Image(image: uiImage, name: name))
+        return image(Image(image: uiImage, name: name, sdf: sdf))
     }
 
     /// Adds a handler for tap gesture on current annotation.

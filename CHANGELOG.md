@@ -6,6 +6,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Reduce MapboxMaps binary size by removing debug symbols. Complete dSYM files are still available in the XCFramework.
 
+## 11.10.1 - 25 February, 2025
+
+* Update CoreMaps to 11.10.2.
+
 ## 11.10.0 - 13 February, 2025
 
 * Update CoreMaps to 11.10.0.

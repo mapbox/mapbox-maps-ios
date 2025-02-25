@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 11.10.1 - 25 February, 2025
+
+* Update CoreMaps to 11.10.2.
+
 ## 11.10.0 - 13 February, 2025
 
 * Update CoreMaps to 11.10.0.

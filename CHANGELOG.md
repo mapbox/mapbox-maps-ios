@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Reduce MapboxMaps binary size by removing debug symbols. Complete dSYM files are still available in the XCFramework.
+* Support panning and pinch gestures on trackpads.
 
 ## 11.10.1 - 25 February, 2025
 

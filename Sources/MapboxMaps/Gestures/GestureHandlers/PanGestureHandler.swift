@@ -51,6 +51,8 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
         super.init(gestureRecognizer: gestureRecognizer)
         gestureRecognizer.delegate = self
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
+
+        gestureRecognizer.allowedScrollTypesMask = [.continuous]
     }
 
     // Handle gesture events, treating `state == .changed && !isPanning` like `state == .began`,

@@ -5,8 +5,8 @@ final class SizeTests: XCTestCase {
 
     func testInitSizeWithCGSize() {
         let cgSize = CGSize(
-            width: 999,
-            height: 0)
+            width: .random(in: 0...1000),
+            height: .random(in: 0...1000))
 
         let size = Size(cgSize)
 
@@ -16,8 +16,8 @@ final class SizeTests: XCTestCase {
 
     func testInitCGSizeWithSize() {
         let size = Size(
-            width: 1000,
-            height: 1000)
+            width: .random(in: 0...1000),
+            height: .random(in: 0...1000))
 
         let cgSize = CGSize(size)
 

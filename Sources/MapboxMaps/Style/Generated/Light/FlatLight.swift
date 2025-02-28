@@ -80,13 +80,13 @@ public struct FlatLight: Codable, StyleEncodable, Equatable {
 
     enum PropertiesCodingKeys: String, CodingKey {
         case anchor = "anchor"
-        case color = "color"
+         case color = "color"
         case colorTransition = "color-transition"
-        case intensity = "intensity"
+         case intensity = "intensity"
         case intensityTransition = "intensity-transition"
-        case position = "position"
+         case position = "position"
         case positionTransition = "position-transition"
-    }
+     }
 }
 
 extension FlatLight {

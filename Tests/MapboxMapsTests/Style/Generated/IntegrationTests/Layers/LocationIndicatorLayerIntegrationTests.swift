@@ -23,6 +23,9 @@ final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
+            layer.bearingImage = Value<ResolvedImage>.testConstantValue()
+            layer.shadowImage = Value<ResolvedImage>.testConstantValue()
+            layer.topImage = Value<ResolvedImage>.testConstantValue()
             layer.accuracyRadius = Value<Double>.testConstantValue()
             layer.accuracyRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.accuracyRadiusBorderColor = Value<StyleColor>.testConstantValue()
@@ -33,7 +36,6 @@ final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.accuracyRadiusColorUseTheme = .none
             layer.bearing = Value<Double>.testConstantValue()
             layer.bearingTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.bearingImage = Value<ResolvedImage>.testConstantValue()
             layer.bearingImageSize = Value<Double>.testConstantValue()
             layer.bearingImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.emphasisCircleColor = Value<StyleColor>.testConstantValue()
@@ -47,10 +49,8 @@ final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.locationIndicatorOpacity = Value<Double>.testConstantValue()
             layer.locationIndicatorOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.perspectiveCompensation = Value<Double>.testConstantValue()
-            layer.shadowImage = Value<ResolvedImage>.testConstantValue()
             layer.shadowImageSize = Value<Double>.testConstantValue()
             layer.shadowImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.topImage = Value<ResolvedImage>.testConstantValue()
             layer.topImageSize = Value<Double>.testConstantValue()
             layer.topImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)
 

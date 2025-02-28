@@ -12,7 +12,7 @@ final class SnapshotterTests: XCTestCase {
         super.setUp()
         let options = MapSnapshotOptions(
             size: CGSize(width: 100, height: 100),
-            pixelRatio: 3.0)
+            pixelRatio: .random(in: 1...3))
         events = MapEvents(makeGenericSubject: { _ in .init() })
         mockMapSnapshotter = MockMapSnapshotter()
         snapshotter = Snapshotter(

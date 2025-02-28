@@ -4,7 +4,7 @@ import XCTest
 final class StyleProjectionTests: XCTestCase {
 
     func testMemberwiseInit() {
-        let name: StyleProjectionName = .mercator
+        let name: StyleProjectionName = [.mercator, .globe].randomElement()!
 
         let projection = StyleProjection(name: name)
 
@@ -12,7 +12,7 @@ final class StyleProjectionTests: XCTestCase {
     }
 
     func testCodable() throws {
-        let name: StyleProjectionName = .globe
+        let name: StyleProjectionName = [.mercator, .globe].randomElement()!
         let projection = StyleProjection(name: name)
 
         let jsonData = try JSONEncoder().encode(projection)
@@ -30,7 +30,7 @@ final class StyleProjectionTests: XCTestCase {
 final class StyleProjectionNameTests: XCTestCase {
 
     func testCodable() throws {
-        let name: StyleProjectionName = .mercator
+        let name: StyleProjectionName = [.mercator, .globe].randomElement()!
 
         let jsonData = try JSONEncoder().encode([name])
 

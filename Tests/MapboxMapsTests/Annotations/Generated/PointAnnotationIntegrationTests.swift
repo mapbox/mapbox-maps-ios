@@ -453,7 +453,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextFont() throws {
         // Test that the setter and getter work
-        let value = Array.testFixture(withLength: 10, generator: { UUID().uuidString })
+        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { UUID().uuidString })
         manager.textFont = value
         XCTAssertEqual(manager.textFont, value)
 
@@ -689,7 +689,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextVariableAnchor() throws {
         // Test that the setter and getter work
-        let value = Array.testFixture(withLength: 10, generator: { TextAnchor.testConstantValue() })
+        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { TextAnchor.testConstantValue() })
         manager.textVariableAnchor = value
         XCTAssertEqual(manager.textVariableAnchor, value)
 
@@ -715,7 +715,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextWritingMode() throws {
         // Test that the setter and getter work
-        let value = Array.testFixture(withLength: 10, generator: { TextWritingMode.testConstantValue() })
+        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { TextWritingMode.testConstantValue() })
         manager.textWritingMode = value
         XCTAssertEqual(manager.textWritingMode, value)
 

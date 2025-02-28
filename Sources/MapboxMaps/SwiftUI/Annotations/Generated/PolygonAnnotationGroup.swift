@@ -75,21 +75,13 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
         assign(manager, \.fillSortKey, value: fillSortKey)
         assign(manager, \.fillAntialias, value: fillAntialias)
         assign(manager, \.fillColor, value: fillColor)
-        assign(manager, \.fillColorUseTheme, value: fillColorUseTheme)
-        assign(manager, \.fillColorTransition, value: fillColorTransition)
         assign(manager, \.fillEmissiveStrength, value: fillEmissiveStrength)
-        assign(manager, \.fillEmissiveStrengthTransition, value: fillEmissiveStrengthTransition)
         assign(manager, \.fillOpacity, value: fillOpacity)
-        assign(manager, \.fillOpacityTransition, value: fillOpacityTransition)
         assign(manager, \.fillOutlineColor, value: fillOutlineColor)
-        assign(manager, \.fillOutlineColorUseTheme, value: fillOutlineColorUseTheme)
-        assign(manager, \.fillOutlineColorTransition, value: fillOutlineColorTransition)
         assign(manager, \.fillPattern, value: fillPattern)
         assign(manager, \.fillTranslate, value: fillTranslate)
-        assign(manager, \.fillTranslateTransition, value: fillTranslateTransition)
         assign(manager, \.fillTranslateAnchor, value: fillTranslateAnchor)
         assign(manager, \.fillZOffset, value: fillZOffset)
-        assign(manager, \.fillZOffsetTransition, value: fillZOffsetTransition)
         assign(manager, \.slot, value: slot)
         manager.tapRadius = tapRadius
         manager.longPressRadius = longPressRadius
@@ -119,38 +111,11 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
         with(self, setter(\.fillAntialias, newValue))
     }
 
+    private var fillColor: StyleColor?
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
     /// Default value: "#000000".
     public func fillColor(_ color: UIColor) -> Self {
         with(self, setter(\.fillColor, StyleColor(color)))
-    }
-
-    private var fillColorUseTheme: ColorUseTheme?
-    /// This property defines whether the `fillColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func fillColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
-        with(self, setter(\.fillColorUseTheme, useTheme))
-    }
-
-    private var fillColorTransition: StyleTransition?
-    /// Transition property for `fillColor`
-    public func fillColorTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.fillColorTransition, transition))
-    }
-
-    private var fillColor: StyleColor?
-    /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
-    /// Default value: "#000000".
-    public func fillColor(_ newValue: StyleColor) -> Self {
-        with(self, setter(\.fillColor, newValue))
-    }
-
-    private var fillEmissiveStrengthTransition: StyleTransition?
-    /// Transition property for `fillEmissiveStrength`
-    public func fillEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.fillEmissiveStrengthTransition, transition))
     }
 
     private var fillEmissiveStrength: Double?
@@ -160,12 +125,6 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
         with(self, setter(\.fillEmissiveStrength, newValue))
     }
 
-    private var fillOpacityTransition: StyleTransition?
-    /// Transition property for `fillOpacity`
-    public func fillOpacityTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.fillOpacityTransition, transition))
-    }
-
     private var fillOpacity: Double?
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
     /// Default value: 1. Value range: [0, 1]
@@ -173,42 +132,16 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
         with(self, setter(\.fillOpacity, newValue))
     }
 
+    private var fillOutlineColor: StyleColor?
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
     public func fillOutlineColor(_ color: UIColor) -> Self {
         with(self, setter(\.fillOutlineColor, StyleColor(color)))
-    }
-
-    private var fillOutlineColorUseTheme: ColorUseTheme?
-    /// This property defines whether the `fillOutlineColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func fillOutlineColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
-        with(self, setter(\.fillOutlineColorUseTheme, useTheme))
-    }
-
-    private var fillOutlineColorTransition: StyleTransition?
-    /// Transition property for `fillOutlineColor`
-    public func fillOutlineColorTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.fillOutlineColorTransition, transition))
-    }
-
-    private var fillOutlineColor: StyleColor?
-    /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
-    public func fillOutlineColor(_ newValue: StyleColor) -> Self {
-        with(self, setter(\.fillOutlineColor, newValue))
     }
 
     private var fillPattern: String?
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public func fillPattern(_ newValue: String) -> Self {
         with(self, setter(\.fillPattern, newValue))
-    }
-
-    private var fillTranslateTransition: StyleTransition?
-    /// Transition property for `fillTranslate`
-    public func fillTranslateTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.fillTranslateTransition, transition))
     }
 
     private var fillTranslate: [Double]?
@@ -223,14 +156,6 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     /// Default value: "map".
     public func fillTranslateAnchor(_ newValue: FillTranslateAnchor) -> Self {
         with(self, setter(\.fillTranslateAnchor, newValue))
-    }
-
-    private var fillZOffsetTransition: StyleTransition?
-    /// Transition property for `fillZOffset`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func fillZOffsetTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.fillZOffsetTransition, transition))
     }
 
     private var fillZOffset: Double?

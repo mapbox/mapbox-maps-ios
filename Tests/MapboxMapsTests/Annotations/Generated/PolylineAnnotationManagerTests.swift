@@ -42,7 +42,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-cap"] as! String, value.rawValue)
     }
 
-
     func testSetToNilLineCap() {
         let newLineCapProperty = LineCap.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cap").value as! String
@@ -67,7 +66,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineCrossSlope, value)
         XCTAssertEqual(manager.impl.layerProperties["line-cross-slope"] as! Double, value)
     }
-
 
     func testSetToNilLineCrossSlope() {
         let newLineCrossSlopeProperty = 0.0
@@ -94,7 +92,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-elevation-reference"] as! String, value.rawValue)
     }
 
-
     func testSetToNilLineElevationReference() {
         let newLineElevationReferenceProperty = LineElevationReference.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-elevation-reference").value as! String
@@ -119,7 +116,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineJoin, value)
         XCTAssertEqual(manager.impl.layerProperties["line-join"] as! String, value.rawValue)
     }
-
 
     func testSetToNilLineJoin() {
         let newLineJoinProperty = LineJoin.testConstantValue()
@@ -146,7 +142,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-miter-limit"] as! Double, value)
     }
 
-
     func testSetToNilLineMiterLimit() {
         let newLineMiterLimitProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-miter-limit").value as! Double
@@ -171,7 +166,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineRoundLimit, value)
         XCTAssertEqual(manager.impl.layerProperties["line-round-limit"] as! Double, value)
     }
-
 
     func testSetToNilLineRoundLimit() {
         let newLineRoundLimitProperty = 0.0
@@ -198,7 +192,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-sort-key"] as! Double, value)
     }
 
-
     func testSetToNilLineSortKey() {
         let newLineSortKeyProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-sort-key").value as! Double
@@ -223,7 +216,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineWidthUnit, value)
         XCTAssertEqual(manager.impl.layerProperties["line-width-unit"] as! String, value.rawValue)
     }
-
 
     func testSetToNilLineWidthUnit() {
         let newLineWidthUnitProperty = LineWidthUnit.testConstantValue()
@@ -250,7 +242,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-z-offset"] as! Double, value)
     }
 
-
     func testSetToNilLineZOffset() {
         let newLineZOffsetProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-z-offset").value as! Double
@@ -276,7 +267,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-blur"] as! Double, value)
     }
 
-
     func testSetToNilLineBlur() {
         let newLineBlurProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-blur").value as! Double
@@ -300,11 +290,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         manager.lineBorderColor = value
         XCTAssertEqual(manager.lineBorderColor, value)
         XCTAssertEqual(manager.impl.layerProperties["line-border-color"] as? String, value?.rawValue)
-    }
-
-    func testSetLineBorderColorUseTheme() {
-        manager.lineBorderColorUseTheme = .default
-        XCTAssertEqual(manager.impl.layerProperties["line-border-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilLineBorderColor() {
@@ -333,7 +318,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-border-width"] as! Double, value)
     }
 
-
     func testSetToNilLineBorderWidth() {
         let newLineBorderWidthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-border-width").value as! Double
@@ -359,11 +343,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-color"] as? String, value?.rawValue)
     }
 
-    func testSetLineColorUseTheme() {
-        manager.lineColorUseTheme = .default
-        XCTAssertEqual(manager.impl.layerProperties["line-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
-    }
-
     func testSetToNilLineColor() {
         let newLineColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
         let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-color").value as! [Any], options: []))
@@ -384,15 +363,14 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
     func testSetLineDasharray() {
-        let value = Array.testFixture(withLength: 10, generator: { 0.0 })
+        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { 0.0 })
         manager.lineDasharray = value
         XCTAssertEqual(manager.lineDasharray, value)
         XCTAssertEqual(manager.impl.layerProperties["line-dasharray"] as! [Double], value)
     }
 
-
     func testSetToNilLineDasharray() {
-        let newLineDasharrayProperty = Array.testFixture(withLength: 10, generator: { 0.0 })
+        let newLineDasharrayProperty = Array.testFixture(withLength: .random(in: 0...10), generator: { 0.0 })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-dasharray").value as! [Double]
         manager.lineDasharray = newLineDasharrayProperty
         XCTAssertNotNil(manager.impl.layerProperties["line-dasharray"])
@@ -415,7 +393,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineDepthOcclusionFactor, value)
         XCTAssertEqual(manager.impl.layerProperties["line-depth-occlusion-factor"] as! Double, value)
     }
-
 
     func testSetToNilLineDepthOcclusionFactor() {
         let newLineDepthOcclusionFactorProperty = 0.5
@@ -442,7 +419,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-emissive-strength"] as! Double, value)
     }
 
-
     func testSetToNilLineEmissiveStrength() {
         let newLineEmissiveStrengthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-emissive-strength").value as! Double
@@ -467,7 +443,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineGapWidth, value)
         XCTAssertEqual(manager.impl.layerProperties["line-gap-width"] as! Double, value)
     }
-
 
     func testSetToNilLineGapWidth() {
         let newLineGapWidthProperty = 50000.0
@@ -494,7 +469,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-occlusion-opacity"] as! Double, value)
     }
 
-
     func testSetToNilLineOcclusionOpacity() {
         let newLineOcclusionOpacityProperty = 0.5
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-occlusion-opacity").value as! Double
@@ -519,7 +493,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineOffset, value)
         XCTAssertEqual(manager.impl.layerProperties["line-offset"] as! Double, value)
     }
-
 
     func testSetToNilLineOffset() {
         let newLineOffsetProperty = 0.0
@@ -546,7 +519,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-opacity"] as! Double, value)
     }
 
-
     func testSetToNilLineOpacity() {
         let newLineOpacityProperty = 0.5
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-opacity").value as! Double
@@ -571,7 +543,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.linePattern, value)
         XCTAssertEqual(manager.impl.layerProperties["line-pattern"] as! String, value)
     }
-
 
     func testSetToNilLinePattern() {
         let newLinePatternProperty = UUID().uuidString
@@ -598,7 +569,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-translate"] as! [Double], value)
     }
 
-
     func testSetToNilLineTranslate() {
         let newLineTranslateProperty = [0.0, 0.0]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate").value as! [Double]
@@ -624,7 +594,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-translate-anchor"] as! String, value.rawValue)
     }
 
-
     func testSetToNilLineTranslateAnchor() {
         let newLineTranslateAnchorProperty = LineTranslateAnchor.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String
@@ -648,11 +617,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         manager.lineTrimColor = value
         XCTAssertEqual(manager.lineTrimColor, value)
         XCTAssertEqual(manager.impl.layerProperties["line-trim-color"] as? String, value?.rawValue)
-    }
-
-    func testSetLineTrimColorUseTheme() {
-        manager.lineTrimColorUseTheme = .default
-        XCTAssertEqual(manager.impl.layerProperties["line-trim-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilLineTrimColor() {
@@ -681,7 +645,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-trim-fade-range"] as! [Double], value)
     }
 
-
     func testSetToNilLineTrimFadeRange() {
         let newLineTrimFadeRangeProperty = [0.5, 0.5]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-trim-fade-range").value as! [Double]
@@ -706,7 +669,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineTrimOffset, value)
         XCTAssertEqual(manager.impl.layerProperties["line-trim-offset"] as! [Double], value)
     }
-
 
     func testSetToNilLineTrimOffset() {
         let newLineTrimOffsetProperty = [0.5, 0.5].sorted()
@@ -733,7 +695,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.impl.layerProperties["line-width"] as! Double, value)
     }
 
-
     func testSetToNilLineWidth() {
         let newLineWidthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-width").value as! Double
@@ -758,7 +719,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.slot, value)
         XCTAssertEqual(manager.impl.layerProperties["slot"] as! String, value)
     }
-
 
     func testSetToNilSlot() {
         let newSlotProperty = UUID().uuidString

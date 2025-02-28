@@ -105,41 +105,21 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
         properties["text-size"] = textSize
         properties["text-transform"] = textTransform?.rawValue
         properties["icon-color"] = iconColor?.rawValue
-        properties["icon-color-use-theme"] = iconColorUseTheme?.rawValue
-        properties["icon-color-transition"] = iconColorTransition?.asDictionary
         properties["icon-emissive-strength"] = iconEmissiveStrength
-        properties["icon-emissive-strength-transition"] = iconEmissiveStrengthTransition?.asDictionary
         properties["icon-halo-blur"] = iconHaloBlur
-        properties["icon-halo-blur-transition"] = iconHaloBlurTransition?.asDictionary
         properties["icon-halo-color"] = iconHaloColor?.rawValue
-        properties["icon-halo-color-use-theme"] = iconHaloColorUseTheme?.rawValue
-        properties["icon-halo-color-transition"] = iconHaloColorTransition?.asDictionary
         properties["icon-halo-width"] = iconHaloWidth
-        properties["icon-halo-width-transition"] = iconHaloWidthTransition?.asDictionary
         properties["icon-image-cross-fade"] = iconImageCrossFade
-        properties["icon-image-cross-fade-transition"] = iconImageCrossFadeTransition?.asDictionary
         properties["icon-occlusion-opacity"] = iconOcclusionOpacity
-        properties["icon-occlusion-opacity-transition"] = iconOcclusionOpacityTransition?.asDictionary
         properties["icon-opacity"] = iconOpacity
-        properties["icon-opacity-transition"] = iconOpacityTransition?.asDictionary
         properties["symbol-z-offset"] = symbolZOffset
-        properties["symbol-z-offset-transition"] = symbolZOffsetTransition?.asDictionary
         properties["text-color"] = textColor?.rawValue
-        properties["text-color-use-theme"] = textColorUseTheme?.rawValue
-        properties["text-color-transition"] = textColorTransition?.asDictionary
         properties["text-emissive-strength"] = textEmissiveStrength
-        properties["text-emissive-strength-transition"] = textEmissiveStrengthTransition?.asDictionary
         properties["text-halo-blur"] = textHaloBlur
-        properties["text-halo-blur-transition"] = textHaloBlurTransition?.asDictionary
         properties["text-halo-color"] = textHaloColor?.rawValue
-        properties["text-halo-color-use-theme"] = textHaloColorUseTheme?.rawValue
-        properties["text-halo-color-transition"] = textHaloColorTransition?.asDictionary
         properties["text-halo-width"] = textHaloWidth
-        properties["text-halo-width-transition"] = textHaloWidthTransition?.asDictionary
         properties["text-occlusion-opacity"] = textOcclusionOpacity
-        properties["text-occlusion-opacity-transition"] = textOcclusionOpacityTransition?.asDictionary
         properties["text-opacity"] = textOpacity
-        properties["text-opacity-transition"] = textOpacityTransition?.asDictionary
         return properties
     }
 
@@ -255,141 +235,65 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     /// Default value: "none".
     public var textTransform: TextTransform?
 
-    /// This property defines whether the `iconColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var iconColorUseTheme: ColorUseTheme?
-
-    /// Transition property for `iconColor`
-    public var iconColorTransition: StyleTransition?
-
     /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "#000000".
     public var iconColor: StyleColor?
-
-    /// Transition property for `iconEmissiveStrength`
-    public var iconEmissiveStrengthTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 1. Minimum value: 0. The unit of iconEmissiveStrength is in intensity.
     public var iconEmissiveStrength: Double?
 
-    /// Transition property for `iconHaloBlur`
-    public var iconHaloBlurTransition: StyleTransition?
-
     /// Fade out the halo towards the outside.
     /// Default value: 0. Minimum value: 0. The unit of iconHaloBlur is in pixels.
     public var iconHaloBlur: Double?
-
-    /// This property defines whether the `iconHaloColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var iconHaloColorUseTheme: ColorUseTheme?
-
-    /// Transition property for `iconHaloColor`
-    public var iconHaloColorTransition: StyleTransition?
 
     /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "rgba(0, 0, 0, 0)".
     public var iconHaloColor: StyleColor?
 
-    /// Transition property for `iconHaloWidth`
-    public var iconHaloWidthTransition: StyleTransition?
-
     /// Distance of halo to the icon outline.
     /// Default value: 0. Minimum value: 0. The unit of iconHaloWidth is in pixels.
     public var iconHaloWidth: Double?
-
-    /// Transition property for `iconImageCrossFade`
-    public var iconImageCrossFadeTransition: StyleTransition?
 
     /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
     /// Default value: 0. Value range: [0, 1]
     public var iconImageCrossFade: Double?
 
-    /// Transition property for `iconOcclusionOpacity`
-    public var iconOcclusionOpacityTransition: StyleTransition?
-
     /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
     /// Default value: 0. Value range: [0, 1]
     public var iconOcclusionOpacity: Double?
-
-    /// Transition property for `iconOpacity`
-    public var iconOpacityTransition: StyleTransition?
 
     /// The opacity at which the icon will be drawn.
     /// Default value: 1. Value range: [0, 1]
     public var iconOpacity: Double?
 
-    /// Transition property for `symbolZOffset`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var symbolZOffsetTransition: StyleTransition?
-
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public var symbolZOffset: Double?
-
-    /// This property defines whether the `textColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var textColorUseTheme: ColorUseTheme?
-
-    /// Transition property for `textColor`
-    public var textColorTransition: StyleTransition?
 
     /// The color with which the text will be drawn.
     /// Default value: "#000000".
     public var textColor: StyleColor?
 
-    /// Transition property for `textEmissiveStrength`
-    public var textEmissiveStrengthTransition: StyleTransition?
-
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 1. Minimum value: 0. The unit of textEmissiveStrength is in intensity.
     public var textEmissiveStrength: Double?
-
-    /// Transition property for `textHaloBlur`
-    public var textHaloBlurTransition: StyleTransition?
 
     /// The halo's fadeout distance towards the outside.
     /// Default value: 0. Minimum value: 0. The unit of textHaloBlur is in pixels.
     public var textHaloBlur: Double?
 
-    /// This property defines whether the `textHaloColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var textHaloColorUseTheme: ColorUseTheme?
-
-    /// Transition property for `textHaloColor`
-    public var textHaloColorTransition: StyleTransition?
-
     /// The color of the text's halo, which helps it stand out from backgrounds.
     /// Default value: "rgba(0, 0, 0, 0)".
     public var textHaloColor: StyleColor?
-
-    /// Transition property for `textHaloWidth`
-    public var textHaloWidthTransition: StyleTransition?
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
     /// Default value: 0. Minimum value: 0. The unit of textHaloWidth is in pixels.
     public var textHaloWidth: Double?
 
-    /// Transition property for `textOcclusionOpacity`
-    public var textOcclusionOpacityTransition: StyleTransition?
-
     /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
     /// Default value: 0. Value range: [0, 1]
     public var textOcclusionOpacity: Double?
-
-    /// Transition property for `textOpacity`
-    public var textOpacityTransition: StyleTransition?
 
     /// The opacity at which the text will be drawn.
     /// Default value: 1. Value range: [0, 1]
@@ -406,50 +310,6 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
 
 extension PointAnnotation {
 
-    /// Adds a handler for tap gesture on current annotation.
-    ///
-    /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
-    ///
-    /// - Parameters:
-    ///   - handler: A handler for tap gesture.
-    public func onTapGesture(handler: @escaping (InteractionContext) -> Bool) -> Self {
-        with(self, setter(\.tapHandler, handler))
-    }
-
-    /// Adds a handler for tap gesture on current annotation.
-    ///
-    /// - Parameters:
-    ///   - handler: A handler for tap gesture.
-    public func onTapGesture(handler: @escaping () -> Void) -> Self {
-        onTapGesture { _ in
-            handler()
-            return true
-        }
-    }
-
-    /// Adds a handler for long press gesture on current annotation.
-    ///
-    /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
-    ///
-    /// - Parameters:
-    ///   - handler: A handler for long press gesture.
-    public func onLongPressGesture(handler: @escaping (InteractionContext) -> Bool) -> Self {
-        with(self, setter(\.longPressHandler, handler))
-    }
-
-    /// Adds a handler for long press gesture on current annotation.
-    ///
-    /// - Parameters:
-    ///   - handler: A handler for long press gesture.
-    public func onLongPressGesture(handler: @escaping () -> Void) -> Self {
-        onLongPressGesture { _ in
-            handler()
-            return true
-        }
-    }
-}
-
-extension PointAnnotation {
     /// Part of the icon placed closest to the anchor.
     /// Default value: "center".
     public func iconAnchor(_ newValue: IconAnchor) -> Self {
@@ -565,20 +425,7 @@ extension PointAnnotation {
     /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "#000000".
     public func iconColor(_ color: UIColor) -> Self {
-        with(self, setter(\.iconColor, StyleColor(color)))
-    }
-
-    /// This property defines whether the `iconColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func iconColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
-        with(self, setter(\.iconColorUseTheme, useTheme))
-    }
-
-    /// Transition property for `iconColor`
-    public func iconColorTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.iconColorTransition, transition))
+        iconColor(StyleColor(color))
     }
 
     /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
@@ -587,20 +434,10 @@ extension PointAnnotation {
         with(self, setter(\.iconColor, newValue))
     }
 
-    /// Transition property for `iconEmissiveStrength`
-    public func iconEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.iconEmissiveStrengthTransition, transition))
-    }
-
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 1. Minimum value: 0. The unit of iconEmissiveStrength is in intensity.
     public func iconEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.iconEmissiveStrength, newValue))
-    }
-
-    /// Transition property for `iconHaloBlur`
-    public func iconHaloBlurTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.iconHaloBlurTransition, transition))
     }
 
     /// Fade out the halo towards the outside.
@@ -612,20 +449,7 @@ extension PointAnnotation {
     /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "rgba(0, 0, 0, 0)".
     public func iconHaloColor(_ color: UIColor) -> Self {
-        with(self, setter(\.iconHaloColor, StyleColor(color)))
-    }
-
-    /// This property defines whether the `iconHaloColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func iconHaloColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
-        with(self, setter(\.iconHaloColorUseTheme, useTheme))
-    }
-
-    /// Transition property for `iconHaloColor`
-    public func iconHaloColorTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.iconHaloColorTransition, transition))
+        iconHaloColor(StyleColor(color))
     }
 
     /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
@@ -634,20 +458,10 @@ extension PointAnnotation {
         with(self, setter(\.iconHaloColor, newValue))
     }
 
-    /// Transition property for `iconHaloWidth`
-    public func iconHaloWidthTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.iconHaloWidthTransition, transition))
-    }
-
     /// Distance of halo to the icon outline.
     /// Default value: 0. Minimum value: 0. The unit of iconHaloWidth is in pixels.
     public func iconHaloWidth(_ newValue: Double) -> Self {
         with(self, setter(\.iconHaloWidth, newValue))
-    }
-
-    /// Transition property for `iconImageCrossFade`
-    public func iconImageCrossFadeTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.iconImageCrossFadeTransition, transition))
     }
 
     /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
@@ -656,20 +470,10 @@ extension PointAnnotation {
         with(self, setter(\.iconImageCrossFade, newValue))
     }
 
-    /// Transition property for `iconOcclusionOpacity`
-    public func iconOcclusionOpacityTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.iconOcclusionOpacityTransition, transition))
-    }
-
     /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
     /// Default value: 0. Value range: [0, 1]
     public func iconOcclusionOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.iconOcclusionOpacity, newValue))
-    }
-
-    /// Transition property for `iconOpacity`
-    public func iconOpacityTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.iconOpacityTransition, transition))
     }
 
     /// The opacity at which the icon will be drawn.
@@ -678,17 +482,8 @@ extension PointAnnotation {
         with(self, setter(\.iconOpacity, newValue))
     }
 
-    /// Transition property for `symbolZOffset`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func symbolZOffsetTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.symbolZOffsetTransition, transition))
-    }
-
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func symbolZOffset(_ newValue: Double) -> Self {
         with(self, setter(\.symbolZOffset, newValue))
     }
@@ -696,20 +491,7 @@ extension PointAnnotation {
     /// The color with which the text will be drawn.
     /// Default value: "#000000".
     public func textColor(_ color: UIColor) -> Self {
-        with(self, setter(\.textColor, StyleColor(color)))
-    }
-
-    /// This property defines whether the `textColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func textColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
-        with(self, setter(\.textColorUseTheme, useTheme))
-    }
-
-    /// Transition property for `textColor`
-    public func textColorTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.textColorTransition, transition))
+        textColor(StyleColor(color))
     }
 
     /// The color with which the text will be drawn.
@@ -718,20 +500,10 @@ extension PointAnnotation {
         with(self, setter(\.textColor, newValue))
     }
 
-    /// Transition property for `textEmissiveStrength`
-    public func textEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.textEmissiveStrengthTransition, transition))
-    }
-
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 1. Minimum value: 0. The unit of textEmissiveStrength is in intensity.
     public func textEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.textEmissiveStrength, newValue))
-    }
-
-    /// Transition property for `textHaloBlur`
-    public func textHaloBlurTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.textHaloBlurTransition, transition))
     }
 
     /// The halo's fadeout distance towards the outside.
@@ -743,20 +515,7 @@ extension PointAnnotation {
     /// The color of the text's halo, which helps it stand out from backgrounds.
     /// Default value: "rgba(0, 0, 0, 0)".
     public func textHaloColor(_ color: UIColor) -> Self {
-        with(self, setter(\.textHaloColor, StyleColor(color)))
-    }
-
-    /// This property defines whether the `textHaloColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func textHaloColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
-        with(self, setter(\.textHaloColorUseTheme, useTheme))
-    }
-
-    /// Transition property for `textHaloColor`
-    public func textHaloColorTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.textHaloColorTransition, transition))
+        textHaloColor(StyleColor(color))
     }
 
     /// The color of the text's halo, which helps it stand out from backgrounds.
@@ -765,31 +524,16 @@ extension PointAnnotation {
         with(self, setter(\.textHaloColor, newValue))
     }
 
-    /// Transition property for `textHaloWidth`
-    public func textHaloWidthTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.textHaloWidthTransition, transition))
-    }
-
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
     /// Default value: 0. Minimum value: 0. The unit of textHaloWidth is in pixels.
     public func textHaloWidth(_ newValue: Double) -> Self {
         with(self, setter(\.textHaloWidth, newValue))
     }
 
-    /// Transition property for `textOcclusionOpacity`
-    public func textOcclusionOpacityTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.textOcclusionOpacityTransition, transition))
-    }
-
     /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
     /// Default value: 0. Value range: [0, 1]
     public func textOcclusionOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.textOcclusionOpacity, newValue))
-    }
-
-    /// Transition property for `textOpacity`
-    public func textOpacityTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.textOpacityTransition, transition))
     }
 
     /// The opacity at which the text will be drawn.
@@ -803,14 +547,56 @@ extension PointAnnotation {
         with(self, setter(\.image, image))
     }
 
-    /// Sets named image as icon
+    /// Sets named image as icon.
     public func image(named name: String) -> Self {
-        with(self, setter(\.image, Image(image: UIImage(named: name)!, name: name)))
+        let uiImage = UIImage(named: name)!
+        return image(Image(image: uiImage, name: name))
+    }
+
+    /// Adds a handler for tap gesture on current annotation.
+    ///
+    /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
+    ///
+    /// - Parameters:
+    ///   - handler: A handler for tap gesture.
+    public func onTapGesture(handler: @escaping (InteractionContext) -> Bool) -> Self {
+        with(self, setter(\.tapHandler, handler))
+    }
+
+    /// Adds a handler for tap gesture on current annotation.
+    ///
+    /// - Parameters:
+    ///   - handler: A handler for tap gesture.
+    public func onTapGesture(handler: @escaping () -> Void) -> Self {
+        onTapGesture { _ in
+            handler()
+            return true
+        }
+    }
+
+    /// Adds a handler for long press gesture on current annotation.
+    ///
+    /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
+    ///
+    /// - Parameters:
+    ///   - handler: A handler for long press gesture.
+    public func onLongPressGesture(handler: @escaping (InteractionContext) -> Bool) -> Self {
+        with(self, setter(\.longPressHandler, handler))
+    }
+
+    /// Adds a handler for long press gesture on current annotation.
+    ///
+    /// - Parameters:
+    ///   - handler: A handler for long press gesture.
+    public func onLongPressGesture(handler: @escaping () -> Void) -> Self {
+        onLongPressGesture { _ in
+            handler()
+            return true
+        }
     }
 }
 
 extension PointAnnotation: MapContent, PrimitiveMapContent {
-
     func visit(_ node: MapContentNode) {
         PointAnnotationGroup { self }.visit(node)
     }

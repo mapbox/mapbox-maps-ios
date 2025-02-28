@@ -29,7 +29,7 @@ final class StyleSourceManagerTests: XCTestCase {
 
     func testGetAllSourceIdentifiers() {
         let stubbedStyleSources: [StyleObjectInfo] = .testFixture(withLength: 3) {
-            StyleObjectInfo(id: .testConstantASCII(withLength: 12), type: LayerType.testConstantValue().rawValue)
+            StyleObjectInfo(id: .randomAlphanumeric(withLength: 12), type: LayerType.random().rawValue)
         }
         styleManager.getStyleSourcesStub.defaultReturnValue = stubbedStyleSources
         XCTAssertTrue(sourceManager.allSourceIdentifiers.allSatisfy { sourceInfo in
@@ -62,8 +62,9 @@ final class StyleSourceManagerTests: XCTestCase {
     }
 
     func testAddNonGeoJSONDataSourceDoesNotTriggerAsyncParsing() throws {
-        let id = String.testConstantASCII(withLength: 10)
-        let type: SourceType = .raster
+        let id = String.randomASCII(withLength: 10)
+        let types: [SourceType] = [.raster, .image, .rasterDem, .vector]
+        let type = try XCTUnwrap(types.randomElement())
         let json = ["type": type.rawValue, "id": id]
         guard let source = try type.sourceType?.init(jsonObject: json) else {
             XCTFail("Expected to return a valid source")
@@ -84,7 +85,7 @@ final class StyleSourceManagerTests: XCTestCase {
     }
 
     func testStyleCanRemoveSource() throws {
-        let id = String.testConstantASCII(withLength: 23)
+        let id = String.randomASCII(withLength: 23)
         styleManager.removeStyleSourceStub.defaultReturnValue = Expected(error: "Cannot remove source")
         XCTAssertThrowsError(try sourceManager.removeSource(withId: id))
         XCTAssertEqual(styleManager.removeStyleSourceStub.invocations.count, 1)
@@ -96,7 +97,7 @@ final class StyleSourceManagerTests: XCTestCase {
     }
 
     func testRemoveSourceUnchecked() throws {
-        let id = String.testConstantASCII(withLength: 23)
+        let id = String.randomASCII(withLength: 23)
         styleManager.removeStyleSourceUncheckedStub.defaultReturnValue = Expected(error: "No such source")
         XCTAssertThrowsError(try sourceManager.removeSourceUnchecked(withId: id))
         XCTAssertEqual(styleManager.removeStyleSourceUncheckedStub.invocations.count, 1)
@@ -118,7 +119,7 @@ final class StyleSourceManagerTests: XCTestCase {
     }
 
     func testUpdateGeoJSONSourceDispatchesParsingOnABackgroundThread() throws {
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
 
         styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
 
@@ -138,7 +139,7 @@ final class StyleSourceManagerTests: XCTestCase {
     }
 
     func testDirectAsyncUpdateGeoJSONCallsPassesConvertedDataOnBackground() throws {
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
         backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
 
@@ -169,7 +170,7 @@ final class StyleSourceManagerTests: XCTestCase {
 
     func testAsyncGeoJSONUpdateSkipsParsingWhenCancelled() throws {
         // given
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
 
         sourceManager.updateGeoJSONSource(withId: id, data: .emptyFeatureCollection(), dataId: nil)
@@ -209,7 +210,7 @@ final class StyleSourceManagerTests: XCTestCase {
     func testMultipleDistinctDirectAsyncGeoJSONUpdateDoNotCancelEachOtherOut() throws {
         // given
         let iterations = 100
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
 
         // when
@@ -255,7 +256,7 @@ final class StyleSourceManagerTests: XCTestCase {
 
     func testSubsequentAsyncGeoJSONUpdateCancelsExisting() throws {
         // given
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
 
         sourceManager.updateGeoJSONSource(withId: id, data: .emptyFeatureCollection(), dataId: nil)
@@ -296,7 +297,7 @@ final class StyleSourceManagerTests: XCTestCase {
 
     func testRemoveGeoJSONSourceCancelsAsyncParsing() throws {
         // given
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         var source = GeoJSONSource(id: id)
         source.data = .featureCollection(FeatureCollection(features: []))
 
@@ -314,7 +315,7 @@ final class StyleSourceManagerTests: XCTestCase {
 
     func testAsyncGeoJSONUpdateCancelsAdd() throws {
         // given
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         var source = GeoJSONSource(id: id)
         source.data = .featureCollection(FeatureCollection(features: []))
         styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
@@ -358,7 +359,7 @@ final class StyleSourceManagerTests: XCTestCase {
     }
 
     func testAddGeoJSONAddsSourceWithFeatureCollection() throws {
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         var source = GeoJSONSource(id: id)
         let feature = Feature(geometry: .point(Point(CLLocationCoordinate2D(latitude: 10, longitude: 20))))
         let featureCollection = FeatureCollection(features: [feature])
@@ -385,7 +386,7 @@ final class StyleSourceManagerTests: XCTestCase {
     }
 
     func testDirectAddGeoJSONSourceWithURL() throws {
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         var source = GeoJSONSource(id: id)
         let url = URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson")!
         source.data = .url(url)
@@ -405,7 +406,7 @@ final class StyleSourceManagerTests: XCTestCase {
     }
 
     func testAddGeoJSONSourceWithString() throws {
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         var source = GeoJSONSource(id: id)
         let geoJSON = """
         {
@@ -432,7 +433,7 @@ final class StyleSourceManagerTests: XCTestCase {
     }
 
     func testAddGeoJSONSourceWithNilData() throws {
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         let source = GeoJSONSource(id: id)
         backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
         mainQueue.asyncClosureStub.defaultSideEffect = { $0.parameters.work() }
@@ -449,10 +450,10 @@ final class StyleSourceManagerTests: XCTestCase {
 
     func testAddGeoJSONSourceFeatures() throws {
         // given
-        let sourceId = String.testConstantASCII(withLength: 10)
-        let dataId = String.testConstantASCII(withLength: 11)
+        let sourceId = String.randomASCII(withLength: 10)
+        let dataId = String.randomASCII(withLength: 11)
         let point = Point(.testConstantValue())
-        let featureIdentifier = 0.0
+        let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)
         backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
@@ -473,10 +474,10 @@ final class StyleSourceManagerTests: XCTestCase {
 
     func testUpdateGeoJSONSourceFeatures() throws {
         // given
-        let sourceId = String.testConstantASCII(withLength: 10)
-        let dataId = String.testConstantASCII(withLength: 11)
+        let sourceId = String.randomASCII(withLength: 10)
+        let dataId = String.randomASCII(withLength: 11)
         let point = Point(.testConstantValue())
-        let featureIdentifier = 1000.0
+        let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)
         backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
@@ -497,9 +498,9 @@ final class StyleSourceManagerTests: XCTestCase {
 
     func testPartialUpdateAPIsDontCancelPreviousUpdates() throws {
         // given
-        let sourceId = String.testConstantASCII(withLength: 10)
+        let sourceId = String.randomASCII(withLength: 10)
         let point = Point(.testConstantValue())
-        let featureIdentifier = 3.4
+        let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)
 
@@ -518,9 +519,9 @@ final class StyleSourceManagerTests: XCTestCase {
 
     func testFullUpdateAPIsCancelsAllPreviousUpdates() throws {
         // given
-        let sourceId = String.testConstantASCII(withLength: 10)
+        let sourceId = String.randomASCII(withLength: 10)
         let point = Point(.testConstantValue())
-        let featureIdentifier = 999.3
+        let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)
 
@@ -542,9 +543,9 @@ final class StyleSourceManagerTests: XCTestCase {
 
     func testRemoveGeoJSONSourceFeatures() throws {
         // given
-        let sourceId = String.testConstantASCII(withLength: 10)
-        let dataId = String.testConstantASCII(withLength: 11)
-        let featureIdentifiers = (0...10).map { String.testConstantASCII(withLength: $0) }
+        let sourceId = String.randomASCII(withLength: 10)
+        let dataId = String.randomASCII(withLength: 11)
+        let featureIdentifiers = (0...10).map { String.randomASCII(withLength: $0) }
         backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
 
         // when

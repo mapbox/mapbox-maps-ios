@@ -114,12 +114,12 @@ final class Puck2DRenderer: PuckRenderer {
                 StyleTransition.CodingKeys.duration.rawValue: 0,
                 StyleTransition.CodingKeys.delay.rawValue: 0]
 
-            newLayerPaintProperties[.topImage] = Self.topImageId
+            newLayerLayoutProperties[.topImage] = Self.topImageId
             if newConfiguration.bearingImage != nil {
-                newLayerPaintProperties[.bearingImage] = Self.bearingImageId
+                newLayerLayoutProperties[.bearingImage] = Self.bearingImageId
             }
             if newConfiguration.shadowImage != nil {
-                newLayerPaintProperties[.shadowImage] = Self.shadowImageId
+                newLayerLayoutProperties[.shadowImage] = Self.shadowImageId
             }
 
             newLayerPaintProperties[.locationTransition] = immediateTransition

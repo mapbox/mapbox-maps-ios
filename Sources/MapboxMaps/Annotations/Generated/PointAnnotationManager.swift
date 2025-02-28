@@ -101,6 +101,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     // MARK: - Common layer properties
+
     /// If true, the icon will be visible even if it collides with other previously drawn symbols.
     /// Default value: false.
     public var iconAllowOverlap: Bool? {
@@ -187,8 +188,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     /// Defines the minimum and maximum scaling factors for icon related properties like `icon-size`, `icon-halo-width`, `icon-halo-blur`
     /// Default value: [0.8,2]. Value range: [0.1, 10]
     @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var iconSizeScaleRange: [Double]? {
+    @_spi(Experimental) public var iconSizeScaleRange: [Double]? {
         get { impl.layerProperties["icon-size-scale-range"] as? [Double] }
         set { impl.layerProperties["icon-size-scale-range"] = newValue }
     }
@@ -217,8 +217,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     /// Selects the base of symbol-elevation.
     /// Default value: "ground".
     @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var symbolElevationReference: SymbolElevationReference? {
+    @_spi(Experimental) public var symbolElevationReference: SymbolElevationReference? {
         get { impl.layerProperties["symbol-elevation-reference"].flatMap { $0 as? String }.flatMap(SymbolElevationReference.init(rawValue:)) }
         set { impl.layerProperties["symbol-elevation-reference"] = newValue?.rawValue }
     }
@@ -392,8 +391,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     /// Defines the minimum and maximum scaling factors for text related properties like `text-size`, `text-max-width`, `text-halo-width`, `font-size`
     /// Default value: [0.8,2]. Value range: [0.1, 10]
     @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var textSizeScaleRange: [Double]? {
+    @_spi(Experimental) public var textSizeScaleRange: [Double]? {
         get { impl.layerProperties["text-size-scale-range"] as? [Double] }
         set { impl.layerProperties["text-size-scale-range"] = newValue }
     }
@@ -417,32 +415,11 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["text-writing-mode"] = newValue?.map(\.rawValue) }
     }
 
-    /// This property defines whether the `iconColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var iconColorUseTheme: ColorUseTheme? {
-        get { impl.layerProperties["icon-color-use-theme"].flatMap { $0 as? String }.flatMap(ColorUseTheme.init(rawValue:)) }
-        set { impl.layerProperties["icon-color-use-theme"] = newValue?.rawValue }
-    }
-
-    /// Transition property for `iconColor`
-    public var iconColorTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["icon-color-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["icon-color-transition"] = newValue?.asDictionary }
-    }
-
     /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "#000000".
     public var iconColor: StyleColor? {
         get { impl.layerProperties["icon-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
         set { impl.layerProperties["icon-color"] = newValue?.rawValue }
-    }
-
-    /// Transition property for `iconColorSaturation`
-    public var iconColorSaturationTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["icon-color-saturation-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["icon-color-saturation-transition"] = newValue?.asDictionary }
     }
 
     /// Increase or reduce the saturation of the symbol icon.
@@ -452,23 +429,11 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["icon-color-saturation"] = newValue }
     }
 
-    /// Transition property for `iconEmissiveStrength`
-    public var iconEmissiveStrengthTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["icon-emissive-strength-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["icon-emissive-strength-transition"] = newValue?.asDictionary }
-    }
-
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 1. Minimum value: 0. The unit of iconEmissiveStrength is in intensity.
     public var iconEmissiveStrength: Double? {
         get { impl.layerProperties["icon-emissive-strength"] as? Double }
         set { impl.layerProperties["icon-emissive-strength"] = newValue }
-    }
-
-    /// Transition property for `iconHaloBlur`
-    public var iconHaloBlurTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["icon-halo-blur-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["icon-halo-blur-transition"] = newValue?.asDictionary }
     }
 
     /// Fade out the halo towards the outside.
@@ -478,32 +443,11 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["icon-halo-blur"] = newValue }
     }
 
-    /// This property defines whether the `iconHaloColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var iconHaloColorUseTheme: ColorUseTheme? {
-        get { impl.layerProperties["icon-halo-color-use-theme"].flatMap { $0 as? String }.flatMap(ColorUseTheme.init(rawValue:)) }
-        set { impl.layerProperties["icon-halo-color-use-theme"] = newValue?.rawValue }
-    }
-
-    /// Transition property for `iconHaloColor`
-    public var iconHaloColorTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["icon-halo-color-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["icon-halo-color-transition"] = newValue?.asDictionary }
-    }
-
     /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "rgba(0, 0, 0, 0)".
     public var iconHaloColor: StyleColor? {
         get { impl.layerProperties["icon-halo-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
         set { impl.layerProperties["icon-halo-color"] = newValue?.rawValue }
-    }
-
-    /// Transition property for `iconHaloWidth`
-    public var iconHaloWidthTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["icon-halo-width-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["icon-halo-width-transition"] = newValue?.asDictionary }
     }
 
     /// Distance of halo to the icon outline.
@@ -513,23 +457,11 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["icon-halo-width"] = newValue }
     }
 
-    /// Transition property for `iconImageCrossFade`
-    public var iconImageCrossFadeTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["icon-image-cross-fade-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["icon-image-cross-fade-transition"] = newValue?.asDictionary }
-    }
-
     /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
     /// Default value: 0. Value range: [0, 1]
     public var iconImageCrossFade: Double? {
         get { impl.layerProperties["icon-image-cross-fade"] as? Double }
         set { impl.layerProperties["icon-image-cross-fade"] = newValue }
-    }
-
-    /// Transition property for `iconOcclusionOpacity`
-    public var iconOcclusionOpacityTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["icon-occlusion-opacity-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["icon-occlusion-opacity-transition"] = newValue?.asDictionary }
     }
 
     /// The opacity at which the icon will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
@@ -539,23 +471,11 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["icon-occlusion-opacity"] = newValue }
     }
 
-    /// Transition property for `iconOpacity`
-    public var iconOpacityTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["icon-opacity-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["icon-opacity-transition"] = newValue?.asDictionary }
-    }
-
     /// The opacity at which the icon will be drawn.
     /// Default value: 1. Value range: [0, 1]
     public var iconOpacity: Double? {
         get { impl.layerProperties["icon-opacity"] as? Double }
         set { impl.layerProperties["icon-opacity"] = newValue }
-    }
-
-    /// Transition property for `iconTranslate`
-    public var iconTranslateTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["icon-translate-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["icon-translate-transition"] = newValue?.asDictionary }
     }
 
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
@@ -572,36 +492,12 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["icon-translate-anchor"] = newValue?.rawValue }
     }
 
-    /// Transition property for `symbolZOffset`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var symbolZOffsetTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["symbol-z-offset-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["symbol-z-offset-transition"] = newValue?.asDictionary }
-    }
-
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var symbolZOffset: Double? {
+    @_spi(Experimental) public var symbolZOffset: Double? {
         get { impl.layerProperties["symbol-z-offset"] as? Double }
         set { impl.layerProperties["symbol-z-offset"] = newValue }
-    }
-
-    /// This property defines whether the `textColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var textColorUseTheme: ColorUseTheme? {
-        get { impl.layerProperties["text-color-use-theme"].flatMap { $0 as? String }.flatMap(ColorUseTheme.init(rawValue:)) }
-        set { impl.layerProperties["text-color-use-theme"] = newValue?.rawValue }
-    }
-
-    /// Transition property for `textColor`
-    public var textColorTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["text-color-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["text-color-transition"] = newValue?.asDictionary }
     }
 
     /// The color with which the text will be drawn.
@@ -611,23 +507,11 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["text-color"] = newValue?.rawValue }
     }
 
-    /// Transition property for `textEmissiveStrength`
-    public var textEmissiveStrengthTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["text-emissive-strength-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["text-emissive-strength-transition"] = newValue?.asDictionary }
-    }
-
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 1. Minimum value: 0. The unit of textEmissiveStrength is in intensity.
     public var textEmissiveStrength: Double? {
         get { impl.layerProperties["text-emissive-strength"] as? Double }
         set { impl.layerProperties["text-emissive-strength"] = newValue }
-    }
-
-    /// Transition property for `textHaloBlur`
-    public var textHaloBlurTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["text-halo-blur-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["text-halo-blur-transition"] = newValue?.asDictionary }
     }
 
     /// The halo's fadeout distance towards the outside.
@@ -637,32 +521,11 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["text-halo-blur"] = newValue }
     }
 
-    /// This property defines whether the `textHaloColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var textHaloColorUseTheme: ColorUseTheme? {
-        get { impl.layerProperties["text-halo-color-use-theme"].flatMap { $0 as? String }.flatMap(ColorUseTheme.init(rawValue:)) }
-        set { impl.layerProperties["text-halo-color-use-theme"] = newValue?.rawValue }
-    }
-
-    /// Transition property for `textHaloColor`
-    public var textHaloColorTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["text-halo-color-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["text-halo-color-transition"] = newValue?.asDictionary }
-    }
-
     /// The color of the text's halo, which helps it stand out from backgrounds.
     /// Default value: "rgba(0, 0, 0, 0)".
     public var textHaloColor: StyleColor? {
         get { impl.layerProperties["text-halo-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
         set { impl.layerProperties["text-halo-color"] = newValue?.rawValue }
-    }
-
-    /// Transition property for `textHaloWidth`
-    public var textHaloWidthTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["text-halo-width-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["text-halo-width-transition"] = newValue?.asDictionary }
     }
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
@@ -672,12 +535,6 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["text-halo-width"] = newValue }
     }
 
-    /// Transition property for `textOcclusionOpacity`
-    public var textOcclusionOpacityTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["text-occlusion-opacity-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["text-occlusion-opacity-transition"] = newValue?.asDictionary }
-    }
-
     /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
     /// Default value: 0. Value range: [0, 1]
     public var textOcclusionOpacity: Double? {
@@ -685,23 +542,11 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["text-occlusion-opacity"] = newValue }
     }
 
-    /// Transition property for `textOpacity`
-    public var textOpacityTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["text-opacity-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["text-opacity-transition"] = newValue?.asDictionary }
-    }
-
     /// The opacity at which the text will be drawn.
     /// Default value: 1. Value range: [0, 1]
     public var textOpacity: Double? {
         get { impl.layerProperties["text-opacity"] as? Double }
         set { impl.layerProperties["text-opacity"] = newValue }
-    }
-
-    /// Transition property for `textTranslate`
-    public var textTranslateTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["text-translate-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["text-translate-transition"] = newValue?.asDictionary }
     }
 
     /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
@@ -726,7 +571,6 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         get { impl.layerProperties["slot"] as? String }
         set { impl.layerProperties["slot"] = newValue }
     }
-
 }
 
 // End of generated file.

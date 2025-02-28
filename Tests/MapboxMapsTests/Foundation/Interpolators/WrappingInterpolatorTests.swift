@@ -6,7 +6,7 @@ final class WrappingInterpolatorTests: XCTestCase {
         let range: Range<Double> = 0..<360
         let interpolator = WrappingInterpolator()
 
-        let fraction = 999.9
+        let fraction = Double.random(in: -1000...1000)
 
         func interpolate(from: Double, to: Double) -> Double {
             return interpolator.interpolate(

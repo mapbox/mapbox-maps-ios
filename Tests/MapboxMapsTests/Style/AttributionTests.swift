@@ -71,7 +71,7 @@ class AttributionTests: XCTestCase {
     }
 
     func testPlainTextAttributionParsing() throws {
-        let attributionString = String.testConstantAlphanumeric(withLength: 10).trimmingCharacters(in: .whitespacesAndNewlines)
+        let attributionString = String.randomAlphanumeric(withLength: 10).trimmingCharacters(in: .whitespacesAndNewlines)
         let parseExpectation = expectation(description: "Attributions are parsed")
 
         Attribution.parse([attributionString]) { attributions in
@@ -160,7 +160,7 @@ class AttributionTests: XCTestCase {
     }
 
     func testNonOSMSnapshotTitle() {
-        let attributionTitle = String.testConstantASCII(withLength: 10)
+        let attributionTitle = String.randomASCII(withLength: 10)
         let attribution = Attribution(title: attributionTitle, url: nil)
 
         XCTAssertEqual(attribution.kind, .nonActionable)

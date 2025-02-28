@@ -14,11 +14,11 @@ final class CameraStateTests: XCTestCase {
         center = .testConstantValue()
         padding = .testConstantValue()
         anchor = CGPoint(
-            x: 23,
-            y: 0)
-        zoom = 12.3
-        bearing = 360
-        pitch = 45
+            x: .random(in: 0...100),
+            y: .random(in: 0...100))
+        zoom = .random(in: 0...20)
+        bearing = .random(in: 0...360)
+        pitch = .random(in: 0...45)
     }
 
     override func tearDown() {

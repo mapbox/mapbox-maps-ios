@@ -87,21 +87,12 @@ public struct CircleAnnotation: Annotation, Equatable, AnnotationInternal {
         var properties: [String: Any] = [:]
         properties["circle-sort-key"] = circleSortKey
         properties["circle-blur"] = circleBlur
-        properties["circle-blur-transition"] = circleBlurTransition?.asDictionary
         properties["circle-color"] = circleColor?.rawValue
-        properties["circle-color-use-theme"] = circleColorUseTheme?.rawValue
-        properties["circle-color-transition"] = circleColorTransition?.asDictionary
         properties["circle-opacity"] = circleOpacity
-        properties["circle-opacity-transition"] = circleOpacityTransition?.asDictionary
         properties["circle-radius"] = circleRadius
-        properties["circle-radius-transition"] = circleRadiusTransition?.asDictionary
         properties["circle-stroke-color"] = circleStrokeColor?.rawValue
-        properties["circle-stroke-color-use-theme"] = circleStrokeColorUseTheme?.rawValue
-        properties["circle-stroke-color-transition"] = circleStrokeColorTransition?.asDictionary
         properties["circle-stroke-opacity"] = circleStrokeOpacity
-        properties["circle-stroke-opacity-transition"] = circleStrokeOpacityTransition?.asDictionary
         properties["circle-stroke-width"] = circleStrokeWidth
-        properties["circle-stroke-width-transition"] = circleStrokeWidthTransition?.asDictionary
         return properties
     }
 
@@ -146,62 +137,29 @@ public struct CircleAnnotation: Annotation, Equatable, AnnotationInternal {
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var circleSortKey: Double?
 
-    /// Transition property for `circleBlur`
-    public var circleBlurTransition: StyleTransition?
-
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity. Setting a negative value renders the blur as an inner glow effect.
     /// Default value: 0.
     public var circleBlur: Double?
-
-    /// This property defines whether the `circleColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var circleColorUseTheme: ColorUseTheme?
-
-    /// Transition property for `circleColor`
-    public var circleColorTransition: StyleTransition?
 
     /// The fill color of the circle.
     /// Default value: "#000000".
     public var circleColor: StyleColor?
 
-    /// Transition property for `circleOpacity`
-    public var circleOpacityTransition: StyleTransition?
-
     /// The opacity at which the circle will be drawn.
     /// Default value: 1. Value range: [0, 1]
     public var circleOpacity: Double?
-
-    /// Transition property for `circleRadius`
-    public var circleRadiusTransition: StyleTransition?
 
     /// Circle radius.
     /// Default value: 5. Minimum value: 0. The unit of circleRadius is in pixels.
     public var circleRadius: Double?
 
-    /// This property defines whether the `circleStrokeColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var circleStrokeColorUseTheme: ColorUseTheme?
-
-    /// Transition property for `circleStrokeColor`
-    public var circleStrokeColorTransition: StyleTransition?
-
     /// The stroke color of the circle.
     /// Default value: "#000000".
     public var circleStrokeColor: StyleColor?
 
-    /// Transition property for `circleStrokeOpacity`
-    public var circleStrokeOpacityTransition: StyleTransition?
-
     /// The opacity of the circle's stroke.
     /// Default value: 1. Value range: [0, 1]
     public var circleStrokeOpacity: Double?
-
-    /// Transition property for `circleStrokeWidth`
-    public var circleStrokeWidthTransition: StyleTransition?
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
     /// Default value: 0. Minimum value: 0. The unit of circleStrokeWidth is in pixels.
@@ -210,6 +168,65 @@ public struct CircleAnnotation: Annotation, Equatable, AnnotationInternal {
 }
 
 extension CircleAnnotation {
+
+    /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
+    public func circleSortKey(_ newValue: Double) -> Self {
+        with(self, setter(\.circleSortKey, newValue))
+    }
+
+    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity. Setting a negative value renders the blur as an inner glow effect.
+    /// Default value: 0.
+    public func circleBlur(_ newValue: Double) -> Self {
+        with(self, setter(\.circleBlur, newValue))
+    }
+
+    /// The fill color of the circle.
+    /// Default value: "#000000".
+    public func circleColor(_ color: UIColor) -> Self {
+        circleColor(StyleColor(color))
+    }
+
+    /// The fill color of the circle.
+    /// Default value: "#000000".
+    public func circleColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.circleColor, newValue))
+    }
+
+    /// The opacity at which the circle will be drawn.
+    /// Default value: 1. Value range: [0, 1]
+    public func circleOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.circleOpacity, newValue))
+    }
+
+    /// Circle radius.
+    /// Default value: 5. Minimum value: 0. The unit of circleRadius is in pixels.
+    public func circleRadius(_ newValue: Double) -> Self {
+        with(self, setter(\.circleRadius, newValue))
+    }
+
+    /// The stroke color of the circle.
+    /// Default value: "#000000".
+    public func circleStrokeColor(_ color: UIColor) -> Self {
+        circleStrokeColor(StyleColor(color))
+    }
+
+    /// The stroke color of the circle.
+    /// Default value: "#000000".
+    public func circleStrokeColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.circleStrokeColor, newValue))
+    }
+
+    /// The opacity of the circle's stroke.
+    /// Default value: 1. Value range: [0, 1]
+    public func circleStrokeOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.circleStrokeOpacity, newValue))
+    }
+
+    /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
+    /// Default value: 0. Minimum value: 0. The unit of circleStrokeWidth is in pixels.
+    public func circleStrokeWidth(_ newValue: Double) -> Self {
+        with(self, setter(\.circleStrokeWidth, newValue))
+    }
 
     /// Adds a handler for tap gesture on current annotation.
     ///
@@ -254,120 +271,7 @@ extension CircleAnnotation {
     }
 }
 
-extension CircleAnnotation {
-    /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
-    public func circleSortKey(_ newValue: Double) -> Self {
-        with(self, setter(\.circleSortKey, newValue))
-    }
-
-    /// Transition property for `circleBlur`
-    public func circleBlurTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.circleBlurTransition, transition))
-    }
-
-    /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity. Setting a negative value renders the blur as an inner glow effect.
-    /// Default value: 0.
-    public func circleBlur(_ newValue: Double) -> Self {
-        with(self, setter(\.circleBlur, newValue))
-    }
-
-    /// The fill color of the circle.
-    /// Default value: "#000000".
-    public func circleColor(_ color: UIColor) -> Self {
-        with(self, setter(\.circleColor, StyleColor(color)))
-    }
-
-    /// This property defines whether the `circleColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func circleColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
-        with(self, setter(\.circleColorUseTheme, useTheme))
-    }
-
-    /// Transition property for `circleColor`
-    public func circleColorTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.circleColorTransition, transition))
-    }
-
-    /// The fill color of the circle.
-    /// Default value: "#000000".
-    public func circleColor(_ newValue: StyleColor) -> Self {
-        with(self, setter(\.circleColor, newValue))
-    }
-
-    /// Transition property for `circleOpacity`
-    public func circleOpacityTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.circleOpacityTransition, transition))
-    }
-
-    /// The opacity at which the circle will be drawn.
-    /// Default value: 1. Value range: [0, 1]
-    public func circleOpacity(_ newValue: Double) -> Self {
-        with(self, setter(\.circleOpacity, newValue))
-    }
-
-    /// Transition property for `circleRadius`
-    public func circleRadiusTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.circleRadiusTransition, transition))
-    }
-
-    /// Circle radius.
-    /// Default value: 5. Minimum value: 0. The unit of circleRadius is in pixels.
-    public func circleRadius(_ newValue: Double) -> Self {
-        with(self, setter(\.circleRadius, newValue))
-    }
-
-    /// The stroke color of the circle.
-    /// Default value: "#000000".
-    public func circleStrokeColor(_ color: UIColor) -> Self {
-        with(self, setter(\.circleStrokeColor, StyleColor(color)))
-    }
-
-    /// This property defines whether the `circleStrokeColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func circleStrokeColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
-        with(self, setter(\.circleStrokeColorUseTheme, useTheme))
-    }
-
-    /// Transition property for `circleStrokeColor`
-    public func circleStrokeColorTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.circleStrokeColorTransition, transition))
-    }
-
-    /// The stroke color of the circle.
-    /// Default value: "#000000".
-    public func circleStrokeColor(_ newValue: StyleColor) -> Self {
-        with(self, setter(\.circleStrokeColor, newValue))
-    }
-
-    /// Transition property for `circleStrokeOpacity`
-    public func circleStrokeOpacityTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.circleStrokeOpacityTransition, transition))
-    }
-
-    /// The opacity of the circle's stroke.
-    /// Default value: 1. Value range: [0, 1]
-    public func circleStrokeOpacity(_ newValue: Double) -> Self {
-        with(self, setter(\.circleStrokeOpacity, newValue))
-    }
-
-    /// Transition property for `circleStrokeWidth`
-    public func circleStrokeWidthTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.circleStrokeWidthTransition, transition))
-    }
-
-    /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
-    /// Default value: 0. Minimum value: 0. The unit of circleStrokeWidth is in pixels.
-    public func circleStrokeWidth(_ newValue: Double) -> Self {
-        with(self, setter(\.circleStrokeWidth, newValue))
-    }
-}
-
 extension CircleAnnotation: MapContent, PrimitiveMapContent {
-
     func visit(_ node: MapContentNode) {
         CircleAnnotationGroup { self }.visit(node)
     }

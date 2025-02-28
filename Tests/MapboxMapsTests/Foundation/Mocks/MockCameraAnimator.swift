@@ -16,7 +16,7 @@ final class MockCameraAnimator: NSObject, CameraAnimatorProtocol {
 
     @Stubbed var state: UIViewAnimatingState = .inactive
 
-    @Stubbed var owner: AnimationOwner = .testConstantValue()
+    @Stubbed var owner: AnimationOwner = .random()
 
     @Stubbed var animationType: AnimationType = .unspecified
 

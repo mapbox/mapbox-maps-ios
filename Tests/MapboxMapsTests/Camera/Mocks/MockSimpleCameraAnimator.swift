@@ -4,7 +4,7 @@ import UIKit
 final class MockSimpleCameraAnimator: SimpleCameraAnimatorProtocol {
     @Stubbed var state: UIViewAnimatingState = .inactive
 
-    @Stubbed var owner: AnimationOwner = .testConstantValue()
+    @Stubbed var owner: AnimationOwner = .random()
 
     @Stubbed var animationType: AnimationType = .unspecified
 

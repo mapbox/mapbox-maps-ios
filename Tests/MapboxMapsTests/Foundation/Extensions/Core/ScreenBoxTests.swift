@@ -4,10 +4,10 @@ import XCTest
 final class ScreenBoxTests: XCTestCase {
     func testInitWithCGRect() {
         let rect = CGRect(
-            x: 10,
-            y: 0,
-            width: 100,
-            height: 0)
+            x: CGFloat.random(in: 0...100),
+            y: CGFloat.random(in: 0...100),
+            width: CGFloat.random(in: 0...100),
+            height: CGFloat.random(in: 0...100))
 
         let screenBox = CoreScreenBox(rect)
 

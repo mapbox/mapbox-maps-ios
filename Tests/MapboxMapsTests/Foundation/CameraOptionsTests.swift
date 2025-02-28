@@ -12,19 +12,19 @@ final class CameraOptionsTests: XCTestCase {
     override func setUp() {
         super.tearDown()
         center = CLLocationCoordinate2D(
-            latitude: 24,
-            longitude: -179)
+            latitude: .random(in: -80...80),
+            longitude: .random(in: -180...180))
         padding = UIEdgeInsets(
-            top: 55,
-            left: 44,
-            bottom: 0,
-            right: 100)
+            top: .random(in: 0...100),
+            left: .random(in: 0...100),
+            bottom: .random(in: 0...100),
+            right: .random(in: 0...100))
         anchor = CGPoint(
-            x: 55,
-            y: 100)
-        zoom = 3.34
-        bearing = 359.0
-        pitch = 39
+            x: CGFloat.random(in: 0...100),
+            y: CGFloat.random(in: 0...100))
+        zoom = .random(in: 0...20)
+        bearing = .random(in: 0...360)
+        pitch = .random(in: 0...45)
     }
 
     override func tearDown() {

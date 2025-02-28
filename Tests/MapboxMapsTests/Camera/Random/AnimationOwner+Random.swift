@@ -1,7 +1,7 @@
 import MapboxMaps
 
 extension AnimationOwner {
-    static func testConstantValue() -> Self {
-        return AnimationOwner(rawValue: .testConstantASCII(withLength: 10))
+    static func random() -> Self {
+        return AnimationOwner(rawValue: .randomASCII(withLength: .random(in: 4...10)))
     }
 }

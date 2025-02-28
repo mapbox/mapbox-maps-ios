@@ -13,6 +13,6 @@ extension Array {
 
 extension Array where Element == String {
     static func testFixture() -> Self {
-        .testFixture(withLength: 9, generator: { .testConstantASCII(withLength: 16) })
+        .testFixture(withLength: 9, generator: { .randomASCII(withLength: 16) })
     }
 }

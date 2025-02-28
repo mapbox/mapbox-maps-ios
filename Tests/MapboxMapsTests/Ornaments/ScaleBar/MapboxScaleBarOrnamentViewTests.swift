@@ -61,7 +61,7 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
         let scaleBar = MockMapboxScaleBarOrnamentView()
         scaleBar.useMetricUnits = true
 
-        scaleBar.metersPerPoint = 0.004
+        scaleBar.metersPerPoint = Double.random(in: 0.00125..<0.005)
         let preferredRow = scaleBar.preferredRow()
 
         XCTAssertEqual(preferredRow.numberOfBars, 1, "Number of bar when max distance is less than 1m should be 1")
@@ -69,7 +69,7 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
         XCTAssertEqual(preferredRow.distance.remainder(dividingBy: 0.25), 0)
         XCTAssertLessThanOrEqual(preferredRow.distance, scaleBar.maximumWidth * scaleBar.metersPerPoint)
 
-        scaleBar.metersPerPoint = 0.001
+        scaleBar.metersPerPoint = Double.random(in: 0...0.00125)
         XCTAssertEqual(scaleBar.preferredRow().distance, 0, "Distance less than 0.25m should not be rendered")
     }
 }
@@ -119,7 +119,7 @@ internal struct ScaleBarTestValues {
 
     // Provide test values where the metersPerPoint results in a distance slightly greater than the distance in MapboxScaleBarOrnamentView.Constants.metricTable
     static let metricValues = [
-        (metersPerPoint: 0.00126, numberOfBars: 1),
+        (metersPerPoint: Double.random(in: 0.00125..<0.005), numberOfBars: 1),
         (metersPerPoint: 0.00505, numberOfBars: 2),
         (metersPerPoint: 0.010049999999999998, numberOfBars: 2),
         (metersPerPoint: 0.02005, numberOfBars: 2),

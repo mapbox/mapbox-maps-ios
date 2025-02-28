@@ -19,9 +19,9 @@ final class LongitudeInterpolatorTests: XCTestCase {
     }
 
     func testInterpolate() {
-        let from: Double = -179
-        let to: Double = 189
-        let fraction: Double = 0.4
+        let from = CLLocationDegrees.random(in: -180..<180)
+        let to = CLLocationDegrees.random(in: -180..<180)
+        let fraction = Double.random(in: 0...1)
 
         let result = longitudeInterpolator.interpolate(
             from: from,

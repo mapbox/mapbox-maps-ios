@@ -38,7 +38,7 @@ public protocol ViewAnnotationUpdateObserver: AnyObject {
     ///
     /// Use `isHidden` property to determine whether a view is visible or not.
     /// - Parameters:
-    ///   - annotationViews: The annotation views whose visibility changed.
+    ///   - annotationViews: The annotation vies whose visibility changed.
     func visibilityDidChange(for annotationViews: [UIView])
 }
 

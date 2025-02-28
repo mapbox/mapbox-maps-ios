@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@_spi(Experimental) @testable import MapboxMaps
+@testable import MapboxMaps
 
 final class PointAnnotationTests: XCTestCase {
 
@@ -270,39 +270,6 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(textTransform, annotation.textTransform?.rawValue)
     }
 
-    func testIconColorUseTheme() {
-      var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-      annotation.iconColorUseTheme = .default
-
-      guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-          return
-      }
-      guard case let .object(layerProperties) = featureProperties["layerProperties"],
-            case let .string(iconColorUseTheme) = layerProperties["icon-color-use-theme"] else {
-          return XCTFail("Layer property icon-color-use-theme should be set to a string.")
-      }
-
-      XCTAssertEqual(iconColorUseTheme, annotation.iconColorUseTheme?.rawValue)
-    }
-    func testIconColorTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.iconColorTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(iconColorTransition) = layerProperties["icon-color-transition"],
-              case let .number(duration) = iconColorTransition["duration"],
-              case let .number(delay) = iconColorTransition["delay"]
-        else {
-            return XCTFail("Layer property icon-color-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.iconColorTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.iconColorTransition?.delay)
-    }
-
     func testIconColor() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconColor =  StyleColor.testConstantValue()
@@ -315,25 +282,6 @@ final class PointAnnotationTests: XCTestCase {
             return XCTFail("Layer property icon-color should be set to a string.")
         }
         XCTAssertEqual(iconColor, annotation.iconColor.flatMap { $0.rawValue })
-    }
-
-    func testIconEmissiveStrengthTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.iconEmissiveStrengthTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(iconEmissiveStrengthTransition) = layerProperties["icon-emissive-strength-transition"],
-              case let .number(duration) = iconEmissiveStrengthTransition["duration"],
-              case let .number(delay) = iconEmissiveStrengthTransition["delay"]
-        else {
-            return XCTFail("Layer property icon-emissive-strength-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.iconEmissiveStrengthTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.iconEmissiveStrengthTransition?.delay)
     }
 
     func testIconEmissiveStrength() {
@@ -350,25 +298,6 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(iconEmissiveStrength, annotation.iconEmissiveStrength)
     }
 
-    func testIconHaloBlurTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.iconHaloBlurTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(iconHaloBlurTransition) = layerProperties["icon-halo-blur-transition"],
-              case let .number(duration) = iconHaloBlurTransition["duration"],
-              case let .number(delay) = iconHaloBlurTransition["delay"]
-        else {
-            return XCTFail("Layer property icon-halo-blur-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.iconHaloBlurTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.iconHaloBlurTransition?.delay)
-    }
-
     func testIconHaloBlur() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconHaloBlur =  Double.testConstantValue()
@@ -381,39 +310,6 @@ final class PointAnnotationTests: XCTestCase {
             return XCTFail("Layer property icon-halo-blur should be set to a number.")
         }
         XCTAssertEqual(iconHaloBlur, annotation.iconHaloBlur)
-    }
-
-    func testIconHaloColorUseTheme() {
-      var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-      annotation.iconHaloColorUseTheme = .default
-
-      guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-          return
-      }
-      guard case let .object(layerProperties) = featureProperties["layerProperties"],
-            case let .string(iconHaloColorUseTheme) = layerProperties["icon-halo-color-use-theme"] else {
-          return XCTFail("Layer property icon-halo-color-use-theme should be set to a string.")
-      }
-
-      XCTAssertEqual(iconHaloColorUseTheme, annotation.iconHaloColorUseTheme?.rawValue)
-    }
-    func testIconHaloColorTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.iconHaloColorTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(iconHaloColorTransition) = layerProperties["icon-halo-color-transition"],
-              case let .number(duration) = iconHaloColorTransition["duration"],
-              case let .number(delay) = iconHaloColorTransition["delay"]
-        else {
-            return XCTFail("Layer property icon-halo-color-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.iconHaloColorTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.iconHaloColorTransition?.delay)
     }
 
     func testIconHaloColor() {
@@ -430,25 +326,6 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(iconHaloColor, annotation.iconHaloColor.flatMap { $0.rawValue })
     }
 
-    func testIconHaloWidthTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.iconHaloWidthTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(iconHaloWidthTransition) = layerProperties["icon-halo-width-transition"],
-              case let .number(duration) = iconHaloWidthTransition["duration"],
-              case let .number(delay) = iconHaloWidthTransition["delay"]
-        else {
-            return XCTFail("Layer property icon-halo-width-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.iconHaloWidthTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.iconHaloWidthTransition?.delay)
-    }
-
     func testIconHaloWidth() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconHaloWidth =  Double.testConstantValue()
@@ -461,25 +338,6 @@ final class PointAnnotationTests: XCTestCase {
             return XCTFail("Layer property icon-halo-width should be set to a number.")
         }
         XCTAssertEqual(iconHaloWidth, annotation.iconHaloWidth)
-    }
-
-    func testIconImageCrossFadeTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.iconImageCrossFadeTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(iconImageCrossFadeTransition) = layerProperties["icon-image-cross-fade-transition"],
-              case let .number(duration) = iconImageCrossFadeTransition["duration"],
-              case let .number(delay) = iconImageCrossFadeTransition["delay"]
-        else {
-            return XCTFail("Layer property icon-image-cross-fade-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.iconImageCrossFadeTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.iconImageCrossFadeTransition?.delay)
     }
 
     func testIconImageCrossFade() {
@@ -496,25 +354,6 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(iconImageCrossFade, annotation.iconImageCrossFade)
     }
 
-    func testIconOcclusionOpacityTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.iconOcclusionOpacityTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(iconOcclusionOpacityTransition) = layerProperties["icon-occlusion-opacity-transition"],
-              case let .number(duration) = iconOcclusionOpacityTransition["duration"],
-              case let .number(delay) = iconOcclusionOpacityTransition["delay"]
-        else {
-            return XCTFail("Layer property icon-occlusion-opacity-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.iconOcclusionOpacityTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.iconOcclusionOpacityTransition?.delay)
-    }
-
     func testIconOcclusionOpacity() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconOcclusionOpacity =  Double.testConstantValue()
@@ -527,25 +366,6 @@ final class PointAnnotationTests: XCTestCase {
             return XCTFail("Layer property icon-occlusion-opacity should be set to a number.")
         }
         XCTAssertEqual(iconOcclusionOpacity, annotation.iconOcclusionOpacity)
-    }
-
-    func testIconOpacityTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.iconOpacityTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(iconOpacityTransition) = layerProperties["icon-opacity-transition"],
-              case let .number(duration) = iconOpacityTransition["duration"],
-              case let .number(delay) = iconOpacityTransition["delay"]
-        else {
-            return XCTFail("Layer property icon-opacity-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.iconOpacityTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.iconOpacityTransition?.delay)
     }
 
     func testIconOpacity() {
@@ -562,25 +382,6 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(iconOpacity, annotation.iconOpacity)
     }
 
-    func testSymbolZOffsetTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.symbolZOffsetTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(symbolZOffsetTransition) = layerProperties["symbol-z-offset-transition"],
-              case let .number(duration) = symbolZOffsetTransition["duration"],
-              case let .number(delay) = symbolZOffsetTransition["delay"]
-        else {
-            return XCTFail("Layer property symbol-z-offset-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.symbolZOffsetTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.symbolZOffsetTransition?.delay)
-    }
-
     func testSymbolZOffset() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.symbolZOffset =  Double.testConstantValue()
@@ -593,39 +394,6 @@ final class PointAnnotationTests: XCTestCase {
             return XCTFail("Layer property symbol-z-offset should be set to a number.")
         }
         XCTAssertEqual(symbolZOffset, annotation.symbolZOffset)
-    }
-
-    func testTextColorUseTheme() {
-      var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-      annotation.textColorUseTheme = .default
-
-      guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-          return
-      }
-      guard case let .object(layerProperties) = featureProperties["layerProperties"],
-            case let .string(textColorUseTheme) = layerProperties["text-color-use-theme"] else {
-          return XCTFail("Layer property text-color-use-theme should be set to a string.")
-      }
-
-      XCTAssertEqual(textColorUseTheme, annotation.textColorUseTheme?.rawValue)
-    }
-    func testTextColorTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.textColorTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(textColorTransition) = layerProperties["text-color-transition"],
-              case let .number(duration) = textColorTransition["duration"],
-              case let .number(delay) = textColorTransition["delay"]
-        else {
-            return XCTFail("Layer property text-color-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.textColorTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.textColorTransition?.delay)
     }
 
     func testTextColor() {
@@ -642,25 +410,6 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(textColor, annotation.textColor.flatMap { $0.rawValue })
     }
 
-    func testTextEmissiveStrengthTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.textEmissiveStrengthTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(textEmissiveStrengthTransition) = layerProperties["text-emissive-strength-transition"],
-              case let .number(duration) = textEmissiveStrengthTransition["duration"],
-              case let .number(delay) = textEmissiveStrengthTransition["delay"]
-        else {
-            return XCTFail("Layer property text-emissive-strength-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.textEmissiveStrengthTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.textEmissiveStrengthTransition?.delay)
-    }
-
     func testTextEmissiveStrength() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textEmissiveStrength =  Double.testConstantValue()
@@ -673,25 +422,6 @@ final class PointAnnotationTests: XCTestCase {
             return XCTFail("Layer property text-emissive-strength should be set to a number.")
         }
         XCTAssertEqual(textEmissiveStrength, annotation.textEmissiveStrength)
-    }
-
-    func testTextHaloBlurTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.textHaloBlurTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(textHaloBlurTransition) = layerProperties["text-halo-blur-transition"],
-              case let .number(duration) = textHaloBlurTransition["duration"],
-              case let .number(delay) = textHaloBlurTransition["delay"]
-        else {
-            return XCTFail("Layer property text-halo-blur-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.textHaloBlurTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.textHaloBlurTransition?.delay)
     }
 
     func testTextHaloBlur() {
@@ -708,39 +438,6 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(textHaloBlur, annotation.textHaloBlur)
     }
 
-    func testTextHaloColorUseTheme() {
-      var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-      annotation.textHaloColorUseTheme = .default
-
-      guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-          return
-      }
-      guard case let .object(layerProperties) = featureProperties["layerProperties"],
-            case let .string(textHaloColorUseTheme) = layerProperties["text-halo-color-use-theme"] else {
-          return XCTFail("Layer property text-halo-color-use-theme should be set to a string.")
-      }
-
-      XCTAssertEqual(textHaloColorUseTheme, annotation.textHaloColorUseTheme?.rawValue)
-    }
-    func testTextHaloColorTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.textHaloColorTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(textHaloColorTransition) = layerProperties["text-halo-color-transition"],
-              case let .number(duration) = textHaloColorTransition["duration"],
-              case let .number(delay) = textHaloColorTransition["delay"]
-        else {
-            return XCTFail("Layer property text-halo-color-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.textHaloColorTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.textHaloColorTransition?.delay)
-    }
-
     func testTextHaloColor() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textHaloColor =  StyleColor.testConstantValue()
@@ -753,25 +450,6 @@ final class PointAnnotationTests: XCTestCase {
             return XCTFail("Layer property text-halo-color should be set to a string.")
         }
         XCTAssertEqual(textHaloColor, annotation.textHaloColor.flatMap { $0.rawValue })
-    }
-
-    func testTextHaloWidthTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.textHaloWidthTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(textHaloWidthTransition) = layerProperties["text-halo-width-transition"],
-              case let .number(duration) = textHaloWidthTransition["duration"],
-              case let .number(delay) = textHaloWidthTransition["delay"]
-        else {
-            return XCTFail("Layer property text-halo-width-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.textHaloWidthTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.textHaloWidthTransition?.delay)
     }
 
     func testTextHaloWidth() {
@@ -788,25 +466,6 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(textHaloWidth, annotation.textHaloWidth)
     }
 
-    func testTextOcclusionOpacityTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.textOcclusionOpacityTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(textOcclusionOpacityTransition) = layerProperties["text-occlusion-opacity-transition"],
-              case let .number(duration) = textOcclusionOpacityTransition["duration"],
-              case let .number(delay) = textOcclusionOpacityTransition["delay"]
-        else {
-            return XCTFail("Layer property text-occlusion-opacity-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.textOcclusionOpacityTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.textOcclusionOpacityTransition?.delay)
-    }
-
     func testTextOcclusionOpacity() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textOcclusionOpacity =  Double.testConstantValue()
@@ -819,25 +478,6 @@ final class PointAnnotationTests: XCTestCase {
             return XCTFail("Layer property text-occlusion-opacity should be set to a number.")
         }
         XCTAssertEqual(textOcclusionOpacity, annotation.textOcclusionOpacity)
-    }
-
-    func testTextOpacityTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.textOpacityTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(textOpacityTransition) = layerProperties["text-opacity-transition"],
-              case let .number(duration) = textOpacityTransition["duration"],
-              case let .number(delay) = textOpacityTransition["delay"]
-        else {
-            return XCTFail("Layer property text-opacity-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.textOpacityTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.textOpacityTransition?.delay)
     }
 
     func testTextOpacity() {

@@ -23,7 +23,7 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testSetProjection() throws {
-        let projectionName = StyleProjectionName.testConstantValue()
+        let projectionName = StyleProjectionName.random()
         let projection = StyleProjection(name: projectionName)
 
         try style.setProjection(projection)
@@ -36,7 +36,7 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testProjection() {
-        let projectionName = StyleProjectionName.testConstantValue()
+        let projectionName = StyleProjectionName.random()
         styleManager.getStyleProjectionPropertyStub.defaultReturnValue = StylePropertyValue(
             value: projectionName.rawValue,
             kind: .constant
@@ -95,7 +95,7 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testStyleIsLoaded() {
-        let isStyleLoaded = Bool.testConstantValue()
+        let isStyleLoaded = Bool.random()
         styleManager.isStyleLoadedStub.defaultReturnValue = isStyleLoaded
         XCTAssertEqual(style.isStyleLoaded, isStyleLoaded)
     }
@@ -147,9 +147,9 @@ final class StyleManagerTests: XCTestCase {
 
     func testGetStyleTransition() {
         let stubTransition = TransitionOptions(
-            duration: 300,
-            delay: 9,
-            enablePlacementTransitions: .testConstantValue())
+            duration: .random(in: 0...300),
+            delay: .random(in: 0...300),
+            enablePlacementTransitions: .random())
         styleManager.getStyleTransitionStub.defaultReturnValue = stubTransition.coreOptions
 
         XCTAssertEqual(style.styleTransition, stubTransition)
@@ -157,9 +157,9 @@ final class StyleManagerTests: XCTestCase {
 
     func testSetStyleTransition() throws {
         let stubTransition = TransitionOptions(
-            duration: 299.0,
-            delay: 4,
-            enablePlacementTransitions: .testConstantValue())
+            duration: .random(in: 0...300),
+            delay: .random(in: 0...300),
+            enablePlacementTransitions: .random())
         style.styleTransition = stubTransition
 
         let coreTransitionOptions = try XCTUnwrap(styleManager.setStyleTransitionStub.invocations.last?.parameters)
@@ -169,7 +169,7 @@ final class StyleManagerTests: XCTestCase {
     // MARK: Layer
 
     func testStyleLayerExistence() {
-        let layerID = String.testConstantAlphanumeric(withLength: 12)
+        let layerID = String.randomAlphanumeric(withLength: 12)
         XCTAssertEqual(style.layerExists(withId: layerID), styleManager.styleLayerExists(forLayerId: layerID))
     }
 
@@ -219,7 +219,7 @@ final class StyleManagerTests: XCTestCase {
 
     func testGetAllSourceIdentifiers() {
         let stubbedStyleSources: [SourceInfo] = .testFixture(withLength: 3) {
-            SourceInfo(id: .testConstantAlphanumeric(withLength: 12), type: .testConstantValue())
+            SourceInfo(id: .randomAlphanumeric(withLength: 12), type: .random())
         }
         sourceManager.$allSourceIdentifiers.getStub.defaultReturnValue = stubbedStyleSources
 
@@ -270,7 +270,7 @@ final class StyleManagerTests: XCTestCase {
 
     func testStyleCanAddTypedStyleSource() throws {
         let id = "dummy-source-id"
-        let type = SourceType.testConstantValue()
+        let type = SourceType.random()
         guard let source = try type.sourceType?.init(jsonObject: ["type": type.rawValue, "id": id]) else {
             XCTFail("Expected to return a valid source")
             return
@@ -294,8 +294,8 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testStyleCanCheckIfSourceExist() {
-        let sourceExists = Bool.testConstantValue()
-        let id = String.testConstantASCII(withLength: 10)
+        let sourceExists = Bool.random()
+        let id = String.randomASCII(withLength: 10)
         sourceManager.sourceExistsStub.defaultReturnValue = sourceExists
 
         let returnedSourceExists = style.sourceExists(withId: id)
@@ -306,7 +306,7 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testUpdateGeoJSONSource() throws {
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
 
         style.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject)
@@ -334,8 +334,8 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testGetSourceProperty() throws {
-        let id = String.testConstantASCII(withLength: 10)
-        let property = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
+        let property = String.randomASCII(withLength: 10)
         let value = StylePropertyValue(value: "foo", kind: .constant)
         sourceManager.sourcePropertyForStub.defaultReturnValue = value
 
@@ -349,7 +349,7 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testGetSourceProperties() throws {
-        let id = String.testConstantASCII(withLength: 10)
+        let id = String.randomASCII(withLength: 10)
         let value = ["foo": "bar"]
         sourceManager.sourcePropertiesForStub.defaultReturnValue = value
 
@@ -362,9 +362,9 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testSetSourceProperty() throws {
-        let id = String.testConstantASCII(withLength: 19)
-        let property = String.testConstantASCII(withLength: 19)
-        let value = String.testConstantASCII(withLength: 19)
+        let id = String.randomASCII(withLength: 19)
+        let property = String.randomASCII(withLength: 19)
+        let value = String.randomASCII(withLength: 19)
 
         try style.setSourceProperty(for: id, property: property, value: value)
 
@@ -376,8 +376,8 @@ final class StyleManagerTests: XCTestCase {
     }
 
     func testSetSourceProperties() throws {
-        let id = String.testConstantASCII(withLength: 19)
-        let properties = [String.testConstantASCII(withLength: 19): String.testConstantASCII(withLength: 19)]
+        let id = String.randomASCII(withLength: 19)
+        let properties = [String.randomASCII(withLength: 19): String.randomASCII(withLength: 19)]
 
         try style.setSourceProperties(for: id, properties: properties)
 
@@ -421,7 +421,7 @@ final class StyleManagerTests: XCTestCase {
         let options = CustomGeometrySourceOptions(
             fetchTileFunction: { _ in },
             cancelTileFunction: { _ in },
-            tileOptions: TileOptions(tolerance: 0, tileSize: 0, buffer: 0, clip: .testConstantValue(), wrap: .testConstantValue()))
+            tileOptions: TileOptions(tolerance: 0, tileSize: 0, buffer: 0, clip: .random(), wrap: .random()))
 
         styleManager.addStyleCustomGeometrySourceStub.defaultReturnValue = Expected(value: NSNull())
         XCTAssertNoThrow(try style.addCustomGeometrySource(withId: "dummy-custom-geometry-source-id", options: options))
@@ -544,14 +544,14 @@ final class StyleManagerTests: XCTestCase {
     func testAddImageWithStretches() throws {
         let image = UIImage.empty
         let id = UUID().uuidString
-        let sdf = Bool.testConstantValue()
-        let stretchX = [ImageStretches(first: 2, second: 0)]
-        let stretchY = [ImageStretches(first: 99, second: 100)]
+        let sdf = Bool.random()
+        let stretchX = [ImageStretches(first: .random(in: 1...100), second: .random(in: 1...100))]
+        let stretchY = [ImageStretches(first: .random(in: 1...100), second: .random(in: 1...100))]
         let content = ImageContent(
-            left: 34,
-            top: 33,
-            right: 1,
-            bottom: 100
+            left: .random(in: 1...100),
+            top: .random(in: 1...100),
+            right: .random(in: 1...100),
+            bottom: .random(in: 1...100)
         )
 
         try style.addImage(image, id: id, sdf: sdf, stretchX: stretchX, stretchY: stretchY, content: content)
@@ -568,7 +568,7 @@ final class StyleManagerTests: XCTestCase {
     func testAddImageWithInsets() throws {
         let image = UIImage.empty
         let id = UUID().uuidString
-        let sdf = Bool.testConstantValue()
+        let sdf = Bool.random()
         let insets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 2)
 
         try style.addImage(image, id: id, sdf: sdf, contentInsets: insets)
@@ -608,8 +608,8 @@ final class StyleManagerTests: XCTestCase {
 
     func testSet3DLightProperty() throws {
         let id = UUID().uuidString
-        let property = String.testConstantASCII(withLength: 19)
-        let value = String.testConstantASCII(withLength: 19)
+        let property = String.randomASCII(withLength: 19)
+        let value = String.randomASCII(withLength: 19)
 
         styleManager.setStyleLightPropertyForIdStub.defaultReturnValue = Expected(value: NSNull())
         XCTAssertNoThrow(try style.setLightProperty(for: id, property: property, value: value))
@@ -624,8 +624,8 @@ final class StyleManagerTests: XCTestCase {
 
     func testGet3DLightProperty() throws {
         let id = UUID().uuidString
-        let property = String.testConstantASCII(withLength: 19)
-        let stringValue = String.testConstantASCII(withLength: 19)
+        let property = String.randomASCII(withLength: 19)
+        let stringValue = String.randomASCII(withLength: 19)
 
         styleManager.getStyleLightPropertyForIdStub.defaultReturnValue = .init(value: stringValue, kind: .constant)
         let propertyValue = style.lightProperty(for: id, property: property)
@@ -663,10 +663,10 @@ final class StyleManagerTests: XCTestCase {
 
     func testAddGeoJSONSourceFeatures() throws {
         // given
-        let sourceId = String.testConstantASCII(withLength: 10)
-        let dataId = String.testConstantASCII(withLength: 11)
+        let sourceId = String.randomASCII(withLength: 10)
+        let dataId = String.randomASCII(withLength: 11)
         let point = Point(.testConstantValue())
-        let featureIdentifier = 999.0
+        let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)
 
@@ -683,10 +683,10 @@ final class StyleManagerTests: XCTestCase {
 
     func testUpdateGeoJSONSourceFeatures() throws {
         // given
-        let sourceId = String.testConstantASCII(withLength: 10)
-        let dataId = String.testConstantASCII(withLength: 11)
+        let sourceId = String.randomASCII(withLength: 10)
+        let dataId = String.randomASCII(withLength: 11)
         let point = Point(.testConstantValue())
-        let featureIdentifier = 0.0
+        let featureIdentifier = Double.random(in: 0...1000)
         var feature = Feature.init(geometry: point.geometry)
         feature.identifier = .number(featureIdentifier)
 
@@ -703,9 +703,9 @@ final class StyleManagerTests: XCTestCase {
 
     func testRemoveGeoJSONSourceFeatures() throws {
         // given
-        let sourceId = String.testConstantASCII(withLength: 10)
-        let dataId = String.testConstantASCII(withLength: 11)
-        let featureIdentifiers = (0...10).map { String.testConstantASCII(withLength: $0) }
+        let sourceId = String.randomASCII(withLength: 10)
+        let dataId = String.randomASCII(withLength: 11)
+        let featureIdentifiers = (0...10).map { String.randomASCII(withLength: $0) }
 
         // when
         style.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIdentifiers, dataId: dataId)

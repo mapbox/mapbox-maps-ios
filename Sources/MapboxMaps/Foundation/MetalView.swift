@@ -57,25 +57,34 @@ class MetalView: UIView, CoreMetalView {
 /// On iOS the MTKView is used to prevent potential breaking of existing behavior.
 /// Also, iOS 13 simulator doesn't directly support CAMetalLayer.
 class MetalView: MTKView, CoreMetalView {
-    var onRender: (() -> Void)?
+    private class DelegateImpl: NSObject, MTKViewDelegate {
+        var onRender: (() -> Void)?
+        func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
+        func draw(in view: MTKView) {
+            onRender?()
+        }
+    }
+
+    var onRender: (() -> Void)? {
+        get { delegateImpl.onRender }
+        set { delegateImpl.onRender = newValue }
+    }
+
+    func nextDrawable() -> CAMetalDrawable? { currentDrawable }
+
+    private let delegateImpl = DelegateImpl()
 
     override init(frame frameRect: CGRect, device: MTLDevice?) {
         super.init(frame: frameRect, device: device)
         autoResizeDrawable = false
         isPaused = true
         enableSetNeedsDisplay = false
+        delegate = delegateImpl
     }
 
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        onRender?()
-    }
-
-    func nextDrawable() -> CAMetalDrawable? { currentDrawable }
 
     open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let view = super.hitTest(point, with: event)

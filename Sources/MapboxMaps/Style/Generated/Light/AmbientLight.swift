@@ -64,9 +64,9 @@ public struct AmbientLight: Codable, StyleEncodable, Equatable {
     enum PropertiesCodingKeys: String, CodingKey {
         case color = "color"
         case colorTransition = "color-transition"
-        case intensity = "intensity"
+         case intensity = "intensity"
         case intensityTransition = "intensity-transition"
-    }
+     }
 }
 
 extension AmbientLight {

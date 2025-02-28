@@ -9,9 +9,9 @@ final class RotateGestureTestCase: GestureTestCase {
 
         try eventGenerator.fingerRotate([.rightThumb, .rightIndex],
                                         angle: -90.0 * .pi / 180.0,
-                                        duration: Constants.pinchDuration * 2)
+                                        duration: Constants.pinchDuration)
 
         XCTAssertTrue(mapView.camera.cameraAnimators.isEmpty)
-        XCTAssertGreaterThanOrEqual(mapView.mapboxMap.cameraState.bearing, 75)
+        XCTAssertGreaterThanOrEqual(mapView.mapboxMap.cameraState.bearing, 70)
     }
 }

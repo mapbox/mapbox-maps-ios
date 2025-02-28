@@ -4,20 +4,6 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-## 11.11.0 - 26 March, 2025
-
-* Update CoreMaps to 11.11.0 and Common to 24.11.0
-* `top-image`, `bearing-image`, and `shadow-image` properties on `LocationIndicatorLayer` are now paint properties instead of layout properties.
-
-## 11.11.0-rc.1 – 12 March, 2025
-
-* Expose experimental API for setting ColorTheme on style imports.
-* Expose use-theme properties for all annotation types and Puck3D layer. 
-* Update CoreMaps to 11.11.0-rc.2.
-* Update Common to 24.11.0-rc.2.
-
-## 11.11.0-beta.1 – 03 March, 2025
-
 * Reduce MapboxMaps binary size by removing debug symbols. Complete dSYM files are still available in the XCFramework.
 * Support panning and pinch gestures on trackpads.
 

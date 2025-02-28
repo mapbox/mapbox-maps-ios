@@ -4,7 +4,7 @@ import XCTest
 class TileRegionEstimateOptionsTests: XCTestCase {
 
     func testInitilization() throws {
-        let extraOptions: [Int] = [5, 6, 2, 66, 2, 5]
+        let extraOptions: [Int]? = .random(Array.testFixture(withLength: 5, generator: { Int.random(in: 0...9) }))
 
         let tileRegionEstimateOptions = try XCTUnwrap(TileRegionEstimateOptions(
             errorMargin: 0.1,

@@ -174,7 +174,7 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkTimestampWhenDisplayLinkIsNonNil() {
-        displayLink._timestamp = 0
+        displayLink._timestamp = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
 
         XCTAssertEqual(mapView.displayLinkTimestamp, displayLink.timestamp)
     }
@@ -186,7 +186,7 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkDurationWhenDisplayLinkIsNonNil() {
-        displayLink._duration = 4
+        displayLink._duration = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
 
         XCTAssertEqual(mapView.displayLinkDuration, displayLink.duration)
     }
@@ -355,7 +355,7 @@ final class MapViewTests: XCTestCase {
     func testURLOpener() throws {
         let attributionMenu = AttributionMenu(urlOpener: attributionURLOpener, feedbackURLRef: Ref { nil })
         let url = URL(string: "http://example.com")!
-        let attribution = Attribution(title: .testConstantASCII(withLength: 10), url: url)
+        let attribution = Attribution(title: .randomASCII(withLength: 10), url: url)
 
         let menu = attributionMenu.menu(from: [attribution])
         guard let item = menu.elements.first, case let AttributionMenuElement.item(menuItem) = item else {
@@ -526,7 +526,7 @@ final class MapViewTestsWithScene: XCTestCase {
 
     func testOpacityIsPropagatedToMetalView() {
         // given
-        let opaque = Bool.testConstantValue()
+        let opaque = Bool.random()
 
         // when
         mapView.isOpaque = opaque

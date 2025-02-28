@@ -56,6 +56,7 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
     func removeAllImages() {}
 
     // MARK: - Common layer properties
+
     /// The display of line endings.
     /// Default value: "butt".
     public var lineCap: LineCap? {
@@ -67,8 +68,7 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
     ///  - Vertical lines don't support line caps
     ///  - `line-join: round` is not supported with this property
     @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var lineCrossSlope: Double? {
+    @_spi(Experimental) public var lineCrossSlope: Double? {
         get { impl.layerProperties["line-cross-slope"] as? Double }
         set { impl.layerProperties["line-cross-slope"] = newValue }
     }
@@ -76,8 +76,7 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
     /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
     @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var lineElevationReference: LineElevationReference? {
+    @_spi(Experimental) public var lineElevationReference: LineElevationReference? {
         get { impl.layerProperties["line-elevation-reference"].flatMap { $0 as? String }.flatMap(LineElevationReference.init(rawValue:)) }
         set { impl.layerProperties["line-elevation-reference"] = newValue?.rawValue }
     }
@@ -112,8 +111,7 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
     /// Selects the unit of line-width. The same unit is automatically used for line-blur and line-offset. Note: This is an experimental property and might be removed in a future release.
     /// Default value: "pixels".
     @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var lineWidthUnit: LineWidthUnit? {
+    @_spi(Experimental) public var lineWidthUnit: LineWidthUnit? {
         get { impl.layerProperties["line-width-unit"].flatMap { $0 as? String }.flatMap(LineWidthUnit.init(rawValue:)) }
         set { impl.layerProperties["line-width-unit"] = newValue?.rawValue }
     }
@@ -128,16 +126,9 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
     ///  - Elevated lines don't cast shadows
     /// Default value: 0.
     @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var lineZOffset: Double? {
+    @_spi(Experimental) public var lineZOffset: Double? {
         get { impl.layerProperties["line-z-offset"] as? Double }
         set { impl.layerProperties["line-z-offset"] = newValue }
-    }
-
-    /// Transition property for `lineBlur`
-    public var lineBlurTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-blur-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-blur-transition"] = newValue?.asDictionary }
     }
 
     /// Blur applied to the line, in pixels.
@@ -147,21 +138,6 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-blur"] = newValue }
     }
 
-    /// This property defines whether the `lineBorderColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var lineBorderColorUseTheme: ColorUseTheme? {
-        get { impl.layerProperties["line-border-color-use-theme"].flatMap { $0 as? String }.flatMap(ColorUseTheme.init(rawValue:)) }
-        set { impl.layerProperties["line-border-color-use-theme"] = newValue?.rawValue }
-    }
-
-    /// Transition property for `lineBorderColor`
-    public var lineBorderColorTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-border-color-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-border-color-transition"] = newValue?.asDictionary }
-    }
-
     /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
     /// Default value: "rgba(0, 0, 0, 0)".
     public var lineBorderColor: StyleColor? {
@@ -169,32 +145,11 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-border-color"] = newValue?.rawValue }
     }
 
-    /// Transition property for `lineBorderWidth`
-    public var lineBorderWidthTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-border-width-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-border-width-transition"] = newValue?.asDictionary }
-    }
-
     /// The width of the line border. A value of zero means no border.
     /// Default value: 0. Minimum value: 0.
     public var lineBorderWidth: Double? {
         get { impl.layerProperties["line-border-width"] as? Double }
         set { impl.layerProperties["line-border-width"] = newValue }
-    }
-
-    /// This property defines whether the `lineColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var lineColorUseTheme: ColorUseTheme? {
-        get { impl.layerProperties["line-color-use-theme"].flatMap { $0 as? String }.flatMap(ColorUseTheme.init(rawValue:)) }
-        set { impl.layerProperties["line-color-use-theme"] = newValue?.rawValue }
-    }
-
-    /// Transition property for `lineColor`
-    public var lineColorTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-color-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-color-transition"] = newValue?.asDictionary }
     }
 
     /// The color with which the line will be drawn.
@@ -211,23 +166,11 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-dasharray"] = newValue }
     }
 
-    /// Transition property for `lineDepthOcclusionFactor`
-    public var lineDepthOcclusionFactorTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-depth-occlusion-factor-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-depth-occlusion-factor-transition"] = newValue?.asDictionary }
-    }
-
     /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
     /// Default value: 1. Value range: [0, 1]
     public var lineDepthOcclusionFactor: Double? {
         get { impl.layerProperties["line-depth-occlusion-factor"] as? Double }
         set { impl.layerProperties["line-depth-occlusion-factor"] = newValue }
-    }
-
-    /// Transition property for `lineEmissiveStrength`
-    public var lineEmissiveStrengthTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-emissive-strength-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-emissive-strength-transition"] = newValue?.asDictionary }
     }
 
     /// Controls the intensity of light emitted on the source features.
@@ -237,23 +180,11 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-emissive-strength"] = newValue }
     }
 
-    /// Transition property for `lineGapWidth`
-    public var lineGapWidthTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-gap-width-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-gap-width-transition"] = newValue?.asDictionary }
-    }
-
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
     /// Default value: 0. Minimum value: 0. The unit of lineGapWidth is in pixels.
     public var lineGapWidth: Double? {
         get { impl.layerProperties["line-gap-width"] as? Double }
         set { impl.layerProperties["line-gap-width"] = newValue }
-    }
-
-    /// Transition property for `lineOcclusionOpacity`
-    public var lineOcclusionOpacityTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-occlusion-opacity-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-occlusion-opacity-transition"] = newValue?.asDictionary }
     }
 
     /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
@@ -263,23 +194,11 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-occlusion-opacity"] = newValue }
     }
 
-    /// Transition property for `lineOffset`
-    public var lineOffsetTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-offset-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-offset-transition"] = newValue?.asDictionary }
-    }
-
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
     /// Default value: 0. The unit of lineOffset is in pixels.
     public var lineOffset: Double? {
         get { impl.layerProperties["line-offset"] as? Double }
         set { impl.layerProperties["line-offset"] = newValue }
-    }
-
-    /// Transition property for `lineOpacity`
-    public var lineOpacityTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-opacity-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-opacity-transition"] = newValue?.asDictionary }
     }
 
     /// The opacity at which the line will be drawn.
@@ -293,12 +212,6 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
     public var linePattern: String? {
         get { impl.layerProperties["line-pattern"] as? String }
         set { impl.layerProperties["line-pattern"] = newValue }
-    }
-
-    /// Transition property for `lineTranslate`
-    public var lineTranslateTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-translate-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-translate-transition"] = newValue?.asDictionary }
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
@@ -315,28 +228,10 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-translate-anchor"] = newValue?.rawValue }
     }
 
-    /// This property defines whether the `lineTrimColor` uses colorTheme from the style or not.
-    /// By default it will use color defined by the root theme in the style.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var lineTrimColorUseTheme: ColorUseTheme? {
-        get { impl.layerProperties["line-trim-color-use-theme"].flatMap { $0 as? String }.flatMap(ColorUseTheme.init(rawValue:)) }
-        set { impl.layerProperties["line-trim-color-use-theme"] = newValue?.rawValue }
-    }
-
-    /// Transition property for `lineTrimColor`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var lineTrimColorTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-trim-color-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-trim-color-transition"] = newValue?.asDictionary }
-    }
-
     /// The color to be used for rendering the trimmed line section that is defined by the `line-trim-offset` property.
     /// Default value: "transparent".
     @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var lineTrimColor: StyleColor? {
+    @_spi(Experimental) public var lineTrimColor: StyleColor? {
         get { impl.layerProperties["line-trim-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
         set { impl.layerProperties["line-trim-color"] = newValue?.rawValue }
     }
@@ -344,8 +239,7 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
     /// The fade range for the trim-start and trim-end points is defined by the `line-trim-offset` property. The first element of the array represents the fade range from the trim-start point toward the end of the line, while the second element defines the fade range from the trim-end point toward the beginning of the line. The fade result is achieved by interpolating between `line-trim-color` and the color specified by the `line-color` or the `line-gradient` property.
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [1,1].
     @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var lineTrimFadeRange: [Double]? {
+    @_spi(Experimental) public var lineTrimFadeRange: [Double]? {
         get { impl.layerProperties["line-trim-fade-range"] as? [Double] }
         set { impl.layerProperties["line-trim-fade-range"] = newValue }
     }
@@ -355,12 +249,6 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
     public var lineTrimOffset: [Double]? {
         get { impl.layerProperties["line-trim-offset"] as? [Double] }
         set { impl.layerProperties["line-trim-offset"] = newValue }
-    }
-
-    /// Transition property for `lineWidth`
-    public var lineWidthTransition: StyleTransition? {
-        get { StyleTransition(impl.layerProperties["line-width-transition"] as? [String: TimeInterval]) }
-        set { impl.layerProperties["line-width-transition"] = newValue?.asDictionary }
     }
 
     /// Stroke thickness.
@@ -378,7 +266,6 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         get { impl.layerProperties["slot"] as? String }
         set { impl.layerProperties["slot"] = newValue }
     }
-
 }
 
 // End of generated file.

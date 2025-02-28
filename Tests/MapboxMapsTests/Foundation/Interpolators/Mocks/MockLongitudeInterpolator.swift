@@ -7,7 +7,7 @@ final class MockLongitudeInterpolator: LongitudeInterpolatorProtocol {
         var to: CLLocationDegrees
         var fraction: Double
     }
-    let interpolateStub = Stub<InterpolateParams, CLLocationDegrees>(defaultReturnValue: -180)
+    let interpolateStub = Stub<InterpolateParams, CLLocationDegrees>(defaultReturnValue: .random(in: -180..<180))
     func interpolate(from: CLLocationDegrees,
                      to: CLLocationDegrees,
                      fraction: Double) -> CLLocationDegrees {

@@ -1535,41 +1535,6 @@ public class StyleManager {
         }
     }
 
-    /// Set coolor theme for the style import with specified `importId`.
-    ///
-    ///  - Parameters:
-    ///   - importId: Identifier of the style import to remove.
-    ///   - colorTheme: Color theme to set for style import.
-    ///
-    ///  - Throws:
-    ///   - An error describing why the operation was unsuccessful.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
-    public func setStyleImportColorTheme(importId: String, colorTheme: ColorTheme) throws {
-        guard let coreTheme = colorTheme.core else {
-            throw StyleError(message: "Cannot construct UIImage object.")
-        }
-
-        try handleExpected {
-            return styleManager.setImportColorThemeForImportId(importId, colorTheme: coreTheme)
-        }
-    }
-
-    /// Remove color theme from the style import.
-    ///
-    ///  - Parameters:
-    ///   - importId: Identifier of the style import to remove color theme from.
-    ///
-    ///  - Throws:
-    ///   - An error describing why the operation was unsuccessful.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
-    public func removeStyleImportColorTheme(importId: String) throws {
-        try handleExpected {
-            return styleManager.setImportColorThemeForImportId(importId, colorTheme: nil)
-        }
-    }
-
 }
 
 extension StyleManagerProtocol {
@@ -1788,20 +1753,6 @@ public struct StyleTransition: Codable, Equatable, Sendable {
 
         try container.encode(duration * 1000, forKey: .duration)
         try container.encode(delay * 1000, forKey: .delay)
-    }
-
-    init?(_ dictionary: [String: TimeInterval]?) {
-        guard
-            let duration = dictionary?[CodingKeys.duration.rawValue],
-            let delay = dictionary?[CodingKeys.delay.rawValue]
-        else {
-            return nil
-        }
-        self.init(duration: duration, delay: delay)
-    }
-
-    var asDictionary: [String: Double] {
-        [CodingKeys.duration.rawValue: duration * 1000, CodingKeys.delay.rawValue: delay * 1000]
     }
 }
 

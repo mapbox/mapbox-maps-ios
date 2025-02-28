@@ -157,7 +157,7 @@ class AttributionDialogTests: XCTestCase {
 
     func testShowAttributionDialogSingleNonActionableAttribution() throws {
 //        attributionMenu.filter = { $0.id == .copyright }
-        let attribution = Attribution(title: String.testConstantASCII(withLength: 10), url: nil)
+        let attribution = Attribution(title: String.randomASCII(withLength: 10), url: nil)
 
         mockDataSource.attributions = [attribution]
 
@@ -181,8 +181,8 @@ class AttributionDialogTests: XCTestCase {
     }
 
     func testShowAttributionDialogTwoAttributions() throws {
-        let attribution0 = Attribution(title: String.testConstantASCII(withLength: 10), url: nil)
-        let attribution1 = Attribution(title: String.testConstantASCII(withLength: 10), url: URL(string: "http://example.com")!)
+        let attribution0 = Attribution(title: String.randomASCII(withLength: 10), url: nil)
+        let attribution1 = Attribution(title: String.randomASCII(withLength: 10), url: URL(string: "http://example.com")!)
 
         mockDataSource.attributions = [attribution0, attribution1]
 
@@ -208,8 +208,8 @@ class AttributionDialogTests: XCTestCase {
     }
 
     func testAttributionFilteringID() throws {
-        let attribution0 = Attribution(title: String.testConstantASCII(withLength: 10), url: nil)
-        let attribution1 = Attribution(title: String.testConstantASCII(withLength: 10), url: URL(string: "http://example.com")!)
+        let attribution0 = Attribution(title: String.randomASCII(withLength: 10), url: nil)
+        let attribution1 = Attribution(title: String.randomASCII(withLength: 10), url: URL(string: "http://example.com")!)
 
         mockDataSource.attributions = [attribution0, attribution1]
 
@@ -238,8 +238,8 @@ class AttributionDialogTests: XCTestCase {
 
     func testAttributionFilteringCategory() throws {
         isGeofenceActive = true
-        let attribution0 = Attribution(title: String.testConstantASCII(withLength: 10), url: nil)
-        let attribution1 = Attribution(title: String.testConstantASCII(withLength: 10), url: URL(string: "http://example.com")!)
+        let attribution0 = Attribution(title: String.randomASCII(withLength: 10), url: nil)
+        let attribution1 = Attribution(title: String.randomASCII(withLength: 10), url: URL(string: "http://example.com")!)
 
         mockDataSource.attributions = [attribution0, attribution1]
 

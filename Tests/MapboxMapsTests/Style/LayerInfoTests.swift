@@ -3,8 +3,8 @@ import MapboxMaps
 
 final class LayerInfoTests: XCTestCase {
     func testMemberwiseInit() {
-        let id = String.testConstantASCII(withLength: 19)
-        let type = LayerType.testConstantValue()
+        let id = String.randomASCII(withLength: .random(in: 0..<20))
+        let type = LayerType.random()
 
         let layerInfo = LayerInfo(id: id, type: type)
 

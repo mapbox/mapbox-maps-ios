@@ -27,8 +27,8 @@ final class PanGestureHandlerTests: XCTestCase {
             cameraAnimationsManager: cameraAnimationsManager,
             dateProvider: dateProvider)
         panGestureHandler.delegate = delegate
-        panGestureHandler.decelerationFactor = 0.99
-        panGestureHandler.panMode = PanMode.horizontalAndVertical
+        panGestureHandler.decelerationFactor = .random(in: 0.99...0.999)
+        panGestureHandler.panMode = PanMode.allCases.randomElement()!
     }
 
     override func tearDown() {
@@ -139,11 +139,11 @@ final class PanGestureHandlerTests: XCTestCase {
                               velocityClampingFunction: (CGPoint) -> (CGPoint)) throws {
         mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = false
         panGestureHandler.panMode = panMode
-        panGestureHandler.decelerationFactor = 0.34
+        panGestureHandler.decelerationFactor = .random(in: 0.1...0.99)
         var initialCameraState = CameraState.testConstantValue()
         initialCameraState.pitch = initialCameraState.pitch.clamped(to: 0...60)
         mapboxMap.cameraState = initialCameraState
-        mapboxMap.size.height = 101
+        mapboxMap.size.height = .random(in: 100..<1000)
         let endedTouchLocation = CGPoint.testConstantValue()
         let touchLocations = [.testConstantValue(), endedTouchLocation, endedTouchLocation]
         gestureRecognizer.locationStub.returnValueQueue = touchLocations
@@ -382,7 +382,7 @@ final class PanGestureHandlerTests: XCTestCase {
 
     func testMultiTouchPanUsesCentroidOfTouches() throws {
         // given
-        let numberOfTouches = 678
+        let numberOfTouches = Int.random(in: 2...1000)
         let initialTouches: [CGPoint] = (0..<numberOfTouches).map { _ in .testConstantValue() }
         func centroid(_ touches: [CGPoint]) -> CGPoint {
             let touchSum = touches.reduce(into: CGPoint.zero) { partialResult, touchLocation in

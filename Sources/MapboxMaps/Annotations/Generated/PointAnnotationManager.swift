@@ -84,7 +84,7 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
 
     func addImages(_ images: Set<PointAnnotation.Image>) {
         for image in images {
-            imagesManager.addImage(image.image, id: image.name, sdf: false, contentInsets: .zero)
+            imagesManager.addImage(image.image, id: image.name, sdf: image.sdf, contentInsets: .zero)
         }
     }
 

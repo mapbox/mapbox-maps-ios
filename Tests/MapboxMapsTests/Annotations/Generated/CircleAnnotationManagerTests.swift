@@ -41,6 +41,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.impl.layerProperties["circle-sort-key"] as! Double, value)
     }
 
+
     func testSetToNilCircleSortKey() {
         let newCircleSortKeyProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-sort-key").value as! Double
@@ -66,6 +67,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.impl.layerProperties["circle-blur"] as! Double, value)
     }
 
+
     func testSetToNilCircleBlur() {
         let newCircleBlurProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-blur").value as! Double
@@ -89,6 +91,11 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         manager.circleColor = value
         XCTAssertEqual(manager.circleColor, value)
         XCTAssertEqual(manager.impl.layerProperties["circle-color"] as? String, value?.rawValue)
+    }
+
+    func testSetCircleColorUseTheme() {
+        manager.circleColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["circle-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilCircleColor() {
@@ -117,6 +124,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.impl.layerProperties["circle-emissive-strength"] as! Double, value)
     }
 
+
     func testSetToNilCircleEmissiveStrength() {
         let newCircleEmissiveStrengthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-emissive-strength").value as! Double
@@ -141,6 +149,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.circleOpacity, value)
         XCTAssertEqual(manager.impl.layerProperties["circle-opacity"] as! Double, value)
     }
+
 
     func testSetToNilCircleOpacity() {
         let newCircleOpacityProperty = 0.5
@@ -167,6 +176,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.impl.layerProperties["circle-pitch-alignment"] as! String, value.rawValue)
     }
 
+
     func testSetToNilCirclePitchAlignment() {
         let newCirclePitchAlignmentProperty = CirclePitchAlignment.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String
@@ -191,6 +201,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.circlePitchScale, value)
         XCTAssertEqual(manager.impl.layerProperties["circle-pitch-scale"] as! String, value.rawValue)
     }
+
 
     func testSetToNilCirclePitchScale() {
         let newCirclePitchScaleProperty = CirclePitchScale.testConstantValue()
@@ -217,6 +228,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.impl.layerProperties["circle-radius"] as! Double, value)
     }
 
+
     func testSetToNilCircleRadius() {
         let newCircleRadiusProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-radius").value as! Double
@@ -240,6 +252,11 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         manager.circleStrokeColor = value
         XCTAssertEqual(manager.circleStrokeColor, value)
         XCTAssertEqual(manager.impl.layerProperties["circle-stroke-color"] as? String, value?.rawValue)
+    }
+
+    func testSetCircleStrokeColorUseTheme() {
+        manager.circleStrokeColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["circle-stroke-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilCircleStrokeColor() {
@@ -268,6 +285,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.impl.layerProperties["circle-stroke-opacity"] as! Double, value)
     }
 
+
     func testSetToNilCircleStrokeOpacity() {
         let newCircleStrokeOpacityProperty = 0.5
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-opacity").value as! Double
@@ -292,6 +310,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.circleStrokeWidth, value)
         XCTAssertEqual(manager.impl.layerProperties["circle-stroke-width"] as! Double, value)
     }
+
 
     func testSetToNilCircleStrokeWidth() {
         let newCircleStrokeWidthProperty = 50000.0
@@ -318,6 +337,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.impl.layerProperties["circle-translate"] as! [Double], value)
     }
 
+
     func testSetToNilCircleTranslate() {
         let newCircleTranslateProperty = [0.0, 0.0]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate").value as! [Double]
@@ -343,6 +363,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.impl.layerProperties["circle-translate-anchor"] as! String, value.rawValue)
     }
 
+
     func testSetToNilCircleTranslateAnchor() {
         let newCircleTranslateAnchorProperty = CircleTranslateAnchor.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String
@@ -367,6 +388,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.slot, value)
         XCTAssertEqual(manager.impl.layerProperties["slot"] as! String, value)
     }
+
 
     func testSetToNilSlot() {
         let newSlotProperty = UUID().uuidString

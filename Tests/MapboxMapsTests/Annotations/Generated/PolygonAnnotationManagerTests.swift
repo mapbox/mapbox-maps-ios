@@ -48,6 +48,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-elevation-reference"] as! String, value.rawValue)
     }
 
+
     func testSetToNilFillElevationReference() {
         let newFillElevationReferenceProperty = FillElevationReference.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-elevation-reference").value as! String
@@ -72,6 +73,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.fillSortKey, value)
         XCTAssertEqual(manager.impl.layerProperties["fill-sort-key"] as! Double, value)
     }
+
 
     func testSetToNilFillSortKey() {
         let newFillSortKeyProperty = 0.0
@@ -98,6 +100,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-antialias"] as! Bool, value)
     }
 
+
     func testSetToNilFillAntialias() {
         let newFillAntialiasProperty = true
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! Bool
@@ -121,6 +124,11 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         manager.fillColor = value
         XCTAssertEqual(manager.fillColor, value)
         XCTAssertEqual(manager.impl.layerProperties["fill-color"] as? String, value?.rawValue)
+    }
+
+    func testSetFillColorUseTheme() {
+        manager.fillColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["fill-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilFillColor() {
@@ -149,6 +157,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-emissive-strength"] as! Double, value)
     }
 
+
     func testSetToNilFillEmissiveStrength() {
         let newFillEmissiveStrengthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-emissive-strength").value as! Double
@@ -174,6 +183,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-opacity"] as! Double, value)
     }
 
+
     func testSetToNilFillOpacity() {
         let newFillOpacityProperty = 0.5
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-opacity").value as! Double
@@ -197,6 +207,11 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         manager.fillOutlineColor = value
         XCTAssertEqual(manager.fillOutlineColor, value)
         XCTAssertEqual(manager.impl.layerProperties["fill-outline-color"] as? String, value?.rawValue)
+    }
+
+    func testSetFillOutlineColorUseTheme() {
+        manager.fillOutlineColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["fill-outline-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilFillOutlineColor() {
@@ -225,6 +240,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-pattern"] as! String, value)
     }
 
+
     func testSetToNilFillPattern() {
         let newFillPatternProperty = UUID().uuidString
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String
@@ -249,6 +265,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.fillTranslate, value)
         XCTAssertEqual(manager.impl.layerProperties["fill-translate"] as! [Double], value)
     }
+
 
     func testSetToNilFillTranslate() {
         let newFillTranslateProperty = [0.0, 0.0]
@@ -275,6 +292,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-translate-anchor"] as! String, value.rawValue)
     }
 
+
     func testSetToNilFillTranslateAnchor() {
         let newFillTranslateAnchorProperty = FillTranslateAnchor.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String
@@ -300,6 +318,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-z-offset"] as! Double, value)
     }
 
+
     func testSetToNilFillZOffset() {
         let newFillZOffsetProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-z-offset").value as! Double
@@ -324,6 +343,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.slot, value)
         XCTAssertEqual(manager.impl.layerProperties["slot"] as! String, value)
     }
+
 
     func testSetToNilSlot() {
         let newSlotProperty = UUID().uuidString

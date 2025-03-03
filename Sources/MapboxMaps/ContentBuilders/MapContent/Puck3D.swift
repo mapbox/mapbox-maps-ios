@@ -109,6 +109,22 @@ public struct Puck3D: MapContent, PrimitiveMapContent {
         copyAssigned(self, \.configuration.modelEmissiveStrength, .expression(modelEmissiveStrength))
     }
 
+    /// This property defines whether the `modelColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.configuration.modelColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `modelColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.configuration.modelColorUseTheme, .expression(expression)))
+    }
+
     /// The ``Slot`` where to put puck layers.
     ///
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.

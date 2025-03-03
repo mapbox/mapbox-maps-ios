@@ -2071,3 +2071,18 @@ Constructor CustomGeometrySource.init(id:options:) has been removed
 # Remove experimental light property
 Func DirectionalLight.shadowQuality(_:) has been removed
 Var DirectionalLight.shadowQuality has been removed
+
+# Add UseTheme properties to Annotations and Puck3D API
+Constructor Puck3DConfiguration.init(model:modelScale:modelRotation:modelOpacity:modelCastShadows:modelReceiveShadows:modelScaleMode:modelEmissiveStrength:layerPosition:) has been removed
+Func PointAnnotation.symbolZOffset(_:) is now with @_documentation
+Func PointAnnotation.symbolZOffset(_:) is now with @_spi
+Func PolygonAnnotation.fillZOffset(_:) is now with @_documentation
+Func PolygonAnnotation.fillZOffset(_:) is now with @_spi
+Func PolylineAnnotation.lineZOffset(_:) is now with @_documentation
+Func PolylineAnnotation.lineZOffset(_:) is now with @_spi
+Var PointAnnotation.symbolZOffset is now with @_documentation
+Var PointAnnotation.symbolZOffset is now with @_spi
+Var PolygonAnnotation.fillZOffset is now with @_documentation
+Var PolygonAnnotation.fillZOffset is now with @_spi
+Var PolylineAnnotation.lineZOffset is now with @_documentation
+Var PolylineAnnotation.lineZOffset is now with @_spi

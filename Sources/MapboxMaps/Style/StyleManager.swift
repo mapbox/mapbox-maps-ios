@@ -1754,6 +1754,20 @@ public struct StyleTransition: Codable, Equatable, Sendable {
         try container.encode(duration * 1000, forKey: .duration)
         try container.encode(delay * 1000, forKey: .delay)
     }
+
+    init?(_ dictionary: [String: TimeInterval]?) {
+        guard
+            let duration = dictionary?[CodingKeys.duration.rawValue],
+            let delay = dictionary?[CodingKeys.delay.rawValue]
+        else {
+            return nil
+        }
+        self.init(duration: duration, delay: delay)
+    }
+
+    var asDictionary: [String: Double] {
+        [CodingKeys.duration.rawValue: duration * 1000, CodingKeys.delay.rawValue: delay * 1000]
+    }
 }
 
 extension StyleManager: StyleProtocol {}

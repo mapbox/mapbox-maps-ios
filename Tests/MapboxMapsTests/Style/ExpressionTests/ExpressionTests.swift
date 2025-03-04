@@ -243,10 +243,10 @@ final class ExpressionTests: XCTestCase {
     }
 
     func testAccessExpressionArgumentsForOperatorlessExpression() throws {
-        let expectedExpressionArguments: [Expression.Argument] = [Expression.Argument.expression(Exp(.sum) {
+        let expectedExpressionArguments: [Exp.Argument] = [Exp.Argument.expression(Exp(.sum) {
             Exp(.accumulated)
             Exp(.get) { "sum" }
-        }), Expression.Argument.expression(Exp(.get) { "scalerank" })]
+        }), Exp.Argument.expression(Exp(.get) { "scalerank" })]
 
         let sumExpression = Exp {
             Exp(.sum) {

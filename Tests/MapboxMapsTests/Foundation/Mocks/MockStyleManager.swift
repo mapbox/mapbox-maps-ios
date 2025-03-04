@@ -490,7 +490,7 @@ class MockStyleManager: StyleManagerProtocol {
 struct NonEncodableLayer: Layer {
     var id: String = "dummy-non-encodable-layer-id"
     var type: LayerType = .random()
-    var filter: Expression?
+    var filter: Exp?
     var source: String?
     var sourceLayer: String?
     var minZoom: Double?

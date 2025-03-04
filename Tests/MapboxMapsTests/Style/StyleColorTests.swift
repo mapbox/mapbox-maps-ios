@@ -115,7 +115,7 @@ final class StyleColorTests: XCTestCase {
     }
 
     func testExpressionInitFailureValuesOutOfBounds() {
-        func makeExpression(red: Double = 0, green: Double = 0, blue: Double = 0, alpha: Double = 0) -> Expression {
+        func makeExpression(red: Double = 0, green: Double = 0, blue: Double = 0, alpha: Double = 0) -> Exp {
             Exp(.rgba) {
                 red
                 green

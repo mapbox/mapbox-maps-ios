@@ -132,6 +132,9 @@ internal final class LocationProducer: LocationProducerProtocol {
     }
 
     deinit {
+        if !Thread.isMainThread {
+            Log.error(forMessage: "Error! LocationProducer is deinitialized on background thread. This may lead to crashes in production.")
+        }
         headingOrientationUpdateBackupTimer?.invalidate()
 
         // note that property observers (didSet) don't run during deinit

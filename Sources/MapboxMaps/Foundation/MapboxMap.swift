@@ -50,6 +50,9 @@ public final class MapboxMap: MapboxMapProtocol {
     private let observable: MapboxObservableProtocol
 
     deinit {
+        if !Thread.isMainThread {
+            Log.error(forMessage: "Error! MapboxMap is deinitialized on background thread. This may lead to crashes in production.")
+        }
         __map.destroyRenderer()
     }
 

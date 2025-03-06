@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+# 10.19.4 - March 6, 2025
+
+* Address the `EXC_BAD_ACCESS` crash in the `LocationProducer.latestCLLocation.setter`
+* Add logs to indicate that deallocating MapView out of the main thread is an undefined behaviour
+
 # 10.19.3 - February 3, 2025
 
 * Update MapboxCommon to 23.11.4

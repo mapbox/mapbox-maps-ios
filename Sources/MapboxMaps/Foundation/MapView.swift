@@ -474,6 +474,9 @@ open class MapView: UIView {
     }
 
     deinit {
+        if !Thread.isMainThread {
+            Log.error(forMessage: "Error! MapView is deinitialized on background thread. This may lead to crashes in production.")
+        }
         displayLink?.invalidate()
         cameraAnimatorsRunner.cancelAnimations()
         cameraAnimatorsRunnerEnablable.isEnabled = false

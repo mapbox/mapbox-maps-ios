@@ -47,8 +47,8 @@ internal extension Array where Element == Double {
     }
 }
 
-internal extension Dictionary where Key == String, Value == Expression {
-    static func testSourceValue() -> [String: Expression] {
+internal extension Dictionary where Key == String, Value == Exp {
+    static func testSourceValue() -> [String: Exp] {
         let exp = Exp(.sum) {
             10
             12

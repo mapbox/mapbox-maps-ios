@@ -2902,7 +2902,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // given
         let testClusterRadius = Double.testSourceValue()
         let testClusterMaxZoom = Double.testSourceValue()
-        let testClusterProperties = [String: Expression].testSourceValue()
+        let testClusterProperties = [String: Exp].testSourceValue()
         let clusterOptions = ClusterOptions(clusterRadius: testClusterRadius,
                                             clusterMaxZoom: testClusterMaxZoom,
                                             clusterProperties: testClusterProperties)

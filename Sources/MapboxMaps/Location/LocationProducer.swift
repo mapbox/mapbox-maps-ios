@@ -55,10 +55,9 @@ internal final class LocationProducer: LocationProducerProtocol {
         }
     }
 
-    private let _consumers = NSHashTable<LocationConsumer>.weakObjects()
+    private var _consumers = WeakObjects<LocationConsumer>()
     internal var consumers: NSHashTable<LocationConsumer> {
-        // swiftlint:disable:next force_cast
-        return _consumers.copy() as! NSHashTable<LocationConsumer>
+        _consumers.asHashTable
     }
 
     private var isUpdating = false {
@@ -133,6 +132,9 @@ internal final class LocationProducer: LocationProducerProtocol {
     }
 
     deinit {
+        if !Thread.isMainThread {
+            Log.error(forMessage: "Error! LocationProducer is deinitialized on background thread. This may lead to crashes in production.")
+        }
         headingOrientationUpdateBackupTimer?.invalidate()
 
         // note that property observers (didSet) don't run during deinit
@@ -215,8 +217,9 @@ internal final class LocationProducer: LocationProducerProtocol {
         guard isUpdating else {
             return
         }
+
         if let latestLocation = latestLocation {
-            for consumer in _consumers.allObjects {
+            _consumers.forEach { consumer in
                 consumer.locationUpdate(newLocation: latestLocation)
             }
         }
@@ -225,7 +228,7 @@ internal final class LocationProducer: LocationProducerProtocol {
     private func syncIsUpdating() {
         // check _consumers.anyObject != nil instead of simply _consumers.count
         // which may still include objects that have been deinited
-        isUpdating = (_consumers.anyObject != nil)
+        isUpdating = !_consumers.isEmpty
     }
 }
 

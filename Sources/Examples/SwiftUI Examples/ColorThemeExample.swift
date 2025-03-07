@@ -39,7 +39,7 @@ struct ColorThemeExample: View {
                 Group {
                     HStack {
                         ColorButton(color: .white, isOn: Binding(get: { theme == .default }, set: { _, _ in theme = .default }))
-                        ColorButton(color: .lightPink, isOn: Binding(get: { theme == .pink }, set: { _, _ in theme = .pink }))
+                        ColorButton(color: .systemPink, isOn: Binding(get: { theme == .pink }, set: { _, _ in theme = .pink }))
                         ColorButton(color: .secondaryLabel, isOn: Binding(get: { theme == .monochrome }, set: { _, _ in theme = .monochrome }))
                     }
 

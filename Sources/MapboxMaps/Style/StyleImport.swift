@@ -32,6 +32,7 @@
 public struct StyleImport: Sendable {
     let id: String?
     let style: MapStyle
+    var colorTheme: ColorTheme?
 
     /// Creates a ``StyleImport`` using a Mapbox Style JSON.
     ///
@@ -75,5 +76,15 @@ public struct StyleImport: Sendable {
     public init(id: String? = nil, style: MapStyle) {
         self.id = id
         self.style = style
+    }
+}
+
+extension StyleImport {
+    /// The color theme to apply on ``StyleImport``. Overrides any config values for color-theme and allow to set theme different from the root style in the import.
+    /// Default value: none
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorTheme(_ colorTheme: ColorTheme?) -> Self {
+        with(self, setter(\.colorTheme, colorTheme))
     }
 }

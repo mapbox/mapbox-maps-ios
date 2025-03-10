@@ -214,6 +214,7 @@ internal protocol StyleManagerProtocol {
 
     func setStyleColorThemeFor(_ colorTheme: CoreColorTheme?) -> Expected<NSNull, NSString>
     func setInitialStyleColorTheme()
+    func setImportColorThemeForImportId(_ importId: String, colorTheme: CoreColorTheme?) -> Expected<NSNull, NSString>
 }
 
 // MARK: Conformance

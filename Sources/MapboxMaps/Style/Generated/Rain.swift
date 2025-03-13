@@ -23,10 +23,6 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var centerThinningTransition: StyleTransition?
-    /// Use theme flag for center-thinning
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var centerThinningUseTheme: Value<ColorUseTheme>?
 
     /// Individual rain particle dorplets color.
     /// Default value: "["interpolate",["linear"],["measure-light","brightness"],0,"#03113d",0.3,"#a8adbc"]".
@@ -38,6 +34,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var colorTransition: StyleTransition?
+
     /// Use theme flag for color
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -53,10 +50,6 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var densityTransition: StyleTransition?
-    /// Use theme flag for density
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var densityUseTheme: Value<ColorUseTheme>?
 
     /// Main rain particles direction. Azimuth and polar angles.
     /// Default value: [0,80]. Value range: [0, 360]
@@ -68,10 +61,6 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var directionTransition: StyleTransition?
-    /// Use theme flag for direction
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var directionUseTheme: Value<ColorUseTheme>?
 
     /// Rain particles screen-space distortion strength.
     /// Default value: 0.7. Value range: [0, 1]
@@ -83,10 +72,6 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var distortionStrengthTransition: StyleTransition?
-    /// Use theme flag for distortion-strength
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var distortionStrengthUseTheme: Value<ColorUseTheme>?
 
     /// Rain droplet size. x - normal to direction, y - along direction
     /// Default value: [2.6,18.2]. Value range: [0, 50]
@@ -98,10 +83,6 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var dropletSizeTransition: StyleTransition?
-    /// Use theme flag for droplet-size
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var dropletSizeUseTheme: Value<ColorUseTheme>?
 
     /// Rain particles movement factor. Controls the overall rain particles speed
     /// Default value: 1. Value range: [0, 1]
@@ -113,10 +94,6 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var intensityTransition: StyleTransition?
-    /// Use theme flag for intensity
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var intensityUseTheme: Value<ColorUseTheme>?
 
     /// Rain particles opacity.
     /// Default value: "["interpolate",["linear"],["measure-light","brightness"],0,0.88,1,0.7]". Value range: [0, 1]
@@ -128,10 +105,6 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var opacityTransition: StyleTransition?
-    /// Use theme flag for opacity
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var opacityUseTheme: Value<ColorUseTheme>?
 
     /// Screen-space vignette rain tinting effect intensity.
     /// Default value: "["interpolate",["linear"],["zoom"],11,0,13,1]". Value range: [0, 1]
@@ -143,10 +116,6 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteTransition: StyleTransition?
-    /// Use theme flag for vignette
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var vignetteUseTheme: Value<ColorUseTheme>?
 
     /// Rain vignette screen-space corners tint color.
     /// Default value: "["interpolate",["linear"],["measure-light","brightness"],0,"#001736",0.3,"#464646"]".
@@ -158,6 +127,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteColorTransition: StyleTransition?
+
     /// Use theme flag for vignette-color
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -168,6 +138,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
         case centerThinningTransition = "center-thinning-transition"
         case color = "color"
         case colorTransition = "color-transition"
+        case colorUseTheme = "color-use-theme"
         case density = "density"
         case densityTransition = "density-transition"
         case direction = "direction"
@@ -184,6 +155,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
         case vignetteTransition = "vignette-transition"
         case vignetteColor = "vignette-color"
         case vignetteColorTransition = "vignette-color-transition"
+        case vignetteColorUseTheme = "vignette-color-use-theme"
     }
 }
 

@@ -29,7 +29,7 @@ final class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.modelCastShadows = Value<Bool>.testConstantValue()
             layer.modelColor = Value<StyleColor>.testConstantValue()
             layer.modelColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.modelColorUseTheme = .none
+            layer.modelColorUseTheme = .testConstantValue()
             layer.modelColorMixIntensity = Value<Double>.testConstantValue()
             layer.modelColorMixIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.modelCutoffFadeRange = Value<Double>.testConstantValue()

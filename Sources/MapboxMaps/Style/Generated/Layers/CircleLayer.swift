@@ -55,9 +55,9 @@ public struct CircleLayer: Layer, Equatable {
 
     /// Transition options for `circleColor`.
     public var circleColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var circleColorUseTheme: Value<ColorUseTheme>?
 
     /// Controls the intensity of light emitted on the source features.
@@ -95,9 +95,9 @@ public struct CircleLayer: Layer, Equatable {
 
     /// Transition options for `circleStrokeColor`.
     public var circleStrokeColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var circleStrokeColorUseTheme: Value<ColorUseTheme>?
 
     /// The opacity of the circle's stroke.

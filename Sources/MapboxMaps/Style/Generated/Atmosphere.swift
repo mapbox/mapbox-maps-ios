@@ -15,7 +15,6 @@ public struct Atmosphere: Codable, Equatable {
 
     /// This property defines whether the  color uses colorTheme from the style or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var colorUseTheme: Value<ColorUseTheme>?
 
     /// The color of the atmosphere region above the horizon, `high-color` extends further above the horizon than the `color` property and its spread can be controlled with `horizon-blend`. The opacity can be set to `0` to remove the high atmosphere color contribution.
@@ -27,7 +26,6 @@ public struct Atmosphere: Codable, Equatable {
 
     /// This property defines whether the  highColor uses colorTheme from the style or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var highColorUseTheme: Value<ColorUseTheme>?
 
     /// Horizon blend applies a smooth fade from the color of the atmosphere to the color of space. A value of zero leaves a sharp transition from atmosphere to space. Increasing the value blends the color of atmosphere into increasingly high angles of the sky.
@@ -55,7 +53,6 @@ public struct Atmosphere: Codable, Equatable {
 
     /// This property defines whether the  spaceColor uses colorTheme from the style or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var spaceColorUseTheme: Value<ColorUseTheme>?
 
     /// A value controlling the star intensity where `0` will show no stars and `1` will show stars at their maximum intensity.

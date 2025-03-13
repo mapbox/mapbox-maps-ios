@@ -223,9 +223,9 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `iconColor`.
     public var iconColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var iconColorUseTheme: Value<ColorUseTheme>?
 
     /// Increase or reduce the saturation of the symbol icon.
@@ -255,9 +255,9 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `iconHaloColor`.
     public var iconHaloColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var iconHaloColorUseTheme: Value<ColorUseTheme>?
 
     /// Distance of halo to the icon outline.
@@ -314,9 +314,9 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `textColor`.
     public var textColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var textColorUseTheme: Value<ColorUseTheme>?
 
     /// Controls the intensity of light emitted on the source features.
@@ -339,9 +339,9 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `textHaloColor`.
     public var textHaloColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var textHaloColorUseTheme: Value<ColorUseTheme>?
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.

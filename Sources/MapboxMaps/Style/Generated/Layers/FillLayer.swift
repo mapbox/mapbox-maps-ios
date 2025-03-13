@@ -57,9 +57,9 @@ public struct FillLayer: Layer, Equatable {
 
     /// Transition options for `fillColor`.
     public var fillColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var fillColorUseTheme: Value<ColorUseTheme>?
 
     /// Controls the intensity of light emitted on the source features.
@@ -81,9 +81,9 @@ public struct FillLayer: Layer, Equatable {
 
     /// Transition options for `fillOutlineColor`.
     public var fillOutlineColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var fillOutlineColorUseTheme: Value<ColorUseTheme>?
 
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.

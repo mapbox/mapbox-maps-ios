@@ -103,9 +103,9 @@ public struct FillExtrusionLayer: Layer, Equatable {
 
     /// Transition options for `fillExtrusionColor`.
     public var fillExtrusionColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var fillExtrusionColorUseTheme: Value<ColorUseTheme>?
 
     /// This parameter defines the range for the fade-out effect before an automatic content cutoff on pitched map views. Fade out is implemented by scaling down and removing buildings in the fade range in a staggered fashion. Opacity is not changed. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
@@ -127,9 +127,9 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Transition options for `fillExtrusionFloodLightColor`.
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionFloodLightColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var fillExtrusionFloodLightColorUseTheme: Value<ColorUseTheme>?
 
     /// Provides a control to futher fine-tune the look of the flood light on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother.

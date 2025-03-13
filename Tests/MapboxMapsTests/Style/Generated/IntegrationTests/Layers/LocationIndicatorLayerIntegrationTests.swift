@@ -27,10 +27,10 @@ final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.accuracyRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.accuracyRadiusBorderColor = Value<StyleColor>.testConstantValue()
             layer.accuracyRadiusBorderColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.accuracyRadiusBorderColorUseTheme = .none
+            layer.accuracyRadiusBorderColorUseTheme = .testConstantValue()
             layer.accuracyRadiusColor = Value<StyleColor>.testConstantValue()
             layer.accuracyRadiusColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.accuracyRadiusColorUseTheme = .none
+            layer.accuracyRadiusColorUseTheme = .testConstantValue()
             layer.bearing = Value<Double>.testConstantValue()
             layer.bearingTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.bearingImage = Value<ResolvedImage>.testConstantValue()
@@ -38,7 +38,7 @@ final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.bearingImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.emphasisCircleColor = Value<StyleColor>.testConstantValue()
             layer.emphasisCircleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.emphasisCircleColorUseTheme = .none
+            layer.emphasisCircleColorUseTheme = .testConstantValue()
             layer.emphasisCircleGlowRangeTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.emphasisCircleRadius = Value<Double>.testConstantValue()
             layer.emphasisCircleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)

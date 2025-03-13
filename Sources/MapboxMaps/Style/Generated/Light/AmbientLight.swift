@@ -19,6 +19,10 @@ public struct AmbientLight: Codable, StyleEncodable, Equatable {
     /// Transition property for `color`
     public var colorTransition: StyleTransition?
 
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_spi(Experimental) public var colorUseTheme: Value<ColorUseTheme>?
+
     /// A multiplier for the color of the ambient light.
     /// Default value: 0.5. Value range: [0, 1]
     public var intensity: Value<Double>?
@@ -39,6 +43,7 @@ public struct AmbientLight: Codable, StyleEncodable, Equatable {
         var propertiesContainer = container.nestedContainer(keyedBy: PropertiesCodingKeys.self, forKey: .properties)
         try propertiesContainer.encodeIfPresent(color, forKey: .color)
         try propertiesContainer.encodeIfPresent(colorTransition, forKey: .colorTransition)
+        try propertiesContainer.encodeIfPresent(colorUseTheme, forKey: .colorUseTheme)
         try propertiesContainer.encodeIfPresent(intensity, forKey: .intensity)
         try propertiesContainer.encodeIfPresent(intensityTransition, forKey: .intensityTransition)
     }
@@ -50,6 +55,7 @@ public struct AmbientLight: Codable, StyleEncodable, Equatable {
         if let propertiesContainer = try? container.nestedContainer(keyedBy: PropertiesCodingKeys.self, forKey: .properties) {
             self.color = try propertiesContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .color)
             self.colorTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .colorTransition)
+            self.colorUseTheme = try propertiesContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .colorUseTheme)
             self.intensity = try propertiesContainer.decodeIfPresent(Value<Double>.self, forKey: .intensity)
             self.intensityTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .intensityTransition)
         }
@@ -64,9 +70,10 @@ public struct AmbientLight: Codable, StyleEncodable, Equatable {
     enum PropertiesCodingKeys: String, CodingKey {
         case color = "color"
         case colorTransition = "color-transition"
-        case intensity = "intensity"
+         case colorUseTheme = "color-use-theme"
+         case intensity = "intensity"
         case intensityTransition = "intensity-transition"
-    }
+      }
 }
 
 extension AmbientLight {
@@ -91,6 +98,22 @@ extension AmbientLight {
     /// Default value: "#ffffff".
     public func color(_ expression: Exp) -> Self {
         with(self, setter(\.color, .expression(expression)))
+    }
+
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.colorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.colorUseTheme, .expression(expression)))
     }
 
     /// A multiplier for the color of the ambient light.

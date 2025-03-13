@@ -36,12 +36,12 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineBorderColor = Value<StyleColor>.testConstantValue()
             layer.lineBorderColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.lineBorderColorUseTheme = .none
+            layer.lineBorderColorUseTheme = .testConstantValue()
             layer.lineBorderWidth = Value<Double>.testConstantValue()
             layer.lineBorderWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineColor = Value<StyleColor>.testConstantValue()
             layer.lineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.lineColorUseTheme = .none
+            layer.lineColorUseTheme = .testConstantValue()
             layer.lineDepthOcclusionFactor = Value<Double>.testConstantValue()
             layer.lineDepthOcclusionFactorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineEmissiveStrength = Value<Double>.testConstantValue()
@@ -49,7 +49,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.lineGapWidth = Value<Double>.testConstantValue()
             layer.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineGradient = Value<StyleColor>.testConstantValue()
-            layer.lineGradientUseTheme = .none
+            layer.lineGradientUseTheme = .testConstantValue()
             layer.lineOcclusionOpacity = Value<Double>.testConstantValue()
             layer.lineOcclusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineOffset = Value<Double>.testConstantValue()
@@ -61,7 +61,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.lineTranslateAnchor = Value<LineTranslateAnchor>.testConstantValue()
             layer.lineTrimColor = Value<StyleColor>.testConstantValue()
             layer.lineTrimColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.lineTrimColorUseTheme = .none
+            layer.lineTrimColorUseTheme = .testConstantValue()
             layer.lineWidth = Value<Double>.testConstantValue()
             layer.lineWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
 

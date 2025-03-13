@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class AmbientLightTests: XCTestCase {
 
@@ -9,9 +9,10 @@ final class AmbientLightTests: XCTestCase {
         var light = AmbientLight(id: lightID)
         light.color = Value<StyleColor>.testConstantValue()
         light.colorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+         light.colorUseTheme = .testConstantValue()
          light.intensity = Value<Double>.testConstantValue()
         light.intensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
- 
+
         let data = try JSONEncoder().encode(light)
         XCTAssertFalse(data.isEmpty)
 
@@ -21,6 +22,7 @@ final class AmbientLightTests: XCTestCase {
         XCTAssertEqual(decodedLight.color, Value<StyleColor>.testConstantValue())
         XCTAssertEqual(decodedLight.colorTransition?.duration, 10)
         XCTAssertEqual(decodedLight.colorTransition?.delay, 10)
+        XCTAssertEqual(decodedLight.colorUseTheme, .testConstantValue())
         XCTAssertEqual(decodedLight.intensity, Value<Double>.testConstantValue())
         XCTAssertEqual(decodedLight.intensityTransition?.duration, 10)
         XCTAssertEqual(decodedLight.intensityTransition?.delay, 10)

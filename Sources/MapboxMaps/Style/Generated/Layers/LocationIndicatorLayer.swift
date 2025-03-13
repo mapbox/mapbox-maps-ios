@@ -38,6 +38,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Transition options for `accuracyRadiusBorderColor`.
     public var accuracyRadiusBorderColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     @_spi(Experimental) public var accuracyRadiusBorderColorUseTheme: Value<ColorUseTheme>?
@@ -48,6 +49,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Transition options for `accuracyRadiusColor`.
     public var accuracyRadiusColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     @_spi(Experimental) public var accuracyRadiusColorUseTheme: Value<ColorUseTheme>?
@@ -75,6 +77,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Transition options for `emphasisCircleColor`.
     public var emphasisCircleColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     @_spi(Experimental) public var emphasisCircleColorUseTheme: Value<ColorUseTheme>?

@@ -37,6 +37,12 @@ internal extension Value where T == StyleColor {
     }
 }
 
+internal extension Value where T == ColorUseTheme {
+    static func testConstantValue() -> Value<ColorUseTheme> {
+        return .constant(.none)
+    }
+}
+
 internal extension Value where T == Bool {
     static func testConstantValue() -> Value<Bool> {
         return .constant(true)

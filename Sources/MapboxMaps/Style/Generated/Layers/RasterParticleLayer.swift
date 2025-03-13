@@ -56,9 +56,9 @@ import UIKit
     /// Defines a color map by which to colorize a raster particle layer, parameterized by the `["raster-particle-speed"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-particle-max-speed`.
     @_documentation(visibility: public)
     public var rasterParticleColor: Value<StyleColor>?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var rasterParticleColorUseTheme: Value<ColorUseTheme>?
 
     /// Defines the amount of particles per tile.

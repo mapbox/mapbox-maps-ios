@@ -23,6 +23,10 @@ public struct FlatLight: Codable, StyleEncodable, Equatable {
     /// Transition property for `color`
     public var colorTransition: StyleTransition?
 
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_spi(Experimental) public var colorUseTheme: Value<ColorUseTheme>?
+
     /// Intensity of lighting (on a scale from 0 to 1). Higher numbers will present as more extreme contrast.
     /// Default value: 0.5. Value range: [0, 1]
     public var intensity: Value<Double>?
@@ -51,6 +55,7 @@ public struct FlatLight: Codable, StyleEncodable, Equatable {
         try propertiesContainer.encodeIfPresent(anchor, forKey: .anchor)
         try propertiesContainer.encodeIfPresent(color, forKey: .color)
         try propertiesContainer.encodeIfPresent(colorTransition, forKey: .colorTransition)
+        try propertiesContainer.encodeIfPresent(colorUseTheme, forKey: .colorUseTheme)
         try propertiesContainer.encodeIfPresent(intensity, forKey: .intensity)
         try propertiesContainer.encodeIfPresent(intensityTransition, forKey: .intensityTransition)
         try propertiesContainer.encodeIfPresent(position, forKey: .position)
@@ -65,6 +70,7 @@ public struct FlatLight: Codable, StyleEncodable, Equatable {
             self.anchor = try propertiesContainer.decodeIfPresent(Value<Anchor>.self, forKey: .anchor)
             self.color = try propertiesContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .color)
             self.colorTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .colorTransition)
+            self.colorUseTheme = try propertiesContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .colorUseTheme)
             self.intensity = try propertiesContainer.decodeIfPresent(Value<Double>.self, forKey: .intensity)
             self.intensityTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .intensityTransition)
             self.position = try propertiesContainer.decodeIfPresent(Value<[Double]>.self, forKey: .position)
@@ -80,13 +86,14 @@ public struct FlatLight: Codable, StyleEncodable, Equatable {
 
     enum PropertiesCodingKeys: String, CodingKey {
         case anchor = "anchor"
-        case color = "color"
+          case color = "color"
         case colorTransition = "color-transition"
-        case intensity = "intensity"
+         case colorUseTheme = "color-use-theme"
+         case intensity = "intensity"
         case intensityTransition = "intensity-transition"
-        case position = "position"
+          case position = "position"
         case positionTransition = "position-transition"
-    }
+      }
 }
 
 extension FlatLight {
@@ -123,6 +130,22 @@ extension FlatLight {
     /// Default value: "#ffffff".
     public func color(_ expression: Exp) -> Self {
         with(self, setter(\.color, .expression(expression)))
+    }
+
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.colorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.colorUseTheme, .expression(expression)))
     }
 
     /// Intensity of lighting (on a scale from 0 to 1). Higher numbers will present as more extreme contrast.

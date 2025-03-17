@@ -22,7 +22,7 @@ final class StyleEncodableTests: XCTestCase {
     }
 
     func testUserInfoKeys() {
-        let userInfoValue = String.randomAlphanumeric(withLength: 10)
+        let userInfoValue = String.testConstantAlphanumeric(withLength: 10)
 
         do {
             let jsonObject = try testStruct.jsonObject(userInfo: [userInfoKey: userInfoValue])

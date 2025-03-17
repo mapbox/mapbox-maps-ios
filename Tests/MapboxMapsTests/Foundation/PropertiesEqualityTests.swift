@@ -10,7 +10,7 @@ final class PropertiesEqualityTests: XCTestCase {
             var ref: Ref
             var computed: String {
                 // The computed properties don't participate in equality check.
-                String.randomASCII(withLength: 10)
+                String.testConstantASCII(withLength: 10)
             }
         }
 

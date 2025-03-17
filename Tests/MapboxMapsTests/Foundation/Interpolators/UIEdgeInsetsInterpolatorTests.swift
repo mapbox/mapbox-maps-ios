@@ -21,10 +21,10 @@ final class UIEdgeInsetsInterpolatorTests: XCTestCase {
     func testInterpolate() {
         let from = UIEdgeInsets.testConstantValue()
         let to = UIEdgeInsets.testConstantValue()
-        let fraction = Double.random(in: 0...1)
+        let fraction = 0.1
         doubleInterpolator.interpolateStub.returnValueQueue = .testFixture(
             withLength: 4,
-            generator: { .random(in: -100...100) })
+            generator: { -100 })
 
         let result = uiEdgeInsetsInterpolator.interpolate(
             from: from,

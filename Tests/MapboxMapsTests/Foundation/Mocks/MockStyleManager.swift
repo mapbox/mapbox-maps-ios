@@ -90,8 +90,8 @@ class MockStyleManager: StyleManagerProtocol {
 
     @Stubbed var stubStyleLayers: [MapboxCoreMaps.StyleObjectInfo] = .testFixture(withLength: 3) {
         MapboxCoreMaps.StyleObjectInfo(
-            id: .randomAlphanumeric(withLength: 12),
-            type: MapboxMaps.LayerType.random().rawValue)
+            id: .testConstantAlphanumeric(withLength: 12),
+            type: MapboxMaps.LayerType.testConstantValue().rawValue)
     }
     let styleLayerExistsStub = Stub<String, Bool>(defaultReturnValue: false)
     func styleLayerExists(forLayerId layerId: String) -> Bool {
@@ -838,7 +838,7 @@ class MockStyleManager: StyleManagerProtocol {
 struct NonEncodableLayer: Layer {
     var id: String = "dummy-non-encodable-layer-id"
     var visibility: Value<Visibility> = .constant(.visible)
-    var type: LayerType = .random()
+    var type: LayerType = .testConstantValue()
     var filter: Exp?
     var source: String?
     var sourceLayer: String?

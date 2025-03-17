@@ -43,7 +43,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
     }
 
     func testGestureChanged() throws {
-        let initialZoom = CGFloat.random(in: 0...15)
+        let initialZoom = 23.3
 
         // Send the began event
         gestureRecognizer.getStateStub.defaultReturnValue = .began

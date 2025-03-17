@@ -8,7 +8,7 @@ final class MockDirectionInterpolator: DirectionInterpolatorProtocol {
         var to: CLLocationDirection
         var fraction: Double
     }
-    let interpolateStub = Stub<InterpolateParams, CLLocationDirection>(defaultReturnValue: .random(in: 0..<360))
+    let interpolateStub = Stub<InterpolateParams, CLLocationDirection>(defaultReturnValue: 340)
     func interpolate(from: CLLocationDirection,
                      to: CLLocationDirection,
                      fraction: Double) -> CLLocationDirection {

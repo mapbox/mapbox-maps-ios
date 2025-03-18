@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* `top-image`, `bearing-image`, and `shadow-image` properties on `LocationIndicatorLayer` are now paint properties instead of layout properties.
+
 ## 11.11.0-rc.1 – 12 March, 2025
 
 * Expose experimental API for setting ColorTheme on style imports.

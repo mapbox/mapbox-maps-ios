@@ -41,6 +41,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var accuracyRadiusBorderColorUseTheme: Value<ColorUseTheme>?
 
     /// The color for drawing the accuracy radius, as a circle. To adjust transparency, set the alpha component of the color accordingly.
@@ -52,6 +53,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var accuracyRadiusColorUseTheme: Value<ColorUseTheme>?
 
     /// The bearing of the location indicator. Values under 0.01 degree variation are ignored.
@@ -80,6 +82,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var emphasisCircleColorUseTheme: Value<ColorUseTheme>?
 
     /// Specifies a glow effect range of the emphasis circle, in pixels. If [0,0] values are provided, it renders the circle as a solid color. The first value specifies the start of the glow effect where it is equal to the circle's color, the second is the end, where it's fully transparent. Between the two values the effect is linearly faded out.

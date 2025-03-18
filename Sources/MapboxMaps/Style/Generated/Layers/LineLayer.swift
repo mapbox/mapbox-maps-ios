@@ -102,6 +102,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var lineBorderColorUseTheme: Value<ColorUseTheme>?
 
     /// The width of the line border. A value of zero means no border.
@@ -120,6 +121,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var lineColorUseTheme: Value<ColorUseTheme>?
 
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
@@ -152,6 +154,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var lineGradientUseTheme: Value<ColorUseTheme>?
 
     /// Opacity multiplier (multiplies line-opacity value) of the line part that is occluded by 3D objects. Value 0 hides occluded part, value 1 means the same opacity as non-occluded part. The property is not supported when `line-opacity` has data-driven styling.
@@ -200,6 +203,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var lineTrimColorUseTheme: Value<ColorUseTheme>?
 
     /// The fade range for the trim-start and trim-end points is defined by the `line-trim-offset` property. The first element of the array represents the fade range from the trim-start point toward the end of the line, while the second element defines the fade range from the trim-end point toward the beginning of the line. The fade result is achieved by interpolating between `line-trim-color` and the color specified by the `line-color` or the `line-gradient` property.

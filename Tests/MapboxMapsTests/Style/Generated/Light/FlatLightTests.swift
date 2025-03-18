@@ -15,7 +15,7 @@ final class FlatLightTests: XCTestCase {
         light.intensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
           light.position = Value<[Double]>.testConstantValue()
         light.positionTransition = StyleTransition(duration: 10.0, delay: 10.0)
-
+  
         let data = try JSONEncoder().encode(light)
         XCTAssertFalse(data.isEmpty)
 

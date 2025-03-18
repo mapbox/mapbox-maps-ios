@@ -2089,3 +2089,20 @@ Var PolylineAnnotation.lineZOffset is now with @_spi
 
 # LayerPosition moved to GL Native
 Enum LayerPosition has been removed
+
+# Fix use-theme generation for Rain and Snow
+Var Rain.centerThinningUseTheme has been removed
+Var Rain.densityUseTheme has been removed
+Var Rain.directionUseTheme has been removed
+Var Rain.distortionStrengthUseTheme has been removed
+Var Rain.dropletSizeUseTheme has been removed
+Var Rain.intensityUseTheme has been removed
+Var Rain.opacityUseTheme has been removed
+Var Rain.vignetteUseTheme has been removed
+Var Snow.centerThinningUseTheme has been removed
+Var Snow.densityUseTheme has been removed
+Var Snow.directionUseTheme has been removed
+Var Snow.flakeSizeUseTheme has been removed
+Var Snow.intensityUseTheme has been removed
+Var Snow.opacityUseTheme has been removed
+Var Snow.vignetteUseTheme has been removed

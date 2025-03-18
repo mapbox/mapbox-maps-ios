@@ -12,7 +12,7 @@ final class AmbientLightTests: XCTestCase {
          light.colorUseTheme = .testConstantValue()
          light.intensity = Value<Double>.testConstantValue()
         light.intensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-
+  
         let data = try JSONEncoder().encode(light)
         XCTAssertFalse(data.isEmpty)
 

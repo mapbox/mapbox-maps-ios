@@ -77,6 +77,7 @@ import UIKit
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var modelColorUseTheme: Value<ColorUseTheme>?
 
     /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.

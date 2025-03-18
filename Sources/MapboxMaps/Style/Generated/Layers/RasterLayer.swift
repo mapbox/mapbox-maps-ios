@@ -62,6 +62,7 @@ public struct RasterLayer: Layer, Equatable {
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var rasterColorUseTheme: Value<ColorUseTheme>?
 
     /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r - src.r + mix.g - src.g + mix.b - src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is -not- multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.

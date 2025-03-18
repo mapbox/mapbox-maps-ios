@@ -34,6 +34,7 @@ public struct BackgroundLayer: Layer, Equatable {
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var backgroundColorUseTheme: Value<ColorUseTheme>?
 
     /// Controls the intensity of light emitted on the source features.

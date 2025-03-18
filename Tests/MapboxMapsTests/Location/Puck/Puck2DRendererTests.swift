@@ -131,19 +131,19 @@ final class Puck2DRendererTests: XCTestCase {
         with state: PuckRendererState<Puck2DConfiguration>,
         bearing: Double? = nil
     ) -> [String: Any] {
+        var expectedPaintLayerProperties = [LocationIndicatorLayer.PaintCodingKeys: Any]()
         var expectedLayoutLayerProperties = [LocationIndicatorLayer.LayoutCodingKeys: Any]()
-        expectedLayoutLayerProperties[.topImage] = "locationIndicatorLayerTopImage"
+        expectedPaintLayerProperties[.topImage] = "locationIndicatorLayerTopImage"
         if state.configuration.bearingImage != nil {
-            expectedLayoutLayerProperties[.bearingImage] = "locationIndicatorLayerBearingImage"
+            expectedPaintLayerProperties[.bearingImage] = "locationIndicatorLayerBearingImage"
         }
         if state.configuration.shadowImage != nil {
-            expectedLayoutLayerProperties[.shadowImage] = "locationIndicatorLayerShadowImage"
+            expectedPaintLayerProperties[.shadowImage] = "locationIndicatorLayerShadowImage"
         }
 
         let resolvedScale = state.configuration.scale ?? .constant(1)
         let scale = try! resolvedScale.toJSON()
 
-        var expectedPaintLayerProperties = [LocationIndicatorLayer.PaintCodingKeys: Any]()
         expectedPaintLayerProperties[.location] = [state.coordinate.latitude, state.coordinate.longitude, 0]
         expectedPaintLayerProperties[.locationTransition] = ["duration": 0, "delay": 0]
         expectedPaintLayerProperties[.topImageSize] = scale
@@ -208,7 +208,7 @@ final class Puck2DRendererTests: XCTestCase {
         let state = updateState(with: .fullAccuracy, heading: nil, configuration: .init(topImage: nil, bearingImage: nil, shadowImage: nil))
 
         var expectedProperties = makeExpectedLayerProperties(with: state)
-        expectedProperties.removeValue(forKey: LocationIndicatorLayer.LayoutCodingKeys.bearingImage.rawValue)
+        expectedProperties.removeValue(forKey: LocationIndicatorLayer.PaintCodingKeys.bearingImage.rawValue)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }

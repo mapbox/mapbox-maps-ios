@@ -2086,3 +2086,6 @@ Var PolygonAnnotation.fillZOffset is now with @_documentation
 Var PolygonAnnotation.fillZOffset is now with @_spi
 Var PolylineAnnotation.lineZOffset is now with @_documentation
 Var PolylineAnnotation.lineZOffset is now with @_spi
+
+# LayerPosition moved to GL Native
+Enum LayerPosition has been removed

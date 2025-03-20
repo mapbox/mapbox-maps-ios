@@ -1,4 +1,5 @@
 import os.log
+@_spi(Marshalling) import MapboxCoreMaps
 
 struct MountedLayer<L>: MapContentMountedComponent where L: Layer, L: Equatable {
     var layer: L
@@ -13,18 +14,19 @@ struct MountedLayer<L>: MapContentMountedComponent where L: Layer, L: Equatable 
         let styleManager = context.style.styleManager
         let properties = try layer.allStyleProperties()
         let position = customPosition ?? context.resolveLayerPosition()
+        let corePosition: CoreLayerPosition = LayerPosition.Marshaller.toObjc(position)
         os_log(.debug, log: .contentDSL, "layer %s insert %s", layer.id, position.asString())
 
         if let customLayer = layer as? CustomLayer {
             try handleExpected {
-                styleManager.addStyleCustomLayer(forLayerId: customLayer.id, layerHost: customLayer.renderer, layerPosition: position.corePosition)
+                styleManager.addStyleCustomLayer(forLayerId: customLayer.id, layerHost: customLayer.renderer, layerPosition: corePosition)
             }
             try handleExpected {
                 styleManager.setStyleLayerPropertiesForLayerId(layer.id, properties: properties)
             }
         } else {
             try handleExpected {
-                styleManager.addStyleLayer(forProperties: properties, layerPosition: position.corePosition)
+                styleManager.addStyleLayer(forProperties: properties, layerPosition: corePosition)
             }
         }
     }
@@ -66,7 +68,7 @@ struct MountedLayer<L>: MapContentMountedComponent where L: Layer, L: Equatable 
         let position = customPosition ?? context.resolveLayerPosition()
         os_log(.debug, log: .contentDSL, "layer %s move to %s", layer.id, position.asString())
         try handleExpected {
-            styleManager.moveStyleLayer(forLayerId: layer.id, layerPosition: position.corePosition)
+            styleManager.moveStyleLayer(forLayerId: layer.id, layerPosition: LayerPosition.Marshaller.toObjc(position))
         }
 
         return true

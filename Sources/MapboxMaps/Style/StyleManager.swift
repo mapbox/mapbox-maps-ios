@@ -1,6 +1,7 @@
 // swiftlint:disable file_length
 @_implementationOnly import MapboxCommon_Private
 import UIKit
+@_spi(Marshalling) import MapboxCoreMaps
 
 protocol StyleProtocol: AnyObject {
     var isStyleLoaded: Bool { get }
@@ -641,7 +642,10 @@ public class StyleManager {
     ///     An error describing why the operation was unsuccessful.
     public func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         try handleExpected {
-            return styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
+            return styleManager.addStyleLayer(
+                forProperties: properties,
+                layerPosition: layerPosition.map(LayerPosition.Marshaller.toObjc)
+            )
         }
     }
 
@@ -655,7 +659,7 @@ public class StyleManager {
     ///     `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
     public func moveLayer(withId id: String, to position: LayerPosition) throws {
         try handleExpected {
-            styleManager.moveStyleLayer(forLayerId: id, layerPosition: position.corePosition)
+            styleManager.moveStyleLayer(forLayerId: id, layerPosition: LayerPosition.Marshaller.toObjc(position))
         }
     }
 
@@ -671,7 +675,10 @@ public class StyleManager {
     ///     An error describing why the operation was unsuccessful
     public func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         try handleExpected {
-            return styleManager.addPersistentStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
+            return styleManager.addPersistentStyleLayer(
+                forProperties: properties,
+                layerPosition: layerPosition.map(LayerPosition.Marshaller.toObjc)
+            )
         }
     }
 
@@ -698,7 +705,11 @@ public class StyleManager {
     ///     An error describing why the operation was unsuccessful.
     public func addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
         try handleExpected {
-            return styleManager.addPersistentStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition?.corePosition)
+            return styleManager.addPersistentStyleCustomLayer(
+                forLayerId: id,
+                layerHost: layerHost,
+                layerPosition: layerPosition.map(LayerPosition.Marshaller.toObjc)
+            )
         }
     }
 
@@ -718,7 +729,11 @@ public class StyleManager {
     ///     An error describing why the operation was unsuccessful.
     public func addCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
         try handleExpected {
-            return styleManager.addStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition?.corePosition)
+            return styleManager.addStyleCustomLayer(
+                forLayerId: id,
+                layerHost: layerHost,
+                layerPosition: layerPosition.map(LayerPosition.Marshaller.toObjc)
+            )
         }
     }
 

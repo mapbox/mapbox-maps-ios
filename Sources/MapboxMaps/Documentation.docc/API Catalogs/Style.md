@@ -30,6 +30,7 @@
 - ``Snow``
 - ``ColorTheme``
 - ``ColorUseTheme``
+- ``Image``
 
 ### Declarative Map Styling
 

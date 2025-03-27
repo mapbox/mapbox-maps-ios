@@ -68,7 +68,7 @@ final class FloatingPointTests: XCTestCase {
     }
 
     func testWrappedAngleWithoutChange() {
-        let anyAngle = CGFloat.random(in: 0..<2 * .pi)
+        let anyAngle = 1.2 * .pi
         XCTAssertEqual(anyAngle.wrappedAngle(to: anyAngle), 0)
     }
 

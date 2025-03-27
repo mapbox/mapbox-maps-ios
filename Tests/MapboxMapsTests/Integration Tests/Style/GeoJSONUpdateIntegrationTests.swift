@@ -10,7 +10,7 @@ class GeoJSONUpdateIntegrationTests: MapViewIntegrationTestCase {
     var parameter: TestParameters! {
         didSet {
             guard let parameter else { return }
-            operationalFeatures = .random(size: parameter.operationalFeatureSize, isInitial: parameter.command != .add)
+            operationalFeatures = .testConstantValue(size: parameter.operationalFeatureSize, isInitial: parameter.command != .add)
         }
     }
     var sourceLoadedToken: Cancelable?
@@ -19,7 +19,7 @@ class GeoJSONUpdateIntegrationTests: MapViewIntegrationTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
 
-        initialFeatures = .random(size: parameter.initialFeatureSize)
+        initialFeatures = .testConstantValue(size: parameter.initialFeatureSize)
 
         mapView.mapboxMap.styleURI = .streets
 
@@ -210,7 +210,7 @@ class GeoJSONUpdateIntegrationTests: MapViewIntegrationTestCase {
 }
 
 extension Array where Element == Feature {
-    static func random(size: Int, isInitial: Bool = true) -> [Feature] {
+    static func testConstantValue(size: Int, isInitial: Bool = true) -> [Feature] {
         return (0..<size)
             .map { index in
                 let coordinate = CLLocationCoordinate2D(

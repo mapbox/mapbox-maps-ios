@@ -118,7 +118,7 @@ final class MockMapboxMap: MapboxMapProtocol {
         return optionsForViewAnnotationWithIdStub.call(with: id)
     }
 
-    let pointIsAboveHorizonStub = Stub<CGPoint, Bool>(defaultReturnValue: .random())
+    let pointIsAboveHorizonStub = Stub<CGPoint, Bool>(defaultReturnValue: .testConstantValue())
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
         pointIsAboveHorizonStub.call(with: point)
     }

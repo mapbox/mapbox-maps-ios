@@ -12,7 +12,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
         super.setUp()
         observer = MockTileStoreObserver()
         wrapper = TileStoreObserverWrapper(observer)
-        id = .randomASCII(withLength: 10)
+        id = .testConstantASCII(withLength: 10)
     }
 
     override func tearDown() {
@@ -61,8 +61,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
     }
 
     func testOnRegionLoadFinishedWithValidError() throws {
-        let types: [TileRegionErrorType] = [.canceled, .diskFull, .doesNotExist, .other, .tileCountExceeded, .tilesetDescriptor]
-        let error = MapboxCommon.TileRegionError(type: types.randomElement()!, message: .randomASCII(withLength: 10))
+        let error = MapboxCommon.TileRegionError(type: .tileCountExceeded, message: .testConstantASCII(withLength: 10))
         let expected = Expected<TileRegion, MapboxCommon.TileRegionError>(error: error)
 
         wrapper.onRegionLoadFinished(forId: id, region: expected)
@@ -94,7 +93,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
     }
 
     func testOnRegionMetadataChanged() {
-        let value = Int.random(in: 0...10)
+        let value = 3
 
         wrapper.onRegionMetadataChanged(forId: id, value: value)
 

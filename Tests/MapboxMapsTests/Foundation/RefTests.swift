@@ -86,6 +86,16 @@ final class RefTests: XCTestCase {
     }
 }
 
+private extension UIColor {
+    static func random() -> UIColor {
+        return UIColor(
+            red: .random(in: 0...1),
+            green: .random(in: 0...1),
+            blue: .random(in: 0...1),
+            alpha: .random(in: 0...1))
+    }
+}
+
 private final class Object {
     var value: Int
 

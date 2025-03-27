@@ -15,7 +15,7 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
         getSizeStub.call()
     }
 
-    var isInTileModeStub = Stub<Void, Bool>(defaultReturnValue: .random())
+    var isInTileModeStub = Stub<Void, Bool>(defaultReturnValue: .testConstantValue())
     func isInTileMode() -> Bool {
         isInTileModeStub.call()
     }
@@ -25,7 +25,7 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
         setTileModeStub.call(with: set)
     }
 
-    var getCameraStateStub = Stub<Void, CoreCameraState>(defaultReturnValue: .init(center: CLLocationCoordinate2D.testConstantValue(), padding: CoreEdgeInsets.init(top: Double.random(in: 0..<100), left: Double.random(in: 0..<100), bottom: Double.random(in: 0..<100), right: Double.random(in: 0..<100)), zoom: .random(in: 0...22), bearing: .random(in: 0...360), pitch: .random(in: 0...90)))
+    var getCameraStateStub = Stub<Void, CoreCameraState>(defaultReturnValue: .init(center: CLLocationCoordinate2D.testConstantValue(), padding: CoreEdgeInsets.init(top: 33, left: 44, bottom: 0, right: 99), zoom: 23, bearing: 360, pitch: 90))
     func getCameraState() -> CoreCameraState {
         getCameraStateStub.call()
     }

@@ -6,7 +6,7 @@ final class UnitBezierTests: XCTestCase {
     func testLinear() {
         let unitBezier = UnitBezier(p1: .zero, p2: .init(x: 1, y: 1))
 
-        let x = Double.random(in: 0...1)
+        let x = 1.0
 
         XCTAssertEqual(unitBezier.solve(x, 1e-6), x, accuracy: 1e-6)
     }

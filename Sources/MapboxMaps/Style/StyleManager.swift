@@ -1550,6 +1550,41 @@ public class StyleManager {
         }
     }
 
+    /// Set coolor theme for the style import with specified `importId`.
+    ///
+    ///  - Parameters:
+    ///   - importId: Identifier of the style import to remove.
+    ///   - colorTheme: Color theme to set for style import.
+    ///
+    ///  - Throws:
+    ///   - An error describing why the operation was unsuccessful.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func setStyleImportColorTheme(importId: String, colorTheme: ColorTheme) throws {
+        guard let coreTheme = colorTheme.core else {
+            throw StyleError(message: "Cannot construct UIImage object.")
+        }
+
+        try handleExpected {
+            return styleManager.setImportColorThemeForImportId(importId, colorTheme: coreTheme)
+        }
+    }
+
+    /// Remove color theme from the style import.
+    ///
+    ///  - Parameters:
+    ///   - importId: Identifier of the style import to remove color theme from.
+    ///
+    ///  - Throws:
+    ///   - An error describing why the operation was unsuccessful.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func removeStyleImportColorTheme(importId: String) throws {
+        try handleExpected {
+            return styleManager.setImportColorThemeForImportId(importId, colorTheme: nil)
+        }
+    }
+
 }
 
 extension StyleManagerProtocol {

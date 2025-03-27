@@ -17,6 +17,7 @@ struct StandardStyleImportExample: View {
                 /// This enables the greater encapsulation and allows to reload the basemap without reloading of the fragment.
                 let importId = "real-estate-fragment"
                 StyleImport(id: importId, uri: StyleURI(url: styleURL)!)
+                    .colorTheme(ColorTheme(uiimage: monochromeTheme))
 
                 /// The contents of the imported style are private, meaning all the implementation details such as layers and sources are not accessible at runtime.
                 /// However the style defines a "hotels-price" featureset that represents a portion of features available for interaction.
@@ -151,6 +152,7 @@ private extension FeaturesetFeature {
 }
 
 private let styleURL = Bundle.main.url(forResource: "fragment-realestate-NY", withExtension: "json")!
+private let monochromeTheme = UIImage(named: "monochrome_lut")!
 
 struct StandardStyleImportExample_Previews: PreviewProvider {
     static var previews: some View {

@@ -19,9 +19,9 @@ final class DirectionInterpolatorTests: XCTestCase {
     }
 
     func testInterpolate() {
-        let from = CLLocationDirection.random(in: 0..<360)
-        let to = CLLocationDirection.random(in: 0..<360)
-        let fraction = Double.random(in: 0...1)
+        let from: Double = 123
+        let to: Double = 300
+        let fraction: Double = 0.4
 
         let result = directionInterpolator.interpolate(
             from: from,

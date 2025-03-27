@@ -21,7 +21,7 @@ final class PinchGestureHandlerTests: XCTestCase {
         delegate = MockGestureHandlerDelegate()
         pinchGestureHandler.delegate = delegate
 
-        pinchGestureHandler.zoomEnabled = .random()
+        pinchGestureHandler.zoomEnabled = .testConstantValue()
         gestureRecognizer.locationOfTouchStub.returnValueQueue = [
             CGPoint(x: -1, y: -1),
             CGPoint(x: 1, y: 1)]

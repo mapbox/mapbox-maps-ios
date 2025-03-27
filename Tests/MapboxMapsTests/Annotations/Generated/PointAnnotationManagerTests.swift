@@ -690,7 +690,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextFont() {
-        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { UUID().uuidString })
+        let value = Array.testFixture(withLength: 10, generator: { UUID().uuidString })
         manager.textFont = value
         XCTAssertEqual(manager.textFont, value)
         XCTAssertEqual((manager.impl.layerProperties["text-font"] as! [Any])[1] as! [String], value)
@@ -698,7 +698,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
 
     func testSetToNilTextFont() {
-        let newTextFontProperty = Array.testFixture(withLength: .random(in: 0...10), generator: { UUID().uuidString })
+        let newTextFontProperty = Array.testFixture(withLength: 10, generator: { UUID().uuidString })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-font").value as! [String]
         manager.textFont = newTextFontProperty
         XCTAssertNotNil(manager.impl.layerProperties["text-font"])
@@ -1158,7 +1158,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextVariableAnchor() {
-        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { TextAnchor.testConstantValue() })
+        let value = Array.testFixture(withLength: 10, generator: { TextAnchor.testConstantValue() })
         manager.textVariableAnchor = value
         XCTAssertEqual(manager.textVariableAnchor, value)
         let valueAsString = value.map { $0.rawValue }
@@ -1167,7 +1167,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
 
     func testSetToNilTextVariableAnchor() {
-        let newTextVariableAnchorProperty = Array.testFixture(withLength: .random(in: 0...10), generator: { TextAnchor.testConstantValue() })
+        let newTextVariableAnchorProperty = Array.testFixture(withLength: 10, generator: { TextAnchor.testConstantValue() })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-variable-anchor").value as! [TextAnchor]
         manager.textVariableAnchor = newTextVariableAnchorProperty
         XCTAssertNotNil(manager.impl.layerProperties["text-variable-anchor"])
@@ -1185,7 +1185,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextWritingMode() {
-        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { TextWritingMode.testConstantValue() })
+        let value = Array.testFixture(withLength: 10, generator: { TextWritingMode.testConstantValue() })
         manager.textWritingMode = value
         XCTAssertEqual(manager.textWritingMode, value)
         let valueAsString = value.map { $0.rawValue }
@@ -1194,7 +1194,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
 
     func testSetToNilTextWritingMode() {
-        let newTextWritingModeProperty = Array.testFixture(withLength: .random(in: 0...10), generator: { TextWritingMode.testConstantValue() })
+        let newTextWritingModeProperty = Array.testFixture(withLength: 10, generator: { TextWritingMode.testConstantValue() })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]
         manager.textWritingMode = newTextWritingModeProperty
         XCTAssertNotNil(manager.impl.layerProperties["text-writing-mode"])

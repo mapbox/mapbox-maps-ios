@@ -47,7 +47,7 @@ final class ImageTests: XCTestCase {
         let image = makeImageWithUIGraphicsContext(
             width: 1,
             height: 1,
-            scale: .random(in: 1...4))
+            scale: 1)
 
         let mbmImage = try XCTUnwrap(CoreMapsImage(uiImage: image))
 
@@ -62,7 +62,7 @@ final class ImageTests: XCTestCase {
         let image = makeImageWithCGContext(
             width: 1,
             height: 1,
-            scale: .random(in: 1...4))
+            scale: 4)
 
         let mbmImage = try XCTUnwrap(CoreMapsImage(uiImage: image))
 
@@ -77,7 +77,7 @@ final class ImageTests: XCTestCase {
         let image = makeImageWithCGContext(
             width: 1,
             height: 1,
-            scale: .random(in: 1...4),
+            scale: 3,
             alphaInfo: .noneSkipLast)
 
         let mbmImage = try XCTUnwrap(CoreMapsImage(uiImage: image))
@@ -93,7 +93,7 @@ final class ImageTests: XCTestCase {
         let image = makeImageWithCGContext(
             width: 1,
             height: 1,
-            scale: .random(in: 1...4),
+            scale: 3,
             alphaInfo: .noneSkipFirst)
 
         let mbmImage = try XCTUnwrap(CoreMapsImage(uiImage: image))

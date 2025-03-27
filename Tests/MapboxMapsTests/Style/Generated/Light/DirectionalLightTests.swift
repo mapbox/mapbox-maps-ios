@@ -16,7 +16,7 @@ final class DirectionalLightTests: XCTestCase {
         light.intensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
          light.shadowIntensity = Value<Double>.testConstantValue()
         light.shadowIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-
+ 
         let data = try JSONEncoder().encode(light)
         XCTAssertFalse(data.isEmpty)
 

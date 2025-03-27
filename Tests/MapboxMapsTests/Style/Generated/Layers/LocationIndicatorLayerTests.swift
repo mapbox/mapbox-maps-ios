@@ -51,9 +51,6 @@ final class LocationIndicatorLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = LocationIndicatorLayer(id: "test-id")
         layer.visibility = .constant(.visible)
-        layer.bearingImage = Value<ResolvedImage>.testConstantValue()
-        layer.shadowImage = Value<ResolvedImage>.testConstantValue()
-        layer.topImage = Value<ResolvedImage>.testConstantValue()
 
         var data: Data?
         do {
@@ -70,9 +67,6 @@ final class LocationIndicatorLayerTests: XCTestCase {
         do {
             let decodedLayer = try JSONDecoder().decode(LocationIndicatorLayer.self, from: validData)
             XCTAssert(decodedLayer.visibility == .constant(.visible))
-            XCTAssertEqual(layer.bearingImage, Value<ResolvedImage>.testConstantValue())
-            XCTAssertEqual(layer.shadowImage, Value<ResolvedImage>.testConstantValue())
-            XCTAssertEqual(layer.topImage, Value<ResolvedImage>.testConstantValue())
         } catch {
             XCTFail("Failed to decode LocationIndicatorLayer")
         }
@@ -90,6 +84,7 @@ final class LocationIndicatorLayerTests: XCTestCase {
        layer.accuracyRadiusColorUseTheme = .none
        layer.bearing = Value<Double>.testConstantValue()
        layer.bearingTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.bearingImage = Value<ResolvedImage>.testConstantValue()
        layer.bearingImageSize = Value<Double>.testConstantValue()
        layer.bearingImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.emphasisCircleColor = Value<StyleColor>.testConstantValue()
@@ -105,8 +100,10 @@ final class LocationIndicatorLayerTests: XCTestCase {
        layer.locationIndicatorOpacity = Value<Double>.testConstantValue()
        layer.locationIndicatorOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.perspectiveCompensation = Value<Double>.testConstantValue()
+       layer.shadowImage = Value<ResolvedImage>.testConstantValue()
        layer.shadowImageSize = Value<Double>.testConstantValue()
        layer.shadowImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.topImage = Value<ResolvedImage>.testConstantValue()
        layer.topImageSize = Value<Double>.testConstantValue()
        layer.topImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
@@ -129,6 +126,7 @@ final class LocationIndicatorLayerTests: XCTestCase {
            XCTAssertEqual(layer.accuracyRadiusBorderColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.accuracyRadiusColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.bearing, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.bearingImage, Value<ResolvedImage>.testConstantValue())
            XCTAssertEqual(layer.bearingImageSize, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.emphasisCircleColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.emphasisCircleGlowRange, Value<[Double]>.testConstantValue())
@@ -137,7 +135,9 @@ final class LocationIndicatorLayerTests: XCTestCase {
            XCTAssertEqual(layer.location, Value<[Double]>.testConstantValue())
            XCTAssertEqual(layer.locationIndicatorOpacity, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.perspectiveCompensation, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.shadowImage, Value<ResolvedImage>.testConstantValue())
            XCTAssertEqual(layer.shadowImageSize, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.topImage, Value<ResolvedImage>.testConstantValue())
            XCTAssertEqual(layer.topImageSize, Value<Double>.testConstantValue())
        } catch {
            XCTFail("Failed to decode LocationIndicatorLayer")
@@ -149,13 +149,11 @@ final class LocationIndicatorLayerTests: XCTestCase {
             .slot(Slot.testConstantValue())
             .minZoom(Double.testConstantValue())
             .maxZoom(Double.testConstantValue())
-            .bearingImage(String.testConstantValue())
-            .shadowImage(String.testConstantValue())
-            .topImage(String.testConstantValue())
             .accuracyRadius(Double.testConstantValue())
             .accuracyRadiusBorderColor(StyleColor.testConstantValue())
             .accuracyRadiusColor(StyleColor.testConstantValue())
             .bearing(Double.testConstantValue())
+            .bearingImage(String.testConstantValue())
             .bearingImageSize(Double.testConstantValue())
             .emphasisCircleColor(StyleColor.testConstantValue())
             .emphasisCircleGlowRange(solidStart: 0, transparentEnd: 1)
@@ -164,19 +162,19 @@ final class LocationIndicatorLayerTests: XCTestCase {
             .location(CLLocationCoordinate2D(latitude: 10, longitude: 20))
             .locationIndicatorOpacity(Double.testConstantValue())
             .perspectiveCompensation(Double.testConstantValue())
+            .shadowImage(String.testConstantValue())
             .shadowImageSize(Double.testConstantValue())
+            .topImage(String.testConstantValue())
             .topImageSize(Double.testConstantValue())
 
         XCTAssertEqual(layer.slot, Slot.testConstantValue())
         XCTAssertEqual(layer.minZoom, Double.testConstantValue())
         XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
-        XCTAssertEqual(layer.bearingImage, Value<ResolvedImage>.constant(.name(String.testConstantValue())))
-        XCTAssertEqual(layer.shadowImage, Value<ResolvedImage>.constant(.name(String.testConstantValue())))
-        XCTAssertEqual(layer.topImage, Value<ResolvedImage>.constant(.name(String.testConstantValue())))
         XCTAssertEqual(layer.accuracyRadius, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.accuracyRadiusBorderColor, Value.constant(StyleColor.testConstantValue()))
         XCTAssertEqual(layer.accuracyRadiusColor, Value.constant(StyleColor.testConstantValue()))
         XCTAssertEqual(layer.bearing, Value.constant(Double.testConstantValue()))
+        XCTAssertEqual(layer.bearingImage, Value<ResolvedImage>.constant(.name(String.testConstantValue())))
         XCTAssertEqual(layer.bearingImageSize, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.emphasisCircleColor, Value.constant(StyleColor.testConstantValue()))
         XCTAssertEqual(layer.emphasisCircleGlowRange, Value.constant([0, 1]))
@@ -185,7 +183,9 @@ final class LocationIndicatorLayerTests: XCTestCase {
         XCTAssertEqual(layer.location, Value.constant([10, 20, 0]))
         XCTAssertEqual(layer.locationIndicatorOpacity, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.perspectiveCompensation, Value.constant(Double.testConstantValue()))
+        XCTAssertEqual(layer.shadowImage, Value<ResolvedImage>.constant(.name(String.testConstantValue())))
         XCTAssertEqual(layer.shadowImageSize, Value.constant(Double.testConstantValue()))
+        XCTAssertEqual(layer.topImage, Value<ResolvedImage>.constant(.name(String.testConstantValue())))
         XCTAssertEqual(layer.topImageSize, Value.constant(Double.testConstantValue()))
     }
 }

@@ -3,6 +3,15 @@ import Foundation
 @_implementationOnly import MapboxCommon_Private
 
 class MockStyleManager: StyleManagerProtocol {
+    struct ImportColorThemeParameters {
+        var importId: String
+        var colorTheme: CoreColorTheme?
+    }
+    let setImportColorThemeStub = Stub<ImportColorThemeParameters, Expected<NSNull, NSString>>( defaultReturnValue: .init(value: NSNull()))
+    func setImportColorThemeForImportId(_ importId: String, colorTheme: CoreColorTheme?) -> Expected<NSNull, NSString> {
+        setImportColorThemeStub(with: ImportColorThemeParameters(importId: importId, colorTheme: colorTheme))
+    }
+
     let setStyleColorThemeForStub = Stub<CoreColorTheme?, Expected<NSNull, NSString>>(
         defaultReturnValue: .init(value: NSNull())
     )
@@ -81,8 +90,8 @@ class MockStyleManager: StyleManagerProtocol {
 
     @Stubbed var stubStyleLayers: [MapboxCoreMaps.StyleObjectInfo] = .testFixture(withLength: 3) {
         MapboxCoreMaps.StyleObjectInfo(
-            id: .randomAlphanumeric(withLength: 12),
-            type: MapboxMaps.LayerType.random().rawValue)
+            id: .testConstantAlphanumeric(withLength: 12),
+            type: MapboxMaps.LayerType.testConstantValue().rawValue)
     }
     let styleLayerExistsStub = Stub<String, Bool>(defaultReturnValue: false)
     func styleLayerExists(forLayerId layerId: String) -> Bool {
@@ -829,7 +838,7 @@ class MockStyleManager: StyleManagerProtocol {
 struct NonEncodableLayer: Layer {
     var id: String = "dummy-non-encodable-layer-id"
     var visibility: Value<Visibility> = .constant(.visible)
-    var type: LayerType = .random()
+    var type: LayerType = .testConstantValue()
     var filter: Exp?
     var source: String?
     var sourceLayer: String?

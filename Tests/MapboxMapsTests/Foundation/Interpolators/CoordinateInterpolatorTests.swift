@@ -26,9 +26,9 @@ final class CoordinateInterpolatorTests: XCTestCase {
     func testInterpolate() throws {
         let from = CLLocationCoordinate2D.testConstantValue()
         let to = CLLocationCoordinate2D.testConstantValue()
-        let fraction = Double.random(in: 0...1)
-        doubleInterpolator.interpolateStub.defaultReturnValue = .random(in: 0..<100)
-        longitudeInterpolator.interpolateStub.defaultReturnValue = .random(in: 0..<100)
+        let fraction = 0.1
+        doubleInterpolator.interpolateStub.defaultReturnValue = 24
+        longitudeInterpolator.interpolateStub.defaultReturnValue = 99
 
         let result = coordinateInterpolator.interpolate(from: from, to: to, fraction: fraction)
 

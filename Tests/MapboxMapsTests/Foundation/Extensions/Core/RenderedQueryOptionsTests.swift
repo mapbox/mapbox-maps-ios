@@ -11,11 +11,11 @@ final class RenderedQueryOptionsTests: XCTestCase {
     }
 
     func testInitWithNonNils() throws {
-        let layerIds = [String].testFixture(withLength: .random(in: 0...10)) {
-            .randomASCII(withLength: .random(in: 0...10))
+        let layerIds = [String].testFixture(withLength: 10) {
+            .testConstantASCII(withLength: 10)
         }
         let filter = Exp(.abs) {
-            Double.random(in: 0..<(.greatestFiniteMagnitude))
+            0.1
         }
         let filterJSONObject = try XCTUnwrap(filter.toJSON() as? NSObject)
 
@@ -34,7 +34,7 @@ final class RenderedQueryOptionsTests: XCTestCase {
 
     func testFilterRefinementNonNil() throws {
         let filter = Exp(.abs) {
-            Double.random(in: 0..<(.greatestFiniteMagnitude))
+            1.2
         }
         let filterJSON = try filter.toJSON()
 

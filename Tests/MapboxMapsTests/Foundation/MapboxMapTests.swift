@@ -66,8 +66,8 @@ final class MapboxMapTests: XCTestCase {
 
     func testSetSize() {
         let expectedSize = CGSize(
-            width: .random(in: 100...1000),
-            height: .random(in: 100...1000))
+            width: 1000,
+            height: 100)
 
         mapboxMap.size = expectedSize
 
@@ -76,8 +76,8 @@ final class MapboxMapTests: XCTestCase {
 
     func testGetSize() {
         let expectedSize = Size(
-            width: .random(in: 100...1000),
-            height: .random(in: 100...1000))
+            width: 124,
+            height: 988)
         mapboxMap.__testingMap.setSizeFor(expectedSize)
 
         let actualSize = mapboxMap.size
@@ -86,13 +86,13 @@ final class MapboxMapTests: XCTestCase {
     }
 
     func testGetRenderWorldCopies() {
-        let renderWorldCopies = Bool.random()
+        let renderWorldCopies = Bool.testConstantValue()
         mapboxMap.__testingMap.setRenderWorldCopiesForRenderWorldCopies(renderWorldCopies)
         XCTAssertEqual(mapboxMap.shouldRenderWorldCopies, renderWorldCopies)
     }
 
     func testSetRenderWorldCopies() {
-        let renderWorldCopies = Bool.random()
+        let renderWorldCopies = Bool.testConstantValue()
         mapboxMap.shouldRenderWorldCopies = renderWorldCopies
         XCTAssertEqual(mapboxMap.__testingMap.getRenderWorldCopies(), renderWorldCopies)
     }

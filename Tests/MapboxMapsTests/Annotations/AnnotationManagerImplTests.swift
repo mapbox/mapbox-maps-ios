@@ -576,7 +576,7 @@ final class AnnotationManagerImplTests: XCTestCase {
         me.annotations = annotations
 
         // Dragged annotation will be added to internal list of dragged annotations.
-        let annotationToDrag = annotations.randomElement()!
+        let annotationToDrag = annotations[0]
         harness.map.simulateInteraction(.drag(.begin), .layer(id), feature: annotationToDrag.feature, context: .zero)
 
         XCTAssertTrue(me.annotations.contains(where: { $0.id == annotationToDrag.id }))

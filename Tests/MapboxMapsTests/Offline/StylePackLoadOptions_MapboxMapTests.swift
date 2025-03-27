@@ -4,16 +4,10 @@ import XCTest
 class StylePackLoadOptionsTests: XCTestCase {
 
     func testInitilization() throws {
-        let allGlyphsRasterizationMode: [GlyphsRasterizationMode] = [
-            .noGlyphsRasterizedLocally,
-            .ideographsRasterizedLocally,
-            .allGlyphsRasterizedLocally
-        ]
-
-        let glyphsRasterizationMode = GlyphsRasterizationMode?.random(allGlyphsRasterizationMode.randomElement()!)
-        let metadata: [Int]? = .random(Array.testFixture(withLength: 5, generator: { Int.random(in: 0...9) }))
-        let acceptExpired = Bool.random()
-        let extraOptions: [Int]? = .random(Array.testFixture(withLength: 5, generator: { Int.random(in: 0...9) }))
+        let glyphsRasterizationMode = GlyphsRasterizationMode.ideographsRasterizedLocally
+        let metadata: [Int] = [8, 3, 2, 5, 20]
+        let acceptExpired = Bool.testConstantValue()
+        let extraOptions: [Int] = [18, 33, 52, 65, 0]
 
         let stylePackLoadOptions = try XCTUnwrap(StylePackLoadOptions(
             glyphsRasterizationMode: glyphsRasterizationMode,

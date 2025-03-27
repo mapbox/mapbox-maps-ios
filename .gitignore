@@ -16,3 +16,5 @@ MapboxMaps.xcodeproj
 Sources/MapboxMaps/Documentation.docc/*.html
 
 .vscode
+MapboxMaps.doccarchive.zip
+MapboxMaps.doccarchive

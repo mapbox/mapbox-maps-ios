@@ -4,10 +4,11 @@ set -euo pipefail
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 public_repo_root="$script_dir/../../"
 
-# Usage: build-docc.sh <hosting_base_path> <output_path>
+# Usage: build-docc.sh <hosting_base_path> <output_path> <use_project>
 
 hosting_base_path=${1:-"/ios/maps/api/latest/"}
 docc_archive=${2:-"$(pwd)/MapboxMaps.doccarchive"}
+use_project=${3:-""}
 theme_dir="$script_dir/docc-theme"
 docc_sources_path="$public_repo_root/Sources/MapboxMaps/Documentation.docc"
 
@@ -23,8 +24,15 @@ process_template() {
 
 build_doc() {
     pushd "$public_repo_root/"
-    xcodegen
-    xcodebuild -project MapboxMaps.xcodeproj docbuild -config Release -scheme MapboxMaps -destination "generic/platform=iOS" \
+    if [[ -n $use_project ]]; then
+        PROJECT=$use_project
+        echo "Using project $PROJECT"
+    else
+        PROJECT="MapboxMaps.xcodeproj"
+        xcodegen
+    fi
+
+    xcodebuild -project $PROJECT docbuild -config Release -scheme MapboxMaps -destination "generic/platform=iOS" \
         COMPILER_INDEX_STORE_ENABLE=NO OTHER_DOCC_FLAGS_UNIFIED="--experimental-enable-custom-templates --output-path $docc_archive --hosting-base-path $hosting_base_path"
     popd
 }

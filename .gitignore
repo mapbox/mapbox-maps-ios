@@ -12,9 +12,9 @@ scripts/release/packager/artifacts
 scripts/release/packager/build
 scripts/xcparty/.swiftpm
 MapboxMaps.xcodeproj
-*.doccarchive
+*.doccarchive*
 Sources/MapboxMaps/Documentation.docc/*.html
 
 .vscode
-MapboxMaps.doccarchive.zip
-MapboxMaps.doccarchive
+Package.resolved
+Examples.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved

@@ -4,9 +4,9 @@
 import PackageDescription
 import Foundation
 
-let coreMaps = MapsDependency.coreMaps(version: "11.11.0-SNAPSHOT-03-27--04-29.git-a0e6128", checksum: "00fe6b6b5fa99919003a8a1988395e3083b1f56ad4141f4baa93b9f9e27deb1a")
+let coreMaps = MapsDependency.coreMaps(version: "11.11.0-SNAPSHOT-03-21--09-47.git-8a42e6a", checksum: "268a2d19cc674193537a29cfafa5e1cea9ccf30d54724650158d1afa73e3a30a")
 
-let common = MapsDependency.common(version: "24.11.0-SNAPSHOT-03-27--04-29.git-a0e6128", checksum: "9e6a4bfafba1031b99bf948acb731d7251181b824c1860032f07e9133e5149c2")
+let common = MapsDependency.common(version: "24.11.0-SNAPSHOT-03-21--09-47.git-8a42e6a", checksum: "878a09721d48e5a55dfbde15420953e5f71721877e419c56ae59728943bdd107")
 
 let mapboxMapsPath: String? = nil
 

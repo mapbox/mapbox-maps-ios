@@ -1,6 +1,6 @@
 // swiftlint:disable file_length
 import UIKit
-import MapboxCoreMaps
+@_spi(Internal) @_spi(Marshalling) import MapboxCoreMaps
 @_implementationOnly import MapboxCommon_Private
 import Turf
 
@@ -195,6 +195,9 @@ public final class MapboxMap: StyleManager {
 
     /// Triggered when map is loaded for the first time, and camera is initialized with default style camera options.
     var isDefaultCameraInitialized: Signal<Bool> { _isDefaultCameraInitialized.signal.skipRepeats() }
+
+    @_spi(Internal)
+    public lazy var map: MapboxCoreMaps.Map = .Marshaller.toSwift(__map)
 
     deinit {
         __map.destroyRenderer()

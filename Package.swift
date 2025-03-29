@@ -4,8 +4,8 @@
 import PackageDescription
 import Foundation
 
-let commonVersion: Version = "24.11.0-SNAPSHOT-03-28--04-29.git-acea700"
-let coreMapsVersion: Version = "11.11.0-SNAPSHOT-03-28--04-29.git-acea700"
+let commonVersion: Version = "24.11.0-SNAPSHOT-03-29--04-29.git-d0ad124"
+let coreMapsVersion: Version = "11.11.0-SNAPSHOT-03-29--04-29.git-d0ad124"
 let turfVersion: Version = "4.0.0"
 
 let mapboxMapsPath: String? = nil

@@ -1,9 +1,7 @@
 Pod::Spec.new do |m|
 
-  maps_version = '11.11.0'
-
   m.name = 'MapboxMaps'
-  m.version = maps_version
+  m.version = '11.11.0-SNAPSHOT-03-31--04-29.git-18d75be'
 
   m.summary = 'Vector map solution for iOS with full styling capabilities.'
   m.description = 'Metal-based vector map solution for iOS with full styling capabilities.'
@@ -13,7 +11,7 @@ Pod::Spec.new do |m|
   m.social_media_url = 'https://twitter.com/mapbox'
   m.documentation_url = 'https://docs.mapbox.com/ios/maps/api-reference/'
 
-  m.source = { :git => 'https://github.com/mapbox/mapbox-maps-ios.git', :tag => "v#{maps_version}" }
+  m.source = { :git => 'https://github.com/mapbox/mapbox-maps-ios.git', :tag => "v#{m.version.to_s}" }
   m.platform = :ios
   m.ios.deployment_target = '14.0'
   m.swift_version = '5.9'

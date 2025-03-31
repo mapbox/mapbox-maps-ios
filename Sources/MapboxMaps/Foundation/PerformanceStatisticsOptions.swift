@@ -58,4 +58,13 @@ extension CumulativeRenderingStatistics {
     /// The amount of vertex memory (array and index buffer memory) in use at the end of the collection window.
     /// - Note: This value is nil for Metal renderer.
     public var vertexBytes: UInt? { __vertexBytes?.uintValue }
+
+    /// The number of graphics pipeline programs created.
+    public var graphicsPrograms: UInt? { __graphicsPrograms?.uintValue }
+
+    /// The total amount of time spent on all graphics pipeline program creation, in milliseconds.
+    public var graphicsProgramsCreationTimeMillis: Double? { __graphicsProgramsCreationTimeMillis?.doubleValue }
+
+    /// The number of FBO(framebuffer object) switches.
+    public var fboSwitchCount: UInt? { __fboSwitchCount?.uintValue }
 }

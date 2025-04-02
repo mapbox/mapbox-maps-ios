@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 11.5.4 - 2 April, 2025
+
+* Update Common to v24.5.1
+
 ## 11.5.3 - 4 December, 2024
 
 * Add a way to filter attribution menu items.

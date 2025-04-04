@@ -4,10 +4,11 @@ set -euo pipefail
 
 #
 # Usage:
-#   ./scripts/release/create-github-draft-release.sh <version-without-v-prefix>
+#   ./scripts/release/create-github-draft-release.sh <version-without-v-prefix> <xcode-min-version>
 #
 
 VERSION=$1
+XCODE_MIN_VERSION=$2
 
 set -euo pipefail
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -17,7 +18,7 @@ UTILS_PATH="$SCRIPT_DIR/../utils.sh"
 source "$UTILS_PATH"
 
 main() {
-    GITHUB_TOKEN=$(mbx-ci github reader token)
+    GITHUB_TOKEN=$GITHUB_READER_PRIVATE_TOKEN
     export GITHUB_TOKEN
 
     VERSION_JSON_PATH="$SCRIPT_DIR/packager/versions.json"
@@ -30,7 +31,6 @@ main() {
     MAPBOX_COREMAPS_VERSION=$(jq -r .MapboxCoreMaps "$VERSION_JSON_PATH")
     # The following python one-liner parses the CircleCI config and takes executor called 'xcode-sdk-min' and then checkout the macos xcode version.
     # It's critical to have the same structure in CircleCI config in any place inside of file.
-    XCODE_MIN_VERSION=$(python3 -c "import yaml,sys;print(yaml.safe_load(sys.stdin)['macos']['xcode'])" < "$SCRIPT_DIR/../../../.circleci/config/executors/xcode-sdk-min.yml")
 
     CHANGELOG=$( ([[ $(command -v parse-changelog) ]] && parse-changelog CHANGELOG.md) || echo "<Compose changelog here>" )
 
@@ -50,7 +50,7 @@ $CHANGELOG
 * Compatible version of Xcode: \`$XCODE_MIN_VERSION\`
 EOF
 
-    PRODUCTION_DOCS_PR_URL=$(GITHUB_TOKEN=$(mbx-ci github writer public token) \
+    PRODUCTION_DOCS_PR_URL=$(GITHUB_TOKEN=$GITHUB_WRITER_PUBLIC_TOKEN \
         gh release create "v$VERSION" --repo mapbox/mapbox-maps-ios \
             --prerelease \
             --draft \

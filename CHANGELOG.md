@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.12.0-beta.1 - 9 April, 2025
+
+* Expose `graphicsPrograms`, `graphicsProgramsCreationTimeMillis` and `fboSwitchCount` for `CumulativeRenderingStatistics`.
+* Update CoreMaps to 11.12.0-beta.1 and Common to 24.12.0-beta.1
+
 ## 11.11.0 - 26 March, 2025
 
 * Update CoreMaps to 11.11.0 and Common to 24.11.0

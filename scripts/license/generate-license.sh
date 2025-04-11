@@ -12,9 +12,10 @@ MODE="generate"
 DEFAULT_VERSIONS_JSON_PATH="scripts/release/packager/versions.json"
 DEFAULT_MAPBOXMAPS_JSON_PATH="Sources/MapboxMaps/MapboxMaps.json"
 DEFAULT_LICENSE_OUTPUT_PATH="LICENSE.md"
+COREMAPS_LICENSE_FILE="../../gl-native/LICENSE-iOS.md"
 
 # Parse command-line arguments
-while getopts "v:m:o:-:" opt; do
+while getopts "v:m:o:c:-:" opt; do
     case $opt in
         -)
             case "${OPTARG}" in
@@ -30,6 +31,7 @@ while getopts "v:m:o:-:" opt; do
         v) VERSIONS_JSON_PATH=$OPTARG ;;
         m) MAPBOXMAPS_JSON_PATH=$OPTARG ;;
         o) LICENSE_OUTPUT_PATH=$OPTARG ;;
+        c) COREMAPS_LICENSE_FILE=$OPTARG ;;
         *) usage ;;
     esac
 done
@@ -43,30 +45,14 @@ VERSIONS_JSON_PATH=${VERSIONS_JSON_PATH:-$DEFAULT_VERSIONS_JSON_PATH}
 MAPBOXMAPS_JSON_PATH=${MAPBOXMAPS_JSON_PATH:-$DEFAULT_MAPBOXMAPS_JSON_PATH}
 LICENSE_OUTPUT_PATH=${LICENSE_OUTPUT_PATH:-$DEFAULT_LICENSE_OUTPUT_PATH}
 
-# Extract versions from the provided JSON paths
-COREMAPS_VERSION=$(jq -r .MapboxCoreMaps "$VERSIONS_JSON_PATH")
-
-if [[ $COREMAPS_VERSION = *"SNAPSHOT"* ]]; then
-    # Skipping license check for GL Native snapshots.
-    exit 0
-fi
-
 TURF_VERSION=$(jq -r .Turf "$VERSIONS_JSON_PATH")
 MAPS_SDK_VERSION=$(jq -r .version "$MAPBOXMAPS_JSON_PATH")
 CURRENT_YEAR=$(date +%Y)
 
 # Fetch license contents from GitHub
 TURF_LICENSE_CONTENT=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/turf-swift/contents/LICENSE.md?ref=v$TURF_VERSION" --jq ".content" | base64 --decode)
-CORE_LICENSE=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/mapbox-sdk/contents/projects/gl-native/LICENSE-iOS.md?ref=gl-native/v$COREMAPS_VERSION" --jq ".content" | base64 --decode)
 
-# Fetch versions.json from the monorepo
-MONOREPO_VERSIONS_JSON=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/mapbox-sdk/contents/versions.json?ref=gl-native/v$COREMAPS_VERSION" --jq ".content" | base64 --decode)
-MONOREPO_CORE_LOCAL_VERSION="$(echo "$MONOREPO_VERSIONS_JSON" | jq -r '.projects | .["gl-native"] | .local')"
-MONOREPO_CORE_HEAD_VERSION=$(echo "$MONOREPO_VERSIONS_JSON" | jq -r '.projects | .["gl-native"] | .head')
-
-# Monorepo don't store release version in license files. Instead, version is updated in CI runtime before distribution.
-# Replacing 'local' version with 'head' version to avoid license validation issues.
-CORE_LICENSE="${CORE_LICENSE/$MONOREPO_CORE_LOCAL_VERSION/$MONOREPO_CORE_HEAD_VERSION}"
+CORE_LICENSE=$(cat $COREMAPS_LICENSE_FILE)
 
 
 LICENSE_TEMPLATE="changequote("""","""")dnl # prevents m4 from being confused with backquotes by changing quotes to non-existent tokens

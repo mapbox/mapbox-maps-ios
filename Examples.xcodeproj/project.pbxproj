@@ -76,7 +76,7 @@
 		68FD9E1F4606B2729BA1E6DC /* SnapshotterExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588FD640D91E9DD366703F7B /* SnapshotterExample.swift */; platformFilter = ios; };
 		6B040F65241ABF600D70D14D /* Custom3DPuckExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C957F9CA07061B793C2DD4A /* Custom3DPuckExample.swift */; platformFilter = ios; };
 		7036A19FCD2CCE85BDDF4E00 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5E598A16FA446F583344CB /* TrackingModeExample.swift */; platformFilter = ios; };
-		73502E332D5D654A003B6A64 /* StandardStyleInteractionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73502E322D5D6544003B6A64 /* StandardStyleInteractionsExample.swift */; };
+		73502E332D5D654A003B6A64 /* StandardStyleInteractionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73502E322D5D6544003B6A64 /* StandardStyleInteractionsExample.swift */; platformFilter = ios; };
 		7365170E39A459EB4DFA198B /* ExamplesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE18E37A8652B4807D2459F1 /* ExamplesUITests.swift */; platformFilter = ios; };
 		759D42AA5FE93B6FA9DFADF5 /* LocationOverrideExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B39AE24486FED5ED30392D /* LocationOverrideExample.swift */; };
 		7686448F8648BECC75A912B6 /* DashboardCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913B4773A82AD6357D6AAEA1 /* DashboardCarPlaySceneDelegate.swift */; platformFilter = ios; };

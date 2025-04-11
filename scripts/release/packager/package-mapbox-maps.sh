@@ -15,28 +15,6 @@ MAPBOX_MAPS_DIR=$(realpath "${5:-"../../../../mapbox-maps-ios"}")
 LICENSE_PATH=$(realpath "${6:-"../../../LICENSE.md"}")
 ARCHIVE_OUTPUT_PATH=${7:-"MapboxMaps.zip"}
 
-function build_from_git() {
-    local NAME=${1}
-    local GIT_REPO_URL=${2}
-    local VERSION=${3}
-    local LINK_TYPE=${4}
-    local SCHEME=${5}
-    local CREATE_XCFRAMEWORK_SCRIPT=${6}
-    local ARTIFACTS_DIR=${7}
-
-    step "Clone $GIT_REPO_URL"
-    git clone "$GIT_REPO_URL" "$ARTIFACTS_DIR/$NAME"
-
-    step "Checkout tag: $VERSION"
-    git -C "$ARTIFACTS_DIR/$NAME" checkout "$VERSION"
-
-    step "Build $NAME"
-    "$CREATE_XCFRAMEWORK_SCRIPT" "$NAME" "$LINK_TYPE" "$SCHEME" "$ARTIFACTS_DIR/$NAME/$NAME.xcodeproj" Turf "$MAPBOX_MAPS_DIR/Sources/MapboxMaps/MapboxMaps.json" "$ARTIFACTS_DIR"
-
-    step "Remove directory"
-    rm -rf "$ARTIFACTS_DIR/${NAME:?}"
-}
-
 function download_binary() {
     local SDK_REGISTRY_NAME=${1}
     local SDK_REGISTRY_ARTIFACT=${2}
@@ -54,6 +32,22 @@ function download_binary() {
     curl -n "https://api.mapbox.com/downloads/v2/$SDK_REGISTRY_NAME/$RELEASE_FOLDER/ios/packages/$VERSION/$SDK_REGISTRY_ARTIFACT.zip" --output .download/tmp.zip
 
     step "Unzipping $SDK_REGISTRY_ARTIFACT.zip ..."
+    unzip -q .download/tmp.zip -d .download
+    mv .download/*.xcframework "$ARTIFACTS_DIR"
+
+    rm -rf .download
+}
+
+function download_binary_url() {
+    local url=${1}
+    local ARTIFACTS_DIR=${2}
+
+    mkdir -p .download
+
+    step "Download dependency at $url"
+    curl -Ln "$url" --output .download/tmp.zip
+
+    step "Unzipping $url ..."
     unzip -q .download/tmp.zip -d .download
     mv .download/*.xcframework "$ARTIFACTS_DIR"
 
@@ -86,9 +80,9 @@ else
     exit 1
 fi
 
+download_binary_url "https://github.com/mapbox/turf-swift/releases/download/v$TURF_VERSION/Turf.xcframework.zip" "artifacts"
 download_binary mapbox-common "$COMMON_ARTIFACT" "$COMMON_VERSION" artifacts
 download_binary mobile-maps-core "$CORE_ARTIFACT" "$CORE_VERSION" artifacts
-build_from_git "Turf" "https://github.com/mapbox/turf-swift.git" "v$TURF_VERSION" "$LINK_TYPE" "Turf" "$CREATE_XCFRAMEWORK_SCRIPT" artifacts
 
 step 'Creating MapboxMaps.xcodeproj'
 cp "$XCODE_PROJECT_SPEC_PATH" artifacts/.xcode/
@@ -102,8 +96,8 @@ step 'Building MapboxMaps.xcframework'
 rm -rf artifacts/.xcode
 
 step 'Sign XCFrameworks'
-codesign --timestamp -v --sign "Apple Distribution: Mapbox, Inc. (GJZR2MEM28)" "artifacts/Turf.xcframework" "artifacts/MapboxMaps.xcframework"
- 
+codesign --timestamp -v --sign "Apple Distribution: Mapbox, Inc." "artifacts/MapboxMaps.xcframework"
+
 step 'Add License and README to bundle'
 cp "$LICENSE_PATH" artifacts/LICENSE.md
 cp "$README_PATH" artifacts/README.md

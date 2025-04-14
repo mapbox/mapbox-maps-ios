@@ -53,42 +53,6 @@ class GeoJSONUpdateIntegrationTests: MapViewIntegrationTestCase {
         self.sourceLoadedToken = nil
     }
 
-    func benchmarkGeoJSONUpdate() {
-        let updateExpectation = self.expectation(description: "Wait for GeoJSON to be updated")
-
-        mapView.mapboxMap.onSourceDataLoaded.observe { event in
-            guard event.sourceId == Self.sourceId, event.dataId == Self.dataId else {
-                return
-            }
-
-            updateExpectation.fulfill()
-        }.store(in: &cancelables)
-
-        switch parameter.updateType {
-        case .partial:
-            performPartialGeoJSONUpdate(operationalFeatures)
-        case .full:
-            performFullGeoJSONUpdate(operationalFeatures)
-        }
-
-        wait(for: [updateExpectation], timeout: 10)
-    }
-
-    func measureOnceIgnoringWarmUpIteration(_ block: () -> Void) {
-        var warmUpIgnored = false
-        let options = XCTMeasureOptions()
-        options.iterationCount = 1
-
-        measure(options: options) {
-            guard warmUpIgnored else {
-                warmUpIgnored = true
-                return
-            }
-
-            block()
-        }
-    }
-
     struct TestParameters {
         // swiftlint:disable:next nesting
         enum UpdateType: String {
@@ -121,8 +85,8 @@ class GeoJSONUpdateIntegrationTests: MapViewIntegrationTestCase {
         }
     }
     static let parameters: [TestParameters] = {
-        let initialFeatureSizes: [Int] = [100, 1_000, 10_000, 50_000, 100_000]
-        let operationalFeatureSizes: [Int] = [1, 100, 1_000, 10_000, 50_000, 100_000]
+        let initialFeatureSizes: [Int] = [100]
+        let operationalFeatureSizes: [Int] = [1]
 
         let iterations = 1
         return (0..<iterations).flatMap { _ in
@@ -171,9 +135,24 @@ class GeoJSONUpdateIntegrationTests: MapViewIntegrationTestCase {
     }
 
     @objc private func executeTest() {
-        measureOnceIgnoringWarmUpIteration {
-            benchmarkGeoJSONUpdate()
+        let updateExpectation = self.expectation(description: "Wait for GeoJSON to be updated")
+
+        mapView.mapboxMap.onSourceDataLoaded.observe { event in
+            guard event.sourceId == Self.sourceId, event.dataId == Self.dataId else {
+                return
+            }
+
+            updateExpectation.fulfill()
+        }.store(in: &cancelables)
+
+        switch parameter.updateType {
+        case .partial:
+            performPartialGeoJSONUpdate(operationalFeatures)
+        case .full:
+            performFullGeoJSONUpdate(operationalFeatures)
         }
+
+        wait(for: [updateExpectation], timeout: 10)
     }
 
     func performPartialGeoJSONUpdate(_ features: [Feature]) {

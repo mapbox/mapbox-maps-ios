@@ -40,6 +40,7 @@
 		38AD95B6DD9BE858F4E59C31 /* WeatherAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D21963A6FF5DA26A210DA5 /* WeatherAnnotationExample.swift */; };
 		38DF3926AD9DDDE883454F64 /* TestableExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB74046A2FC03770B62B9E6 /* TestableExampleTests.swift */; platformFilter = ios; };
 		392857DBD1231B0438144335 /* AnimatedMarkerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44C0F343A1B5F4DA0C19B9C /* AnimatedMarkerExample.swift */; platformFilter = ios; };
+		3A3EF2822D92E6BB00FA88D7 /* EditPolygonExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3EF2812D92E6BB00FA88D7 /* EditPolygonExample.swift */; };
 		3B4862E6832F23CB115D444A /* ClipLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A3027A7DA59E090DAD25F1 /* ClipLayerExample.swift */; };
 		3E515D1DD1D9CA02F3E95AA2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D03F5A3A0E879717BFE421 /* Constants.swift */; };
 		3FD83483E0AE57790504CB0C /* MapRecorderExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = E612275E3042D0D0AF8B583E /* MapRecorderExample.swift */; platformFilter = ios; };
@@ -212,6 +213,7 @@
 		370DFCA52EB6C7F119BF81DA /* MapEventsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapEventsExample.swift; sourceTree = "<group>"; };
 		384FD8FC97B9F5011AF4BD61 /* GlobeFlyToExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobeFlyToExample.swift; sourceTree = "<group>"; };
 		388932B3A65BB7E9B59FDBE0 /* InteractionsPlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionsPlayground.swift; sourceTree = "<group>"; };
+		3A3EF2812D92E6BB00FA88D7 /* EditPolygonExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPolygonExample.swift; sourceTree = "<group>"; };
 		3BCB1CC4577300FEF4DE017B /* InsetMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetMapExample.swift; sourceTree = "<group>"; };
 		3BDE7738CA55957F3FAC3ECE /* LineAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineAnnotationExample.swift; sourceTree = "<group>"; };
 		3E2F68B22AFF73A71F86CABC /* ExamplesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExamplesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -527,6 +529,7 @@
 		ACB753539ABAD3312B849CB1 /* All Examples */ = {
 			isa = PBXGroup;
 			children = (
+				3A3EF2812D92E6BB00FA88D7 /* EditPolygonExample.swift */,
 				3FB717239BBFE5103C1EB1A4 /* AdvancedViewportGesturesExample.swift */,
 				7274E152F7FBB7894447F822 /* AnimateGeoJSONLineExample.swift */,
 				A471857797898860C3A8F685 /* AnimateImageLayerExample.swift */,
@@ -838,6 +841,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A3EF2822D92E6BB00FA88D7 /* EditPolygonExample.swift in Sources */,
 				05DF15DADC248A2CAA5EEDC4 /* AddMarkersSymbolExample.swift in Sources */,
 				2C03342240D5487880316518 /* AddOneMarkerSymbolExample.swift in Sources */,
 				10C2E5ADC16B91D43288E820 /* AdvancedViewportGesturesExample.swift in Sources */,

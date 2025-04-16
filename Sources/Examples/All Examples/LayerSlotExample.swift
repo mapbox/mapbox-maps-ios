@@ -3,7 +3,7 @@ import MapboxMaps
 
 final class LayerSlotExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
-    private lazy var source = GeoJSONSource(id: "ploygon-geojson-source")
+    private lazy var source = GeoJSONSource(id: "polygon-geojson-source")
     private lazy var layer = FillLayer(id: "polygon-layer", source: source.id)
     private var cancelables = Set<AnyCancelable>()
 

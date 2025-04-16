@@ -147,6 +147,9 @@ struct Examples {
         Example(title: "Combine location",
                 description: "Shows how to use Combine framework to drive the location puck.",
                 type: CombineLocationExample.self)
+        Example(title: "Edit polygon with drag/drop",
+                description: "Shows how to update a polygon with drag",
+                type: EditPolygonExample.self)
     }
 
     // Examples that focus on displaying the user's location.

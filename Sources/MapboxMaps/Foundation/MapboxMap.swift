@@ -1798,7 +1798,7 @@ extension MapboxMap {
             eventType = .longClick
         case "drag":
             eventType = .drag
-        case "dragBeing":
+        case "dragBegin":
             eventType = .dragBegin
         case "dragEnd":
             eventType = .dragEnd

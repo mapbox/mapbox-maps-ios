@@ -53,7 +53,8 @@ final class MapboxMapTests: XCTestCase {
             crossSourceCollisions: mapInitOptions.mapOptions.crossSourceCollisions.NSNumber,
             size: mapInitOptions.mapOptions.size.map(Size.init),
             pixelRatio: mapInitOptions.mapOptions.pixelRatio,
-            glyphsRasterizationOptions: nil) // __map.getOptions() always returns nil for glyphsRasterizationOptions
+            glyphsRasterizationOptions: nil,
+            screenShape: nil) // __map.getOptions() always returns nil for glyphsRasterizationOptions
 
         let actualMapOptions = mapboxMap.options
 

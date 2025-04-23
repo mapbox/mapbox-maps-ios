@@ -64,8 +64,7 @@ extension MapOptions {
                   crossSourceCollisions: crossSourceCollisions.NSNumber,
                   size: mbmSize,
                   pixelRatio: Float(pixelRatio ?? ScreenShim.nativeScale),
-                  glyphsRasterizationOptions: glyphsRasterizationOptions,
-                  screenShape: nil)
+                  glyphsRasterizationOptions: glyphsRasterizationOptions)
     }
 
     /// The map constrain mode. This can be used to limit the map to wrap around

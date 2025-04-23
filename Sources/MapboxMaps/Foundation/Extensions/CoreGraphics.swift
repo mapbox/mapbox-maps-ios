@@ -11,6 +11,10 @@ extension CGPoint {
         CoreScreenCoordinate(x: Double(x), y: Double(y))
     }
 
+    internal var vec2: Vec2 {
+        Vec2(x: x, y: y)
+    }
+
     /// Interpolate a point along a fraction of a line between two points.
     /// - Parameters:
     ///   - origin: The starting point for the interpolation.

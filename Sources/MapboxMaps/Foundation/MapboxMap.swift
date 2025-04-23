@@ -346,6 +346,17 @@ public final class MapboxMap: StyleManager {
         __map.__setTileCacheBudgetFor(tileCacheBudget)
     }
 
+    /// A convex polygon that describes the shape of the screen in case it is non-rectangular.
+    /// Every coordinate is in 0 to 1 range, with (0, 0) being the map view top-left and (1, 1) the bottom-right.
+    /// The points have to be given in clockwise winding order. The polygon will be closed automatically, so for a rectangular shape, pass in 4 points.
+    /// Use this if the visible screen area is obscured enough that using a custom shape improves performance.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var screenCullingShape: [CGPoint] {
+        get { __map.getScreenCullingShape().map(\.point) }
+        set { __map.setScreenCullingShapeForShape(newValue.map(\.vec2)) }
+    }
+
     /// Defines whether multiple copies of the world will be rendered side by side beyond -180 and 180 degrees longitude.
     ///
     /// If disabled, when the map is zoomed out far enough that a single representation of the world does not fill the map's entire container,

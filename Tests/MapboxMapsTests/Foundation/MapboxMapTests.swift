@@ -53,8 +53,7 @@ final class MapboxMapTests: XCTestCase {
             crossSourceCollisions: mapInitOptions.mapOptions.crossSourceCollisions.NSNumber,
             size: mapInitOptions.mapOptions.size.map(Size.init),
             pixelRatio: mapInitOptions.mapOptions.pixelRatio,
-            glyphsRasterizationOptions: nil,
-            screenShape: nil) // __map.getOptions() always returns nil for glyphsRasterizationOptions
+            glyphsRasterizationOptions: nil) // __map.getOptions() always returns nil for glyphsRasterizationOptions
 
         let actualMapOptions = mapboxMap.options
 
@@ -112,6 +111,18 @@ final class MapboxMapTests: XCTestCase {
 
     func testGetCameraOptions() {
         XCTAssertEqual(mapboxMap.cameraState, CameraState(mapboxMap.__testingMap.getCameraState()))
+    }
+
+    func testGetScreenCullingShape() {
+        let screenCullingShape = [CGPoint(x: 0, y: 0.5), CGPoint(x: 0.3, y: 0), CGPoint(x: 0.7, y: 1)]
+        mapboxMap.__testingMap.setScreenCullingShapeForShape(screenCullingShape.map(\.vec2))
+        XCTAssertEqual(mapboxMap.screenCullingShape, screenCullingShape)
+    }
+
+    func testSetScreenCullingShape() {
+        let screenCullingShape = [CGPoint(x: 0, y: 0.5), CGPoint(x: 0.3, y: 0), CGPoint(x: 0.7, y: 1)]
+        mapboxMap.screenCullingShape = screenCullingShape
+        XCTAssertEqual(mapboxMap.__testingMap.getScreenCullingShape(), screenCullingShape.map(\.vec2))
     }
 
     func testCameraForCoordinateArray() {

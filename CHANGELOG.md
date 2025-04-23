@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Expose an experimental API to define a non-rectangular screen culling shape(`MapboxMap.screenCullingShape`).
+
 ## 11.12.0-beta.1 - 9 April, 2025
 
 * Expose `graphicsPrograms`, `graphicsProgramsCreationTimeMillis` and `fboSwitchCount` for `CumulativeRenderingStatistics`.
@@ -17,7 +19,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 11.11.0-rc.1 – 12 March, 2025
 
 * Expose experimental API for setting ColorTheme on style imports.
-* Expose use-theme properties for all annotation types and Puck3D layer. 
+* Expose use-theme properties for all annotation types and Puck3D layer.
 * Update CoreMaps to 11.11.0-rc.2.
 * Update Common to 24.11.0-rc.2.
 

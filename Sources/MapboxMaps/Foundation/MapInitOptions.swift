@@ -1,4 +1,5 @@
 import Foundation
+@_implementationOnly import MapboxCoreMaps_Private
 
 /// A protocol used to provide ``MapInitOptions`` when initializing a ``MapView`` with a Storyboard or
 /// a nib.
@@ -101,9 +102,7 @@ extension MapInitOptions {
                 crossSourceCollisions: mapOptions.__crossSourceCollisions,
                 size: Size(width: Float(bounds.width), height: Float(bounds.height)),
                 pixelRatio: mapOptions.pixelRatio,
-                glyphsRasterizationOptions: mapOptions.glyphsRasterizationOptions,
-                screenShape: nil)
-
+                glyphsRasterizationOptions: mapOptions.glyphsRasterizationOptions)
 
             // Use the overriding style URI if provided (currently from IB)
             let resolvedStyleURI = overridingStyleURI.map { StyleURI(url: $0) } ?? styleURI

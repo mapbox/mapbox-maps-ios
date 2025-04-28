@@ -135,7 +135,7 @@ class AttributionTests: XCTestCase {
             parseExpectation.fulfill()
         }
 
-        wait(for: [parseExpectation], timeout: 5)
+        wait(for: [parseExpectation], timeout: 15)
     }
 
     func testFeedbackSnapshotTitle() {

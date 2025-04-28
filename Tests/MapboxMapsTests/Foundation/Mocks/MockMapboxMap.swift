@@ -44,6 +44,9 @@ final class MockMapboxMap: MapboxMapProtocol {
 
     var anchor = CGPoint.zero
 
+    @Stubbed
+    var screenCullingShape: [CGPoint] = []
+
     let setCameraStub = Stub<MapboxMaps.CameraOptions, Void>()
     func setCamera(to cameraOptions: MapboxMaps.CameraOptions) {
         setCameraStub.call(with: cameraOptions)

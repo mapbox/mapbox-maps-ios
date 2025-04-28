@@ -10,6 +10,7 @@ struct Settings {
     var ornamentSettings = OrnamentSettings()
     var debugOptions: MapViewDebugOptions = [.camera]
     var performance = PerformanceSettings()
+    var isCullingShapeEnabled = true
 
     struct OrnamentSettings {
         var isScaleBarVisible = true
@@ -24,6 +25,18 @@ struct Settings {
         var statisticsOptions: PerformanceStatisticsOptions {
             PerformanceStatisticsOptions(samplerOptions, samplingDurationMillis: Double(samplingDurationMillis))
         }
+    }
+
+    fileprivate var cullingShape: [CGPoint] {
+        guard isCullingShapeEnabled else { return [] }
+        return [
+            CGPoint(x: 0.35, y: 0.37),  // top-left
+            CGPoint(x: 0.65, y: 0.37),  // top-right
+            CGPoint(x: 0.85, y: 0.50),  // right
+            CGPoint(x: 0.65, y: 0.63),  // bottom-right
+            CGPoint(x: 0.35, y: 0.63),  // bottom-left
+            CGPoint(x: 0.15, y: 0.50)   // left
+        ]
     }
 }
 
@@ -49,6 +62,7 @@ struct MapSettingsExample: View {
                     compass: CompassViewOptions(visibility: settings.ornamentSettings.isCompassVisible ? .visible : .hidden)
                 ))
                 .debugOptions(settings.debugOptions)
+                .screenCullingShape(settings.cullingShape)
                 .ignoresSafeArea()
                 .sheet(isPresented: $settingsOpened) {
                     SettingsView(settings: $settings)
@@ -69,6 +83,30 @@ struct MapSettingsExample: View {
                     Text(stats.renderingDurationStatisticsDescription).font(.safeMonospaced)
                 }
                 .floating()
+            }
+
+            if settings.isCullingShapeEnabled {
+                ZStack {
+                    Color.black.opacity(0.7)
+                        .compositingGroup()
+                        .overlay {
+                            ZStack {
+                                // cutout
+                                HexagonShape(points: settings.cullingShape)
+                                    .fill()
+                                    .blendMode(.destinationOut)
+
+                                // border
+                                HexagonShape(points: settings.cullingShape)
+                                    .stroke(.white, lineWidth: 4)
+                                    .shadow(color: .white, radius: 5)
+                            }
+
+                        }
+                }
+                .ignoresSafeArea()
+                .allowsHitTesting(false)
+                .compositingGroup()
             }
         }
     }
@@ -148,6 +186,13 @@ struct SettingsView: View {
             } header: {
                 Text("Debug Options")
             }
+
+            Section {
+                Toggle("Simulate hex screen shape", isOn: $settings.isCullingShapeEnabled)
+            } header: {
+                Text("Screen culling shape")
+            }
+
             Section {
                 let samplerOptions = [
                     ("Per Frame", PerformanceStatisticsOptions.SamplerOptions.perFrame),
@@ -170,6 +215,23 @@ struct SettingsView: View {
             }
             #endif
         }
+    }
+}
+
+struct HexagonShape: Shape {
+    let points: [CGPoint]
+
+    func path(in rect: CGRect) -> Path {
+        let scaledPoints = points.map { CGPoint(x: $0.x * rect.width, y: $0.y * rect.height) }
+
+        var path = Path()
+        path.move(to: scaledPoints[0])
+        for point in scaledPoints.dropFirst() {
+            path.addLine(to: point)
+        }
+        path.closeSubpath()
+
+        return path
     }
 }
 

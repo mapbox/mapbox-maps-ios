@@ -95,6 +95,7 @@ final class MapBasicCoordinator {
         assign(&mapView, \.frameRate, value: deps.frameRate)
         assign(&mapView, \.presentationTransactionMode, value: deps.presentationTransactionMode)
         assign(&mapView, \.viewportManager.options, value: deps.viewportOptions)
+        assign(mapboxMap.screenCullingShape, { mapboxMap.screenCullingShape = $0 }, value: deps.screenCullingShape)
 
         cameraChangeHandlers = deps.cameraChangeHandlers
         mapView.gestureManager.gestureHandlers = deps.gestureHandlers

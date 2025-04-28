@@ -21,6 +21,7 @@ struct MapDependencies {
     var viewportOptions = ViewportOptions(transitionsToIdleUponUserInteraction: true, usesSafeAreaInsetsAsPadding: true)
     var performanceStatisticsParameters: Map.PerformanceStatisticsParameters?
     var attributionMenuFilter: ((AttributionMenuItem) -> Bool)?
+    var screenCullingShape = [CGPoint]()
 
     var onMapTap: ((InteractionContext) -> Void)?
     var onMapLongPress: ((InteractionContext) -> Void)?

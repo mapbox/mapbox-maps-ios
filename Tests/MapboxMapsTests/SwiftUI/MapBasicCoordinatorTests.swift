@@ -54,18 +54,22 @@ final class MapBasicCoordinatorTests: XCTestCase {
         XCTAssertEqual(mapboxMap.northOrientationStub.invocations.count, 0)
         XCTAssertEqual(mapboxMap.setConstraintModeStub.invocations.count, 0)
         XCTAssertEqual(mapboxMap.setViewportModeStub.invocations.count, 0)
+        XCTAssertEqual(mapboxMap.screenCullingShape, [])
 
         update(with: MapDependencies(
             constrainMode: .none,
             viewportMode: .flippedY,
-            orientation: .downwards))
+            orientation: .downwards,
+            screenCullingShape: [.init(x: 1, y: 2)]))
         XCTAssertEqual(mapboxMap.setConstraintModeStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.setViewportModeStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.northOrientationStub.invocations.count, 1)
+        XCTAssertEqual(mapboxMap.$screenCullingShape.setStub.invocations.count, 1)
 
         XCTAssertEqual(mapboxMap.setConstraintModeStub.invocations.first?.parameters, ConstrainMode.none)
         XCTAssertEqual(mapboxMap.setViewportModeStub.invocations.first?.parameters, .flippedY)
         XCTAssertEqual(mapboxMap.northOrientationStub.invocations.first?.parameters, .downwards)
+        XCTAssertEqual(mapboxMap.$screenCullingShape.setStub.invocations.first?.parameters, [CGPoint(x: 1, y: 2)])
     }
 
     func testOrnamentOptions() {

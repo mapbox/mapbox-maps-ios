@@ -78,6 +78,7 @@ protocol MapboxMapProtocol: AnyObject {
         stateKey: T.StateKey?,
         callback: ((Error?) -> Void)?
     ) -> Cancelable
+    var screenCullingShape: [CGPoint] { get set }
 }
 
 // swiftlint:disable type_body_length

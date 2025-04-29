@@ -16,17 +16,13 @@ final class FeaturesetsTests: IntegrationTestCase {
 
         map.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), zoom: 10))
 
-        let expectation = expectation(description: "Load style")
-        map.load(mapStyle: .featuresetTestsStyle) { res in
-            switch res {
-            case .none:
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                    expectation.fulfill()
-                }
-            case .some(let error):
-                XCTFail("Failed to load style: \(error)")
-            }
-        }
+        let expectation = expectation(description: "Load the map")
+
+        map.load(mapStyle: .featuresetTestsStyle)
+
+        map.onMapLoaded.observeNext { _ in
+            expectation.fulfill()
+        }.store(in: &cancelables)
 
         wait(for: [expectation], timeout: 10.0)
 

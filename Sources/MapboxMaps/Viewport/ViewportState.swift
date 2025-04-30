@@ -49,8 +49,10 @@ public protocol ViewportState: AnyObject {
     /// ``ViewportManager`` calls this method at the end of a successful transition into this state.
     ///
     /// Implementations typically have a dependency on either ``MapboxMap`` so that they can use its
-    /// ``MapboxMap/setCamera(to:)`` method to change the camea or on
+    /// ``MapboxMap/setCamera(to:)`` method to change the camera or on
     /// ``CameraAnimationsManager`` so that they can run camera animations.
+    ///
+    /// - Important: Don't call this method directly, instead activate the viewport via ``ViewportManager/transition(to:transition:completion:)``.
     func startUpdatingCamera()
 
     /// Tells this state that it is no longer responsible for updating the camera.
@@ -59,5 +61,7 @@ public protocol ViewportState: AnyObject {
     ///
     /// Implementations must stop updating the camera immediately and should typically cancel any
     /// ongoing animations that they started when this method is invoked.
+    ///
+    /// - Important: Don't call this method directly. Instead, use ``ViewportManager/idle()`` to stop animations in progress.
     func stopUpdatingCamera()
 }

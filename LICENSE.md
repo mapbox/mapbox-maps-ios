@@ -1295,6 +1295,16 @@ For more information, please see
 
 ---
 
+### building-gen,1.0.0,ISC,Mapbox,https://github.com/mapbox/building-gen
+
+```
+Copyright (c) 2025 Mapbox
+
+All rights reserved.
+```
+
+---
+
 ### mapbox-base-internal,dev,BSD-3-Clause,Mapbox,https://www.mapbox.com/
 
 ```

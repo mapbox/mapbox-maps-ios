@@ -13,11 +13,14 @@ extension MapStyle {
     ///   - showRoadLabels: Shows and hides all road labels, including road shields. Default value: `true`.
     ///   - showPedestrianRoads: Shows and hides all pedestrian roads, paths, trails. Default value: `true`.
     ///   - show3dObjects: Shows or hides all 3d layers (3D buildings, landmarks, trees, etc.) including shadows, ambient occlusion, and flood lights. Default value: `true`.
+    ///   - colorBuildingHighlight: Building fill extrusion color used when setting highlight state. Default value: `hsl(34, 30%, 93%)`.
+    ///   - colorBuildingSelect: Building fill extrusion color used when setting select state. Default value: `hsl(214, 82%, 63%)`.
     ///   - colorMotorways: Set a custom color for motorway roads. Default value: `hsl(214, 23%, 70%)`.
     ///   - colorPlaceLabelHighlight: Place label color used when setting highlight state. Default value: `hsl(4, 43%, 55%)`.
     ///   - colorPlaceLabelSelect: Place label color used when setting select state. Default value: `hsl(4, 53%, 42%)`.
     ///   - colorRoads: Set a custom color for other roads. Default value: `hsl(224, 25%, 80%)`.
     ///   - colorTrunks: Set a custom color for trunk roads. Default value: `hsl(235, 20%, 70%)`.
+    ///   - showLandmarkIcons: Shows or hides Landmark Icons.
     ///   - themeData: Set a custom theme based on a look-up table (LUT).
     public static func standard(
         theme: StandardTheme? = nil,
@@ -29,11 +32,14 @@ extension MapStyle {
         showRoadLabels: Bool? = nil,
         showPedestrianRoads: Bool? = nil,
         show3dObjects: Bool? = nil,
+        colorBuildingHighlight: StyleColor? = nil,
+        colorBuildingSelect: StyleColor? = nil,
         colorMotorways: StyleColor? = nil,
         colorPlaceLabelHighlight: StyleColor? = nil,
         colorPlaceLabelSelect: StyleColor? = nil,
         colorRoads: StyleColor? = nil,
         colorTrunks: StyleColor? = nil,
+        showLandmarkIcons: Bool? = nil,
         themeData: String? = nil
     ) -> MapStyle {
         var config = JSONObject()
@@ -46,11 +52,14 @@ extension MapStyle {
         config.encode(key: "showRoadLabels", value: showRoadLabels)
         config.encode(key: "showPedestrianRoads", value: showPedestrianRoads)
         config.encode(key: "show3dObjects", value: show3dObjects)
+        config.encode(key: "colorBuildingHighlight", value: colorBuildingHighlight)
+        config.encode(key: "colorBuildingSelect", value: colorBuildingSelect)
         config.encode(key: "colorMotorways", value: colorMotorways)
         config.encode(key: "colorPlaceLabelHighlight", value: colorPlaceLabelHighlight)
         config.encode(key: "colorPlaceLabelSelect", value: colorPlaceLabelSelect)
         config.encode(key: "colorRoads", value: colorRoads)
         config.encode(key: "colorTrunks", value: colorTrunks)
+        config.encode(key: "showLandmarkIcons", value: showLandmarkIcons)
         config.encode(key: "theme-data", value: themeData)
         return MapStyle(uri: .standard, configuration: config)
     }

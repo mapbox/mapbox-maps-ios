@@ -56,6 +56,15 @@ public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInter
     func removeAllImages() {}
 
     // MARK: - Common layer properties
+    /// Determines whether bridge guard rails are added for elevated roads.
+    /// Default value: "true".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillConstructBridgeGuardRail: Bool? {
+        get { impl.layerProperties["fill-construct-bridge-guard-rail"] as? Bool }
+        set { impl.layerProperties["fill-construct-bridge-guard-rail"] = newValue }
+    }
+
     /// Selects the base of fill-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
     @_documentation(visibility: public)
@@ -76,6 +85,32 @@ public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInter
     public var fillAntialias: Bool? {
         get { impl.layerProperties["fill-antialias"] as? Bool }
         set { impl.layerProperties["fill-antialias"] = newValue }
+    }
+
+    /// This property defines whether the `fillBridgeGuardRailColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillBridgeGuardRailColorUseTheme: ColorUseTheme? {
+        get { impl.layerProperties["fill-bridge-guard-rail-color-use-theme"].flatMap { $0 as? String }.flatMap(ColorUseTheme.init(rawValue:)) }
+        set { impl.layerProperties["fill-bridge-guard-rail-color-use-theme"] = newValue?.rawValue }
+    }
+
+    /// Transition property for `fillBridgeGuardRailColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillBridgeGuardRailColorTransition: StyleTransition? {
+        get { StyleTransition(impl.layerProperties["fill-bridge-guard-rail-color-transition"] as? [String: TimeInterval]) }
+        set { impl.layerProperties["fill-bridge-guard-rail-color-transition"] = newValue?.asDictionary }
+    }
+
+    /// The color of bridge guard rail.
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillBridgeGuardRailColor: StyleColor? {
+        get { impl.layerProperties["fill-bridge-guard-rail-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["fill-bridge-guard-rail-color"] = newValue?.rawValue }
     }
 
     /// This property defines whether the `fillColor` uses colorTheme from the style or not.
@@ -171,6 +206,32 @@ public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInter
     public var fillTranslateAnchor: FillTranslateAnchor? {
         get { impl.layerProperties["fill-translate-anchor"].flatMap { $0 as? String }.flatMap(FillTranslateAnchor.init(rawValue:)) }
         set { impl.layerProperties["fill-translate-anchor"] = newValue?.rawValue }
+    }
+
+    /// This property defines whether the `fillTunnelStructureColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillTunnelStructureColorUseTheme: ColorUseTheme? {
+        get { impl.layerProperties["fill-tunnel-structure-color-use-theme"].flatMap { $0 as? String }.flatMap(ColorUseTheme.init(rawValue:)) }
+        set { impl.layerProperties["fill-tunnel-structure-color-use-theme"] = newValue?.rawValue }
+    }
+
+    /// Transition property for `fillTunnelStructureColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillTunnelStructureColorTransition: StyleTransition? {
+        get { StyleTransition(impl.layerProperties["fill-tunnel-structure-color-transition"] as? [String: TimeInterval]) }
+        set { impl.layerProperties["fill-tunnel-structure-color-transition"] = newValue?.asDictionary }
+    }
+
+    /// The color of tunnel structures (tunnel entrance and tunnel walls).
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillTunnelStructureColor: StyleColor? {
+        get { impl.layerProperties["fill-tunnel-structure-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rawValue:)) }
+        set { impl.layerProperties["fill-tunnel-structure-color"] = newValue?.rawValue }
     }
 
     /// Transition property for `fillZOffset`

@@ -85,7 +85,11 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
 
     var layerProperties: [String: Any] {
         var properties: [String: Any] = [:]
+        properties["fill-construct-bridge-guard-rail"] = fillConstructBridgeGuardRail
         properties["fill-sort-key"] = fillSortKey
+        properties["fill-bridge-guard-rail-color"] = fillBridgeGuardRailColor?.rawValue
+        properties["fill-bridge-guard-rail-color-use-theme"] = fillBridgeGuardRailColorUseTheme?.rawValue
+        properties["fill-bridge-guard-rail-color-transition"] = fillBridgeGuardRailColorTransition?.asDictionary
         properties["fill-color"] = fillColor?.rawValue
         properties["fill-color-use-theme"] = fillColorUseTheme?.rawValue
         properties["fill-color-transition"] = fillColorTransition?.asDictionary
@@ -95,6 +99,9 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
         properties["fill-outline-color-use-theme"] = fillOutlineColorUseTheme?.rawValue
         properties["fill-outline-color-transition"] = fillOutlineColorTransition?.asDictionary
         properties["fill-pattern"] = fillPattern
+        properties["fill-tunnel-structure-color"] = fillTunnelStructureColor?.rawValue
+        properties["fill-tunnel-structure-color-use-theme"] = fillTunnelStructureColorUseTheme?.rawValue
+        properties["fill-tunnel-structure-color-transition"] = fillTunnelStructureColorTransition?.asDictionary
         properties["fill-z-offset"] = fillZOffset
         properties["fill-z-offset-transition"] = fillZOffsetTransition?.asDictionary
         return properties
@@ -127,8 +134,31 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
 
     // MARK: - Style Properties -
 
+    /// Determines whether bridge guard rails are added for elevated roads.
+    /// Default value: "true".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillConstructBridgeGuardRail: Bool?
+
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var fillSortKey: Double?
+
+    /// This property defines whether the `fillBridgeGuardRailColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillBridgeGuardRailColorUseTheme: ColorUseTheme?
+
+    /// Transition property for `fillBridgeGuardRailColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillBridgeGuardRailColorTransition: StyleTransition?
+
+    /// The color of bridge guard rail.
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillBridgeGuardRailColor: StyleColor?
 
     /// This property defines whether the `fillColor` uses colorTheme from the style or not.
     /// By default it will use color defined by the root theme in the style.
@@ -164,6 +194,23 @@ public struct PolygonAnnotation: Annotation, Equatable, AnnotationInternal {
 
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var fillPattern: String?
+
+    /// This property defines whether the `fillTunnelStructureColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillTunnelStructureColorUseTheme: ColorUseTheme?
+
+    /// Transition property for `fillTunnelStructureColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillTunnelStructureColorTransition: StyleTransition?
+
+    /// The color of tunnel structures (tunnel entrance and tunnel walls).
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var fillTunnelStructureColor: StyleColor?
 
     /// Transition property for `fillZOffset`
     @_documentation(visibility: public)
@@ -224,9 +271,48 @@ extension PolygonAnnotation {
 }
 
 extension PolygonAnnotation {
+    /// Determines whether bridge guard rails are added for elevated roads.
+    /// Default value: "true".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillConstructBridgeGuardRail(_ newValue: Bool) -> Self {
+        with(self, setter(\.fillConstructBridgeGuardRail, newValue))
+    }
+
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public func fillSortKey(_ newValue: Double) -> Self {
         with(self, setter(\.fillSortKey, newValue))
+    }
+
+    /// The color of bridge guard rail.
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColor(_ color: UIColor) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColor, StyleColor(color)))
+    }
+
+    /// This property defines whether the `fillBridgeGuardRailColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColorUseTheme, useTheme))
+    }
+
+    /// Transition property for `fillBridgeGuardRailColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColorTransition, transition))
+    }
+
+    /// The color of bridge guard rail.
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColor, newValue))
     }
 
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
@@ -291,6 +377,37 @@ extension PolygonAnnotation {
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public func fillPattern(_ newValue: String) -> Self {
         with(self, setter(\.fillPattern, newValue))
+    }
+
+    /// The color of tunnel structures (tunnel entrance and tunnel walls).
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColor(_ color: UIColor) -> Self {
+        with(self, setter(\.fillTunnelStructureColor, StyleColor(color)))
+    }
+
+    /// This property defines whether the `fillTunnelStructureColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillTunnelStructureColorUseTheme, useTheme))
+    }
+
+    /// Transition property for `fillTunnelStructureColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillTunnelStructureColorTransition, transition))
+    }
+
+    /// The color of tunnel structures (tunnel entrance and tunnel walls).
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.fillTunnelStructureColor, newValue))
     }
 
     /// Transition property for `fillZOffset`

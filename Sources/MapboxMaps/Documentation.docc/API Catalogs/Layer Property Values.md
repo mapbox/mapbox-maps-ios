@@ -49,6 +49,7 @@
 - ``LineElevationReference``
 - ``LineWidthUnit``
 - ``ModelElevationReference``
+- ``CircleElevationReference``
 
 <!-- Next two are arguable regarding it's category -->
 - ``ImageContent``

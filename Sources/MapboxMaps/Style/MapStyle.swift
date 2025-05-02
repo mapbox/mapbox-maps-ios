@@ -32,7 +32,7 @@ import MapboxCoreMaps
 /// }
 /// ```
 ///
-/// The ``MapStyle/standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:themeData:)`` factory method lists the predefined parameters that Standard Style supports. You can also use the Classic Mapbox-designed styles such as ``MapStyle/satelliteStreets``, ``MapStyle/outdoors``, and many more. Or use custom styles that you design with [Mapbox Studio](https://www.mapbox.com/mapbox-studio).
+/// The ``MapStyle/standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorBuildingHighlight:colorBuildingSelect:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:showLandmarkIcons:themeData:)`` factory method lists the predefined parameters that Standard Style supports. You can also use the Classic Mapbox-designed styles such as ``MapStyle/satelliteStreets``, ``MapStyle/outdoors``, and many more. Or use custom styles that you design with [Mapbox Studio](https://www.mapbox.com/mapbox-studio).
 ///
 ///
 /// - Important: Configuration can be applied only to `.standard` style or styles that uses `.standard` as import. For any other styles configuration will make no effect.

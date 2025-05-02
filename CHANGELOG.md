@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Expose new experimental properties: `CircleLayer.circleElevationReference`, `FillLayer.fillConstructBridgeGuardRail`, `FillLayer.fillBridgeGuardRailColor`, `FillLayer.fillTunnelStructureColor`.
+* Expose new `showLandmarkIcons` property in `MapStyle.standerd`.
+
 ## 11.12.0-rc.1 - 23 April, 2025
 
 * Expose an experimental API to define a non-rectangular screen culling shape(`MapboxMap.screenCullingShape`).

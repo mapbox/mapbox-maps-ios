@@ -23,9 +23,13 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
+            layer.fillConstructBridgeGuardRail = Value<Bool>.testConstantValue()
             layer.fillElevationReference = Value<FillElevationReference>.testConstantValue()
             layer.fillSortKey = Value<Double>.testConstantValue()
             layer.fillAntialias = Value<Bool>.testConstantValue()
+            layer.fillBridgeGuardRailColor = Value<StyleColor>.testConstantValue()
+            layer.fillBridgeGuardRailColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillBridgeGuardRailColorUseTheme = .testConstantValue()
             layer.fillColor = Value<StyleColor>.testConstantValue()
             layer.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillColorUseTheme = .testConstantValue()
@@ -39,6 +43,9 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.fillPattern = Value<ResolvedImage>.testConstantValue()
             layer.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillTranslateAnchor = Value<FillTranslateAnchor>.testConstantValue()
+            layer.fillTunnelStructureColor = Value<StyleColor>.testConstantValue()
+            layer.fillTunnelStructureColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillTunnelStructureColorUseTheme = .testConstantValue()
             layer.fillZOffset = Value<Double>.testConstantValue()
             layer.fillZOffsetTransition = StyleTransition(duration: 10.0, delay: 10.0)
 

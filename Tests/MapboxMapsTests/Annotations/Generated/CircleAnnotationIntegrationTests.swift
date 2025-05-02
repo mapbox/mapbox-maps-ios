@@ -59,6 +59,32 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         waitForExpectations(timeout: 2, handler: nil)
     }
 
+    func testCircleElevationReference() throws {
+        // Test that the setter and getter work
+        let value = CircleElevationReference.testConstantValue()
+        manager.circleElevationReference = value
+        XCTAssertEqual(manager.circleElevationReference, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
+        if case .constant(let actualValue) = layer.circleElevationReference {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.circleElevationReference = nil
+        XCTAssertNil(manager.circleElevationReference)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
+        XCTAssertEqual(layer.circleElevationReference, .constant(CircleElevationReference(rawValue: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-elevation-reference").value as! String)))
+    }
+
     func testCircleEmissiveStrength() throws {
         // Test that the setter and getter work
         let value = 50000.0

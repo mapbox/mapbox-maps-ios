@@ -253,6 +253,20 @@ extension TextTransform {
     }
 }
 
+// MARK: CIRCLE_ELEVATION_REFERENCE
+
+extension Value where T == CircleElevationReference {
+    static func testConstantValue() -> Value<CircleElevationReference> {
+        return .constant(CircleElevationReference.testConstantValue())
+    }
+}
+
+extension CircleElevationReference {
+    static func testConstantValue() -> CircleElevationReference {
+        return .none
+    }
+}
+
 // MARK: FILL_TRANSLATE_ANCHOR
 
 extension Value where T == FillTranslateAnchor {

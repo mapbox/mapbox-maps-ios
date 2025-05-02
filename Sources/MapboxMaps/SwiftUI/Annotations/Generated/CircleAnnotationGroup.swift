@@ -75,6 +75,7 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     }
 
     private func updateProperties(manager: CircleAnnotationManager) {
+        assign(manager, \.circleElevationReference, value: circleElevationReference)
         assign(manager, \.circleSortKey, value: circleSortKey)
         assign(manager, \.circleBlur, value: circleBlur)
         assign(manager, \.circleBlurTransition, value: circleBlurTransition)
@@ -105,6 +106,15 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     }
 
     // MARK: - Common layer properties
+
+    private var circleElevationReference: CircleElevationReference?
+    /// Selects the base of circle-elevation. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "none".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func circleElevationReference(_ newValue: CircleElevationReference) -> Self {
+        with(self, setter(\.circleElevationReference, newValue))
+    }
 
     private var circleSortKey: Double?
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.

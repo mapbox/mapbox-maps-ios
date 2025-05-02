@@ -23,6 +23,7 @@ final class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
+            layer.circleElevationReference = Value<CircleElevationReference>.testConstantValue()
             layer.circleSortKey = Value<Double>.testConstantValue()
             layer.circleBlur = Value<Double>.testConstantValue()
             layer.circleBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)

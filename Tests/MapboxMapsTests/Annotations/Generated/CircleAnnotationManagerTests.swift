@@ -29,6 +29,32 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         super.tearDown()
     }
 
+    func testInitialCircleElevationReference() {
+        let initialValue = manager.circleElevationReference
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetCircleElevationReference() {
+        let value = CircleElevationReference.testConstantValue()
+        manager.circleElevationReference = value
+        XCTAssertEqual(manager.circleElevationReference, value)
+        XCTAssertEqual(manager.impl.layerProperties["circle-elevation-reference"] as! String, value.rawValue)
+    }
+
+
+    func testSetToNilCircleElevationReference() {
+        let newCircleElevationReferenceProperty = CircleElevationReference.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-elevation-reference").value as! String
+        manager.circleElevationReference = newCircleElevationReferenceProperty
+        XCTAssertNotNil(manager.impl.layerProperties["circle-elevation-reference"])
+        harness.triggerDisplayLink()
+
+        manager.circleElevationReference = nil
+        XCTAssertNil(manager.circleElevationReference)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-elevation-reference"] as! String, defaultValue)
+    }
     func testInitialCircleSortKey() {
         let initialValue = manager.circleSortKey
         XCTAssertNil(initialValue)

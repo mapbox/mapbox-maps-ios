@@ -56,6 +56,15 @@ public class CircleAnnotationManager: AnnotationManager, AnnotationManagerIntern
     func removeAllImages() {}
 
     // MARK: - Common layer properties
+    /// Selects the base of circle-elevation. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "none".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var circleElevationReference: CircleElevationReference? {
+        get { impl.layerProperties["circle-elevation-reference"].flatMap { $0 as? String }.flatMap(CircleElevationReference.init(rawValue:)) }
+        set { impl.layerProperties["circle-elevation-reference"] = newValue?.rawValue }
+    }
+
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var circleSortKey: Double? {
         get { impl.layerProperties["circle-sort-key"] as? Double }

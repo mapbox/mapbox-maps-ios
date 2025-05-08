@@ -5,7 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Expose new experimental properties: `CircleLayer.circleElevationReference`, `FillLayer.fillConstructBridgeGuardRail`, `FillLayer.fillBridgeGuardRailColor`, `FillLayer.fillTunnelStructureColor`.
-* Expose new `showLandmarkIcons` property in `MapStyle.standerd`.
+* Expose new `showLandmarkIcons` property in `MapStyle.standard`.
 
 ## 11.12.0-rc.1 - 23 April, 2025
 
@@ -51,12 +51,12 @@ mapView.mapboxMap.setMapStyleContent {
    ColorTheme(base64: "base64EncodedImage") // or use an uiimage shortcut ColorTheme(uiimage: lutImage)
 }
 ```
-Note: Each style can have only one `ColorTheme`. Setting a new theme overwrites the previous one. Further details can be fouund in documentation for `ColorTheme`
+Note: Each style can have only one `ColorTheme`. Setting a new theme overwrites the previous one. Further details can be found in documentation for `ColorTheme`
 * Promote `ClipLayer.clipLayerTypes` and `ClipLayer.clipLayerScope` to stable.
 * Remove experimental `DirectionalLight.shadowQuality`.
 * Add experimental `ViewAnnotationManager.viewAnnotationAvoidLayers` for specifying layers that view annotations should avoid. The API currently only supports line layers.
 * Add support for the `maxOverscaleFactorForParentTiles` property in `CustomRasterSource` and `CustomGeometrySource`, allowing greater control over tile overscaling behavior when rendering custom raster tiles.
-* Add support for experimental *-use-theme propert that allow to override the color theme set on the Map. This is experimental and have several limitations - currently expressions are not supported. Color properties in Lights, Rain, Snow are not supported. *-use-theme for layer applied only after zoom level change.
+* Add support for experimental *-use-theme property that allow to override the color theme set on the Map. This is experimental and have several limitations - currently expressions are not supported. Color properties in Lights, Rain, Snow are not supported. *-use-theme for layer applied only after zoom level change.
 * Update CoreMaps to 11.10.0-rc.1 and Common to 24.10.0-rc.1.
 
 ## 11.10.0-beta.1 - 20 January, 2025
@@ -111,7 +111,7 @@ Use this property to define view annotation sort order.
 * Mark `symbolElevationReference`, `symbolZOffset`, `lineTrimColor `,  `lineTrimFadeRange`, `lineZOffset` as Experimental in AnnotationManagers. This is potentially breaking change, however those properties are not marked as experimental only in AnnotationManagers by mistake.
 In order to continue use them use the following import `@_spi(Experimental) import MapboxMaps`.
 
-* Add two separete Geofence examples in SwiftUI - `GeofencingPlayground` and `GeofencingUserLocation`
+* Add two separate Geofence examples in SwiftUI - `GeofencingPlayground` and `GeofencingUserLocation`
 * Add support for Base and Height alignment in FillExtrusionLayer.
 * Add support for `pitchAlignment` in BackgroundLayer.
 * Add support for `zOffset` in FillLayer, PolygonAnnotation[Manager] and PolygonAnnotationGroup.

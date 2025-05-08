@@ -6,7 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Expose new experimental properties: `CircleLayer.circleElevationReference`, `FillLayer.fillConstructBridgeGuardRail`, `FillLayer.fillBridgeGuardRailColor`, `FillLayer.fillTunnelStructureColor`.
 * Expose new `showLandmarkIcons` property in `MapStyle.standard`.
-* Expose new `showLandmarkIcons` property in `MapStyle.standerd`.
+
 ## 11.12.0 - 07 May, 2025
 
 ## 11.12.0-rc.1 - 23 April, 2025

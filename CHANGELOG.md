@@ -4,6 +4,70 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* The Interactions and Featuresets API is promoted from experimental. The new API allows you to add interaction handlers to layers, Standard Style featuresets (POI, Buildings and Place Labels), and the map itself in the consistent way. You can control the propagation of events, tappable area, and the order of event handling.
+* The experimental style `MapStyle.standardExperimental` is removed. Use `MapStyle.standard` instead.
+* Methods `GestureManager.onMapTap`, `GestureManager.onMapLongPress`, `GestureManager.onLayerTap`, `GestureManager.onLayerLongPress` and their SwiftUI counterparts are deprecated. Use `TapInteraction` and `LongPressInteraction` instead.
+
+```swift
+// Before (SwiftUI)
+Map()
+    .onMapTapGesture { context in
+        // Handle tap on map
+    }
+    .onLayerLongPressGesture("a-layer-id") { feature, context in
+        // Handle press on a layer
+        return true
+    }
+
+// After (SwiftUI)
+Map {
+    TapInteraction { feature in
+        // Handle tap on map
+        return true
+    }
+
+    LongPressInteraction(.layer("a-layer-id")) { feature, context in
+        // Handle press on a layer
+        return true
+    }
+
+    // Bonus: If you use Standard style, new API allows to handle tap on POI, Buildings and Place Labels
+    TapInteraction(.standardPoi) { poi, feature in
+        print("Tap on \(poi.name)")
+        return true
+    }
+}
+```
+
+```swift
+// Before (UIKit)
+mapView.gestures.onMapTap.observe { context in
+    // Handle Tap on Map
+}.store(in: &cancelables)
+
+mapView.gestures.onLayerLongPress("a-layer-id") { feature, context in
+    // Handle Long press
+    return true
+}
+
+// After (UIKit)
+mapView.mapboxMap.addInteraction(TapInteraction { context in
+    // Handle tap on map
+    return true
+})
+
+mapView.mapboxMap.addInteraction(LongPressInteraction(.layer("a-layer-id")) { feature, context in
+    // Handle long press on a layer
+    return true
+})
+
+// Bonus: If you use Standard style, new API allows to handle tap on POI, Buildings and Place Labels
+mapView.mapboxMap.addInteraction(TapInteraction(.standardPoi) { poi, feature in
+    print("Tap on poi \(poi.name)")
+    return true
+})
+```
+
 * Expose new experimental properties: `CircleLayer.circleElevationReference`, `FillLayer.fillConstructBridgeGuardRail`, `FillLayer.fillBridgeGuardRailColor`, `FillLayer.fillTunnelStructureColor`.
 * Expose new `showLandmarkIcons` property in `MapStyle.standard`.
 

@@ -14,11 +14,13 @@ struct FeaturesQueryExample: View {
                             .circleColor(.red)
                             .circleRadius(8)
                     }
+
+                    TapInteraction { context in
+                        model.mapTapped(context, map: proxy.map, bottomInset: geometry.size.height * 0.33)
+                        return false
+                    }
                 }
                 .mapStyle(.streets) // In the Streets style you can access the layers
-                .onMapTapGesture { context in
-                    model.mapTapped(context, map: proxy.map, bottomInset: geometry.size.height * 0.33)
-                }
                 .ignoresSafeArea()
                 .sheet(item: $model.queryResult, onDismiss: {
                     model.dismiss()

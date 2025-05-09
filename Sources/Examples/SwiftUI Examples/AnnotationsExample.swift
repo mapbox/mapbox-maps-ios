@@ -101,9 +101,11 @@ struct AnnotationsExample: View {
                     }
                 }
                 .slot(.middle)
-            }
-            .onMapTapGesture { context in
-                taps.append(Tap(coordinate: context.coordinate))
+
+                TapInteraction { context in
+                    taps.append(Tap(coordinate: context.coordinate))
+                    return false
+                }
             }
             .ignoresSafeArea()
             .overlay(alignment: .bottom) {

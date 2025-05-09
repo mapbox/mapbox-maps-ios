@@ -24,9 +24,9 @@ final class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         // Add tap handers to and clustered and unclustered layers.
         for layer in ["unclustered-point-layer", "clustered-circle-layer"] {
-            mapView.gestures.onLayerTap(layer) { [weak self] queriedFeature, _ in
-                return self?.handleTap(queriedFeature: queriedFeature) ?? false
-            }.store(in: &cancelables)
+            mapView.mapboxMap.addInteraction(TapInteraction(.layer(layer)) { [weak self] feature, _ in
+                return self?.handleTap(feature: feature) ?? false
+            })
         }
     }
 
@@ -162,9 +162,9 @@ final class SymbolClusteringExample: UIViewController, ExampleProtocol {
     }
 
     // Shows cluster or hydrant info. Returns false if couldn't parse data.
-    private func handleTap(queriedFeature: QueriedFeature) -> Bool {
-        if let selectedFeatureProperties = queriedFeature.feature.properties,
-           case let .string(featureInformation) = selectedFeatureProperties["ASSETNUM"],
+    private func handleTap(feature: FeaturesetFeature) -> Bool {
+        let selectedFeatureProperties = feature.properties
+        if case let .string(featureInformation) = selectedFeatureProperties["ASSETNUM"],
            case let .string(location) = selectedFeatureProperties["LOCATIONDETAIL"] {
             showAlert(withTitle: "Hydrant \(featureInformation)", and: "\(location)")
             // If the feature is a cluster, it will have `point_count` and `cluster_id` properties.
@@ -172,8 +172,7 @@ final class SymbolClusteringExample: UIViewController, ExampleProtocol {
             return true
         }
 
-        if let selectedFeatureProperties = queriedFeature.feature.properties,
-           case let .number(pointCount) = selectedFeatureProperties["point_count"],
+        if case let .number(pointCount) = selectedFeatureProperties["point_count"],
            case let .number(clusterId) = selectedFeatureProperties["cluster_id"],
            case let .number(maxFlow) = selectedFeatureProperties["max"],
            case let .number(sum) = selectedFeatureProperties["sum"],

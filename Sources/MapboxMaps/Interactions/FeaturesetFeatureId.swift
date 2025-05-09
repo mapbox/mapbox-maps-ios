@@ -9,8 +9,6 @@ import Turf
 ///
 /// - Warning: There is no guarantee of identifier persistency. This depends on the underlying source of the features and may vary from style to style.
 /// If you want to store the identifiers persistently, please make sure that the style or source provides this guarantee.
-@_spi(Experimental)
-@_documentation(visibility: public)
 public struct FeaturesetFeatureId: Hashable {
     /// A feature id coming from the feature itself.
     @_documentation(visibility: public)

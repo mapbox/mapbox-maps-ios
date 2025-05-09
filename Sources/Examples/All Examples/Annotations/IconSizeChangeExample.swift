@@ -71,18 +71,19 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         try? mapView.mapboxMap.addLayer(selectedMarkerLayer)
 
         // Add a handler for tap on the selected marker layer.
-        mapView.gestures.onLayerTap(Constants.selectedMarkerLayerId) { [weak self] _, context in
+        mapView.mapboxMap.addInteraction(TapInteraction(.layer(Constants.selectedMarkerLayerId)) { [weak self] _, context in
             guard let self else { return false }
             if !self.markerSelected {
                 self.updateSelectedMarker(atPoint: context.point)
             }
             return true
-        }.store(in: &cancelables)
+        })
 
         // Add a handler for on map, except taps on selected marker.
-        mapView.gestures.onMapTap.observe { [weak self] context in
+        mapView.mapboxMap.addInteraction(TapInteraction { [weak self] context in
             self?.updateSelectedMarker(atPoint: context.point)
-        }.store(in: &cancelables)
+            return false
+        })
     }
 
     private func updateSelectedMarker(atPoint point: CGPoint) {

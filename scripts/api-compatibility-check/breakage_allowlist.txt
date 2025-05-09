@@ -2111,3 +2111,13 @@ Var Snow.vignetteUseTheme has been removed
 # Style update
 Func MapStyle.standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:themeData:) has been renamed to Func standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorBuildingHighlight:colorBuildingSelect:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:showLandmarkIcons:themeData:)
 Func MapStyle.standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:themeData:) has parameter 14 type change from Swift.String? to MapboxMaps.StyleColor?
+
+# Promote interactions
+Func MapStyle.standardExperimental(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:buildingHighlightColor:buildingSelectColor:placeLabelHighlightColor:placeLabelSelectColor:) has been removed
+Var MapStyle.standardExperimental has been removed
+Accessor Interaction.impl.Get() has return type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Accessor LongPressInteraction.impl.Get() has return type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Accessor TapInteraction.impl.Get() has return type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Var Interaction.impl has declared type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Var LongPressInteraction.impl has declared type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Var TapInteraction.impl has declared type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?

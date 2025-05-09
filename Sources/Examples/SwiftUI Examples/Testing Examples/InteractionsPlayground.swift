@@ -1,4 +1,4 @@
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 import SwiftUI
 
 struct InteractionsPlayground: View {
@@ -83,7 +83,6 @@ struct InteractionsPlayground: View {
                 }
             }
             .debugOptions(.collision)
-            .mapStyle(.standardExperimental)
 
             GeometryReader { _ in
                 if let mapTap {

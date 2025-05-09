@@ -33,11 +33,12 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
             self.finish()
         }.store(in: &cancelables)
 
-        mapView.gestures.onMapTap.observe { [weak self] context in
+        mapView.mapboxMap.addInteraction(TapInteraction { [weak self] context in
             if let self, self.annotation == nil {
                 self.addViewAnnotation(at: context.coordinate)
             }
-        }.store(in: &cancelables)
+            return false
+        })
 
         mapView.mapboxMap.styleURI = .streets
     }

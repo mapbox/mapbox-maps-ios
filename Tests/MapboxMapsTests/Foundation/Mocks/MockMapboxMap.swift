@@ -246,7 +246,7 @@ final class MockMapboxMap: MapboxMapProtocol {
     private var interactions = [(Int, InteractionImpl)]()
     private var id = 0
     func addInteraction(_ interaction: some Interaction) -> any Cancelable {
-        addInteraction(interaction.impl)
+        addInteraction(interaction.impl!)
     }
 
     func addInteraction(_ interaction: CoreInteraction) -> any Cancelable {

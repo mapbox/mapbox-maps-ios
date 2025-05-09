@@ -4,7 +4,7 @@ import MapboxMaps
 final class FeatureStateExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var descriptionView: EarthquakeDescriptionView!
-    private var previouslyTappedEarthquakeId: String = ""
+    private var selectedFeature: FeaturesetFeature?
     private var cancelables = Set<AnyCancelable>()
 
     private lazy var dateFormatter: DateFormatter = {
@@ -48,10 +48,10 @@ final class FeatureStateExample: UIViewController, ExampleProtocol {
             }
         }.store(in: &cancelables)
 
-        mapView.gestures.onLayerTap("earthquake-viz") { [weak self] queriedFeature, _ in
-            self?.handleTappedFeature(queriedFeature)
+        mapView.mapboxMap.addInteraction(TapInteraction(.layer("earthquake-viz")) { [weak self] feature, _ in
+            self?.handleTappedFeature(feature)
             return true
-        }.store(in: &cancelables)
+        })
     }
 
     func setupSourceAndLayer() {
@@ -169,27 +169,25 @@ final class FeatureStateExample: UIViewController, ExampleProtocol {
         }
     }
 
-    private func handleTappedFeature(_ queriedFeature: QueriedFeature) {
-        let earthquakeFeature = queriedFeature.feature
-        if case .number(let earthquakeIdDouble) = earthquakeFeature.identifier,
-           case .point(let point) = earthquakeFeature.geometry,
-           case let .number(magnitude) = earthquakeFeature.properties?["mag"],
-           case let .string(place) = earthquakeFeature.properties?["place"],
-           case let .number(timestamp) = earthquakeFeature.properties?["time"] {
-
-            let earthquakeId = Int(earthquakeIdDouble).description
+    private func handleTappedFeature(_ feature: FeaturesetFeature) {
+        if case .point(let point) = feature.geometry,
+           case let .number(magnitude) = feature.properties["mag"],
+           case let .string(place) = feature.properties["place"],
+           case let .number(timestamp) = feature.properties["time"] {
 
             // Set the description of the earthquake from the `properties` object
             self.setDescription(magnitude: magnitude, timeStamp: timestamp, location: place)
 
             // Set the earthquake to be "selected"
-            self.setSelectedState(earthquakeId: earthquakeId)
+            self.mapView.mapboxMap.setFeatureState(feature, state: ["selected": true])
 
             // Reset a previously tapped earthquake to be "unselected".
-            self.resetPreviouslySelectedStateIfNeeded(currentTappedEarthquakeId: earthquakeId)
+            if let selectedFeature, selectedFeature.id != feature.id {
+                self.mapView.mapboxMap.setFeatureState(selectedFeature, state: ["selected": false])
+            }
 
             // Store the currently tapped earthquake so it can be reset when another earthquake is tapped.
-            self.previouslyTappedEarthquakeId = earthquakeId
+            self.selectedFeature = feature
 
             // Center the selected earthquake on the screen
             self.mapView.camera.fly(to: CameraOptions(center: point.coordinates, zoom: 10))
@@ -201,41 +199,6 @@ final class FeatureStateExample: UIViewController, ExampleProtocol {
         self.descriptionView.locationLabel.text = "Location: \(location)"
         self.descriptionView.dateLabel.text = "Date: " + self.dateFormatter.string(
             from: Date(timeIntervalSince1970: timeStamp / 1000.0))
-    }
-
-    // Sets a particular earthquake to be selected
-    func setSelectedState(earthquakeId: String) {
-        self.mapView.mapboxMap.setFeatureState(sourceId: Self.earthquakeSourceId,
-                                               sourceLayerId: nil,
-                                               featureId: earthquakeId,
-                                               state: ["selected": true]) { result in
-            switch result {
-            case .failure(let error):
-                print("Could not retrieve feature state: \(error).")
-            case .success:
-                print("Succesfully set feature state.")
-            }
-        }
-    }
-
-    // Resets the previously selected earthquake to be "unselected" if needed.
-    func resetPreviouslySelectedStateIfNeeded(currentTappedEarthquakeId: String) {
-
-        if self.previouslyTappedEarthquakeId != ""
-            && currentTappedEarthquakeId != self.previouslyTappedEarthquakeId {
-            // Reset a previously tapped earthquake to be "unselected".
-            self.mapView.mapboxMap.setFeatureState(sourceId: Self.earthquakeSourceId,
-                                                    sourceLayerId: nil,
-                                                    featureId: self.previouslyTappedEarthquakeId,
-                                                   state: ["selected": false]) { result in
-                switch result {
-                case .failure(let error):
-                    print("Could not retrieve feature state: \(error).")
-                case .success:
-                    print("Succesfully set feature state.")
-                }
-            }
-        }
     }
 
     // Present an alert with a given title.

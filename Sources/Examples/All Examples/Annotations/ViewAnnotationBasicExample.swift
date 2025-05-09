@@ -23,9 +23,10 @@ final class ViewAnnotationBasicExample: UIViewController, ExampleProtocol {
             self.finish()
         }.store(in: &cancelables)
 
-        mapView.gestures.onMapTap.observe { [weak self] context in
+        mapView.mapboxMap.addInteraction(TapInteraction { [weak self] context in
             self?.addViewAnnotation(at: context.coordinate)
-        }.store(in: &cancelables)
+            return true
+        })
     }
 
     private func addViewAnnotation(at coordinate: CLLocationCoordinate2D) {

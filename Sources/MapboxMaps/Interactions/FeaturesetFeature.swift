@@ -2,8 +2,6 @@ import Foundation
 import Turf
 
 /// A type constraint for a generic featureset feature.
-@_spi(Experimental)
-@_documentation(visibility: public)
 public protocol FeaturesetFeatureType {
     /// A type representing the State object.
     associatedtype State: Codable, Equatable
@@ -17,33 +15,27 @@ public protocol FeaturesetFeatureType {
     ///
     /// The identifier can be `nil` if the underlying source doesn't have identifiers for features.
     /// In this case it's impossible to set a feature state for an individual feature.
-    @_documentation(visibility: public)
     var id: FeaturesetFeatureId? { get }
 
     /// A featureset descriptor denoting a featureset this feature belongs to.
-    @_documentation(visibility: public)
     var featureset: FeaturesetDescriptor<Self> { get }
 
     /// A feature state.
     ///
     /// This is a **snapshot** of the state that the feature had when it was interacted with.
     /// To update and read the original state, use ``MapboxMap/setFeatureState(_:state:callback:)`` and ``MapboxMap/getFeatureState(_:callback:)``.
-    @_documentation(visibility: public)
     var state: State { get }
 
     /// A feature geometry.
-    @_documentation(visibility: public)
     var geometry: Geometry { get }
 
     /// Feature JSON properties.
-    @_documentation(visibility: public)
     var properties: JSONObject { get }
 
     /// Converts a generic feature to the typed one.
     ///
     /// - Parameters:
     ///    - from: A generic feature.
-    @_documentation(visibility: public)
     init?(from: FeaturesetFeature)
 }
 
@@ -67,8 +59,6 @@ public protocol FeaturesetFeatureType {
 /// If you use Standard Style, you can use typed alternatives like ``StandardPoiFeature``, ``StandardPlaceLabelsFeature``, ``StandardBuildingsFeature``.
 ///
 /// The featureset feature is different to the `Turf.Feature`. The latter represents any GeoJSON feature, while the former is a high level representation of features.
-@_spi(Experimental)
-@_documentation(visibility: public)
 final public class FeaturesetFeature: FeaturesetFeatureType {
     public typealias State = JSONObject
     public typealias StateKey = String
@@ -77,26 +67,21 @@ final public class FeaturesetFeature: FeaturesetFeatureType {
     ///
     /// The identifier can be `nil` if the underlying source doesn't have identifiers for features.
     /// In this case it's impossible to set a feature state for an individual feature.
-    @_documentation(visibility: public)
     public let id: FeaturesetFeatureId?
 
     /// A featureset descriptor denoting a featureset this feature belongs to.
-    @_documentation(visibility: public)
     public let featureset: FeaturesetDescriptor<FeaturesetFeature>
 
     /// A feature geometry.
-    @_documentation(visibility: public)
     public var geometry: Geometry { geoJsonFeature.geometry! }
 
     /// Feature JSON properties.
-    @_documentation(visibility: public)
     public var properties: JSONObject { geoJsonFeature.properties ?? [:] }
 
     /// A feature state.
     ///
     /// This is a **snapshot** of the state that the feature had when it was interacted with.
     /// To update and read the original state, use ``MapboxMap/setFeatureState(_:state:callback:)`` and ``MapboxMap/getFeatureState(_:callback:)``.
-    @_documentation(visibility: public)
     public let state: JSONObject
 
     let geoJsonFeature: Feature
@@ -109,7 +94,6 @@ final public class FeaturesetFeature: FeaturesetFeatureType {
     ///   - featureset: A featureset descriptor
     ///   - geoJsonFeature: An underlying feature.
     ///   - state: A snapshot of the feature state
-    @_documentation(visibility: public)
     public init(
         id: FeaturesetFeatureId?,
         featureset: FeaturesetDescriptor<FeaturesetFeature>,

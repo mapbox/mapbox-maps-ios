@@ -17,11 +17,13 @@ struct GeofencingPlayground: View {
                 if let isochrone {
                     Isochrone(id: "isochrone", feature: isochrone)
                 }
-            }
-            .onMapTapGesture { context in
-                fetch(from: .isochrone(coordinate: context.coordinate, contourMinutes: 3)) { newFeature in
-                    geofencing.replace(oldFeature: isochrone, with: newFeature)
-                    isochrone = newFeature
+
+                TapInteraction { context in
+                    fetch(from: .isochrone(coordinate: context.coordinate, contourMinutes: 3)) { newFeature in
+                        geofencing.replace(oldFeature: isochrone, with: newFeature)
+                        isochrone = newFeature
+                    }
+                    return false
                 }
             }
             .onMapLoaded { _ in geofencing.start() }

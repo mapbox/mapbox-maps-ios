@@ -1753,7 +1753,6 @@ extension StyleManager {
     /// Returns the available featuresets in the currently loaded style.
     ///
     /// - Note: This function should only be called after the style is fully loaded; otherwise, the result may be unreliable.
-    @_spi(Experimental)
     public var featuresets: [FeaturesetDescriptor<FeaturesetFeature>] {
         styleManager.getStyleFeaturesets().map(FeaturesetDescriptor<FeaturesetFeature>.init(core:))
     }

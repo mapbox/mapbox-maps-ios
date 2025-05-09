@@ -33,32 +33,40 @@ struct AnnotationsOrderTestExample: View {
             )
             TestLayer(id: "black-layer", radius: 2, color: .black.darker, coordinate: .init(latitude: -10, longitude: 0))
             FadingCircle()
+
+            TapInteraction(.layer("purple-layer")) { _, context in
+                tapMessage = gestureMessage("Purple layer", context: context)
+                return true // handled, do not propagate to layers below or map
+            }
+
+            LongPressInteraction(.layer("purple-layer")) { _, context in
+                longPressMessage = gestureMessage("Purple layer", context: context)
+                return true // handled, do not propagate to layers below or map
+            }
+
+            TapInteraction(.layer("black-layer")) { _, context in
+                tapMessage = gestureMessage("Black layer", context: context)
+                return true
+            }
+
+            TapInteraction(.layer("yellow-layer")) { _, context in
+                tapMessage = gestureMessage("Yellow layer", context: context)
+                return true
+            }
+
+            TapInteraction { context in
+                tapMessage = gestureMessage("Map", context: context)
+                taps.append(Tap(coordinate: context.coordinate))
+                return true
+            }
+
+            LongPressInteraction { context in
+                longPressMessage = gestureMessage("Map", context: context)
+                return true
+            }
         }
         .debugOptions(.camera)
         .mapStyle(mapStyle)
-        .onLayerTapGesture("purple-layer") { _, context in
-            tapMessage = gestureMessage("Purple layer", context: context)
-            return true // handled, do not propagate to layers below or map
-        }
-        .onLayerLongPressGesture("purple-layer") { _, context in
-            longPressMessage = gestureMessage("Purple layer", context: context)
-            return true // handled, do not propagate to layers below or map
-        }
-        .onLayerTapGesture("black-layer") { _, context in
-            tapMessage = gestureMessage("Black layer", context: context)
-            return true
-        }
-        .onLayerTapGesture("yellow-layer") { _, context in
-            tapMessage = gestureMessage("Yellow layer", context: context)
-            return true
-        }
-        .onMapTapGesture { context in
-            tapMessage = gestureMessage("Map", context: context)
-            taps.append(Tap(coordinate: context.coordinate))
-        }
-        .onMapLongPressGesture { context in
-            longPressMessage = gestureMessage("Map", context: context)
-        }
         .ignoresSafeArea()
         .overlay(alignment: .trailing) {
             MapStyleSelectorButton(mapStyle: $mapStyle)

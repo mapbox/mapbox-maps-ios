@@ -25,9 +25,10 @@ final class EditPolygonExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.gestures.onMapTap.observe { [weak self] context in
+        mapView.mapboxMap.addInteraction(TapInteraction { [weak self] context in
             self?.dropPin(at: context.coordinate)
-        }.store(in: &cancelables)
+            return false
+        })
 
         mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             self?.dropPin(at: .helsinki)

@@ -19,24 +19,28 @@ struct ClusteringExample: View {
 
     var body: some View {
         MapReader { proxy in
-            Map(initialViewport: .camera(center: .dc, zoom: 10))
+            Map(initialViewport: .camera(center: .dc, zoom: 10)) {
+                TapInteraction(.layer(Id.clusterCircle)) { feature, _ in
+                    details = Detail(feature: feature)
+                    return true
+                }
+
+                TapInteraction(.layer(Id.point)) { feature, _ in
+                    details = Detail(feature: feature)
+                    return true
+                }
+
+                TapInteraction { context in
+                    let latLon = String(format: "%.4f, %.4f", context.coordinate.latitude, context.coordinate.longitude)
+                    details = Detail(title: "Map Tapped", message: "\(latLon)")
+                    return false
+                }
+            }
                 .mapStyle(.dark)
                 .onStyleLoaded { _ in
                     // This example uses direct style manipulation with MapboxMap
                     guard let map = proxy.map else { return }
                     try! setupClusteringLayer(map)
-                }
-                .onLayerTapGesture(Id.clusterCircle) { feature, _ in
-                    details = Detail(queriedFeature: feature)
-                    return true
-                }
-                .onLayerTapGesture(Id.point) { feature, _ in
-                    details = Detail(queriedFeature: feature)
-                    return true
-                }
-                .onMapTapGesture { context in
-                    let latLon = String(format: "%.4f, %.4f", context.coordinate.latitude, context.coordinate.longitude)
-                    details = Detail(title: "Map Tapped", message: "\(latLon)")
                 }
                 .ignoresSafeArea()
                 .alert(item: $details) {
@@ -51,10 +55,8 @@ extension ClusteringExample.Detail {
         self.title = title
         self.message = message
     }
-    init?(queriedFeature: QueriedFeature) {
-        guard let properties = queriedFeature.feature.properties else {
-            return nil
-        }
+    init?(feature: FeaturesetFeature) {
+        let properties = feature.properties
         if case let .string(assetnum) = properties["ASSETNUM"],
            case let .string(loc) = properties["LOCATIONDETAIL"] {
             title = "Hydrant \(assetnum)"

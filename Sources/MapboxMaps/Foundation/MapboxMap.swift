@@ -1106,8 +1106,6 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - featureset: A typed featureset to query with.
     ///   - filter: An additional filter for features.
     ///   - completion: Callback called when the query completes.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     @discardableResult
     public func queryRenderedFeatures<G: RenderedQueryGeometryConvertible, T: FeaturesetFeatureType>(
         with geometry: G,
@@ -1140,8 +1138,6 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - featureset: A typed featureset to query with.
     ///   - filter: An additional filter for features.
     ///   - completion: Callback called when the query completes.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     @discardableResult
     public func queryRenderedFeatures<T: FeaturesetFeatureType>(
         featureset: FeaturesetDescriptor<T>,
@@ -1442,8 +1438,6 @@ extension MapboxMap {
     ///   - callback: The `feature state operation callback` called when the operation completes or ends.
     ///
     /// - Returns: A `Cancelable` object  that could be used to cancel the pending operation.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func setFeatureState<T: FeaturesetFeatureType>(
         featureset: FeaturesetDescriptor<T>,
@@ -1474,8 +1468,6 @@ extension MapboxMap {
     ///   - callback: The `feature state operation callback` called when the operation completes or ends.
     ///
     /// - Returns: A `Cancelable` object  that could be used to cancel the pending operation.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func setFeatureState<T: FeaturesetFeatureType>(
         _ feature: T,
@@ -1516,8 +1508,6 @@ extension MapboxMap {
     ///   - callback: Feature's state map or an empty map if the feature could not be found.
     ///
     /// - Returns: A `Cancelable` object that could be used to cancel the pending query.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func getFeatureState<T: FeaturesetFeatureType>(
         featureset: FeaturesetDescriptor<T>,
@@ -1543,8 +1533,6 @@ extension MapboxMap {
     ///   - callback: Feature's state map or an empty map if the feature could not be found.
     ///
     /// - Returns: A `Cancelable` object that could be used to cancel the pending query.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func getFeatureState<F: FeaturesetFeatureType>(
         _ feature: F,
@@ -1588,8 +1576,6 @@ extension MapboxMap {
     ///   - stateKey: The key of the property to remove. If `nil`, all feature's state object properties are removed. Defaults to `nil`.
     ///   - callback: The `feature state operation callback` called when the operation completes or ends.
     /// - Returns: A `Cancelable` object that could be used to cancel the pending operation.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func removeFeatureState<T: FeaturesetFeatureType>(
         featureset: FeaturesetDescriptor<T>,
@@ -1614,8 +1600,6 @@ extension MapboxMap {
     ///   - stateKey: The key of the property to remove. If `nil`, all feature's state object properties are removed. Defaults to `nil`.
     ///   - callback: The `feature state operation callback` called when the operation completes or ends.
     /// - Returns: A `Cancelable` object that could be used to cancel the pending operation.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func removeFeatureState<F: FeaturesetFeatureType>(
         _ feature: F,
@@ -1663,8 +1647,6 @@ extension MapboxMap {
     ///   - callback: The `feature state operation callback` called when the operation completes or ends.
     ///
     /// - Returns: A `cancelable` object that could be used to cancel the pending operation.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func resetFeatureStates<T: FeaturesetFeatureType>(
         featureset: FeaturesetDescriptor<T>,
@@ -1779,10 +1761,9 @@ extension MapboxMap {
     /// - Parameters:
     ///     - interaction: An instance of interaction
     /// - Returns: A cancelable token that cancels (removes) the interaction.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     @discardableResult public func addInteraction(_ interaction: some Interaction) -> Cancelable {
-        addInteraction(interaction.impl)
+        guard let impl = interaction.impl  else { return AnyCancelable.empty }
+        return addInteraction(impl)
     }
 
     @discardableResult func addInteraction(_ interaction: InteractionImpl) -> Cancelable {
@@ -1799,7 +1780,6 @@ extension MapboxMap {
 
     /// For internal use only
     /// Triggers a gesture of the provided type at the specified screen coordinates
-    @_spi(Experimental)
     @_spi(Internal)
     public func dispatch(gesture: String, screenCoordinateX: Double, screenCoordinateY: Double) {
         var eventType = CorePlatformEventType.click

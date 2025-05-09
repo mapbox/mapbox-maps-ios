@@ -1,4 +1,4 @@
-@testable @_spi(Experimental) import MapboxMaps
+@testable import MapboxMaps
 import XCTest
 
 final class InteractionsTests: IntegrationTestCase {

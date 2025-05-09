@@ -36,6 +36,7 @@ public extension Map {
     ///
     /// - Parameters:
     ///  - action: The action to perform.
+    @available(*, deprecated, message: "Use TapInteraction")
     func onMapTapGesture(perform action: @escaping (InteractionContext) -> Void) -> Self {
         copyAssigned(self, \.mapDependencies.onMapTap, action)
     }
@@ -46,6 +47,7 @@ public extension Map {
     ///
     /// - Parameters:
     ///  - action: The action to perform.
+    @available(*, deprecated, message: "Use LongPressInteraction")
     func onMapLongPressGesture(perform action: @escaping (InteractionContext) -> Void) -> Self {
         copyAssigned(self, \.mapDependencies.onMapLongPress, action)
     }
@@ -57,6 +59,7 @@ public extension Map {
     /// - Parameters:
     ///  - layerId: The identifier of the layers.
     ///  - action: The action to perform. Return `true` in action if tap has been handled, or `false` to let event propagate to the layers or annotations below.
+    @available(*, deprecated, message: "Use TapInteraction")
     func onLayerTapGesture(_ layerId: String, perform action: @escaping MapLayerGestureHandler) -> Self {
         var updated = self
         updated.mapDependencies.onLayerTap[layerId] = action
@@ -70,6 +73,7 @@ public extension Map {
     /// - Parameters:
     ///  - layerId: The identifier of the layers.
     ///  - action: The action to perform. Return `true` in action if tap has been handled, or `false` to let event propagate to the layers or annotations below.
+    @available(*, deprecated, message: "Use LongPressInteraction")
     func onLayerLongPressGesture(_ layerId: String, perform action: @escaping MapLayerGestureHandler) -> Self {
         var updated = self
         updated.mapDependencies.onLayerLongPress[layerId] = action

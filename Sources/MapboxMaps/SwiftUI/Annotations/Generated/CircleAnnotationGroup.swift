@@ -322,15 +322,11 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     var longPressRadius: CGFloat?
 
     /// A custom tappable area radius. Default value is 0.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     public func tapRadius(_ radius: CGFloat? = nil) -> Self {
         with(self, setter(\.tapRadius, radius))
     }
 
     /// A custom tappable area radius. Default value is 0.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     public func longPressRadius(_ radius: CGFloat? = nil) -> Self {
         with(self, setter(\.longPressRadius, radius))
     }

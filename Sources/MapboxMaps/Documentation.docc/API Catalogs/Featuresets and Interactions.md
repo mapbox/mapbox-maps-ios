@@ -1,7 +1,5 @@
 # Featuresets and Interactions
 
-The experimental Interactions API.
-
 ## Overview
 
 The new Interactions API is a toolset that allows you to handle interactions on both layers and basemap features.
@@ -15,7 +13,7 @@ If an `Interaction` is added to the map without a descriptor, it will handle all
 @TabNavigator {
     @Tab("Swift UI") {
     ```swift
-    @_spi(Experimental) import MapboxMaps
+    import MapboxMaps
 
     Map {
         SymbolLayer(id: "demo-layer", source: "demo-source")
@@ -36,22 +34,16 @@ If an `Interaction` is added to the map without a descriptor, it will handle all
             return true
         }
     }
-    // Currently the featuresets are only available in experimental version of Standard Style for preview.
-    // Don't use it in production.
-    .mapStyle(.standardExperimental)
     ```
     }
     @Tab("UI Kit") {
     ```swift
-    @_spi(Experimental) import MapboxMaps
+    import MapboxMaps
 
     let mapView = MapView()
     mapView.mapboxMap.setMapStyleContent {
         SymbolLayer(id: "demo-layer", source: "demo-source")
     }
-    // Currently the featuresets are only available in experimental version of Standard Style for preview.
-    // Don't use it in production.
-    mapView.mapboxMap.mapStyle = .standardExperimental
 
     mapView.mapboxMap.addInteraction(TapInteraction(.layer("demo-layer")) { feature, context in
         // Handle tap on the feature
@@ -112,9 +104,6 @@ struct InteractionsExample: View {
                 FeatureState(selectedBuilding, .init(select: true))
             }
         }
-        // Currently the featuresets are only available in experimental version of Standard Style for preview.
-        // Don't use it in production.
-        .mapStyle(.standardExperimental)
     }
 }
 ```

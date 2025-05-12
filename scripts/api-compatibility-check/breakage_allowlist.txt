@@ -2121,3 +2121,4 @@ Accessor TapInteraction.impl.Get() has return type change from MapboxMaps.Intera
 Var Interaction.impl has declared type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
 Var LongPressInteraction.impl has declared type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
 Var TapInteraction.impl has declared type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Var GeoJSONSource.autoMaxZoom is now with @_documentation

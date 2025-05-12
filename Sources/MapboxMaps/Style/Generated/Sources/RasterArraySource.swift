@@ -14,42 +14,51 @@ import Foundation
 
     /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`. Required if `tiles` is not provided.
     @_documentation(visibility: public)
+    @_spi(Experimental)
     public var url: String?
 
     /// An array of one or more tile source URLs, as in the TileJSON spec. Required if `url` is not provided.
     @_documentation(visibility: public)
+    @_spi(Experimental)
     public var tiles: [String]?
 
     /// An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL.
     /// Default value: [-180,-85.051129,180,85.051129].
     @_documentation(visibility: public)
+    @_spi(Experimental)
     public private(set) var bounds: [Double]?
 
     /// Minimum zoom level for which tiles are available, as in the TileJSON spec.
     /// Default value: 0.
     @_documentation(visibility: public)
+    @_spi(Experimental)
     public var minzoom: Double?
 
     /// Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels.
     /// Default value: 22.
     @_documentation(visibility: public)
+    @_spi(Experimental)
     public var maxzoom: Double?
 
     /// The minimum visual size to display tiles for this layer. Only configurable for raster layers.
     /// Default value: 512. The unit of tileSize is in pixels.
     @_documentation(visibility: public)
+    @_spi(Experimental)
     public private(set) var tileSize: Double?
 
     /// Contains an attribution to be displayed when the map is shown to a user.
     @_documentation(visibility: public)
+    @_spi(Experimental)
     public private(set) var attribution: String?
 
     /// Contains the description of the raster data layers and the bands contained within the tiles.
     @_documentation(visibility: public)
+    @_spi(Experimental)
     public private(set) var rasterLayers: [RasterArraySource.RasterDataLayer]?
 
     /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.
     @_documentation(visibility: public)
+    @_spi(Experimental)
     public var tileCacheBudget: TileCacheBudgetSize?
 
     @_documentation(visibility: public)

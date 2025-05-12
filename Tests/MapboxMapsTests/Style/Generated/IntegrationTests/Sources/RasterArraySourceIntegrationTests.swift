@@ -5,10 +5,10 @@ import XCTest
 final class RasterArraySourceIntegrationTests: MapViewIntegrationTestCase {
 
     func testAdditionAndRemovalOfSource() throws {
-        let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added RasterArraySource to Map")
+        let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added RasterArraySourceSource to Map")
         successfullyAddedSourceExpectation.expectedFulfillmentCount = 1
 
-        let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved RasterArraySource from Map")
+        let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved RasterArraySourceSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
         mapView.mapboxMap.styleJSON = .testStyleJSON()
@@ -29,13 +29,17 @@ final class RasterArraySourceIntegrationTests: MapViewIntegrationTestCase {
                 XCTFail("Failed to add RasterArraySource because of error: \(error)")
             }
 
+            var result: RasterArraySource?
             // Retrieve the source
             do {
-                _ = try mapView.mapboxMap.source(withId: "test-source", type: RasterArraySource.self)
+                result = try mapView.mapboxMap.source(withId: "test-source", type: RasterArraySource.self)
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve RasterArraySource because of error: \(error)")
             }
+
+            XCTAssertEqual(source.type, result?.type)
+            XCTAssertEqual(source.tileCacheBudget, result?.tileCacheBudget)
         }
 
         wait(for: [successfullyAddedSourceExpectation, successfullyRetrievedSourceExpectation], timeout: 5.0)

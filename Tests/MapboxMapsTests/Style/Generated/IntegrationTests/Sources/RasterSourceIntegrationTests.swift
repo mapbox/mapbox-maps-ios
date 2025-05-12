@@ -5,10 +5,10 @@ import XCTest
 final class RasterSourceIntegrationTests: MapViewIntegrationTestCase {
 
     func testAdditionAndRemovalOfSource() throws {
-        let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added RasterSource to Map")
+        let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added RasterSourceSource to Map")
         successfullyAddedSourceExpectation.expectedFulfillmentCount = 1
 
-        let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved RasterSource from Map")
+        let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved RasterSourceSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
         mapView.mapboxMap.styleJSON = .testStyleJSON()
@@ -39,13 +39,22 @@ final class RasterSourceIntegrationTests: MapViewIntegrationTestCase {
                 XCTFail("Failed to add RasterSource because of error: \(error)")
             }
 
+            var result: RasterSource?
             // Retrieve the source
             do {
-                _ = try mapView.mapboxMap.source(withId: "test-source", type: RasterSource.self)
+                result = try mapView.mapboxMap.source(withId: "test-source", type: RasterSource.self)
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve RasterSource because of error: \(error)")
             }
+
+            XCTAssertEqual(source.type, result?.type)
+            XCTAssertEqual(source.prefetchZoomDelta, result?.prefetchZoomDelta)
+            XCTAssertEqual(source.tileCacheBudget, result?.tileCacheBudget)
+            XCTAssertEqual(source.minimumTileUpdateInterval, result?.minimumTileUpdateInterval)
+            XCTAssertEqual(source.maxOverscaleFactorForParentTiles, result?.maxOverscaleFactorForParentTiles)
+            XCTAssertEqual(source.tileRequestsDelay, result?.tileRequestsDelay)
+            XCTAssertEqual(source.tileNetworkRequestsDelay, result?.tileNetworkRequestsDelay)
         }
 
         wait(for: [successfullyAddedSourceExpectation, successfullyRetrievedSourceExpectation], timeout: 5.0)

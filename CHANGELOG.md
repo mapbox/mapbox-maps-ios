@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 * The Interactions and Featuresets API is promoted from experimental. The new API allows you to add interaction handlers to layers, Standard Style featuresets (POI, Buildings and Place Labels), and the map itself in the consistent way. You can control the propagation of events, tappable area, and the order of event handling.
 * The experimental style `MapStyle.standardExperimental` is removed. Use `MapStyle.standard` instead.
 * Methods `GestureManager.onMapTap`, `GestureManager.onMapLongPress`, `GestureManager.onLayerTap`, `GestureManager.onLayerLongPress` and their SwiftUI counterparts are deprecated. Use `TapInteraction` and `LongPressInteraction` instead.
+* Add new `VectorSource.promoteId2` and `GeoJSONSource.promoteId2`. Deprecate `VectorSource.promoteId` and `GeoJSONSource.promoteId`. The newer version support the expression variant of promoteId, which can be used to dynamically nominate IDs to the features.
 
 ```swift
 // Before (SwiftUI)

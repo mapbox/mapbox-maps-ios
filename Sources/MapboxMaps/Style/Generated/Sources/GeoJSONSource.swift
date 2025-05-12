@@ -61,12 +61,21 @@ public struct GeoJSONSource: Source {
     /// Default value: false.
     public var generateId: Bool?
 
-    /// A property to use as a feature id (for feature state). Either a property name, or an object of the form `{<sourceLayer>: <propertyName>}`.
-    public var promoteId: PromoteId?
+    /// A property to use as a feature id. An expression can be used to dynamically check multiple properties.
+    public var promoteId2: Value<String>?
+
+    /// A property to use as a feature id. An expression can be used to dynamically check multiple properties.
+    @available(*, deprecated, message: "Use promoteId2 instead")
+    public var promoteId: PromoteId? {
+        get { .init(from: promoteId2) }
+        set { promoteId2 = newValue.flatMap { .init(from: $0) } }
+    }
 
     /// When set to true, the maxZoom property is ignored and is instead calculated automatically based on the largest bounding box from the geoJSON features. This resolves rendering artifacts for features that use wide blur (e.g. fill extrusion ground flood light or circle layer) and would bring performance improvement on lower zoom levels, especially for geoJSON sources that update data frequently. However, it can lead to flickering and precision loss on zoom levels above 19.
     /// Default value: false.
-    @_spi(Experimental) public var autoMaxZoom: Bool?
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var autoMaxZoom: Bool?
 
     /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom.
     /// Default value: 4.
@@ -97,7 +106,7 @@ extension GeoJSONSource {
         case clusterProperties = "clusterProperties"
         case lineMetrics = "lineMetrics"
         case generateId = "generateId"
-        case promoteId = "promoteId"
+        case promoteId2 = "promoteId"
         case autoMaxZoom = "autoMaxZoom"
         case prefetchZoomDelta = "prefetch-zoom-delta"
         case tileCacheBudget = "tile-cache-budget"
@@ -136,7 +145,7 @@ extension GeoJSONSource {
         try container.encodeIfPresent(clusterProperties, forKey: .clusterProperties)
         try container.encodeIfPresent(lineMetrics, forKey: .lineMetrics)
         try container.encodeIfPresent(generateId, forKey: .generateId)
-        try container.encodeIfPresent(promoteId, forKey: .promoteId)
+        try container.encodeIfPresent(promoteId2, forKey: .promoteId2)
         try container.encodeIfPresent(autoMaxZoom, forKey: .autoMaxZoom)
     }
 }

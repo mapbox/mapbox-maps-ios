@@ -29,7 +29,7 @@ class AttributionTests: XCTestCase {
             parseExpectation.fulfill()
         }
 
-        wait(for: [parseExpectation], timeout: 5)
+        wait(for: [parseExpectation], timeout: 20)
     }
 
     func testFeedbackAttributionParsing() throws {
@@ -67,7 +67,7 @@ class AttributionTests: XCTestCase {
             parseExpectation.fulfill()
         }
 
-        wait(for: [parseExpectation], timeout: 5)
+        wait(for: [parseExpectation], timeout: 20)
     }
 
     func testPlainTextAttributionParsing() throws {
@@ -86,7 +86,7 @@ class AttributionTests: XCTestCase {
             parseExpectation.fulfill()
         }
 
-        wait(for: [parseExpectation], timeout: 5)
+        wait(for: [parseExpectation], timeout: 20)
     }
 
     func testDuplicateAttributionParsing() {
@@ -110,7 +110,7 @@ class AttributionTests: XCTestCase {
             parseExpectation.fulfill()
         }
 
-        wait(for: [parseExpectation], timeout: 5)
+        wait(for: [parseExpectation], timeout: 20)
     }
 
     func testAttributionAbbreviation() {

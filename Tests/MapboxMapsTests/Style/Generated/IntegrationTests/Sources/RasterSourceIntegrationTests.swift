@@ -18,6 +18,7 @@ final class RasterSourceIntegrationTests: MapViewIntegrationTestCase {
             source.url = String.testSourceValue()
             source.tiles = [String].testSourceValue()
             source.bounds = [Double].testSourceValue()
+            source.extra_bounds = [[Double]].testSourceValue()
             source.minzoom = Double.testSourceValue()
             source.maxzoom = Double.testSourceValue()
             source.tileSize = Double.testSourceValue()

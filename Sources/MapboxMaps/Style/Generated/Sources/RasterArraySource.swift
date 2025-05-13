@@ -28,6 +28,10 @@ import Foundation
     @_spi(Experimental)
     public private(set) var bounds: [Double]?
 
+    /// An array of additional discrete geographic regions where tiles are available. When used alongside the `bounds` property, these regions act as an additional filter - Mapbox GL will only request tiles that are both within the `bounds` and any of the regions defined in `extra_bounds`. When used independently (without `bounds`), Mapbox GL will request tiles that fall within any of the regions in `extra_bounds`. This allows for more fine-grained control over tile requests, particularly when dealing with sparse data coverage.
+    @_documentation(visibility: public)
+    public var extra_bounds: [[Double]]?
+
     /// Minimum zoom level for which tiles are available, as in the TileJSON spec.
     /// Default value: 0.
     @_documentation(visibility: public)
@@ -75,6 +79,7 @@ extension RasterArraySource {
         case url = "url"
         case tiles = "tiles"
         case bounds = "bounds"
+        case extra_bounds = "extra_bounds"
         case minzoom = "minzoom"
         case maxzoom = "maxzoom"
         case tileSize = "tileSize"
@@ -106,6 +111,7 @@ extension RasterArraySource {
         try container.encodeIfPresent(url, forKey: .url)
         try container.encodeIfPresent(tiles, forKey: .tiles)
         try container.encodeIfPresent(bounds, forKey: .bounds)
+        try container.encodeIfPresent(extra_bounds, forKey: .extra_bounds)
         try container.encodeIfPresent(minzoom, forKey: .minzoom)
         try container.encodeIfPresent(maxzoom, forKey: .maxzoom)
         try container.encodeIfPresent(tileSize, forKey: .tileSize)
@@ -124,6 +130,11 @@ extension RasterArraySource {
     /// An array of one or more tile source URLs, as in the TileJSON spec. Required if `url` is not provided.
     public func tiles(_ newValue: [String]) -> Self {
         with(self, setter(\.tiles, newValue))
+    }
+
+    /// An array of additional discrete geographic regions where tiles are available. When used alongside the `bounds` property, these regions act as an additional filter - Mapbox GL will only request tiles that are both within the `bounds` and any of the regions defined in `extra_bounds`. When used independently (without `bounds`), Mapbox GL will request tiles that fall within any of the regions in `extra_bounds`. This allows for more fine-grained control over tile requests, particularly when dealing with sparse data coverage.
+    public func extra_bounds(_ newValue: [[Double]]) -> Self {
+        with(self, setter(\.extra_bounds, newValue))
     }
 
     /// Minimum zoom level for which tiles are available, as in the TileJSON spec.

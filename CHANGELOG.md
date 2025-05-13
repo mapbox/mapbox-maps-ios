@@ -70,6 +70,7 @@ mapView.mapboxMap.addInteraction(TapInteraction(.standardPoi) { poi, feature in
 
 * Expose new experimental properties: `CircleLayer.circleElevationReference`, `FillLayer.fillConstructBridgeGuardRail`, `FillLayer.fillBridgeGuardRailColor`, `FillLayer.fillTunnelStructureColor`.
 * Expose new `showLandmarkIcons` property in `MapStyle.standard`.
+* New example for elevated spiral line. Utilized the experimental API `LineLayer/linezOffset`.
 
 ## 11.12.0 - 07 May, 2025
 

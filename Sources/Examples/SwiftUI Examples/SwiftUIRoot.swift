@@ -37,6 +37,10 @@ struct SwiftUIRoot: View {
                 } header: { Text("Use cases") }
 
                 Section {
+                    ExampleLink("Line elevation", destination: ElevatedLineMapView())
+                } header: { Text("🔬 Experimental APIs") }
+
+                Section {
                     ExampleLink("Map settings", note: "Showcase of the most possible map configurations.", destination: MapSettingsExample())
                     ExampleLink("Interactions playground", note: "Interactions edge cases", destination: InteractionsPlayground())
                     ExampleLink("Viewport Playground", note: "Showcase of the possible viewport states.", destination: ViewportPlayground())

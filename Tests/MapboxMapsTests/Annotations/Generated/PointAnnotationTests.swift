@@ -463,39 +463,6 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(iconHaloWidth, annotation.iconHaloWidth)
     }
 
-    func testIconImageCrossFadeTransition() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.iconImageCrossFadeTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(iconImageCrossFadeTransition) = layerProperties["icon-image-cross-fade-transition"],
-              case let .number(duration) = iconImageCrossFadeTransition["duration"],
-              case let .number(delay) = iconImageCrossFadeTransition["delay"]
-        else {
-            return XCTFail("Layer property icon-image-cross-fade-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.iconImageCrossFadeTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.iconImageCrossFadeTransition?.delay)
-    }
-
-    func testIconImageCrossFade() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        annotation.iconImageCrossFade =  Double.testConstantValue()
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .number(iconImageCrossFade) = layerProperties["icon-image-cross-fade"] else {
-            return XCTFail("Layer property icon-image-cross-fade should be set to a number.")
-        }
-        XCTAssertEqual(iconImageCrossFade, annotation.iconImageCrossFade)
-    }
-
     func testIconOcclusionOpacityTransition() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconOcclusionOpacityTransition = StyleTransition(duration: 1, delay: 1)

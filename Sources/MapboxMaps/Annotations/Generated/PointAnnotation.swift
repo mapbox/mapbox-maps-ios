@@ -116,8 +116,6 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
         properties["icon-halo-color-transition"] = iconHaloColorTransition?.asDictionary
         properties["icon-halo-width"] = iconHaloWidth
         properties["icon-halo-width-transition"] = iconHaloWidthTransition?.asDictionary
-        properties["icon-image-cross-fade"] = iconImageCrossFade
-        properties["icon-image-cross-fade-transition"] = iconImageCrossFadeTransition?.asDictionary
         properties["icon-occlusion-opacity"] = iconOcclusionOpacity
         properties["icon-occlusion-opacity-transition"] = iconOcclusionOpacityTransition?.asDictionary
         properties["icon-opacity"] = iconOpacity
@@ -301,13 +299,6 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     /// Distance of halo to the icon outline.
     /// Default value: 0. Minimum value: 0. The unit of iconHaloWidth is in pixels.
     public var iconHaloWidth: Double?
-
-    /// Transition property for `iconImageCrossFade`
-    public var iconImageCrossFadeTransition: StyleTransition?
-
-    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
-    /// Default value: 0. Value range: [0, 1]
-    public var iconImageCrossFade: Double?
 
     /// Transition property for `iconOcclusionOpacity`
     public var iconOcclusionOpacityTransition: StyleTransition?
@@ -643,17 +634,6 @@ extension PointAnnotation {
     /// Default value: 0. Minimum value: 0. The unit of iconHaloWidth is in pixels.
     public func iconHaloWidth(_ newValue: Double) -> Self {
         with(self, setter(\.iconHaloWidth, newValue))
-    }
-
-    /// Transition property for `iconImageCrossFade`
-    public func iconImageCrossFadeTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.iconImageCrossFadeTransition, transition))
-    }
-
-    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
-    /// Default value: 0. Value range: [0, 1]
-    public func iconImageCrossFade(_ newValue: Double) -> Self {
-        with(self, setter(\.iconImageCrossFade, newValue))
     }
 
     /// Transition property for `iconOcclusionOpacity`

@@ -177,6 +177,15 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
         self.init(id: id, point: point, isSelected: isSelected, isDraggable: isDraggable)
     }
 
+    /// Transition property for `iconImageCrossFade`
+    @available(*, deprecated, message: "Use PointAnnotationManager.iconImageCrossFadeTransition instead")
+    public var iconImageCrossFadeTransition: StyleTransition? { get { return nil } set { } }
+
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+    /// Default value: 0. Value range: [0, 1]
+    @available(*, deprecated, message: "Use PointAnnotationManager.iconImageCrossFade instead")
+    public var iconImageCrossFade: Double? { get { return nil } set { } }
+
     // MARK: - Style Properties -
 
     /// Part of the icon placed closest to the anchor.
@@ -796,4 +805,14 @@ extension PointAnnotation: MapContent, PrimitiveMapContent {
     }
 }
 
+extension PointAnnotation {
+    /// Transition property for `iconImageCrossFade`
+    @available(*, deprecated, message: "Use PointAnnotationManager.iconImageCrossFadeTransition instead")
+    public func iconImageCrossFadeTransition(_ transition: StyleTransition) -> Self { return self }
+
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+    /// Default value: 0. Value range: [0, 1]
+    @available(*, deprecated, message: "Use PointAnnotationManager.iconImageCrossFade instead")
+    public func iconImageCrossFade(_ newValue: Double) -> Self { return self }
+}
 // End of generated file.

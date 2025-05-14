@@ -17,7 +17,6 @@ final class RasterArraySourceIntegrationTests: MapViewIntegrationTestCase {
             var source = RasterArraySource(id: "test-source")
             source.url = String.testSourceValue()
             source.tiles = [String].testSourceValue()
-            source.extra_bounds = [[Double]].testSourceValue()
             source.minzoom = Double.testSourceValue()
             source.maxzoom = Double.testSourceValue()
             source.tileCacheBudget = TileCacheBudgetSize.testSourceValue()

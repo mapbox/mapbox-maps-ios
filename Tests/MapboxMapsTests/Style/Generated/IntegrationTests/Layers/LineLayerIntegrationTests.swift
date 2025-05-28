@@ -57,6 +57,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.lineOpacity = Value<Double>.testConstantValue()
             layer.lineOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.linePattern = Value<ResolvedImage>.testConstantValue()
+            layer.linePatternCrossFade = Value<Double>.testConstantValue()
             layer.lineTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineTranslateAnchor = Value<LineTranslateAnchor>.testConstantValue()
             layer.lineTrimColor = Value<StyleColor>.testConstantValue()

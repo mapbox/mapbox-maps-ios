@@ -586,6 +586,32 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-pattern"] as! String, defaultValue)
     }
+    func testInitialLinePatternCrossFade() {
+        let initialValue = manager.linePatternCrossFade
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLinePatternCrossFade() {
+        let value = 0.5
+        manager.linePatternCrossFade = value
+        XCTAssertEqual(manager.linePatternCrossFade, value)
+        XCTAssertEqual(manager.impl.layerProperties["line-pattern-cross-fade"] as! Double, value)
+    }
+
+
+    func testSetToNilLinePatternCrossFade() {
+        let newLinePatternCrossFadeProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-pattern-cross-fade").value as! Double
+        manager.linePatternCrossFade = newLinePatternCrossFadeProperty
+        XCTAssertNotNil(manager.impl.layerProperties["line-pattern-cross-fade"])
+        harness.triggerDisplayLink()
+
+        manager.linePatternCrossFade = nil
+        XCTAssertNil(manager.linePatternCrossFade)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-pattern-cross-fade"] as! Double, defaultValue)
+    }
     func testInitialLineTranslate() {
         let initialValue = manager.lineTranslate
         XCTAssertNil(initialValue)

@@ -295,6 +295,13 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-pattern"] = newValue }
     }
 
+    /// Controls the transition progress between the image variants of line-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public var linePatternCrossFade: Double? {
+        get { impl.layerProperties["line-pattern-cross-fade"] as? Double }
+        set { impl.layerProperties["line-pattern-cross-fade"] = newValue }
+    }
+
     /// Transition property for `lineTranslate`
     public var lineTranslateTransition: StyleTransition? {
         get { StyleTransition(impl.layerProperties["line-translate-transition"] as? [String: TimeInterval]) }

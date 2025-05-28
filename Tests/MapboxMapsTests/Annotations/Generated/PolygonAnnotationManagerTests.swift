@@ -311,6 +311,32 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-pattern"] as! String, defaultValue)
     }
+    func testInitialFillPatternCrossFade() {
+        let initialValue = manager.fillPatternCrossFade
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillPatternCrossFade() {
+        let value = 0.5
+        manager.fillPatternCrossFade = value
+        XCTAssertEqual(manager.fillPatternCrossFade, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-pattern-cross-fade"] as! Double, value)
+    }
+
+
+    func testSetToNilFillPatternCrossFade() {
+        let newFillPatternCrossFadeProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-pattern-cross-fade").value as! Double
+        manager.fillPatternCrossFade = newFillPatternCrossFadeProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-pattern-cross-fade"])
+        harness.triggerDisplayLink()
+
+        manager.fillPatternCrossFade = nil
+        XCTAssertNil(manager.fillPatternCrossFade)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-pattern-cross-fade"] as! Double, defaultValue)
+    }
     func testInitialFillTranslate() {
         let initialValue = manager.fillTranslate
         XCTAssertNil(initialValue)

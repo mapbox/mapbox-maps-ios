@@ -41,6 +41,7 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.fillOutlineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillOutlineColorUseTheme = .testConstantValue()
             layer.fillPattern = Value<ResolvedImage>.testConstantValue()
+            layer.fillPatternCrossFade = Value<Double>.testConstantValue()
             layer.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillTranslateAnchor = Value<FillTranslateAnchor>.testConstantValue()
             layer.fillTunnelStructureColor = Value<StyleColor>.testConstantValue()

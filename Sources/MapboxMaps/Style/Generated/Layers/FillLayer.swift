@@ -110,6 +110,10 @@ public struct FillLayer: Layer, Equatable {
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var fillPattern: Value<ResolvedImage>?
 
+    /// Controls the transition progress between the image variants of fill-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public var fillPatternCrossFade: Value<Double>?
+
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     /// Default value: [0,0]. The unit of fillTranslate is in pixels.
     public var fillTranslate: Value<[Double]>?
@@ -178,6 +182,7 @@ public struct FillLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(fillOutlineColorTransition, forKey: .fillOutlineColorTransition)
         try paintContainer.encodeIfPresent(fillOutlineColorUseTheme, forKey: .fillOutlineColorUseTheme)
         try paintContainer.encodeIfPresent(fillPattern, forKey: .fillPattern)
+        try paintContainer.encodeIfPresent(fillPatternCrossFade, forKey: .fillPatternCrossFade)
         try paintContainer.encodeIfPresent(fillTranslate, forKey: .fillTranslate)
         try paintContainer.encodeIfPresent(fillTranslateTransition, forKey: .fillTranslateTransition)
         try paintContainer.encodeIfPresent(fillTranslateAnchor, forKey: .fillTranslateAnchor)
@@ -221,6 +226,7 @@ public struct FillLayer: Layer, Equatable {
             fillOutlineColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillOutlineColorTransition)
             fillOutlineColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .fillOutlineColorUseTheme)
             fillPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .fillPattern)
+            fillPatternCrossFade = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillPatternCrossFade)
             fillTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .fillTranslate)
             fillTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillTranslateTransition)
             fillTranslateAnchor = try paintContainer.decodeIfPresent(Value<FillTranslateAnchor>.self, forKey: .fillTranslateAnchor)
@@ -277,6 +283,7 @@ public struct FillLayer: Layer, Equatable {
         case fillOutlineColorTransition = "fill-outline-color-transition"
         case fillOutlineColorUseTheme = "fill-outline-color-use-theme"
         case fillPattern = "fill-pattern"
+        case fillPatternCrossFade = "fill-pattern-cross-fade"
         case fillTranslate = "fill-translate"
         case fillTranslateTransition = "fill-translate-transition"
         case fillTranslateAnchor = "fill-translate-anchor"
@@ -543,6 +550,18 @@ extension FillLayer {
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public func fillPattern(_ expression: Exp) -> Self {
         with(self, setter(\.fillPattern, .expression(expression)))
+    }
+
+    /// Controls the transition progress between the image variants of fill-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public func fillPatternCrossFade(_ constant: Double) -> Self {
+        with(self, setter(\.fillPatternCrossFade, .constant(constant)))
+    }
+
+    /// Controls the transition progress between the image variants of fill-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public func fillPatternCrossFade(_ expression: Exp) -> Self {
+        with(self, setter(\.fillPatternCrossFade, .expression(expression)))
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.

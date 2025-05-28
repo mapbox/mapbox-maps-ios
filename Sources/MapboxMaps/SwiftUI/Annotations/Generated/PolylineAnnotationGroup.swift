@@ -107,6 +107,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
         assign(manager, \.lineOpacity, value: lineOpacity)
         assign(manager, \.lineOpacityTransition, value: lineOpacityTransition)
         assign(manager, \.linePattern, value: linePattern)
+        assign(manager, \.linePatternCrossFade, value: linePatternCrossFade)
         assign(manager, \.lineTranslate, value: lineTranslate)
         assign(manager, \.lineTranslateTransition, value: lineTranslateTransition)
         assign(manager, \.lineTranslateAnchor, value: lineTranslateAnchor)
@@ -373,6 +374,13 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public func linePattern(_ newValue: String) -> Self {
         with(self, setter(\.linePattern, newValue))
+    }
+
+    private var linePatternCrossFade: Double?
+    /// Controls the transition progress between the image variants of line-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public func linePatternCrossFade(_ newValue: Double) -> Self {
+        with(self, setter(\.linePatternCrossFade, newValue))
     }
 
     private var lineTranslateTransition: StyleTransition?

@@ -89,6 +89,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
         assign(manager, \.fillOutlineColorUseTheme, value: fillOutlineColorUseTheme)
         assign(manager, \.fillOutlineColorTransition, value: fillOutlineColorTransition)
         assign(manager, \.fillPattern, value: fillPattern)
+        assign(manager, \.fillPatternCrossFade, value: fillPatternCrossFade)
         assign(manager, \.fillTranslate, value: fillTranslate)
         assign(manager, \.fillTranslateTransition, value: fillTranslateTransition)
         assign(manager, \.fillTranslateAnchor, value: fillTranslateAnchor)
@@ -253,6 +254,13 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public func fillPattern(_ newValue: String) -> Self {
         with(self, setter(\.fillPattern, newValue))
+    }
+
+    private var fillPatternCrossFade: Double?
+    /// Controls the transition progress between the image variants of fill-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public func fillPatternCrossFade(_ newValue: Double) -> Self {
+        with(self, setter(\.fillPatternCrossFade, newValue))
     }
 
     private var fillTranslateTransition: StyleTransition?

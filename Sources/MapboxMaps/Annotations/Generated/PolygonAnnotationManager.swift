@@ -188,6 +188,13 @@ public class PolygonAnnotationManager: AnnotationManager, AnnotationManagerInter
         set { impl.layerProperties["fill-pattern"] = newValue }
     }
 
+    /// Controls the transition progress between the image variants of fill-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public var fillPatternCrossFade: Double? {
+        get { impl.layerProperties["fill-pattern-cross-fade"] as? Double }
+        set { impl.layerProperties["fill-pattern-cross-fade"] = newValue }
+    }
+
     /// Transition property for `fillTranslate`
     public var fillTranslateTransition: StyleTransition? {
         get { StyleTransition(impl.layerProperties["fill-translate-transition"] as? [String: TimeInterval]) }

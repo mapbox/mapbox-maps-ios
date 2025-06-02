@@ -16,6 +16,8 @@ struct RasterizerData
     float4 color;
 };
 
+// === Simple shaders ===
+
 vertex RasterizerData vertexShader(uint vertexID [[vertex_id]],
                                      constant VertexData *vertices [[buffer(VertexInputIndexVertices)]],
                                      constant float4x4 &transformation [[buffer(VertexInputIndexTransformation)]])
@@ -26,7 +28,7 @@ vertex RasterizerData vertexShader(uint vertexID [[vertex_id]],
     VertexData currentVertex = vertices[vertexID];
 
     // transform vertex position according to the transformation matrix
-    out.position = transformation * float4(currentVertex.position, 0, 1);
+    out.position = transformation * float4(currentVertex.position, 1.0);
 
     // pass the input color to the rasterizer
     out.color = currentVertex.color;
@@ -36,6 +38,36 @@ vertex RasterizerData vertexShader(uint vertexID [[vertex_id]],
 
 fragment float4 fragmentShader(RasterizerData in [[stage_in]])
 {
-    // Return the interpolated color.
+    return in.color;
+}
+
+// === Globe blending shaders ===
+struct GlobeVertexOut {
+    float4 position [[position]];
+    float4 color;
+    float  point_size [[point_size]];
+};
+
+vertex GlobeVertexOut globeVertexShader(
+                                        uint vertexID [[vertex_id]],
+                                        constant GlobeVertexData *vertices [[buffer(0)]],
+                                        constant GlobeUniforms &uniforms   [[buffer(1)]]
+                                        )
+{
+    GlobeVertexOut out;
+
+    float4 pos_merc = uniforms.u_matrix_merc * float4(vertices[vertexID].pos_merc, 1.0);
+    float4 pos_ecef = uniforms.u_matrix_ecef * float4(vertices[vertexID].pos_ecef, 1.0);
+
+    float t = clamp(uniforms.u_transition, 0.0, 1.0);
+    out.position = mix(pos_merc, pos_ecef, t);
+    out.color = float4(vertices[vertexID].color, 1.0);
+    out.point_size = uniforms.u_point_size; // Set point size from uniform
+
+    return out;
+}
+
+fragment float4 globeFragmentShader(RasterizerData in [[stage_in]])
+{
     return in.color;
 }

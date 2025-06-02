@@ -71,6 +71,32 @@ public final class Projection {
     public static func unproject(_ mercatorCoordinate: MercatorCoordinate, zoomScale: CGFloat) -> CLLocationCoordinate2D {
         return CoreProjection.unproject(for: mercatorCoordinate, zoomScale: Double(zoomScale))
     }
+
+    /// Calculates the scale factor for a given latitude.
+    ///
+    /// - Parameter latitude: The latitude in degrees for which to compute the scale.
+    /// - Returns: The scale factor (as a 64-bit floating point number) at the specified latitude.
+    public static func getLatitudeScale(_ latitude: CLLocationDegrees) -> Double {
+        return CoreProjection.getLatitudeScale(forLatitude: latitude)
+    }
+
+    /// Converts a geographic coordinate to its corresponding
+    /// Mercator projection coordinates (X, Y).
+    ///
+    /// - Parameter coordinate: The geographic coordinate to convert.
+    /// - Returns: A `Vec2` representing the X and Y coordinates in the Mercator projection.
+    public static func latLngToMercatorXY(coordinate: CLLocationCoordinate2D) -> MercatorCoordinate {
+        let vec = CoreProjection.latLngToMercatorXY(for: coordinate)
+        return MercatorCoordinate(x: vec.x, y: vec.y)
+    }
+
+    /// Calculates the map pixel width at a given scale.
+    ///
+    /// - Parameter scale: The current zoom applied on the map.
+    /// - Returns: The map pixel width.
+    public static func worldSize(scale: Double) -> Double {
+        return CoreProjection.worldSize(forScale: scale)
+    }
 }
 
 internal extension Projection {

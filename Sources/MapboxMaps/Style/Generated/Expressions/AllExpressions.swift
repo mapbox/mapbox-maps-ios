@@ -304,6 +304,9 @@ public extension Exp {
         /// - `LineString`: Returns `false` if any part of a line falls outside the boundary, the line intersects the boundary, or a line's endpoint is on the boundary.
         public static let within = Operator(rawValue: "within")
 
+        /// Returns the current worldview being used.
+        @_spi(Experimental) public static let worldview = Operator(rawValue: "worldview")
+
         /// Returns the current zoom level. Note that in style layout and paint properties, ["zoom"] may only appear as the input to a top-level "step" or "interpolate" expression.
         public static let zoom = Operator(rawValue: "zoom")
 

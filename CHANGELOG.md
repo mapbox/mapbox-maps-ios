@@ -4,6 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.13.0-rc.1
+
+* Introduce experimental `worldview` expression.
+
 ## 11.13.0-beta.1 - 19 May, 2025
 
 ## Breaking changes ⚠️

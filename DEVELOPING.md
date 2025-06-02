@@ -53,7 +53,8 @@ git clone git@github.com:mapbox/mapbox-maps-ios.git && cd mapbox-maps-ios
 
 ### Building the Maps SDK
 
-Open `Apps/Apps.xcworkspace` and build the `MapboxMaps` target.
+* Run `xcodegen` in the root of the repo to generate the Xcode project.
+* Open the resulting `MapboxMaps.xcodeproj` in Xcode and and build the `MapboxMaps` target.
 
 ### Running the Debug App
 

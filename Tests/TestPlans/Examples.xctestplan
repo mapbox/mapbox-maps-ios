@@ -28,14 +28,14 @@
       ],
       "target" : {
         "containerPath" : "container:Examples.xcodeproj",
-        "identifier" : "077C4F0A252F7E89007636F1",
+        "identifier" : "F3570A57FF15EEC3B4529EF0",
         "name" : "ExamplesUITests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:Examples.xcodeproj",
-        "identifier" : "077C4EFF252F7E89007636F1",
+        "identifier" : "542BE47134765F0824559C2F",
         "name" : "ExamplesTests"
       }
     },

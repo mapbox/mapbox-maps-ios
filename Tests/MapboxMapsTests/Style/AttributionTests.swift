@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Internal) @testable import MapboxMaps
 import Foundation
 import UIKit
 

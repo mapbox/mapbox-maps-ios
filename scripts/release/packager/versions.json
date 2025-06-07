@@ -1,5 +1,5 @@
 {
-    "MapboxCoreMaps": "11.14.0-SNAPSHOT-06-06--04-30.git-ae7b59c",
-    "MapboxCommon": "24.14.0-SNAPSHOT-06-06--04-30.git-ae7b59c",
+    "MapboxCoreMaps": "11.14.0-SNAPSHOT-06-07--04-29.git-2d6a61e",
+    "MapboxCommon": "24.14.0-SNAPSHOT-06-07--04-29.git-2d6a61e",
     "Turf": "4.0.0"
 }

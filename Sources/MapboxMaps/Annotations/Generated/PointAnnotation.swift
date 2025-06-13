@@ -792,9 +792,10 @@ extension PointAnnotation {
         with(self, setter(\.image, image))
     }
 
-    /// Sets named image as icon
-    public func image(named name: String) -> Self {
-        with(self, setter(\.image, Image(image: UIImage(named: name)!, name: name)))
+    /// Sets named image as icon.
+    public func image(named name: String, sdf: Bool = false) -> Self {
+        let uiImage = UIImage(named: name)!
+        return image(Image(image: uiImage, name: name, sdf: sdf))
     }
 }
 

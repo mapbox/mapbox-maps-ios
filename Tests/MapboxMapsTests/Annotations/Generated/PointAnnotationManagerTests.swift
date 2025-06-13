@@ -41,6 +41,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-allow-overlap"] as! Bool, value)
     }
 
+
     func testSetToNilIconAllowOverlap() {
         let newIconAllowOverlapProperty = true
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-allow-overlap").value as! Bool
@@ -65,6 +66,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconAnchor, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-anchor"] as! String, value.rawValue)
     }
+
 
     func testSetToNilIconAnchor() {
         let newIconAnchorProperty = IconAnchor.testConstantValue()
@@ -91,6 +93,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-ignore-placement"] as! Bool, value)
     }
 
+
     func testSetToNilIconIgnorePlacement() {
         let newIconIgnorePlacementProperty = true
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-ignore-placement").value as! Bool
@@ -115,6 +118,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconImage, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-image"] as! String, value)
     }
+
 
     func testSetToNilIconImage() {
         let newIconImageProperty = UUID().uuidString
@@ -141,6 +145,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-keep-upright"] as! Bool, value)
     }
 
+
     func testSetToNilIconKeepUpright() {
         let newIconKeepUprightProperty = true
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-keep-upright").value as! Bool
@@ -165,6 +170,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconOffset, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-offset"] as! [Double], value)
     }
+
 
     func testSetToNilIconOffset() {
         let newIconOffsetProperty = [0.0, 0.0]
@@ -191,6 +197,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-optional"] as! Bool, value)
     }
 
+
     func testSetToNilIconOptional() {
         let newIconOptionalProperty = true
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-optional").value as! Bool
@@ -215,6 +222,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconPadding, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-padding"] as! Double, value)
     }
+
 
     func testSetToNilIconPadding() {
         let newIconPaddingProperty = 50000.0
@@ -241,6 +249,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-pitch-alignment"] as! String, value.rawValue)
     }
 
+
     func testSetToNilIconPitchAlignment() {
         let newIconPitchAlignmentProperty = IconPitchAlignment.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String
@@ -265,6 +274,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconRotate, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-rotate"] as! Double, value)
     }
+
 
     func testSetToNilIconRotate() {
         let newIconRotateProperty = 0.0
@@ -291,6 +301,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-rotation-alignment"] as! String, value.rawValue)
     }
 
+
     func testSetToNilIconRotationAlignment() {
         let newIconRotationAlignmentProperty = IconRotationAlignment.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String
@@ -315,6 +326,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconSize, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-size"] as! Double, value)
     }
+
 
     func testSetToNilIconSize() {
         let newIconSizeProperty = 50000.0
@@ -341,6 +353,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-size-scale-range"] as! [Double], value)
     }
 
+
     func testSetToNilIconSizeScaleRange() {
         let newIconSizeScaleRangeProperty = [0.0, 0.0]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-size-scale-range").value as! [Double]
@@ -365,6 +378,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconTextFit, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-text-fit"] as! String, value.rawValue)
     }
+
 
     func testSetToNilIconTextFit() {
         let newIconTextFitProperty = IconTextFit.testConstantValue()
@@ -391,6 +405,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-text-fit-padding"] as! [Double], value)
     }
 
+
     func testSetToNilIconTextFitPadding() {
         let newIconTextFitPaddingProperty = [0.0, 0.0, 0.0, 0.0]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit-padding").value as! [Double]
@@ -415,6 +430,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.symbolAvoidEdges, value)
         XCTAssertEqual(manager.impl.layerProperties["symbol-avoid-edges"] as! Bool, value)
     }
+
 
     func testSetToNilSymbolAvoidEdges() {
         let newSymbolAvoidEdgesProperty = true
@@ -441,6 +457,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["symbol-elevation-reference"] as! String, value.rawValue)
     }
 
+
     func testSetToNilSymbolElevationReference() {
         let newSymbolElevationReferenceProperty = SymbolElevationReference.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-elevation-reference").value as! String
@@ -465,6 +482,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.symbolPlacement, value)
         XCTAssertEqual(manager.impl.layerProperties["symbol-placement"] as! String, value.rawValue)
     }
+
 
     func testSetToNilSymbolPlacement() {
         let newSymbolPlacementProperty = SymbolPlacement.testConstantValue()
@@ -491,6 +509,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["symbol-sort-key"] as! Double, value)
     }
 
+
     func testSetToNilSymbolSortKey() {
         let newSymbolSortKeyProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-sort-key").value as! Double
@@ -515,6 +534,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.symbolSpacing, value)
         XCTAssertEqual(manager.impl.layerProperties["symbol-spacing"] as! Double, value)
     }
+
 
     func testSetToNilSymbolSpacing() {
         let newSymbolSpacingProperty = 50000.5
@@ -541,6 +561,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["symbol-z-elevate"] as! Bool, value)
     }
 
+
     func testSetToNilSymbolZElevate() {
         let newSymbolZElevateProperty = true
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-elevate").value as! Bool
@@ -565,6 +586,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.symbolZOrder, value)
         XCTAssertEqual(manager.impl.layerProperties["symbol-z-order"] as! String, value.rawValue)
     }
+
 
     func testSetToNilSymbolZOrder() {
         let newSymbolZOrderProperty = SymbolZOrder.testConstantValue()
@@ -591,6 +613,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-allow-overlap"] as! Bool, value)
     }
 
+
     func testSetToNilTextAllowOverlap() {
         let newTextAllowOverlapProperty = true
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-allow-overlap").value as! Bool
@@ -615,6 +638,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textAnchor, value)
         XCTAssertEqual(manager.impl.layerProperties["text-anchor"] as! String, value.rawValue)
     }
+
 
     func testSetToNilTextAnchor() {
         let newTextAnchorProperty = TextAnchor.testConstantValue()
@@ -641,6 +665,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-field"] as! String, value)
     }
 
+
     func testSetToNilTextField() {
         let newTextFieldProperty = UUID().uuidString
         let defaultValue = Value<String>.expression(Exp(.format) {
@@ -665,14 +690,15 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextFont() {
-        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { UUID().uuidString })
+        let value = Array.testFixture(withLength: 10, generator: { UUID().uuidString })
         manager.textFont = value
         XCTAssertEqual(manager.textFont, value)
         XCTAssertEqual((manager.impl.layerProperties["text-font"] as! [Any])[1] as! [String], value)
     }
 
+
     func testSetToNilTextFont() {
-        let newTextFontProperty = Array.testFixture(withLength: .random(in: 0...10), generator: { UUID().uuidString })
+        let newTextFontProperty = Array.testFixture(withLength: 10, generator: { UUID().uuidString })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-font").value as! [String]
         manager.textFont = newTextFontProperty
         XCTAssertNotNil(manager.impl.layerProperties["text-font"])
@@ -695,6 +721,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textIgnorePlacement, value)
         XCTAssertEqual(manager.impl.layerProperties["text-ignore-placement"] as! Bool, value)
     }
+
 
     func testSetToNilTextIgnorePlacement() {
         let newTextIgnorePlacementProperty = true
@@ -721,6 +748,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-justify"] as! String, value.rawValue)
     }
 
+
     func testSetToNilTextJustify() {
         let newTextJustifyProperty = TextJustify.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-justify").value as! String
@@ -745,6 +773,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textKeepUpright, value)
         XCTAssertEqual(manager.impl.layerProperties["text-keep-upright"] as! Bool, value)
     }
+
 
     func testSetToNilTextKeepUpright() {
         let newTextKeepUprightProperty = true
@@ -771,6 +800,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-letter-spacing"] as! Double, value)
     }
 
+
     func testSetToNilTextLetterSpacing() {
         let newTextLetterSpacingProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-letter-spacing").value as! Double
@@ -795,6 +825,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textLineHeight, value)
         XCTAssertEqual(manager.impl.layerProperties["text-line-height"] as! Double, value)
     }
+
 
     func testSetToNilTextLineHeight() {
         let newTextLineHeightProperty = 0.0
@@ -821,6 +852,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-max-angle"] as! Double, value)
     }
 
+
     func testSetToNilTextMaxAngle() {
         let newTextMaxAngleProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-max-angle").value as! Double
@@ -845,6 +877,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textMaxWidth, value)
         XCTAssertEqual(manager.impl.layerProperties["text-max-width"] as! Double, value)
     }
+
 
     func testSetToNilTextMaxWidth() {
         let newTextMaxWidthProperty = 50000.0
@@ -871,6 +904,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-offset"] as! [Double], value)
     }
 
+
     func testSetToNilTextOffset() {
         let newTextOffsetProperty = [0.0, 0.0]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-offset").value as! [Double]
@@ -895,6 +929,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textOptional, value)
         XCTAssertEqual(manager.impl.layerProperties["text-optional"] as! Bool, value)
     }
+
 
     func testSetToNilTextOptional() {
         let newTextOptionalProperty = true
@@ -921,6 +956,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-padding"] as! Double, value)
     }
 
+
     func testSetToNilTextPadding() {
         let newTextPaddingProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-padding").value as! Double
@@ -945,6 +981,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textPitchAlignment, value)
         XCTAssertEqual(manager.impl.layerProperties["text-pitch-alignment"] as! String, value.rawValue)
     }
+
 
     func testSetToNilTextPitchAlignment() {
         let newTextPitchAlignmentProperty = TextPitchAlignment.testConstantValue()
@@ -971,6 +1008,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-radial-offset"] as! Double, value)
     }
 
+
     func testSetToNilTextRadialOffset() {
         let newTextRadialOffsetProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-radial-offset").value as! Double
@@ -995,6 +1033,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textRotate, value)
         XCTAssertEqual(manager.impl.layerProperties["text-rotate"] as! Double, value)
     }
+
 
     func testSetToNilTextRotate() {
         let newTextRotateProperty = 0.0
@@ -1021,6 +1060,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-rotation-alignment"] as! String, value.rawValue)
     }
 
+
     func testSetToNilTextRotationAlignment() {
         let newTextRotationAlignmentProperty = TextRotationAlignment.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String
@@ -1045,6 +1085,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textSize, value)
         XCTAssertEqual(manager.impl.layerProperties["text-size"] as! Double, value)
     }
+
 
     func testSetToNilTextSize() {
         let newTextSizeProperty = 50000.0
@@ -1071,6 +1112,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-size-scale-range"] as! [Double], value)
     }
 
+
     func testSetToNilTextSizeScaleRange() {
         let newTextSizeScaleRangeProperty = [0.0, 0.0]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-size-scale-range").value as! [Double]
@@ -1096,6 +1138,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-transform"] as! String, value.rawValue)
     }
 
+
     func testSetToNilTextTransform() {
         let newTextTransformProperty = TextTransform.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-transform").value as! String
@@ -1115,15 +1158,16 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextVariableAnchor() {
-        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { TextAnchor.testConstantValue() })
+        let value = Array.testFixture(withLength: 10, generator: { TextAnchor.testConstantValue() })
         manager.textVariableAnchor = value
         XCTAssertEqual(manager.textVariableAnchor, value)
         let valueAsString = value.map { $0.rawValue }
         XCTAssertEqual(manager.impl.layerProperties["text-variable-anchor"] as! [String], valueAsString)
     }
 
+
     func testSetToNilTextVariableAnchor() {
-        let newTextVariableAnchorProperty = Array.testFixture(withLength: .random(in: 0...10), generator: { TextAnchor.testConstantValue() })
+        let newTextVariableAnchorProperty = Array.testFixture(withLength: 10, generator: { TextAnchor.testConstantValue() })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-variable-anchor").value as! [TextAnchor]
         manager.textVariableAnchor = newTextVariableAnchorProperty
         XCTAssertNotNil(manager.impl.layerProperties["text-variable-anchor"])
@@ -1141,15 +1185,16 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextWritingMode() {
-        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { TextWritingMode.testConstantValue() })
+        let value = Array.testFixture(withLength: 10, generator: { TextWritingMode.testConstantValue() })
         manager.textWritingMode = value
         XCTAssertEqual(manager.textWritingMode, value)
         let valueAsString = value.map { $0.rawValue }
         XCTAssertEqual(manager.impl.layerProperties["text-writing-mode"] as! [String], valueAsString)
     }
 
+
     func testSetToNilTextWritingMode() {
-        let newTextWritingModeProperty = Array.testFixture(withLength: .random(in: 0...10), generator: { TextWritingMode.testConstantValue() })
+        let newTextWritingModeProperty = Array.testFixture(withLength: 10, generator: { TextWritingMode.testConstantValue() })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]
         manager.textWritingMode = newTextWritingModeProperty
         XCTAssertNotNil(manager.impl.layerProperties["text-writing-mode"])
@@ -1171,6 +1216,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager.iconColor = value
         XCTAssertEqual(manager.iconColor, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-color"] as? String, value?.rawValue)
+    }
+
+    func testSetIconColorUseTheme() {
+        manager.iconColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["icon-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilIconColor() {
@@ -1199,6 +1249,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-color-saturation"] as! Double, value)
     }
 
+
     func testSetToNilIconColorSaturation() {
         let newIconColorSaturationProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-saturation").value as! Double
@@ -1223,6 +1274,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconEmissiveStrength, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-emissive-strength"] as! Double, value)
     }
+
 
     func testSetToNilIconEmissiveStrength() {
         let newIconEmissiveStrengthProperty = 50000.0
@@ -1249,6 +1301,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-halo-blur"] as! Double, value)
     }
 
+
     func testSetToNilIconHaloBlur() {
         let newIconHaloBlurProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-blur").value as! Double
@@ -1272,6 +1325,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager.iconHaloColor = value
         XCTAssertEqual(manager.iconHaloColor, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-halo-color"] as? String, value?.rawValue)
+    }
+
+    func testSetIconHaloColorUseTheme() {
+        manager.iconHaloColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["icon-halo-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilIconHaloColor() {
@@ -1300,6 +1358,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-halo-width"] as! Double, value)
     }
 
+
     func testSetToNilIconHaloWidth() {
         let newIconHaloWidthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-width").value as! Double
@@ -1324,6 +1383,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconImageCrossFade, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-image-cross-fade"] as! Double, value)
     }
+
 
     func testSetToNilIconImageCrossFade() {
         let newIconImageCrossFadeProperty = 0.5
@@ -1350,6 +1410,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-occlusion-opacity"] as! Double, value)
     }
 
+
     func testSetToNilIconOcclusionOpacity() {
         let newIconOcclusionOpacityProperty = 0.5
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-occlusion-opacity").value as! Double
@@ -1374,6 +1435,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconOpacity, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-opacity"] as! Double, value)
     }
+
 
     func testSetToNilIconOpacity() {
         let newIconOpacityProperty = 0.5
@@ -1400,6 +1462,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["icon-translate"] as! [Double], value)
     }
 
+
     func testSetToNilIconTranslate() {
         let newIconTranslateProperty = [0.0, 0.0]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate").value as! [Double]
@@ -1424,6 +1487,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconTranslateAnchor, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-translate-anchor"] as! String, value.rawValue)
     }
+
 
     func testSetToNilIconTranslateAnchor() {
         let newIconTranslateAnchorProperty = IconTranslateAnchor.testConstantValue()
@@ -1450,6 +1514,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["symbol-z-offset"] as! Double, value)
     }
 
+
     func testSetToNilSymbolZOffset() {
         let newSymbolZOffsetProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-offset").value as! Double
@@ -1473,6 +1538,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager.textColor = value
         XCTAssertEqual(manager.textColor, value)
         XCTAssertEqual(manager.impl.layerProperties["text-color"] as? String, value?.rawValue)
+    }
+
+    func testSetTextColorUseTheme() {
+        manager.textColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["text-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilTextColor() {
@@ -1501,6 +1571,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-emissive-strength"] as! Double, value)
     }
 
+
     func testSetToNilTextEmissiveStrength() {
         let newTextEmissiveStrengthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-emissive-strength").value as! Double
@@ -1526,6 +1597,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-halo-blur"] as! Double, value)
     }
 
+
     func testSetToNilTextHaloBlur() {
         let newTextHaloBlurProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-halo-blur").value as! Double
@@ -1549,6 +1621,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager.textHaloColor = value
         XCTAssertEqual(manager.textHaloColor, value)
         XCTAssertEqual(manager.impl.layerProperties["text-halo-color"] as? String, value?.rawValue)
+    }
+
+    func testSetTextHaloColorUseTheme() {
+        manager.textHaloColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["text-halo-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilTextHaloColor() {
@@ -1577,6 +1654,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-halo-width"] as! Double, value)
     }
 
+
     func testSetToNilTextHaloWidth() {
         let newTextHaloWidthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-halo-width").value as! Double
@@ -1601,6 +1679,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textOcclusionOpacity, value)
         XCTAssertEqual(manager.impl.layerProperties["text-occlusion-opacity"] as! Double, value)
     }
+
 
     func testSetToNilTextOcclusionOpacity() {
         let newTextOcclusionOpacityProperty = 0.5
@@ -1627,6 +1706,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-opacity"] as! Double, value)
     }
 
+
     func testSetToNilTextOpacity() {
         let newTextOpacityProperty = 0.5
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-opacity").value as! Double
@@ -1651,6 +1731,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textTranslate, value)
         XCTAssertEqual(manager.impl.layerProperties["text-translate"] as! [Double], value)
     }
+
 
     func testSetToNilTextTranslate() {
         let newTextTranslateProperty = [0.0, 0.0]
@@ -1677,6 +1758,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.impl.layerProperties["text-translate-anchor"] as! String, value.rawValue)
     }
 
+
     func testSetToNilTextTranslateAnchor() {
         let newTextTranslateAnchorProperty = TextTranslateAnchor.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String
@@ -1701,6 +1783,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.slot, value)
         XCTAssertEqual(manager.impl.layerProperties["slot"] as! String, value)
     }
+
 
     func testSetToNilSlot() {
         let newSlotProperty = UUID().uuidString

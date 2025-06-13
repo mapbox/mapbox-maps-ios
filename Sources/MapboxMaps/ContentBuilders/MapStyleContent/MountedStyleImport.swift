@@ -6,7 +6,8 @@ extension StyleImport: MapStyleContent, PrimitiveMapContent {
         node.mount(MountedStyleImport(
             id: id ?? node.id.stringId,
             styleData: style.data,
-            configuration: style.configuration
+            configuration: style.configuration,
+            colorTheme: colorTheme
         ))
     }
 }
@@ -15,6 +16,7 @@ struct MountedStyleImport: MapContentMountedComponent {
     let id: String
     let styleData: MapStyle.Data
     let configuration: JSONObject?
+    let colorTheme: ColorTheme?
 
     func mount(with context: MapContentNodeContext) throws {
         let importPosition = context.resolveImportPosition()
@@ -37,6 +39,10 @@ struct MountedStyleImport: MapContentMountedComponent {
                     config: configuration?.turfRawValue as? [String: Any],
                     importPosition: importPosition.corePosition)
             }
+        }
+
+        if let colorTheme, let coreColorTheme = colorTheme.core {
+            try handleExpected { context.style.styleManager.setImportColorThemeForImportId(id, colorTheme: coreColorTheme) }
         }
     }
 
@@ -81,6 +87,12 @@ struct MountedStyleImport: MapContentMountedComponent {
         } else if configuration != old.configuration, let config = configuration?.turfRawValue as? [String: Any] {
             try handleExpected {
                 context.style.styleManager.setStyleImportConfigPropertiesForImportId(id, configs: config)
+            }
+        }
+
+        if colorTheme != old.colorTheme {
+            try handleExpected {
+                context.style.styleManager.setImportColorThemeForImportId(id, colorTheme: colorTheme?.core)
             }
         }
 

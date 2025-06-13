@@ -26,9 +26,10 @@ final class LongTapAnimationExample: UIViewController, ExampleProtocol {
             self?.finish()
         }.store(in: &cancelables)
 
-        mapView.gestures.onMapLongPress.observe { [weak self] context in
+        mapView.mapboxMap.addInteraction(LongPressInteraction { [weak self] context in
             self?.handleLongPress(at: context.point)
-        }.store(in: &cancelables)
+            return false
+        })
 
         pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
     }

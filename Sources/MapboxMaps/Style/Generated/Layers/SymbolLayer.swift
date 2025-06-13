@@ -223,6 +223,7 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `iconColor`.
     public var iconColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -255,6 +256,7 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `iconHaloColor`.
     public var iconHaloColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -267,7 +269,7 @@ public struct SymbolLayer: Layer, Equatable {
     /// Transition options for `iconHaloWidth`.
     public var iconHaloWidthTransition: StyleTransition?
 
-    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together. . Both images should be the same size and have the same type (either raster or vector).
     /// Default value: 0. Value range: [0, 1]
     public var iconImageCrossFade: Value<Double>?
 
@@ -314,6 +316,7 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `textColor`.
     public var textColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -339,6 +342,7 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Transition options for `textHaloColor`.
     public var textHaloColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -1434,7 +1438,7 @@ extension SymbolLayer {
         with(self, setter(\.iconHaloWidth, .expression(expression)))
     }
 
-    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together. . Both images should be the same size and have the same type (either raster or vector).
     /// Default value: 0. Value range: [0, 1]
     public func iconImageCrossFade(_ constant: Double) -> Self {
         with(self, setter(\.iconImageCrossFade, .constant(constant)))
@@ -1445,7 +1449,7 @@ extension SymbolLayer {
         with(self, setter(\.iconImageCrossFadeTransition, transition))
     }
 
-    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together. . Both images should be the same size and have the same type (either raster or vector).
     /// Default value: 0. Value range: [0, 1]
     public func iconImageCrossFade(_ expression: Exp) -> Self {
         with(self, setter(\.iconImageCrossFade, .expression(expression)))

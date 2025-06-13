@@ -13,11 +13,6 @@ final class TestableExampleTests: XCTestCase {
 
         for example in Examples.all.flatMap(\.examples) {
 
-            // TODO: MAPSIOS-1602 Geofencing example causes examples tests to fail
-            if example.type is GeofencingExample.Type {
-                continue
-            }
-
             // Add a method for this test, but using the same implementation
             let testSelector = Selector("test\(example.type)")
             let myBlock: @convention(block) (TestableExampleTests) -> Void = { testCase in

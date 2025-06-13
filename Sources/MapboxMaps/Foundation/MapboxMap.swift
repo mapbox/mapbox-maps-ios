@@ -1,6 +1,6 @@
 // swiftlint:disable file_length
 import UIKit
-import MapboxCoreMaps
+@_spi(Internal) @_spi(Marshalling) import MapboxCoreMaps
 @_implementationOnly import MapboxCommon_Private
 import Turf
 
@@ -78,6 +78,7 @@ protocol MapboxMapProtocol: AnyObject {
         stateKey: T.StateKey?,
         callback: ((Error?) -> Void)?
     ) -> Cancelable
+    var screenCullingShape: [CGPoint] { get set }
 }
 
 // swiftlint:disable type_body_length
@@ -195,6 +196,9 @@ public final class MapboxMap: StyleManager {
 
     /// Triggered when map is loaded for the first time, and camera is initialized with default style camera options.
     var isDefaultCameraInitialized: Signal<Bool> { _isDefaultCameraInitialized.signal.skipRepeats() }
+
+    @_spi(Internal)
+    public lazy var map: MapboxCoreMaps.Map = .Marshaller.toSwift(__map)
 
     deinit {
         __map.destroyRenderer()
@@ -341,6 +345,17 @@ public final class MapboxMap: StyleManager {
     @available(*, deprecated, message: "Use .setTileCacheBudget(size: TileCacheBudgetSize?) instead.")
     public func setTileCacheBudget(_ tileCacheBudget: TileCacheBudget?) {
         __map.__setTileCacheBudgetFor(tileCacheBudget)
+    }
+
+    /// A convex polygon that describes the shape of the screen in case it is non-rectangular.
+    /// Every coordinate is in 0 to 1 range, with (0, 0) being the map view top-left and (1, 1) the bottom-right.
+    /// The points have to be given in clockwise winding order. The polygon will be closed automatically, so for a rectangular shape, pass in 4 points.
+    /// Use this if the visible screen area is obscured enough that using a custom shape improves performance.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var screenCullingShape: [CGPoint] {
+        get { __map.getScreenCullingShape().map(\.point) }
+        set { __map.setScreenCullingShapeForShape(newValue.map(\.vec2)) }
     }
 
     /// Defines whether multiple copies of the world will be rendered side by side beyond -180 and 180 degrees longitude.
@@ -1091,8 +1106,6 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - featureset: A typed featureset to query with.
     ///   - filter: An additional filter for features.
     ///   - completion: Callback called when the query completes.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     @discardableResult
     public func queryRenderedFeatures<G: RenderedQueryGeometryConvertible, T: FeaturesetFeatureType>(
         with geometry: G,
@@ -1125,8 +1138,6 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - featureset: A typed featureset to query with.
     ///   - filter: An additional filter for features.
     ///   - completion: Callback called when the query completes.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     @discardableResult
     public func queryRenderedFeatures<T: FeaturesetFeatureType>(
         featureset: FeaturesetDescriptor<T>,
@@ -1427,8 +1438,6 @@ extension MapboxMap {
     ///   - callback: The `feature state operation callback` called when the operation completes or ends.
     ///
     /// - Returns: A `Cancelable` object  that could be used to cancel the pending operation.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func setFeatureState<T: FeaturesetFeatureType>(
         featureset: FeaturesetDescriptor<T>,
@@ -1459,8 +1468,6 @@ extension MapboxMap {
     ///   - callback: The `feature state operation callback` called when the operation completes or ends.
     ///
     /// - Returns: A `Cancelable` object  that could be used to cancel the pending operation.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func setFeatureState<T: FeaturesetFeatureType>(
         _ feature: T,
@@ -1501,8 +1508,6 @@ extension MapboxMap {
     ///   - callback: Feature's state map or an empty map if the feature could not be found.
     ///
     /// - Returns: A `Cancelable` object that could be used to cancel the pending query.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func getFeatureState<T: FeaturesetFeatureType>(
         featureset: FeaturesetDescriptor<T>,
@@ -1528,8 +1533,6 @@ extension MapboxMap {
     ///   - callback: Feature's state map or an empty map if the feature could not be found.
     ///
     /// - Returns: A `Cancelable` object that could be used to cancel the pending query.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func getFeatureState<F: FeaturesetFeatureType>(
         _ feature: F,
@@ -1573,8 +1576,6 @@ extension MapboxMap {
     ///   - stateKey: The key of the property to remove. If `nil`, all feature's state object properties are removed. Defaults to `nil`.
     ///   - callback: The `feature state operation callback` called when the operation completes or ends.
     /// - Returns: A `Cancelable` object that could be used to cancel the pending operation.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func removeFeatureState<T: FeaturesetFeatureType>(
         featureset: FeaturesetDescriptor<T>,
@@ -1599,8 +1600,6 @@ extension MapboxMap {
     ///   - stateKey: The key of the property to remove. If `nil`, all feature's state object properties are removed. Defaults to `nil`.
     ///   - callback: The `feature state operation callback` called when the operation completes or ends.
     /// - Returns: A `Cancelable` object that could be used to cancel the pending operation.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func removeFeatureState<F: FeaturesetFeatureType>(
         _ feature: F,
@@ -1648,8 +1647,6 @@ extension MapboxMap {
     ///   - callback: The `feature state operation callback` called when the operation completes or ends.
     ///
     /// - Returns: A `cancelable` object that could be used to cancel the pending operation.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     @discardableResult
     public func resetFeatureStates<T: FeaturesetFeatureType>(
         featureset: FeaturesetDescriptor<T>,
@@ -1764,10 +1761,9 @@ extension MapboxMap {
     /// - Parameters:
     ///     - interaction: An instance of interaction
     /// - Returns: A cancelable token that cancels (removes) the interaction.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     @discardableResult public func addInteraction(_ interaction: some Interaction) -> Cancelable {
-        addInteraction(interaction.impl)
+        guard let impl = interaction.impl  else { return AnyCancelable.empty }
+        return addInteraction(impl)
     }
 
     @discardableResult func addInteraction(_ interaction: InteractionImpl) -> Cancelable {
@@ -1784,7 +1780,6 @@ extension MapboxMap {
 
     /// For internal use only
     /// Triggers a gesture of the provided type at the specified screen coordinates
-    @_spi(Experimental)
     @_spi(Internal)
     public func dispatch(gesture: String, screenCoordinateX: Double, screenCoordinateY: Double) {
         var eventType = CorePlatformEventType.click
@@ -1795,7 +1790,7 @@ extension MapboxMap {
             eventType = .longClick
         case "drag":
             eventType = .drag
-        case "dragBeing":
+        case "dragBegin":
             eventType = .dragBegin
         case "dragEnd":
             eventType = .dragEnd

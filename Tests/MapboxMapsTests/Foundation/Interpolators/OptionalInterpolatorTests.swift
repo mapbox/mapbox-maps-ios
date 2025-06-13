@@ -22,7 +22,7 @@ final class OptionalInterpolatorTests: XCTestCase {
         let result = optionalInterpolator.interpolate(
             from: nil,
             to: nil,
-            fraction: .random(in: 0...1),
+            fraction: 0.1,
             interpolate: doubleInterpolator.interpolate(from:to:fraction:))
 
         XCTAssertNil(result)
@@ -32,8 +32,8 @@ final class OptionalInterpolatorTests: XCTestCase {
     func testFromNil() {
         let result = optionalInterpolator.interpolate(
             from: nil,
-            to: Double.random(in: 0..<10),
-            fraction: .random(in: 0...1),
+            to: 0.2,
+            fraction: 0.3,
             interpolate: doubleInterpolator.interpolate(from:to:fraction:))
 
         XCTAssertNil(result)
@@ -42,9 +42,9 @@ final class OptionalInterpolatorTests: XCTestCase {
 
     func testToNil() {
         let result = optionalInterpolator.interpolate(
-            from: Double.random(in: 0..<10),
+            from: 0.4,
             to: nil,
-            fraction: .random(in: 0...1),
+            fraction: 0.4,
             interpolate: doubleInterpolator.interpolate(from:to:fraction:))
 
         XCTAssertNil(result)
@@ -52,9 +52,9 @@ final class OptionalInterpolatorTests: XCTestCase {
     }
 
     func testBothNonNil() throws {
-        let from = Double.random(in: 0..<10)
-        let to = Double.random(in: 0..<10)
-        let fraction = Double.random(in: 0...1)
+        let from: Double = 0
+        let to: Double = 1
+        let fraction: Double = 0.3
 
         let result = optionalInterpolator.interpolate(
             from: from,

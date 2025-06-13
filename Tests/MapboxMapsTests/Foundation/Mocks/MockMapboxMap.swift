@@ -44,6 +44,9 @@ final class MockMapboxMap: MapboxMapProtocol {
 
     var anchor = CGPoint.zero
 
+    @Stubbed
+    var screenCullingShape: [CGPoint] = []
+
     let setCameraStub = Stub<MapboxMaps.CameraOptions, Void>()
     func setCamera(to cameraOptions: MapboxMaps.CameraOptions) {
         setCameraStub.call(with: cameraOptions)
@@ -118,7 +121,7 @@ final class MockMapboxMap: MapboxMapProtocol {
         return optionsForViewAnnotationWithIdStub.call(with: id)
     }
 
-    let pointIsAboveHorizonStub = Stub<CGPoint, Bool>(defaultReturnValue: .random())
+    let pointIsAboveHorizonStub = Stub<CGPoint, Bool>(defaultReturnValue: .testConstantValue())
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
         pointIsAboveHorizonStub.call(with: point)
     }
@@ -243,7 +246,7 @@ final class MockMapboxMap: MapboxMapProtocol {
     private var interactions = [(Int, InteractionImpl)]()
     private var id = 0
     func addInteraction(_ interaction: some Interaction) -> any Cancelable {
-        addInteraction(interaction.impl)
+        addInteraction(interaction.impl!)
     }
 
     func addInteraction(_ interaction: CoreInteraction) -> any Cancelable {

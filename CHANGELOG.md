@@ -4,7 +4,118 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## Features ✨ and improvements 🏁
+## 11.13.0-rc.1 - 03 June, 2025
+
+## 11.13.0-rc.1
+
+* Added new `FillLayer.fillPatternCrossFade`, `FillExtrusionLayer.fillExtrusionPatternCrossFade`, `LineLayer.fillExtrusionPatternCrossFade` properties.
+
+## 11.12.0 - 07 May, 2025
+
+## Breaking changes ⚠️
+* `PointAnnotation.iconImageCrossFade` has been deprecated and setting value to it will not have any impact. Use `PointAnnotationManager.iconImageCrossFadeTransition` instead.
+
+* The Interactions and Featuresets API is promoted from experimental. The new API allows you to add interaction handlers to layers, Standard Style featuresets (POI, Buildings and Place Labels), and the map itself in the consistent way. You can control the propagation of events, tappable area, and the order of event handling.
+* The experimental style `MapStyle.standardExperimental` is removed. Use `MapStyle.standard` instead.
+* Methods `GestureManager.onMapTap`, `GestureManager.onMapLongPress`, `GestureManager.onLayerTap`, `GestureManager.onLayerLongPress` and their SwiftUI counterparts are deprecated. Use `TapInteraction` and `LongPressInteraction` instead.
+* Add new `VectorSource.promoteId2` and `GeoJSONSource.promoteId2`. Deprecate `VectorSource.promoteId` and `GeoJSONSource.promoteId`. The newer version support the expression variant of promoteId, which can be used to dynamically nominate IDs to the features.
+
+```swift
+// Before (SwiftUI)
+Map()
+    .onMapTapGesture { context in
+        // Handle tap on map
+    }
+    .onLayerLongPressGesture("a-layer-id") { feature, context in
+        // Handle press on a layer
+        return true
+    }
+
+// After (SwiftUI)
+Map {
+    TapInteraction { feature in
+        // Handle tap on map
+        return true
+    }
+
+    LongPressInteraction(.layer("a-layer-id")) { feature, context in
+        // Handle press on a layer
+        return true
+    }
+
+    // Bonus: If you use Standard style, new API allows to handle tap on POI, Buildings and Place Labels
+    TapInteraction(.standardPoi) { poi, feature in
+        print("Tap on \(poi.name)")
+        return true
+    }
+}
+```
+
+```swift
+// Before (UIKit)
+mapView.gestures.onMapTap.observe { context in
+    // Handle Tap on Map
+}.store(in: &cancelables)
+
+mapView.gestures.onLayerLongPress("a-layer-id") { feature, context in
+    // Handle Long press
+    return true
+}
+
+// After (UIKit)
+mapView.mapboxMap.addInteraction(TapInteraction { context in
+    // Handle tap on map
+    return true
+})
+
+mapView.mapboxMap.addInteraction(LongPressInteraction(.layer("a-layer-id")) { feature, context in
+    // Handle long press on a layer
+    return true
+})
+
+// Bonus: If you use Standard style, new API allows to handle tap on POI, Buildings and Place Labels
+mapView.mapboxMap.addInteraction(TapInteraction(.standardPoi) { poi, feature in
+    print("Tap on poi \(poi.name)")
+    return true
+})
+```
+
+* Expose new experimental properties: `CircleLayer.circleElevationReference`, `FillLayer.fillConstructBridgeGuardRail`, `FillLayer.fillBridgeGuardRailColor`, `FillLayer.fillTunnelStructureColor`.
+* Expose new `showLandmarkIcons` property in `MapStyle.standard`.
+* New example for elevated spiral line. Utilized the experimental API `LineLayer/linezOffset`.
+
+## 11.12.0 - 07 May, 2025
+
+## 11.12.0-rc.1 - 23 April, 2025
+
+* Expose an experimental API to define a non-rectangular screen culling shape(`MapboxMap.screenCullingShape`).
+
+## 11.12.0-beta.1 - 9 April, 2025
+
+* Expose `graphicsPrograms`, `graphicsProgramsCreationTimeMillis` and `fboSwitchCount` for `CumulativeRenderingStatistics`.
+* Update CoreMaps to 11.12.0-beta.1 and Common to 24.12.0-beta.1
+
+## 11.11.0 - 26 March, 2025
+
+* Update CoreMaps to 11.11.0 and Common to 24.11.0
+* `top-image`, `bearing-image`, and `shadow-image` properties on `LocationIndicatorLayer` are now paint properties instead of layout properties.
+
+## 11.11.0-rc.1 – 12 March, 2025
+
+* Expose experimental API for setting ColorTheme on style imports.
+* Expose use-theme properties for all annotation types and Puck3D layer.
+* Update CoreMaps to 11.11.0-rc.2.
+* Update Common to 24.11.0-rc.2.
+
+## 11.11.0-beta.1 – 03 March, 2025
+
 * Reduce MapboxMaps binary size by removing debug symbols. Complete dSYM files are still available in the XCFramework.
+* Support panning and pinch gestures on trackpads.
+
+## 11.10.1 - 25 February, 2025
+
+* Update CoreMaps to 11.10.2.
 
 ## 11.10.0 - 13 February, 2025
 
@@ -20,12 +131,12 @@ mapView.mapboxMap.setMapStyleContent {
    ColorTheme(base64: "base64EncodedImage") // or use an uiimage shortcut ColorTheme(uiimage: lutImage)
 }
 ```
-Note: Each style can have only one `ColorTheme`. Setting a new theme overwrites the previous one. Further details can be fouund in documentation for `ColorTheme`
+Note: Each style can have only one `ColorTheme`. Setting a new theme overwrites the previous one. Further details can be found in documentation for `ColorTheme`
 * Promote `ClipLayer.clipLayerTypes` and `ClipLayer.clipLayerScope` to stable.
 * Remove experimental `DirectionalLight.shadowQuality`.
 * Add experimental `ViewAnnotationManager.viewAnnotationAvoidLayers` for specifying layers that view annotations should avoid. The API currently only supports line layers.
 * Add support for the `maxOverscaleFactorForParentTiles` property in `CustomRasterSource` and `CustomGeometrySource`, allowing greater control over tile overscaling behavior when rendering custom raster tiles.
-* Add support for experimental *-use-theme propert that allow to override the color theme set on the Map. This is experimental and have several limitations - currently expressions are not supported. Color properties in Lights, Rain, Snow are not supported. *-use-theme for layer applied only after zoom level change.
+* Add support for experimental *-use-theme property that allow to override the color theme set on the Map. This is experimental and have several limitations - currently expressions are not supported. Color properties in Lights, Rain, Snow are not supported. *-use-theme for layer applied only after zoom level change.
 * Update CoreMaps to 11.10.0-rc.1 and Common to 24.10.0-rc.1.
 
 ## 11.10.0-beta.1 - 20 January, 2025
@@ -80,7 +191,7 @@ Use this property to define view annotation sort order.
 * Mark `symbolElevationReference`, `symbolZOffset`, `lineTrimColor `,  `lineTrimFadeRange`, `lineZOffset` as Experimental in AnnotationManagers. This is potentially breaking change, however those properties are not marked as experimental only in AnnotationManagers by mistake.
 In order to continue use them use the following import `@_spi(Experimental) import MapboxMaps`.
 
-* Add two separete Geofence examples in SwiftUI - `GeofencingPlayground` and `GeofencingUserLocation`
+* Add two separate Geofence examples in SwiftUI - `GeofencingPlayground` and `GeofencingUserLocation`
 * Add support for Base and Height alignment in FillExtrusionLayer.
 * Add support for `pitchAlignment` in BackgroundLayer.
 * Add support for `zOffset` in FillLayer, PolygonAnnotation[Manager] and PolygonAnnotationGroup.

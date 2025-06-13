@@ -25,7 +25,7 @@ final class RasterParticleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.visibility = .constant(.visible)
             layer.rasterParticleArrayBand = Value<String>.testConstantValue()
             layer.rasterParticleColor = Value<StyleColor>.testConstantValue()
-            layer.rasterParticleColorUseTheme = .none
+            layer.rasterParticleColorUseTheme = .testConstantValue()
             layer.rasterParticleCount = Value<Double>.testConstantValue()
             layer.rasterParticleFadeOpacityFactor = Value<Double>.testConstantValue()
             layer.rasterParticleFadeOpacityFactorTransition = StyleTransition(duration: 10.0, delay: 10.0)

@@ -388,6 +388,27 @@ public struct TextTransform: RawRepresentable, Codable, Hashable, Sendable {
     public static let lowercase = TextTransform(rawValue: "lowercase")
 }
 
+/// Selects the base of circle-elevation. Some modes might require precomputed elevation data in the tileset.
+@_documentation(visibility: public)
+@_spi(Experimental)
+public struct CircleElevationReference: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
+    public let rawValue: String
+
+    @_documentation(visibility: public)
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Elevated rendering is disabled.
+    @_documentation(visibility: public)
+    public static let none = CircleElevationReference(rawValue: "none")
+
+    /// Elevated rendering is enabled. Use this mode to describe additive and stackable features that should exist only on top of road polygons.
+    @_documentation(visibility: public)
+    public static let hdRoadMarkup = CircleElevationReference(rawValue: "hd-road-markup")
+}
+
 /// Controls the frame of reference for `fill-translate`.
 public struct FillTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String

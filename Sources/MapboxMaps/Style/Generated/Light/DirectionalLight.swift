@@ -23,6 +23,10 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
     /// Transition property for `color`
     public var colorTransition: StyleTransition?
 
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_spi(Experimental) public var colorUseTheme: Value<ColorUseTheme>?
+
     /// Direction of the light source specified as [a azimuthal angle, p polar angle] where a indicates the azimuthal angle of the light relative to north (in degrees and proceeding clockwise), and p indicates polar angle of the light (from 0 degree, directly above, to 180 degree, directly below).
     /// Default value: [210,30]. Minimum value: [0,0]. Maximum value: [360,90].
     public var direction: Value<[Double]>?
@@ -58,6 +62,7 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
         try propertiesContainer.encodeIfPresent(castShadows, forKey: .castShadows)
         try propertiesContainer.encodeIfPresent(color, forKey: .color)
         try propertiesContainer.encodeIfPresent(colorTransition, forKey: .colorTransition)
+        try propertiesContainer.encodeIfPresent(colorUseTheme, forKey: .colorUseTheme)
         try propertiesContainer.encodeIfPresent(direction, forKey: .direction)
         try propertiesContainer.encodeIfPresent(directionTransition, forKey: .directionTransition)
         try propertiesContainer.encodeIfPresent(intensity, forKey: .intensity)
@@ -74,6 +79,7 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
             self.castShadows = try propertiesContainer.decodeIfPresent(Value<Bool>.self, forKey: .castShadows)
             self.color = try propertiesContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .color)
             self.colorTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .colorTransition)
+            self.colorUseTheme = try propertiesContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .colorUseTheme)
             self.direction = try propertiesContainer.decodeIfPresent(Value<[Double]>.self, forKey: .direction)
             self.directionTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .directionTransition)
             self.intensity = try propertiesContainer.decodeIfPresent(Value<Double>.self, forKey: .intensity)
@@ -91,15 +97,16 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
 
     enum PropertiesCodingKeys: String, CodingKey {
         case castShadows = "cast-shadows"
-         case color = "color"
+          case color = "color"
         case colorTransition = "color-transition"
+         case colorUseTheme = "color-use-theme"
          case direction = "direction"
         case directionTransition = "direction-transition"
-         case intensity = "intensity"
+          case intensity = "intensity"
         case intensityTransition = "intensity-transition"
-         case shadowIntensity = "shadow-intensity"
+          case shadowIntensity = "shadow-intensity"
         case shadowIntensityTransition = "shadow-intensity-transition"
-    }
+      }
 }
 
 extension DirectionalLight {
@@ -136,6 +143,22 @@ extension DirectionalLight {
     /// Default value: "#ffffff".
     public func color(_ expression: Exp) -> Self {
         with(self, setter(\.color, .expression(expression)))
+    }
+
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.colorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `color` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func colorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.colorUseTheme, .expression(expression)))
     }
 
     /// Direction of the light source specified as [a azimuthal angle, p polar angle] where a indicates the azimuthal angle of the light relative to north (in degrees and proceeding clockwise), and p indicates polar angle of the light (from 0 degree, directly above, to 180 degree, directly below).

@@ -27,3 +27,7 @@ DOWNLOAD_URL=https://api.mapbox.com/downloads/v2/${PROJECT}/${UPLOAD_TYPE}/ios/$
 step "Uploading ${SOURCE_ZIP} to ${S3_DESTINATION}"
 aws s3 cp ${SOURCE_ZIP} ${S3_DESTINATION} ${S3_ARGS:-}
 step "Download URL will be ${DOWNLOAD_URL}"
+
+if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+    echo "${ZIP_FILENAME}: \`${DOWNLOAD_URL}\`" >> $GITHUB_STEP_SUMMARY
+fi

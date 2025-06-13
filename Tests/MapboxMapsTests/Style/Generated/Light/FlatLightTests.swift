@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class FlatLightTests: XCTestCase {
 
@@ -8,13 +8,14 @@ final class FlatLightTests: XCTestCase {
         let lightID = UUID().uuidString
         var light = FlatLight(id: lightID)
         light.anchor = Value<Anchor>.testConstantValue()
-         light.color = Value<StyleColor>.testConstantValue()
+          light.color = Value<StyleColor>.testConstantValue()
         light.colorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+         light.colorUseTheme = .testConstantValue()
          light.intensity = Value<Double>.testConstantValue()
         light.intensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-         light.position = Value<[Double]>.testConstantValue()
+          light.position = Value<[Double]>.testConstantValue()
         light.positionTransition = StyleTransition(duration: 10.0, delay: 10.0)
- 
+  
         let data = try JSONEncoder().encode(light)
         XCTAssertFalse(data.isEmpty)
 
@@ -25,6 +26,7 @@ final class FlatLightTests: XCTestCase {
         XCTAssertEqual(decodedLight.color, Value<StyleColor>.testConstantValue())
         XCTAssertEqual(decodedLight.colorTransition?.duration, 10)
         XCTAssertEqual(decodedLight.colorTransition?.delay, 10)
+        XCTAssertEqual(decodedLight.colorUseTheme, .testConstantValue())
         XCTAssertEqual(decodedLight.intensity, Value<Double>.testConstantValue())
         XCTAssertEqual(decodedLight.intensityTransition?.duration, 10)
         XCTAssertEqual(decodedLight.intensityTransition?.delay, 10)

@@ -23,12 +23,13 @@ final class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
+            layer.circleElevationReference = Value<CircleElevationReference>.testConstantValue()
             layer.circleSortKey = Value<Double>.testConstantValue()
             layer.circleBlur = Value<Double>.testConstantValue()
             layer.circleBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.circleColor = Value<StyleColor>.testConstantValue()
             layer.circleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.circleColorUseTheme = .none
+            layer.circleColorUseTheme = .testConstantValue()
             layer.circleEmissiveStrength = Value<Double>.testConstantValue()
             layer.circleEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.circleOpacity = Value<Double>.testConstantValue()
@@ -39,7 +40,7 @@ final class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.circleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.circleStrokeColor = Value<StyleColor>.testConstantValue()
             layer.circleStrokeColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.circleStrokeColorUseTheme = .none
+            layer.circleStrokeColorUseTheme = .testConstantValue()
             layer.circleStrokeOpacity = Value<Double>.testConstantValue()
             layer.circleStrokeOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.circleStrokeWidth = Value<Double>.testConstantValue()

@@ -17,7 +17,36 @@ final class DebugMapExample: UIViewController, ExampleProtocol {
         Setting(option: .debug(.light), title: "Show light conditions"),
         Setting(option: .debug(.camera), title: "Show camera debug view"),
         Setting(option: .debug(.padding), title: "Camera padding"),
+        Setting(option: .screenShape, title: "Custom culling shape"),
         Setting(option: .performance(.init([.perFrame, .cumulative], samplingDurationMillis: 5000)), title: "Performance statistics"),
+    ]
+    private let customCullingShapeLayer: CAShapeLayer = {
+        let layer = CAShapeLayer()
+        layer.strokeColor = UIColor.white.cgColor
+        layer.fillColor = UIColor.clear.cgColor
+        layer.lineWidth = 3
+        layer.lineJoin = .round
+        layer.shadowColor = UIColor.white.cgColor
+        layer.shadowRadius = 5
+        layer.shadowOpacity = 1
+        layer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.main.scale
+        return layer
+    }()
+    private let dimLayer: CAShapeLayer = {
+        let layer = CAShapeLayer()
+        layer.fillRule = .evenOdd
+        layer.fillColor = UIColor.black.withAlphaComponent(0.5).cgColor
+
+        return layer
+    }()
+    private let customCullingShape = [
+        CGPoint(x: 0.35, y: 0.34),  // top-left
+        CGPoint(x: 0.65, y: 0.34),  // top-right
+        CGPoint(x: 0.85, y: 0.50),  // right
+        CGPoint(x: 0.65, y: 0.66),  // bottom-right
+        CGPoint(x: 0.35, y: 0.66),  // bottom-left
+        CGPoint(x: 0.15, y: 0.50)   // left
     ]
 
     override func viewDidLoad() {
@@ -76,10 +105,49 @@ final class DebugMapExample: UIViewController, ExampleProtocol {
     private func handle(statistics: PerformanceStatistics) {
         showAlert(with: "\(statistics.topRenderedGroupDescription)\n\(statistics.renderingDurationStatisticsDescription)")
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        let scaledShape = customCullingShape.map { CGPoint(x: $0.x * mapView.bounds.width, y: $0.y * mapView.bounds.height) }
+        let cutoutPath = UIBezierPath()
+        cutoutPath.move(to: scaledShape.first!)
+        scaledShape.dropFirst().forEach(cutoutPath.addLine)
+        cutoutPath.close()
+
+        customCullingShapeLayer.path = cutoutPath.cgPath
+
+        let mapViewPath = UIBezierPath(rect: mapView.bounds)
+        mapViewPath.append(cutoutPath)
+        mapViewPath.usesEvenOddFillRule = true
+
+        dimLayer.path = mapViewPath.cgPath
+    }
+
+    private func setScreenShape() {
+        mapView.mapboxMap.screenCullingShape = customCullingShape
+        mapView.layer.addSublayer(dimLayer)
+        mapView.layer.addSublayer(customCullingShapeLayer)
+    }
+
+    private func removeScreenShape() {
+        customCullingShapeLayer.removeFromSuperlayer()
+        dimLayer.removeFromSuperlayer()
+        mapView.mapboxMap.screenCullingShape = []
+    }
 }
 
 extension DebugMapExample: DebugOptionSettingsDelegate {
-    func settingsDidChange(debugOptions: MapViewDebugOptions, performanceOptions: PerformanceStatisticsOptions?) {
+    func settingsDidChange(
+        debugOptions: MapViewDebugOptions,
+        performanceOptions: PerformanceStatisticsOptions?,
+        screenShapeEnabled: Bool
+    ) {
+        if screenShapeEnabled {
+            setScreenShape()
+        } else {
+            removeScreenShape()
+        }
         mapView.debugOptions = debugOptions
 
         guard let performanceOptions else { return performanceStatisticsCancelable = nil }
@@ -133,16 +201,21 @@ final class SettingsViewController: UIViewController, UITableViewDataSource {
     }
 
     @objc private func saveSettings(_ sender: UIBarButtonItem) {
-        let debugOptions = settings
-            .filter(\.isEnabled)
+        let enabledSettings = settings.filter({ $0.isEnabled })
+        let debugOptions = enabledSettings
             .compactMap(\.option.debugOption)
             .reduce(MapViewDebugOptions()) { result, next in result.union(next) }
 
-        let performanceOptions = settings
-            .filter(\.isEnabled)
+        let performanceOptions = enabledSettings
             .compactMap(\.option.performanceOption)
 
-        delegate?.settingsDidChange(debugOptions: debugOptions, performanceOptions: performanceOptions.first)
+        let screenShapeEnabled = enabledSettings.contains(where: { $0.option.isScreenShape })
+
+        delegate?.settingsDidChange(
+            debugOptions: debugOptions,
+            performanceOptions: performanceOptions.first,
+            screenShapeEnabled: screenShapeEnabled
+        )
         dismiss(animated: true, completion: nil)
     }
 
@@ -211,13 +284,18 @@ private class DebugOptionCell: UITableViewCell {
 }
 
 protocol DebugOptionSettingsDelegate: AnyObject {
-    func settingsDidChange(debugOptions: MapViewDebugOptions, performanceOptions: PerformanceStatisticsOptions?)
+    func settingsDidChange(
+        debugOptions: MapViewDebugOptions,
+        performanceOptions: PerformanceStatisticsOptions?,
+        screenShapeEnabled: Bool
+    )
 }
 
 private final class Setting {
     enum Option {
         case debug(MapViewDebugOptions)
         case performance(PerformanceStatisticsOptions)
+        case screenShape
     }
 
     let option: Option
@@ -240,6 +318,10 @@ extension Setting.Option {
 
     var performanceOption: PerformanceStatisticsOptions? {
         if case let .performance(option) = self { return option } else { return nil }
+    }
+
+    var isScreenShape: Bool {
+        if case .screenShape = self { return true } else { return false }
     }
 }
 

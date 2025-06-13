@@ -103,6 +103,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
 
     /// Transition options for `fillExtrusionColor`.
     public var fillExtrusionColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -127,6 +128,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Transition options for `fillExtrusionFloodLightColor`.
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionFloodLightColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -198,6 +200,10 @@ public struct FillExtrusionLayer: Layer, Equatable {
 
     /// Name of image in sprite to use for drawing images on extruded fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var fillExtrusionPattern: Value<ResolvedImage>?
+
+    /// Controls the transition progress between the image variants of fill-extrusion-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public var fillExtrusionPatternCrossFade: Value<Double>?
 
     /// Indicates whether top edges should be rounded when fill-extrusion-edge-radius has a value greater than 0. If false, rounded edges are only applied to the sides. Default is true.
     /// Default value: true.
@@ -285,6 +291,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(fillExtrusionOpacity, forKey: .fillExtrusionOpacity)
         try paintContainer.encodeIfPresent(fillExtrusionOpacityTransition, forKey: .fillExtrusionOpacityTransition)
         try paintContainer.encodeIfPresent(fillExtrusionPattern, forKey: .fillExtrusionPattern)
+        try paintContainer.encodeIfPresent(fillExtrusionPatternCrossFade, forKey: .fillExtrusionPatternCrossFade)
         try paintContainer.encodeIfPresent(fillExtrusionRoundedRoof, forKey: .fillExtrusionRoundedRoof)
         try paintContainer.encodeIfPresent(fillExtrusionTranslate, forKey: .fillExtrusionTranslate)
         try paintContainer.encodeIfPresent(fillExtrusionTranslateTransition, forKey: .fillExtrusionTranslateTransition)
@@ -348,6 +355,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
             fillExtrusionOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionOpacity)
             fillExtrusionOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionOpacityTransition)
             fillExtrusionPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .fillExtrusionPattern)
+            fillExtrusionPatternCrossFade = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionPatternCrossFade)
             fillExtrusionRoundedRoof = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .fillExtrusionRoundedRoof)
             fillExtrusionTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .fillExtrusionTranslate)
             fillExtrusionTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionTranslateTransition)
@@ -422,6 +430,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
         case fillExtrusionOpacity = "fill-extrusion-opacity"
         case fillExtrusionOpacityTransition = "fill-extrusion-opacity-transition"
         case fillExtrusionPattern = "fill-extrusion-pattern"
+        case fillExtrusionPatternCrossFade = "fill-extrusion-pattern-cross-fade"
         case fillExtrusionRoundedRoof = "fill-extrusion-rounded-roof"
         case fillExtrusionTranslate = "fill-extrusion-translate"
         case fillExtrusionTranslateTransition = "fill-extrusion-translate-transition"
@@ -909,6 +918,18 @@ extension FillExtrusionLayer {
     /// Name of image in sprite to use for drawing images on extruded fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public func fillExtrusionPattern(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionPattern, .expression(expression)))
+    }
+
+    /// Controls the transition progress between the image variants of fill-extrusion-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public func fillExtrusionPatternCrossFade(_ constant: Double) -> Self {
+        with(self, setter(\.fillExtrusionPatternCrossFade, .constant(constant)))
+    }
+
+    /// Controls the transition progress between the image variants of fill-extrusion-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public func fillExtrusionPatternCrossFade(_ expression: Exp) -> Self {
+        with(self, setter(\.fillExtrusionPatternCrossFade, .expression(expression)))
     }
 
     /// Indicates whether top edges should be rounded when fill-extrusion-edge-radius has a value greater than 0. If false, rounded edges are only applied to the sides. Default is true.

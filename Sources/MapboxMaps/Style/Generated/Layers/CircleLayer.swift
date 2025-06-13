@@ -39,6 +39,11 @@ public struct CircleLayer: Layer, Equatable {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>
 
+    /// Selects the base of circle-elevation. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "none".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var circleElevationReference: Value<CircleElevationReference>?
+
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var circleSortKey: Value<Double>?
 
@@ -55,6 +60,7 @@ public struct CircleLayer: Layer, Equatable {
 
     /// Transition options for `circleColor`.
     public var circleColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -95,6 +101,7 @@ public struct CircleLayer: Layer, Equatable {
 
     /// Transition options for `circleStrokeColor`.
     public var circleStrokeColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -170,6 +177,7 @@ public struct CircleLayer: Layer, Equatable {
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encode(visibility, forKey: .visibility)
+        try layoutContainer.encodeIfPresent(circleElevationReference, forKey: .circleElevationReference)
         try layoutContainer.encodeIfPresent(circleSortKey, forKey: .circleSortKey)
     }
 
@@ -213,6 +221,7 @@ public struct CircleLayer: Layer, Equatable {
         var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
             visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            circleElevationReference = try layoutContainer.decodeIfPresent(Value<CircleElevationReference>.self, forKey: .circleElevationReference)
             circleSortKey = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .circleSortKey)
         }
         visibility = visibilityEncoded ?? .constant(.visible)
@@ -232,6 +241,7 @@ public struct CircleLayer: Layer, Equatable {
     }
 
     enum LayoutCodingKeys: String, CodingKey {
+        case circleElevationReference = "circle-elevation-reference"
         case circleSortKey = "circle-sort-key"
         case visibility = "visibility"
     }
@@ -298,6 +308,22 @@ extension CircleLayer {
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// Selects the base of circle-elevation. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "none".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func circleElevationReference(_ constant: CircleElevationReference) -> Self {
+        with(self, setter(\.circleElevationReference, .constant(constant)))
+    }
+
+    /// Selects the base of circle-elevation. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "none".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func circleElevationReference(_ expression: Exp) -> Self {
+        with(self, setter(\.circleElevationReference, .expression(expression)))
     }
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.

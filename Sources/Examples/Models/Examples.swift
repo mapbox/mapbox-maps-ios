@@ -147,9 +147,10 @@ struct Examples {
         Example(title: "Combine location",
                 description: "Shows how to use Combine framework to drive the location puck.",
                 type: CombineLocationExample.self)
+        Example(title: "Edit polygon with drag/drop",
+                description: "Shows how to update a polygon with drag",
+                type: EditPolygonExample.self)
     }
-
-    public static let geofencingExample = Example(title: "Geofencing", description: "Showcase geofencing detection", type: GeofencingExample.self)
 
     // Examples that focus on displaying the user's location.
     public static let locationExamples: [Example] = .init {
@@ -168,7 +169,6 @@ struct Examples {
         Example(title: "Simulate navigation",
                 description: "Simulate a driving trip from LA to San Francisco along a pre-defined route.",
                 type: NavigationSimulatorExample.self)
-        geofencingExample
     }
 
     // Examples that highlight using the Offline APIs.

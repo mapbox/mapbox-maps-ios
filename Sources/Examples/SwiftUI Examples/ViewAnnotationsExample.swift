@@ -82,9 +82,11 @@ struct ViewAnnotationsExample: View {
             .onAnchorChanged { self.etaAnnotationAnchor = $0.anchor }
             .priority(2)
             .minZoom(5)
-        }
-        .onMapTapGesture { context in
-            taps.append(Tap(coordinate: context.coordinate))
+
+            TapInteraction { context in
+                taps.append(Tap(coordinate: context.coordinate))
+                return false
+            }
         }
         // Add bottom padding for the bottom config panel, View Annotations won't appear there.
         .additionalSafeAreaInsets(.bottom, overlayHeight)

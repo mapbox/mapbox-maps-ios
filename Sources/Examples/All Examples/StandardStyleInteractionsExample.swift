@@ -1,5 +1,5 @@
+import MapboxMaps
 import UIKit
-@_spi(Experimental) import MapboxMaps
 
 final class StandardStyleInteractionsExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
@@ -15,10 +15,6 @@ final class StandardStyleInteractionsExample: UIViewController, ExampleProtocol 
         let options = MapInitOptions(cameraOptions: CameraOptions(center: cameraCenter, zoom: 16.35, bearing: 49.92, pitch: 40))
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-        /// DON'T USE Standard Experimental style in production, it will break over time.
-        /// Currently this feature is in preview.
-        mapView.mapboxMap.mapStyle = .standardExperimental()
 
         view.addSubview(mapView)
         mapView.mapboxMap.onStyleLoaded.observe { [weak self] _ in
@@ -158,7 +154,7 @@ final class StandardStyleInteractionsExample: UIViewController, ExampleProtocol 
         default:
             break
         }
-        mapView.mapboxMap.mapStyle = .standardExperimental(theme: theme, lightPreset: lightPreset, buildingSelectColor: buildingSelectColor)
+        applyStyleChanges()
     }
 
     @objc private func lightPresetChanged(_ sender: UISegmentedControl) {
@@ -174,7 +170,7 @@ final class StandardStyleInteractionsExample: UIViewController, ExampleProtocol 
         default:
             break
         }
-        mapView.mapboxMap.mapStyle = .standardExperimental(theme: theme, lightPreset: lightPreset, buildingSelectColor: buildingSelectColor)
+        applyStyleChanges()
     }
 
     @objc private func themeChanged(_ sender: UISegmentedControl) {
@@ -188,6 +184,10 @@ final class StandardStyleInteractionsExample: UIViewController, ExampleProtocol 
         default:
             break
         }
-        mapView.mapboxMap.mapStyle = .standardExperimental(theme: theme, lightPreset: lightPreset, buildingSelectColor: buildingSelectColor)
+        applyStyleChanges()
+    }
+
+    private func applyStyleChanges() {
+        mapView.mapboxMap.mapStyle = .standard(theme: theme, lightPreset: lightPreset, colorBuildingSelect: buildingSelectColor)
     }
 }

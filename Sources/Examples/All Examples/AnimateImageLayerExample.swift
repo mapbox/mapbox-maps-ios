@@ -68,9 +68,10 @@ final class AnimateImageLayerExample: UIViewController, ExampleProtocol {
         }
 
         // Add a tap gesture handler that will allow the animation to be stopped and started.
-        mapView.gestures.onMapTap.observe {[weak self] _ in
+        mapView.mapboxMap.addInteraction(TapInteraction {[weak self] _ in
             self?.manageTimer()
-        }.store(in: &cancelables)
+            return false
+        })
 
         manageTimer()
     }

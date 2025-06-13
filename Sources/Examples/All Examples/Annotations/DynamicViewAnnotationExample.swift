@@ -314,15 +314,13 @@ private final class Route {
         updateSelected()
 
         mapView.viewAnnotations.add(etaAnnotation)
-        mapView.gestures.onLayerTap(layerId) { [weak self] feature, _ in
+        mapView.mapboxMap.addInteraction(TapInteraction(.layer(layerId)) { [weak self] feature, _ in
             guard let self,
                   let onTap = onTap,
-                  let identifier = feature.feature.identifier,
-                  case let .string(id) = identifier,
-                  id == self.name else { return false }
+                  feature.id?.id == self.name else { return false }
             onTap()
             return true
-        }.store(in: &tokens)
+        })
     }
 
     func remove() {

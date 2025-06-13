@@ -71,23 +71,48 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     }
 
     private func updateProperties(manager: PolygonAnnotationManager) {
+        assign(manager, \.fillConstructBridgeGuardRail, value: fillConstructBridgeGuardRail)
         assign(manager, \.fillElevationReference, value: fillElevationReference)
         assign(manager, \.fillSortKey, value: fillSortKey)
         assign(manager, \.fillAntialias, value: fillAntialias)
+        assign(manager, \.fillBridgeGuardRailColor, value: fillBridgeGuardRailColor)
+        assign(manager, \.fillBridgeGuardRailColorUseTheme, value: fillBridgeGuardRailColorUseTheme)
+        assign(manager, \.fillBridgeGuardRailColorTransition, value: fillBridgeGuardRailColorTransition)
         assign(manager, \.fillColor, value: fillColor)
+        assign(manager, \.fillColorUseTheme, value: fillColorUseTheme)
+        assign(manager, \.fillColorTransition, value: fillColorTransition)
         assign(manager, \.fillEmissiveStrength, value: fillEmissiveStrength)
+        assign(manager, \.fillEmissiveStrengthTransition, value: fillEmissiveStrengthTransition)
         assign(manager, \.fillOpacity, value: fillOpacity)
+        assign(manager, \.fillOpacityTransition, value: fillOpacityTransition)
         assign(manager, \.fillOutlineColor, value: fillOutlineColor)
+        assign(manager, \.fillOutlineColorUseTheme, value: fillOutlineColorUseTheme)
+        assign(manager, \.fillOutlineColorTransition, value: fillOutlineColorTransition)
         assign(manager, \.fillPattern, value: fillPattern)
+        assign(manager, \.fillPatternCrossFade, value: fillPatternCrossFade)
         assign(manager, \.fillTranslate, value: fillTranslate)
+        assign(manager, \.fillTranslateTransition, value: fillTranslateTransition)
         assign(manager, \.fillTranslateAnchor, value: fillTranslateAnchor)
+        assign(manager, \.fillTunnelStructureColor, value: fillTunnelStructureColor)
+        assign(manager, \.fillTunnelStructureColorUseTheme, value: fillTunnelStructureColorUseTheme)
+        assign(manager, \.fillTunnelStructureColorTransition, value: fillTunnelStructureColorTransition)
         assign(manager, \.fillZOffset, value: fillZOffset)
+        assign(manager, \.fillZOffsetTransition, value: fillZOffsetTransition)
         assign(manager, \.slot, value: slot)
         manager.tapRadius = tapRadius
         manager.longPressRadius = longPressRadius
     }
 
     // MARK: - Common layer properties
+
+    private var fillConstructBridgeGuardRail: Bool?
+    /// Determines whether bridge guard rails are added for elevated roads.
+    /// Default value: "true".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillConstructBridgeGuardRail(_ newValue: Bool) -> Self {
+        with(self, setter(\.fillConstructBridgeGuardRail, newValue))
+    }
 
     private var fillElevationReference: FillElevationReference?
     /// Selects the base of fill-elevation. Some modes might require precomputed elevation data in the tileset.
@@ -111,11 +136,72 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
         with(self, setter(\.fillAntialias, newValue))
     }
 
-    private var fillColor: StyleColor?
+    /// The color of bridge guard rail.
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColor(_ color: UIColor) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColor, StyleColor(color)))
+    }
+
+    private var fillBridgeGuardRailColorUseTheme: ColorUseTheme?
+    /// This property defines whether the `fillBridgeGuardRailColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColorUseTheme, useTheme))
+    }
+
+    private var fillBridgeGuardRailColorTransition: StyleTransition?
+    /// Transition property for `fillBridgeGuardRailColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColorTransition, transition))
+    }
+
+    private var fillBridgeGuardRailColor: StyleColor?
+    /// The color of bridge guard rail.
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColor, newValue))
+    }
+
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
     /// Default value: "#000000".
     public func fillColor(_ color: UIColor) -> Self {
         with(self, setter(\.fillColor, StyleColor(color)))
+    }
+
+    private var fillColorUseTheme: ColorUseTheme?
+    /// This property defines whether the `fillColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillColorUseTheme, useTheme))
+    }
+
+    private var fillColorTransition: StyleTransition?
+    /// Transition property for `fillColor`
+    public func fillColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillColorTransition, transition))
+    }
+
+    private var fillColor: StyleColor?
+    /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+    /// Default value: "#000000".
+    public func fillColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.fillColor, newValue))
+    }
+
+    private var fillEmissiveStrengthTransition: StyleTransition?
+    /// Transition property for `fillEmissiveStrength`
+    public func fillEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillEmissiveStrengthTransition, transition))
     }
 
     private var fillEmissiveStrength: Double?
@@ -125,6 +211,12 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
         with(self, setter(\.fillEmissiveStrength, newValue))
     }
 
+    private var fillOpacityTransition: StyleTransition?
+    /// Transition property for `fillOpacity`
+    public func fillOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillOpacityTransition, transition))
+    }
+
     private var fillOpacity: Double?
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
     /// Default value: 1. Value range: [0, 1]
@@ -132,16 +224,49 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
         with(self, setter(\.fillOpacity, newValue))
     }
 
-    private var fillOutlineColor: StyleColor?
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
     public func fillOutlineColor(_ color: UIColor) -> Self {
         with(self, setter(\.fillOutlineColor, StyleColor(color)))
+    }
+
+    private var fillOutlineColorUseTheme: ColorUseTheme?
+    /// This property defines whether the `fillOutlineColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillOutlineColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillOutlineColorUseTheme, useTheme))
+    }
+
+    private var fillOutlineColorTransition: StyleTransition?
+    /// Transition property for `fillOutlineColor`
+    public func fillOutlineColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillOutlineColorTransition, transition))
+    }
+
+    private var fillOutlineColor: StyleColor?
+    /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
+    public func fillOutlineColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.fillOutlineColor, newValue))
     }
 
     private var fillPattern: String?
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public func fillPattern(_ newValue: String) -> Self {
         with(self, setter(\.fillPattern, newValue))
+    }
+
+    private var fillPatternCrossFade: Double?
+    /// Controls the transition progress between the image variants of fill-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public func fillPatternCrossFade(_ newValue: Double) -> Self {
+        with(self, setter(\.fillPatternCrossFade, newValue))
+    }
+
+    private var fillTranslateTransition: StyleTransition?
+    /// Transition property for `fillTranslate`
+    public func fillTranslateTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillTranslateTransition, transition))
     }
 
     private var fillTranslate: [Double]?
@@ -156,6 +281,48 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     /// Default value: "map".
     public func fillTranslateAnchor(_ newValue: FillTranslateAnchor) -> Self {
         with(self, setter(\.fillTranslateAnchor, newValue))
+    }
+
+    /// The color of tunnel structures (tunnel entrance and tunnel walls).
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColor(_ color: UIColor) -> Self {
+        with(self, setter(\.fillTunnelStructureColor, StyleColor(color)))
+    }
+
+    private var fillTunnelStructureColorUseTheme: ColorUseTheme?
+    /// This property defines whether the `fillTunnelStructureColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillTunnelStructureColorUseTheme, useTheme))
+    }
+
+    private var fillTunnelStructureColorTransition: StyleTransition?
+    /// Transition property for `fillTunnelStructureColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillTunnelStructureColorTransition, transition))
+    }
+
+    private var fillTunnelStructureColor: StyleColor?
+    /// The color of tunnel structures (tunnel entrance and tunnel walls).
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.fillTunnelStructureColor, newValue))
+    }
+
+    private var fillZOffsetTransition: StyleTransition?
+    /// Transition property for `fillZOffset`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillZOffsetTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillZOffsetTransition, transition))
     }
 
     private var fillZOffset: Double?
@@ -199,15 +366,11 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     var longPressRadius: CGFloat?
 
     /// A custom tappable area radius. Default value is 0.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     public func tapRadius(_ radius: CGFloat? = nil) -> Self {
         with(self, setter(\.tapRadius, radius))
     }
 
     /// A custom tappable area radius. Default value is 0.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     public func longPressRadius(_ radius: CGFloat? = nil) -> Self {
         with(self, setter(\.longPressRadius, radius))
     }

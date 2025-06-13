@@ -1,17 +1,6 @@
 ---
 manifests:
   - type: Package.swift
-  - type: Package.resolved
-    omit_for:
-      # Temporarily disabled since we use .binaryTarget instead of SPM dependency for MapboxCoreMaps
-      - MapboxCoreMaps
-      - MapboxCommon
-  - type: Package.resolved
-    path: Examples.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
-    omit_for:
-    # Temporarily disabled since we use .binaryTarget instead of SPM dependency for MapboxCoreMaps
-      - MapboxCoreMaps
-      - MapboxCommon
   - type: Podspec
   - type: packager
   - type: Cross-check Common SDK version with GL Native
@@ -23,15 +12,12 @@ dependencies:
   - name: MapboxCoreMaps
     variations:
       Package.swift: mapbox-core-maps-ios
-      Package.resolved: mapbox-core-maps-ios
   - name: MapboxCommon
     variations:
       Package.swift: mapbox-common-ios
-      Package.resolved: mapbox-common-ios
   - name: Turf
     variations:
       Package.swift: turf-swift
-      Package.resolved: turf-swift
 manifest_definitions:
   - name: packager
     type: SemanticVersion

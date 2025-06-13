@@ -113,16 +113,19 @@ public final class GestureManager: GestureHandlerDelegate {
     /// A stream of single tap events on the map.
     ///
     /// This event is called when the user taps the map and no interactions, annotations or layers handled the gesture.
+    @available(*, deprecated, message: "Use TapInteraction")
     public var onMapTap: Signal<InteractionContext> { mapTap.signal }
 
     /// A stream of long press events.
     ///
     /// This event is called when the user long-presses the map and no annotations or layers handled the gesture.
+    @available(*, deprecated, message: "Use LongPressInteraction")
     public var onMapLongPress: Signal<InteractionContext> { mapLongPress.signal }
 
     /// Adds a tap handler to the specified layer.
     ///
     /// The handler will be called in the event, starting with the topmost layer and propagating down to each layer under the tap in order.
+    @available(*, deprecated, message: "Use TapInteraction")
     public func onLayerTap(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable {
         mapboxMap.addInteraction(CoreInteraction(layerId: layerId, type: .click, handler: handler)).erased
     }
@@ -130,6 +133,7 @@ public final class GestureManager: GestureHandlerDelegate {
     /// Adds a long press handler for the layer with `layerId`.
     ///
     /// The handler will be called in the event, starting with the topmost layer and propagating down to each layer under the tap in order.
+    @available(*, deprecated, message: "Use TapInteraction")
     public func onLayerLongPress(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable {
         mapboxMap.addInteraction(CoreInteraction(layerId: layerId, type: .longClick, handler: handler)).erased
     }

@@ -29,7 +29,7 @@ struct StandardInteractiveBuildingsExample: View {
         }
         /// DON'T USE Standard Experimental style in production, it will break over time.
         /// Currently this feature is in preview.
-        .mapStyle(.standardExperimental(theme: theme, lightPreset: lightPreset, buildingSelectColor: buildingSelectColor))
+        .mapStyle(.standard(theme: theme, lightPreset: lightPreset, colorBuildingSelect: buildingSelectColor))
         .ignoresSafeArea()
         /// Debug panel
         .overlay(alignment: .bottom) {

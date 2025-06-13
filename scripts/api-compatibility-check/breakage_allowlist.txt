@@ -2071,3 +2071,102 @@ Constructor CustomGeometrySource.init(id:options:) has been removed
 # Remove experimental light property
 Func DirectionalLight.shadowQuality(_:) has been removed
 Var DirectionalLight.shadowQuality has been removed
+
+# Add UseTheme properties to Annotations and Puck3D API
+Constructor Puck3DConfiguration.init(model:modelScale:modelRotation:modelOpacity:modelCastShadows:modelReceiveShadows:modelScaleMode:modelEmissiveStrength:layerPosition:) has been removed
+Func PointAnnotation.symbolZOffset(_:) is now with @_documentation
+Func PointAnnotation.symbolZOffset(_:) is now with @_spi
+Func PolygonAnnotation.fillZOffset(_:) is now with @_documentation
+Func PolygonAnnotation.fillZOffset(_:) is now with @_spi
+Func PolylineAnnotation.lineZOffset(_:) is now with @_documentation
+Func PolylineAnnotation.lineZOffset(_:) is now with @_spi
+Var PointAnnotation.symbolZOffset is now with @_documentation
+Var PointAnnotation.symbolZOffset is now with @_spi
+Var PolygonAnnotation.fillZOffset is now with @_documentation
+Var PolygonAnnotation.fillZOffset is now with @_spi
+Var PolylineAnnotation.lineZOffset is now with @_documentation
+Var PolylineAnnotation.lineZOffset is now with @_spi
+
+# LayerPosition moved to GL Native
+Enum LayerPosition has been removed
+
+# Fix use-theme generation for Rain and Snow
+Var Rain.centerThinningUseTheme has been removed
+Var Rain.densityUseTheme has been removed
+Var Rain.directionUseTheme has been removed
+Var Rain.distortionStrengthUseTheme has been removed
+Var Rain.dropletSizeUseTheme has been removed
+Var Rain.intensityUseTheme has been removed
+Var Rain.opacityUseTheme has been removed
+Var Rain.vignetteUseTheme has been removed
+Var Snow.centerThinningUseTheme has been removed
+Var Snow.densityUseTheme has been removed
+Var Snow.directionUseTheme has been removed
+Var Snow.flakeSizeUseTheme has been removed
+Var Snow.intensityUseTheme has been removed
+Var Snow.opacityUseTheme has been removed
+Var Snow.vignetteUseTheme has been removed
+
+
+# Style update
+Func MapStyle.standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:themeData:) has been renamed to Func standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorBuildingHighlight:colorBuildingSelect:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:showLandmarkIcons:themeData:)
+Func MapStyle.standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:themeData:) has parameter 14 type change from Swift.String? to MapboxMaps.StyleColor?
+
+# Promote interactions
+Func MapStyle.standardExperimental(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:show3dObjects:buildingHighlightColor:buildingSelectColor:placeLabelHighlightColor:placeLabelSelectColor:) has been removed
+Var MapStyle.standardExperimental has been removed
+Accessor Interaction.impl.Get() has return type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Accessor LongPressInteraction.impl.Get() has return type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Accessor TapInteraction.impl.Get() has return type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Var Interaction.impl has declared type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Var LongPressInteraction.impl has declared type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Var TapInteraction.impl has declared type change from MapboxMaps.InteractionImpl to MapboxMaps.InteractionImpl?
+Var GeoJSONSource.autoMaxZoom is now with @_documentation
+
+
+/* Decl Attribute changes */
+Accessor CircleAnnotationManager.circleColorUseTheme.Modify() is now with @_spi
+Accessor CircleAnnotationManager.circleElevationReference.Modify() is now with @_spi
+Accessor CircleAnnotationManager.circleStrokeColorUseTheme.Modify() is now with @_spi
+Accessor CircleAnnotationManager.longPressRadius.Modify() is now with @_spi
+Accessor CircleAnnotationManager.tapRadius.Modify() is now with @_spi
+Accessor MapboxMap.screenCullingShape.Modify() is now with @_spi
+Accessor MapboxMap.styleGlyphURL.Modify() is now with @_spi
+Accessor PointAnnotationManager.iconColorUseTheme.Modify() is now with @_spi
+Accessor PointAnnotationManager.iconHaloColorUseTheme.Modify() is now with @_spi
+Accessor PointAnnotationManager.iconSizeScaleRange.Modify() is now with @_spi
+Accessor PointAnnotationManager.longPressRadius.Modify() is now with @_spi
+Accessor PointAnnotationManager.symbolElevationReference.Modify() is now with @_spi
+Accessor PointAnnotationManager.symbolZOffset.Modify() is now with @_spi
+Accessor PointAnnotationManager.symbolZOffsetTransition.Modify() is now with @_spi
+Accessor PointAnnotationManager.tapRadius.Modify() is now with @_spi
+Accessor PointAnnotationManager.textColorUseTheme.Modify() is now with @_spi
+Accessor PointAnnotationManager.textHaloColorUseTheme.Modify() is now with @_spi
+Accessor PointAnnotationManager.textSizeScaleRange.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillBridgeGuardRailColor.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillBridgeGuardRailColorTransition.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillBridgeGuardRailColorUseTheme.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillColorUseTheme.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillConstructBridgeGuardRail.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillElevationReference.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillOutlineColorUseTheme.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillTunnelStructureColor.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillTunnelStructureColorTransition.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillTunnelStructureColorUseTheme.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillZOffset.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.fillZOffsetTransition.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.longPressRadius.Modify() is now with @_spi
+Accessor PolygonAnnotationManager.tapRadius.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.lineBorderColorUseTheme.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.lineColorUseTheme.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.lineCrossSlope.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.lineElevationReference.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.lineTrimColor.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.lineTrimColorTransition.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.lineTrimColorUseTheme.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.lineTrimFadeRange.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.lineWidthUnit.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.lineZOffset.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.longPressRadius.Modify() is now with @_spi
+Accessor PolylineAnnotationManager.tapRadius.Modify() is now with @_spi
+Accessor ViewAnnotationManager.viewAnnotationAvoidLayers.Modify() is now with @_spi

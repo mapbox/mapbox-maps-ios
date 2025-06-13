@@ -32,6 +32,8 @@ internal class InfoButtonOrnament: UIView {
         button.addTarget(self, action: #selector(infoTapped), for: .primaryActionTriggered)
 
         let bundle = Bundle.mapboxMaps
+        isAccessibilityElement = true
+        accessibilityTraits = [.button]
         accessibilityLabel = NSLocalizedString("INFO_A11Y_LABEL",
                                                tableName: Ornaments.localizableTableName,
                                                bundle: bundle,

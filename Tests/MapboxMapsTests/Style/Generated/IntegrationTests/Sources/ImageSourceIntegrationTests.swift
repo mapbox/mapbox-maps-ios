@@ -5,10 +5,10 @@ import XCTest
 final class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
 
     func testAdditionAndRemovalOfSource() throws {
-        let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added ImageSource to Map")
+        let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added ImageSourceSource to Map")
         successfullyAddedSourceExpectation.expectedFulfillmentCount = 1
 
-        let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved ImageSource from Map")
+        let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved ImageSourceSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
         mapView.mapboxMap.styleJSON = .testStyleJSON()
@@ -27,13 +27,17 @@ final class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
                 XCTFail("Failed to add ImageSource because of error: \(error)")
             }
 
+            var result: ImageSource?
             // Retrieve the source
             do {
-                _ = try mapView.mapboxMap.source(withId: "test-source", type: ImageSource.self)
+                result = try mapView.mapboxMap.source(withId: "test-source", type: ImageSource.self)
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve ImageSource because of error: \(error)")
             }
+
+            XCTAssertEqual(source.type, result?.type)
+            XCTAssertEqual(source.prefetchZoomDelta, result?.prefetchZoomDelta)
         }
 
         wait(for: [successfullyAddedSourceExpectation, successfullyRetrievedSourceExpectation], timeout: 5.0)

@@ -113,7 +113,7 @@ final class OrnamentManagerTests: XCTestCase {
         XCTAssertTrue(compass.containerView.isHidden, "The compass should be hidden initially")
 
         var cameraState = CameraState.zero
-        cameraState.bearing += .random(in: (.leastNonzeroMagnitude)..<360)
+        cameraState.bearing += 350
         onCameraChanged.send(CameraChanged(cameraState: cameraState, timestamp: Date()))
 
         XCTAssertFalse(compass.containerView.isHidden, "The compass should not be hidden when the bearing is non-zero.")

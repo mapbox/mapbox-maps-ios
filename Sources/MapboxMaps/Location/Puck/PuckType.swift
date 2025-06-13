@@ -196,6 +196,12 @@ public struct Puck3DConfiguration: Equatable, Sendable {
     /// Default value is 1.
     public var modelEmissiveStrength: Value<Double>?
 
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var modelColorUseTheme: Value<ColorUseTheme>?
+
     /// The ``Slot`` where to put puck layers.
     ///
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
@@ -248,6 +254,7 @@ public struct Puck3DConfiguration: Equatable, Sendable {
         modelReceiveShadows: Value<Bool>? = nil,
         modelScaleMode: Value<ModelScaleMode>? = nil,
         modelEmissiveStrength: Value<Double> = .constant(1),
+        modelColorUseTheme: Value<ColorUseTheme>? = nil,
         layerPosition: LayerPosition? = nil
     ) {
         self.model = model

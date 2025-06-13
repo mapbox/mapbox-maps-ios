@@ -74,7 +74,7 @@ jobs:
 
         - name: Archive xcodebuild.log
           uses: actions/upload-artifact@v4
-          if: matrix.language == 'swift'
+          if: always() && matrix.language == 'swift'
           with:
             name: xcodebuild.log
             path: xcodebuild.log

@@ -1,9 +1,7 @@
 Pod::Spec.new do |m|
 
-  maps_version = '11.10.0'
-
   m.name = 'MapboxMaps'
-  m.version = maps_version
+  m.version = '11.14.0-SNAPSHOT-06-12--04-30.git-fa8df2d'
 
   m.summary = 'Vector map solution for iOS with full styling capabilities.'
   m.description = 'Metal-based vector map solution for iOS with full styling capabilities.'
@@ -13,16 +11,16 @@ Pod::Spec.new do |m|
   m.social_media_url = 'https://twitter.com/mapbox'
   m.documentation_url = 'https://docs.mapbox.com/ios/maps/api-reference/'
 
-  m.source = { :git => 'https://github.com/mapbox/mapbox-maps-ios.git', :tag => "v#{maps_version}" }
+  m.source = { :git => 'https://github.com/mapbox/mapbox-maps-ios.git', :tag => "v#{m.version.to_s}" }
   m.platform = :ios
   m.ios.deployment_target = '14.0'
   m.swift_version = '5.9'
 
   m.source_files = 'Sources/MapboxMaps/**/*.{swift,h}'
-  m.resource_bundles = { 'MapboxMapsResources' => ['Sources/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json', 'Sources/MapboxMaps/PrivacyInfo.xcprivacy'] }
+  m.resource_bundles = { 'MapboxMapsResources' => ['Sources/MapboxMaps/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json', 'Sources/MapboxMaps/PrivacyInfo.xcprivacy'] }
 
-  m.dependency 'MapboxCoreMaps', '11.10.0'
-  m.dependency 'MapboxCommon', '24.10.0'
+  m.dependency 'MapboxCoreMaps', '11.14.0-SNAPSHOT-06-12--04-30.git-fa8df2d'
+  m.dependency 'MapboxCommon', '24.14.0-SNAPSHOT-06-12--04-30.git-fa8df2d'
   m.dependency 'Turf', '4.0.0'
 
 end

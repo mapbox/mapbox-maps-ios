@@ -39,6 +39,11 @@ public struct FillLayer: Layer, Equatable {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>
 
+    /// Determines whether bridge guard rails are added for elevated roads.
+    /// Default value: "true".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillConstructBridgeGuardRail: Value<Bool>?
+
     /// Selects the base of fill-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
     @_documentation(visibility: public)
@@ -51,12 +56,27 @@ public struct FillLayer: Layer, Equatable {
     /// Default value: true.
     public var fillAntialias: Value<Bool>?
 
+    /// The color of bridge guard rail.
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillBridgeGuardRailColor: Value<StyleColor>?
+
+    /// Transition options for `fillBridgeGuardRailColor`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillBridgeGuardRailColorTransition: StyleTransition?
+
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var fillBridgeGuardRailColorUseTheme: Value<ColorUseTheme>?
+
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
     /// Default value: "#000000".
     public var fillColor: Value<StyleColor>?
 
     /// Transition options for `fillColor`.
     public var fillColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -81,6 +101,7 @@ public struct FillLayer: Layer, Equatable {
 
     /// Transition options for `fillOutlineColor`.
     public var fillOutlineColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -88,6 +109,10 @@ public struct FillLayer: Layer, Equatable {
 
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var fillPattern: Value<ResolvedImage>?
+
+    /// Controls the transition progress between the image variants of fill-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public var fillPatternCrossFade: Value<Double>?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     /// Default value: [0,0]. The unit of fillTranslate is in pixels.
@@ -99,6 +124,20 @@ public struct FillLayer: Layer, Equatable {
     /// Controls the frame of reference for `fill-translate`.
     /// Default value: "map".
     public var fillTranslateAnchor: Value<FillTranslateAnchor>?
+
+    /// The color of tunnel structures (tunnel entrance and tunnel walls).
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillTunnelStructureColor: Value<StyleColor>?
+
+    /// Transition options for `fillTunnelStructureColor`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var fillTunnelStructureColorTransition: StyleTransition?
+
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var fillTunnelStructureColorUseTheme: Value<ColorUseTheme>?
 
     /// Specifies an uniform elevation in meters. Note: If the value is zero, the layer will be rendered on the ground. Non-zero values will elevate the layer from the sea level, which can cause it to be rendered below the terrain.
     /// Default value: 0. Minimum value: 0.
@@ -129,6 +168,9 @@ public struct FillLayer: Layer, Equatable {
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         try paintContainer.encodeIfPresent(fillAntialias, forKey: .fillAntialias)
+        try paintContainer.encodeIfPresent(fillBridgeGuardRailColor, forKey: .fillBridgeGuardRailColor)
+        try paintContainer.encodeIfPresent(fillBridgeGuardRailColorTransition, forKey: .fillBridgeGuardRailColorTransition)
+        try paintContainer.encodeIfPresent(fillBridgeGuardRailColorUseTheme, forKey: .fillBridgeGuardRailColorUseTheme)
         try paintContainer.encodeIfPresent(fillColor, forKey: .fillColor)
         try paintContainer.encodeIfPresent(fillColorTransition, forKey: .fillColorTransition)
         try paintContainer.encodeIfPresent(fillColorUseTheme, forKey: .fillColorUseTheme)
@@ -140,14 +182,19 @@ public struct FillLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(fillOutlineColorTransition, forKey: .fillOutlineColorTransition)
         try paintContainer.encodeIfPresent(fillOutlineColorUseTheme, forKey: .fillOutlineColorUseTheme)
         try paintContainer.encodeIfPresent(fillPattern, forKey: .fillPattern)
+        try paintContainer.encodeIfPresent(fillPatternCrossFade, forKey: .fillPatternCrossFade)
         try paintContainer.encodeIfPresent(fillTranslate, forKey: .fillTranslate)
         try paintContainer.encodeIfPresent(fillTranslateTransition, forKey: .fillTranslateTransition)
         try paintContainer.encodeIfPresent(fillTranslateAnchor, forKey: .fillTranslateAnchor)
+        try paintContainer.encodeIfPresent(fillTunnelStructureColor, forKey: .fillTunnelStructureColor)
+        try paintContainer.encodeIfPresent(fillTunnelStructureColorTransition, forKey: .fillTunnelStructureColorTransition)
+        try paintContainer.encodeIfPresent(fillTunnelStructureColorUseTheme, forKey: .fillTunnelStructureColorUseTheme)
         try paintContainer.encodeIfPresent(fillZOffset, forKey: .fillZOffset)
         try paintContainer.encodeIfPresent(fillZOffsetTransition, forKey: .fillZOffsetTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encode(visibility, forKey: .visibility)
+        try layoutContainer.encodeIfPresent(fillConstructBridgeGuardRail, forKey: .fillConstructBridgeGuardRail)
         try layoutContainer.encodeIfPresent(fillElevationReference, forKey: .fillElevationReference)
         try layoutContainer.encodeIfPresent(fillSortKey, forKey: .fillSortKey)
     }
@@ -165,6 +212,9 @@ public struct FillLayer: Layer, Equatable {
 
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             fillAntialias = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .fillAntialias)
+            fillBridgeGuardRailColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillBridgeGuardRailColor)
+            fillBridgeGuardRailColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillBridgeGuardRailColorTransition)
+            fillBridgeGuardRailColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .fillBridgeGuardRailColorUseTheme)
             fillColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillColor)
             fillColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillColorTransition)
             fillColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .fillColorUseTheme)
@@ -176,9 +226,13 @@ public struct FillLayer: Layer, Equatable {
             fillOutlineColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillOutlineColorTransition)
             fillOutlineColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .fillOutlineColorUseTheme)
             fillPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .fillPattern)
+            fillPatternCrossFade = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillPatternCrossFade)
             fillTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .fillTranslate)
             fillTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillTranslateTransition)
             fillTranslateAnchor = try paintContainer.decodeIfPresent(Value<FillTranslateAnchor>.self, forKey: .fillTranslateAnchor)
+            fillTunnelStructureColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillTunnelStructureColor)
+            fillTunnelStructureColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillTunnelStructureColorTransition)
+            fillTunnelStructureColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .fillTunnelStructureColorUseTheme)
             fillZOffset = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillZOffset)
             fillZOffsetTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillZOffsetTransition)
         }
@@ -186,6 +240,7 @@ public struct FillLayer: Layer, Equatable {
         var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
             visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            fillConstructBridgeGuardRail = try layoutContainer.decodeIfPresent(Value<Bool>.self, forKey: .fillConstructBridgeGuardRail)
             fillElevationReference = try layoutContainer.decodeIfPresent(Value<FillElevationReference>.self, forKey: .fillElevationReference)
             fillSortKey = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .fillSortKey)
         }
@@ -206,6 +261,7 @@ public struct FillLayer: Layer, Equatable {
     }
 
     enum LayoutCodingKeys: String, CodingKey {
+        case fillConstructBridgeGuardRail = "fill-construct-bridge-guard-rail"
         case fillElevationReference = "fill-elevation-reference"
         case fillSortKey = "fill-sort-key"
         case visibility = "visibility"
@@ -213,6 +269,9 @@ public struct FillLayer: Layer, Equatable {
 
     enum PaintCodingKeys: String, CodingKey {
         case fillAntialias = "fill-antialias"
+        case fillBridgeGuardRailColor = "fill-bridge-guard-rail-color"
+        case fillBridgeGuardRailColorTransition = "fill-bridge-guard-rail-color-transition"
+        case fillBridgeGuardRailColorUseTheme = "fill-bridge-guard-rail-color-use-theme"
         case fillColor = "fill-color"
         case fillColorTransition = "fill-color-transition"
         case fillColorUseTheme = "fill-color-use-theme"
@@ -224,9 +283,13 @@ public struct FillLayer: Layer, Equatable {
         case fillOutlineColorTransition = "fill-outline-color-transition"
         case fillOutlineColorUseTheme = "fill-outline-color-use-theme"
         case fillPattern = "fill-pattern"
+        case fillPatternCrossFade = "fill-pattern-cross-fade"
         case fillTranslate = "fill-translate"
         case fillTranslateTransition = "fill-translate-transition"
         case fillTranslateAnchor = "fill-translate-anchor"
+        case fillTunnelStructureColor = "fill-tunnel-structure-color"
+        case fillTunnelStructureColorTransition = "fill-tunnel-structure-color-transition"
+        case fillTunnelStructureColorUseTheme = "fill-tunnel-structure-color-use-theme"
         case fillZOffset = "fill-z-offset"
         case fillZOffsetTransition = "fill-z-offset-transition"
     }
@@ -269,6 +332,22 @@ extension FillLayer {
         with(self, setter(\.maxZoom, newValue))
     }
 
+    /// Determines whether bridge guard rails are added for elevated roads.
+    /// Default value: "true".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillConstructBridgeGuardRail(_ constant: Bool) -> Self {
+        with(self, setter(\.fillConstructBridgeGuardRail, .constant(constant)))
+    }
+
+    /// Determines whether bridge guard rails are added for elevated roads.
+    /// Default value: "true".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillConstructBridgeGuardRail(_ expression: Exp) -> Self {
+        with(self, setter(\.fillConstructBridgeGuardRail, .expression(expression)))
+    }
+
     /// Selects the base of fill-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
     @_documentation(visibility: public)
@@ -305,6 +384,53 @@ extension FillLayer {
     /// Default value: true.
     public func fillAntialias(_ expression: Exp) -> Self {
         with(self, setter(\.fillAntialias, .expression(expression)))
+    }
+
+    /// The color of bridge guard rail.
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColor, .constant(constant)))
+    }
+
+    /// The color of bridge guard rail.
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColor(_ color: UIColor) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColor, .constant(StyleColor(color))))
+    }
+
+    /// Transition property for `fillBridgeGuardRailColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColorTransition, transition))
+    }
+
+    /// The color of bridge guard rail.
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColor(_ expression: Exp) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `fillBridgeGuardRailColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `fillBridgeGuardRailColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillBridgeGuardRailColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.fillBridgeGuardRailColorUseTheme, .expression(expression)))
     }
 
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
@@ -426,6 +552,18 @@ extension FillLayer {
         with(self, setter(\.fillPattern, .expression(expression)))
     }
 
+    /// Controls the transition progress between the image variants of fill-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public func fillPatternCrossFade(_ constant: Double) -> Self {
+        with(self, setter(\.fillPatternCrossFade, .constant(constant)))
+    }
+
+    /// Controls the transition progress between the image variants of fill-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public func fillPatternCrossFade(_ expression: Exp) -> Self {
+        with(self, setter(\.fillPatternCrossFade, .expression(expression)))
+    }
+
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     /// Default value: [0,0]. The unit of fillTranslate is in pixels.
     public func fillTranslate(x: Double, y: Double) -> Self {
@@ -453,6 +591,53 @@ extension FillLayer {
     /// Default value: "map".
     public func fillTranslateAnchor(_ expression: Exp) -> Self {
         with(self, setter(\.fillTranslateAnchor, .expression(expression)))
+    }
+
+    /// The color of tunnel structures (tunnel entrance and tunnel walls).
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColor(_ constant: StyleColor) -> Self {
+        with(self, setter(\.fillTunnelStructureColor, .constant(constant)))
+    }
+
+    /// The color of tunnel structures (tunnel entrance and tunnel walls).
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColor(_ color: UIColor) -> Self {
+        with(self, setter(\.fillTunnelStructureColor, .constant(StyleColor(color))))
+    }
+
+    /// Transition property for `fillTunnelStructureColor`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.fillTunnelStructureColorTransition, transition))
+    }
+
+    /// The color of tunnel structures (tunnel entrance and tunnel walls).
+    /// Default value: "rgba(241, 236, 225, 255)".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColor(_ expression: Exp) -> Self {
+        with(self, setter(\.fillTunnelStructureColor, .expression(expression)))
+    }
+
+    /// This property defines whether the `fillTunnelStructureColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.fillTunnelStructureColorUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `fillTunnelStructureColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func fillTunnelStructureColorUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.fillTunnelStructureColorUseTheme, .expression(expression)))
     }
 
     /// Specifies an uniform elevation in meters. Note: If the value is zero, the layer will be rendered on the ground. Non-zero values will elevate the layer from the sea level, which can cause it to be rendered below the terrain.

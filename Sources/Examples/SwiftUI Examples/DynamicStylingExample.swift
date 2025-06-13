@@ -77,13 +77,14 @@ struct DynamicStylingExample: View {
             }
 
             ModelsComponent()
+
+            TapInteraction(.layer("connection-fill")) { _, _ in
+                connectionColor = .random
+                return true
+            }
         }
         .mapStyle(mapStyle)
         .additionalSafeAreaInsets(.bottom, settingsHeight)
-        .onLayerTapGesture("connection-fill") { _, _ in
-            connectionColor = .random
-            return true
-        }
         .debugOptions(.camera)
         .ignoresSafeArea()
         .overlay(alignment: .bottom) {

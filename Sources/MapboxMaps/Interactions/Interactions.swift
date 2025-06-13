@@ -6,12 +6,14 @@ import MapboxCoreMaps
 /// To create an interaction use ``TapInteraction`` and ``LongPressInteraction`` implementations.
 ///
 /// See also: ``MapboxMap/addInteraction(_:)``.
-@_documentation(visibility: public)
-@_spi(Experimental)
 public protocol Interaction {
     /// An interaction opaque type.
     @_spi(Internal)
-    var impl: InteractionImpl { get }
+    var impl: InteractionImpl? { get }
+}
+
+extension Interaction {
+    var impl: InteractionImpl? { nil }
 }
 
 /// A single tap interaction.
@@ -21,8 +23,13 @@ public protocol Interaction {
 /// ```swift
 /// // UIKit
 /// map.addInteraction(TapInteraction(.layer("my-layer") { feature, context in
-///     // Handle tap on the feature
+///     // Handle tap on the feature in "my-layer"
 ///     return true // Stops propagation to features below or the map.
+/// }))
+///
+/// map.addInteraction(TapInteraction { context in
+///     // Handle tap on the map
+///     return true // Stops propagation to other tap interactions.
 /// })
 ///
 /// // SwiftUI
@@ -31,14 +38,17 @@ public protocol Interaction {
 ///         // Handle tap on the feature
 ///         return true // Stops propagation to features below or the map.
 ///     }
+///
+///     TapInteraction { context in
+///         // Handle tap on the map
+///         return true // Stops propagation to other tap interactions.
+///     }
 /// }
 /// ```
-@_documentation(visibility: public)
-@_spi(Experimental)
 public struct TapInteraction: Interaction {
     /// Implementation.
     @_spi(Internal)
-    public let impl: InteractionImpl
+    public let impl: InteractionImpl?
 
     /// Creates a Tap interaction on the map itself.
     ///
@@ -48,7 +58,6 @@ public struct TapInteraction: Interaction {
     /// If the `action` returns `true` as a default, the interaction stops propagation.
     /// - Parameters:
     ///    - action: Interaction action.
-    @_documentation(visibility: public)
     public init(action: @escaping (InteractionContext) -> Bool) {
         self.impl = InteractionImpl(.tap, action)
     }
@@ -65,7 +74,6 @@ public struct TapInteraction: Interaction {
     ///    - filter: An optional filter of features that should trigger the interaction.
     ///    - radius: Radius of a tappable area, in points.
     ///    - action: An interaction action.
-    @_documentation(visibility: public)
     public init<T: FeaturesetFeatureType>(
         _ featureset: FeaturesetDescriptor<T>,
         filter: Exp? = nil,
@@ -83,8 +91,13 @@ public struct TapInteraction: Interaction {
 /// ```swift
 /// // UIKit
 /// map.addInteraction(LongPressInteraction(.layer("my-layer") { feature, context in
-///     // Handle long press on the feature
+///     // Handle long press on the feature in "my-layer"
 ///     return true // Stops propagation to features below or the map.
+/// }))
+///
+/// map.addInteraction(LongPressInteraction { context in
+///     // Handle long press on the map
+///     return true // Stops propagation to other long press interactions.
 /// })
 ///
 /// // SwiftUI
@@ -93,13 +106,16 @@ public struct TapInteraction: Interaction {
 ///         // Handle long press on the feature
 ///         return true // Stops propagation to features below or the map.
 ///     }
+///
+///     TapInteraction { context in
+///         // Handle long press on the map
+///         return true // Stops propagation to other tap interactions.
+///     }
 /// }
 /// ```
-@_documentation(visibility: public)
-@_spi(Experimental)
 public struct LongPressInteraction: Interaction {
     @_spi(Internal)
-    public let impl: InteractionImpl
+    public let impl: InteractionImpl?
 
     /// Creates a Long Press interaction on the map itself.
     ///
@@ -108,7 +124,6 @@ public struct LongPressInteraction: Interaction {
     /// The action will be called if no other interaction handled the tap gesture.
     /// - Parameters:
     ///    - action: Interaction action.
-    @_documentation(visibility: public)
     public init(action: @escaping (InteractionContext) -> Bool) {
         self.impl = InteractionImpl(.longPress, action)
     }
@@ -125,7 +140,6 @@ public struct LongPressInteraction: Interaction {
     ///    - filter: An optional filter of features that should trigger the interaction.
     ///    - radius: Radius of a tappable area, in points.
     ///    - action: An interaction action.
-    @_documentation(visibility: public)
     public init<T: FeaturesetFeatureType>(
         _ featureset: FeaturesetDescriptor<T>,
         filter: Exp? = nil,
@@ -138,7 +152,7 @@ public struct LongPressInteraction: Interaction {
 
 /// For internal use in Annotations.
 struct DragInteraction: Interaction {
-    let impl: InteractionImpl
+    let impl: InteractionImpl?
 
     init(
         _ featureset: FeaturesetDescriptor<FeaturesetFeature>,
@@ -238,18 +252,18 @@ public struct InteractionImpl {
     }
 }
 
-@_spi(Experimental)
-@_documentation(visibility: public)
 extension TapInteraction: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
-        node.mount(MountedInteraction(interaction: self.impl))
+        if let impl {
+            node.mount(MountedInteraction(interaction: impl))
+        }
     }
 }
 
-@_spi(Experimental)
-@_documentation(visibility: public)
 extension LongPressInteraction: MapContent, PrimitiveMapContent {
     func visit(_ node: MapContentNode) {
-        node.mount(MountedInteraction(interaction: self.impl))
+        if let impl {
+            node.mount(MountedInteraction(interaction: impl))
+        }
     }
 }

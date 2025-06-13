@@ -40,7 +40,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
             // UIPinchGestureRecognizer sometimes begins with 1 touch.
             // If that happens, we ignore it here, but will start handling it
             // in .changed if the number of touches increases to 2.
-            guard gestureRecognizer.numberOfTouches == 2 else {
+            guard [0, 2].contains(gestureRecognizer.numberOfTouches) else {
                 return
             }
             start(with: gestureRecognizer)
@@ -51,7 +51,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
             //
             // if a second touch goes down again before the gesture ends, we
             // resume and re-capture the initial state
-            guard gestureRecognizer.numberOfTouches == 2 else {
+            guard [0, 2].contains(gestureRecognizer.numberOfTouches) else {
                 initialZoom = nil
                 gestureRecognizer.scale = 1
                 return

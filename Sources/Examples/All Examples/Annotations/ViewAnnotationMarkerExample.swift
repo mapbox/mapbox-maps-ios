@@ -50,13 +50,14 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
             self.addMarker(at: mapView.mapboxMap.coordinate(for: mapView.center), viewAnnotation: true)
         }.store(in: &cancelables)
 
-        mapView.gestures.onMapLongPress.observe { [weak self] context in
+        mapView.mapboxMap.addInteraction(LongPressInteraction { [weak self] context in
             self?.addMarker(at: context.coordinate)
-        }.store(in: &cancelables)
+            return false
+        })
 
-        mapView.gestures.onLayerTap(Constants.LAYER_ID) { [weak self] feature, _ in
-            self?.handleMarkerTap(feature.feature) ?? false
-        }.store(in: &cancelables)
+        mapView.mapboxMap.addInteraction(TapInteraction(.layer(Constants.LAYER_ID)) { [weak self] feature, _ in
+            self?.handleMarkerTap(feature) ?? false
+        })
 
         mapView.mapboxMap.styleURI = .streets
 
@@ -69,14 +70,14 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         ])
     }
 
-    private func handleMarkerTap(_ feature: Feature) -> Bool {
-        guard case let .string(id) = feature.identifier else { return false }
+    private func handleMarkerTap(_ feature: FeaturesetFeature) -> Bool {
+        guard let id = feature.id?.id else { return false }
 
         if let annotation = annotations[id] {
             annotation.priority = topPriority
             return true
         }
-        return addViewAnnotation(to: feature)
+        return addViewAnnotation(id: id, geometry: feature.geometry)
     }
 
     @objc private func styleChangePressed(sender: UIButton) {
@@ -124,15 +125,14 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         }
 
         if viewAnnotation {
-            addViewAnnotation(to: feature)
+            addViewAnnotation(id: currentId, geometry: .point(Point(coordinate)))
         }
     }
 
     // Add a view annotation at a specified location and optionally bind it to an ID of a marker
     @discardableResult
-    private func addViewAnnotation(to feature: Feature) -> Bool {
-        guard case let .string(id) = feature.identifier,
-              case let .point(point) = feature.geometry else { return false }
+    private func addViewAnnotation(id: String, geometry: Geometry) -> Bool {
+        guard case let .point(point) = geometry else { return false }
         let annotationView = AnnotationView(frame: .zero)
         annotationView.title = String(format: "lat=%.2f\nlon=%.2f", point.coordinates.latitude, point.coordinates.longitude)
 

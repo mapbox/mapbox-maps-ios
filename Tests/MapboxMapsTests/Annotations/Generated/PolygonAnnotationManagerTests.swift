@@ -36,6 +36,32 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         super.tearDown()
     }
 
+    func testInitialFillConstructBridgeGuardRail() {
+        let initialValue = manager.fillConstructBridgeGuardRail
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillConstructBridgeGuardRail() {
+        let value = true
+        manager.fillConstructBridgeGuardRail = value
+        XCTAssertEqual(manager.fillConstructBridgeGuardRail, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-construct-bridge-guard-rail"] as! Bool, value)
+    }
+
+
+    func testSetToNilFillConstructBridgeGuardRail() {
+        let newFillConstructBridgeGuardRailProperty = true
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-construct-bridge-guard-rail").value as! Bool
+        manager.fillConstructBridgeGuardRail = newFillConstructBridgeGuardRailProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-construct-bridge-guard-rail"])
+        harness.triggerDisplayLink()
+
+        manager.fillConstructBridgeGuardRail = nil
+        XCTAssertNil(manager.fillConstructBridgeGuardRail)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-construct-bridge-guard-rail"] as! Bool, defaultValue)
+    }
     func testInitialFillElevationReference() {
         let initialValue = manager.fillElevationReference
         XCTAssertNil(initialValue)
@@ -47,6 +73,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.fillElevationReference, value)
         XCTAssertEqual(manager.impl.layerProperties["fill-elevation-reference"] as! String, value.rawValue)
     }
+
 
     func testSetToNilFillElevationReference() {
         let newFillElevationReferenceProperty = FillElevationReference.testConstantValue()
@@ -73,6 +100,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-sort-key"] as! Double, value)
     }
 
+
     func testSetToNilFillSortKey() {
         let newFillSortKeyProperty = 0.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-sort-key").value as! Double
@@ -98,6 +126,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-antialias"] as! Bool, value)
     }
 
+
     func testSetToNilFillAntialias() {
         let newFillAntialiasProperty = true
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! Bool
@@ -111,6 +140,37 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-antialias"] as! Bool, defaultValue)
     }
+    func testInitialFillBridgeGuardRailColor() {
+        let initialValue = manager.fillBridgeGuardRailColor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillBridgeGuardRailColor() {
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.fillBridgeGuardRailColor = value
+        XCTAssertEqual(manager.fillBridgeGuardRailColor, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-bridge-guard-rail-color"] as? String, value?.rawValue)
+    }
+
+    func testSetFillBridgeGuardRailColorUseTheme() {
+        manager.fillBridgeGuardRailColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["fill-bridge-guard-rail-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
+    }
+
+    func testSetToNilFillBridgeGuardRailColor() {
+        let newFillBridgeGuardRailColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-bridge-guard-rail-color").value as! [Any], options: []))
+        manager.fillBridgeGuardRailColor = newFillBridgeGuardRailColorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-bridge-guard-rail-color"])
+        harness.triggerDisplayLink()
+
+        manager.fillBridgeGuardRailColor = nil
+        XCTAssertNil(manager.fillBridgeGuardRailColor)
+        harness.triggerDisplayLink()
+
+        let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-bridge-guard-rail-color"] as! [Any]))
+        XCTAssertEqual(currentValue, defaultValue)
+    }
     func testInitialFillColor() {
         let initialValue = manager.fillColor
         XCTAssertNil(initialValue)
@@ -121,6 +181,11 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         manager.fillColor = value
         XCTAssertEqual(manager.fillColor, value)
         XCTAssertEqual(manager.impl.layerProperties["fill-color"] as? String, value?.rawValue)
+    }
+
+    func testSetFillColorUseTheme() {
+        manager.fillColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["fill-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilFillColor() {
@@ -149,6 +214,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-emissive-strength"] as! Double, value)
     }
 
+
     func testSetToNilFillEmissiveStrength() {
         let newFillEmissiveStrengthProperty = 50000.0
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-emissive-strength").value as! Double
@@ -174,6 +240,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-opacity"] as! Double, value)
     }
 
+
     func testSetToNilFillOpacity() {
         let newFillOpacityProperty = 0.5
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-opacity").value as! Double
@@ -197,6 +264,11 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         manager.fillOutlineColor = value
         XCTAssertEqual(manager.fillOutlineColor, value)
         XCTAssertEqual(manager.impl.layerProperties["fill-outline-color"] as? String, value?.rawValue)
+    }
+
+    func testSetFillOutlineColorUseTheme() {
+        manager.fillOutlineColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["fill-outline-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
     }
 
     func testSetToNilFillOutlineColor() {
@@ -225,6 +297,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-pattern"] as! String, value)
     }
 
+
     func testSetToNilFillPattern() {
         let newFillPatternProperty = UUID().uuidString
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String
@@ -238,6 +311,32 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-pattern"] as! String, defaultValue)
     }
+    func testInitialFillPatternCrossFade() {
+        let initialValue = manager.fillPatternCrossFade
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillPatternCrossFade() {
+        let value = 0.5
+        manager.fillPatternCrossFade = value
+        XCTAssertEqual(manager.fillPatternCrossFade, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-pattern-cross-fade"] as! Double, value)
+    }
+
+
+    func testSetToNilFillPatternCrossFade() {
+        let newFillPatternCrossFadeProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-pattern-cross-fade").value as! Double
+        manager.fillPatternCrossFade = newFillPatternCrossFadeProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-pattern-cross-fade"])
+        harness.triggerDisplayLink()
+
+        manager.fillPatternCrossFade = nil
+        XCTAssertNil(manager.fillPatternCrossFade)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-pattern-cross-fade"] as! Double, defaultValue)
+    }
     func testInitialFillTranslate() {
         let initialValue = manager.fillTranslate
         XCTAssertNil(initialValue)
@@ -249,6 +348,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.fillTranslate, value)
         XCTAssertEqual(manager.impl.layerProperties["fill-translate"] as! [Double], value)
     }
+
 
     func testSetToNilFillTranslate() {
         let newFillTranslateProperty = [0.0, 0.0]
@@ -275,6 +375,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.impl.layerProperties["fill-translate-anchor"] as! String, value.rawValue)
     }
 
+
     func testSetToNilFillTranslateAnchor() {
         let newFillTranslateAnchorProperty = FillTranslateAnchor.testConstantValue()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String
@@ -288,6 +389,37 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate-anchor"] as! String, defaultValue)
     }
+    func testInitialFillTunnelStructureColor() {
+        let initialValue = manager.fillTunnelStructureColor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillTunnelStructureColor() {
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        manager.fillTunnelStructureColor = value
+        XCTAssertEqual(manager.fillTunnelStructureColor, value)
+        XCTAssertEqual(manager.impl.layerProperties["fill-tunnel-structure-color"] as? String, value?.rawValue)
+    }
+
+    func testSetFillTunnelStructureColorUseTheme() {
+        manager.fillTunnelStructureColorUseTheme = .default
+        XCTAssertEqual(manager.impl.layerProperties["fill-tunnel-structure-color-use-theme"] as! String, ColorUseTheme.default.rawValue)
+    }
+
+    func testSetToNilFillTunnelStructureColor() {
+        let newFillTunnelStructureColorProperty = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        let defaultValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-tunnel-structure-color").value as! [Any], options: []))
+        manager.fillTunnelStructureColor = newFillTunnelStructureColorProperty
+        XCTAssertNotNil(manager.impl.layerProperties["fill-tunnel-structure-color"])
+        harness.triggerDisplayLink()
+
+        manager.fillTunnelStructureColor = nil
+        XCTAssertNil(manager.fillTunnelStructureColor)
+        harness.triggerDisplayLink()
+
+        let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-tunnel-structure-color"] as! [Any]))
+        XCTAssertEqual(currentValue, defaultValue)
+    }
     func testInitialFillZOffset() {
         let initialValue = manager.fillZOffset
         XCTAssertNil(initialValue)
@@ -299,6 +431,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.fillZOffset, value)
         XCTAssertEqual(manager.impl.layerProperties["fill-z-offset"] as! Double, value)
     }
+
 
     func testSetToNilFillZOffset() {
         let newFillZOffsetProperty = 50000.0
@@ -324,6 +457,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.slot, value)
         XCTAssertEqual(manager.impl.layerProperties["slot"] as! String, value)
     }
+
 
     func testSetToNilSlot() {
         let newSlotProperty = UUID().uuidString

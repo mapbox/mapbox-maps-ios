@@ -26,13 +26,12 @@ final class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
 
         // Set up the tap gesture
-        mapView.gestures.onLayerTap("US-states") { [weak self] queriedFeature, _ in
-            if let firstFeature = queriedFeature.feature.properties,
-               case let .string(stateName) = firstFeature["STATE_NAME"] {
+        mapView.mapboxMap.addInteraction(TapInteraction(.layer("US-states")) { [weak self] feature, _ in
+            if case let .string(stateName) = feature.properties["STATE_NAME"] {
                     self?.showAlert(with: "You selected \(stateName)")
             }
             return true
-        }.store(in: &cancelables)
+        })
     }
 
     func setupExample() {

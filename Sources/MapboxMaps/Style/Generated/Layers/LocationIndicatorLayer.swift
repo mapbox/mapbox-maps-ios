@@ -25,15 +25,6 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>
 
-    /// Name of image in sprite to use as the middle of the location indicator.
-    public var bearingImage: Value<ResolvedImage>?
-
-    /// Name of image in sprite to use as the background of the location indicator.
-    public var shadowImage: Value<ResolvedImage>?
-
-    /// Name of image in sprite to use as the top of the location indicator.
-    public var topImage: Value<ResolvedImage>?
-
     /// The accuracy, in meters, of the position source used to retrieve the position of the location indicator.
     /// Default value: 0. The unit of accuracyRadius is in meters.
     public var accuracyRadius: Value<Double>?
@@ -47,6 +38,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Transition options for `accuracyRadiusBorderColor`.
     public var accuracyRadiusBorderColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -58,6 +50,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Transition options for `accuracyRadiusColor`.
     public var accuracyRadiusColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -69,6 +62,9 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Transition options for `bearing`.
     public var bearingTransition: StyleTransition?
+
+    /// Name of image in sprite to use as the middle of the location indicator.
+    public var bearingImage: Value<ResolvedImage>?
 
     /// The size of the bearing image, as a scale factor applied to the size of the specified image.
     /// Default value: 1. The unit of bearingImageSize is in factor of the original icon size.
@@ -83,6 +79,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
 
     /// Transition options for `emphasisCircleColor`.
     public var emphasisCircleColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -124,12 +121,18 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     /// Default value: "0.85".
     public var perspectiveCompensation: Value<Double>?
 
+    /// Name of image in sprite to use as the background of the location indicator.
+    public var shadowImage: Value<ResolvedImage>?
+
     /// The size of the shadow image, as a scale factor applied to the size of the specified image.
     /// Default value: 1. The unit of shadowImageSize is in factor of the original icon size.
     public var shadowImageSize: Value<Double>?
 
     /// Transition options for `shadowImageSize`.
     public var shadowImageSizeTransition: StyleTransition?
+
+    /// Name of image in sprite to use as the top of the location indicator.
+    public var topImage: Value<ResolvedImage>?
 
     /// The size of the top image, as a scale factor applied to the size of the specified image.
     /// Default value: 1. The unit of topImageSize is in factor of the original icon size.
@@ -163,6 +166,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(accuracyRadiusColorUseTheme, forKey: .accuracyRadiusColorUseTheme)
         try paintContainer.encodeIfPresent(bearing, forKey: .bearing)
         try paintContainer.encodeIfPresent(bearingTransition, forKey: .bearingTransition)
+        try paintContainer.encodeIfPresent(bearingImage, forKey: .bearingImage)
         try paintContainer.encodeIfPresent(bearingImageSize, forKey: .bearingImageSize)
         try paintContainer.encodeIfPresent(bearingImageSizeTransition, forKey: .bearingImageSizeTransition)
         try paintContainer.encodeIfPresent(emphasisCircleColor, forKey: .emphasisCircleColor)
@@ -178,16 +182,15 @@ public struct LocationIndicatorLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(locationIndicatorOpacity, forKey: .locationIndicatorOpacity)
         try paintContainer.encodeIfPresent(locationIndicatorOpacityTransition, forKey: .locationIndicatorOpacityTransition)
         try paintContainer.encodeIfPresent(perspectiveCompensation, forKey: .perspectiveCompensation)
+        try paintContainer.encodeIfPresent(shadowImage, forKey: .shadowImage)
         try paintContainer.encodeIfPresent(shadowImageSize, forKey: .shadowImageSize)
         try paintContainer.encodeIfPresent(shadowImageSizeTransition, forKey: .shadowImageSizeTransition)
+        try paintContainer.encodeIfPresent(topImage, forKey: .topImage)
         try paintContainer.encodeIfPresent(topImageSize, forKey: .topImageSize)
         try paintContainer.encodeIfPresent(topImageSizeTransition, forKey: .topImageSizeTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encode(visibility, forKey: .visibility)
-        try layoutContainer.encodeIfPresent(bearingImage, forKey: .bearingImage)
-        try layoutContainer.encodeIfPresent(shadowImage, forKey: .shadowImage)
-        try layoutContainer.encodeIfPresent(topImage, forKey: .topImage)
     }
 
     public init(from decoder: Decoder) throws {
@@ -209,6 +212,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
             accuracyRadiusColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .accuracyRadiusColorUseTheme)
             bearing = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .bearing)
             bearingTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .bearingTransition)
+            bearingImage = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .bearingImage)
             bearingImageSize = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .bearingImageSize)
             bearingImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .bearingImageSizeTransition)
             emphasisCircleColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .emphasisCircleColor)
@@ -224,8 +228,10 @@ public struct LocationIndicatorLayer: Layer, Equatable {
             locationIndicatorOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .locationIndicatorOpacity)
             locationIndicatorOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .locationIndicatorOpacityTransition)
             perspectiveCompensation = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .perspectiveCompensation)
+            shadowImage = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .shadowImage)
             shadowImageSize = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .shadowImageSize)
             shadowImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .shadowImageSizeTransition)
+            topImage = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .topImage)
             topImageSize = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .topImageSize)
             topImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .topImageSizeTransition)
         }
@@ -233,9 +239,6 @@ public struct LocationIndicatorLayer: Layer, Equatable {
         var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
             visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
-            bearingImage = try layoutContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .bearingImage)
-            shadowImage = try layoutContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .shadowImage)
-            topImage = try layoutContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .topImage)
         }
         visibility = visibilityEncoded ?? .constant(.visible)
     }
@@ -251,9 +254,6 @@ public struct LocationIndicatorLayer: Layer, Equatable {
     }
 
     enum LayoutCodingKeys: String, CodingKey {
-        case bearingImage = "bearing-image"
-        case shadowImage = "shadow-image"
-        case topImage = "top-image"
         case visibility = "visibility"
     }
 
@@ -268,6 +268,7 @@ public struct LocationIndicatorLayer: Layer, Equatable {
         case accuracyRadiusColorUseTheme = "accuracy-radius-color-use-theme"
         case bearing = "bearing"
         case bearingTransition = "bearing-transition"
+        case bearingImage = "bearing-image"
         case bearingImageSize = "bearing-image-size"
         case bearingImageSizeTransition = "bearing-image-size-transition"
         case emphasisCircleColor = "emphasis-circle-color"
@@ -283,8 +284,10 @@ public struct LocationIndicatorLayer: Layer, Equatable {
         case locationIndicatorOpacity = "location-indicator-opacity"
         case locationIndicatorOpacityTransition = "location-indicator-opacity-transition"
         case perspectiveCompensation = "perspective-compensation"
+        case shadowImage = "shadow-image"
         case shadowImageSize = "shadow-image-size"
         case shadowImageSizeTransition = "shadow-image-size-transition"
+        case topImage = "top-image"
         case topImageSize = "top-image-size"
         case topImageSizeTransition = "top-image-size-transition"
     }
@@ -306,36 +309,6 @@ extension LocationIndicatorLayer {
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
-    }
-
-    /// Name of image in sprite to use as the middle of the location indicator.
-    public func bearingImage(_ constant: String) -> Self {
-        with(self, setter(\.bearingImage, .constant(.name(constant))))
-    }
-
-    /// Name of image in sprite to use as the middle of the location indicator.
-    public func bearingImage(_ expression: Exp) -> Self {
-        with(self, setter(\.bearingImage, .expression(expression)))
-    }
-
-    /// Name of image in sprite to use as the background of the location indicator.
-    public func shadowImage(_ constant: String) -> Self {
-        with(self, setter(\.shadowImage, .constant(.name(constant))))
-    }
-
-    /// Name of image in sprite to use as the background of the location indicator.
-    public func shadowImage(_ expression: Exp) -> Self {
-        with(self, setter(\.shadowImage, .expression(expression)))
-    }
-
-    /// Name of image in sprite to use as the top of the location indicator.
-    public func topImage(_ constant: String) -> Self {
-        with(self, setter(\.topImage, .constant(.name(constant))))
-    }
-
-    /// Name of image in sprite to use as the top of the location indicator.
-    public func topImage(_ expression: Exp) -> Self {
-        with(self, setter(\.topImage, .expression(expression)))
     }
 
     /// The accuracy, in meters, of the position source used to retrieve the position of the location indicator.
@@ -448,6 +421,16 @@ extension LocationIndicatorLayer {
     /// Default value: 0. The unit of bearing is in degrees.
     public func bearing(_ expression: Exp) -> Self {
         with(self, setter(\.bearing, .expression(expression)))
+    }
+
+    /// Name of image in sprite to use as the middle of the location indicator.
+    public func bearingImage(_ constant: String) -> Self {
+        with(self, setter(\.bearingImage, .constant(.name(constant))))
+    }
+
+    /// Name of image in sprite to use as the middle of the location indicator.
+    public func bearingImage(_ expression: Exp) -> Self {
+        with(self, setter(\.bearingImage, .expression(expression)))
     }
 
     /// The size of the bearing image, as a scale factor applied to the size of the specified image.
@@ -598,6 +581,16 @@ extension LocationIndicatorLayer {
         with(self, setter(\.perspectiveCompensation, .expression(expression)))
     }
 
+    /// Name of image in sprite to use as the background of the location indicator.
+    public func shadowImage(_ constant: String) -> Self {
+        with(self, setter(\.shadowImage, .constant(.name(constant))))
+    }
+
+    /// Name of image in sprite to use as the background of the location indicator.
+    public func shadowImage(_ expression: Exp) -> Self {
+        with(self, setter(\.shadowImage, .expression(expression)))
+    }
+
     /// The size of the shadow image, as a scale factor applied to the size of the specified image.
     /// Default value: 1. The unit of shadowImageSize is in factor of the original icon size.
     public func shadowImageSize(_ constant: Double) -> Self {
@@ -613,6 +606,16 @@ extension LocationIndicatorLayer {
     /// Default value: 1. The unit of shadowImageSize is in factor of the original icon size.
     public func shadowImageSize(_ expression: Exp) -> Self {
         with(self, setter(\.shadowImageSize, .expression(expression)))
+    }
+
+    /// Name of image in sprite to use as the top of the location indicator.
+    public func topImage(_ constant: String) -> Self {
+        with(self, setter(\.topImage, .constant(.name(constant))))
+    }
+
+    /// Name of image in sprite to use as the top of the location indicator.
+    public func topImage(_ expression: Exp) -> Self {
+        with(self, setter(\.topImage, .expression(expression)))
     }
 
     /// The size of the top image, as a scale factor applied to the size of the specified image.

@@ -15,6 +15,7 @@
 - ``RasterArraySource``
 - ``VectorSource``
 - ``PromoteId``
+- ``VectorSourcePromoteId``
 - ``Scheme``
 - ``Encoding``
 - ``CustomGeometrySource``

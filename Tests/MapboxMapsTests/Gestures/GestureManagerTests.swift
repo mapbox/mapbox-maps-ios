@@ -173,7 +173,7 @@ final class GestureManagerTests: XCTestCase {
     }
 
     func testGestureBegan() {
-        let gestureType = GestureType.allCases.randomElement()!
+        let gestureType = GestureType.doubleTapToZoomIn
 
         gestureManager.gestureBegan(for: gestureType)
 
@@ -184,8 +184,8 @@ final class GestureManagerTests: XCTestCase {
     }
 
     func testGestureEnded() throws {
-        let gestureType = GestureType.allCases.randomElement()!
-        let willAnimate = Bool.random()
+        let gestureType = GestureType.pinch
+        let willAnimate = Bool.testConstantValue()
         gestureManager.gestureBegan(for: gestureType)
         gestureManager.gestureEnded(for: gestureType, willAnimate: willAnimate)
 
@@ -198,7 +198,7 @@ final class GestureManagerTests: XCTestCase {
     }
 
     func testAnimationEnded() {
-        let gestureType = GestureType.allCases.randomElement()!
+        let gestureType = GestureType.rotation
 
         gestureManager.animationEnded(for: gestureType)
 
@@ -402,7 +402,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(gestureManager.options.panMode, .horizontalAndVertical)
         XCTAssertEqual(panGestureHandler.panMode, .horizontalAndVertical)
 
-        panGestureHandler.panMode = [.horizontal, .vertical].randomElement()!
+        panGestureHandler.panMode = .vertical
 
         XCTAssertEqual(gestureManager.options.panMode, panGestureHandler.panMode)
     }

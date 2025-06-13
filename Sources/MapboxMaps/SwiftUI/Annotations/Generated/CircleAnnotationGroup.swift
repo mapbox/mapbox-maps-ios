@@ -75,18 +75,30 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     }
 
     private func updateProperties(manager: CircleAnnotationManager) {
+        assign(manager, \.circleElevationReference, value: circleElevationReference)
         assign(manager, \.circleSortKey, value: circleSortKey)
         assign(manager, \.circleBlur, value: circleBlur)
+        assign(manager, \.circleBlurTransition, value: circleBlurTransition)
         assign(manager, \.circleColor, value: circleColor)
+        assign(manager, \.circleColorUseTheme, value: circleColorUseTheme)
+        assign(manager, \.circleColorTransition, value: circleColorTransition)
         assign(manager, \.circleEmissiveStrength, value: circleEmissiveStrength)
+        assign(manager, \.circleEmissiveStrengthTransition, value: circleEmissiveStrengthTransition)
         assign(manager, \.circleOpacity, value: circleOpacity)
+        assign(manager, \.circleOpacityTransition, value: circleOpacityTransition)
         assign(manager, \.circlePitchAlignment, value: circlePitchAlignment)
         assign(manager, \.circlePitchScale, value: circlePitchScale)
         assign(manager, \.circleRadius, value: circleRadius)
+        assign(manager, \.circleRadiusTransition, value: circleRadiusTransition)
         assign(manager, \.circleStrokeColor, value: circleStrokeColor)
+        assign(manager, \.circleStrokeColorUseTheme, value: circleStrokeColorUseTheme)
+        assign(manager, \.circleStrokeColorTransition, value: circleStrokeColorTransition)
         assign(manager, \.circleStrokeOpacity, value: circleStrokeOpacity)
+        assign(manager, \.circleStrokeOpacityTransition, value: circleStrokeOpacityTransition)
         assign(manager, \.circleStrokeWidth, value: circleStrokeWidth)
+        assign(manager, \.circleStrokeWidthTransition, value: circleStrokeWidthTransition)
         assign(manager, \.circleTranslate, value: circleTranslate)
+        assign(manager, \.circleTranslateTransition, value: circleTranslateTransition)
         assign(manager, \.circleTranslateAnchor, value: circleTranslateAnchor)
         assign(manager, \.slot, value: slot)
         manager.tapRadius = tapRadius
@@ -95,10 +107,25 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
 
     // MARK: - Common layer properties
 
+    private var circleElevationReference: CircleElevationReference?
+    /// Selects the base of circle-elevation. Some modes might require precomputed elevation data in the tileset.
+    /// Default value: "none".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func circleElevationReference(_ newValue: CircleElevationReference) -> Self {
+        with(self, setter(\.circleElevationReference, newValue))
+    }
+
     private var circleSortKey: Double?
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public func circleSortKey(_ newValue: Double) -> Self {
         with(self, setter(\.circleSortKey, newValue))
+    }
+
+    private var circleBlurTransition: StyleTransition?
+    /// Transition property for `circleBlur`
+    public func circleBlurTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleBlurTransition, transition))
     }
 
     private var circleBlur: Double?
@@ -108,11 +135,38 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
         with(self, setter(\.circleBlur, newValue))
     }
 
-    private var circleColor: StyleColor?
     /// The fill color of the circle.
     /// Default value: "#000000".
     public func circleColor(_ color: UIColor) -> Self {
         with(self, setter(\.circleColor, StyleColor(color)))
+    }
+
+    private var circleColorUseTheme: ColorUseTheme?
+    /// This property defines whether the `circleColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func circleColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.circleColorUseTheme, useTheme))
+    }
+
+    private var circleColorTransition: StyleTransition?
+    /// Transition property for `circleColor`
+    public func circleColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleColorTransition, transition))
+    }
+
+    private var circleColor: StyleColor?
+    /// The fill color of the circle.
+    /// Default value: "#000000".
+    public func circleColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.circleColor, newValue))
+    }
+
+    private var circleEmissiveStrengthTransition: StyleTransition?
+    /// Transition property for `circleEmissiveStrength`
+    public func circleEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleEmissiveStrengthTransition, transition))
     }
 
     private var circleEmissiveStrength: Double?
@@ -120,6 +174,12 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     /// Default value: 0. Minimum value: 0. The unit of circleEmissiveStrength is in intensity.
     public func circleEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.circleEmissiveStrength, newValue))
+    }
+
+    private var circleOpacityTransition: StyleTransition?
+    /// Transition property for `circleOpacity`
+    public func circleOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleOpacityTransition, transition))
     }
 
     private var circleOpacity: Double?
@@ -143,6 +203,12 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
         with(self, setter(\.circlePitchScale, newValue))
     }
 
+    private var circleRadiusTransition: StyleTransition?
+    /// Transition property for `circleRadius`
+    public func circleRadiusTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleRadiusTransition, transition))
+    }
+
     private var circleRadius: Double?
     /// Circle radius.
     /// Default value: 5. Minimum value: 0. The unit of circleRadius is in pixels.
@@ -150,11 +216,38 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
         with(self, setter(\.circleRadius, newValue))
     }
 
-    private var circleStrokeColor: StyleColor?
     /// The stroke color of the circle.
     /// Default value: "#000000".
     public func circleStrokeColor(_ color: UIColor) -> Self {
         with(self, setter(\.circleStrokeColor, StyleColor(color)))
+    }
+
+    private var circleStrokeColorUseTheme: ColorUseTheme?
+    /// This property defines whether the `circleStrokeColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func circleStrokeColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.circleStrokeColorUseTheme, useTheme))
+    }
+
+    private var circleStrokeColorTransition: StyleTransition?
+    /// Transition property for `circleStrokeColor`
+    public func circleStrokeColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleStrokeColorTransition, transition))
+    }
+
+    private var circleStrokeColor: StyleColor?
+    /// The stroke color of the circle.
+    /// Default value: "#000000".
+    public func circleStrokeColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.circleStrokeColor, newValue))
+    }
+
+    private var circleStrokeOpacityTransition: StyleTransition?
+    /// Transition property for `circleStrokeOpacity`
+    public func circleStrokeOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleStrokeOpacityTransition, transition))
     }
 
     private var circleStrokeOpacity: Double?
@@ -164,11 +257,23 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
         with(self, setter(\.circleStrokeOpacity, newValue))
     }
 
+    private var circleStrokeWidthTransition: StyleTransition?
+    /// Transition property for `circleStrokeWidth`
+    public func circleStrokeWidthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleStrokeWidthTransition, transition))
+    }
+
     private var circleStrokeWidth: Double?
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
     /// Default value: 0. Minimum value: 0. The unit of circleStrokeWidth is in pixels.
     public func circleStrokeWidth(_ newValue: Double) -> Self {
         with(self, setter(\.circleStrokeWidth, newValue))
+    }
+
+    private var circleTranslateTransition: StyleTransition?
+    /// Transition property for `circleTranslate`
+    public func circleTranslateTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.circleTranslateTransition, transition))
     }
 
     private var circleTranslate: [Double]?
@@ -217,15 +322,11 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> 
     var longPressRadius: CGFloat?
 
     /// A custom tappable area radius. Default value is 0.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     public func tapRadius(_ radius: CGFloat? = nil) -> Self {
         with(self, setter(\.tapRadius, radius))
     }
 
     /// A custom tappable area radius. Default value is 0.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     public func longPressRadius(_ radius: CGFloat? = nil) -> Self {
         with(self, setter(\.longPressRadius, radius))
     }

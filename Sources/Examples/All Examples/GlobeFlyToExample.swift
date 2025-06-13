@@ -35,9 +35,10 @@ final class GlobeFlyToExample: UIViewController, ExampleProtocol {
             self.finish()
         }.store(in: &cancelables)
 
-        mapView.gestures.onMapTap.observe { [weak self] _ in
+        mapView.mapboxMap.addInteraction(TapInteraction { [weak self] _ in
             self?.animateCameraOnClick()
-        }.store(in: &cancelables)
+            return true
+        })
 
         instuctionLabel.text = "Tap anywhere on the map"
         instuctionLabel.textColor = UIColor.black

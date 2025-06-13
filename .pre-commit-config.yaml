@@ -2,10 +2,14 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v5.0.0
     hooks:
     - id: trailing-whitespace
-      exclude: ^(LICENSE.md|.*\.swiftinterface)$
+      exclude: |
+          (?x)^(
+              .*LICENSE.md|
+              .*\.swiftinterface
+          )$
     - id: end-of-file-fixer
       exclude: ".*.list"
     - id: check-yaml
@@ -14,16 +18,16 @@ repos:
     - id: check-byte-order-marker
     - id: check-merge-conflict
 - repo: "https://github.com/realm/SwiftLint"
-  rev: 0.55.1
+  rev: 0.58.2
   hooks:
     - id: swiftlint
       entry: swiftlint --fix --strict
 - repo: https://github.com/psf/black
-  rev: 24.4.2
+  rev: 25.1.0
   hooks:
     - id: black
       language_version: python3.12
 - repo: https://github.com/gitleaks/gitleaks
-  rev: v8.16.1
+  rev: v8.24.0
   hooks:
     - id: gitleaks

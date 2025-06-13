@@ -14,9 +14,9 @@ final class TransitionOptionsTests: XCTestCase {
     }
 
     func testInitWithNonNils() {
-        let duration = TimeInterval.random(in: 0...10)
-        let delay = TimeInterval.random(in: 0...10)
-        let enablePlacementTransition = Bool.random()
+        let duration = 0.1
+        let delay = 10.0
+        let enablePlacementTransition = Bool.testConstantValue()
 
         let options = TransitionOptions(
             duration: duration,
@@ -29,9 +29,9 @@ final class TransitionOptionsTests: XCTestCase {
     }
 
     func testRefinedPropertiesWithNonNils() {
-        let duration = TimeInterval.random(in: 0...10)
-        let delay = TimeInterval.random(in: 0...10)
-        let enablePlacementTransition = Bool.random()
+        let duration = 9.2
+        let delay = 0.0
+        let enablePlacementTransition = Bool.testConstantValue()
         let options = TransitionOptions(duration: duration,
                                         delay: delay,
                                         enablePlacementTransitions: enablePlacementTransition)

@@ -31,6 +31,7 @@ public struct BackgroundLayer: Layer, Equatable {
 
     /// Transition options for `backgroundColor`.
     public var backgroundColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.

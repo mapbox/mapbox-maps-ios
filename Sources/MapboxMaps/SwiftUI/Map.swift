@@ -369,6 +369,16 @@ public extension Map {
         copy.mapDependencies.additionalSafeArea.updateEdges(edges, length)
         return copy
     }
+
+    /// A convex polygon that describes the shape of the screen in case it is non-rectangular.
+    /// Every coordinate is in 0 to 1 range, with (0, 0) being the map view top-left and (1, 1) the bottom-right.
+    /// The points have to be given in clockwise winding order. The polygon will be closed automatically, so for a rectangular shape, pass in 4 points.
+    /// Use this if the visible screen area is obscured enough that using a custom shape improves performance.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    func screenCullingShape(_ shape: [CGPoint]) -> Self {
+        copyAssigned(self, \.mapDependencies.screenCullingShape, shape)
+    }
 }
 
 extension Map {

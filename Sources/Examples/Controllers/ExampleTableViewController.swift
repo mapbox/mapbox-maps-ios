@@ -1,6 +1,7 @@
 import UIKit
 import ObjectiveC
 import os
+@_spi(Internal) import MapboxMaps
 
 final class ExampleTableViewController: UITableViewController {
     let startingExampleTitleKey = "com.mapbox.startingExampleTitle"
@@ -21,6 +22,15 @@ final class ExampleTableViewController: UITableViewController {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "SwiftUI", style: .plain, target: self, action: #selector(openSwiftUI))
+            
+        var version = Bundle.mapboxMapsMetadata.version
+        if version.count > 12 {
+            version = version.prefix(12) + "..."
+        }
+        let versionButton = UIBarButtonItem(title: version, image: nil, target: self, action: #selector(openVersion))
+        navigationItem.rightBarButtonItem = versionButton
+        
+        
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
 
         navigationController?.delegate = self
@@ -51,6 +61,13 @@ final class ExampleTableViewController: UITableViewController {
 
     @objc func openSwiftUI() {
         present(createSwiftUIExamplesController(), animated: true)
+    }
+    
+    @objc func openVersion() {
+        let str = "MapboxMaps: \(Bundle.mapboxMapsMetadata.version)"
+        let vc = UIAlertController(title: "Version", message: str, preferredStyle: .alert)
+        vc.addAction(UIAlertAction(title: "OK", style: .default))
+        present(vc, animated: true)
     }
 
     override func viewWillAppear(_ animated: Bool) {

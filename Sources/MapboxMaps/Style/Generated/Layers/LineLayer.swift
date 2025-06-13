@@ -99,6 +99,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// Transition options for `lineBorderColor`.
     public var lineBorderColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -117,6 +118,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// Transition options for `lineColor`.
     public var lineColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -149,6 +151,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// A gradient used to color a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
     public var lineGradient: Value<StyleColor>?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -178,6 +181,10 @@ public struct LineLayer: Layer, Equatable {
     /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var linePattern: Value<ResolvedImage>?
 
+    /// Controls the transition progress between the image variants of line-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public var linePatternCrossFade: Value<Double>?
+
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     /// Default value: [0,0]. The unit of lineTranslate is in pixels.
     public var lineTranslate: Value<[Double]>?
@@ -197,6 +204,7 @@ public struct LineLayer: Layer, Equatable {
     /// Transition options for `lineTrimColor`.
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineTrimColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.
@@ -263,6 +271,7 @@ public struct LineLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(lineOpacity, forKey: .lineOpacity)
         try paintContainer.encodeIfPresent(lineOpacityTransition, forKey: .lineOpacityTransition)
         try paintContainer.encodeIfPresent(linePattern, forKey: .linePattern)
+        try paintContainer.encodeIfPresent(linePatternCrossFade, forKey: .linePatternCrossFade)
         try paintContainer.encodeIfPresent(lineTranslate, forKey: .lineTranslate)
         try paintContainer.encodeIfPresent(lineTranslateTransition, forKey: .lineTranslateTransition)
         try paintContainer.encodeIfPresent(lineTranslateAnchor, forKey: .lineTranslateAnchor)
@@ -325,6 +334,7 @@ public struct LineLayer: Layer, Equatable {
             lineOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineOpacity)
             lineOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineOpacityTransition)
             linePattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .linePattern)
+            linePatternCrossFade = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .linePatternCrossFade)
             lineTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineTranslate)
             lineTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineTranslateTransition)
             lineTranslateAnchor = try paintContainer.decodeIfPresent(Value<LineTranslateAnchor>.self, forKey: .lineTranslateAnchor)
@@ -406,6 +416,7 @@ public struct LineLayer: Layer, Equatable {
         case lineOpacity = "line-opacity"
         case lineOpacityTransition = "line-opacity-transition"
         case linePattern = "line-pattern"
+        case linePatternCrossFade = "line-pattern-cross-fade"
         case lineTranslate = "line-translate"
         case lineTranslateTransition = "line-translate-transition"
         case lineTranslateAnchor = "line-translate-anchor"
@@ -859,6 +870,18 @@ extension LineLayer {
     /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public func linePattern(_ expression: Exp) -> Self {
         with(self, setter(\.linePattern, .expression(expression)))
+    }
+
+    /// Controls the transition progress between the image variants of line-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public func linePatternCrossFade(_ constant: Double) -> Self {
+        with(self, setter(\.linePatternCrossFade, .constant(constant)))
+    }
+
+    /// Controls the transition progress between the image variants of line-pattern. Zero means the first variant is used, one is the second, and in between they are blended together. Both images should be the same size and have the same type (either raster or vector).
+    /// Default value: 0. Value range: [0, 1]
+    public func linePatternCrossFade(_ expression: Exp) -> Self {
+        with(self, setter(\.linePatternCrossFade, .expression(expression)))
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.

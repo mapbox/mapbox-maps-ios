@@ -49,7 +49,7 @@ public extension Exp {
         /// Returns the value of a cluster property accumulated so far. Can only be used in the `clusterProperties` option of a clustered GeoJSON source.
         public static let accumulated = Operator(rawValue: "accumulated")
 
-        /// Returns the arccosine of the input.
+        /// Returns the arccosine of the input, in radians between −π/2 and π/2.
         public static let acos = Operator(rawValue: "acos")
 
         /// Returns a string which matches one of the values specified in the text-anchor layout property, depending on the best-fit anchor for the symbol during rendering. Using this expression the content of the layer can be dynamically configured for the specific anchor type.
@@ -64,13 +64,16 @@ public extension Exp {
         /// Asserts that the input is an array (optionally with a specific item type and length). If, when the input expression is evaluated, it is not of the asserted type, then this assertion will cause the whole expression to be aborted.
         public static let array = Operator(rawValue: "array")
 
-        /// Returns the arcsine of the input.
+        /// Returns the arcsine of the input, in radians between −π/2 and π/2.
         public static let asin = Operator(rawValue: "asin")
 
         /// Retrieves an item from an array.
         public static let at = Operator(rawValue: "at")
 
-        /// Returns the arctangent of the input.
+        /// Retrieves an item from an array. If the array contains numeric values and the provided index is non-integer, the expression returns an interpolated value between adjacent items.
+        public static let atInterpolated = Operator(rawValue: "at-interpolated")
+
+        /// Returns the arctangent of the input, in radians between −π/2 and π/2.
         public static let atan = Operator(rawValue: "atan")
 
         /// Asserts that the input value is a boolean. If multiple values are provided, each one is evaluated in order until a boolean is obtained. If none of the inputs are booleans, the expression is an error.
@@ -91,10 +94,10 @@ public extension Exp {
         /// Returns a `string` consisting of the concatenation of the inputs. Each input is converted to a string as if by `to-string`.
         public static let concat = Operator(rawValue: "concat")
 
-        /// Retrieves the configuration value for the given option.
+        /// Retrieves the configuration value for the given option. Returns null if the requested option is missing.
         public static let config = Operator(rawValue: "config")
 
-        /// Returns the cosine of the input.
+        /// Returns the cosine of the input, interpreted as radians.
         public static let cos = Operator(rawValue: "cos")
 
         /// Returns the shortest distance in meters between the evaluated feature and the input geometry. The input value can be a valid GeoJSON of type `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`, `Feature`, or `FeatureCollection`. Distance values returned may vary in precision due to loss in precision from encoding geometries, particularly below zoom level 13.
@@ -248,7 +251,7 @@ public extension Exp {
         /// Rounds the input to the nearest integer. Halfway values are rounded away from zero. For example, `["round", -1.5]` evaluates to -2.
         public static let round = Operator(rawValue: "round")
 
-        /// Returns the sine of the input.
+        /// Returns the sine of the input, interpreted as radians.
         public static let sin = Operator(rawValue: "sin")
 
         /// Returns the distance of a point on the sky from the sun position. Returns 0 at sun position and 1 when the distance reaches `sky-gradient-radius`. Can only be used in the `sky-gradient` property.
@@ -266,7 +269,7 @@ public extension Exp {
         /// Asserts that the input value is a string. If multiple values are provided, each one is evaluated in order until a string is obtained. If none of the inputs are strings, the expression is an error.
         public static let string = Operator(rawValue: "string")
 
-        /// Returns the tangent of the input.
+        /// Returns the tangent of the input, interpreted as radians.
         public static let tan = Operator(rawValue: "tan")
 
         /// Converts the input value to a boolean. The result is `false` when then input is an empty string, 0, `false`, `null`, or `NaN`; otherwise it is `true`.
@@ -300,6 +303,9 @@ public extension Exp {
         /// - `Point`: Returns `false` if a point is on the boundary or falls outside the boundary.
         /// - `LineString`: Returns `false` if any part of a line falls outside the boundary, the line intersects the boundary, or a line's endpoint is on the boundary.
         public static let within = Operator(rawValue: "within")
+
+        /// Returns the current worldview being used.
+        @_spi(Experimental) public static let worldview = Operator(rawValue: "worldview")
 
         /// Returns the current zoom level. Note that in style layout and paint properties, ["zoom"] may only appear as the input to a top-level "step" or "interpolate" expression.
         public static let zoom = Operator(rawValue: "zoom")

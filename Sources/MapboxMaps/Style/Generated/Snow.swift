@@ -23,10 +23,6 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var centerThinningTransition: StyleTransition?
-    /// Use theme flag for center-thinning
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var centerThinningUseTheme: Value<ColorUseTheme>?
 
     /// Snow particles color.
     /// Default value: "#ffffff".
@@ -38,6 +34,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var colorTransition: StyleTransition?
+
     /// Use theme flag for color
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -53,10 +50,6 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var densityTransition: StyleTransition?
-    /// Use theme flag for density
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var densityUseTheme: Value<ColorUseTheme>?
 
     /// Main snow particles direction. Azimuth and polar angles
     /// Default value: [0,50]. Value range: [0, 360]
@@ -68,10 +61,6 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var directionTransition: StyleTransition?
-    /// Use theme flag for direction
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var directionUseTheme: Value<ColorUseTheme>?
 
     /// Snow flake particle size. Correlates with individual particle screen size
     /// Default value: 0.71. Value range: [0, 5]
@@ -83,10 +72,6 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var flakeSizeTransition: StyleTransition?
-    /// Use theme flag for flake-size
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var flakeSizeUseTheme: Value<ColorUseTheme>?
 
     /// Snow particles movement factor. Controls the overall particles movement speed.
     /// Default value: 1. Value range: [0, 1]
@@ -98,10 +83,6 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var intensityTransition: StyleTransition?
-    /// Use theme flag for intensity
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var intensityUseTheme: Value<ColorUseTheme>?
 
     /// Snow particles opacity.
     /// Default value: 1. Value range: [0, 1]
@@ -113,10 +94,6 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var opacityTransition: StyleTransition?
-    /// Use theme flag for opacity
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var opacityUseTheme: Value<ColorUseTheme>?
 
     /// Snow vignette screen-space effect. Adds snow tint to screen corners
     /// Default value: "["interpolate",["linear"],["zoom"],11,0,13,0.3]". Value range: [0, 1]
@@ -128,10 +105,6 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteTransition: StyleTransition?
-    /// Use theme flag for vignette
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public var vignetteUseTheme: Value<ColorUseTheme>?
 
     /// Snow vignette screen-space corners tint color.
     /// Default value: "#ffffff".
@@ -143,6 +116,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteColorTransition: StyleTransition?
+
     /// Use theme flag for vignette-color
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -153,6 +127,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
         case centerThinningTransition = "center-thinning-transition"
         case color = "color"
         case colorTransition = "color-transition"
+        case colorUseTheme = "color-use-theme"
         case density = "density"
         case densityTransition = "density-transition"
         case direction = "direction"
@@ -167,6 +142,7 @@ public struct Snow: Codable, Equatable, StyleEncodable {
         case vignetteTransition = "vignette-transition"
         case vignetteColor = "vignette-color"
         case vignetteColorTransition = "vignette-color-transition"
+        case vignetteColorUseTheme = "vignette-color-use-theme"
     }
 }
 

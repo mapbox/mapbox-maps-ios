@@ -143,7 +143,7 @@ final class RotateGestureHandlerTests: XCTestCase {
                        gestureRecognizer.locationInViewStub.defaultReturnValue)
     }
 
-    func testFocalPointOveridesTouchMidpointAnchor() {
+    func testFocalPointOverridesTouchMidpointAnchor() {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.sendActions()
 
@@ -158,7 +158,7 @@ final class RotateGestureHandlerTests: XCTestCase {
     }
 
     func testRotationChanged() throws {
-        mapboxMap.cameraState.bearing = .random(in: 0..<360)
+        mapboxMap.cameraState.bearing = 134
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.sendActions()
 

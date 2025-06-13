@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
+SKIP_BINARY_DEPS=${SKIP_BINARY_DEPS:-0}
 
+if [[ "$SKIP_BINARY_DEPS" -eq 1 ]]; then
+    echo "SKIP_BINARY_DEPS is set to 1. Skipping binary dependencies download. Do not forget to put the right version to the Carthage/Build folder."
+    exit 0
+fi
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 cd "$SCRIPT_DIR/../" || exit

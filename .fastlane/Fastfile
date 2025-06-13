@@ -10,10 +10,28 @@
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
 
+require 'json'
+
 default_platform(:ios)
 
 ENV["FASTLANE_SKIP_UPDATE_CHECK"] = "1"
 ENV["SPACESHIP_SKIP_2FA_UPGRADE"] = "1"
+
+project_path = ENV["PROJECT_PATH"] || "Examples.xcodeproj"
+entitlement_path = "../Sources/Examples/Examples_CarPlay.entitlements"
+entitlement_absolute_path = File.absolute_path(entitlement_path)
+
+def read_json file_path, key
+  JSON.parse(File.read(file_path))[key]
+end
+
+def examples_changelog
+  maps = read_json(File.absolute_path('../Sources/MapboxMaps/MapboxMaps.json'), 'version')
+  "Bump MapboxMaps version to #{maps}"
+end
+
+puts "Project Path: #{project_path}"
+puts "Entitlement Path: #{entitlement_absolute_path}"
 
 platform :ios do
 
@@ -39,7 +57,7 @@ platform :ios do
     sync_code_signing
     update_code_signing_settings(
       use_automatic_signing: false,
-      path: "Examples.xcodeproj",
+      path: project_path,
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["mapbox.ExamplesUITests.xctrunner"],
       targets: ["ExamplesUITests"],
@@ -47,14 +65,14 @@ platform :ios do
     )
     update_code_signing_settings(
       use_automatic_signing: false,
-      path: "Examples.xcodeproj",
+      path: project_path,
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
       targets: ["Examples"],
       code_sign_identity: "Apple Development: Created via API",
     )
     run_tests(
-      project: 'Examples.xcodeproj',
+      project: project_path,
       scheme: 'Examples',                  # XCTest scheme
       clean: true,                        # Recommended: This would ensure the build would not include unnecessary files
       # Use the Debug mode here to avoid the compiler crash
@@ -97,10 +115,18 @@ platform :ios do
 
   lane :beta do
     api_key_if_needed # Generate API Token
+    new_build_number = latest_testflight_build_number + 1
     increment_build_number(
-      build_number: latest_testflight_build_number + 1,
-      xcodeproj: 'Examples.xcodeproj'
+      build_number: new_build_number,
+      xcodeproj: project_path
     )
+
+    if ENV['GITHUB_OUTPUT']
+      File.open(ENV['GITHUB_OUTPUT'], 'a') do |file|
+        file.puts("build_number=#{new_build_number}")
+      end
+    end
+
     build_and_submit
   end
 
@@ -111,24 +137,28 @@ platform :ios do
     sync_code_signing(type: "development")
     update_code_signing_settings(
       use_automatic_signing: false,
-      path: "Examples.xcodeproj",
+      path: project_path,
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
       targets: ["Examples"],
       code_sign_identity: "Apple Development: Created via API",
-      entitlements_file_path: "Sources/Examples/Examples_CarPlay.entitlements"
+      entitlements_file_path: entitlement_absolute_path
     )
     sync_code_signing(type: "appstore")
     build_app(
       scheme: "Examples",
-      project: "Examples.xcodeproj",
+      project: project_path,
+      export_method: "app-store",
       xcargs: "SWIFT_TREAT_WARNINGS_AS_ERRORS=NO COMPILER_INDEX_STORE_ENABLE=NO" # Disable to bypass Deprecated error on OfflineManager example
     )
     upload_to_testflight(
       beta_app_feedback_email: "applemachine@mapbox.com",
       beta_app_description: "Examples app test build.",
       demo_account_required: false,
-      skip_waiting_for_build_processing: true
+      skip_waiting_for_build_processing: false,
+      distribute_external: true,
+      groups: ["Mobot", "Mapbox Testers"],
+      changelog: examples_changelog
     )
   end
 

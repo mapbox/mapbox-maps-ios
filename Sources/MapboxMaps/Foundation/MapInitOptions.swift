@@ -1,4 +1,5 @@
 import Foundation
+@_implementationOnly import MapboxCoreMaps_Private
 
 /// A protocol used to provide ``MapInitOptions`` when initializing a ``MapView`` with a Storyboard or
 /// a nib.

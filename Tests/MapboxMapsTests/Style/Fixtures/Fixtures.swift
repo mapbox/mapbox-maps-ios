@@ -127,6 +127,21 @@ internal extension PromoteId {
     }
 }
 
+internal extension VectorSourcePromoteId {
+    static func testSourceValue() -> VectorSourcePromoteId {
+        return .byLayer([
+            "layer-1": .constant("test-promote-id-1"),
+            "layer-2": .expression(Exp(.get, "name")),
+        ])
+    }
+}
+
+extension Value where T == String {
+    static func testSourceValue() -> Value {
+        .expression(Exp(.get, "name"))
+    }
+}
+
 internal extension Array where Element == RasterArraySource.RasterDataLayer {
     static func testSourceValue() -> [RasterArraySource.RasterDataLayer] {
         return [.init(layerId: "test-layer-id", bands: ["band_0", "band_1"])]

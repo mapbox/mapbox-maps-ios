@@ -2,8 +2,9 @@ import Foundation
 
 private class BundleLocator {}
 
-internal struct MapboxMapsMetadata: Codable {
-    var version: String
+@_spi(Internal)
+public struct MapboxMapsMetadata: Codable {
+    public var version: String
 }
 
 extension Bundle {
@@ -24,7 +25,8 @@ extension Bundle {
         #endif
     }
 
-    static var mapboxMapsMetadata: MapboxMapsMetadata = {
+    @_spi(Internal)
+    public static var mapboxMapsMetadata: MapboxMapsMetadata = {
         guard let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json") else {
             return MapboxMapsMetadata(version: "unknown.ios-metatadata-failure")
         }

@@ -453,7 +453,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextFont() throws {
         // Test that the setter and getter work
-        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { UUID().uuidString })
+        let value = Array.testFixture(withLength: 10, generator: { UUID().uuidString })
         manager.textFont = value
         XCTAssertEqual(manager.textFont, value)
 
@@ -689,7 +689,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextVariableAnchor() throws {
         // Test that the setter and getter work
-        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { TextAnchor.testConstantValue() })
+        let value = Array.testFixture(withLength: 10, generator: { TextAnchor.testConstantValue() })
         manager.textVariableAnchor = value
         XCTAssertEqual(manager.textVariableAnchor, value)
 
@@ -715,7 +715,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextWritingMode() throws {
         // Test that the setter and getter work
-        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { TextWritingMode.testConstantValue() })
+        let value = Array.testFixture(withLength: 10, generator: { TextWritingMode.testConstantValue() })
         manager.textWritingMode = value
         XCTAssertEqual(manager.textWritingMode, value)
 
@@ -763,6 +763,32 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
         XCTAssertEqual(layer.iconColorSaturation, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-saturation").value as! NSNumber).doubleValue))
+    }
+
+    func testIconImageCrossFade() throws {
+        // Test that the setter and getter work
+        let value = 0.5
+        manager.iconImageCrossFade = value
+        XCTAssertEqual(manager.iconImageCrossFade, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.iconImageCrossFade {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.iconImageCrossFade = nil
+        XCTAssertNil(manager.iconImageCrossFade)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.iconImageCrossFade, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-image-cross-fade").value as! NSNumber).doubleValue))
     }
 
     func testIconTranslate() throws {
@@ -1689,39 +1715,6 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
         XCTAssertEqual(layer.iconHaloWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-width").value as! NSNumber).doubleValue))
-    }
-
-    func testIconImageCrossFade() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-        // Test that the setter and getter work
-        let value = 0.5
-        annotation.iconImageCrossFade = value
-        XCTAssertEqual(annotation.iconImageCrossFade, value)
-
-        manager.annotations = [annotation]
-
-        // Test that the value is synced to the layer
-        manager.impl.syncSourceAndLayerIfNeeded()
-        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        let fallbackValue = self.manager.iconImageCrossFade ?? StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-image-cross-fade").value
-        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
-            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
-            : Data(String(describing: fallbackValue).utf8)
-        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
-        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"icon-image-cross-fade\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
-        XCTAssertEqual(try layer.iconImageCrossFade.toString(), expectedString)
-
-        // Test that the property can be reset to nil
-        annotation.iconImageCrossFade = nil
-        XCTAssertNil(annotation.iconImageCrossFade)
-
-        manager.annotations = [annotation]
-
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
-        manager.impl.syncSourceAndLayerIfNeeded()
-        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconImageCrossFade, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-image-cross-fade").value as! NSNumber).doubleValue))
     }
 
     func testIconOcclusionOpacity() throws {

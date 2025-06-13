@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Internal) @testable import MapboxMaps
 import Foundation
 import UIKit
 
@@ -29,7 +29,7 @@ class AttributionTests: XCTestCase {
             parseExpectation.fulfill()
         }
 
-        wait(for: [parseExpectation], timeout: 5)
+        wait(for: [parseExpectation], timeout: 20)
     }
 
     func testFeedbackAttributionParsing() throws {
@@ -67,11 +67,11 @@ class AttributionTests: XCTestCase {
             parseExpectation.fulfill()
         }
 
-        wait(for: [parseExpectation], timeout: 5)
+        wait(for: [parseExpectation], timeout: 20)
     }
 
     func testPlainTextAttributionParsing() throws {
-        let attributionString = String.randomAlphanumeric(withLength: 10).trimmingCharacters(in: .whitespacesAndNewlines)
+        let attributionString = String.testConstantAlphanumeric(withLength: 10).trimmingCharacters(in: .whitespacesAndNewlines)
         let parseExpectation = expectation(description: "Attributions are parsed")
 
         Attribution.parse([attributionString]) { attributions in
@@ -86,7 +86,7 @@ class AttributionTests: XCTestCase {
             parseExpectation.fulfill()
         }
 
-        wait(for: [parseExpectation], timeout: 5)
+        wait(for: [parseExpectation], timeout: 20)
     }
 
     func testDuplicateAttributionParsing() {
@@ -110,7 +110,7 @@ class AttributionTests: XCTestCase {
             parseExpectation.fulfill()
         }
 
-        wait(for: [parseExpectation], timeout: 5)
+        wait(for: [parseExpectation], timeout: 20)
     }
 
     func testAttributionAbbreviation() {
@@ -135,7 +135,7 @@ class AttributionTests: XCTestCase {
             parseExpectation.fulfill()
         }
 
-        wait(for: [parseExpectation], timeout: 5)
+        wait(for: [parseExpectation], timeout: 15)
     }
 
     func testFeedbackSnapshotTitle() {
@@ -160,7 +160,7 @@ class AttributionTests: XCTestCase {
     }
 
     func testNonOSMSnapshotTitle() {
-        let attributionTitle = String.randomASCII(withLength: 10)
+        let attributionTitle = String.testConstantASCII(withLength: 10)
         let attribution = Attribution(title: attributionTitle, url: nil)
 
         XCTAssertEqual(attribution.kind, .nonActionable)

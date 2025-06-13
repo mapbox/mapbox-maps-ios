@@ -119,25 +119,48 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         assign(manager, \.textVariableAnchor, value: textVariableAnchor)
         assign(manager, \.textWritingMode, value: textWritingMode)
         assign(manager, \.iconColor, value: iconColor)
+        assign(manager, \.iconColorUseTheme, value: iconColorUseTheme)
+        assign(manager, \.iconColorTransition, value: iconColorTransition)
         assign(manager, \.iconColorSaturation, value: iconColorSaturation)
+        assign(manager, \.iconColorSaturationTransition, value: iconColorSaturationTransition)
         assign(manager, \.iconEmissiveStrength, value: iconEmissiveStrength)
+        assign(manager, \.iconEmissiveStrengthTransition, value: iconEmissiveStrengthTransition)
         assign(manager, \.iconHaloBlur, value: iconHaloBlur)
+        assign(manager, \.iconHaloBlurTransition, value: iconHaloBlurTransition)
         assign(manager, \.iconHaloColor, value: iconHaloColor)
+        assign(manager, \.iconHaloColorUseTheme, value: iconHaloColorUseTheme)
+        assign(manager, \.iconHaloColorTransition, value: iconHaloColorTransition)
         assign(manager, \.iconHaloWidth, value: iconHaloWidth)
+        assign(manager, \.iconHaloWidthTransition, value: iconHaloWidthTransition)
         assign(manager, \.iconImageCrossFade, value: iconImageCrossFade)
+        assign(manager, \.iconImageCrossFadeTransition, value: iconImageCrossFadeTransition)
         assign(manager, \.iconOcclusionOpacity, value: iconOcclusionOpacity)
+        assign(manager, \.iconOcclusionOpacityTransition, value: iconOcclusionOpacityTransition)
         assign(manager, \.iconOpacity, value: iconOpacity)
+        assign(manager, \.iconOpacityTransition, value: iconOpacityTransition)
         assign(manager, \.iconTranslate, value: iconTranslate)
+        assign(manager, \.iconTranslateTransition, value: iconTranslateTransition)
         assign(manager, \.iconTranslateAnchor, value: iconTranslateAnchor)
         assign(manager, \.symbolZOffset, value: symbolZOffset)
+        assign(manager, \.symbolZOffsetTransition, value: symbolZOffsetTransition)
         assign(manager, \.textColor, value: textColor)
+        assign(manager, \.textColorUseTheme, value: textColorUseTheme)
+        assign(manager, \.textColorTransition, value: textColorTransition)
         assign(manager, \.textEmissiveStrength, value: textEmissiveStrength)
+        assign(manager, \.textEmissiveStrengthTransition, value: textEmissiveStrengthTransition)
         assign(manager, \.textHaloBlur, value: textHaloBlur)
+        assign(manager, \.textHaloBlurTransition, value: textHaloBlurTransition)
         assign(manager, \.textHaloColor, value: textHaloColor)
+        assign(manager, \.textHaloColorUseTheme, value: textHaloColorUseTheme)
+        assign(manager, \.textHaloColorTransition, value: textHaloColorTransition)
         assign(manager, \.textHaloWidth, value: textHaloWidth)
+        assign(manager, \.textHaloWidthTransition, value: textHaloWidthTransition)
         assign(manager, \.textOcclusionOpacity, value: textOcclusionOpacity)
+        assign(manager, \.textOcclusionOpacityTransition, value: textOcclusionOpacityTransition)
         assign(manager, \.textOpacity, value: textOpacity)
+        assign(manager, \.textOpacityTransition, value: textOpacityTransition)
         assign(manager, \.textTranslate, value: textTranslate)
+        assign(manager, \.textTranslateTransition, value: textTranslateTransition)
         assign(manager, \.textTranslateAnchor, value: textTranslateAnchor)
         assign(manager, \.slot, value: slot)
         assign(manager, \.iconOcclusionOpacity, value: iconOcclusionOpacity)
@@ -467,11 +490,38 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.textWritingMode, newValue))
     }
 
-    private var iconColor: StyleColor?
     /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "#000000".
     public func iconColor(_ color: UIColor) -> Self {
         with(self, setter(\.iconColor, StyleColor(color)))
+    }
+
+    private var iconColorUseTheme: ColorUseTheme?
+    /// This property defines whether the `iconColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func iconColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.iconColorUseTheme, useTheme))
+    }
+
+    private var iconColorTransition: StyleTransition?
+    /// Transition property for `iconColor`
+    public func iconColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.iconColorTransition, transition))
+    }
+
+    private var iconColor: StyleColor?
+    /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
+    /// Default value: "#000000".
+    public func iconColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.iconColor, newValue))
+    }
+
+    private var iconColorSaturationTransition: StyleTransition?
+    /// Transition property for `iconColorSaturation`
+    public func iconColorSaturationTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.iconColorSaturationTransition, transition))
     }
 
     private var iconColorSaturation: Double?
@@ -481,11 +531,23 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.iconColorSaturation, newValue))
     }
 
+    private var iconEmissiveStrengthTransition: StyleTransition?
+    /// Transition property for `iconEmissiveStrength`
+    public func iconEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.iconEmissiveStrengthTransition, transition))
+    }
+
     private var iconEmissiveStrength: Double?
     /// Controls the intensity of light emitted on the source features.
     /// Default value: 1. Minimum value: 0. The unit of iconEmissiveStrength is in intensity.
     public func iconEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.iconEmissiveStrength, newValue))
+    }
+
+    private var iconHaloBlurTransition: StyleTransition?
+    /// Transition property for `iconHaloBlur`
+    public func iconHaloBlurTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.iconHaloBlurTransition, transition))
     }
 
     private var iconHaloBlur: Double?
@@ -495,11 +557,38 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.iconHaloBlur, newValue))
     }
 
-    private var iconHaloColor: StyleColor?
     /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     /// Default value: "rgba(0, 0, 0, 0)".
     public func iconHaloColor(_ color: UIColor) -> Self {
         with(self, setter(\.iconHaloColor, StyleColor(color)))
+    }
+
+    private var iconHaloColorUseTheme: ColorUseTheme?
+    /// This property defines whether the `iconHaloColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func iconHaloColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.iconHaloColorUseTheme, useTheme))
+    }
+
+    private var iconHaloColorTransition: StyleTransition?
+    /// Transition property for `iconHaloColor`
+    public func iconHaloColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.iconHaloColorTransition, transition))
+    }
+
+    private var iconHaloColor: StyleColor?
+    /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
+    /// Default value: "rgba(0, 0, 0, 0)".
+    public func iconHaloColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.iconHaloColor, newValue))
+    }
+
+    private var iconHaloWidthTransition: StyleTransition?
+    /// Transition property for `iconHaloWidth`
+    public func iconHaloWidthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.iconHaloWidthTransition, transition))
     }
 
     private var iconHaloWidth: Double?
@@ -509,11 +598,23 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.iconHaloWidth, newValue))
     }
 
+    private var iconImageCrossFadeTransition: StyleTransition?
+    /// Transition property for `iconImageCrossFade`
+    public func iconImageCrossFadeTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.iconImageCrossFadeTransition, transition))
+    }
+
     private var iconImageCrossFade: Double?
-    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together. . Both images should be the same size and have the same type (either raster or vector).
     /// Default value: 0. Value range: [0, 1]
     public func iconImageCrossFade(_ newValue: Double) -> Self {
         with(self, setter(\.iconImageCrossFade, newValue))
+    }
+
+    private var iconOcclusionOpacityTransition: StyleTransition?
+    /// Transition property for `iconOcclusionOpacity`
+    public func iconOcclusionOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.iconOcclusionOpacityTransition, transition))
     }
 
     private var iconOcclusionOpacity: Double?
@@ -523,11 +624,23 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.iconOcclusionOpacity, newValue))
     }
 
+    private var iconOpacityTransition: StyleTransition?
+    /// Transition property for `iconOpacity`
+    public func iconOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.iconOpacityTransition, transition))
+    }
+
     private var iconOpacity: Double?
     /// The opacity at which the icon will be drawn.
     /// Default value: 1. Value range: [0, 1]
     public func iconOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.iconOpacity, newValue))
+    }
+
+    private var iconTranslateTransition: StyleTransition?
+    /// Transition property for `iconTranslate`
+    public func iconTranslateTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.iconTranslateTransition, transition))
     }
 
     private var iconTranslate: [Double]?
@@ -544,6 +657,14 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.iconTranslateAnchor, newValue))
     }
 
+    private var symbolZOffsetTransition: StyleTransition?
+    /// Transition property for `symbolZOffset`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func symbolZOffsetTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.symbolZOffsetTransition, transition))
+    }
+
     private var symbolZOffset: Double?
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
@@ -553,11 +674,38 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.symbolZOffset, newValue))
     }
 
-    private var textColor: StyleColor?
     /// The color with which the text will be drawn.
     /// Default value: "#000000".
     public func textColor(_ color: UIColor) -> Self {
         with(self, setter(\.textColor, StyleColor(color)))
+    }
+
+    private var textColorUseTheme: ColorUseTheme?
+    /// This property defines whether the `textColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func textColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.textColorUseTheme, useTheme))
+    }
+
+    private var textColorTransition: StyleTransition?
+    /// Transition property for `textColor`
+    public func textColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.textColorTransition, transition))
+    }
+
+    private var textColor: StyleColor?
+    /// The color with which the text will be drawn.
+    /// Default value: "#000000".
+    public func textColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.textColor, newValue))
+    }
+
+    private var textEmissiveStrengthTransition: StyleTransition?
+    /// Transition property for `textEmissiveStrength`
+    public func textEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.textEmissiveStrengthTransition, transition))
     }
 
     private var textEmissiveStrength: Double?
@@ -567,6 +715,12 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.textEmissiveStrength, newValue))
     }
 
+    private var textHaloBlurTransition: StyleTransition?
+    /// Transition property for `textHaloBlur`
+    public func textHaloBlurTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.textHaloBlurTransition, transition))
+    }
+
     private var textHaloBlur: Double?
     /// The halo's fadeout distance towards the outside.
     /// Default value: 0. Minimum value: 0. The unit of textHaloBlur is in pixels.
@@ -574,11 +728,38 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.textHaloBlur, newValue))
     }
 
-    private var textHaloColor: StyleColor?
     /// The color of the text's halo, which helps it stand out from backgrounds.
     /// Default value: "rgba(0, 0, 0, 0)".
     public func textHaloColor(_ color: UIColor) -> Self {
         with(self, setter(\.textHaloColor, StyleColor(color)))
+    }
+
+    private var textHaloColorUseTheme: ColorUseTheme?
+    /// This property defines whether the `textHaloColor` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func textHaloColorUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.textHaloColorUseTheme, useTheme))
+    }
+
+    private var textHaloColorTransition: StyleTransition?
+    /// Transition property for `textHaloColor`
+    public func textHaloColorTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.textHaloColorTransition, transition))
+    }
+
+    private var textHaloColor: StyleColor?
+    /// The color of the text's halo, which helps it stand out from backgrounds.
+    /// Default value: "rgba(0, 0, 0, 0)".
+    public func textHaloColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.textHaloColor, newValue))
+    }
+
+    private var textHaloWidthTransition: StyleTransition?
+    /// Transition property for `textHaloWidth`
+    public func textHaloWidthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.textHaloWidthTransition, transition))
     }
 
     private var textHaloWidth: Double?
@@ -588,6 +769,12 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.textHaloWidth, newValue))
     }
 
+    private var textOcclusionOpacityTransition: StyleTransition?
+    /// Transition property for `textOcclusionOpacity`
+    public func textOcclusionOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.textOcclusionOpacityTransition, transition))
+    }
+
     private var textOcclusionOpacity: Double?
     /// The opacity at which the text will be drawn in case of being depth occluded. Absent value means full occlusion against terrain only.
     /// Default value: 0. Value range: [0, 1]
@@ -595,11 +782,23 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.textOcclusionOpacity, newValue))
     }
 
+    private var textOpacityTransition: StyleTransition?
+    /// Transition property for `textOpacity`
+    public func textOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.textOpacityTransition, transition))
+    }
+
     private var textOpacity: Double?
     /// The opacity at which the text will be drawn.
     /// Default value: 1. Value range: [0, 1]
     public func textOpacity(_ newValue: Double) -> Self {
         with(self, setter(\.textOpacity, newValue))
+    }
+
+    private var textTranslateTransition: StyleTransition?
+    /// Transition property for `textTranslate`
+    public func textTranslateTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.textTranslateTransition, transition))
     }
 
     private var textTranslate: [Double]?
@@ -681,15 +880,11 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     var longPressRadius: CGFloat?
 
     /// A custom tappable area radius. Default value is 0.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     public func tapRadius(_ radius: CGFloat? = nil) -> Self {
         with(self, setter(\.tapRadius, radius))
     }
 
     /// A custom tappable area radius. Default value is 0.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
     public func longPressRadius(_ radius: CGFloat? = nil) -> Self {
         with(self, setter(\.longPressRadius, radius))
     }

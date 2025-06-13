@@ -218,7 +218,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineDasharray() throws {
         // Test that the setter and getter work
-        let value = Array.testFixture(withLength: .random(in: 0...10), generator: { 0.0 })
+        let value = Array.testFixture(withLength: 10, generator: { 0.0 })
         manager.lineDasharray = value
         XCTAssertEqual(manager.lineDasharray, value)
 
@@ -320,6 +320,32 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineOcclusionOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-occlusion-opacity").value as! NSNumber).doubleValue))
+    }
+
+    func testLinePatternCrossFade() throws {
+        // Test that the setter and getter work
+        let value = 0.5
+        manager.linePatternCrossFade = value
+        XCTAssertEqual(manager.linePatternCrossFade, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        if case .constant(let actualValue) = layer.linePatternCrossFade {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.linePatternCrossFade = nil
+        XCTAssertNil(manager.linePatternCrossFade)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.linePatternCrossFade, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-pattern-cross-fade").value as! NSNumber).doubleValue))
     }
 
     func testLineTranslate() throws {

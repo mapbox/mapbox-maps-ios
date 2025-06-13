@@ -1,6 +1,7 @@
 // swiftlint:disable file_length
 @_implementationOnly import MapboxCommon_Private
 import UIKit
+@_spi(Marshalling) import MapboxCoreMaps
 
 protocol StyleProtocol: AnyObject {
     var isStyleLoaded: Bool { get }
@@ -641,7 +642,10 @@ public class StyleManager {
     ///     An error describing why the operation was unsuccessful.
     public func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         try handleExpected {
-            return styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
+            return styleManager.addStyleLayer(
+                forProperties: properties,
+                layerPosition: layerPosition.map(LayerPosition.Marshaller.toObjc)
+            )
         }
     }
 
@@ -655,7 +659,7 @@ public class StyleManager {
     ///     `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
     public func moveLayer(withId id: String, to position: LayerPosition) throws {
         try handleExpected {
-            styleManager.moveStyleLayer(forLayerId: id, layerPosition: position.corePosition)
+            styleManager.moveStyleLayer(forLayerId: id, layerPosition: LayerPosition.Marshaller.toObjc(position))
         }
     }
 
@@ -671,7 +675,10 @@ public class StyleManager {
     ///     An error describing why the operation was unsuccessful
     public func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         try handleExpected {
-            return styleManager.addPersistentStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
+            return styleManager.addPersistentStyleLayer(
+                forProperties: properties,
+                layerPosition: layerPosition.map(LayerPosition.Marshaller.toObjc)
+            )
         }
     }
 
@@ -698,7 +705,11 @@ public class StyleManager {
     ///     An error describing why the operation was unsuccessful.
     public func addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
         try handleExpected {
-            return styleManager.addPersistentStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition?.corePosition)
+            return styleManager.addPersistentStyleCustomLayer(
+                forLayerId: id,
+                layerHost: layerHost,
+                layerPosition: layerPosition.map(LayerPosition.Marshaller.toObjc)
+            )
         }
     }
 
@@ -718,7 +729,11 @@ public class StyleManager {
     ///     An error describing why the operation was unsuccessful.
     public func addCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
         try handleExpected {
-            return styleManager.addStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition?.corePosition)
+            return styleManager.addStyleCustomLayer(
+                forLayerId: id,
+                layerHost: layerHost,
+                layerPosition: layerPosition.map(LayerPosition.Marshaller.toObjc)
+            )
         }
     }
 
@@ -1535,6 +1550,41 @@ public class StyleManager {
         }
     }
 
+    /// Set coolor theme for the style import with specified `importId`.
+    ///
+    ///  - Parameters:
+    ///   - importId: Identifier of the style import to remove.
+    ///   - colorTheme: Color theme to set for style import.
+    ///
+    ///  - Throws:
+    ///   - An error describing why the operation was unsuccessful.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func setStyleImportColorTheme(importId: String, colorTheme: ColorTheme) throws {
+        guard let coreTheme = colorTheme.core else {
+            throw StyleError(message: "Cannot construct UIImage object.")
+        }
+
+        try handleExpected {
+            return styleManager.setImportColorThemeForImportId(importId, colorTheme: coreTheme)
+        }
+    }
+
+    /// Remove color theme from the style import.
+    ///
+    ///  - Parameters:
+    ///   - importId: Identifier of the style import to remove color theme from.
+    ///
+    ///  - Throws:
+    ///   - An error describing why the operation was unsuccessful.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public func removeStyleImportColorTheme(importId: String) throws {
+        try handleExpected {
+            return styleManager.setImportColorThemeForImportId(importId, colorTheme: nil)
+        }
+    }
+
 }
 
 extension StyleManagerProtocol {
@@ -1703,7 +1753,6 @@ extension StyleManager {
     /// Returns the available featuresets in the currently loaded style.
     ///
     /// - Note: This function should only be called after the style is fully loaded; otherwise, the result may be unreliable.
-    @_spi(Experimental)
     public var featuresets: [FeaturesetDescriptor<FeaturesetFeature>] {
         styleManager.getStyleFeaturesets().map(FeaturesetDescriptor<FeaturesetFeature>.init(core:))
     }
@@ -1753,6 +1802,20 @@ public struct StyleTransition: Codable, Equatable, Sendable {
 
         try container.encode(duration * 1000, forKey: .duration)
         try container.encode(delay * 1000, forKey: .delay)
+    }
+
+    init?(_ dictionary: [String: TimeInterval]?) {
+        guard
+            let duration = dictionary?[CodingKeys.duration.rawValue],
+            let delay = dictionary?[CodingKeys.delay.rawValue]
+        else {
+            return nil
+        }
+        self.init(duration: duration, delay: delay)
+    }
+
+    var asDictionary: [String: Double] {
+        [CodingKeys.duration.rawValue: duration * 1000, CodingKeys.delay.rawValue: delay * 1000]
     }
 }
 

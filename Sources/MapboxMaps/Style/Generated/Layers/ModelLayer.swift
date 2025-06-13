@@ -74,6 +74,7 @@ import UIKit
     /// Transition options for `modelColor`.
     @_documentation(visibility: public)
     public var modelColorTransition: StyleTransition?
+
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
     /// NOTE: - Expressions set to this property currently don't work.

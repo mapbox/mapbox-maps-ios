@@ -51,9 +51,10 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.loadStyle(.satelliteStreets)
 
         // add a tap gesture handler that will allow the marker to be animated
-        mapView.gestures.onMapTap.observe {[weak self] context in
+        mapView.mapboxMap.addInteraction(TapInteraction { [weak self] context in
             self?.updatePosition(newCoordinate: context.coordinate)
-        }.store(in: &cancelables)
+            return true
+        })
     }
 
     private func setupExample() {

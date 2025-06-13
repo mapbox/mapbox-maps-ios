@@ -144,6 +144,32 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.fillEmissiveStrength, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-emissive-strength").value as! NSNumber).doubleValue))
     }
 
+    func testFillPatternCrossFade() throws {
+        // Test that the setter and getter work
+        let value = 0.5
+        manager.fillPatternCrossFade = value
+        XCTAssertEqual(manager.fillPatternCrossFade, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        if case .constant(let actualValue) = layer.fillPatternCrossFade {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.fillPatternCrossFade = nil
+        XCTAssertNil(manager.fillPatternCrossFade)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        XCTAssertEqual(layer.fillPatternCrossFade, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-pattern-cross-fade").value as! NSNumber).doubleValue))
+    }
+
     func testFillTranslate() throws {
         // Test that the setter and getter work
         let value = [0.0, 0.0]
@@ -221,6 +247,46 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.slot, nil)
     }
 
+    func testFillConstructBridgeGuardRail() throws {
+        let polygonCoords = [
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+        ]
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
+        // Test that the setter and getter work
+        let value = true
+        annotation.fillConstructBridgeGuardRail = value
+        XCTAssertEqual(annotation.fillConstructBridgeGuardRail, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        let fallbackValue = self.manager.fillConstructBridgeGuardRail ?? StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-construct-bridge-guard-rail").value as! Bool
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"boolean\",[\"coalesce\",[\"get\",\"fill-construct-bridge-guard-rail\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.fillConstructBridgeGuardRail.toString(), expectedString)
+
+        // Test that the property can be reset to nil
+        annotation.fillConstructBridgeGuardRail = nil
+        XCTAssertNil(annotation.fillConstructBridgeGuardRail)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        XCTAssertEqual(layer.fillConstructBridgeGuardRail, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-construct-bridge-guard-rail").value as! NSNumber).boolValue))
+    }
+
     func testFillSortKey() throws {
         let polygonCoords = [
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
@@ -259,6 +325,46 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillSortKey, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-sort-key").value as! NSNumber).doubleValue))
+    }
+
+    func testFillBridgeGuardRailColor() throws {
+        let polygonCoords = [
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+        ]
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
+        // Test that the setter and getter work
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        annotation.fillBridgeGuardRailColor = value
+        XCTAssertEqual(annotation.fillBridgeGuardRailColor, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        let fallbackValue = self.manager.fillBridgeGuardRailColor ?? StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-bridge-guard-rail-color").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-color\",[\"coalesce\",[\"get\",\"fill-bridge-guard-rail-color\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.fillBridgeGuardRailColor.toString(), expectedString)
+
+        // Test that the property can be reset to nil
+        annotation.fillBridgeGuardRailColor = nil
+        XCTAssertNil(annotation.fillBridgeGuardRailColor)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        XCTAssertEqual(layer.fillBridgeGuardRailColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-bridge-guard-rail-color").value as! [Any], options: []))))
     }
 
     func testFillColor() throws {
@@ -419,6 +525,46 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillPattern, .constant(.name(StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String)))
+    }
+
+    func testFillTunnelStructureColor() throws {
+        let polygonCoords = [
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+        ]
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
+        // Test that the setter and getter work
+        let value = StyleColor(red: 255, green: 0, blue: 255, alpha: 1)
+        annotation.fillTunnelStructureColor = value
+        XCTAssertEqual(annotation.fillTunnelStructureColor, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        let fallbackValue = self.manager.fillTunnelStructureColor ?? StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-tunnel-structure-color").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"to-color\",[\"coalesce\",[\"get\",\"fill-tunnel-structure-color\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.fillTunnelStructureColor.toString(), expectedString)
+
+        // Test that the property can be reset to nil
+        annotation.fillTunnelStructureColor = nil
+        XCTAssertNil(annotation.fillTunnelStructureColor)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        XCTAssertEqual(layer.fillTunnelStructureColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-tunnel-structure-color").value as! [Any], options: []))))
     }
 
     func testFillZOffset() throws {

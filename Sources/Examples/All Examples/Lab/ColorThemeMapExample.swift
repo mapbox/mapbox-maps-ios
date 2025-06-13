@@ -26,8 +26,8 @@ final class ColorThemeMapExample: UIViewController, ExampleProtocol {
         try! mapView.mapboxMap.setColorTheme(ColorTheme(uiimage: UIImage(named: "monochrome_lut")!))
         addTestLayer()
 
-        mapView.gestures.onMapTap.observe { [weak self] _ in
-            guard let self else { return }
+        mapView.mapboxMap.addInteraction(TapInteraction { [weak self] _ in
+            guard let self else { return false }
 
             self.mapUseTheme.toggle()
             if self.mapUseTheme {
@@ -35,17 +35,16 @@ final class ColorThemeMapExample: UIViewController, ExampleProtocol {
             } else {
                 try! self.mapView.mapboxMap.removeColorTheme()
             }
-        }
-        .store(in: &cancellables)
+            return false
+        })
 
-        mapView.gestures.onLayerTap("blue-layer") { [weak self] _, _ in
+        mapView.mapboxMap.addInteraction(TapInteraction(.layer("blue-layer")) { [weak self] _, _ in
             guard let self else { return true }
 
             self.circleUseTheme.toggle()
             self.addTestLayer(useTheme: self.circleUseTheme)
             return true
-        }
-        .store(in: &cancellables)
+        })
     }
 
     private func addTestLayer(

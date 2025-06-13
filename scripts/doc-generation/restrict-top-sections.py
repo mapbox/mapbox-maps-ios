@@ -33,21 +33,22 @@ def main():
     with open(root_file_path) as f:
         root = json.load(f)
 
-    sectionTitles = list(map(lambda section: section["title"], root["topicSections"]))
-    unexpectedTitles = list(
-        filter(lambda title: title not in acceptedTopSectionTitles, sectionTitles)
-    )
+    errors = []
+    for section in root["topicSections"]:
+        if section["title"] not in acceptedTopSectionTitles:
+            errors.append(f"{section['title']}:")
+            for identifier in section["identifiers"]:
+                symbol = identifier.replace("doc://com.mapbox.MapboxMaps/documentation/MapboxMaps/", "")
+                errors.append(f"- {symbol}")
 
-    if len(unexpectedTitles) > 0:
-        print(
-            f"""
-        Unexpected section titles found: {unexpectedTitles}
-        This suggests that you've introduced new public symbols in your pull request, yet they don't seem to be reflected in any of the API catalog.
-        """
-        )
+    if len(errors) > 0:
+        print("❌ Unexpected sections found.")
+        for error in errors:
+            print(error)
+        print("Please make sure these symbols are expected to be publicly available and list them in one of the Markdown files in Sources/MapboxMaps/Documentation.docc/API Catalogs")
         exit(1)
     else:
-        print("Check passed.")
+        print("✅ Check passed.")
 
 
 main()

@@ -797,48 +797,6 @@ extension PointAnnotation {
         let uiImage = UIImage(named: name)!
         return image(Image(image: uiImage, name: name, sdf: sdf))
     }
-
-    /// Adds a handler for tap gesture on current annotation.
-    ///
-    /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
-    ///
-    /// - Parameters:
-    ///   - handler: A handler for tap gesture.
-    public func onTapGesture(handler: @escaping (InteractionContext) -> Bool) -> Self {
-        with(self, setter(\.tapHandler, handler))
-    }
-
-    /// Adds a handler for tap gesture on current annotation.
-    ///
-    /// - Parameters:
-    ///   - handler: A handler for tap gesture.
-    public func onTapGesture(handler: @escaping () -> Void) -> Self {
-        onTapGesture { _ in
-            handler()
-            return true
-        }
-    }
-
-    /// Adds a handler for long press gesture on current annotation.
-    ///
-    /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
-    ///
-    /// - Parameters:
-    ///   - handler: A handler for long press gesture.
-    public func onLongPressGesture(handler: @escaping (InteractionContext) -> Bool) -> Self {
-        with(self, setter(\.longPressHandler, handler))
-    }
-
-    /// Adds a handler for long press gesture on current annotation.
-    ///
-    /// - Parameters:
-    ///   - handler: A handler for long press gesture.
-    public func onLongPressGesture(handler: @escaping () -> Void) -> Self {
-        onLongPressGesture { _ in
-            handler()
-            return true
-        }
-    }
 }
 
 extension PointAnnotation: MapContent, PrimitiveMapContent {

@@ -25,6 +25,7 @@
 - ``CustomLayerRenderParameters``
 - ``CustomLayerHost``
 - ``CustomLayerMapProjection``
+- ``DepthRange``
 - ``ElevationData``
 - ``Slot``
 - ``SlotLayer``

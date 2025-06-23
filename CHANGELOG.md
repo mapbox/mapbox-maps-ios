@@ -5,6 +5,10 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 ## Features ✨ and improvements 🏁
+## 11.13.1 - 18 June, 2025
+
+## 11.13.0 - 17 June, 2025
+
 ## 11.13.0-rc.1 - 03 June, 2025
 
 ## 11.13.0-rc.1

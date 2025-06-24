@@ -16,13 +16,13 @@ If you are interested in contributing to the Maps SDK, please see the [DEVELOPIN
 ## Reporting issues / Need help?
 
 #### Report a bug :beetle:
-Please use our [bug template](https://github.com/mapbox/mapbox-maps-ios/issues/new?labels=bug%20%3Abeetle%3A&template=bug.md) to report any issues.
+Please use our [bug template](https://github.com/mapbox/mapbox-maps-ios/issues/new?labels=bug%20%3Abeetle%3A&template=bug.md) to report any issues with the Mapbox Maps SDK for iOS. We kindly ask you to avoid using the issue tracker in this repository for questions and instead use our support channels. See [other questions](#other-questions) below.
 
 #### Request a new feature or enhancement :green_apple:
 Please use our [feature template](https://github.com/mapbox/mapbox-maps-ios/issues/new?labels=feature%20%3Agreen_apple%3A&template=feature.md) to request new features or enhancements.
 
 #### Other questions
-If you have any questions about how to use the SDK or if you need help with specific features, you can reach out to our support team [via our website](https://docs.mapbox.com/help/) or connect with our developer community by joining our [Discord channel](https://discord.gg/UshjQYyDFw). We kindly ask you to avoid using the issue tracker in this repository for questions and instead use our support channels.
+If you have any questions about how to use the Mapbox platform, Mapbox Maps SDK for iOS, or if you need help with specific features, you can reach out to our support team [via our website](https://docs.mapbox.com/help/) or connect with our developer community by joining our [Discord channel](https://discord.gg/UshjQYyDFw).
 
 ## Historical Note
 This repository is a continuation of the Mapbox Maps SDK for iOS available at [mapbox/mapbox-gl-native-ios](https://github.com/mapbox/mapbox-gl-native-ios).

@@ -260,6 +260,9 @@ public extension Exp {
         /// Returns an item from an array or a substring from a string from a specified start index, or between a start index and an end index if set. The return value is inclusive of the start index but not of the end index.
         public static let slice = Operator(rawValue: "slice")
 
+        /// Returns an array of substrings from a string, split by a delimiter parameter.
+        public static let split = Operator(rawValue: "split")
+
         /// Returns the square root of the input.
         public static let sqrt = Operator(rawValue: "sqrt")
 

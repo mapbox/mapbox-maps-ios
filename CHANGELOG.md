@@ -3,6 +3,7 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
+* Added new `split` expression, which returns an array of substrings from a string, split by a delimiter parameter.
 
 * Allow option to set SDF on a `PointAnnotation` image in Style DSL
 

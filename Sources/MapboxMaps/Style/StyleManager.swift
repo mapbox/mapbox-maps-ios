@@ -1550,7 +1550,7 @@ public class StyleManager {
         }
     }
 
-    /// Set coolor theme for the style import with specified `importId`.
+    /// Set color theme for the style import with specified `importId`.
     ///
     ///  - Parameters:
     ///   - importId: Identifier of the style import to remove.

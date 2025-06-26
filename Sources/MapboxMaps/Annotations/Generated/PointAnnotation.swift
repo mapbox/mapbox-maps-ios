@@ -796,6 +796,11 @@ extension PointAnnotation {
     public func image(named name: String) -> Self {
         with(self, setter(\.image, Image(image: UIImage(named: name)!, name: name)))
     }
+
+    /// Sets named image as icon
+    public func image(named name: String, sdf: Bool) -> Self {
+        with(self, setter(\.image, Image(image: UIImage(named: name)!, name: name, sdf: sdf)))
+    }
 }
 
 extension PointAnnotation: MapContent, PrimitiveMapContent {

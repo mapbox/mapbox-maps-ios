@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Allow option to set SDF on a `PointAnnotation` image in Style DSL
+
 ## Features ✨ and improvements 🏁
 ## 11.13.1 - 18 June, 2025
 

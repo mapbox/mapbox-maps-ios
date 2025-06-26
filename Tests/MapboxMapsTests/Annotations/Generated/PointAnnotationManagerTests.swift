@@ -1809,7 +1809,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewImagesAddedToStyle() {
         // given
         let annotations = (0..<10)
-            .map { _ in PointAnnotation.Image(image: UIImage(), name: UUID().uuidString) }
+            .map { _ in PointAnnotation.Image(image: UIImage(), name: UUID().uuidString, sdf: true) }
             .map(PointAnnotation.init)
 
         // when
@@ -1825,6 +1825,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(
             Set(harness.imagesManager.addImageStub.invocations.map(\.parameters.image)),
             Set(annotations.compactMap(\.image?.image))
+        )
+        XCTAssertEqual(
+            Set(harness.imagesManager.addImageStub.invocations.map(\.parameters.sdf)),
+            Set(annotations.compactMap(\.image?.sdf))
         )
         XCTAssertEqual(harness.imagesManager.removeImageStub.invocations.count, 0)
         XCTAssertTrue(annotations.compactMap(\.image?.name).allSatisfy(manager.isUsingStyleImage(_:)))

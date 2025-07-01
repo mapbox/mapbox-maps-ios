@@ -40,7 +40,6 @@ final class CustomLayerExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
 
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        navigationController?.isNavigationBarHidden = true
         view.addSubview(mapView)
     }
 

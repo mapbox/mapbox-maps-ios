@@ -32,6 +32,33 @@ import Foundation
     @_spi(Logging) public static func error(_ message: String, category: Category? = nil) {
         Logger.error(forMessage: message, category: logCategory(category?.rawValue))
     }
+
+    // MARK: - Logging levels
+    /// Get the current logging level for a specific category or globally.
+    /// - Parameter category: The logging category to check. If `nil`, returns the global logging level.
+    /// - Returns: The current logging level. Returns `.debug` if no level is configured.
+    @_spi(Logging) public static func loggingLevel(category: Category? = nil) -> LoggingLevel {
+        let level: NSNumber?
+        if let category {
+            level = LogConfiguration.getLoggingLevel(forCategory: logCategory(category.rawValue))
+        } else {
+            level = LogConfiguration.getLoggingLevel()
+        }
+        return (level?.intValue).flatMap(LoggingLevel.init) ?? .debug
+    }
+
+    /// Set the logging level for a specific category or globally.
+    /// - Parameters:
+    ///   - level: The logging level to set.
+    ///   - category: The logging category to configure. If `nil`, sets the global logging level.
+    @_spi(Logging) public static func setLogging(level: LoggingLevel, category: Category? = nil) {
+        let nsLevel = NSNumber(value: level.rawValue)
+        if let category {
+            LogConfiguration.setLoggingLevelForCategory(category.fullCategoryName, upTo: nsLevel)
+        } else {
+            LogConfiguration.setLoggingLevelForUpTo(nsLevel)
+        }
+    }
 }
 
 extension Log {
@@ -59,6 +86,17 @@ extension Log {
         }
 
         static let `default` = Category("")
-    }
 
+        internal var fullCategoryName: String {
+            Log.logCategory(rawValue)
+        }
+    }
+}
+
+@_spi(Logging) extension Log.Category {
+    /// Category for application lifecycle events.
+    public static let applicationLifecycle = Log.Category("ApplicationLifecycle")
+
+    /// Category for size tracking layer events and operations.
+    public static let sizeTrackingLayer = Log.Category("SizeTrackingLayer")
 }

@@ -1,0 +1,59 @@
+name: Deploy
+
+on:
+  push:
+    branches: [publisher-staging, publisher-production]
+
+env:
+  bucket: '{ "staging": "docs.mapbox.com-staging/android/api", "production": "docs.mapbox.com/android/api" }'
+
+jobs:
+  deploy:
+    name: Deploy to ${{ matrix.environment }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [staging, production]
+        exclude:
+          - environment: ${{ github.ref_name != 'publisher-staging' && 'staging' }}
+          - environment: ${{ github.ref_name != 'publisher-production' && 'production' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: Configure AWS Credentials
+        uses: mapbox/configure-aws-credentials-internal@v5
+        with:
+          target-account-id: ${{ vars.AWS_ACCOUNT_ID_DEFAULT }}
+
+      - name: Retrieve and configure npm token
+        uses: mapbox/setup-npm-token@v2
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build for ${{ matrix.environment }}
+        run: npm run build
+        env:
+          # We don't want this to fail on warnings
+          CI: false
+          DEPLOY_ENV: ${{ matrix.environment }}
+
+      - name: Sync non-html and json files to ${{ matrix.environment }}
+        run: aws s3 sync build ${{ env.targetBucket }} --exclude "*.html" --exclude "*.json" --cache-control "max-age=31536000"
+        env:
+          targetBucket: s3://${{ fromJson(env.bucket)[matrix.environment] }}
+
+      - name: Sync html and json files to ${{ matrix.environment }}
+        run: aws s3 sync build ${{ env.targetBucket }} --exclude "*" --include "*.html" --include "*.json" --cache-control "max-age=10,stale-while-revalidate=60"
+        env:
+          targetBucket: s3://${{ fromJson(env.bucket)[matrix.environment] }}

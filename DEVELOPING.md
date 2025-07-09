@@ -4,7 +4,6 @@ This guide contains the steps required to contribute to the development of this 
 
 * [Setting Up a Development Environment](#setting-up-a-development-environment)
 * [Updating Dependency Versions](#updating-dependency-versions)
-* [Configuring CircleCI](#configuring-circleci)
 * [Running Unit Tests On Devices](#running-unit-tests-on-devices)
 * [Running Integration Tests](#running-integration-tests)
 * [Making an Example](#making-an-example)
@@ -19,8 +18,8 @@ running the test app in simulators:
 
 This project:
 
-1. requires [a valid ~/.netrc file](https://docs.mapbox.com/ios/maps/guides/install/#configure-credentials)
-   to fetch dependencies.
+1. requires a valid ~/.netrc file with a Mapbox [**secret token**](https://docs.mapbox.com/help/dive-deeper/access-tokens/#secret-tokens) to download binary dependencies.
+  **Note**: A public token (pk.*) is not sufficient for downloading binary dependencies.
 
 2. reads a Mapbox access token from a [file at `~/mapbox`](https://docs.mapbox.com/help/troubleshooting/private-access-token-android-and-ios/#ios)
    to enable tests and apps to access Mapbox APIs.
@@ -33,15 +32,17 @@ This project:
    to manage dependencies for development. CocoaPods is supported for *consuming*
    the SDK.
 
-5. Install pre-commit hooks
+5. uses [Carthage](https://github.com/Carthage/Carthage) to manage binary dependencies that are automatically downloaded when running xcodegen.
+
+6. Install pre-commit hooks
   ```bash
-  brew install xcodegen swiftlint
+  brew install xcodegen swiftlint carthage
   pip install pre-commit
 
   pre-commit install # Installs the pre-commit hooks
   ```
 
-6. uses CircleCI and Firebase Test Lab for continuous integration.
+7. uses CircleCI and Firebase Test Lab for continuous integration.
 
 ### Accessing the Maps SDK's Source
 
@@ -71,36 +72,15 @@ In order to use the debug app, run the `DebugApp` scheme.
 * Update the dependency versions in `MapboxMaps.podspec`
 * Update the dependency versions in `scripts/release/packager/versions.json`
 
-## Configuring CircleCI
+## Running Unit Tests On Devices locally
 
-You can run `make validate` to ensure you've formatted the changes to the
-CircleCI config file correctly. This make target will install the
-[CircleCI command line interface](https://circleci.com/docs/2.0/local-cli/) to
-validate `.circleci/config.yml`, and run `circleci config validate`.
-
-## Running Unit Tests On Devices
-
-To run unit tests on an iOS device there are two options:
-
-1. Run locally:
-
-   * Install [xcodegen](https://github.com/yonaskolb/XcodeGen).
-   * Run `$ xcodegen` in the root of the repo.
-   * Open the resulting `MapboxMaps.xcodeproj`.
+   * Follow the [Building the Maps SDK](#building-the-maps-sdk) steps above.
    * Test the `MapboxTestHost` scheme.
-
-2. Run in CI:
-
-   * Open the optional-tests workflow for your branch in CircleCI
-   * Approve the `run-tests?` job to trigger running unit tests on
-     Firebase Test Lab
-   * Approve the `run-examples-tests?` job to trigger running examples tests on
-     Firebase Test Lab
 
 ## Running Integration Tests
 
 Integration tests typically require a Metal device, so these tests can only run
-locally and on Firebase Test Lab. They are skipped when running on CircleCI
+locally and on Firebase Test Lab. They are skipped when running on CI
 inside of a VM and when running on simulators < iOS 13 (iOS 13+ has a simulated
 Metal device.)
 

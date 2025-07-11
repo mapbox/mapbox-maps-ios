@@ -15,10 +15,10 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>11.13.2</string>
+	<string>11.13.3</string>
 	<key>CFBundleVersion</key>
-	<string>189</string>
+	<string>190</string>
 	<key>MBXBundleVersion</key>
-	<string>11.13.2</string>
+	<string>11.13.3</string>
 </dict>
 </plist>

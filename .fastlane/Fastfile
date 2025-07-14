@@ -122,6 +122,7 @@ platform :ios do
     build_app(
       scheme: "Examples",
       project: "Examples.xcodeproj",
+      destination: "generic/platform=iOS",
       xcargs: "SWIFT_TREAT_WARNINGS_AS_ERRORS=NO COMPILER_INDEX_STORE_ENABLE=NO" # Disable to bypass Deprecated error on OfflineManager example
     )
     upload_to_testflight(

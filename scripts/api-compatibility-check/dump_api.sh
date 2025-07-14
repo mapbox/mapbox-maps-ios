@@ -19,6 +19,7 @@ fi
 
 # Checkout the specific version if baseline is true
 if [ "$BASELINE" == "true" ]; then
+  git stash 
   git checkout "$(cat "$MAPBOX_MAPS_VERSION_FILE")"
 fi
 

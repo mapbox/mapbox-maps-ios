@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.11.2 - 14 July, 2025
+
+* Address the code sign issue `The signature of “MapboxCommon.xcframework” cannot be validated and may have been compromised`
+* Update CoreMaps to 11.11.5.
+* Update MapboxCommon to 24.11.5.
+
 ## 11.11.1 - 26 April, 2025
 
 * Update CoreMaps to 11.11.3.

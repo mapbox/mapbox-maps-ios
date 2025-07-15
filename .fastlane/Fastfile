@@ -112,6 +112,7 @@ platform :ios do
     update_code_signing_settings(
       use_automatic_signing: false,
       path: "Examples.xcodeproj",
+      destination: "generic/platform=iOS",
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
       targets: ["Examples"],

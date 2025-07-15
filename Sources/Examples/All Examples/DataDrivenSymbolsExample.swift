@@ -9,10 +9,10 @@ final class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.761, longitude: -119.624)
-        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 10.0),
-                                     styleURI: .outdoors)
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 10.0))
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView.mapboxMap.mapStyle = .standard(theme: .faded)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

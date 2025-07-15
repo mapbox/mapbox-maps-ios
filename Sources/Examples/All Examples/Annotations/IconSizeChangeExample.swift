@@ -13,6 +13,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         let cameraOptions = CameraOptions(center: initialPosition, zoom: 11)
         let initOptions = MapInitOptions(cameraOptions: cameraOptions)
         mapView = MapView(frame: view.bounds, mapInitOptions: initOptions)
+        mapView.mapboxMap.mapStyle = .standard(theme: .monochrome, lightPreset: .night)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
@@ -25,8 +26,6 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
             // The below line is used for internal testing purposes only.
             self?.finish()
         }.store(in: &cancelables)
-
-        mapView.mapboxMap.loadStyle(.dark)
     }
 
     private func setupExample() {

@@ -26,10 +26,8 @@ final class CustomLayerExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(cameraOptions: cameraOptions))
         mapView.debugOptions = .camera
-        mapView.mapboxMap.mapStyle = .streets
         mapView.mapboxMap.setMapStyleContent {
             CustomLayer(id: "custom-layer-example", renderer: renderer)
-                .position(.below("waterway"))
         }
 
         mapView.mapboxMap.onRenderFrameStarted.observeNext { [weak self] _ in

@@ -12,6 +12,7 @@ final class AnimateLayerExample: UIViewController, ExampleProtocol {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.8, longitude: -96)
         let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate,
                                                                   zoom: 2),
+                                     // The Streets style contains the airplane icon
                                      styleURI: .streets)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)

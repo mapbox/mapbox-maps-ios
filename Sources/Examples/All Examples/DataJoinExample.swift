@@ -11,9 +11,10 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         // Set up map and camera
         let centerCoordinate = CLLocationCoordinate2D(latitude: 50, longitude: 12)
         let camera = CameraOptions(center: centerCoordinate, zoom: 1.6)
-        let mapInitOptions = MapInitOptions(cameraOptions: camera, styleURI: .light)
+        let mapInitOptions = MapInitOptions(cameraOptions: camera)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
+        mapView.mapboxMap.mapStyle = .standard(theme: .monochrome)
         mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
 
         view.addSubview(mapView)
@@ -87,6 +88,7 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         // Add layer from the vector tile source to create the choropleth
         var layer = FillLayer(id: "countries", source: source.id)
         layer.sourceLayer = "country_boundaries"
+        layer.slot = .middle
 
         // Build a GL match expression that defines the color for every vector tile feature
         // https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/#match
@@ -128,7 +130,7 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         // Join data to the vector layer
         do {
             try mapView.mapboxMap.addSource(source)
-            try mapView.mapboxMap.addLayer(layer, layerPosition: .below("admin-1-boundary-bg"))
+            try mapView.mapboxMap.addLayer(layer)
             if let expressionData = jsonExpression.data(using: .utf8) {
                 let expJSONObject = try JSONSerialization.jsonObject(with: expressionData, options: [])
                 try mapView.mapboxMap.setLayerProperty(for: "countries",

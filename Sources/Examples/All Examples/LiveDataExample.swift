@@ -19,6 +19,7 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
         // Set up map and camera
         let centerCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         let camera = CameraOptions(center: centerCoordinate, zoom: 1)
+        // The Streets style contains the rocket icon
         let mapInitOptions = MapInitOptions(cameraOptions: camera, styleURI: .streets)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)

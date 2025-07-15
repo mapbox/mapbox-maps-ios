@@ -48,7 +48,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
             label.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
 
-        mapView.mapboxMap.loadStyle(.satelliteStreets)
+        mapView.mapboxMap.mapStyle = .standardSatellite
 
         // add a tap gesture handler that will allow the marker to be animated
         mapView.mapboxMap.addInteraction(TapInteraction { [weak self] context in

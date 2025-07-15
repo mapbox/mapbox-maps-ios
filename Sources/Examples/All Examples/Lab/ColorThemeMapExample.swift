@@ -60,6 +60,8 @@ final class ColorThemeMapExample: UIViewController, ExampleProtocol {
         try? mapView.mapboxMap.removeSource(withId: sourceId)
 
         mapView.mapboxMap.setMapStyleContent {
+            GeoJSONSource(id: sourceId)
+                .data(.geometry(.polygon(Polygon(center: coordinate, radius: radius * 1000000, vertices: 60))))
             FillLayer(id: id, source: sourceId)
                 .fillColorUseTheme(useTheme ? .default : .none)
                 .fillColor(color)
@@ -69,8 +71,6 @@ final class ColorThemeMapExample: UIViewController, ExampleProtocol {
                 .lineColorUseTheme(useTheme ? .default : .none)
                 .lineOpacity(0.4)
                 .lineWidth(2)
-            GeoJSONSource(id: sourceId)
-                .data(.geometry(.polygon(Polygon(center: coordinate, radius: radius * 1000000, vertices: 60))))
         }
     }
 

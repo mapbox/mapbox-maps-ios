@@ -36,9 +36,9 @@ final class Custom2DPuckExample: UIViewController, ExampleProtocol {
         }
     }
 
-    private var style: Style = .dark {
+    private var style: Style = .light {
         didSet {
-            mapView.mapboxMap.styleURI = style.styleURL
+            try? mapView.mapboxMap.setStyleImportConfigProperty(for: "basemap", config: "lightPreset", value: style.lightPreset)
         }
     }
 
@@ -150,12 +150,12 @@ final class Custom2DPuckExample: UIViewController, ExampleProtocol {
         case light
         case dark
 
-        var styleURL: StyleURI {
+        var lightPreset: String {
             switch self {
             case .light:
-                return StyleURI.light
+                "day"
             case .dark:
-                return StyleURI.dark
+                "night"
             }
         }
 
@@ -168,8 +168,9 @@ final class Custom2DPuckExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.26301831966747, longitude: -121.97647612483807), zoom: 6)
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .dark)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
+        mapView.mapboxMap.mapStyle = .standard(theme: .monochrome)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

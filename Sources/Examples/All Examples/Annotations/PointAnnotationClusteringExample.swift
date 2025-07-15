@@ -12,8 +12,9 @@ final class PointAnnotationClusteringExample: UIViewController, ExampleProtocol 
         // Center the map over Washington, D.C.
         let center = CLLocationCoordinate2D(latitude: 38.889215, longitude: -77.039354)
         let cameraOptions = CameraOptions(center: center, zoom: 11)
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .light)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
+        mapView.mapboxMap.mapStyle = .standard(theme: .monochrome)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         view.addSubview(mapView)

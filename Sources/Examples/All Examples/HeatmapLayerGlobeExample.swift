@@ -10,10 +10,11 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
 
         // Center the map over the United States.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 50, longitude: -120)
-        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 1.0), styleURI: .dark)
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 1.0))
 
         // Set up map view
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView.mapboxMap.mapStyle = .standard(theme: .monochrome, lightPreset: .night)
         mapView.ornaments.options.scaleBar.visibility = .hidden
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         try! self.mapView.mapboxMap.setProjection(StyleProjection(name: .globe))
@@ -29,8 +30,8 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
 
     func addRuntimeLayers() {
         createEarthquakeSource()
-        createHeatmapLayer()
         createCircleLayer()
+        createHeatmapLayer()
     }
 
     func createEarthquakeSource() {
@@ -118,7 +119,7 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         )
 
         do {
-            try mapView.mapboxMap.addLayer(heatmapLayer, layerPosition: .above("waterway-label"))
+            try mapView.mapboxMap.addLayer(heatmapLayer)
         } catch {
             print("Ran into an error adding a layer: \(error)")
         }
@@ -194,8 +195,12 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         circleLayer.circleStrokeColor = .constant(.init(UIColor.white))
         circleLayer.circleStrokeWidth = .constant(0.1)
 
+        // `LightPreset`s are applied to all layers of the map.
+        // As `.night` is applied we need to set `circleEmissiveStrength` to color the circles
+        circleLayer.circleEmissiveStrength = .constant(1)
+
         do {
-            try mapView.mapboxMap.addLayer(circleLayer, layerPosition: .below(self.heatmapLayerId))
+            try mapView.mapboxMap.addLayer(circleLayer)
         } catch {
             print("Ran into an error adding a layer: \(error)")
         }

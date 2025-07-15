@@ -87,8 +87,8 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let options = MapInitOptions(styleURI: .light)
-        mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView = MapView(frame: view.bounds)
+        mapView.mapboxMap.mapStyle = .standard(theme: .monochrome, lightPreset: .day)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

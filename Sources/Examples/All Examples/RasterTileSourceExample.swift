@@ -14,9 +14,10 @@ final class RasterTileSourceExample: UIViewController, ExampleProtocol {
         // Initialize a `MapView` that is centered over the southeastern United States.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40, longitude: -74.5)
         let cameraOptions = CameraOptions(center: centerCoordinate, zoom: 2)
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .satellite)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
+        mapView.mapboxMap.mapStyle = .standardSatellite
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

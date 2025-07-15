@@ -18,7 +18,7 @@ public final class MapInitOptions: NSObject {
     /// Associated `MapOptions`
     public let mapOptions: MapOptions
 
-    /// Style URI for initializing the map. Defaults to Mapbox Streets.
+    /// Style URI for initializing the map. Defaults to Mapbox Standard.
     public let styleURI: StyleURI?
 
     /// String representation of JSON style spec. Has precedence over ``styleURI``.
@@ -41,7 +41,7 @@ public final class MapInitOptions: NSObject {
     ///         used for glyph rendering.
     ///   - cameraOptions: `CameraOptions` to be applied to the map, overriding
     ///         the default camera that has been specified in the style.
-    ///   - styleURI: Style URI for the map to load. Defaults to `.streets`, but
+    ///   - styleURI: Style URI for the map to load. Defaults to `.standard`, but
     ///         can be `nil`.
     ///   - styleJSON: Style JSON in String representation. Has precedence over ``styleURI``.
     ///   - antialiasingSampleCount: Sample count to control multisample anti-aliasing (MSAA) option for rendering.

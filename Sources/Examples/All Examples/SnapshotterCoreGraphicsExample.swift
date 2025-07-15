@@ -26,7 +26,7 @@ final class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExampleP
                                                       height: view.bounds.height),
                                          pixelRatio: 4)
         snapshotter = Snapshotter(options: options)
-        snapshotter.styleURI = .dark
+        snapshotter.styleURI = .standardSatellite
         snapshotter.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 51.180885866921386, longitude: 16.26129435178828), zoom: 4))
 
         snapshotter.onStyleLoaded.observeNext { [weak self] _ in

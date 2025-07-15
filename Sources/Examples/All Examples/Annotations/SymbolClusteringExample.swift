@@ -11,8 +11,9 @@ final class SymbolClusteringExample: UIViewController, ExampleProtocol {
         // Create a `MapView` centered over Washington, DC.
         let center = CLLocationCoordinate2D(latitude: 38.889215, longitude: -77.039354)
         let cameraOptions = CameraOptions(center: center, zoom: 11)
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .dark)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
+        mapView.mapboxMap.mapStyle = .standard(theme: .monochrome, lightPreset: .night)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         view.addSubview(mapView)
@@ -124,6 +125,10 @@ final class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         clusteredLayer.circleRadius = .constant(25)
 
+        // `LightPreset`s are applied to all layers of the map.
+        // As `.night` is applied we need to set `circleEmissiveStrength` to color the circles
+        clusteredLayer.circleEmissiveStrength = .constant(1)
+
         return clusteredLayer
     }
 
@@ -145,6 +150,10 @@ final class SymbolClusteringExample: UIViewController, ExampleProtocol {
             Exp(.get) { "FLOW" }
             360
         })
+
+        // `LightPreset`s are applied to all layers of the map.
+        // As `.night` is applied we need to set `iconEmissiveStrength` to color the symbols
+        unclusteredLayer.iconEmissiveStrength = .constant(1)
 
         return unclusteredLayer
     }

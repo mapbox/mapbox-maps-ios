@@ -9,7 +9,7 @@ final class LineAnnotationExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), zoom: 2)
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .streets)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
@@ -62,10 +62,7 @@ final class LineAnnotationExample: UIViewController, ExampleProtocol {
         // Annotation managers are kept alive by `AnnotationOrchestrator`
         // (`mapView.annotations`) until you explicitly destroy them
         // by calling `mapView.annotations.removeAnnotationManager(withId:)`
-        let lineAnnnotationManager = mapView.annotations.makePolylineAnnotationManager(
-            // position line annotations layer in a way that line annotations clipped at land borders
-            layerPosition: .below("pitch-outline")
-        )
+        let lineAnnnotationManager = mapView.annotations.makePolylineAnnotationManager()
 
         // Sync the annotation to the manager.
         lineAnnnotationManager.annotations = annotations

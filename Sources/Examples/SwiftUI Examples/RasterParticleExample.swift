@@ -2,7 +2,7 @@ import SwiftUI
 @_spi(Experimental) import MapboxMaps
 
 struct RasterParticleExample: View {
-    @State var mapStyle = MapStyle.dark
+    @State var mapStyle = MapStyle.standard(theme: .monochrome, lightPreset: .night)
     @State var rasterParticleCount: Double = 2048
     @State var rasterParticleFadeOpacityFactor = 0.8
     @State var resetRateFactor = 0.4

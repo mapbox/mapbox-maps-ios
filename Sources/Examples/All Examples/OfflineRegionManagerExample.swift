@@ -26,9 +26,9 @@ final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
         let options = MapInitOptions(
             cameraOptions: CameraOptions(
                 center: center,
-                zoom: zoom),
-            styleURI: .light)
+                zoom: zoom))
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView.mapboxMap.mapStyle = .standard(theme: .monochrome)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

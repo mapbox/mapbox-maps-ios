@@ -9,10 +9,10 @@ final class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 41.878781, longitude: -87.622088)
-        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 12.0),
-                                     styleURI: .light)
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 12.0))
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView.mapboxMap.mapStyle = .standard(theme: .monochrome)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
@@ -40,6 +40,7 @@ final class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         lineLayer.lineOpacity = .constant(0.6)
         lineLayer.lineWidth = .constant(2.0)
         lineLayer.lineCap = .constant(.round)
+        lineLayer.slot = .middle
 
         do {
             try mapView.mapboxMap.addSource(vectorSource)
@@ -50,7 +51,7 @@ final class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         // Define the layer's positioning within the layer stack so
         // that it doesn't obscure other important labels.
         do {
-            try mapView.mapboxMap.addLayer(lineLayer, layerPosition: .below("waterway-label"))
+            try mapView.mapboxMap.addLayer(lineLayer)
         } catch let layerError {
             showAlert(with: layerError.localizedDescription)
         }

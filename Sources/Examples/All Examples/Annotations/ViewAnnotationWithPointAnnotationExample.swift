@@ -39,8 +39,6 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
             }
             return false
         })
-
-        mapView.mapboxMap.styleURI = .streets
     }
 
     // MARK: - Annotation management

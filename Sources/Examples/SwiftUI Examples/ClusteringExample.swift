@@ -36,7 +36,7 @@ struct ClusteringExample: View {
                     return false
                 }
             }
-                .mapStyle(.dark)
+                .mapStyle(.standard(theme: .monochrome, lightPreset: .night))
                 .onStyleLoaded { _ in
                     // This example uses direct style manipulation with MapboxMap
                     guard let map = proxy.map else { return }
@@ -131,6 +131,10 @@ private func createClusteredLayer() -> CircleLayer {
 
     clusteredLayer.circleRadius = .constant(25)
 
+    // `LightPreset`s are applied to all layers of the map.
+    // As `.night` is applied we need to set `circleEmissiveStrength` to color the circles
+    clusteredLayer.circleEmissiveStrength = .constant(1)
+
     return clusteredLayer
 }
 
@@ -152,6 +156,10 @@ private func createUnclusteredLayer() -> SymbolLayer {
         Exp(.get) { "FLOW" }
         360
     })
+
+    // `LightPreset`s are applied to all layers of the map.
+    // As `.night` is applied we need to set `iconEmissiveStrength` to color the symbols
+    unclusteredLayer.iconEmissiveStrength = .constant(1)
 
     return unclusteredLayer
 }

@@ -51,6 +51,53 @@ platform :ios do
     end
   end
 
+  desc "Setup code signing for a given project, target, and signing type"
+  desc "Parameters:"
+  desc "- project_path: Path to the Xcode project"
+  desc "- target: Target name to configure"
+  desc "- type: 'development' or 'appstore'"
+  desc "Bundle identifier will be automatically extracted from the target"
+  lane :setup_code_signing do |options|
+    UI.message("Setting up code signing...")
+    UI.message(options.inspect)
+    proj_path = options[:project_path]
+    target = options[:target]
+    type = options[:type]
+
+    UI.user_error!("project_path is required") unless proj_path
+    UI.user_error!("target is required") unless target
+    UI.user_error!("type is required (development or appstore)") unless type
+    UI.user_error!("type must be 'development' or 'appstore'") unless ["development", "appstore"].include?(type)
+
+    # Extract bundle identifier from the target's build settings
+    begin
+      build_settings_output = sh("xcodebuild -project '#{proj_path}' -target '#{target}' -showBuildSettings | grep 'PRODUCT_BUNDLE_IDENTIFIER'", log: false)
+      app_identifier = build_settings_output.split('=').last.strip
+      UI.user_error!("Could not extract PRODUCT_BUNDLE_IDENTIFIER from target #{target}") if app_identifier.empty?
+      UI.message("Extracted app_identifier: #{app_identifier}")
+    rescue => e
+      UI.user_error!("Failed to extract bundle identifier from target #{target}: #{e.message}")
+    end
+
+    api_key_if_needed
+    setup_circle_ci
+
+    # Sync code signing with the extracted app identifier
+    sync_code_signing(type: type, app_identifier: app_identifier, readonly: true)
+
+    # Update code signing settings
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: proj_path,
+      team_id: "GJZR2MEM28", # Developer Portal Team ID
+      profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING][app_identifier],
+      targets: [target],
+      code_sign_identity: "Apple Development: Created via API",
+    )
+
+    UI.success("Code signing setup complete for #{target} with #{type} signing")
+  end
+
   lane :build_examples_tests do
     api_key_if_needed
     setup_circle_ci

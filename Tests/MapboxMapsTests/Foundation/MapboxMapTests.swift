@@ -8,12 +8,14 @@ final class MapboxMapTests: XCTestCase {
     var mapInitOptions: MapInitOptions!
     var events: MapEvents!
     var mapboxMap: MapboxMap!
+    var cancelables = Set<AnyCancelable>()
 
     // We don't store fooSubject strongly to test that MapEvents stores the subjects it created.
     weak private var fooGenericSubject: SignalSubject<GenericEvent>?
 
     override func setUp() {
         super.setUp()
+        cancelables.removeAll()
         let size = CGSize(width: 100, height: 200)
         events = MapEvents(makeGenericSubject: { [weak self] eventName in
             let s = SignalSubject<GenericEvent>()
@@ -41,6 +43,7 @@ final class MapboxMapTests: XCTestCase {
         mapClient = nil
         events = nil
         fooGenericSubject = nil
+        cancelables.removeAll()
         super.tearDown()
     }
 
@@ -434,7 +437,6 @@ final class MapboxMapTests: XCTestCase {
     }
 
     func testGenericEvents() {
-        var cancelables = Set<AnyCancelable>()
         var received = [GenericEvent]()
         mapboxMap["foo"].observe { received.append($0) }.store(in: &cancelables)
 

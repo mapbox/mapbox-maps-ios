@@ -395,7 +395,6 @@ final class SignalTests: XCTestCase {
     }
 
     func testCombineSupportWithOperators() {
-        var tokens = Set<AnyCancellable>()
 
         var observedValues = [Bool]()
         let subject = SignalSubject<Int>()
@@ -410,7 +409,7 @@ final class SignalTests: XCTestCase {
 
         mapped.prefix(2)
             .sink { values.append($0) }
-            .store(in: &tokens)
+            .store(in: &cancellables)
 
         XCTAssertEqual(observedValues, [true], "sink leads to subscription")
 

@@ -38,6 +38,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        cancelables.removeAll(keepingCapacity: true)
         owner = .init(rawValue: UUID().uuidString)
         mapboxMap = MockMapboxMap()
         mapboxMap.cameraState = initialCameraState
@@ -65,6 +66,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         mapboxMap = nil
         owner = nil
         recordedCameraAnimatorStatus = []
+        cancelables.removeAll()
         super.tearDown()
     }
 
@@ -214,7 +216,6 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
     func testOnFinished() {
         var isFinished = false
-        var cancelables = Set<AnyCancelable>()
         flyToCameraAnimator.onFinished.observe {
             isFinished = true
         }.store(in: &cancelables)

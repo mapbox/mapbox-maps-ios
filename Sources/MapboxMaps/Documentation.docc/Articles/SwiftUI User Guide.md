@@ -256,6 +256,8 @@ MapViewAnnotation(coordinate: CLLocationCoordinate(...))
 
 Layer annotations are rendered natively in the map using layers. They can be placed in between map layers, support clustering (for ``PointAnnotation``s only) and are usually more performant.
 
+> Note: SwiftUI layer annotations do not support dragging functionality. The `isDraggable` and `isSelected` properties available in UIKit are not supported in SwiftUI.
+
 The example below displays different types of layer annotations.
 
 ```swift

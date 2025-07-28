@@ -21,6 +21,7 @@ struct SwiftUIRoot: View {
                 } header: { Text("Standard Style") }
 
                 Section {
+                    ExampleLink("Add Map Markers", note: "Add/remove Markers to your map.", destination: MarkersExample())
                     ExampleLink("View Annotations", note: "Add/remove view annotation on tap.", destination: ViewAnnotationsExample())
                     ExampleLink("Weather annotations", note: "Show view annotations with contents changed on selection.", destination: WeatherAnnotationExample())
                     ExampleLink("Layer Annotations", note: "Add/remove layer annotation on tap.", destination: AnnotationsExample())

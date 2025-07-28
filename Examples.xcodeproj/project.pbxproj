@@ -79,6 +79,7 @@
 		68FD9E1F4606B2729BA1E6DC /* SnapshotterExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588FD640D91E9DD366703F7B /* SnapshotterExample.swift */; platformFilter = ios; };
 		6B040F65241ABF600D70D14D /* Custom3DPuckExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C957F9CA07061B793C2DD4A /* Custom3DPuckExample.swift */; platformFilter = ios; };
 		7036A19FCD2CCE85BDDF4E00 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5E598A16FA446F583344CB /* TrackingModeExample.swift */; platformFilter = ios; };
+		7350DF212DFCC73A00B47542 /* MarkersExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7350DF1E2DFCC73A00B47542 /* MarkersExample.swift */; };
 		7352DDB22DD7E9EE000E3000 /* StudioStyleExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7352DDB02DD7E9EE000E3000 /* StudioStyleExample.swift */; };
 		7365170E39A459EB4DFA198B /* ExamplesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE18E37A8652B4807D2459F1 /* ExamplesUITests.swift */; platformFilter = ios; };
 		759D42AA5FE93B6FA9DFADF5 /* LocationOverrideExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B39AE24486FED5ED30392D /* LocationOverrideExample.swift */; };
@@ -256,6 +257,7 @@
 		6E54D3F5943238258AA0A9BE /* ResizeMapViewExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizeMapViewExample.swift; sourceTree = "<group>"; };
 		70922E748D003176C4A3C60A /* HeatmapLayerGlobeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatmapLayerGlobeExample.swift; sourceTree = "<group>"; };
 		7274E152F7FBB7894447F822 /* AnimateGeoJSONLineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGeoJSONLineExample.swift; sourceTree = "<group>"; };
+		7350DF1E2DFCC73A00B47542 /* MarkersExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkersExample.swift; sourceTree = "<group>"; };
 		7352DDB02DD7E9EE000E3000 /* StudioStyleExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudioStyleExample.swift; sourceTree = "<group>"; };
 		7352DDB42DDB93B5000E3000 /* StudioStyleExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StudioStyleExample.swift; path = "Sources/Examples/SwiftUI Examples/Testing Examples/StudioStyleExample.swift"; sourceTree = "<group>"; };
 		75D03F5A3A0E879717BFE421 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -421,6 +423,7 @@
 				C61CC711054A032EE0446036 /* DynamicStylingExample.swift */,
 				09BBD2991186A6B98F730454 /* ElevatedLineMapView.swift */,
 				A6B06A1D70F479D8DC5C375A /* FeaturesQueryExample.swift */,
+				7350DF1E2DFCC73A00B47542 /* MarkersExample.swift */,
 				7613C4E19DCD679A2620223C /* GeofencingPlayground.swift */,
 				DD3A816C6E4D7A0A532EEE84 /* GeofencingUserLocation.swift */,
 				62DA0608D44DEF6C4A82777C /* LocateMeExample.swift */,
@@ -876,6 +879,7 @@
 				3B4862E6832F23CB115D444A /* ClipLayerExample.swift in Sources */,
 				1DAE02D73D16E543777C2025 /* ClusteringExample.swift in Sources */,
 				5A28C124249725578389175A /* ColorExpressionExample.swift in Sources */,
+				7350DF212DFCC73A00B47542 /* MarkersExample.swift in Sources */,
 				DA109856E64BBD8071DF0619 /* ColorThemeExample.swift in Sources */,
 				65E9F2B993AEB394FC2D0080 /* ColorThemeMapExample.swift in Sources */,
 				C664365A373267B564EC84EE /* CombineExample.swift in Sources */,

@@ -1,4 +1,5 @@
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
+import SwiftUICore
 import XCTest
 
 final class ViewAnnotationTests: XCTestCase {
@@ -213,6 +214,31 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(anchors, [descriotor1.anchorConfig, descriotor2.anchorConfig])
         XCTAssertEqual(anchorCoordinates, [descriotor1.anchorCoordinate, descriotor2.anchorCoordinate])
         XCTAssertEqual(visibilities, [true])
+    }
+
+    /// Marker Tests 
+    func testSettingMarkerProperties() {
+        let marker = Marker(coordinate: .testConstantValue())
+            .color(.blue)
+            .innerColor(.orange)
+            .stroke(.green)
+            .text(.testConstantValue())
+
+        XCTAssertEqual(marker.innerColor, .orange)
+        XCTAssertEqual(marker.outerColor, .blue)
+        XCTAssertEqual(marker.strokeColor, .green)
+        XCTAssertEqual(marker.coordinate, CLLocationCoordinate2D.testConstantValue())
+        XCTAssertEqual(marker.text, String.testConstantValue())
+    }
+
+    func testDefaultMarkerProperties() {
+        let marker = Marker(coordinate: .testConstantValue())
+
+        XCTAssertEqual(marker.innerColor, Color(red: 1, green: 1, blue: 1, opacity: 1.0))
+        XCTAssertEqual(marker.outerColor, Color(red: 207/255, green: 218/255, blue: 247/255, opacity: 1.0))
+        XCTAssertEqual(marker.strokeColor, Color(red: 58/255, green: 89/255, blue: 250/255, opacity: 1.0))
+        XCTAssertEqual(marker.coordinate, CLLocationCoordinate2D.testConstantValue())
+        XCTAssertEqual(marker.text, nil)
     }
 }
 

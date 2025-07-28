@@ -4,12 +4,23 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-## 11.14.0-beta.1 - 02 July, 2025
-* Added new `split` expression, which returns an array of substrings from a string, split by a delimiter parameter.
+* Introduce experimental `Marker` convenience API in Swift UI. Use `Marker` to quickly add a `MapViewAnnotation` pin at the specified coordinates with custom text and color.
 
-* Allow option to set SDF on a `PointAnnotation` image in Style DSL
+```swift
+Map {
+  Marker(coordinate: CLLocationCoordinate2D(...))
+    .text("My marker")
+    .color(.blue)
+    .stroke(.orange)
+}
+```
+
+## 11.14.0-beta.1 - 02 July, 2025
 
 ## Features ✨ and improvements 🏁
+* Added new `split` expression, which returns an array of substrings from a string, split by a delimiter parameter.
+* Allow option to set SDF on a `PointAnnotation` image in Style DSL
+
 ## 11.13.1 - 18 June, 2025
 
 ## 11.13.0 - 17 June, 2025

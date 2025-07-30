@@ -1,6 +1,6 @@
 ## License
 
-Mapbox Maps for iOS version 11.15.0-SNAPSHOT-07-29--04-36.git-c6793cb
+Mapbox Maps for iOS version 11.15.0-SNAPSHOT-07-30--04-33.git-965b9cf
 Mapbox Maps iOS SDK
 
 Copyright &copy; 2021 - 2025 Mapbox, Inc. All rights reserved.
@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### MapboxCoreMaps,11.15.0-SNAPSHOT-07-29--04-36.git-c6793cb,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### MapboxCoreMaps,11.15.0-SNAPSHOT-07-30--04-33.git-965b9cf,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Core Maps version 11.0

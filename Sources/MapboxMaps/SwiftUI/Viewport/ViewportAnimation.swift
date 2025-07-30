@@ -172,29 +172,13 @@ private struct MapAnimationTransactionKey: TransactionKey {
 extension Transaction {
     var viewportAnimationData: ViewportAnimationData? {
         get {
-            // Custom Transaction properties via subscript are only supported starting from iOS 17 and Xcode 15.
-            // For older iOS versions we use the `GlobalAnimationStore` to carry the animations options
-            // to the Map.updateUIViewController method.
-#if swift(>=5.9)
-            if #available(iOS 17.0, *) {
-                return self[MapAnimationTransactionKey.self]
-            }
-#endif
             let data = GlobalAnimationStore.viewportAnimationData
             // This options should be used only once in update method to prevent undesired animation.
             GlobalAnimationStore.viewportAnimationData = nil
             return data
         }
         set {
-#if swift(>=5.9)
-            if #available(iOS 17.0, *) {
-                self[MapAnimationTransactionKey.self] = newValue
-            } else {
-                GlobalAnimationStore.viewportAnimationData = newValue
-            }
-#else
             GlobalAnimationStore.viewportAnimationData = newValue
-#endif
         }
     }
 }

@@ -773,13 +773,13 @@ internal class StyleDSLIntegrationTests: MapViewIntegrationTestCase {
                 Exp(.rgba) {
                     46.0
                     77.0
-                    107.00000762939453
+                    107.0
                     1.0
                 }
                 7
                 Exp(.rgba) {
                     153.0
-                    204.00001525878906
+                    204.0
                     255.0
                     1.0
                 }

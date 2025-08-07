@@ -10,6 +10,31 @@ public struct ExpressionArgumentBuilder {
     public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> [Exp.Argument] {
         return arguments.flatMap { $0.expressionArguments }
     }
+
+    /// :nodoc:
+    public static func buildOptional(_ component: ExpressionArgumentConvertible?) -> [Exp.Argument] {
+        return component?.expressionArguments ?? []
+    }
+
+    /// :nodoc:
+    public static func buildEither(first argument: ExpressionArgumentConvertible) -> [Exp.Argument] {
+        return argument.expressionArguments
+    }
+
+    /// :nodoc:
+    public static func buildEither(second argument: ExpressionArgumentConvertible) -> [Exp.Argument] {
+        return argument.expressionArguments
+    }
+
+    /// :nodoc:
+    public static func buildArray(_ arguments: [ExpressionArgumentConvertible]) -> [Exp.Argument] {
+        return arguments.flatMap { $0.expressionArguments }
+    }
+
+    /// :nodoc:
+    public static func buildLimitedAvailability(_ argument: ExpressionArgumentConvertible) -> [Exp.Argument] {
+        return argument.expressionArguments
+    }
 }
 
 /// :nodoc:
@@ -67,6 +92,8 @@ extension Array: ExpressionArgumentConvertible {
             return [.stringArray(validStringArray)]
         } else if let validNumberArray = self as? [Double] {
             return [.numberArray(validNumberArray)]
+        } else if let argumentArray = self as? [Exp.Argument] {
+            return argumentArray
         } else {
             Log.warning("Unsupported array provided to Expression. Only [String] and [Double] are supported.", category: "Expressions")
             return []

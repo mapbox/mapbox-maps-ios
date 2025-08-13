@@ -148,4 +148,45 @@ final class OrnamentManagerTests: XCTestCase {
     func testAttributionButton() {
         XCTAssertIdentical(ornamentsManager.attributionButton, attributionButton)
     }
+
+    func testTintColor() {
+        options.attributionButton.tintColor = .red
+        ornamentsManager.options = options
+        XCTAssertEqual(ornamentsManager.attributionButton.tintColor, .red)
+        XCTAssertEqual(ornamentsManager.options.attributionButton.tintColor, .red)
+    }
+
+    func testTintColorOverride() {
+        ornamentsManager.attributionButton.tintColor = .gray
+
+        options.attributionButton.tintColor = .red
+        ornamentsManager.options = options
+        XCTAssertEqual(ornamentsManager.attributionButton.tintColor, .red)
+        XCTAssertEqual(ornamentsManager.options.attributionButton.tintColor, .red)
+    }
+
+    func testTintColorSync() {
+        ornamentsManager.attributionButton.tintColor = .gray
+        XCTAssertEqual(ornamentsManager.attributionButton.tintColor, .gray)
+        XCTAssertEqual(ornamentsManager.options.attributionButton.tintColor, .gray)
+
+        options.attributionButton.tintColor = .red
+        ornamentsManager.options = options
+        XCTAssertEqual(ornamentsManager.attributionButton.tintColor, .red)
+        XCTAssertEqual(ornamentsManager.options.attributionButton.tintColor, .red)
+    }
+
+    func testTintColorClear() {
+        let originalTintColor = ornamentsManager.attributionButton.tintColor
+
+        options.attributionButton.tintColor = .red
+        ornamentsManager.options = options
+        XCTAssertEqual(ornamentsManager.attributionButton.tintColor, .red)
+        XCTAssertEqual(ornamentsManager.options.attributionButton.tintColor, .red)
+
+        options.attributionButton.tintColor = nil
+        ornamentsManager.options = options
+        XCTAssertEqual(ornamentsManager.attributionButton.tintColor, originalTintColor)
+        XCTAssertEqual(ornamentsManager.options.attributionButton.tintColor, originalTintColor)
+    }
 }

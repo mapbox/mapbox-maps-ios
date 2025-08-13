@@ -15,6 +15,14 @@ internal class InfoButtonOrnament: UIView {
         }
     }
 
+    var onTintColorDidChange: ((_ tintColor: UIColor) -> Void)?
+
+    override func tintColorDidChange() {
+        super.tintColorDidChange()
+
+        onTintColorDidChange?(tintColor)
+    }
+
     internal weak var delegate: InfoButtonOrnamentDelegate?
 
     internal init() {

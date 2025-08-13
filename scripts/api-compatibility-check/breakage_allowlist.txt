@@ -2170,3 +2170,6 @@ Accessor PolylineAnnotationManager.lineZOffset.Modify() is now with @_spi
 Accessor PolylineAnnotationManager.longPressRadius.Modify() is now with @_spi
 Accessor PolylineAnnotationManager.tapRadius.Modify() is now with @_spi
 Accessor ViewAnnotationManager.viewAnnotationAvoidLayers.Modify() is now with @_spi
+
+# Add configuration option to configure attribution button tint color.
+Constructor AttributionButtonOptions.init(position:margins:) has been removed

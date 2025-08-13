@@ -159,6 +159,9 @@ public final class OrnamentsManager {
         self._attributionButton = attributionButton
 
         _attributionButton.delegate = infoButtonOrnamentDelegate
+        _attributionButton.onTintColorDidChange = { [weak self] tintColor in
+            self?.options.attributionButton.tintColor = tintColor
+        }
 
         updateOrnaments()
 
@@ -227,6 +230,7 @@ public final class OrnamentsManager {
         _compassView.isHidden = options.compass.visibility == .hidden
         _attributionButton.isHidden = options.attributionButton.visibility == .hidden
         _scaleBarView.useMetricUnits = options.scaleBar.useMetricUnits
+        _attributionButton.tintColor = options.attributionButton.tintColor
     }
 
     private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {

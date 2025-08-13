@@ -22,6 +22,8 @@
 - ``StandardLightPreset``
 - ``StandardTheme``
 - ``StandardFont``
+- ``StandardBackgroundPointOfInterestLabels``
+- ``StandardColorModePointOfInterestLabels``
 - ``StyleProjection``
 - ``StyleProjectionName``
 - ``CancelError``

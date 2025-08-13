@@ -127,3 +127,4 @@ In UIKit applications, use ``MapboxMap/setFeatureState(_:state:callback:)`` and 
 - ``StandardPoiFeature``
 - ``StandardPlaceLabelsFeature``
 - ``StandardBuildingsFeature``
+- ``StandardLandmarkIconsFeature``

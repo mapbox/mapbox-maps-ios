@@ -4,10 +4,14 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Added support for `LandmarkIcons` featureset in Mapbox Standard Style. The `LandmarkIcons` featureset allows querying and configuring landmark building icons that appear on the map. Access landmark properties including landmarkId, name, type, and localized names through the `StandardLandmarkIconsFeature` class.
+* Enhanced `MapStyle.standard()` and `MapStyle.standardSatellite()` with new configuration parameters for color customization, landmark icons visibility, point-of-interest styling, road appearance, and administrative boundaries.
+* Add configuration option to configure attribution button tint color.
+
 ## 11.15.0-beta.1 - 12 August, 2025
 
+## Features ✨ and improvements 🏁
 * Introduce experimental `Marker` convenience API in Swift UI. Use `Marker` to quickly add a `MapViewAnnotation` pin at the specified coordinates with custom text and color.
-
 ```swift
 Map {
   Marker(coordinate: CLLocationCoordinate2D(...))
@@ -17,7 +21,6 @@ Map {
 }
 ```
 ## 11.14.1 - 07 August, 2025
-* Add configuration option to configure attribution button tint color.
 
 ## 11.14.0 - 30 July, 2025
 

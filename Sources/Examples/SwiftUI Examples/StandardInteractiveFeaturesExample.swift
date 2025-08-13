@@ -42,6 +42,12 @@ struct StandardInteractiveFeaturesExample: View {
                 return true
             }
 
+            /// When a landmark icon in the Standard Landmark Icons featureset is tapped, print its name
+            TapInteraction(.standardLandmarkIcons) { landmarkIcon, _ in
+                print(landmarkIcon.name?.description ?? "No name")
+                return true
+            }
+
             /// When the map is long-pressed, reset all selections
             LongPressInteraction { _ in
                 selectedBuildings = []
@@ -80,7 +86,7 @@ struct StandardInteractiveFeaturesExample: View {
             }
         }
 
-        .mapStyle(.standard(theme: theme, lightPreset: lightPreset, colorBuildingSelect: buildingSelectColor))
+        .mapStyle(.standard(theme: theme, lightPreset: lightPreset, colorBuildingSelect: buildingSelectColor, showLandmarkIcons: true))
         .ignoresSafeArea()
         /// Debug panel
         .overlay(alignment: .bottom) {

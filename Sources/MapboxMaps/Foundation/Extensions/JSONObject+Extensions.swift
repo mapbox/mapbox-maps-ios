@@ -11,6 +11,12 @@ extension JSONObject {
         }
     }
 
+    mutating func encode(key: String, value: Double?) {
+        if let value {
+            self[key] = .number(value)
+        }
+    }
+
     mutating func encode<T>(key: String, value: T?) where T: RawRepresentable, T.RawValue == String {
         encode(key: key, value: value?.rawValue)
     }

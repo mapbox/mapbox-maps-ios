@@ -6,21 +6,33 @@ extension MapStyle {
     /// - Parameters:
     ///   - theme: Switch between predefined themes or set a custom theme. Default value: `default`.
     ///   - lightPreset: Switch between 4 time-of-day states: dusk, dawn, day and night. Default value: `day`.
-    ///   - font: Defines font family for the style from predefined options. Default value: `DIN Pro`.
-    ///   - showPointOfInterestLabels: Shows or hides all POI icons and text. Default value: `true`.
-    ///   - showTransitLabels: Shows or hides all transit icons and text. Default value: `true`.
-    ///   - showPlaceLabels: Shows and hides place label layers. Default value: `true`.
-    ///   - showRoadLabels: Shows and hides all road labels, including road shields. Default value: `true`.
-    ///   - showPedestrianRoads: Shows and hides all pedestrian roads, paths, trails. Default value: `true`.
-    ///   - show3dObjects: Shows or hides all 3d layers (3D buildings, landmarks, trees, etc.) including shadows, ambient occlusion, and flood lights. Default value: `true`.
-    ///   - colorBuildingHighlight: Building fill extrusion color used when setting highlight state. Default value: `hsl(34, 30%, 93%)`.
-    ///   - colorBuildingSelect: Building fill extrusion color used when setting select state. Default value: `hsl(214, 82%, 63%)`.
+    ///   - font: Set the text font family. The basemap uses Medium, Bold, Italic and Regular. Falls back to Arial Unicode MS if a weight is missing. Default value: `DIN Pro`.
+    ///   - showPointOfInterestLabels: Show or hide POI labels. Default value: `true`.
+    ///   - showTransitLabels: Show or hide transit labels. Default value: `true`.
+    ///   - showPlaceLabels: Show or hide place labels. Default value: `true`.
+    ///   - showRoadLabels: Show or hide road labels including road shields. Default value: `true`.
+    ///   - showPedestrianRoads: Show or hide pedestrian roads, paths, and trails. Default value: `true`.
+    ///   - show3dObjects: Show or hide 3d objects (buildings, landmarks, trees, etc.) including shadows, ambient occlusion, and flood lights. Default value: `true`.
+    ///   - backgroundPointOfInterestLabels: Set background shape for POI labels. Default value: `circle`.
+    ///   - colorAdminBoundaries: Set a custom color for administrative boundaries. Default value: `hsl(345, 100%, 70%)`.
+    ///   - colorBuildingHighlight: Set a custom color for building fill extrusion when setting highlight state. Default value: `hsl(34, 30%, 93%)`.
+    ///   - colorBuildingSelect: Set a custom color for building fill extrusion when setting select state. Default value: `hsl(214, 82%, 63%)`.
+    ///   - colorGreenspace: Set a custom color for greenspaces such as forests, parks, and woods. Default value: `hsl(115, 60%, 84%)`.
+    ///   - colorModePointOfInterestLabels: Use the default categorical colors or set a single custom color for POI labels. Default value: `default`.
     ///   - colorMotorways: Set a custom color for motorway roads. Default value: `hsl(214, 23%, 70%)`.
-    ///   - colorPlaceLabelHighlight: Place label color used when setting highlight state. Default value: `hsl(4, 43%, 55%)`.
-    ///   - colorPlaceLabelSelect: Place label color used when setting select state. Default value: `hsl(4, 53%, 42%)`.
+    ///   - colorPlaceLabelHighlight: Set a custom color for place labels when setting highlight state. Default value: `hsl(4, 43%, 55%)`.
+    ///   - colorPlaceLabels: Set a custom color for place labels. Default value: `hsl(0, 0%, 0%)`.
+    ///   - colorPlaceLabelSelect: Set a custom color for place labels when setting select state. Default value: `hsl(4, 53%, 42%)`.
+    ///   - colorPointOfInterestLabels: Set a custom color for POI labels. Default value: `#848e94`.
+    ///   - colorRoadLabels: Set a custom color for road labels. Default value: `hsl(0, 0%, 25%)`.
     ///   - colorRoads: Set a custom color for other roads. Default value: `hsl(224, 25%, 80%)`.
     ///   - colorTrunks: Set a custom color for trunk roads. Default value: `hsl(235, 20%, 70%)`.
-    ///   - showLandmarkIcons: Shows or hides Landmark Icons.
+    ///   - colorWater: Set a custom color for water. Default value: `hsl(200, 100%, 80%)`.
+    ///   - densityPointOfInterestLabels: Set the density of POI labels. Default value: `3`.
+    ///   - roadsBrightness: Control how bright roads appear in dark styles. Default value: `0.4`.
+    ///   - showAdminBoundaries: Show or hide administrative boundaries. Default value: `true`.
+    ///   - showLandmarkIconLabels: Show or hide Landmark icon labels. Default value: `true`.
+    ///   - showLandmarkIcons: Show or hide Landmark icons.
     ///   - themeData: Set a custom theme based on a look-up table (LUT).
     public static func standard(
         theme: StandardTheme? = nil,
@@ -32,13 +44,25 @@ extension MapStyle {
         showRoadLabels: Bool? = nil,
         showPedestrianRoads: Bool? = nil,
         show3dObjects: Bool? = nil,
+        backgroundPointOfInterestLabels: StandardBackgroundPointOfInterestLabels? = nil,
+        colorAdminBoundaries: StyleColor? = nil,
         colorBuildingHighlight: StyleColor? = nil,
         colorBuildingSelect: StyleColor? = nil,
+        colorGreenspace: StyleColor? = nil,
+        colorModePointOfInterestLabels: StandardColorModePointOfInterestLabels? = nil,
         colorMotorways: StyleColor? = nil,
         colorPlaceLabelHighlight: StyleColor? = nil,
+        colorPlaceLabels: StyleColor? = nil,
         colorPlaceLabelSelect: StyleColor? = nil,
+        colorPointOfInterestLabels: StyleColor? = nil,
+        colorRoadLabels: StyleColor? = nil,
         colorRoads: StyleColor? = nil,
         colorTrunks: StyleColor? = nil,
+        colorWater: StyleColor? = nil,
+        densityPointOfInterestLabels: Double? = nil,
+        roadsBrightness: Double? = nil,
+        showAdminBoundaries: Bool? = nil,
+        showLandmarkIconLabels: Bool? = nil,
         showLandmarkIcons: Bool? = nil,
         themeData: String? = nil
     ) -> MapStyle {
@@ -52,13 +76,25 @@ extension MapStyle {
         config.encode(key: "showRoadLabels", value: showRoadLabels)
         config.encode(key: "showPedestrianRoads", value: showPedestrianRoads)
         config.encode(key: "show3dObjects", value: show3dObjects)
+        config.encode(key: "backgroundPointOfInterestLabels", value: backgroundPointOfInterestLabels)
+        config.encode(key: "colorAdminBoundaries", value: colorAdminBoundaries)
         config.encode(key: "colorBuildingHighlight", value: colorBuildingHighlight)
         config.encode(key: "colorBuildingSelect", value: colorBuildingSelect)
+        config.encode(key: "colorGreenspace", value: colorGreenspace)
+        config.encode(key: "colorModePointOfInterestLabels", value: colorModePointOfInterestLabels)
         config.encode(key: "colorMotorways", value: colorMotorways)
         config.encode(key: "colorPlaceLabelHighlight", value: colorPlaceLabelHighlight)
+        config.encode(key: "colorPlaceLabels", value: colorPlaceLabels)
         config.encode(key: "colorPlaceLabelSelect", value: colorPlaceLabelSelect)
+        config.encode(key: "colorPointOfInterestLabels", value: colorPointOfInterestLabels)
+        config.encode(key: "colorRoadLabels", value: colorRoadLabels)
         config.encode(key: "colorRoads", value: colorRoads)
         config.encode(key: "colorTrunks", value: colorTrunks)
+        config.encode(key: "colorWater", value: colorWater)
+        config.encode(key: "densityPointOfInterestLabels", value: densityPointOfInterestLabels)
+        config.encode(key: "roadsBrightness", value: roadsBrightness)
+        config.encode(key: "showAdminBoundaries", value: showAdminBoundaries)
+        config.encode(key: "showLandmarkIconLabels", value: showLandmarkIconLabels)
         config.encode(key: "showLandmarkIcons", value: showLandmarkIcons)
         config.encode(key: "theme-data", value: themeData)
         return MapStyle(uri: .standard, configuration: config)
@@ -115,7 +151,7 @@ public struct StandardLightPreset: RawRepresentable, Hashable, Sendable {
     public static let night = StandardLightPreset(rawValue: "night")
 }
 
-/// Defines font family for the style from predefined options.
+/// Set the text font family. The basemap uses Medium, Bold, Italic and Regular. Falls back to Arial Unicode MS if a weight is missing.
 public struct StandardFont: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
 
@@ -197,4 +233,34 @@ public struct StandardFont: RawRepresentable, Hashable, Sendable {
 
     /// Ubuntu font.
     public static let ubuntu = StandardFont(rawValue: "Ubuntu")
+}
+
+/// Set background shape for POI labels.
+public struct StandardBackgroundPointOfInterestLabels: RawRepresentable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Circle background point of interest labels.
+    public static let circle = StandardBackgroundPointOfInterestLabels(rawValue: "circle")
+
+    /// None background point of interest labels.
+    public static let noBackground = StandardBackgroundPointOfInterestLabels(rawValue: "none")
+}
+
+/// Use the default categorical colors or set a single custom color for POI labels.
+public struct StandardColorModePointOfInterestLabels: RawRepresentable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Default color mode point of interest labels.
+    public static let `default` = StandardColorModePointOfInterestLabels(rawValue: "default")
+
+    /// Single color mode point of interest labels.
+    public static let single = StandardColorModePointOfInterestLabels(rawValue: "single")
 }

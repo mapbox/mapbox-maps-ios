@@ -26,7 +26,7 @@ public final class StandardBuildingsFeature: FeaturesetFeatureType {
     /// ```
     ///
     /// To configure appearance of the states use the following configuration options: `colorBuildingHighlight`, `colorBuildingSelect`.
-    /// For more information see ``MapStyle/standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorBuildingHighlight:colorBuildingSelect:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:showLandmarkIcons:themeData:)``.
+    /// For more information see ``MapStyle/standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:backgroundPointOfInterestLabels:colorAdminBoundaries:colorBuildingHighlight:colorBuildingSelect:colorGreenspace:colorModePointOfInterestLabels:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabels:colorPlaceLabelSelect:colorPointOfInterestLabels:colorRoadLabels:colorRoads:colorTrunks:colorWater:densityPointOfInterestLabels:roadsBrightness:showAdminBoundaries:showLandmarkIconLabels:showLandmarkIcons:themeData:)``.
     public struct State: Codable, Equatable {
         /// When `true`, the building is highlighted. Use this state to create a temporary effect (e.g. hover).
         public var highlight: Bool?

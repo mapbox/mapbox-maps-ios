@@ -17,6 +17,7 @@ Map {
 }
 ```
 ## 11.14.1 - 07 August, 2025
+* Add configuration option to configure attribution button tint color.
 
 ## 11.14.0 - 30 July, 2025
 

@@ -156,16 +156,21 @@ public struct AttributionButtonOptions: Equatable, Sendable {
     /// Restricted API. Please contact Mapbox to discuss your use case if you intend to use this property.
     @_spi(Restricted) public var visibility: OrnamentVisibility = .visible
 
+    /// Tint color of the attribution button control.
+    public var tintColor: UIColor?
+
     /// Initializes an `AttributionButtonOptions`.
     /// - Parameters:
     ///   - position: The position of the attribution button.
     ///   - margins: The margins of the attribution button.
     public init(
         position: OrnamentPosition = .bottomTrailing,
-        margins: CGPoint = .init(x: 8.0, y: 8.0)
+        margins: CGPoint = .init(x: 8.0, y: 8.0),
+        tintColor: UIColor? = nil
     ) {
         self.position = position
         self.margins = margins
+        self.tintColor = tintColor
     }
 }
 

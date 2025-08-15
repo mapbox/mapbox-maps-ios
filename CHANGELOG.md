@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.15.0-beta.2 - 15 August, 2025
+
 ## 11.15.0-beta.1 - 12 August, 2025
 
 * Introduce experimental `Marker` convenience API in Swift UI. Use `Marker` to quickly add a `MapViewAnnotation` pin at the specified coordinates with custom text and color.

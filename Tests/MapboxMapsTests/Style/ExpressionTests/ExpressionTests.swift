@@ -327,6 +327,84 @@ final class ExpressionTests: XCTestCase {
         XCTAssertNotEqual(shortFormExpression, longFormExpression)
     }
 
+    func testExpressionArgumentResultBuilder() throws {
+        let values: [Double] = [1, 2, 3, 4]
+        let eitherFirst: String? = "eitherFirst"
+        let eitherSecond = "eitherSecond"
+        let optional: String? = "optional"
+        let limitedAvailability = "limitedAvailability"
+
+        let writtenOutExpression = Exp(.match) {
+            "foo"
+
+            "eitherFirst"
+            1
+
+            eitherSecond
+            2
+
+            "optional"
+            3
+
+            limitedAvailability
+            4
+
+            "array"
+            Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                values[0]
+                values[0]
+                values[1]
+                values[1]
+                values[2]
+                values[2]
+                values[3]
+                values[3]
+            }
+        }
+
+        let dslExpression = Exp(.match) {
+            "foo"
+
+            if let eitherFirst {
+                eitherFirst
+            } else {
+                "failure"
+            }
+            1
+
+            if false {
+                "failure"
+            } else {
+                eitherSecond
+            }
+            2
+
+            if let optional {
+                optional
+            }
+            3
+
+            if #available(iOS 13, *) {
+                limitedAvailability
+            }
+            4
+
+            "array"
+            Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                for value in values {
+                    value
+                    value
+                }
+            }
+        }
+
+        XCTAssertEqual(writtenOutExpression, dslExpression)
+    }
+
     func testEncodeImageOptions() throws {
         let color = StyleColor(UIColor.black)
         let empty = ImageOptions([:])

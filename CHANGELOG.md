@@ -4,7 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Fix infinite loop in attribution button tint color configuration.
+
 ## 11.15.0-beta.2 - 15 August, 2025
+* Add configuration option to configure attribution button tint color.
 
 ## 11.15.0-beta.1 - 12 August, 2025
 
@@ -19,7 +22,6 @@ Map {
 }
 ```
 ## 11.14.1 - 07 August, 2025
-* Add configuration option to configure attribution button tint color.
 
 ## 11.14.0 - 30 July, 2025
 

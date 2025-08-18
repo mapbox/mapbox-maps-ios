@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.15.0-beta.3 - 18 August, 2025
+
 * Fix infinite loop in attribution button tint color configuration.
 
 ## 11.15.0-beta.2 - 15 August, 2025

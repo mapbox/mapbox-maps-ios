@@ -76,6 +76,10 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     private func updateProperties(manager: PolylineAnnotationManager) {
         assign(manager, \.lineCap, value: lineCap)
         assign(manager, \.lineCrossSlope, value: lineCrossSlope)
+        assign(manager, \.lineCutoutOpacity, value: lineCutoutOpacity)
+        assign(manager, \.lineCutoutOpacityTransition, value: lineCutoutOpacityTransition)
+        assign(manager, \.lineCutoutWidth, value: lineCutoutWidth)
+        assign(manager, \.lineCutoutWidthTransition, value: lineCutoutWidthTransition)
         assign(manager, \.lineElevationReference, value: lineElevationReference)
         assign(manager, \.lineJoin, value: lineJoin)
         assign(manager, \.lineMiterLimit, value: lineMiterLimit)
@@ -140,6 +144,40 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     @_spi(Experimental)
     public func lineCrossSlope(_ newValue: Double) -> Self {
         with(self, setter(\.lineCrossSlope, newValue))
+    }
+
+    private var lineCutoutOpacityTransition: StyleTransition?
+    /// Transition property for `lineCutoutOpacity`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineCutoutOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.lineCutoutOpacityTransition, transition))
+    }
+
+    private var lineCutoutOpacity: Double?
+    /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
+    /// Default value: 0.3. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineCutoutOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.lineCutoutOpacity, newValue))
+    }
+
+    private var lineCutoutWidthTransition: StyleTransition?
+    /// Transition property for `lineCutoutWidth`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineCutoutWidthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.lineCutoutWidthTransition, transition))
+    }
+
+    private var lineCutoutWidth: Double?
+    /// The width of the line cutout in meters. If set to 0, the cutout is disabled. The cutout does not apply to location-indicator type layers.
+    /// Default value: 0. Value range: [0, 50]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineCutoutWidth(_ newValue: Double) -> Self {
+        with(self, setter(\.lineCutoutWidth, newValue))
     }
 
     private var lineElevationReference: LineElevationReference?

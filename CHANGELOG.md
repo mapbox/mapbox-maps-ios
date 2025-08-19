@@ -10,6 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 11.15.0-beta.2 - 15 August, 2025
 
 * Add configuration option to configure attribution button tint color.
+* Expose `LineLayer.lineCutoutOpacity` and `LineLayer.lineCutoutWidth` to make route lines visible through obstructing 3D buildings and other aboveground features.
 
 ## 11.15.0-beta.1 - 12 August, 2025
 

@@ -44,43 +44,17 @@ final class DistanceExpressionExample: UIViewController, ExampleProtocol {
         // This expression simulates a `CircleLayer` with a radius of 150 meters. For features that will be
         // visible at lower zoom levels, add more stops at the zoom levels where the feature will be more
         // visible. This keeps the circle's radius more consistent.
+
+        let radii: [Double] = [0, 5, 10, 15, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22]
+
         let circleRadiusExp = Exp(.interpolate) {
             Exp(.linear)
             Exp(.zoom)
-            0
-            circleRadius(forZoom: 0)
-            5
-            circleRadius(forZoom: 5)
-            10
-            circleRadius(forZoom: 10)
-            15
-            circleRadius(forZoom: 15)
-            16
-            circleRadius(forZoom: 16)
-            16.5
-            circleRadius(forZoom: 16.5)
-            17
-            circleRadius(forZoom: 17)
-            17.5
-            circleRadius(forZoom: 17.5)
-            18
-            circleRadius(forZoom: 18)
-            18.5
-            circleRadius(forZoom: 18.5)
-            19
-            circleRadius(forZoom: 19)
-            19.5
-            circleRadius(forZoom: 19.5)
-            20
-            circleRadius(forZoom: 20)
-            20.5
-            circleRadius(forZoom: 20.5)
-            21
-            circleRadius(forZoom: 21)
-            21.5
-            circleRadius(forZoom: 21.5)
-            22
-            circleRadius(forZoom: 22)
+
+            for radius in radii {
+                radius
+                circleRadius(forZoom: radius)
+            }
         }
         circleLayer.circleRadius = .expression(circleRadiusExp)
         circleLayer.circleOpacity = .constant(0.3)

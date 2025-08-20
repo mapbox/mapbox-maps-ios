@@ -789,7 +789,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 
-### draco,1.5.3,Apache-2.0,Google,https://github.com/google/draco
+### draco,1.5.7,Apache-2.0,Google,https://github.com/google/draco
 
 ```
                                  Apache License

@@ -49,6 +49,24 @@ public struct LineLayer: Layer, Equatable {
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineCrossSlope: Value<Double>?
 
+    /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
+    /// Default value: 0.3. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineCutoutOpacity: Value<Double>?
+
+    /// Transition options for `LineCutoutOpacity`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineCutoutOpacityTransition: StyleTransition?
+
+    /// The width of the line cutout in meters. If set to 0, the cutout is disabled. The cutout does not apply to location-indicator type layers.
+    /// Default value: 0. Value range: [0, 50]
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineCutoutWidth: Value<Double>?
+
+    /// Transition options for `LineCutoutWidth`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineCutoutWidthTransition: StyleTransition?
+
     /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
     @_documentation(visibility: public)
@@ -287,6 +305,10 @@ public struct LineLayer: Layer, Equatable {
         try layoutContainer.encode(visibility, forKey: .visibility)
         try layoutContainer.encodeIfPresent(lineCap, forKey: .lineCap)
         try layoutContainer.encodeIfPresent(lineCrossSlope, forKey: .lineCrossSlope)
+        try layoutContainer.encodeIfPresent(lineCutoutOpacity, forKey: .lineCutoutOpacity)
+        try layoutContainer.encodeIfPresent(lineCutoutOpacityTransition, forKey: .lineCutoutOpacityTransition)
+        try layoutContainer.encodeIfPresent(lineCutoutWidth, forKey: .lineCutoutWidth)
+        try layoutContainer.encodeIfPresent(lineCutoutWidthTransition, forKey: .lineCutoutWidthTransition)
         try layoutContainer.encodeIfPresent(lineElevationReference, forKey: .lineElevationReference)
         try layoutContainer.encodeIfPresent(lineJoin, forKey: .lineJoin)
         try layoutContainer.encodeIfPresent(lineMiterLimit, forKey: .lineMiterLimit)
@@ -352,6 +374,10 @@ public struct LineLayer: Layer, Equatable {
             visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
             lineCap = try layoutContainer.decodeIfPresent(Value<LineCap>.self, forKey: .lineCap)
             lineCrossSlope = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineCrossSlope)
+            lineCutoutOpacity = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineCutoutOpacity)
+            lineCutoutOpacityTransition = try layoutContainer.decodeIfPresent(StyleTransition.self, forKey: .lineCutoutOpacityTransition)
+            lineCutoutWidth = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineCutoutWidth)
+            lineCutoutWidthTransition = try layoutContainer.decodeIfPresent(StyleTransition.self, forKey: .lineCutoutWidthTransition)
             lineElevationReference = try layoutContainer.decodeIfPresent(Value<LineElevationReference>.self, forKey: .lineElevationReference)
             lineJoin = try layoutContainer.decodeIfPresent(Value<LineJoin>.self, forKey: .lineJoin)
             lineMiterLimit = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineMiterLimit)
@@ -379,6 +405,10 @@ public struct LineLayer: Layer, Equatable {
     enum LayoutCodingKeys: String, CodingKey {
         case lineCap = "line-cap"
         case lineCrossSlope = "line-cross-slope"
+        case lineCutoutOpacity = "line-cutout-opacity"
+        case lineCutoutOpacityTransition = "line-cutout-opacity-transition"
+        case lineCutoutWidth = "line-cutout-width"
+        case lineCutoutWidthTransition = "line-cutout-width-transition"
         case lineElevationReference = "line-elevation-reference"
         case lineJoin = "line-join"
         case lineMiterLimit = "line-miter-limit"
@@ -495,6 +525,52 @@ extension LineLayer {
     @_spi(Experimental)
     public func lineCrossSlope(_ expression: Exp) -> Self {
         with(self, setter(\.lineCrossSlope, .expression(expression)))
+    }
+
+    /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
+    /// Default value: 0.3. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineCutoutOpacity(_ constant: Double) -> Self {
+        with(self, setter(\.lineCutoutOpacity, .constant(constant)))
+    }
+
+    /// Transition property for `lineCutoutOpacity`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineCutoutOpacityTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.lineCutoutOpacityTransition, transition))
+    }
+
+    /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
+    /// Default value: 0.3. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineCutoutOpacity(_ expression: Exp) -> Self {
+        with(self, setter(\.lineCutoutOpacity, .expression(expression)))
+    }
+
+    /// The width of the line cutout in meters. If set to 0, the cutout is disabled. The cutout does not apply to location-indicator type layers.
+    /// Default value: 0. Value range: [0, 50]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineCutoutWidth(_ constant: Double) -> Self {
+        with(self, setter(\.lineCutoutWidth, .constant(constant)))
+    }
+
+    /// Transition property for `lineCutoutWidth`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineCutoutWidthTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.lineCutoutWidthTransition, transition))
+    }
+
+    /// The width of the line cutout in meters. If set to 0, the cutout is disabled. The cutout does not apply to location-indicator type layers.
+    /// Default value: 0. Value range: [0, 50]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineCutoutWidth(_ expression: Exp) -> Self {
+        with(self, setter(\.lineCutoutWidth, .expression(expression)))
     }
 
     /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.

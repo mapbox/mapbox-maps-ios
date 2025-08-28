@@ -73,6 +73,40 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-cross-slope"] = newValue }
     }
 
+    /// Transition property for `lineCutoutOpacity`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var lineCutoutOpacityTransition: StyleTransition? {
+        get { StyleTransition(impl.layerProperties["line-cutout-opacity-transition"] as? [String: TimeInterval]) }
+        set { impl.layerProperties["line-cutout-opacity-transition"] = newValue?.asDictionary }
+    }
+
+    /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
+    /// Default value: 0.3. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var lineCutoutOpacity: Double? {
+        get { impl.layerProperties["line-cutout-opacity"] as? Double }
+        set { impl.layerProperties["line-cutout-opacity"] = newValue }
+    }
+
+    /// Transition property for `lineCutoutWidth`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var lineCutoutWidthTransition: StyleTransition? {
+        get { StyleTransition(impl.layerProperties["line-cutout-width-transition"] as? [String: TimeInterval]) }
+        set { impl.layerProperties["line-cutout-width-transition"] = newValue?.asDictionary }
+    }
+
+    /// The width of the line cutout in meters. If set to 0, the cutout is disabled. The cutout does not apply to location-indicator type layers.
+    /// Default value: 0. Value range: [0, 50]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var lineCutoutWidth: Double? {
+        get { impl.layerProperties["line-cutout-width"] as? Double }
+        set { impl.layerProperties["line-cutout-width"] = newValue }
+    }
+
     /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
     @_documentation(visibility: public)

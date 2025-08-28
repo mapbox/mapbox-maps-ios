@@ -296,6 +296,9 @@ private final class Route {
         routeLayer.lineBorderWidth = .constant(2)
         routeLayer.lineBorderColor = .expression(colorExpression(normal: "#666666", selected: "#327AC2"))
         routeLayer.slot = .middle
+        // make route lines visible through obstructing 3D buildings and other aboveground features
+        routeLayer.lineCutoutWidth = .constant(30)
+        routeLayer.lineCutoutOpacity = .constant(0.2)
         try! mapView.mapboxMap.addLayer(routeLayer)
 
         // Annotation

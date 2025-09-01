@@ -6,6 +6,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Added support for `LandmarkIcons` featureset in Mapbox Standard Style. The `LandmarkIcons` featureset allows querying and configuring landmark building icons that appear on the map. Access landmark properties including landmarkId, name, type, and localized names through the `StandardLandmarkIconsFeature` class.
 * Enhanced `MapStyle.standard()` and `MapStyle.standardSatellite()` with new configuration parameters for color customization, landmark icons visibility, point-of-interest styling, road appearance, and administrative boundaries.
+## 11.15.0-rc.1 - 28 August, 2025
+
+## 11.15.0-beta.3 - 18 August, 2025
+
+* Fix infinite loop in attribution button tint color configuration.
 
 ## 11.15.0-beta.2 - 15 August, 2025
 

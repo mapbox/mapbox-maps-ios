@@ -613,13 +613,17 @@ public struct ModelElevationReference: RawRepresentable, Codable, Hashable, Send
         self.rawValue = rawValue
     }
 
-    /// Elevated rendering is enabled. Use this mode to elevate lines relative to the sea level.
+    /// Elevated rendering is enabled. Use this mode to elevate models relative to the sea level.
     @_documentation(visibility: public)
     public static let sea = ModelElevationReference(rawValue: "sea")
 
-    /// Elevated rendering is enabled. Use this mode to elevate lines relative to the ground's height below them.
+    /// Elevated rendering is enabled. Use this mode to elevate models relative to the ground's height below them.
     @_documentation(visibility: public)
     public static let ground = ModelElevationReference(rawValue: "ground")
+
+    /// Elevated rendering is enabled. Use this mode to describe additive and stackable features that should exist only on top of road polygons.
+    @_documentation(visibility: public)
+    public static let hdRoadMarkup = ModelElevationReference(rawValue: "hd-road-markup")
 }
 
 /// Defines scaling mode. Only applies to location-indicator type layers.

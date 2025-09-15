@@ -243,7 +243,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testIconSizeScaleRange() throws {
         // Test that the setter and getter work
-        let value = [0.0, 0.0]
+        let value = [5.05, 5.05]
         manager.iconSizeScaleRange = value
         XCTAssertEqual(manager.iconSizeScaleRange, value)
 
@@ -661,7 +661,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextSizeScaleRange() throws {
         // Test that the setter and getter work
-        let value = [0.0, 0.0]
+        let value = [5.05, 5.05]
         manager.textSizeScaleRange = value
         XCTAssertEqual(manager.textSizeScaleRange, value)
 

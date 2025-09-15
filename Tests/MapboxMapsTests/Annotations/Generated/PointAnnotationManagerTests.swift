@@ -347,7 +347,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetIconSizeScaleRange() {
-        let value = [0.0, 0.0]
+        let value = [5.05, 5.05]
         manager.iconSizeScaleRange = value
         XCTAssertEqual(manager.iconSizeScaleRange, value)
         XCTAssertEqual(manager.impl.layerProperties["icon-size-scale-range"] as! [Double], value)
@@ -355,7 +355,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
 
     func testSetToNilIconSizeScaleRange() {
-        let newIconSizeScaleRangeProperty = [0.0, 0.0]
+        let newIconSizeScaleRangeProperty = [5.05, 5.05]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-size-scale-range").value as! [Double]
         manager.iconSizeScaleRange = newIconSizeScaleRangeProperty
         XCTAssertNotNil(manager.impl.layerProperties["icon-size-scale-range"])
@@ -1106,7 +1106,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextSizeScaleRange() {
-        let value = [0.0, 0.0]
+        let value = [5.05, 5.05]
         manager.textSizeScaleRange = value
         XCTAssertEqual(manager.textSizeScaleRange, value)
         XCTAssertEqual(manager.impl.layerProperties["text-size-scale-range"] as! [Double], value)
@@ -1114,7 +1114,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
 
     func testSetToNilTextSizeScaleRange() {
-        let newTextSizeScaleRangeProperty = [0.0, 0.0]
+        let newTextSizeScaleRangeProperty = [5.05, 5.05]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-size-scale-range").value as! [Double]
         manager.textSizeScaleRange = newTextSizeScaleRangeProperty
         XCTAssertNotNil(manager.impl.layerProperties["text-size-scale-range"])

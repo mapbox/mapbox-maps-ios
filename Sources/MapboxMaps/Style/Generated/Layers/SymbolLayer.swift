@@ -86,8 +86,8 @@ public struct SymbolLayer: Layer, Equatable {
     /// Default value: 1. Minimum value: 0. The unit of iconSize is in factor of the original icon size.
     public var iconSize: Value<Double>?
 
-    /// Defines the minimum and maximum scaling factors for icon related properties like `icon-size`, `icon-halo-width`, `icon-halo-blur`
-    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    /// Limits the possible scaling range for `icon-size`, `icon-halo-width`, `icon-halo-blur` properties to be within [min-scale, max-scale]
+    /// Default value: [0.8,2]. Minimum value: [0.1,0.1]. Maximum value: [10,10].
     @_documentation(visibility: public)
     @_spi(Experimental) public var iconSizeScaleRange: Value<[Double]>?
 
@@ -202,8 +202,8 @@ public struct SymbolLayer: Layer, Equatable {
     /// Default value: 16. Minimum value: 0. The unit of textSize is in pixels.
     public var textSize: Value<Double>?
 
-    /// Defines the minimum and maximum scaling factors for text related properties like `text-size`, `text-max-width`, `text-halo-width`, `font-size`
-    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    /// Limits the possible scaling range for `text-size`, `text-halo-width`, `text-halo-blur` properties to be within [min-scale, max-scale]
+    /// Default value: [0.8,2]. Minimum value: [0.1,0.1]. Maximum value: [10,10].
     @_documentation(visibility: public)
     @_spi(Experimental) public var textSizeScaleRange: Value<[Double]>?
 
@@ -892,16 +892,16 @@ extension SymbolLayer {
         with(self, setter(\.iconSize, .expression(expression)))
     }
 
-    /// Defines the minimum and maximum scaling factors for icon related properties like `icon-size`, `icon-halo-width`, `icon-halo-blur`
-    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    /// Limits the possible scaling range for `icon-size`, `icon-halo-width`, `icon-halo-blur` properties to be within [min-scale, max-scale]
+    /// Default value: [0.8,2]. Minimum value: [0.1,0.1]. Maximum value: [10,10].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func iconSizeScaleRange(min: Double, max: Double) -> Self {
         with(self, setter(\.iconSizeScaleRange, .constant([min, max])))
     }
 
-    /// Defines the minimum and maximum scaling factors for icon related properties like `icon-size`, `icon-halo-width`, `icon-halo-blur`
-    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    /// Limits the possible scaling range for `icon-size`, `icon-halo-width`, `icon-halo-blur` properties to be within [min-scale, max-scale]
+    /// Default value: [0.8,2]. Minimum value: [0.1,0.1]. Maximum value: [10,10].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func iconSizeScaleRange(_ expression: Exp) -> Self {
@@ -1244,16 +1244,16 @@ extension SymbolLayer {
         with(self, setter(\.textSize, .expression(expression)))
     }
 
-    /// Defines the minimum and maximum scaling factors for text related properties like `text-size`, `text-max-width`, `text-halo-width`, `font-size`
-    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    /// Limits the possible scaling range for `text-size`, `text-halo-width`, `text-halo-blur` properties to be within [min-scale, max-scale]
+    /// Default value: [0.8,2]. Minimum value: [0.1,0.1]. Maximum value: [10,10].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func textSizeScaleRange(min: Double, max: Double) -> Self {
         with(self, setter(\.textSizeScaleRange, .constant([min, max])))
     }
 
-    /// Defines the minimum and maximum scaling factors for text related properties like `text-size`, `text-max-width`, `text-halo-width`, `font-size`
-    /// Default value: [0.8,2]. Value range: [0.1, 10]
+    /// Limits the possible scaling range for `text-size`, `text-halo-width`, `text-halo-blur` properties to be within [min-scale, max-scale]
+    /// Default value: [0.8,2]. Minimum value: [0.1,0.1]. Maximum value: [10,10].
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func textSizeScaleRange(_ expression: Exp) -> Self {

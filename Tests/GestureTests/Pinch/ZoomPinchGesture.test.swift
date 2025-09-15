@@ -24,7 +24,6 @@ final class ZoomPinchGestureTestCase: GestureTestCase {
     /// It is _almost_ the same to compensate initial zooming theshold affect
     /// This function also applies 35° angle to simulate real finger touches.
     func testZoomInAndOutForSameDistanceWithRealFingersIncline() async throws {
-        throw XCTSkip("Disable flacky test")
         let startCameraState = mapView.mapboxMap.cameraState
 
         let angle = -35 * (Double.pi / 180.0)
@@ -35,9 +34,7 @@ final class ZoomPinchGestureTestCase: GestureTestCase {
                                          duration: Constants.pinchDuration)
         try eventGenerator.twoFingerUp()
 
-        XCTExpectFailure("Bug in Hammer: angle arg interprets incorrectly") {
-            XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, startCameraState.zoom, accuracy: 0.001)
-        }
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, startCameraState.zoom, accuracy: 0.001)
     }
 
     /// Test that zooming-out and zooming-in to _almost_ the same place will return zoom level back
@@ -59,7 +56,6 @@ final class ZoomPinchGestureTestCase: GestureTestCase {
     /// Test that zooming-out and zooming-in to _almost_ the same place will return zoom level back
     /// It is _almost_ the same to compensate initial zooming theshold affect
     func testZoomOutAndInForSameDistanceWithRealFingersIncline() async throws {
-        throw XCTSkip("Disable flacky test")
         camera.zoom = 8
         let startCameraState = mapView.mapboxMap.cameraState
 
@@ -71,8 +67,6 @@ final class ZoomPinchGestureTestCase: GestureTestCase {
                                          duration: Constants.pinchDuration)
         try eventGenerator.twoFingerUp()
 
-        XCTExpectFailure("Bug in Hammer: angle arg interprets incorrectly") {
-            XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, startCameraState.zoom, accuracy: 0.001)
-        }
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, startCameraState.zoom, accuracy: 0.001)
     }
 }

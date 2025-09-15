@@ -27,8 +27,7 @@ packages:
     url: https://github.com/mapbox/Fingertips.git
     from: 0.6.0
   Hammer:
-    url: https://github.com/lyft/Hammer.git
-    from: 0.14.3
+    path: Sources/Vendors/Hammer
 
 targets:
   Examples:

@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 11.16.0-beta.1 - 23 September, 2025
 
+* Added experimental `scaleFactor` param to `MapOptions`, `MapSnapshotOptions` for scaling icons and texts.
 * Added support for `LandmarkIcons` featureset in Mapbox Standard Style. The `LandmarkIcons` featureset allows querying and configuring landmark building icons that appear on the map. Access landmark properties including landmarkId, name, type, and localized names through the `StandardLandmarkIconsFeature` class.
 * Enhanced `MapStyle.standard()` and `MapStyle.standardSatellite()` with new configuration parameters for color customization, landmark icons visibility, point-of-interest styling, road appearance, and administrative boundaries.
 * Expose `LineLayer.lineCutoutFadeWidth` to control route line cutout fade width.

@@ -2186,3 +2186,7 @@ Func MapStyle.standard(theme:lightPreset:font:showPointOfInterestLabels:showTran
 Func MapStyle.standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:colorBuildingHighlight:colorBuildingSelect:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:showLandmarkIcons:themeData:) has parameter 9 type change from MapboxMaps.StyleColor? to MapboxMaps.StandardBackgroundPointOfInterestLabels?
 Func MapStyle.standardSatellite(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showRoadsAndTransit:showPedestrianRoads:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:) has parameter 10 type change from MapboxMaps.StyleColor? to MapboxMaps.StandardColorModePointOfInterestLabels?
 Func MapStyle.standardSatellite(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showRoadsAndTransit:showPedestrianRoads:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabelSelect:colorRoads:colorTrunks:) has parameter 8 type change from MapboxMaps.StyleColor? to MapboxMaps.StandardBackgroundPointOfInterestLabels?
+
+/* Removed Decls */
+Constructor MapOptions.init(constrainMode:viewportMode:orientation:crossSourceCollisions:size:pixelRatio:glyphsRasterizationOptions:) has been removed
+Constructor MapSnapshotOptions.init(size:pixelRatio:glyphsRasterizationOptions:showsLogo:showsAttribution:) has been removed

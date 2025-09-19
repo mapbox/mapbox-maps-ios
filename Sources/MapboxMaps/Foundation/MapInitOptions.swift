@@ -102,7 +102,8 @@ extension MapInitOptions {
                 crossSourceCollisions: mapOptions.__crossSourceCollisions,
                 size: Size(width: Float(bounds.width), height: Float(bounds.height)),
                 pixelRatio: mapOptions.pixelRatio,
-                glyphsRasterizationOptions: mapOptions.glyphsRasterizationOptions)
+                glyphsRasterizationOptions: mapOptions.glyphsRasterizationOptions,
+                scaleFactor: mapOptions.__scaleFactor)
 
             // Use the overriding style URI if provided (currently from IB)
             let resolvedStyleURI = overridingStyleURI.map { StyleURI(url: $0) } ?? styleURI

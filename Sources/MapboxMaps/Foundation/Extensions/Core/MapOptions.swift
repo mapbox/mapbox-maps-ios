@@ -41,13 +41,15 @@ extension MapOptions {
     ///   - size: Size of the map, if nil (the default), a minimal default size will be used.
     ///   - pixelRatio: Pixel scale of the map view; default is the main screen's native scale.
     ///   - glyphsRasterizationOptions: A `GlyphsRasterizationOptions` object.
+    ///   - scaleFactor: Scale factor to scale Map icons and texts; default is `1.0`.
     public convenience init(constrainMode: ConstrainMode = .heightOnly,
                             viewportMode: ViewportMode = .default,
                             orientation: NorthOrientation = .upwards,
                             crossSourceCollisions: Bool = true,
                             size: CGSize? = nil,
                             pixelRatio: CGFloat? = nil,
-                            glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: [])) {
+                            glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: []),
+                            scaleFactor: CGFloat = 1.0) {
 
         let mbmSize: Size?
 
@@ -64,7 +66,8 @@ extension MapOptions {
                   crossSourceCollisions: crossSourceCollisions.NSNumber,
                   size: mbmSize,
                   pixelRatio: Float(pixelRatio ?? ScreenShim.nativeScale),
-                  glyphsRasterizationOptions: glyphsRasterizationOptions)
+                  glyphsRasterizationOptions: glyphsRasterizationOptions,
+                  scaleFactor: Float(scaleFactor))
     }
 
     /// The map constrain mode. This can be used to limit the map to wrap around
@@ -110,6 +113,12 @@ extension MapOptions {
         return CGSize(width: Double(size.width), height: Double(size.height))
     }
 
+    /// Scale factor to scale map icons and texts. Default is `1.0`.
+    @_spi(Experimental)
+    public var scaleFactor: CGFloat {
+        return CGFloat(__scaleFactor)
+    }
+
     public override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? MapOptions else {
             return false
@@ -126,7 +135,8 @@ extension MapOptions {
             (crossSourceCollisions == other.crossSourceCollisions) &&
             (size == other.size) &&
             (pixelRatio == other.pixelRatio) &&
-            (glyphsRasterizationOptions == other.glyphsRasterizationOptions)
+            (glyphsRasterizationOptions == other.glyphsRasterizationOptions) &&
+            (scaleFactor == other.scaleFactor)
     }
 
     open override var hash: Int {
@@ -137,6 +147,7 @@ extension MapOptions {
         hasher.combine(crossSourceCollisions)
         hasher.combine(pixelRatio)
         hasher.combine(glyphsRasterizationOptions)
+        hasher.combine(scaleFactor)
         return hasher.finalize()
     }
 }

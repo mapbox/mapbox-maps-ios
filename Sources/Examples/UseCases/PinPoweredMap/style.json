@@ -1,0 +1,15 @@
+{
+    "version": 8,
+    "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+    "sprite": "mapbox://sprites/mapbox-map-design/cmetu1bho01cj01pjg3fz41if/cb928gwx5l1l0ml37adao6el5",
+    "imports": [
+      {
+        "config": {
+          "showPointOfInterestLabels": false,
+          "showLandmarkIcons": true
+        },
+        "id": "basemap",
+        "url": "mapbox://styles/mapbox/standard"
+      }
+    ]
+}

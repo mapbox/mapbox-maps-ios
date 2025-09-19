@@ -29,4 +29,5 @@ extension CameraBoundsOptions {
 
 extension StyleURI {
     static let customStyle = StyleURI(rawValue: "mapbox://styles/examples/cke97f49z5rlg19l310b7uu7j")!
+    static var pinPoweredMapStyle: StyleURI { StyleURI(url: Bundle.main.url(forResource: "style", withExtension: "json")!)! }
 }

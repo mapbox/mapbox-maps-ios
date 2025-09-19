@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 import Fingertips
 import OSLog
 @_spi(Experimental) import MapboxMaps
@@ -118,15 +119,10 @@ final class SceneDelegate: NSObject, UISceneDelegate {
 
         let window = FingerTipWindow(windowScene: windowScene)
 
-        let examplesTableViewController = ExampleTableViewController()
-        let navigationController = UINavigationController(rootViewController: examplesTableViewController)
+        let rootView = ExamplesRootView()
+        let hostingController = UIHostingController(rootView: rootView)
 
-        let appearance = UINavigationBar.appearance()
-        appearance.prefersLargeTitles = true
-
-        appearance.scrollEdgeAppearance = UINavigationBarAppearance()
-
-        window.rootViewController = navigationController
+        window.rootViewController = hostingController
         window.makeKeyAndVisible()
 
         windows.append(window)

@@ -1,10 +1,10 @@
 import SwiftUI
 import UIKit
-import MapboxMaps
+@_spi(Internal) import MapboxMaps
 
 struct SwiftUIRoot: View {
     var body: some View {
-        ExamplesNavigationView {
+        NavigationView {
             List {
                 Section {
                     ExampleLink("Simple Map", note: "Camera observing, automatic dark mode support.", destination: SimpleMapExample())
@@ -64,6 +64,8 @@ struct SwiftUIRoot: View {
 
                 } header: { Text("Testing Examples") }
             }
+            .navigationTitle(title)
+            .safeNavigationSubtitle(Bundle.mapboxMapsMetadata.version)
         }
     }
 }
@@ -114,35 +116,6 @@ struct SwiftUIWrapper: View {
     }
 }
 
-func createSwiftUIExamplesController() -> UIViewController {
-    let controller =  UIHostingController(rootView: SwiftUIWrapper())
-    controller.title = title
-    controller.modalPresentationStyle = .fullScreen
-    return controller
-}
-
-struct ExamplesNavigationView<Content>: View where Content: View {
-    let content: Content
-
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-
-    var body: some View {
-        NavigationView {
-            content
-                .listStyle(.plain)
-                .navigationTitle(title)
-                .navigationBarTitleDisplayMode(.inline)
-                .modifier(ToolbarContentWhenPresented { dismiss in
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Close") { dismiss() }
-                    }
-                })
-        }
-    }
-}
-
 struct ExampleView<Content>: View where Content: View {
     @State private var isNavigationBarHidden = false
     let content: Content
@@ -153,6 +126,7 @@ struct ExampleView<Content>: View where Content: View {
 
     var body: some View {
         content
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(isNavigationBarHidden)
             .onShake {
                 isNavigationBarHidden.toggle()

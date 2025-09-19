@@ -13,24 +13,27 @@ final class ExampleTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Examples"
+        title = "UIKit Examples"
 
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
-        searchController.searchBar.placeholder = "Search examples"
+        searchController.searchBar.placeholder = "Search"
         searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "SwiftUI", style: .plain, target: self, action: #selector(openSwiftUI))
-            
-        var version = Bundle.mapboxMapsMetadata.version
-        if version.count > 12 {
-            version = version.prefix(12) + "..."
+
+        if #available(iOS 26.0, *) {
+#if compiler(>=6.2)
+            self.navigationItem.subtitle = Bundle.mapboxMapsMetadata.version
+#endif
+        } else {
+            var version = Bundle.mapboxMapsMetadata.version
+            if version.count > 12 {
+                version = version.prefix(12) + "..."
+            }
+            let versionButton = UIBarButtonItem(title: version, image: nil, target: self, action: #selector(openVersion))
+            navigationItem.rightBarButtonItem = versionButton
         }
-        let versionButton = UIBarButtonItem(title: version, image: nil, target: self, action: #selector(openVersion))
-        navigationItem.rightBarButtonItem = versionButton
-        
-        
+
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
 
         navigationController?.delegate = self
@@ -59,10 +62,6 @@ final class ExampleTableViewController: UITableViewController {
         UserDefaults.standard.removeObject(forKey: startingExampleTitleKey)
     }
 
-    @objc func openSwiftUI() {
-        present(createSwiftUIExamplesController(), animated: true)
-    }
-    
     @objc func openVersion() {
         let str = "MapboxMaps: \(Bundle.mapboxMapsMetadata.version)"
         let vc = UIAlertController(title: "Version", message: str, preferredStyle: .alert)
@@ -128,6 +127,7 @@ extension ExampleTableViewController {
         cell.detailTextLabel?.text = example.description.trimmingCharacters(in: .whitespacesAndNewlines)
         cell.detailTextLabel?.numberOfLines = 2
         cell.detailTextLabel?.textColor = .secondaryLabel
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
 

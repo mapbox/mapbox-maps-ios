@@ -10,7 +10,6 @@
 
 - ``MapRecorderOptions-struct``
 - ``MapPlayerOptions-struct``
-- ``PlaybackFinished``
 
 ### Performance recording
 

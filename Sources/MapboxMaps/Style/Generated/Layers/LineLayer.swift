@@ -49,15 +49,6 @@ public struct LineLayer: Layer, Equatable {
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineCrossSlope: Value<Double>?
 
-    /// The width of the cutout fade effect
-    /// Default value: 0.4. Value range: [0, 1]
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var lineCutoutFadeWidth: Value<Double>?
-
-    /// Transition options for `LineCutoutFadeWidth`.
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var lineCutoutFadeWidthTransition: StyleTransition?
-
     /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
     /// Default value: 0.3. Value range: [0, 1]
     @_documentation(visibility: public)
@@ -314,8 +305,6 @@ public struct LineLayer: Layer, Equatable {
         try layoutContainer.encode(visibility, forKey: .visibility)
         try layoutContainer.encodeIfPresent(lineCap, forKey: .lineCap)
         try layoutContainer.encodeIfPresent(lineCrossSlope, forKey: .lineCrossSlope)
-        try layoutContainer.encodeIfPresent(lineCutoutFadeWidth, forKey: .lineCutoutFadeWidth)
-        try layoutContainer.encodeIfPresent(lineCutoutFadeWidthTransition, forKey: .lineCutoutFadeWidthTransition)
         try layoutContainer.encodeIfPresent(lineCutoutOpacity, forKey: .lineCutoutOpacity)
         try layoutContainer.encodeIfPresent(lineCutoutOpacityTransition, forKey: .lineCutoutOpacityTransition)
         try layoutContainer.encodeIfPresent(lineCutoutWidth, forKey: .lineCutoutWidth)
@@ -385,8 +374,6 @@ public struct LineLayer: Layer, Equatable {
             visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
             lineCap = try layoutContainer.decodeIfPresent(Value<LineCap>.self, forKey: .lineCap)
             lineCrossSlope = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineCrossSlope)
-            lineCutoutFadeWidth = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineCutoutFadeWidth)
-            lineCutoutFadeWidthTransition = try layoutContainer.decodeIfPresent(StyleTransition.self, forKey: .lineCutoutFadeWidthTransition)
             lineCutoutOpacity = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineCutoutOpacity)
             lineCutoutOpacityTransition = try layoutContainer.decodeIfPresent(StyleTransition.self, forKey: .lineCutoutOpacityTransition)
             lineCutoutWidth = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineCutoutWidth)
@@ -418,8 +405,6 @@ public struct LineLayer: Layer, Equatable {
     enum LayoutCodingKeys: String, CodingKey {
         case lineCap = "line-cap"
         case lineCrossSlope = "line-cross-slope"
-        case lineCutoutFadeWidth = "line-cutout-fade-width"
-        case lineCutoutFadeWidthTransition = "line-cutout-fade-width-transition"
         case lineCutoutOpacity = "line-cutout-opacity"
         case lineCutoutOpacityTransition = "line-cutout-opacity-transition"
         case lineCutoutWidth = "line-cutout-width"
@@ -540,29 +525,6 @@ extension LineLayer {
     @_spi(Experimental)
     public func lineCrossSlope(_ expression: Exp) -> Self {
         with(self, setter(\.lineCrossSlope, .expression(expression)))
-    }
-
-    /// The width of the cutout fade effect
-    /// Default value: 0.4. Value range: [0, 1]
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func lineCutoutFadeWidth(_ constant: Double) -> Self {
-        with(self, setter(\.lineCutoutFadeWidth, .constant(constant)))
-    }
-
-    /// Transition property for `lineCutoutFadeWidth`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func lineCutoutFadeWidthTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.lineCutoutFadeWidthTransition, transition))
-    }
-
-    /// The width of the cutout fade effect
-    /// Default value: 0.4. Value range: [0, 1]
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func lineCutoutFadeWidth(_ expression: Exp) -> Self {
-        with(self, setter(\.lineCutoutFadeWidth, .expression(expression)))
     }
 
     /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.

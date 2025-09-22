@@ -76,8 +76,6 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     private func updateProperties(manager: PolylineAnnotationManager) {
         assign(manager, \.lineCap, value: lineCap)
         assign(manager, \.lineCrossSlope, value: lineCrossSlope)
-        assign(manager, \.lineCutoutFadeWidth, value: lineCutoutFadeWidth)
-        assign(manager, \.lineCutoutFadeWidthTransition, value: lineCutoutFadeWidthTransition)
         assign(manager, \.lineCutoutOpacity, value: lineCutoutOpacity)
         assign(manager, \.lineCutoutOpacityTransition, value: lineCutoutOpacityTransition)
         assign(manager, \.lineCutoutWidth, value: lineCutoutWidth)
@@ -146,23 +144,6 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     @_spi(Experimental)
     public func lineCrossSlope(_ newValue: Double) -> Self {
         with(self, setter(\.lineCrossSlope, newValue))
-    }
-
-    private var lineCutoutFadeWidthTransition: StyleTransition?
-    /// Transition property for `lineCutoutFadeWidth`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func lineCutoutFadeWidthTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.lineCutoutFadeWidthTransition, transition))
-    }
-
-    private var lineCutoutFadeWidth: Double?
-    /// The width of the cutout fade effect
-    /// Default value: 0.4. Value range: [0, 1]
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func lineCutoutFadeWidth(_ newValue: Double) -> Self {
-        with(self, setter(\.lineCutoutFadeWidth, newValue))
     }
 
     private var lineCutoutOpacityTransition: StyleTransition?

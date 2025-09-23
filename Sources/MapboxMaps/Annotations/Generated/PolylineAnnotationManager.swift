@@ -73,6 +73,23 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-cross-slope"] = newValue }
     }
 
+    /// Transition property for `lineCutoutFadeWidth`
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var lineCutoutFadeWidthTransition: StyleTransition? {
+        get { StyleTransition(impl.layerProperties["line-cutout-fade-width-transition"] as? [String: TimeInterval]) }
+        set { impl.layerProperties["line-cutout-fade-width-transition"] = newValue?.asDictionary }
+    }
+
+    /// The width of the cutout fade effect
+    /// Default value: 0.4. Value range: [0, 1]
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var lineCutoutFadeWidth: Double? {
+        get { impl.layerProperties["line-cutout-fade-width"] as? Double }
+        set { impl.layerProperties["line-cutout-fade-width"] = newValue }
+    }
+
     /// Transition property for `lineCutoutOpacity`
     @_documentation(visibility: public)
     @_spi(Experimental)

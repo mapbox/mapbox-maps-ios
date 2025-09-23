@@ -67,11 +67,11 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
             self.finish()
         }.store(in: &cancelables)
 
-        self.toolbarItems = [
-            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-            UIBarButtonItem(customView: modeButton),
-            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        ]
+        self.view.addSubview(modeButton)
+        NSLayoutConstraint.activate([
+            self.view.centerXAnchor.constraint(equalTo: modeButton.centerXAnchor),
+            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: modeButton.bottomAnchor, multiplier: 1)
+        ])
 
         addParkingAnnotation(
             coordinate: CLLocationCoordinate2D(latitude: 37.445, longitude: -122.1704),
@@ -298,7 +298,8 @@ private final class Route {
         routeLayer.slot = .middle
         // make route lines visible through obstructing 3D buildings and other aboveground features
         routeLayer.lineCutoutWidth = .constant(30)
-        routeLayer.lineCutoutOpacity = .constant(0.2)
+        routeLayer.lineCutoutFadeWidth = .constant(0.5)
+        routeLayer.lineCutoutOpacity = .constant(0)
         try! mapView.mapboxMap.addLayer(routeLayer)
 
         // Annotation

@@ -112,6 +112,32 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.lineCrossSlope, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cross-slope").value as! NSNumber).doubleValue))
     }
 
+    func testLineCutoutFadeWidth() throws {
+        // Test that the setter and getter work
+        let value = 0.5
+        manager.lineCutoutFadeWidth = value
+        XCTAssertEqual(manager.lineCutoutFadeWidth, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        if case .constant(let actualValue) = layer.lineCutoutFadeWidth {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.lineCutoutFadeWidth = nil
+        XCTAssertNil(manager.lineCutoutFadeWidth)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineCutoutFadeWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cutout-fade-width").value as! NSNumber).doubleValue))
+    }
+
     func testLineCutoutOpacity() throws {
         // Test that the setter and getter work
         let value = 0.5

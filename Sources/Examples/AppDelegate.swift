@@ -31,6 +31,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appearance.prefersLargeTitles = true
         appearance.scrollEdgeAppearance = UINavigationBarAppearance()
 
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+
+
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+
         return true
     }
 }

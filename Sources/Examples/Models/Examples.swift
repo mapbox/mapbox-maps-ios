@@ -313,6 +313,26 @@ extension Examples {
     struct Category {
         let title: String
         let examples: [Example]
+
+        init(title: String, examples: [Example]) {
+            self.title = title
+            self.examples = examples
+        }
+
+        init(_ title: String, @ExampleBuilder examples: () -> [Example]) {
+            self.title = title
+            self.examples = examples()
+        }
+
+        func search(for term: String) -> [Example] {
+            if term.isEmpty {
+                return examples
+            }
+            return examples.filter { example in
+                example.title.localizedCaseInsensitiveContains(term) ||
+                example.description.localizedCaseInsensitiveContains(term)
+            }
+        }
     }
 
     static let all: [Category] = .init {

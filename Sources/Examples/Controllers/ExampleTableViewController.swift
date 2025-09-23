@@ -15,23 +15,12 @@ final class ExampleTableViewController: UITableViewController {
         super.viewDidLoad()
         title = "UIKit Examples"
 
-        let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.placeholder = "Search"
-        searchController.obscuresBackgroundDuringPresentation = false
-        navigationItem.searchController = searchController
-
-        if #available(iOS 26.0, *) {
-#if compiler(>=6.2)
-            self.navigationItem.subtitle = Bundle.mapboxMapsMetadata.version
-#endif
-        } else {
-            var version = Bundle.mapboxMapsMetadata.version
-            if version.count > 12 {
-                version = version.prefix(12) + "..."
-            }
-            let versionButton = UIBarButtonItem(title: version, image: nil, target: self, action: #selector(openVersion))
-            navigationItem.rightBarButtonItem = versionButton
+        if #unavailable(iOS 18.0) {
+            let searchController = UISearchController(searchResultsController: nil)
+            searchController.searchResultsUpdater = self
+            searchController.searchBar.placeholder = "Search"
+            searchController.obscuresBackgroundDuringPresentation = false
+            navigationItem.searchController = searchController
         }
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
@@ -60,13 +49,6 @@ final class ExampleTableViewController: UITableViewController {
 
     func removeExampleForReopening() {
         UserDefaults.standard.removeObject(forKey: startingExampleTitleKey)
-    }
-
-    @objc func openVersion() {
-        let str = "MapboxMaps: \(Bundle.mapboxMapsMetadata.version)"
-        let vc = UIAlertController(title: "Version", message: str, preferredStyle: .alert)
-        vc.addAction(UIAlertAction(title: "OK", style: .default))
-        present(vc, animated: true)
     }
 
     override func viewWillAppear(_ animated: Bool) {

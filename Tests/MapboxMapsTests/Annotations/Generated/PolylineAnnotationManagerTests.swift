@@ -82,6 +82,32 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cross-slope"] as! Double, defaultValue)
     }
+    func testInitialLineCutoutFadeWidth() {
+        let initialValue = manager.lineCutoutFadeWidth
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineCutoutFadeWidth() {
+        let value = 0.5
+        manager.lineCutoutFadeWidth = value
+        XCTAssertEqual(manager.lineCutoutFadeWidth, value)
+        XCTAssertEqual(manager.impl.layerProperties["line-cutout-fade-width"] as! Double, value)
+    }
+
+
+    func testSetToNilLineCutoutFadeWidth() {
+        let newLineCutoutFadeWidthProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cutout-fade-width").value as! Double
+        manager.lineCutoutFadeWidth = newLineCutoutFadeWidthProperty
+        XCTAssertNotNil(manager.impl.layerProperties["line-cutout-fade-width"])
+        harness.triggerDisplayLink()
+
+        manager.lineCutoutFadeWidth = nil
+        XCTAssertNil(manager.lineCutoutFadeWidth)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cutout-fade-width"] as! Double, defaultValue)
+    }
     func testInitialLineCutoutOpacity() {
         let initialValue = manager.lineCutoutOpacity
         XCTAssertNil(initialValue)

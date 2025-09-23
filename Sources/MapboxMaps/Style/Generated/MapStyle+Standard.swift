@@ -1,7 +1,7 @@
 // This file is generated.
 
 extension MapStyle {
-    /// [Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) is a general-purpose style with 3D visualization.
+    /// [Mapbox Standard](https://docs.mapbox.com/map-styles/standard/guides/) is a general-purpose style with 3D visualization.
     ///
     /// - Parameters:
     ///   - theme: Switch between predefined themes or set a custom theme. Default value: `default`.
@@ -100,12 +100,12 @@ extension MapStyle {
         return MapStyle(uri: .standard, configuration: config)
     }
 
-    /// [Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) is a general-purpose style with 3D visualization.
+    /// [Mapbox Standard](https://docs.mapbox.com/map-styles/standard/guides/) is a general-purpose style with 3D visualization.
     public static var standard: MapStyle { MapStyle(uri: .standard) }
 }
 
 extension StyleURI {
-    /// [Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) is a general-purpose style with 3D visualization.
+    /// [Mapbox Standard](https://docs.mapbox.com/map-styles/standard/guides/) is a general-purpose style with 3D visualization.
     public static var standard: StyleURI { StyleURI(rawValue: "mapbox://styles/mapbox/standard")! }
 }
 

@@ -2,6 +2,12 @@ import UIKit
 import MapboxMaps
 
 final class FeatureStateExample: UIViewController, ExampleProtocol {
+    private struct EarthquakeThreshold {
+        let magnitude: Double
+        let colorHEX: String
+        let radius: Double
+    }
+
     private var mapView: MapView!
     private var descriptionView: EarthquakeDescriptionView!
     private var selectedFeature: FeaturesetFeature?
@@ -15,6 +21,19 @@ final class FeatureStateExample: UIViewController, ExampleProtocol {
 
         return dateFormatter
     }()
+
+    private let earthquakeThresholds = [
+        EarthquakeThreshold(magnitude: 1, colorHEX: "#fff7ec", radius: 8),
+        EarthquakeThreshold(magnitude: 1.5, colorHEX: "#fee8c8", radius: 10),
+        EarthquakeThreshold(magnitude: 2, colorHEX: "#fdd49e", radius: 12),
+        EarthquakeThreshold(magnitude: 2.5, colorHEX: "#fdbb84", radius: 14),
+        EarthquakeThreshold(magnitude: 3, colorHEX: "#fc8d59", radius: 16),
+        EarthquakeThreshold(magnitude: 3.5, colorHEX: "#ef6548", radius: 18),
+        EarthquakeThreshold(magnitude: 4.5, colorHEX: "#d7301f", radius: 20),
+        EarthquakeThreshold(magnitude: 6.5, colorHEX: "#b30000", radius: 22),
+        EarthquakeThreshold(magnitude: 8.5, colorHEX: "#7f0000", radius: 24),
+        EarthquakeThreshold(magnitude: 10.5, colorHEX: "#000", radius: 26)
+    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -96,26 +115,11 @@ final class FeatureStateExample: UIViewController, ExampleProtocol {
                 Exp(.interpolate) {
                     Exp(.linear)
                     Exp(.get) { "mag" }
-                    1
-                    8
-                    1.5
-                    10
-                    2
-                    12
-                    2.5
-                    14
-                    3
-                    16
-                    3.5
-                    18
-                    4.5
-                    20
-                    6.5
-                    22
-                    8.5
-                    24
-                    10.5
-                    26
+
+                    for threshold in earthquakeThresholds {
+                        threshold.magnitude
+                        threshold.radius
+                    }
                 }
                 5
             }
@@ -136,26 +140,11 @@ final class FeatureStateExample: UIViewController, ExampleProtocol {
                 Exp(.interpolate) {
                     Exp(.linear)
                     Exp(.get) { "mag" }
-                    1
-                    "#fff7ec"
-                    1.5
-                    "#fee8c8"
-                    2
-                    "#fdd49e"
-                    2.5
-                    "#fdbb84"
-                    3
-                    "#fc8d59"
-                    3.5
-                    "#ef6548"
-                    4.5
-                    "#d7301f"
-                    6.5
-                    "#b30000"
-                    8.5
-                    "#7f0000"
-                    10.5
-                    "#000"
+
+                    for threshold in earthquakeThresholds {
+                        threshold.magnitude
+                        threshold.colorHEX
+                    }
                 }
                 "#000"
             }

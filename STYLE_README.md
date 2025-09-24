@@ -118,5 +118,77 @@ Exp(.interpolate) {
 }
 ```
 
+#### Control Flow in Expression DSL
+
+The Expression DSL supports advanced Swift control flow constructs, making it easier to build complex expressions dynamically:
+
+**For loops** - Generate multiple expression arguments from collections:
+```swift
+let zoomLevels: [Double] = [0, 5, 10, 15, 20]
+let colors = [UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue]
+
+Exp(.interpolate) {
+    Exp(.linear)
+    Exp(.zoom)
+
+    for (level, color) in zip(zoomLevels, colors) {
+        level
+        color
+    }
+}
+```
+
+**Conditional expressions** - Use if/else to conditionally include arguments:
+```swift
+let isDarkMode = traitCollection.userInterfaceStyle == .dark
+
+Exp(.interpolate) {
+    Exp(.linear)
+    Exp(.zoom)
+
+    if isDarkMode {
+        0
+        UIColor.black
+    } else {
+        0
+        UIColor.white
+    }
+
+    10
+    UIColor.blue
+}
+```
+
+**Optional handling** - Work with optional values seamlessly:
+```swift
+let optionalColor: UIColor? = someCondition ? UIColor.red : nil
+
+Exp(.interpolate) {
+    Exp(.linear)
+    Exp(.zoom)
+
+    if let color = optionalColor {
+        color
+    }
+
+    0
+    UIColor.blue
+}
+```
+
+**Availability checks** - Include platform-specific logic:
+```swift
+Exp(.interpolate) {
+    Exp(.linear)
+    Exp(.zoom)
+
+    if #available(iOS 13.0, *) {
+        UIColor.systemBackground
+    } else {
+        UIColor.white
+    }
+}
+```
+
 #### Other Expression Examples
 - This (example)[Sources/Examples/All%20Examples/DataDrivenSymbolsExample.swift#L74] highlights the use of a match, and a switchcase expression

@@ -10,6 +10,52 @@ public struct ExpressionArgumentBuilder {
     public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> [Exp.Argument] {
         return arguments.flatMap { $0.expressionArguments }
     }
+
+    /// Builds an optional expression argument.
+    /// Enables support for optional values in Expression DSL, allowing `if let` and `guard let` constructs.
+    ///
+    /// - Parameter component: An optional expression argument convertible value
+    /// - Returns: Array of expression arguments, empty if component is nil
+    public static func buildOptional(_ component: ExpressionArgumentConvertible?) -> [Exp.Argument] {
+        return component?.expressionArguments ?? []
+    }
+
+    /// Builds expression arguments for the first branch of a conditional.
+    /// Enables support for `if/else` constructs in Expression DSL.
+    ///
+    /// - Parameter argument: Expression argument from the first conditional branch
+    /// - Returns: Array of expression arguments
+    public static func buildEither(first argument: ExpressionArgumentConvertible) -> [Exp.Argument] {
+        return argument.expressionArguments
+    }
+
+    /// Builds expression arguments for the second branch of a conditional.
+    /// Enables support for `if/else` constructs in Expression DSL.
+    ///
+    /// - Parameter argument: Expression argument from the second conditional branch
+    /// - Returns: Array of expression arguments
+    public static func buildEither(second argument: ExpressionArgumentConvertible) -> [Exp.Argument] {
+        return argument.expressionArguments
+    }
+
+    /// Builds expression arguments from an array of convertible values.
+    /// Enables support for `for` loops in Expression DSL, allowing iteration over collections
+    /// to generate multiple expression arguments dynamically.
+    ///
+    /// - Parameter arguments: Array of expression argument convertible values
+    /// - Returns: Flattened array of expression arguments
+    public static func buildArray(_ arguments: [ExpressionArgumentConvertible]) -> [Exp.Argument] {
+        return arguments.flatMap { $0.expressionArguments }
+    }
+
+    /// Builds expression arguments with limited availability checks.
+    /// Enables support for `#available` constructs in Expression DSL.
+    ///
+    /// - Parameter argument: Expression argument from availability-guarded code
+    /// - Returns: Array of expression arguments
+    public static func buildLimitedAvailability(_ argument: ExpressionArgumentConvertible) -> [Exp.Argument] {
+        return argument.expressionArguments
+    }
 }
 
 /// :nodoc:
@@ -67,6 +113,8 @@ extension Array: ExpressionArgumentConvertible {
             return [.stringArray(validStringArray)]
         } else if let validNumberArray = self as? [Double] {
             return [.numberArray(validNumberArray)]
+        } else if let argumentArray = self as? [Exp.Argument] {
+            return argumentArray
         } else {
             Log.warning("Unsupported array provided to Expression. Only [String] and [Double] are supported.", category: "Expressions")
             return []

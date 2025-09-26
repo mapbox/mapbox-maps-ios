@@ -71,12 +71,12 @@ final class DebugMapExample: UIViewController, ExampleProtocol {
             style: .plain,
             target: self,
             action: #selector(openDebugOptionsMenu(_:)))
-        let tileCover = UIBarButtonItem(
-            title: "Tiles",
+        let infoBarItem = UIBarButtonItem(
+            title: "Info",
             style: .plain,
             target: self,
-            action: #selector(tileCover))
-        navigationItem.rightBarButtonItems = [debugOptionsBarItem, tileCover]
+            action: #selector(showInfo))
+        navigationItem.rightBarButtonItems = [debugOptionsBarItem, infoBarItem]
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -96,10 +96,66 @@ final class DebugMapExample: UIViewController, ExampleProtocol {
         present(navigationController, animated: true, completion: nil)
     }
 
-    @objc private func tileCover() {
+    private func extractStyleInfo() -> StyleInfo {
+        let styleJSON = mapView.mapboxMap.styleJSON
+
+        guard let data = styleJSON.data(using: .utf8),
+              let parsedStyle = try? JSONDecoder().decode(StyleJson.self, from: data) else {
+            return StyleInfo(modifiedDate: "Unknown", sdkCompatibility: "Unknown", styleURL: "Unknown")
+        }
+
+        let modifiedDate = parsedStyle.modified ?? "Unknown"
+
+        let sdkCompatibility: String
+        if let compatibility = parsedStyle.metadata?.compatibility {
+            var compatibilityParts: [String] = []
+            if let ios = compatibility.ios {
+                compatibilityParts.append("iOS: \(ios)")
+            }
+            if let android = compatibility.android {
+                compatibilityParts.append("Android: \(android)")
+            }
+            if let js = compatibility.js {
+                compatibilityParts.append("JS: \(js)")
+            }
+            sdkCompatibility = compatibilityParts.isEmpty ? "Unknown" : compatibilityParts.joined(separator: "\n")
+        } else {
+            sdkCompatibility = "Unknown"
+        }
+
+        let styleURL: String
+        if let origin = parsedStyle.metadata?.origin, !origin.isEmpty {
+            styleURL = origin
+        } else {
+            styleURL = mapView.mapboxMap.styleURI?.rawValue ?? "Unknown"
+        }
+
+        return StyleInfo(modifiedDate: modifiedDate, sdkCompatibility: sdkCompatibility, styleURL: styleURL)
+    }
+
+    @objc private func showInfo() {
+        // Get tiles information
         let tileIds = mapView.mapboxMap.tileCover(for: TileCoverOptions(tileSize: 512, minZoom: 0, maxZoom: 22, roundZoom: false))
-        let message = tileIds.map { "\($0.z)/\($0.x)/\($0.y)" }.joined(separator: "\n")
-        showAlert(withTitle: "Displayed tiles", and: message)
+        let tilesMessage = tileIds.map { "\($0.z)/\($0.x)/\($0.y)" }.joined(separator: "\n")
+
+        // Get style information
+        let styleInfo = extractStyleInfo()
+        let styleMessage = """
+        Style URL: \(styleInfo.styleURL)
+        Modified: \(styleInfo.modifiedDate)
+        SDK Compatibility:
+        \(styleInfo.sdkCompatibility)
+        """
+
+        // Combine both
+        let combinedMessage = """
+        TILES:
+        \(tilesMessage)
+
+        STYLE INFO:
+        \(styleMessage)
+        """
+        showAlert(withTitle: "Map Info", and: combinedMessage)
     }
 
     private func handle(statistics: PerformanceStatistics) {
@@ -341,3 +397,31 @@ extension PerformanceStatistics {
         """
     }
 }
+
+struct StyleInfo {
+    let modifiedDate: String
+    let sdkCompatibility: String
+    let styleURL: String
+}
+
+struct StyleJson: Codable {
+    let modified: String?
+    let metadata: Metadata?
+}
+
+struct Metadata: Codable {
+    let origin: String?
+    let compatibility: Compatibility?
+    
+    enum CodingKeys: String, CodingKey {
+        case origin = "mapbox:origin"
+        case compatibility = "mapbox:compatibility"
+    }
+}
+
+struct Compatibility: Codable {
+    let ios: String?
+    let android: String?
+    let js: String?
+}
+

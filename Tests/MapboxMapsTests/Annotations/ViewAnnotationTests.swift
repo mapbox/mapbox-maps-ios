@@ -1,5 +1,5 @@
 @_spi(Experimental) @testable import MapboxMaps
-import SwiftUICore
+import SwiftUI
 import XCTest
 
 final class ViewAnnotationTests: XCTestCase {

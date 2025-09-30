@@ -54,6 +54,33 @@ public struct OrnamentOptions: Equatable, Sendable {
 /// Used to configure position, margin, and visibility for the map's scale bar view.
 public struct ScaleBarViewOptions: Equatable, Sendable {
 
+    /// The type of the distance unit the scale bar displays in.
+    public struct Units: RawRepresentable, Equatable, Sendable {
+        public let rawValue: String
+
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+
+        /// Imperial units using feet for short distances and miles for longer distances.
+        ///
+        /// The scale bar will display distances in feet for small distances
+        /// and automatically switch to miles for longer distances.
+        public static let imperial = Units(rawValue: "imperial")
+
+        /// Metric units using meters and kilometers.
+        ///
+        /// The scale bar will automatically choose between meters and kilometers
+        /// based on the distance being displayed for optimal readability.
+        public static let metric = Units(rawValue: "metric")
+
+        /// Nautical units using fathoms for short distances and nautical miles for longer distances.
+        ///
+        /// The scale bar will display distances in fathoms for small distances
+        /// and automatically switch to nautical miles for longer distances. Commonly used for marine and aviation navigation.
+        public static let nautical = Units(rawValue: "nautical")
+    }
+
     /// The position of the scale bar view.
     ///
     /// The default value for this property is `.topLeading`.
@@ -73,7 +100,30 @@ public struct ScaleBarViewOptions: Equatable, Sendable {
     /// True if the scale bar is using metric units, false if the scale bar is using imperial units.
     ///
     /// The default value for this property is `Locale.current.usesMetricSystem`.
-    public var useMetricUnits: Bool
+    @available(*, deprecated, renamed: "units", message: "Use `units` instead.")
+    public var useMetricUnits: Bool {
+        didSet {
+            guard useMetricUnits != oldValue, !ignoreDeprecatedUnitUpdates else {
+                return
+            }
+            units = useMetricUnits ? .metric : .imperial
+        }
+    }
+
+    /// Specifies the distance units the scale bar uses.
+    ///
+    /// The default value for this property is `.metric`.
+    public var units: Units {
+        didSet {
+            guard units != oldValue else {
+                return
+            }
+            ignoreDeprecatedUnitUpdates = true
+            useMetricUnits = units == .metric
+            ignoreDeprecatedUnitUpdates = false
+        }
+    }
+    private var ignoreDeprecatedUnitUpdates: Bool = false
 
     /// Initializes a `ScaleBarViewOptions`.
     /// - Parameters:
@@ -85,12 +135,20 @@ public struct ScaleBarViewOptions: Equatable, Sendable {
         position: OrnamentPosition = .topLeading,
         margins: CGPoint = .init(x: 8.0, y: 8.0),
         visibility: OrnamentVisibility = .adaptive,
-        useMetricUnits: Bool = Locale.current.usesMetricSystem
+        useMetricUnits: Bool = Locale.current.usesMetricSystem,
+        units: Units? = nil
     ) {
         self.position = position
         self.margins = margins
         self.visibility = visibility
-        self.useMetricUnits = useMetricUnits
+
+        if let units {
+            self.useMetricUnits = units == .metric
+            self.units = units
+        } else {
+            self.useMetricUnits = useMetricUnits
+            self.units = useMetricUnits ? .metric : .imperial
+        }
     }
 }
 

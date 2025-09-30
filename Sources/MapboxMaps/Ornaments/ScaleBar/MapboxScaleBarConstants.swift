@@ -10,6 +10,9 @@ extension MapboxScaleBarOrnamentView {
         internal static let feetPerMile: Double = 5280
         internal static let feetPerMeter: Double = 3.28084
 
+        internal static let feetPerNauticalMile: Double = 6076.12
+        internal static let feetPerFathom: Double = 6
+
         internal static let barHeight: CGFloat = 4
         internal static let scaleBarLabelWidthHint: CGFloat = 30.0
         internal static let scaleBarMinimumBarWidth: CGFloat = 30.0 // Arbitrary
@@ -97,6 +100,39 @@ extension MapboxScaleBarOrnamentView {
             (distance: 6000*feetPerMile, numberOfBars: 3),
             (distance: 8000*feetPerMile, numberOfBars: 2),
             (distance: 10000*feetPerMile, numberOfBars: 2)
+        ]
+
+        internal static let nauticalTable: [Row] = [
+            // Small distances in fathoms
+            (distance: 1*feetPerFathom, numberOfBars: 2),        // 1 fathom
+            (distance: 2*feetPerFathom, numberOfBars: 2),        // 2 fathoms
+            (distance: 3*feetPerFathom, numberOfBars: 3),        // 3 fathoms
+            (distance: 5*feetPerFathom, numberOfBars: 2),        // 5 fathoms
+            (distance: 10*feetPerFathom, numberOfBars: 2),       // 10 fathoms
+            (distance: 20*feetPerFathom, numberOfBars: 2),       // 20 fathoms
+            (distance: 30*feetPerFathom, numberOfBars: 3),       // 30 fathoms
+            (distance: 50*feetPerFathom, numberOfBars: 2),       // 50 fathoms
+            (distance: 100*feetPerFathom, numberOfBars: 2),      // 100 fathoms
+            (distance: 200*feetPerFathom, numberOfBars: 2),      // 200 fathoms
+
+            // Nautical miles
+            (distance: 0.5*feetPerNauticalMile, numberOfBars: 2),   // 1/2 nautical mile
+            (distance: 1*feetPerNauticalMile, numberOfBars: 2),     // 1 nautical mile
+            (distance: 2*feetPerNauticalMile, numberOfBars: 2),     // 2 nautical miles
+            (distance: 3*feetPerNauticalMile, numberOfBars: 3),     // 3 nautical miles
+            (distance: 5*feetPerNauticalMile, numberOfBars: 2),     // 5 nautical miles
+            (distance: 10*feetPerNauticalMile, numberOfBars: 2),    // 10 nautical miles
+            (distance: 20*feetPerNauticalMile, numberOfBars: 2),    // 20 nautical miles
+            (distance: 30*feetPerNauticalMile, numberOfBars: 3),    // 30 nautical miles
+            (distance: 50*feetPerNauticalMile, numberOfBars: 2),    // 50 nautical miles
+            (distance: 100*feetPerNauticalMile, numberOfBars: 2),   // 100 nautical miles
+            (distance: 200*feetPerNauticalMile, numberOfBars: 2),   // 200 nautical miles
+            (distance: 300*feetPerNauticalMile, numberOfBars: 3),   // 300 nautical miles
+            (distance: 500*feetPerNauticalMile, numberOfBars: 2),   // 500 nautical miles
+            (distance: 1000*feetPerNauticalMile, numberOfBars: 2),  // 1000 nautical miles
+            (distance: 2000*feetPerNauticalMile, numberOfBars: 2),  // 2000 nautical miles
+            (distance: 3000*feetPerNauticalMile, numberOfBars: 3),  // 3000 nautical miles
+            (distance: 5000*feetPerNauticalMile, numberOfBars: 2),  // 5000 nautical miles
         ]
 
         private init() {}

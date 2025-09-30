@@ -229,7 +229,7 @@ public final class OrnamentsManager {
         _compassView.visibility = options.compass.visibility
         _compassView.isHidden = options.compass.visibility == .hidden
         _attributionButton.isHidden = options.attributionButton.visibility == .hidden
-        _scaleBarView.useMetricUnits = options.scaleBar.useMetricUnits
+        _scaleBarView.units = options.scaleBar.units
         if _attributionButton.tintColor != options.attributionButton.tintColor {
             _attributionButton.tintColor = options.attributionButton.tintColor
         }

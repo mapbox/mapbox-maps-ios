@@ -189,4 +189,101 @@ final class OrnamentManagerTests: XCTestCase {
         XCTAssertEqual(ornamentsManager.attributionButton.tintColor, originalTintColor)
         XCTAssertEqual(ornamentsManager.options.attributionButton.tintColor, originalTintColor)
     }
+
+    // MARK: - ScaleBar Units Tests
+
+    func testUseMetricUnitsToUnitsInteraction() {
+        var scaleBarOptions = ScaleBarViewOptions()
+
+        // Test setting useMetricUnits to true sets units to .metric
+        scaleBarOptions.useMetricUnits = true
+        XCTAssertEqual(scaleBarOptions.units, .metric, "Setting useMetricUnits to true should set units to .metric")
+        XCTAssertTrue(scaleBarOptions.useMetricUnits, "useMetricUnits should remain true")
+
+        // Test setting useMetricUnits to false sets units to .imperial
+        scaleBarOptions.useMetricUnits = false
+        XCTAssertEqual(scaleBarOptions.units, .imperial, "Setting useMetricUnits to false should set units to .imperial")
+        XCTAssertFalse(scaleBarOptions.useMetricUnits, "useMetricUnits should remain false")
+    }
+
+    func testUnitsToUseMetricUnitsInteraction() {
+        var scaleBarOptions = ScaleBarViewOptions()
+
+        // Test setting units to .metric sets useMetricUnits to true
+        scaleBarOptions.units = .metric
+        XCTAssertTrue(scaleBarOptions.useMetricUnits, "Setting units to .metric should set useMetricUnits to true")
+        XCTAssertEqual(scaleBarOptions.units, .metric, "units should remain .metric")
+
+        // Test setting units to .imperial sets useMetricUnits to false
+        scaleBarOptions.units = .imperial
+        XCTAssertFalse(scaleBarOptions.useMetricUnits, "Setting units to .imperial should set useMetricUnits to false")
+        XCTAssertEqual(scaleBarOptions.units, .imperial, "units should remain .imperial")
+
+        // Test setting units to .nautical sets useMetricUnits to false
+        scaleBarOptions.units = .nautical
+        XCTAssertFalse(scaleBarOptions.useMetricUnits, "Setting units to .nautical should set useMetricUnits to false")
+        XCTAssertEqual(scaleBarOptions.units, .nautical, "units should remain .nautical")
+    }
+
+    func testScaleBarOptionsInitialization() {
+        // Test default initialization - depends on locale
+        let defaultOptions = ScaleBarViewOptions()
+        let expectedDefaultUnits: ScaleBarViewOptions.Units = Locale.current.usesMetricSystem ? .metric : .imperial
+        XCTAssertEqual(defaultOptions.units, expectedDefaultUnits, "Default units should match locale")
+        XCTAssertEqual(defaultOptions.useMetricUnits, Locale.current.usesMetricSystem, "Default useMetricUnits should match locale")
+
+        // Test initialization with useMetricUnits false
+        let imperialOptions = ScaleBarViewOptions(useMetricUnits: false)
+        XCTAssertEqual(imperialOptions.units, .imperial, "useMetricUnits false should result in .imperial units")
+        XCTAssertFalse(imperialOptions.useMetricUnits, "useMetricUnits should be false")
+
+        // Test initialization with explicit units
+        let nauticalOptions = ScaleBarViewOptions(units: .nautical)
+        XCTAssertEqual(nauticalOptions.units, .nautical, "Explicit units should be preserved")
+        XCTAssertFalse(nauticalOptions.useMetricUnits, "useMetricUnits should be false for nautical units")
+
+        // Test initialization with both parameters - units should take precedence
+        let explicitOptions = ScaleBarViewOptions(useMetricUnits: true, units: .nautical)
+        XCTAssertEqual(explicitOptions.units, .nautical, "Explicit units parameter should take precedence")
+        XCTAssertFalse(explicitOptions.useMetricUnits, "useMetricUnits should be set based on units value")
+    }
+
+    func testScaleBarUnitsBackwardCompatibility() {
+        var scaleBarOptions = ScaleBarViewOptions()
+
+        // Simulate legacy code setting useMetricUnits
+        scaleBarOptions.useMetricUnits = true
+        XCTAssertEqual(scaleBarOptions.units, .metric, "Legacy useMetricUnits=true should work with new units property")
+
+        scaleBarOptions.useMetricUnits = false
+        XCTAssertEqual(scaleBarOptions.units, .imperial, "Legacy useMetricUnits=false should work with new units property")
+
+        // Simulate new code setting units while legacy property exists
+        scaleBarOptions.units = .nautical
+        XCTAssertFalse(scaleBarOptions.useMetricUnits, "New units=.nautical should update legacy useMetricUnits property")
+
+        scaleBarOptions.units = .metric
+        XCTAssertTrue(scaleBarOptions.useMetricUnits, "New units=.metric should update legacy useMetricUnits property")
+
+        scaleBarOptions.units = .imperial
+        XCTAssertFalse(scaleBarOptions.useMetricUnits, "New units=.imperial should update legacy useMetricUnits property")
+    }
+
+    func testScaleBarUnitsNoInfiniteLoop() {
+        var scaleBarOptions = ScaleBarViewOptions()
+
+        // Test that setting the same value doesn't trigger changes
+        scaleBarOptions.units = .metric
+        let initialUnits = scaleBarOptions.units
+        let initialUseMetric = scaleBarOptions.useMetricUnits
+
+        scaleBarOptions.units = .metric  // Same value
+        XCTAssertEqual(scaleBarOptions.units, initialUnits, "Setting same units value should not change anything")
+        XCTAssertEqual(scaleBarOptions.useMetricUnits, initialUseMetric, "Setting same units value should not change useMetricUnits")
+
+        // Test same for useMetricUnits
+        scaleBarOptions.useMetricUnits = true  // Same value
+        XCTAssertEqual(scaleBarOptions.units, initialUnits, "Setting same useMetricUnits value should not change anything")
+        XCTAssertEqual(scaleBarOptions.useMetricUnits, initialUseMetric, "Setting same useMetricUnits value should not change itself")
+    }
 }

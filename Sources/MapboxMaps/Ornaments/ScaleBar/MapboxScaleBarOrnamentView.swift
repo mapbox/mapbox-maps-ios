@@ -93,7 +93,11 @@ internal class MapboxScaleBarOrnamentView: UIView {
     private var shouldLayoutBars = false
 
     internal var unitsPerPoint: Double {
-        return useMetricUnits ? metersPerPoint : metersPerPoint * Constants.feetPerMeter
+        return switch units {
+        case .imperial, .nautical: metersPerPoint * Constants.feetPerMeter
+        case .metric: metersPerPoint
+        default: metersPerPoint
+        }
     }
 
     internal var maximumWidth: CGFloat {
@@ -103,9 +107,9 @@ internal class MapboxScaleBarOrnamentView: UIView {
         return floor(bounds.width / 2)
     }
 
-    internal var useMetricUnits: Bool = true {
+    internal var units: ScaleBarViewOptions.Units = .metric {
         didSet {
-            guard useMetricUnits != oldValue else {
+            guard units != oldValue else {
                 return
             }
 
@@ -315,7 +319,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         if let image = labelImageCache[distance] {
             return image
         } else {
-            let text = formatter.string(fromDistance: distance, useMetricSystem: useMetricUnits)
+            let text = formatter.string(fromDistance: distance, units: units)
             let image = renderImageFor(text: text)
             labelImageCache[distance] = image
             return image
@@ -325,8 +329,9 @@ internal class MapboxScaleBarOrnamentView: UIView {
     private func updateLabels() {
         var multiplier = row.distance / Double(row.numberOfBars)
 
-        if !useMetricUnits {
-            multiplier /= Constants.feetPerMeter
+        switch units {
+        case .imperial, .nautical: multiplier /= Constants.feetPerMeter
+        default: break
         }
 
         labelViews.enumerated().forEach {
@@ -388,10 +393,12 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     private func maxDistanceAndRows() -> (maxDistance: Measurement<UnitLength>, rows: [Row]) {
         let distanceInMeters = Measurement(value: metersPerPoint * maximumWidth, unit: UnitLength.meters)
-        if useMetricUnits {
-            return (distanceInMeters, Constants.metricTable)
-        } else {
-            return (distanceInMeters.converted(to: .feet), Constants.imperialTable)
+
+        return switch units {
+        case .imperial: (distanceInMeters.converted(to: .feet), Constants.imperialTable)
+        case .nautical: (distanceInMeters.converted(to: .feet), Constants.nauticalTable)
+        case .metric: (distanceInMeters, Constants.metricTable)
+        default: (distanceInMeters, Constants.metricTable)
         }
     }
 }

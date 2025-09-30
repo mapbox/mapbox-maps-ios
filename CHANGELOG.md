@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Introduced `ScaleBarViewOptions.units` property supporting metric, imperial, and nautical units, replacing the boolean `useMetricUnits` property.
+
 ## 11.16.0-beta.1 - 23 September, 2025
 
 * Added experimental `scaleFactor` param to `MapOptions`, `MapSnapshotOptions` for scaling icons and texts.

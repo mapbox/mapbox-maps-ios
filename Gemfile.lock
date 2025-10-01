@@ -192,7 +192,7 @@ GEM
       trailblazer-option (>= 0.1.1, < 0.2.0)
       uber (< 0.2.0)
     retriable (3.1.2)
-    rexml (3.4.1)
+    rexml (3.4.4)
     rouge (3.28.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.4.1)
@@ -234,10 +234,12 @@ PLATFORMS
   arm64-darwin-22
   arm64-darwin-23
   arm64-darwin-24
+  arm64-darwin-25
 
 DEPENDENCIES
   fastlane (>= 2.223.0)
   fastlane-plugin-firebase_test_lab!
+  rexml (~> 3.4.2)
 
 BUNDLED WITH
    2.5.4

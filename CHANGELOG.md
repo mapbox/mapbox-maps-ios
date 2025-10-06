@@ -9,11 +9,15 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 11.16.0-beta.1 - 23 September, 2025
 
+### Features ✨ and improvements 🏁
 * Added experimental `scaleFactor` param to `MapOptions`, `MapSnapshotOptions` for scaling icons and texts.
 * Added support for `LandmarkIcons` featureset in Mapbox Standard Style. The `LandmarkIcons` featureset allows querying and configuring landmark building icons that appear on the map. Access landmark properties including landmarkId, name, type, and localized names through the `StandardLandmarkIconsFeature` class.
 * Enhanced `MapStyle.standard()` and `MapStyle.standardSatellite()` with new configuration parameters for color customization, landmark icons visibility, point-of-interest styling, road appearance, and administrative boundaries.
 * Expose `LineLayer.lineCutoutFadeWidth` to control route line cutout fade width.
 * Expanded Expression DSL capabilities with support for control flow constructs in `ExpressionArgumentBuilder`. Now supports `if/else` conditions, `for` loops, optionals, and `#available` checks within expression builders. This allows more natural and readable expression construction, reducing boilerplate code when building complex map styling expressions.
+
+### Bug fixes 🐞
+* Fix incorrect color rendering for gradients and interpolations with zero alpha channel.
 
 ## 11.15.0 - 11 September, 2025
 

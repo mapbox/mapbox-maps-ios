@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.16.0-rc.1 - 07 October, 2025
+
 ## 11.16.0-beta.1 - 23 September, 2025
 
 ### Features ✨ and improvements 🏁

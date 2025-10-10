@@ -34,10 +34,10 @@ public struct VectorSource: Source {
     /// Contains an attribution to be displayed when the map is shown to a user.
     public var attribution: String?
 
-    /// A property to use as a feature id (for feature state). Either a property name, or an object of the form `{<sourceLayer>: <propertyName>}`. If specified as a string for a vector tile source, the same property is used across all its source layers. If specified as an object only specified source layers will have id overriden, others will fallback to original feature id
+    /// A property to use as a feature id (for feature state). It can be a property name, or an expression to evaluate as the ID, or an object of the form `{<sourceLayer>: <propertyName/expression>}`. The expression can only be feature dependent if it is used. If specified as a string for a vector tile source, the same property is used across all its source layers. If specified as an object only specified source layers will have id overriden, others will fallback to original feature id
     public var promoteId2: VectorSourcePromoteId?
 
-    /// A property to use as a feature id (for feature state). Either a property name, or an object of the form `{<sourceLayer>: <propertyName>}`. If specified as a string for a vector tile source, the same property is used across all its source layers. If specified as an object only specified source layers will have id overriden, others will fallback to original feature id
+    /// A property to use as a feature id (for feature state). It can be a property name, or an expression to evaluate as the ID, or an object of the form `{<sourceLayer>: <propertyName/expression>}`. The expression can only be feature dependent if it is used. If specified as a string for a vector tile source, the same property is used across all its source layers. If specified as an object only specified source layers will have id overriden, others will fallback to original feature id
     @available(*, deprecated, message: "Use promoteId2 instead")
     public var promoteId: PromoteId? {
         get { .init(from: promoteId2) }

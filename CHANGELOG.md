@@ -20,6 +20,8 @@ Mapbox welcomes participation and contributions from everyone.
 * Add configuration option to configure attribution button tint color.
 * Expose `LineLayer.lineCutoutOpacity` and `LineLayer.lineCutoutWidth` to make route lines visible through obstructing 3D buildings and other aboveground features.
 
+* Add configuration option to configure attribution button tint color.
+
 ## 11.15.0-beta.1 - 12 August, 2025
 
 * Introduce experimental `Marker` convenience API in Swift UI. Use `Marker` to quickly add a `MapViewAnnotation` pin at the specified coordinates with custom text and color.

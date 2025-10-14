@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         geofencing.addObserver(observer: self, callback: { result in
             switch result {
             case .success:
-                os_log(.info, "Geofencing: Observer added properly")
+                break
             case .failure(let error):
                 os_log(.error, "Geofencing: Error while adding observer %@", error.message)
             }
@@ -33,7 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithOpaqueBackground()
-
 
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
 

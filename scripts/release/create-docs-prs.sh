@@ -66,6 +66,12 @@ ios_sdk_update_versions() {
 
     IOS_SDK_BRANCH_NAME="maps-sdk/ios/${VERSION}"
 
+    # Check if branch already exists remotely
+    if git ls-remote --heads origin "$IOS_SDK_BRANCH_NAME" | grep -q "$IOS_SDK_BRANCH_NAME"; then
+        info "Branch $IOS_SDK_BRANCH_NAME already exists, skipping creating docs PR."
+        cleanup 0
+    fi
+
     git_configure_release_user
 
     git checkout -b "${IOS_SDK_BRANCH_NAME}" --quiet

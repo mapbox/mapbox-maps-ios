@@ -17,12 +17,18 @@ struct MarkersExample: View {
                 .color(markerColor)
                 .stroke(showStroke ? strokeColor : nil)
                 .text(showText ? markerText : nil)
+                .onTapGesture {
+                    markerColor = .random
+                }
 
             ForEvery(tappedPoints, id: \.latitude) { coord in
                 Marker(coordinate: coord)
                     .color(markerColor)
                     .stroke(showStroke ? strokeColor : nil)
                     .text(showText ? String(format: "%.3f, %.3f", coord.latitude, coord.longitude) : nil)
+                    .onTapGesture {
+                        markerColor = .random
+                    }
             }
 
             TapInteraction { tapContext in

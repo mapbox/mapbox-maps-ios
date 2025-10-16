@@ -2193,3 +2193,6 @@ Constructor MapSnapshotOptions.init(size:pixelRatio:glyphsRasterizationOptions:s
 
 // Add scale bar nautical units
 Constructor ScaleBarViewOptions.init(position:margins:visibility:useMetricUnits:) has been removed
+
+// Documentation for Marker
+Struct Marker is now with @_documentation

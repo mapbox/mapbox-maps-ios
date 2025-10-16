@@ -19,6 +19,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 * Fix incorrect color rendering for gradients and interpolations with zero alpha channel.
+* Add tap gesture support to `Marker` component with `onTapGesture` modifier
 
 ## 11.15.0 - 11 September, 2025
 

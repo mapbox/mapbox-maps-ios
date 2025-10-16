@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Displays a simple map Marker at the specified coordinated.
+/// Displays a simple map Marker at the specified coordinate.
 ///
 /// `Marker` is a convenience struct which creates a simple `MapViewAnnotation` with limited customization options.
 /// Use `Marker` to quickly add a pin annotation at the specific coordinates when using SwiftUI.
@@ -19,6 +19,7 @@ import SwiftUI
 /// - Note: `Marker`s  are great for displaying unique interactive features. However, they may be suboptimal for large amounts of data and don't support clustering.
 /// Each marker creates a SwiftUI view, so for scenarios with 100+ markers, consider using ``PointAnnotation``,
 /// Additionally, `Marker`s appear above all content of MapView (e.g. layers, annotations, puck). If you need to display annotation between layers or below a puck, use ``PointAnnotation``.
+@_documentation(visibility: public)
 @_spi(Experimental)
 public struct Marker {
 
@@ -41,6 +42,9 @@ public struct Marker {
 
     /// The color of optional strokes
     var strokeColor: Color? = Color(red: 58/255, green: 89/255, blue: 250/255, opacity: 1.0)
+
+    /// The tap action to perform when marker is tapped
+    var tapAction: (() -> Void)?
 
     /// The outer image of the Marker
     private let outerImage = Image("default_marker_outer", bundle: .mapboxMaps)
@@ -74,6 +78,11 @@ public struct Marker {
         with(self, setter(\.strokeColor, color))
     }
 
+    /// Set a tap action for the Marker
+    public func onTapGesture(perform action: @escaping () -> Void) -> Self {
+        with(self, setter(\.tapAction, action))
+    }
+
     /// Build a `MapViewAnnotation` with the current Marker properties
     private func build() -> MapViewAnnotation {
         MapViewAnnotation(coordinate: coordinate) {
@@ -82,6 +91,9 @@ public struct Marker {
                 if let text {
                     markerText(text)
                 }
+            }
+            .onTapGesture {
+                tapAction?()
             }
         }
         .allowOverlap(true)

@@ -239,6 +239,23 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(marker.strokeColor, Color(red: 58/255, green: 89/255, blue: 250/255, opacity: 1.0))
         XCTAssertEqual(marker.coordinate, CLLocationCoordinate2D.testConstantValue())
         XCTAssertEqual(marker.text, nil)
+        XCTAssertNil(marker.tapAction)
+    }
+
+    func testMarkerTapGesture() {
+        var tapped = false
+        let marker = Marker(coordinate: .testConstantValue())
+            .text("Test Marker")
+            .onTapGesture {
+                tapped = true
+            }
+
+        XCTAssertNotNil(marker.tapAction)
+        XCTAssertFalse(tapped)
+
+        // Execute the tap action
+        marker.tapAction?()
+        XCTAssertTrue(tapped)
     }
 }
 

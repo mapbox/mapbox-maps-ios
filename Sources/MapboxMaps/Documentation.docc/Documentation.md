@@ -32,6 +32,7 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 
 
 ### Annotations
+- ``Marker``
 - <doc:Layer-Annotations>
 - <doc:View-Annotations>
 

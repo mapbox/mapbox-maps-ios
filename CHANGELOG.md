@@ -6,6 +6,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Introduced `ScaleBarViewOptions.units` property supporting metric, imperial, and nautical units, replacing the boolean `useMetricUnits` property.
 * Fix crash in `OrnamentsManager` when setting attribution color.
+## 11.16.0 - 21 October, 2025
+
+## 11.16.0-rc.2 - 14 October, 2025
+
 ## 11.16.0-rc.1 - 07 October, 2025
 
 ## 11.16.0-beta.1 - 23 September, 2025

@@ -330,10 +330,8 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
             object: nil
         )
 
-        if let initialStyleJSON = resolvedMapInitOptions.styleJSON {
-            mapboxMap.mapStyle = MapStyle(json: initialStyleJSON)
-        } else if let initialStyleURI = resolvedMapInitOptions.styleURI {
-            mapboxMap.mapStyle = MapStyle(uri: initialStyleURI)
+        if let mapStyle = resolvedMapInitOptions.mapStyle {
+            mapboxMap.mapStyle = mapStyle
         }
 
         if let cameraOptions = resolvedMapInitOptions.cameraOptions {

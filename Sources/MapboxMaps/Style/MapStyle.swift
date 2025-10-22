@@ -60,6 +60,18 @@ public struct MapStyle: Equatable, Sendable {
     enum Data: Equatable, Sendable {
         case uri(StyleURI)
         case json(String)
+        var asJson: String? {
+            switch self {
+            case .json(let json): json
+            case .uri: nil
+            }
+        }
+        var asURI: StyleURI? {
+            switch self {
+            case .json: nil
+            case .uri(let uri): uri
+            }
+        }
     }
     var data: Data
     var configuration: JSONObject?

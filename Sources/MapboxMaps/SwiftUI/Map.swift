@@ -97,7 +97,8 @@ public struct Map: UIViewControllerRepresentable {
     public func makeCoordinator() -> Coordinator {
         let urlOpener = ClosureURLOpener()
         sendTelemetry(\.swiftUI)
-        let mapView = MapView(frame: .zero, urlOpener: urlOpener)
+        let initOptions = MapInitOptions(mapStyle: mapDependencies.mapStyle)
+        let mapView = MapView(frame: .zero, mapInitOptions: initOptions, urlOpener: urlOpener)
         let viewController = MapViewController(mapView: mapView)
 
         let mapContentDependencies = MapContentDependencies(

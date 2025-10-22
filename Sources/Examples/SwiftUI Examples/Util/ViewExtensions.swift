@@ -58,7 +58,6 @@ extension Color {
     }
 }
 
-
 extension View {
     func simpleAlert(message: Binding<String?>, title: String = "Alert") -> some View {
         return alert(item: message) { item in

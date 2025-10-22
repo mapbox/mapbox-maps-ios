@@ -29,4 +29,27 @@ class MapInitOptionsTests: XCTestCase {
 
         XCTAssert(set.count == 1)
     }
+
+    func testStyleURI() {
+        var me = MapInitOptions(styleURI: .standardSatellite)
+        XCTAssertEqual(me.styleURI, .standardSatellite)
+        XCTAssertEqual(me.mapStyle, MapStyle.standardSatellite)
+
+        me = MapInitOptions(mapStyle: .streets)
+        XCTAssertEqual(me.styleURI, .streets)
+        XCTAssertEqual(me.mapStyle, MapStyle.streets)
+    }
+
+    func testStyleJSON() {
+        let json = "{}"
+        var me = MapInitOptions(styleJSON: json)
+        XCTAssertEqual(me.styleURI, nil)
+        XCTAssertEqual(me.styleJSON, json)
+        XCTAssertEqual(me.mapStyle, MapStyle(json: json))
+
+        me = MapInitOptions(mapStyle: MapStyle(json: json))
+        XCTAssertEqual(me.styleURI, nil)
+        XCTAssertEqual(me.styleJSON, json)
+        XCTAssertEqual(me.mapStyle, MapStyle(json: json))
+    }
 }

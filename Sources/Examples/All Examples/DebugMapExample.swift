@@ -412,7 +412,7 @@ struct StyleJson: Codable {
 struct Metadata: Codable {
     let origin: String?
     let compatibility: Compatibility?
-    
+
     enum CodingKeys: String, CodingKey {
         case origin = "mapbox:origin"
         case compatibility = "mapbox:compatibility"
@@ -424,4 +424,3 @@ struct Compatibility: Codable {
     let android: String?
     let js: String?
 }
-

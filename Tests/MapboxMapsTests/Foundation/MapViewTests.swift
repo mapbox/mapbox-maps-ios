@@ -441,6 +441,13 @@ final class MapViewTestsWithScene: XCTestCase {
         super.tearDown()
     }
 
+    func testMapStyleInInitOptions() throws {
+        XCTAssertEqual(mapView.mapboxMap.mapStyle, .standard)
+        let mapStyle = MapStyle.outdoors
+        var aView = MapView(frame: .zero, mapInitOptions: MapInitOptions(mapStyle: mapStyle))
+        XCTAssertEqual(aView.mapboxMap.mapStyle, mapStyle)
+    }
+
     func testDisplayLinkResumedWhenSceneDidActivate() throws {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")

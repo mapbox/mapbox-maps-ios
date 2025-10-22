@@ -19,10 +19,13 @@ public final class MapInitOptions: NSObject {
     public let mapOptions: MapOptions
 
     /// Style URI for initializing the map. Defaults to Mapbox Standard.
-    public let styleURI: StyleURI?
+    public var styleURI: StyleURI? { mapStyle?.data.asURI }
 
     /// String representation of JSON style spec. Has precedence over ``styleURI``.
-    public let styleJSON: String?
+    public var styleJSON: String? { mapStyle?.data.asJson }
+
+    /// Map style for map initialization.
+    public let mapStyle: MapStyle?
 
     /// Camera options for initializing the map. CameraOptions default to 0.0 for each value.
     public let cameraOptions: CameraOptions?
@@ -45,17 +48,42 @@ public final class MapInitOptions: NSObject {
     ///         can be `nil`.
     ///   - styleJSON: Style JSON in String representation. Has precedence over ``styleURI``.
     ///   - antialiasingSampleCount: Sample count to control multisample anti-aliasing (MSAA) option for rendering.
-    public init(
+    convenience public init(
         mapOptions: MapOptions = MapOptions(),
         cameraOptions: CameraOptions? = nil,
         styleURI: StyleURI? = .standard,
         styleJSON: String? = nil,
         antialiasingSampleCount: Int = 1
     ) {
-        self.mapOptions      = mapOptions
-        self.cameraOptions   = cameraOptions
-        self.styleURI        = styleURI
-        self.styleJSON       = styleJSON
+        let mapStyle: MapStyle? = if let styleJSON {
+            MapStyle(json: styleJSON)
+        } else if let styleURI {
+            MapStyle(uri: styleURI)
+        } else {
+            nil
+        }
+        self.init(mapStyle: mapStyle,
+                  mapOptions: mapOptions,
+                  cameraOptions: cameraOptions,
+                  antialiasingSampleCount: antialiasingSampleCount)
+    }
+
+    /// Creates new map init options.
+    ///
+    /// - Parameters:
+    ///   - mapStyle:  Map style to load, defaults to Mapbox Standard style.
+    ///   - mapOptions: Map rendering options.
+    ///   - cameraOptions:  Camera options overriding the default camera that has been specified in the style.
+    ///   - antialiasingSampleCount: Sample count to control multisample anti-aliasing (MSAA) option for rendering.
+    public init(
+        mapStyle: MapStyle?,
+        mapOptions: MapOptions = MapOptions(),
+        cameraOptions: CameraOptions? = nil,
+        antialiasingSampleCount: Int = 1
+    ) {
+        self.mapOptions = mapOptions
+        self.cameraOptions = cameraOptions
+        self.mapStyle = mapStyle
         self.antialiasingSampleCount = antialiasingSampleCount
     }
 
@@ -106,13 +134,17 @@ extension MapInitOptions {
                 scaleFactor: mapOptions.__scaleFactor)
 
             // Use the overriding style URI if provided (currently from IB)
-            let resolvedStyleURI = overridingStyleURI.map { StyleURI(url: $0) } ?? styleURI
+            let resolvedStyle = if let overridingStyleURI,
+                                   let uri = StyleURI(url: overridingStyleURI) {
+                MapStyle(uri: uri)
+            } else {
+                mapStyle
+            }
 
             return MapInitOptions(
+                mapStyle: resolvedStyle,
                 mapOptions: resolvedMapOptions,
-                cameraOptions: cameraOptions,
-                styleURI: resolvedStyleURI,
-                styleJSON: styleJSON)
+                cameraOptions: cameraOptions)
         } else {
             return self
         }

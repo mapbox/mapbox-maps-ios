@@ -6,6 +6,19 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Introduced `ScaleBarViewOptions.units` property supporting metric, imperial, and nautical units, replacing the boolean `useMetricUnits` property.
 * Fix crash in `OrnamentsManager` when setting attribution color.
+* Introduce `MapInitOptions.mapStyle` property. Use it to initialize map with a custom style.
+```swift
+// Before
+let options = MapInitOptions(styleURI: .standardSatellite)
+let mapView = MapView(frame: view.bounds, mapInitOptions: options)
+mapView.mapboxMap.setStyleImportConfigProperties(for: "basemap", configs: ["lightPreset": "dusk"])
+
+// After:
+let options = MapInitOptions(mapStyle: .standardSatellite(lightPreset: .dusk))
+let mapView = MapView(frame: view.bounds, mapInitOptions: options)
+```
+
+
 ## 11.16.0 - 21 October, 2025
 
 ## 11.16.0-rc.2 - 14 October, 2025

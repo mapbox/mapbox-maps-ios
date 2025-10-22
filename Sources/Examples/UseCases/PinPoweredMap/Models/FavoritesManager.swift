@@ -3,7 +3,7 @@ import MapboxMaps
 
 class FavoritesManager: ObservableObject {
     @Published var favoriteIds: Set<String> = []
-    
+
     func isFavorite(_ mapboxId: String) -> Bool {
         return favoriteIds.contains(mapboxId)
     }
@@ -22,7 +22,7 @@ class FavoritesManager: ObservableObject {
 
         toggleFavorite(for: mapboxId)
     }
-    
+
     func toggleFavorite(for mapboxId: String) {
         if favoriteIds.contains(mapboxId) {
             favoriteIds.remove(mapboxId)
@@ -30,7 +30,7 @@ class FavoritesManager: ObservableObject {
             favoriteIds.insert(mapboxId)
         }
     }
-        
+
     var allFavoriteIds: [String] {
         return Array(favoriteIds)
     }

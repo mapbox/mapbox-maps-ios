@@ -30,24 +30,21 @@ private extension Data {
 
         let resultSizeInBytes = 4 * cgImage.height * cgImage.width
 
-        if CFDataGetLength(data) == resultSizeInBytes {
-            switch cgImage.alphaInfo {
-            case .premultipliedLast:
-                // Fast path, use existing image data.
-                // Handles for most PNG images.
-                self.init(referencing: data)
-            case .noneSkipLast:
-                // RGBX, handles most JPEG images.
-                self.init(convertingImageData: data, alphaFirst: false)
-            case .noneSkipFirst:
-                // XRGB
-                self.init(convertingImageData: data, alphaFirst: true)
-            default: break
-            }
+        switch (cgImage.alphaInfo, CFDataGetLength(data) == resultSizeInBytes) {
+        case (.premultipliedLast, true):
+            // Fast path, use existing image data.
+            // Handles for most PNG images.
+            self.init(referencing: data)
+        case (.noneSkipLast, true):
+            // RGBX, handles most JPEG images.
+            self.init(convertingImageData: data, alphaFirst: false)
+        case (.noneSkipFirst, true):
+            // XRGB
+            self.init(convertingImageData: data, alphaFirst: true)
+        default:
+            // Handles all other cases, such as code-generated images, monochrome images.
+            self.init(drawing: cgImage)
         }
-
-        // Handles all other cases, such as code-generated images, monochrome images.
-        self.init(drawing: cgImage)
     }
 
     init?(convertingImageData: NSData, alphaFirst: Bool) {
@@ -64,16 +61,18 @@ private extension Data {
 
         // TODO: measure performance, use Accelerate
         if alphaFirst {
+            // Convert XRGB to RGBA: [X, R, G, B] → [R, G, B, 255]
             for i in stride(from: 0, to: length, by: 4) {
-                ptr[i]     =  ptr[i + 1]
-                ptr[i + 1] =  ptr[i + 2]
-                ptr[i + 2] =  ptr[i + 3]
+                ptr[i]     =  ptr[i + 1]  // R
+                ptr[i + 1] =  ptr[i + 2]  // G
+                ptr[i + 2] =  ptr[i + 3]  // B
+                ptr[i + 3] =  255         // A (opaque)
             }
         } else {
+            // Convert RGBX to RGBA: [R, G, B, X] → [R, G, B, 255]
             for i in stride(from: 0, to: length, by: 4) {
                 ptr[i + 3] = 255
             }
-
         }
         self.init(referencing: mutableData)
     }

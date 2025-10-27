@@ -100,6 +100,16 @@ public struct MapStyle: Equatable, Sendable {
     ///   - configuration: Style import configuration to be applied on style load.
     ///                    Providing `nil` configuration will make no effect and previous configuration will stay in place. In order to change previous value, you should explicitly override it with the new value.
     public init(uri: StyleURI, configuration: JSONObject? = nil) {
+        if let override = Self._overrides[uri] {
+            self.data = override.data
+            self.configuration = override.configuration
+            
+            if let configuration, !configuration.isEmpty {
+                self.configuration = (self.configuration ?? [:]).merging(configuration, uniquingKeysWith: {_, new in new })
+            }
+            return
+        }
+        
         self.data = .uri(uri)
         self.configuration = configuration
     }
@@ -134,4 +144,13 @@ extension StandardFont: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
         self.rawValue = value
     }
+}
+
+
+// This API is for testing only and subject of change
+extension MapStyle {
+    /// :nodoc:
+    @_spi(Internal)
+    @_documentation(visibility: internal)
+    public static var _overrides = [StyleURI: MapStyle]()
 }

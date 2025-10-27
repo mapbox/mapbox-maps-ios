@@ -2,6 +2,7 @@ import SwiftUI
 import UIKit
 
 struct ExamplesRootView: View {
+    @StateObject private var overridesModel = StyleOverridesModel()
     @State private var searchText: String = ""
 
     // MARK: - Tab Content
@@ -28,13 +29,15 @@ struct ExamplesRootView: View {
     }
 
     var body: some View {
-        if #available(iOS 18.0, *) {
-            modernTabView
-                .safeTabBarMinimizeBehaviorOnScrollDown()
-        } else {
-            legacyTabView
-                .safeTabBarMinimizeBehaviorOnScrollDown()
+        Group {
+            if #available(iOS 18.0, *) {
+                modernTabView
+            } else {
+                legacyTabView
+            }
         }
+        .safeTabBarMinimizeBehaviorOnScrollDown()
+        .environmentObject(overridesModel)
     }
 
     // MARK: - Modern Tab View (iOS 18+)
@@ -56,6 +59,7 @@ struct ExamplesRootView: View {
             Tab("Settings", systemImage: "gear") {
                 settingsTab
             }
+            .badge(overridesModel.activeCount > 0 ? overridesModel.activeCount : 0)
 
             Tab(role: .search) {
                 searchTab
@@ -90,6 +94,7 @@ struct ExamplesRootView: View {
                     Image(systemName: "gear")
                     Text("Settings")
                 }
+                .badge(overridesModel.activeCount > 0 ? overridesModel.activeCount : 0)
         }
     }
 }

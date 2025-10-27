@@ -17,6 +17,17 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
 
         dataPathURL = try temporaryCacheDirectory()
 
+        // allow multiple tilestore folders
+        let ss = SettingsServiceFactory.getInstance(storageType: SettingsServiceStorageType.nonPersistent)
+        let result = ss.set(key: "com.mapbox.common.tilestore.allow_multiple", value: true)
+        switch result {
+        case .success:
+            print("Allowed multiple tilestores")
+
+        case .failure(let error):
+            print("Error allowing multiple tilestores: \(String(describing: error.errorDescription))")
+        }
+
         guard let window = window,
               let rootView = rootViewController?.view else {
             XCTFail("No valid UIWindow or root view controller")

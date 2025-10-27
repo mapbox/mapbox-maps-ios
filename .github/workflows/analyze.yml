@@ -73,7 +73,7 @@ jobs:
           run: set -o pipefail && xcodebuild build -project '${{ inputs.project-path }}' -scheme ${{ inputs.scheme }} -destination '${{ inputs.destination }}'| tee xcodebuild.log | xcpretty
 
         - name: Archive xcodebuild.log
-          uses: actions/upload-artifact@v4
+          uses: actions/upload-artifact@v5
           if: always() && matrix.language == 'swift'
           with:
             name: xcodebuild.log

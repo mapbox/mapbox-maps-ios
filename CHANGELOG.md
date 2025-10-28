@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Introduced `ScaleBarViewOptions.units` property supporting metric, imperial, and nautical units, replacing the boolean `useMetricUnits` property.
 * Fix crash in `OrnamentsManager` when setting attribution color.
+* Added `fuelingStationModePointOfInterestLabels` configuration option to Mapbox Standard and Standard Satellite styles. Control the visibility of fuel station and electric charging station POI labels with options: `default` (shows both), `fuel` (fuel stations only), `electric` (charging stations only), or `none` (hides both).
 * Introduce `MapInitOptions.mapStyle` property. Use it to initialize map with a custom style.
 ```swift
 // Before

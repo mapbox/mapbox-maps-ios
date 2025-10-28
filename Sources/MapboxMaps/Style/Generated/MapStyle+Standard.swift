@@ -29,6 +29,7 @@ extension MapStyle {
     ///   - colorTrunks: Set a custom color for trunk roads. Default value: `hsl(235, 20%, 70%)`.
     ///   - colorWater: Set a custom color for water. Default value: `hsl(200, 100%, 80%)`.
     ///   - densityPointOfInterestLabels: Set the density of POI labels. Default value: `3`.
+    ///   - fuelingStationModePointOfInterestLabels: Control the visibility of fuel and electric charging station POI labels. Default displays both types. Default value: `default`.
     ///   - roadsBrightness: Control how bright roads appear in dark styles. Default value: `0.4`.
     ///   - showAdminBoundaries: Show or hide administrative boundaries. Default value: `true`.
     ///   - showLandmarkIconLabels: Show or hide Landmark icon labels. Default value: `true`.
@@ -60,6 +61,7 @@ extension MapStyle {
         colorTrunks: StyleColor? = nil,
         colorWater: StyleColor? = nil,
         densityPointOfInterestLabels: Double? = nil,
+        fuelingStationModePointOfInterestLabels: StandardFuelingStationModePointOfInterestLabels? = nil,
         roadsBrightness: Double? = nil,
         showAdminBoundaries: Bool? = nil,
         showLandmarkIconLabels: Bool? = nil,
@@ -92,6 +94,7 @@ extension MapStyle {
         config.encode(key: "colorTrunks", value: colorTrunks)
         config.encode(key: "colorWater", value: colorWater)
         config.encode(key: "densityPointOfInterestLabels", value: densityPointOfInterestLabels)
+        config.encode(key: "fuelingStationModePointOfInterestLabels", value: fuelingStationModePointOfInterestLabels)
         config.encode(key: "roadsBrightness", value: roadsBrightness)
         config.encode(key: "showAdminBoundaries", value: showAdminBoundaries)
         config.encode(key: "showLandmarkIconLabels", value: showLandmarkIconLabels)
@@ -263,4 +266,25 @@ public struct StandardColorModePointOfInterestLabels: RawRepresentable, Hashable
 
     /// Single color mode point of interest labels.
     public static let single = StandardColorModePointOfInterestLabels(rawValue: "single")
+}
+
+/// Control the visibility of fuel and electric charging station POI labels. Default displays both types.
+public struct StandardFuelingStationModePointOfInterestLabels: RawRepresentable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Default fueling station mode point of interest labels.
+    public static let `default` = StandardFuelingStationModePointOfInterestLabels(rawValue: "default")
+
+    /// Fuel fueling station mode point of interest labels.
+    public static let fuel = StandardFuelingStationModePointOfInterestLabels(rawValue: "fuel")
+
+    /// Electric fueling station mode point of interest labels.
+    public static let electric = StandardFuelingStationModePointOfInterestLabels(rawValue: "electric")
+
+    /// None fueling station mode point of interest labels.
+    public static let none = StandardFuelingStationModePointOfInterestLabels(rawValue: "none")
 }

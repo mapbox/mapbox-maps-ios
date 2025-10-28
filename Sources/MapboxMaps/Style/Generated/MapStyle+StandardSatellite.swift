@@ -24,6 +24,7 @@ extension MapStyle {
     ///   - colorRoads: Set a custom color for roads. Default value: `hsl(224, 25%, 75%)`.
     ///   - colorTrunks: Set a custom color for trunk roads. Default value: `hsl(235, 20%, 80%)`.
     ///   - densityPointOfInterestLabels: Set the density of POI labels. Default value: `3`.
+    ///   - fuelingStationModePointOfInterestLabels: Control the visibility of fuel and electric charging station POI labels. Default displays both types. Default value: `default`.
     ///   - roadsBrightness: Control how bright road network appear in dark styles. Default value: `0.7`.
     ///   - showAdminBoundaries: Show or hide administrative boundaries. Default value: `true`.
     public static func standardSatellite(
@@ -47,6 +48,7 @@ extension MapStyle {
         colorRoads: StyleColor? = nil,
         colorTrunks: StyleColor? = nil,
         densityPointOfInterestLabels: Double? = nil,
+        fuelingStationModePointOfInterestLabels: StandardFuelingStationModePointOfInterestLabels? = nil,
         roadsBrightness: Double? = nil,
         showAdminBoundaries: Bool? = nil
     ) -> MapStyle {
@@ -71,6 +73,7 @@ extension MapStyle {
         config.encode(key: "colorRoads", value: colorRoads)
         config.encode(key: "colorTrunks", value: colorTrunks)
         config.encode(key: "densityPointOfInterestLabels", value: densityPointOfInterestLabels)
+        config.encode(key: "fuelingStationModePointOfInterestLabels", value: fuelingStationModePointOfInterestLabels)
         config.encode(key: "roadsBrightness", value: roadsBrightness)
         config.encode(key: "showAdminBoundaries", value: showAdminBoundaries)
         return MapStyle(uri: .standardSatellite, configuration: config)

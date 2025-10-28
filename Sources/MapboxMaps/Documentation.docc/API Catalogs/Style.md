@@ -24,6 +24,7 @@
 - ``StandardFont``
 - ``StandardBackgroundPointOfInterestLabels``
 - ``StandardColorModePointOfInterestLabels``
+- ``StandardFuelingStationModePointOfInterestLabels``
 - ``StyleProjection``
 - ``StyleProjectionName``
 - ``CancelError``

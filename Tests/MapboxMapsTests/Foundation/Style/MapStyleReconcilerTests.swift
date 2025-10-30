@@ -298,4 +298,118 @@ final class MapStyleReconcilerTests: XCTestCase {
 
         token.cancel()
     }
+
+    // MARK: - Always Reload Tests
+
+    func testAlwaysReloadWithSameURI() throws {
+        styleManager.setStyleURIStub.defaultSideEffect = { _ in
+            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+        }
+
+        // Load initial style
+        me.mapStyle = MapStyle(uri: .standard)
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 1)
+
+        // Load same URI with default policy (should skip)
+        me.mapStyle = MapStyle(uri: .standard)
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 1, "Should not reload with same URI")
+
+        // Always reload with same URI
+        me.mapStyle = MapStyle(uri: .standard, reloadPolicy: .always)
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 2, "Should reload with .always policy")
+    }
+
+    func testAlwaysReloadWithSameJSON() throws {
+        let json = "{\"layers\": [], \"sources\": {}}"
+        styleManager.setStyleJSONStub.defaultSideEffect = { _ in
+            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+        }
+
+        // Load initial style
+        me.mapStyle = MapStyle(json: json)
+        XCTAssertEqual(styleManager.setStyleJSONStub.invocations.count, 1)
+
+        // Load same JSON with default policy (should skip)
+        me.mapStyle = MapStyle(json: json)
+        XCTAssertEqual(styleManager.setStyleJSONStub.invocations.count, 1, "Should not reload with same JSON")
+
+        // Always reload with same JSON
+        me.mapStyle = MapStyle(json: json, reloadPolicy: .always)
+        XCTAssertEqual(styleManager.setStyleJSONStub.invocations.count, 2, "Should reload with .always policy")
+    }
+
+    func testAlwaysReloadCancelsPendingLoads() throws {
+        var callbacks: RuntimeStylingCallbacks?
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+            // Cancel previous load when new load starts
+            if let callbacks {
+                self.simulateLoad(callbacks: callbacks, result: .cancel)
+            }
+            callbacks = invoc.parameters.callbacks
+        }
+
+        // Start loading a style
+        var firstCallbackReceived = false
+        me.loadStyle(MapStyle(uri: .standard)) { error in
+            XCTAssertTrue(error is CancelError, "First load should be cancelled")
+            firstCallbackReceived = true
+        }
+
+        // Always reload should cancel the first load
+        me.loadStyle(MapStyle(uri: .standard, reloadPolicy: .always)) { error in
+            XCTAssertNil(error)
+        }
+
+        // Simulate the second load completing
+        simulateLoad(callbacks: try XCTUnwrap(callbacks), result: .success)
+
+        XCTAssertTrue(firstCallbackReceived, "First completion should have been called with CancelError")
+    }
+
+    func testOnlyIfChangedPolicyDoesNotReloadSameStyle() {
+        styleManager.setStyleURIStub.defaultSideEffect = { _ in
+            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+        }
+
+        me.mapStyle = MapStyle(uri: .standard, reloadPolicy: .onlyIfChanged)
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 1)
+
+        me.mapStyle = MapStyle(uri: .standard, reloadPolicy: .onlyIfChanged)
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 1, ".onlyIfChanged should not reload same style")
+    }
+
+    func testNilPolicyBehavesLikeOnlyIfChanged() {
+        styleManager.setStyleURIStub.defaultSideEffect = { _ in
+            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+        }
+
+        me.mapStyle = MapStyle(uri: .standard, reloadPolicy: nil)
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 1)
+
+        me.mapStyle = MapStyle(uri: .standard, reloadPolicy: nil)
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 1, "nil policy should behave like .onlyIfChanged")
+    }
+
+    func testAlwaysReloadTriggersStyleLoadedEvent() throws {
+        var callbacks: RuntimeStylingCallbacks?
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+            callbacks = invoc.parameters.callbacks
+        }
+
+        // Load and complete initial style
+        me.mapStyle = MapStyle(uri: .standard)
+        simulateLoad(callbacks: try XCTUnwrap(callbacks), result: .success)
+
+        // Always reload should trigger another load
+        var reloadCompleted = false
+        me.loadStyle(MapStyle(uri: .standard, reloadPolicy: .always)) { error in
+            XCTAssertNil(error)
+            reloadCompleted = true
+        }
+
+        simulateLoad(callbacks: try XCTUnwrap(callbacks), result: .success)
+        XCTAssertTrue(reloadCompleted, "Always reload completion should be called")
+    }
 }

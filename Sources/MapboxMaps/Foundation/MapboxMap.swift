@@ -234,12 +234,14 @@ public final class MapboxMap: StyleManager {
     /// - Parameters:
     ///   - styleURI: StyleURI to load
     ///   - transition: Options for the style transition.
+    ///   - reloadPolicy: Controls whether the style should reload if the URI matches the currently loaded style. When `nil`, behaves as `.onlyIfChanged`. Defaults to `nil`.
     ///   - completion: Closure called when the style has been fully loaded.
     ///     If style has failed to load a `MapLoadingError` is provided to the closure.
     public func loadStyle(_ styleURI: StyleURI,
                           transition: TransitionOptions? = nil,
+                          reloadPolicy: StyleReloadPolicy? = nil,
                           completion: ((Error?) -> Void)? = nil) {
-        load(mapStyle: MapStyle(uri: styleURI),
+        load(mapStyle: MapStyle(uri: styleURI, reloadPolicy: reloadPolicy),
              transition: transition,
              completion: completion)
     }
@@ -265,12 +267,14 @@ public final class MapboxMap: StyleManager {
     /// - Parameters:
     ///   - JSON: Style JSON string
     ///   - transition: Options for the style transition.
+    ///   - reloadPolicy: Controls whether the style should reload if the JSON matches the currently loaded style. When `nil`, behaves as `.onlyIfChanged`. Defaults to `nil`.
     ///   - completion: Closure called when the style has been fully loaded.
     ///     If style has failed to load a `MapLoadingError` is provided to the closure.
     public func loadStyle(_ JSON: String,
                           transition: TransitionOptions? = nil,
+                          reloadPolicy: StyleReloadPolicy? = nil,
                           completion: ((Error?) -> Void)? = nil) {
-        load(mapStyle: MapStyle(json: JSON),
+        load(mapStyle: MapStyle(json: JSON, reloadPolicy: reloadPolicy),
              transition: transition,
              completion: completion)
     }

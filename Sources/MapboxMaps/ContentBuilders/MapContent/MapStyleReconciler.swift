@@ -36,7 +36,10 @@ final class MapStyleReconciler {
     ) {
         let oldMapStyle = _mapStyle
 
-        if _mapStyle?.data != style.data {
+        // Determine if reload is needed based on data change or reload policy
+        let shouldReload = _mapStyle?.data != style.data || style.reloadPolicy == .always
+
+        if shouldReload {
             _mapStyle = style
 
             let callbacks = RuntimeStylingCallbacks(

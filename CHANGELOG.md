@@ -18,7 +18,7 @@ mapView.mapboxMap.setStyleImportConfigProperties(for: "basemap", configs: ["ligh
 let options = MapInitOptions(mapStyle: .standardSatellite(lightPreset: .dusk))
 let mapView = MapView(frame: view.bounds, mapInitOptions: options)
 ```
-
+* Add `StyleReloadPolicy` to control style reload behavior. Use `reloadPolicy: .always` parameter in `loadStyle()` methods or `MapStyle` initializers to always reload the style even when the URI or JSON matches the currently loaded style. Defaults to `.onlyIfChanged` for optimal performance.
 
 ## 11.16.0 - 21 October, 2025
 

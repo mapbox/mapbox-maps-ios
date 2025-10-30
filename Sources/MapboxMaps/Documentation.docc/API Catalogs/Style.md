@@ -6,6 +6,7 @@
 
 - ``StyleManager-46yjd``
 - ``StyleURI``
+- ``StyleReloadPolicy``
 - ``LayerPosition-swift.enum``
 - ``AmbientLight``
 - ``DirectionalLight``

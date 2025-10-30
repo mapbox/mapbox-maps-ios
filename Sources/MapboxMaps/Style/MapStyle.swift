@@ -55,7 +55,8 @@ import MapboxCoreMaps
 /// mapView.mapboxMap.mapStyle = .standard(stylePreset: .dusk)
 /// ```
 ///
-/// The style reloads only when the actual ``StyleURI`` or JSON (when loaded with ``MapStyle/init(json:configuration:)`` is changed. To observe the result of the style load you can subscribe to ``MapboxMap/onStyleLoaded`` or ``Snapshotter/onStyleLoaded`` events, or use use ``StyleManager/load(mapStyle:transition:completion:)`` method.
+/// By default, the style reloads only when the actual ``StyleURI`` or JSON (when loaded with ``MapStyle/init(json:configuration:reloadPolicy:)``) is changed. Use ``StyleReloadPolicy/always`` to always reload even when the URI or JSON hasn't changed.
+/// To observe the result of the style load you can subscribe to ``MapboxMap/onStyleLoaded`` or ``Snapshotter/onStyleLoaded`` events, or use ``StyleManager/load(mapStyle:transition:completion:)`` method.
 public struct MapStyle: Equatable, Sendable {
     enum Data: Equatable, Sendable {
         case uri(StyleURI)
@@ -75,20 +76,23 @@ public struct MapStyle: Equatable, Sendable {
     }
     var data: Data
     var configuration: JSONObject?
+    var reloadPolicy: StyleReloadPolicy?
 
     /// Creates a map style using a Mapbox Style JSON.
     ///
     /// Please consult [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/) describing the JSON format.
     ///
-    /// - Important: For the better performance with large local Style JSON please consider loading style from the file system via the ``MapStyle/init(uri:configuration:)`` initializer.
+    /// - Important: For the better performance with large local Style JSON please consider loading style from the file system via the ``MapStyle/init(uri:configuration:reloadPolicy:)`` initializer.
     ///
     /// - Parameters:
     ///   - json: A Mapbox Style JSON string.
     ///   - configuration: Style import configuration to be applied on style load.
     ///                    Providing `nil` configuration will make no effect and previous configuration will stay in place.  In order to change previous value, you should explicitly override it with the new value.
-    public init(json: String, configuration: JSONObject? = nil) {
+    ///   - reloadPolicy: Controls whether the style should reload if the JSON matches the currently loaded style. When `nil`, behaves as `.onlyIfChanged`. Defaults to `nil`.
+    public init(json: String, configuration: JSONObject? = nil, reloadPolicy: StyleReloadPolicy? = nil) {
         self.data = .json(json)
         self.configuration = configuration
+        self.reloadPolicy = reloadPolicy
     }
 
     /// Creates a map style using a Style URI.
@@ -99,19 +103,21 @@ public struct MapStyle: Equatable, Sendable {
     ///   - uri: An instance of ``StyleURI`` pointing to a Mapbox Style URI (mapbox://styles/{user}/{style}), a full HTTPS URI, or a path to a local file.
     ///   - configuration: Style import configuration to be applied on style load.
     ///                    Providing `nil` configuration will make no effect and previous configuration will stay in place. In order to change previous value, you should explicitly override it with the new value.
-    public init(uri: StyleURI, configuration: JSONObject? = nil) {
+    ///   - reloadPolicy: Controls whether the style should reload if the URI matches the currently loaded style. When `nil`, behaves as `.onlyIfChanged`. Defaults to `nil`.
+    public init(uri: StyleURI, configuration: JSONObject? = nil, reloadPolicy: StyleReloadPolicy? = nil) {
         if let override = Self._overrides[uri] {
             self.data = override.data
             self.configuration = override.configuration
-            
+            self.reloadPolicy = reloadPolicy
             if let configuration, !configuration.isEmpty {
                 self.configuration = (self.configuration ?? [:]).merging(configuration, uniquingKeysWith: {_, new in new })
             }
             return
         }
-        
+
         self.data = .uri(uri)
         self.configuration = configuration
+        self.reloadPolicy = reloadPolicy
     }
 
     /// [Mapbox Streets](https://www.mapbox.com/maps/streets) is a general-purpose style with detailed road and transit networks.

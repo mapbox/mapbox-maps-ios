@@ -4,6 +4,8 @@
 	classes = {
 	};
 	objectVersion = 63;
+	objectVersion = 54;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -36,6 +38,8 @@
 		2997D21A7DB20098C6D03D3B /* StandardStyleImportExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 640198169EEDFC7CBEFCFCCF /* StandardStyleImportExample.swift */; };
 		2B44F3E8EF3A50D9AE6B825F /* route.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 450C8D5E4B84428FE51BCA97 /* route.geojson */; };
 		2C03342240D5487880316518 /* AddOneMarkerSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCBE814694CF08A9C2E4A42 /* AddOneMarkerSymbolExample.swift */; platformFilter = ios; };
+		2C03342240D5487880316518 /* AddOneMarkerSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCBE814694CF08A9C2E4A42 /* AddOneMarkerSymbolExample.swift */; platformFilters = (ios, ); };
+		2D3DF43CEE3D4C2B0B012E0E /* IndoorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1109CA9B9EDD4DEB302501A /* IndoorExample.swift */; platformFilters = (ios, ); };
 		2EC3AAE5D54ACFB90E98CD43 /* ElevatedLineMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BBD2991186A6B98F730454 /* ElevatedLineMapView.swift */; };
 		30589E5AB307FC934E466332 /* radar2.gif in Resources */ = {isa = PBXBuildFile; fileRef = D8730F8FB259A4F889609108 /* radar2.gif */; };
 		312CE7CED726F0A572301622 /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC3D7884D057238010CB6E4 /* PinView.swift */; };
@@ -384,6 +388,7 @@
 		F033C8EFB89A90D6705B047D /* GeoJSONSourceExample.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = GeoJSONSourceExample.geojson; sourceTree = "<group>"; };
 		F0A6063E57EC170F558A3F74 /* ExampleTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleTableViewController.swift; sourceTree = "<group>"; };
 		F0CE51977FA6E83B6F11BE5C /* Examples.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Examples.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1109CA9B9EDD4DEB302501A /* IndoorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndoorExample.swift; sourceTree = "<group>"; };
 		F1356FEA44593D43FBC3F74B /* ColorPaletteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPaletteView.swift; sourceTree = "<group>"; };
 		F26EC4DB977D4C2DDBCA1924 /* MarkersExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkersExample.swift; sourceTree = "<group>"; };
 		F393DF039D7AD2F35C8DE4CE /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
@@ -761,6 +766,7 @@
 				50F519EC4AF0B4BEE0FDCABC /* ColorThemeMapExample.swift */,
 				8DBF737C9C7FBF46BB5F7B78 /* CombineExample.swift */,
 				A4EE8F38428A64B5B9D4DBBE /* CombineLocationExample.swift */,
+				F1109CA9B9EDD4DEB302501A /* IndoorExample.swift */,
 				60A8CD8A69D3429FCF8ACBDD /* Lights3DExample.swift */,
 				370DFCA52EB6C7F119BF81DA /* MapEventsExample.swift */,
 				E612275E3042D0D0AF8B583E /* MapRecorderExample.swift */,
@@ -880,6 +886,8 @@
 				AC4B0DE570C38B503D03669A /* XCRemoteSwiftPackageReference "Fingertips" */,
 				4F0A03F138FCA51E80A1893D /* XCLocalSwiftPackageReference "." */,
 			);
+			preferredProjectObjectVersion = 54;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1051,6 +1059,7 @@
 				0414AD72988F405F5BA1D843 /* GlobeFlyToExample.swift in Sources */,
 				49F6209402BF34C06C90107A /* HeatmapLayerGlobeExample.swift in Sources */,
 				B9B1EE72E6203358F2785916 /* IconSizeChangeExample.swift in Sources */,
+				2D3DF43CEE3D4C2B0B012E0E /* IndoorExample.swift in Sources */,
 				423A42B555DD0B3AD4856FCF /* InsetMapExample.swift in Sources */,
 				94DB7E8C829041DC5F5B2300 /* InstrumentClusterCarPlaySceneDelegate.swift in Sources */,
 				AD0922FA7F69AEE4C23F2351 /* InteractionsPlayground.swift in Sources */,

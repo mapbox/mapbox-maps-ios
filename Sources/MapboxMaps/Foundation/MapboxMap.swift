@@ -1,6 +1,6 @@
 // swiftlint:disable file_length
 import UIKit
-@_spi(Internal) @_spi(Marshalling) import MapboxCoreMaps
+@_spi(Internal) @_spi(Marshalling) @_spi(Experimental) import MapboxCoreMaps
 @_implementationOnly import MapboxCommon_Private
 import Turf
 
@@ -199,6 +199,9 @@ public final class MapboxMap: StyleManager {
 
     @_spi(Internal)
     public lazy var map: MapboxCoreMaps.Map = .Marshaller.toSwift(__map)
+
+    // @_spi(Experimental)
+    // public lazy var indoor: IndoorManager = .Marshaller.toSwift(__map.getIndoorManager())
 
     deinit {
         __map.destroyRenderer()

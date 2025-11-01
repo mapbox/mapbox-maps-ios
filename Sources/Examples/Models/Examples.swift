@@ -150,6 +150,9 @@ struct Examples {
         Example(title: "Edit polygon with drag/drop",
                 description: "Shows how to update a polygon with drag",
                 type: EditPolygonExample.self)
+        Example(title: "Display an indoor map",
+                description: "Create and display a map that uses the indoor data and renders it.",
+                type: IndoorExample.self)
     }
 
     // Examples that focus on displaying the user's location.

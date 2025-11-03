@@ -46,4 +46,3 @@ typealias CoreFeaturesetFeatureId = MapboxCoreMaps_Private.FeaturesetFeatureId
 typealias CoreFeaturesetQueryTarget = MapboxCoreMaps_Private.FeaturesetQueryTarget
 typealias CoreFeaturesetDescriptor = MapboxCoreMaps_Private.FeaturesetDescriptor
 typealias CoreColorTheme = MapboxCoreMaps_Private.ColorTheme
-typealias CoreAsyncOperationResultCallback = MapboxCoreMaps_Private.AsyncOperationResultCallback

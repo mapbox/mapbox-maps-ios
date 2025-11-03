@@ -4,29 +4,6 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-### ⚠️ Breaking changes
-* Remove line-cutout-width and change line-cutout-opacity default to 1.0
-
-## 11.17.0
-
-### Features ✨ and improvements 🏁
-* Promote Geofencing APIs to stable. Remove `@_spi(Experimental)` from Geofencing APIs.
-
-## 11.17.0-rc.1 - 20 November, 2025
-
-## 11.17.0-beta.2 - 14 November, 2025
-
-* Promote `ModelLayer` to stable.
-* Add `SymbolLayer.occlusionOpacityMode`, `SymbolLayer.iconColorBrightnessMax`, `SymbolLayer.iconColorBrightnessMin`, `SymbolLayer.iconColorContrast` properties.
-* Add `FillExtrusionLayer.castShadows` property.
-* Add `GeoJSONSource.minZoom` property.
-* Add `RasterArraySource.volatile` experimental property.
-* Make `line-emissive-strength` property data-driven.
-* Add experimental `MapboxMap.setFeatureStateExpression()`, `removeFeatureStateExpression()`, and `resetFeatureStateExpressions()` APIs to efficiently update feature state for multiple features at once using expressions.
-* Add experimental async variants of `MapboxMap.setLayerProperty()`, `setLayerProperties` and `updateLayer()`.
-
-## 11.17.0-beta.1 - 05 November, 2025
-
 * Introduced `ScaleBarViewOptions.units` property supporting metric, imperial, and nautical units, replacing the boolean `useMetricUnits` property.
 * Fix crash in `OrnamentsManager` when setting attribution color.
 * Added `fuelingStationModePointOfInterestLabels` configuration option to Mapbox Standard and Standard Satellite styles. Control the visibility of fuel station and electric charging station POI labels with options: `default` (shows both), `fuel` (fuel stations only), `electric` (charging stations only), or `none` (hides both).
@@ -42,34 +19,6 @@ let options = MapInitOptions(mapStyle: .standardSatellite(lightPreset: .dusk))
 let mapView = MapView(frame: view.bounds, mapInitOptions: options)
 ```
 * Add `StyleReloadPolicy` to control style reload behavior. Use `reloadPolicy: .always` parameter in `loadStyle()` methods or `MapStyle` initializers to always reload the style even when the URI or JSON matches the currently loaded style. Defaults to `.onlyIfChanged` for optimal performance.
-## 11.16.2 - 31 October, 2025
-
-## 11.16.1 - 28 October, 2025
-
-* Introduce the `LocationManager.locationDataModel` and make it possible to use location provider from MapboxCommon. Deprecate the `LocationManager.override*` methods.
-Now you can choose to use the location provider from MapboxCommon.
-```swift
-@_spi(Experimental) import MapboxMaps
-
-// UIKit
-let initOptions = MapInitOptions(
-    locationDataModel: .createCore()
-)
-let mapView = MapView(mapInitOptions: initOptions) // specify at init time (recommended)
-mapView.mapboxMap.locationDataModel = .createCore() // or, override it at runtime
-
-
-// SwiftUI
-struct MyView: View {
-   @State var locationDataModel = LocationDataModel.createCore()
-   var body: some View {
-       Map(viewport: $viewport) {
-           Puck2D(bearing: .heading)
-       }
-       .locationDataModel(locationDataModel)
-   }
-}
-```
 
 ## 11.16.0 - 21 October, 2025
 

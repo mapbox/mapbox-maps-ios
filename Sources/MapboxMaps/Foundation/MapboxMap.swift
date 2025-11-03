@@ -78,15 +78,6 @@ protocol MapboxMapProtocol: AnyObject {
         stateKey: T.StateKey?,
         callback: ((Error?) -> Void)?
     ) -> Cancelable
-    @MainActor
-    func setFeatureStateExpression<T: FeaturesetFeatureType>(
-        expressionId: UInt,
-        featureset: FeaturesetDescriptor<T>,
-        expression: Exp,
-        state: T.State
-    ) async throws
-    @MainActor
-    func removeFeatureStateExpression(expressionId: UInt) async throws
     var screenCullingShape: [CGPoint] { get set }
 }
 
@@ -1674,75 +1665,6 @@ extension MapboxMap {
                                             type: NSNull.self,
                                             concreteErrorType: MapError.self))
 
-    }
-
-    /// Sets a feature state expression that applies to features within the specified featureset.
-    ///
-    /// All feature states with expressions that evaluate to true will be applied to the feature.
-    /// Feature states from later added feature state expressions have higher priority. Regular feature states have higher priority than feature state expressions.
-    /// The final feature state is determined by applying states in order from lower to higher priority. As a result, multiple expressions that set states with different keys can affect the same features simultaneously.
-    /// If an expression is added for a feature set, properties from that feature set are used, not the properties from original sources.
-    ///
-    /// Note that updates to feature state expressions are asynchronous, so changes made by this method might not be
-    /// immediately visible and will have some delay. The displayed data will not be affected immediately.
-    ///
-    /// - Parameters:
-    ///   - expressionId: Unique identifier for the state expression.
-    ///   - featureset: The featureset descriptor that specifies which featureset the expression applies to.
-    ///   - expression: The expression to evaluate for the state. Should return boolean.
-    ///   - state: The `state` object with properties to update with their respective new values.
-    @_spi(Experimental)
-    @MainActor
-    public func setFeatureStateExpression<T: FeaturesetFeatureType>(
-        expressionId: UInt,
-        featureset: FeaturesetDescriptor<T>,
-        expression: Exp,
-        state: T.State
-    ) async throws {
-        guard let stateJson = encodeState(state) else {
-            throw MapError(coreError: "Failed to encode feature state")
-        }
-        guard let expressionDict = expression.asCore else {
-            throw MapError(coreError: "Failed to encode expression")
-        }
-
-        try await handleExpectedOnMain { callback in
-            __map.__setFeatureStateExpressionForFeatureStateExpressionId(UInt64(expressionId),
-                                                                         featureset: featureset.core,
-                                                                         expression: expressionDict,
-                                                                         state: stateJson,
-                                                                         callback: callback)
-        }
-    }
-
-    /// Removes a specific feature state expression.
-    ///
-    /// Remove a specific expression from the feature state expressions based on the expression ID.
-    ///
-    /// Note that updates to feature state expressions are asynchronous, so changes made by this method might not be
-    /// immediately visible and will have some delay.
-    ///
-    /// - Parameters:
-    ///   - featureStateExpressionId: The unique identifier of the expression to remove.
-    @_spi(Experimental)
-    @MainActor
-    public func removeFeatureStateExpression(expressionId: UInt) async throws {
-        try await handleExpectedOnMain { callback in
-            __map.__removeFeatureStateExpression(forFeatureStateExpressionId: UInt64(expressionId),
-                                                 callback: callback)
-        }
-    }
-
-    /// Reset all feature state expressions.
-    ///
-    /// Note that updates to feature state expressions are asynchronous, so changes made by this method might not be
-    /// immediately visible and will have some delay.
-    @_spi(Experimental)
-    @MainActor
-    public func resetFeatureStateExpressions() async throws {
-        try await handleExpectedOnMain { callback in
-            __map.__resetFeatureStateExpressions(forCallback: callback)
-        }
     }
 }
 

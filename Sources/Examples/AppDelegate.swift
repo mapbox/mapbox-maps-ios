@@ -3,7 +3,7 @@ import SwiftUI
 import Fingertips
 import OSLog
 @_spi(Experimental) import MapboxMaps
-import MapboxCommon
+@_spi(Experimental) import MapboxCommon
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

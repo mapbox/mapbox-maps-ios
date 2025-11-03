@@ -25,7 +25,6 @@ extension Bundle {
         #endif
     }
 
-    /// :nodoc:
     @_spi(Internal)
     public static var mapboxMapsMetadata: MapboxMapsMetadata = {
         guard let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json") else {

@@ -2212,17 +2212,3 @@ Constructor MapStyle.init(json:configuration:) has been removed
 Constructor MapStyle.init(uri:configuration:) has been removed
 Func MapboxMap.loadStyle(_:transition:completion:) has been renamed to Func loadStyle(_:transition:reloadPolicy:completion:)
 Func MapboxMap.loadStyle(_:transition:completion:) has parameter 2 type change from (((any Swift.Error)?) -> ())? to MapboxMaps.StyleReloadPolicy?
-
-// Allow MapboxCommon's location provider to be used in MapView, Heading is moved to MapboxCommon
-Constructor MapInitOptions.init(mapOptions:cameraOptions:styleURI:styleJSON:antialiasingSampleCount:) has been removed
-Struct Heading has been removed
-
-// Remove lineCutoutWidth API in favor of using lineWidth for cutout
-Func LineLayer.lineCutoutWidth(_:) has been removed
-Func LineLayer.lineCutoutWidthTransition(_:) has been removed
-Func PolylineAnnotationGroup.lineCutoutWidth(_:) has been removed
-Func PolylineAnnotationGroup.lineCutoutWidthTransition(_:) has been removed
-Var LineLayer.lineCutoutWidth has been removed
-Var LineLayer.lineCutoutWidthTransition has been removed
-Var PolylineAnnotationManager.lineCutoutWidth has been removed
-Var PolylineAnnotationManager.lineCutoutWidthTransition has been removed

@@ -76,7 +76,6 @@ extension RasterArraySource: UpdatableSource, MapStyleContent, PrimitiveMapConte
         encodeUpdate(\.tiles, old: old, new: self, container: &props, key: "tiles")
         encodeUpdate(\.minzoom, old: old, new: self, container: &props, key: "minzoom")
         encodeUpdate(\.maxzoom, old: old, new: self, container: &props, key: "maxzoom")
-        encodeUpdate(\.volatile, old: old, new: self, container: &props, key: "volatile")
         if !props.isEmpty {
             try manager.setSourceProperties(for: id, properties: props)
         }

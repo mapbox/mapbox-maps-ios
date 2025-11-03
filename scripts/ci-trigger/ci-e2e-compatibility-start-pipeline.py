@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ruff: noqa
 #
 # Implements https://circleci.com/docs/api/v2/#trigger-a-new-pipeline
 #
@@ -17,6 +16,7 @@ import argparse
 import os
 import requests
 import sys
+import datetime
 import yaml
 import git
 from os import path
@@ -44,7 +44,9 @@ def parse_args():
     versions = dict({v["id"]: v["name"] for v in versions})
 
     """Parse script input parameters."""
-    parser = argparse.ArgumentParser(description="Creates CircleCI jobs and waits for the result.")
+    parser = argparse.ArgumentParser(
+        description="Creates CircleCI jobs and waits for the result."
+    )
     parser.add_argument(
         "--token",
         default=os.getenv("CIRCLE_API_TOKEN"),
@@ -52,7 +54,7 @@ def parse_args():
     )
     parser.add_argument(
         "--origin-slug",
-        default=f"{os.getenv('CIRCLE_PROJECT_USERNAME')}/{os.getenv('CIRCLE_PROJECT_REPONAME')}",
+        default=f'{os.getenv("CIRCLE_PROJECT_USERNAME")}/{os.getenv("CIRCLE_PROJECT_REPONAME")}',
         help="Origin repository, otherwise CIRCLE_PROJECT_USERNAME/CIRCLE_PROJECT_REPONAME.",
     )
     parser.add_argument(
@@ -105,7 +107,9 @@ def validate_args(args):
 
 
 def execute_command(command):
-    popen = subprocess.Popen(f"{command}", stdout=subprocess.PIPE, universal_newlines=True, shell=True)
+    popen = subprocess.Popen(
+        f"{command}", stdout=subprocess.PIPE, universal_newlines=True, shell=True
+    )
     for stdout_line in iter(popen.stdout.readline, ""):
         yield stdout_line
     popen.stdout.close()
@@ -177,8 +181,10 @@ def trigger_pipeline(slug, token, branch, params):
         sys.exit(1)
 
     if response.status_code == 201:
-        print("\nTriggered job can be found at:")
-        print(f"https://app.circleci.com/pipelines/github/{slug}/{response.json()['number']}")
+        print(f"\nTriggered job can be found at:")
+        print(
+            f'https://app.circleci.com/pipelines/github/{slug}/{response.json()["number"]}'
+        )
 
 
 def main():

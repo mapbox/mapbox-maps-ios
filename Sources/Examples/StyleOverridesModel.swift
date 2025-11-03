@@ -9,13 +9,13 @@ class StyleOverridesModel: ObservableObject {
             applyOverrides()
         }
     }
-
+    
     @Published var previouslyUsedURIs: [String: Date] = [:] {
         didSet {
            savePreviouslyUsed()
         }
     }
-
+    
     var activeCount: Int {
         overrides.filter { $0.active }.count
     }
@@ -33,13 +33,13 @@ class StyleOverridesModel: ObservableObject {
             userDefaults.set(encoded, forKey: "styleOverrides")
         }
     }
-
+    
     private func savePreviouslyUsed() {
         if let encoded = try? JSONEncoder().encode(previouslyUsedURIs) {
             userDefaults.set(encoded, forKey: "previouslyUsedURIs")
         }
     }
-
+    
     private func loadPreviouslyUsedURIs() {
         guard let data = userDefaults.data(forKey: "previouslyUsedURIs"),
               let decoded = try? JSONDecoder().decode([String: Date].self, from: data)
@@ -75,7 +75,7 @@ class StyleOverridesModel: ObservableObject {
                 overrides[i].active = false
             }
         }
-
+        
         previouslyUsedURIs[override.style.rawValue] = Date()
         previouslyUsedURIs[override.baseStyle.rawValue] = Date()
     }

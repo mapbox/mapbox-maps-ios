@@ -1,5 +1,4 @@
 import UIKit
-import Combine
 import CoreLocation
 import MapboxMaps
 
@@ -52,7 +51,7 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
         mapView.accessibilityElements = []
 
         let location = Location(coordinate: centerCoordinate)
-        mapView.location.dataModel = LocationDataModel(location: Just([location]).eraseToAnyPublisher())
+        mapView.location.override(locationProvider: Signal(just: [location]))
         mapView.location.options.puckType = .puck2D(.makeDefault())
 
         // create point annotation manager to house point annotations

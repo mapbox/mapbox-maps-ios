@@ -193,34 +193,6 @@ public class StyleManager {
     public func updateLayer<T>(withId id: String,
                                type: T.Type,
                                update: (inout T) throws -> Void) throws where T: Layer {
-        let layerProperties = try resolveUpdatedLayerProperties(withId: id, update)
-        // Apply the changes to the layer properties to the style
-        try setLayerProperties(for: id, properties: layerProperties)
-    }
-
-    /// Updates a `layer` that exists in the `style` already
-    ///
-    /// - Parameters:
-    ///   - id: identifier of layer to update
-    ///   - type: Type of the layer
-    ///   - update: Closure that mutates a layer passed to it
-    ///
-    /// - Throws: ``TypeConversionError`` if there is a problem getting a layer data.
-    /// - Throws: ``StyleError`` if there is a problem updating the layer.
-    /// - Throws: An error when executing `update` block.
-    @_spi(Experimental)
-    public func updateLayer<T>(withId id: String,
-                               type: T.Type,
-                               update: (inout T) throws -> Void) async throws where T: Layer {
-        let layerProperties = try resolveUpdatedLayerProperties(withId: id, update)
-        // Apply the changes to the layer properties to the style
-        try await setLayerProperties(for: id, properties: layerProperties)
-    }
-
-    private func resolveUpdatedLayerProperties<T: Layer>(
-        withId id: String,
-        _ update: (inout T) throws -> Void
-    ) throws -> [String: Any] {
         let oldLayerProperties = try layerProperties(for: id)
         var layer = try T(jsonObject: oldLayerProperties)
 
@@ -250,7 +222,9 @@ public class StyleManager {
                     reduceStrategy(&result, element)
                 }
             })
-        return layerProperties
+
+        // Apply the changes to the layer properties to the style
+        try setLayerProperties(for: id, properties: layerProperties)
     }
 
     // MARK: - Sources
@@ -848,22 +822,6 @@ public class StyleManager {
         }
     }
 
-    /// Sets a JSON value to a style layer property.
-    ///
-    /// - Parameters:
-    ///   - layerId: Style layer identifier.
-    ///   - property: Style layer property name.
-    ///   - value: Style layer property value.
-    ///
-    /// - Throws:
-    ///     An error describing why the operation was unsuccessful.
-    @_spi(Experimental)
-    public func setLayerProperty(for layerId: String, property: String, value: Any) async throws {
-        try await handleExpected { callback in
-            return styleManager.__setStyleLayerPropertyAsyncForLayerId(layerId, property: property, value: value, callback: callback)
-        }
-    }
-
     /// Gets the default value of style layer property.
     ///
     /// - Parameters:
@@ -910,29 +868,6 @@ public class StyleManager {
     public func setLayerProperties(for layerId: String, properties: [String: Any]) throws {
         try handleExpected {
             return styleManager.setStyleLayerPropertiesForLayerId(layerId, properties: properties)
-        }
-    }
-
-    /// Sets style layer properties.
-    ///
-    /// This method can be used to perform batch update for a style layer properties.
-    /// The structure of a provided `properties` value must conform to the
-    /// [format for a corresponding layer type](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/).
-    ///
-    /// Modification of a [layer identifier](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#id)
-    /// and/or [layer type](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#type)
-    /// is not allowed.
-    ///
-    /// - Parameters:
-    ///   - layerId: Style layer identifier.
-    ///   - properties: JSON dictionary representing the updated layer properties.
-    ///
-    /// - Throws:
-    ///     An error describing why the operation was unsuccessful.
-    @_spi(Experimental)
-    public func setLayerProperties(for layerId: String, properties: [String: Any]) async throws {
-        try await handleExpected { callback in
-            return styleManager.__setStyleLayerPropertiesAsyncForLayerId(layerId, properties: properties, callback: callback)
         }
     }
 
@@ -1670,112 +1605,6 @@ extension StyleManagerProtocol {
 }
 
 // MARK: - Conversion helpers
-
-private actor ActorCancelable {
-    private var _isCanceled: Bool = false
-
-    var isCanceled: Bool {
-        _isCanceled
-    }
-
-    private func setCanceled() {
-        _isCanceled = true
-    }
-
-    nonisolated func markCanceled() {
-        Task { await setCanceled() }
-    }
-}
-
-// TODO: When Swift 6 actor isolation is available merge main and non-main variants into one
-
-// non cancelable variant
-@MainActor
-internal func handleExpectedOnMain<Value, Error>(closure: ((@escaping (Expected<Value, Error>) -> Void) -> Void)) async throws {
-    try await handleExpectedOnMain { wrapped in
-        closure(wrapped)
-        return AnyCancelable { }
-    }
-}
-
-@MainActor
-internal func handleExpectedOnMain<Value, Error>(closure: ((@escaping (Expected<Value, Error>) -> Void) -> Cancelable)) async throws {
-    let sendableCancelable = ActorCancelable()
-
-    return try await withTaskCancellationHandler {
-        return try await withCheckedThrowingContinuation { continuation in
-            if Task.isCancelled {
-                continuation.resume(throwing: CancellationError())
-                return
-            }
-
-            var cancelable: Cancelable!
-            cancelable = closure { expected in
-                Task { @MainActor in
-                    if await sendableCancelable.isCanceled {
-                        cancelable?.cancel()
-                        cancelable = nil
-                        continuation.resume(throwing: CancellationError())
-                        return
-                    }
-
-                    do {
-                        try handleExpected(closure: { expected })
-                        continuation.resume(with: .success(()))
-                    } catch {
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
-        }
-
-    } onCancel: {
-        sendableCancelable.markCanceled()
-    }
-}
-
-// non cancelable variant
-internal func handleExpected<Value, Error>(closure: ((@escaping (Expected<Value, Error>) -> Void) -> Void)) async throws {
-    try await handleExpected { wrapped in
-        closure(wrapped)
-        return AnyCancelable { }
-    }
-}
-
-internal func handleExpected<Value, Error>(closure: ((@escaping (Expected<Value, Error>) -> Void) -> Cancelable)) async throws {
-    let sendableCancelable = ActorCancelable()
-
-    return try await withTaskCancellationHandler {
-        return try await withCheckedThrowingContinuation { continuation in
-            if Task.isCancelled {
-                continuation.resume(throwing: CancellationError())
-                return
-            }
-
-            var cancelable: Cancelable!
-            cancelable = closure { expected in
-                Task {
-                    if await sendableCancelable.isCanceled {
-                        cancelable?.cancel()
-                        cancelable = nil
-                        continuation.resume(throwing: CancellationError())
-                        return
-                    }
-
-                    do {
-                        try handleExpected(closure: { expected })
-                        continuation.resume(with: .success(()))
-                    } catch {
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
-        }
-
-    } onCancel: {
-        sendableCancelable.markCanceled()
-    }
-}
 
 internal func handleExpected<Value, Error>(closure: () -> (Expected<Value, Error>)) throws {
     let expected = closure()

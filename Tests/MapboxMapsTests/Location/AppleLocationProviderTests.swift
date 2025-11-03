@@ -19,6 +19,7 @@ final class AppleLocationProviderTests: XCTestCase {
         locationManagerDelegateProxy = CLLocationManagerDelegateProxy()
         locationProvider = AppleLocationProvider(
             locationManager: locationManager,
+            interfaceOrientation: $interfaceOrientation,
             mayRequestWhenInUseAuthorization: true,
             locationManagerDelegateProxy: locationManagerDelegateProxy)
         delegate = MockLocationProducerDelegate()
@@ -146,6 +147,7 @@ final class AppleLocationProviderTests: XCTestCase {
     func testAddingAConsumerDoesNotRequestWhenInUseAuthorizationIfDisallowed() {
         locationProvider = AppleLocationProvider(
             locationManager: locationManager,
+            interfaceOrientation: $interfaceOrientation,
             mayRequestWhenInUseAuthorization: false,
             locationManagerDelegateProxy: locationManagerDelegateProxy)
         locationManager.authorizationStatus = .notDetermined
@@ -260,6 +262,7 @@ final class AppleLocationProviderTests: XCTestCase {
         do {
             let locationProducer = AppleLocationProvider(
                 locationManager: locationManager,
+                interfaceOrientation: $interfaceOrientation,
                 mayRequestWhenInUseAuthorization: true,
                 locationManagerDelegateProxy: locationManagerDelegateProxy)
             locationProducer.onLocationUpdate.observe { _ in }.store(in: &cancelables)
@@ -324,6 +327,7 @@ final class AppleLocationProviderTests: XCTestCase {
         locationManager.accuracyAuthorization = accuracyAuthorizationValues[initialIndex]
         locationProvider = AppleLocationProvider(
             locationManager: locationManager,
+            interfaceOrientation: $interfaceOrientation,
             mayRequestWhenInUseAuthorization: true,
         locationManagerDelegateProxy: locationManagerDelegateProxy)
         delegate = MockLocationProducerDelegate()
@@ -342,6 +346,7 @@ final class AppleLocationProviderTests: XCTestCase {
         locationManager.accuracyAuthorization = .fullAccuracy
         locationProvider = AppleLocationProvider(
             locationManager: locationManager,
+            interfaceOrientation: $interfaceOrientation,
             mayRequestWhenInUseAuthorization: true,
         locationManagerDelegateProxy: locationManagerDelegateProxy)
         delegate = MockLocationProducerDelegate()
@@ -357,6 +362,7 @@ final class AppleLocationProviderTests: XCTestCase {
         locationManager.accuracyAuthorization = .reducedAccuracy
         locationProvider = AppleLocationProvider(
             locationManager: locationManager,
+            interfaceOrientation: $interfaceOrientation,
             mayRequestWhenInUseAuthorization: true,
             locationManagerDelegateProxy: locationManagerDelegateProxy)
         delegate = MockLocationProducerDelegate()
@@ -432,6 +438,51 @@ final class AppleLocationProviderTests: XCTestCase {
 
         XCTAssertTrue(locationManager.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
     }
+
+#if !(swift(>=5.9) && os(visionOS))
+    func testHeadingOrientationChangeIsPropagated() {
+        // given
+        let newOrientation = UIInterfaceOrientation.landscapeRight
+        interfaceOrientation = .portraitUpsideDown
+        addNoopHeadingObserver()
+        locationManager.$headingOrientation.reset()
+
+        // when
+        interfaceOrientation = .landscapeRight
+
+        // then
+        XCTAssertEqual(locationManager.$headingOrientation.setStub.invocations.count, 1)
+        XCTAssertEqual(locationManager.$headingOrientation.setStub.invocations.first?.parameters, CLDeviceOrientation(interfaceOrientation: newOrientation))
+    }
+
+    func testHeadingOrientationIsUpdatedInPlaceUponActivation() {
+        // given
+        let newOrientation = UIInterfaceOrientation.portraitUpsideDown
+        interfaceOrientation = newOrientation
+        addNoopHeadingObserver()
+
+        // then
+        XCTAssertEqual(locationManager.$headingOrientation.setStub.invocations.count, 1)
+        XCTAssertEqual(locationManager.$headingOrientation.setStub.invocations.first?.parameters, CLDeviceOrientation(interfaceOrientation: newOrientation))
+    }
+
+    func testHeadingOrientationSameValueIsIgnored() {
+        // given
+        let orientation: UIInterfaceOrientation = .landscapeLeft
+        locationManager.$headingOrientation.getStub.defaultReturnValue = CLDeviceOrientation(interfaceOrientation: orientation)
+        addNoopHeadingObserver()
+        interfaceOrientation = orientation
+        locationManager.$headingOrientation.getStub.reset()
+        locationManager.$headingOrientation.setStub.reset()
+
+        // when
+        interfaceOrientation = orientation
+
+        // then
+        XCTAssertEqual(locationManager.$headingOrientation.getStub.invocations.count, 0) // heading orientation should be cached by the provider
+        XCTAssertEqual(locationManager.$headingOrientation.setStub.invocations.count, 0)
+    }
+#endif
 
     func testOptions() {
         // given

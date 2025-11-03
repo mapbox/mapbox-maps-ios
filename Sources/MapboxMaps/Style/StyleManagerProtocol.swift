@@ -92,22 +92,11 @@ internal protocol StyleManagerProtocol {
         property: String,
         value: Any) -> Expected<NSNull, NSString>
 
-    func __setStyleLayerPropertyAsyncForLayerId(
-        _ layerId: String,
-        property: String,
-        value: Any,
-        callback: @escaping CoreAsyncOperationResultCallback) -> any Cancelable
-
     func getStyleLayerProperties(forLayerId layerId: String) -> Expected<AnyObject, NSString>
 
     func setStyleLayerPropertiesForLayerId(
         _ layerId: String,
         properties: Any) -> Expected<NSNull, NSString>
-
-    func __setStyleLayerPropertiesAsyncForLayerId(
-        _ layerId: String,
-        properties: Any,
-        callback: @escaping CoreAsyncOperationResultCallback) -> any Cancelable
 
     func addStyleSource(
         forSourceId sourceId: String,

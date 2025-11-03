@@ -98,8 +98,6 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
         properties["line-color"] = lineColor?.rawValue
         properties["line-color-use-theme"] = lineColorUseTheme?.rawValue
         properties["line-color-transition"] = lineColorTransition?.asDictionary
-        properties["line-emissive-strength"] = lineEmissiveStrength
-        properties["line-emissive-strength-transition"] = lineEmissiveStrengthTransition?.asDictionary
         properties["line-gap-width"] = lineGapWidth
         properties["line-gap-width-transition"] = lineGapWidthTransition?.asDictionary
         properties["line-offset"] = lineOffset
@@ -204,13 +202,6 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
     /// The color with which the line will be drawn.
     /// Default value: "#000000".
     public var lineColor: StyleColor?
-
-    /// Transition property for `lineEmissiveStrength`
-    public var lineEmissiveStrengthTransition: StyleTransition?
-
-    /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0. The unit of lineEmissiveStrength is in intensity.
-    public var lineEmissiveStrength: Double?
 
     /// Transition property for `lineGapWidth`
     public var lineGapWidthTransition: StyleTransition?
@@ -387,17 +378,6 @@ extension PolylineAnnotation {
     /// Default value: "#000000".
     public func lineColor(_ newValue: StyleColor) -> Self {
         with(self, setter(\.lineColor, newValue))
-    }
-
-    /// Transition property for `lineEmissiveStrength`
-    public func lineEmissiveStrengthTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.lineEmissiveStrengthTransition, transition))
-    }
-
-    /// Controls the intensity of light emitted on the source features.
-    /// Default value: 0. Minimum value: 0. The unit of lineEmissiveStrength is in intensity.
-    public func lineEmissiveStrength(_ newValue: Double) -> Self {
-        with(self, setter(\.lineEmissiveStrength, newValue))
     }
 
     /// Transition property for `lineGapWidth`

@@ -1,4 +1,4 @@
-@testable @_spi(Experimental) import MapboxMaps
+@testable import MapboxMaps
 import XCTest
 
 final class FeaturesetsTests: IntegrationTestCase {
@@ -11,22 +11,15 @@ final class FeaturesetsTests: IntegrationTestCase {
 
         let rootView = try XCTUnwrap(rootViewController?.view)
         let size = CGSize(width: 200, height: 200)
-
-        // Pass style and camera in mapInitOptions to avoid loading default style first
-        let mapInitOptions = MapInitOptions(
-            mapStyle: .featuresetTestsStyle,
-            cameraOptions: CameraOptions(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), zoom: 10)
-        )
-        mapView = MapView(frame: .init(origin: CGPoint(x: 100, y: 100), size: size), mapInitOptions: mapInitOptions)
+        mapView = MapView(frame: .init(origin: CGPoint(x: 100, y: 100), size: size))
         rootView.addSubview(mapView)
 
-        // Force layout pass to ensure map view has correct bounds before rendering
-        // This ensures coordinate-to-screen-point conversions are accurate
-        rootView.layoutIfNeeded()
+        map.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), zoom: 10))
 
         let expectation = expectation(description: "Load the map")
 
-        // Set up observer to wait for map to be fully loaded
+        map.load(mapStyle: .featuresetTestsStyle)
+
         map.onMapLoaded.observeNext { _ in
             expectation.fulfill()
         }.store(in: &cancelables)
@@ -176,29 +169,6 @@ final class FeaturesetsTests: IntegrationTestCase {
         }
 
         wait(for: [resetStatesExp], timeout: 10)
-    }
-
-    func testAsyncFeatureStateMethods() async throws {
-        let expressionId: UInt = 123
-
-        let map = await mapView.mapboxMap!
-        try await map.setFeatureStateExpression(
-            expressionId: expressionId,
-            featureset: .featureset("poi", importId: "nested"),
-            expression: Exp(.boolean) { true },
-            state: ["foo": "bar"]
-        )
-
-        try await map.setFeatureStateExpression(
-            expressionId: 1111111,
-            featureset: .featureset("poi", importId: "nested"),
-            expression: Exp(.boolean) { true },
-            state: ["one": "two"]
-        )
-
-        try await map.removeFeatureStateExpression(expressionId: expressionId)
-
-        try await map.resetFeatureStateExpressions()
     }
 
     func testStateIsQueried() throws {

@@ -37,8 +37,6 @@ public final class MapInitOptions: NSObject {
     /// - SeeAlso: [`Improving edge-rendering quality with multisample antialiasing (MSAA)`](https://developer.apple.com/documentation/metal/metal_sample_code_library/improving_edge-rendering_quality_with_multisample_antialiasing_msaa)
     public let antialiasingSampleCount: Int
 
-    public let locationDataModel: LocationDataModel?
-
     /// Creates new instance of ``MapInitOptions``.
     ///
     /// - Parameters:
@@ -55,8 +53,7 @@ public final class MapInitOptions: NSObject {
         cameraOptions: CameraOptions? = nil,
         styleURI: StyleURI? = .standard,
         styleJSON: String? = nil,
-        antialiasingSampleCount: Int = 1,
-        locationDataModel: LocationDataModel? = nil
+        antialiasingSampleCount: Int = 1
     ) {
         let mapStyle: MapStyle? = if let styleJSON {
             MapStyle(json: styleJSON)
@@ -68,8 +65,7 @@ public final class MapInitOptions: NSObject {
         self.init(mapStyle: mapStyle,
                   mapOptions: mapOptions,
                   cameraOptions: cameraOptions,
-                  antialiasingSampleCount: antialiasingSampleCount,
-                  locationDataModel: locationDataModel)
+                  antialiasingSampleCount: antialiasingSampleCount)
     }
 
     /// Creates new map init options.
@@ -83,14 +79,12 @@ public final class MapInitOptions: NSObject {
         mapStyle: MapStyle?,
         mapOptions: MapOptions = MapOptions(),
         cameraOptions: CameraOptions? = nil,
-        antialiasingSampleCount: Int = 1,
-        locationDataModel: LocationDataModel? = nil
+        antialiasingSampleCount: Int = 1
     ) {
         self.mapOptions = mapOptions
         self.cameraOptions = cameraOptions
         self.mapStyle = mapStyle
         self.antialiasingSampleCount = antialiasingSampleCount
-        self.locationDataModel = locationDataModel
     }
 
     /// :nodoc:
@@ -150,8 +144,7 @@ extension MapInitOptions {
             return MapInitOptions(
                 mapStyle: resolvedStyle,
                 mapOptions: resolvedMapOptions,
-                cameraOptions: cameraOptions,
-                locationDataModel: locationDataModel)
+                cameraOptions: cameraOptions)
         } else {
             return self
         }

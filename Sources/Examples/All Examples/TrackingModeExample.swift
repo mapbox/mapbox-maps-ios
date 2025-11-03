@@ -1,11 +1,14 @@
 import UIKit
-import SwiftUI
 import MapboxMaps
 
 final class TrackingModeExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
     private var locationTrackingCancellation: AnyCancelable?
 
     private var mapView: MapView!
+    private lazy var toggleBearingImageButton = UIButton(frame: .zero)
+    private lazy var trackingButton = UIButton(frame: .zero)
+    private lazy var styleToggle = UISegmentedControl(items: Style.allCases.map(\.name))
     private var style: Style = .standard {
         didSet {
             mapView.mapboxMap.styleURI = style.uri
@@ -13,8 +16,7 @@ final class TrackingModeExample: UIViewController, ExampleProtocol {
     }
     private var showsBearingImage: Bool = false {
         didSet {
-            let configuration = Puck2DConfiguration.makeDefault(showBearing: showsBearingImage)
-            mapView.location.options.puckType = .puck2D(configuration)
+            syncPuckAndButton()
         }
     }
 
@@ -29,7 +31,11 @@ final class TrackingModeExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        setupSettingsButton()
+        addStyleToggle()
+
+        // Setup and create button for toggling show bearing image
+        setupToggleShowBearingImageButton()
+        setupLocationButton()
 
         // Add user position icon to the map with location indicator layer
         mapView.location.options.puckType = .puck2D()
@@ -47,72 +53,74 @@ final class TrackingModeExample: UIViewController, ExampleProtocol {
         finish()
     }
 
-    private func setupSettingsButton() {
-        let buttonView = SettingsButtonView(onTap: openSettings)
-        let hostingController = UIHostingController(rootView: buttonView)
-        hostingController.view.backgroundColor = .clear
-        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+    @objc func showHideBearingImage() {
+        showsBearingImage.toggle()
+    }
 
-        addChild(hostingController)
-        view.addSubview(hostingController.view)
-        hostingController.didMove(toParent: self)
+    func syncPuckAndButton() {
+        // Update puck config
+        let configuration = Puck2DConfiguration.makeDefault(showBearing: showsBearingImage)
+
+        mapView.location.options.puckType = .puck2D(configuration)
+
+        // Update button title
+        let title: String = showsBearingImage ? "Hide bearing image" : "Show bearing image"
+        toggleBearingImageButton.setTitle(title, for: .normal)
+    }
+
+    private func setupToggleShowBearingImageButton() {
+        // Styling
+        toggleBearingImageButton.backgroundColor = .systemBlue
+        toggleBearingImageButton.addTarget(self, action: #selector(showHideBearingImage), for: .touchUpInside)
+        toggleBearingImageButton.setTitleColor(.white, for: .normal)
+        toggleBearingImageButton.layer.cornerRadius = 4
+        toggleBearingImageButton.clipsToBounds = true
+        toggleBearingImageButton.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+
+        toggleBearingImageButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(toggleBearingImageButton)
+
+        // Constraints
+        toggleBearingImageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0).isActive = true
+        toggleBearingImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0).isActive = true
+        toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -70.0).isActive = true
+
+        syncPuckAndButton()
+    }
+
+    private func setupLocationButton() {
+        trackingButton.addTarget(self, action: #selector(switchTracking), for: .touchUpInside)
+
+        trackingButton.setImage(UIImage(systemName: "location.fill"), for: .normal)
+
+        let buttonWidth = 44.0
+        trackingButton.translatesAutoresizingMaskIntoConstraints = false
+        trackingButton.backgroundColor = UIColor(white: 0.97, alpha: 1)
+        trackingButton.layer.cornerRadius = buttonWidth/2
+        trackingButton.layer.shadowOffset = CGSize(width: -1, height: 1)
+        trackingButton.layer.shadowColor = UIColor.black.cgColor
+        trackingButton.layer.shadowOpacity = 0.5
+        view.addSubview(trackingButton)
 
         NSLayoutConstraint.activate([
-            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            hostingController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -120)
+            trackingButton.trailingAnchor.constraint(equalTo: toggleBearingImageButton.trailingAnchor),
+            trackingButton.bottomAnchor.constraint(equalTo: toggleBearingImageButton.topAnchor, constant: -20),
+            trackingButton.widthAnchor.constraint(equalTo: trackingButton.heightAnchor),
+            trackingButton.widthAnchor.constraint(equalToConstant: buttonWidth)
         ])
     }
 
-    private func openSettings() {
-        let controlsSection = SettingsSection(
-            title: "Controls",
-            controls: [
-                .toggle(
-                    title: "Track user location",
-                    isOn: Binding(
-                        get: { [weak self] in self?.locationTrackingCancellation != nil },
-                        set: { [weak self] in $0 ? self?.startTracking() : self?.stopTracking() }
-                    )
-                ),
-                .toggle(
-                    title: "Show bearing image",
-                    isOn: Binding(
-                        get: { [weak self] in self?.showsBearingImage ?? false },
-                        set: { [weak self] in self?.showsBearingImage = $0 }
-                    )
-                ),
-                .segmentedPicker(
-                    title: "Map style",
-                    options: Style.allCases.map(\.name),
-                    selection: Binding(
-                        get: { [weak self] in self?.style.rawValue ?? 0 },
-                        set: { [weak self] newValue in
-                            self?.style = Style(rawValue: newValue) ?? .standard
-                        }
-                    )
-                )
-            ]
-        )
+    @objc func switchStyle(sender: UISegmentedControl) {
+        style = Style(rawValue: sender.selectedSegmentIndex) ?? . satelliteStreets
+    }
 
-        let docsSection = SettingsSection(
-            title: "Docs",
-            controls: [
-                .link(
-                    title: "Tracking mode example",
-                    url: URL(string: "https://docs.mapbox.com/ios/maps/examples/tracking-mode/")!
-                )
-            ]
-        )
-
-        let settingsView = SettingsSheet(sections: [controlsSection, docsSection])
-        let hostingController = UIHostingController(rootView: settingsView)
-
-        if let sheet = hostingController.sheetPresentationController {
-            sheet.detents = [.medium()]
-            sheet.prefersGrabberVisible = true
+    @objc func switchTracking() {
+        let isTrackingNow = locationTrackingCancellation != nil
+        if isTrackingNow {
+            stopTracking()
+        } else {
+            startTracking()
         }
-
-        present(hostingController, animated: true)
     }
 
     private func startTracking() {
@@ -122,10 +130,23 @@ final class TrackingModeExample: UIViewController, ExampleProtocol {
                 to: CameraOptions(center: location.coordinate, zoom: 15),
                 duration: 1.3)
         }
+
+        trackingButton.setImage(UIImage(systemName: "location.fill"), for: .normal)
     }
 
-    private func stopTracking() {
+    func stopTracking() {
+        trackingButton.setImage(UIImage(systemName: "location"), for: .normal)
         locationTrackingCancellation = nil
+    }
+
+    func addStyleToggle() {
+        // Create a UISegmentedControl to toggle between map styles
+        styleToggle.selectedSegmentIndex = style.rawValue
+        styleToggle.addTarget(self, action: #selector(switchStyle(sender:)), for: .valueChanged)
+        styleToggle.translatesAutoresizingMaskIntoConstraints = false
+
+        // set the segmented control as the title view
+        navigationItem.titleView = styleToggle
     }
 }
 
@@ -141,11 +162,6 @@ extension TrackingModeExample: GestureManagerDelegate {
 
 extension TrackingModeExample {
     private enum Style: Int, CaseIterable {
-        case standard
-        case light
-        case satelliteStreets
-        case customUri
-
         var name: String {
             switch self {
             case .standard:
@@ -172,17 +188,10 @@ extension TrackingModeExample {
                 return .init(url: localStyleURL)!
             }
         }
-    }
-}
 
-// MARK: - SwiftUI Settings Button
-private struct SettingsButtonView: View {
-    let onTap: () -> Void
-
-    var body: some View {
-        Button(action: onTap) {
-            Image(systemName: "slider.horizontal.3")
-        }
-        .buttonStyle(MapFloatingButtonStyle())
+        case standard
+        case light
+        case satelliteStreets
+        case customUri
     }
 }

@@ -1,6 +1,5 @@
 import XCTest
 @_spi(Experimental) @testable import MapboxMaps
-import Combine
 
 final class MapContentReconcilerTests: XCTestCase {
     var me: MapContentReconciler!
@@ -24,11 +23,9 @@ final class MapContentReconcilerTests: XCTestCase {
         viewAnnotationsManager = ViewAnnotationManager(containerView: UIView(), mapboxMap: map, displayLink: Signal(just: ()))
         locationManager = LocationManager(
             interfaceOrientationView: Ref({ nil }),
-            styleManager: style,
-            mapboxMap: MockMapboxMap(),
             displayLink: Signal(just: ()),
-            dataModel: LocationDataModel(location: Empty<[Location], Never>().eraseToAnyPublisher()),
-            nowTimestamp: .now
+            styleManager: style,
+            mapboxMap: MockMapboxMap()
         )
         styleIsLoaded = true
 

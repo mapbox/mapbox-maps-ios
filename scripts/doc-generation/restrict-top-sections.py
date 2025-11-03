@@ -18,8 +18,12 @@ acceptedTopSectionTitles = [
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Check DocC top sections for unexpected items.")
-    parser.add_argument("--docc", required=True, type=str, help="Path to doccarchive folder")
+    parser = argparse.ArgumentParser(
+        description="Check DocC top sections for unexpected items."
+    )
+    parser.add_argument(
+        "--docc", required=True, type=str, help="Path to doccarchive folder"
+    )
 
     args = parser.parse_args()
 
@@ -41,9 +45,7 @@ def main():
         print("❌ Unexpected sections found.")
         for error in errors:
             print(error)
-        print(
-            "Please make sure these symbols are expected to be publicly available and list them in one of the Markdown files in Sources/MapboxMaps/Documentation.docc/API Catalogs"
-        )
+        print("Please make sure these symbols are expected to be publicly available and list them in one of the Markdown files in Sources/MapboxMaps/Documentation.docc/API Catalogs")
         exit(1)
     else:
         print("✅ Check passed.")

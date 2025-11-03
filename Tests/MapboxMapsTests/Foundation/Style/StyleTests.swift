@@ -541,41 +541,6 @@ final class StyleManagerTests: XCTestCase {
         XCTAssertEqual(layoutProperties["visibility"] as? String, "visible", "visibility is not reset and should keep old value")
     }
 
-    func testStyleCanUpdateLayerAsync() async throws {
-        styleManager.getStyleLayerPropertiesStub.defaultReturnValue = Expected(value: NSDictionary(dictionary: [
-            "id": "dummy-layer-id",
-            "type": "background",
-            "minzoom": 1,
-            "maxzoom": 10,
-            "paint": [
-                "background-opacity-transition": ["delay": 1, "duration": 100],
-            ],
-            "layout": [
-                "visibility": "visible",
-            ],
-        ]))
-        try await style.updateLayer(
-            withId: "dummy-layer-id",
-            type: BackgroundLayer.self) { layer in
-                layer.minZoom = nil
-                layer.maxZoom = 12
-                layer.backgroundOpacityTransition = nil
-                layer.backgroundOpacity = nil
-            }
-
-        let rootProperties = try XCTUnwrap(styleManager.setStyleLayerPropertiesAsyncStub.invocations.last!.parameters.properties as? [String: Any])
-        XCTAssertEqual(rootProperties["id"] as? String, "dummy-layer-id", "id should always be presented")
-        XCTAssertTrue(rootProperties.keys.contains("minzoom"), "minzoom is reset and should be presented")
-        XCTAssertEqual(rootProperties["maxzoom"] as? Double, 12, "maxzoom is updated and should be presented")
-
-        let paintProperties = try XCTUnwrap(rootProperties["paint"] as? [String: Any])
-        XCTAssertTrue(paintProperties.keys.contains("background-opacity-transition"), "background-opacity-transition is reset and should be presented")
-        XCTAssertFalse(paintProperties.keys.contains("background-opacity"), "background-opacity is newly added and should be presented")
-
-        let layoutProperties = try XCTUnwrap(rootProperties["layout"] as? [String: Any])
-        XCTAssertEqual(layoutProperties["visibility"] as? String, "visible", "visibility is not reset and should keep old value")
-    }
-
     func testAddImageWithStretches() throws {
         let image = UIImage.empty
         let id = UUID().uuidString

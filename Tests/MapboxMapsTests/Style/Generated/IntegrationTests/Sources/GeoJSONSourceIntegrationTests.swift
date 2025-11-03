@@ -17,7 +17,6 @@ final class GeoJSONSourceIntegrationTests: MapViewIntegrationTestCase {
             var source = GeoJSONSource(id: "test-source")
             source.data = GeoJSONSourceData.testSourceValue()
             source.maxzoom = Double.testSourceValue()
-            source.minzoom = Double.testSourceValue()
             source.attribution = String.testSourceValue()
             source.buffer = Double.testSourceValue()
             source.tolerance = Double.testSourceValue()

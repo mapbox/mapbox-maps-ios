@@ -259,6 +259,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
             }
             expectation.fulfill()
         })
-        wait(for: [expectation], timeout: 15.0)
+        wait(for: [expectation], timeout: 10)
     }
 }

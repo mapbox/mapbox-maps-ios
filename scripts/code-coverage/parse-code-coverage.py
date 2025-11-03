@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import re
 from io import open
 import argparse
 import git
@@ -21,7 +22,7 @@ def parseReport(reportPath):
         totals = results["data"][0]["totals"]
         return totals
 
-    except Exception:
+    except:
         print("No coverage totals found")
         return {}
 
@@ -38,7 +39,11 @@ def publish_coverage_report(report, fileName):
         )
         print(publish_results)
     except subprocess.CalledProcessError as e:
-        raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+        raise RuntimeError(
+            "command '{}' return with error (code {}): {}".format(
+                e.cmd, e.returncode, e.output
+            )
+        )
     finally:
         # remove the temporary zip file
         os.remove(fileName)
@@ -47,8 +52,12 @@ def publish_coverage_report(report, fileName):
 if __name__ == "__main__":
     # Example:
     # ./scripts/code-coverage/parse-code-coverage.py --report data.profraw.json --scheme MapboxTestHost -c MapboxMaps -g . -d
-    parser = argparse.ArgumentParser(description="Script to parse the lcov JSON coverage report.")
-    parser.add_argument("--report", help="Provide path the lcov JSON report", required=True)
+    parser = argparse.ArgumentParser(
+        description="Script to parse the lcov JSON coverage report."
+    )
+    parser.add_argument(
+        "--report", help="Provide path the lcov JSON report", required=True
+    )
     parser.add_argument("--scheme", help="Xcode scheme", required=True)
     parser.add_argument(
         "-c",
@@ -139,5 +148,11 @@ if __name__ == "__main__":
         print("### Uploading to S3.")
         publish_coverage_report(
             report,
-            "./code-coverage-" + component + "-" + scheme + "-" + buildNumber + ".json.gz",
+            "./code-coverage-"
+            + component
+            + "-"
+            + scheme
+            + "-"
+            + buildNumber
+            + ".json.gz",
         )

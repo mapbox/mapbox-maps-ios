@@ -1,60 +1,47 @@
 import Foundation
 import SwiftUI
 @_spi(Experimental) import MapboxMaps
-import MapboxCommon
+@_spi(Experimental) import MapboxCommon
 
+/// This is an Example for Experimental API that is subject to change.
 struct GeofencingUserLocation: View {
-    @State private var region: CircularRegion?
+    @State private var initialLocation: CLLocationCoordinate2D?
     @ObservedObject private var geofencing = Geofencing()
     private let initialLocationProvider = InitialLocationProvider()
 
     var body: some View {
         MapReader { proxy in
-            Map(initialViewport: .followPuck(zoom: 13)) {
+            Map(initialViewport: .followPuck(zoom: 16)) {
                 Puck2D(bearing: .heading)
-                if let region {
-                    GeofenceCircle(id: "circle", region: region, event: geofencing.lastEvent)
+                if let initialLocation = initialLocation {
+                    GeofenceCircle(id: "circle", location: initialLocation, event: geofencing.lastEvent)
                 }
             }
             .onMapLoaded { _ in startGeofencing(proxy.location) }
-            .ignoresSafeArea()
-            .overlay(alignment: .bottom) {
-                PermissionView()
-            }
         }
+        .ignoresSafeArea()
     }
 
     func startGeofencing(_ locationManager: LocationManager?) {
         geofencing.start {
             initialLocationProvider.start(locationManager: locationManager) { initialLocation in
-                let _region = CircularRegion(center: Point(initialLocation), radius: .random(in: 200...300))
-                var feature = Feature(geometry: _region.center)
+                var feature = Feature(geometry: .geofenceCircle(initialLocation))
                 feature.identifier = .string("geofence-source-circle")
-                feature = feature.properties([
-                    GeofencingPropertiesKeys.dwellTimeKey: 1,
-                    GeofencingPropertiesKeys.pointRadiusKey: .number(_region.radius)
-                ])
-                geofencing.add(feature: feature) {
-                    region = _region
-                }
+                feature = feature.properties([GeofencingPropertiesKeys.dwellTimeKey: 1])
+                    geofencing.add(feature: feature, onSuccess: { _initialLocation.wrappedValue = initialLocation })
             }
         }
     }
 }
 
-private struct CircularRegion {
-    let center: Turf.Point
-    let radius: CLLocationDistance
-}
-
 private struct GeofenceCircle: MapStyleContent {
     var id: String
-    var region: CircularRegion
+    var location: CLLocationCoordinate2D
     var event: GeofenceEvent?
 
     var body: some MapStyleContent {
         GeoJSONSource(id: "geofence-source-\(id)")
-            .data(.geometry(Polygon(center: region.center.coordinates, radius: region.radius, vertices: 64).geometry))
+            .data(.geofenceCircle(location))
 
         FillLayer(id: "geofence-layer-\(id)", source: "geofence-source-\(id)")
             .fillColor(color(for: event))
@@ -72,30 +59,6 @@ private struct GeofenceCircle: MapStyleContent {
         case .dwell:
             return .green
         }
-    }
-}
-
-private struct PermissionView: View {
-    var body: some View {
-        HStack {
-            OvalButton(title: "Enable Pushes") {
-                Task {
-                    // Request notifications (alert, badge) once via async/await.
-                    do {
-                        let granted = try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge])
-                        print("Notification permission request finished. Granted: \(granted)")
-                    } catch {
-                        print("Notification permission request failed with error: \(error)")
-                    }
-                }
-            }
-            #if !os(visionOS)
-            OvalButton(title: "Enable Location") {
-                CLLocationManager().requestAlwaysAuthorization()
-            }
-            #endif
-        }
-        .padding(30)
     }
 }
 
@@ -174,4 +137,16 @@ private struct GeofenceEvent {
 
     var type: GeofenceEventType
     var feature: Turf.Feature
+}
+
+private extension GeoJSONSourceData {
+    static func geofenceCircle(_ center: LocationCoordinate2D) -> GeoJSONSourceData {
+        .geometry(.geofenceCircle(center))
+    }
+}
+
+private extension Turf.Geometry {
+    static func geofenceCircle(_ center: LocationCoordinate2D) -> Turf.Geometry {
+        .polygon(Polygon(center: center, radius: 30, vertices: 64))
+    }
 }

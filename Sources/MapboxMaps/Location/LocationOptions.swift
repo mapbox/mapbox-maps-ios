@@ -58,7 +58,7 @@ public enum PuckBearing: Equatable, Sendable {
     /// spatial orientation.
     ///
     /// - Note: On visionOS, the heading-based puck bearing is not supported by default.
-    /// You can supply your custom data via the ``LocationDataModel`` in ``LocationManager`` to make it work.
+    /// You can supply your custom data via the ``HeadingProvider`` in ``LocationManager`` to make it work.
     case heading
 
     /// The puck should set its bearing using `course: CLLocationDirection`. Bearing will mimic

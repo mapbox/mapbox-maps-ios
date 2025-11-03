@@ -10,7 +10,7 @@ import QuartzCore
 /// The class is designed to be used as a target for `CADisplayLink`, forwarding
 /// all update callbacks to the provided closure handler.
 internal final class ForwardingDisplayLinkTarget {
-
+    
     /// The closure that will be called when the display link fires.
     private let handler: (CADisplayLink) -> Void
 

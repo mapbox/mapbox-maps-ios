@@ -1,55 +1,18 @@
 import SwiftUI
-@_spi(Experimental) import MapboxMaps
-import CoreLocation
+import MapboxMaps
 
-/// The example demonstrates Puck and Viewport configuration that allow to follow user location.
 struct LocateMeExample: View {
     @State var viewport: Viewport = .followPuck(zoom: 13, bearing: .constant(0))
 
     var body: some View {
-        MapReader { _ in
-            Map(viewport: $viewport) {
-                Puck2D(bearing: .heading)
-                    .showsAccuracyRing(true)
-            }
+        Map(viewport: $viewport) {
+            Puck2D(bearing: .heading)
+        }
             .mapStyle(.standard)
             .ignoresSafeArea()
             .overlay(alignment: .trailing) {
                 LocateMeButton(viewport: $viewport)
             }
-        }
-    }
-}
-
-/// The example demonstrates Puck and Viewport configuration that allow to follow user location.
-/// In this example the CoreLocationProvider is use instead of default `AppleLocationProvider`.
-struct LocateMeCoreLocationProviderExample: View {
-    @State var locaionModel = LocationDataModel.createCore()
-    @State var viewport: Viewport = .followPuck(zoom: 13, bearing: .constant(0))
-
-    var body: some View {
-        MapReader { _ in
-            Map(viewport: $viewport) {
-                Puck2D(bearing: .heading)
-                    .showsAccuracyRing(true)
-
-            }
-            .mapStyle(.standard)
-            .locationDataModel(locaionModel)
-            .ignoresSafeArea()
-            .overlay(alignment: .trailing) {
-                LocateMeButton(viewport: $viewport)
-            }
-            .onAppear {
-                /// The core location provider doesn't automatically initiate the location authorization request.
-                /// Instead, the application is responsible for that.
-                let locationManager = CLLocationManager()
-                if locationManager.authorizationStatus == .notDetermined {
-                    locationManager.requestWhenInUseAuthorization()
-                }
-            }
-
-        }
     }
 }
 

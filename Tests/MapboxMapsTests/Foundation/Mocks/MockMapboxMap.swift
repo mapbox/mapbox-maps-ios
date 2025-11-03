@@ -238,34 +238,6 @@ final class MockMapboxMap: MapboxMapProtocol {
             ))
     }
 
-    struct FeatureStateParamsExpression {
-        var expressionId: UInt
-        var featureset: FeaturesetDescriptor<FeaturesetFeature>
-        var expression: Exp
-        var state: JSONObject?
-    }
-
-    var setFeatureStateExpressionStub = Stub<FeatureStateParamsExpression, Void>()
-    func setFeatureStateExpression<T: FeaturesetFeatureType>(
-        expressionId: UInt,
-        featureset: FeaturesetDescriptor<T>,
-        expression: Exp,
-        state: T.State
-    ) async throws {
-        setFeatureStateExpressionStub.call(
-            with: FeatureStateParamsExpression(
-                expressionId: expressionId,
-                featureset: featureset.converted(),
-                expression: expression,
-                state: encodeState(state).flatMap(JSONObject.init(turfRawValue:)))
-        )
-    }
-
-    var removeFeatureStateExpressionStub = Stub<UInt, Void>()
-    func removeFeatureStateExpression(expressionId: UInt) async throws {
-        removeFeatureStateExpressionStub.call(with: expressionId)
-    }
-
     let dispatchStub = Stub<CorePlatformEventInfo, Void>()
     func dispatch(event: CorePlatformEventInfo) {
         dispatchStub.call(with: event)

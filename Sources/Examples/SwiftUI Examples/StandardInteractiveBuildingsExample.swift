@@ -3,7 +3,6 @@ import SwiftUI
 
 struct StandardInteractiveBuildingsExample: View {
     @State var selectedBuildings = [StandardBuildingsFeature]()
-    @State var shouldSelectAllBuildings: Bool = false
     @State var lightPreset = StandardLightPreset.day
     @State var theme = StandardTheme.default
     @State var buildingSelectColor = StyleColor("hsl(214, 94%, 59%)") // default color
@@ -16,10 +15,6 @@ struct StandardInteractiveBuildingsExample: View {
                 FeatureState(building, .init(select: true))
             }
 
-            if shouldSelectAllBuildings {
-                FeatureState(.standardBuildings, expression: Exp(.boolean) { true }, state: .init(select: true))
-            }
-
             /// When the user taps the building, it is added to the list of selected buildings.
             TapInteraction(.standardBuildings) { building, _ in
                 self.selectedBuildings.append(building)
@@ -28,7 +23,6 @@ struct StandardInteractiveBuildingsExample: View {
 
             /// Tapping anywhere away from a 3D building will deselect previously selected buildings.
             TapInteraction { _ in
-                shouldSelectAllBuildings = false
                 selectedBuildings.removeAll()
                 return true
             }
@@ -47,9 +41,6 @@ struct StandardInteractiveBuildingsExample: View {
                         Text("Yellow").tag(StyleColor("yellow"))
                         Text("Red").tag(StyleColor(.red))
                     }.pickerStyle(.segmented)
-                    Button("Select all") {
-                        shouldSelectAllBuildings = true
-                    }
                 }
                 HStack {
                     Text("Light")

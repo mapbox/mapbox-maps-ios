@@ -10,44 +10,13 @@ final class MountedFeatureState<T: FeaturesetFeatureType>: MapContentMountedComp
     }
 
     func mount(with context: MapContentNodeContext) throws {
-        if let featureId = state.featureId {
-            context.content?.mapboxMap.value?.setFeatureState(
-                featureset: state.featureset,
-                featureId: featureId,
-                state: state.state,
-                callback: { _ in }
-            )
+        guard let featureId = state.featureId else {
+            return
         }
-
-        if let expression = state.expression {
-            Task {
-                try await context.content?.mapboxMap.value?.setFeatureStateExpression(
-                    expressionId: UInt(bitPattern: expression.description.hashValue),
-                    featureset: state.featureset,
-                    expression: expression,
-                    state: state.state
-                )
-            }
-        }
+        context.content?.mapboxMap.value?.setFeatureState(featureset: state.featureset, featureId: featureId, state: state.state, callback: { _ in })
     }
 
     func unmount(with context: MapContentNodeContext) throws {
-        try unmountSingleFeature(with: context)
-        try unmountExpression(with: context)
-    }
-
-    private func unmountExpression(with context: MapContentNodeContext) throws {
-        guard let expression = state.expression else {
-            return
-        }
-        Task {
-            try await context.content?.mapboxMap.value?.removeFeatureStateExpression(
-                expressionId: UInt(bitPattern: expression.description.hashValue)
-            )
-        }
-    }
-
-    private func unmountSingleFeature(with context: MapContentNodeContext) throws {
         guard let featureId = state.featureId else {
             return
         }

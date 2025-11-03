@@ -97,10 +97,6 @@ public struct FillExtrusionLayer: Layer, Equatable {
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionBaseAlignment: Value<FillExtrusionBaseAlignment>?
 
-    /// Enable/Disable shadow casting for this layer
-    /// Default value: true.
-    public var fillExtrusionCastShadows: Value<Bool>?
-
     /// The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root `light` settings. If this color is specified as `rgba` with an alpha component, the alpha component will be ignored; use `fill-extrusion-opacity` to set layer opacity.
     /// Default value: "#000000".
     public var fillExtrusionColor: Value<StyleColor>?
@@ -270,7 +266,6 @@ public struct FillExtrusionLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(fillExtrusionBase, forKey: .fillExtrusionBase)
         try paintContainer.encodeIfPresent(fillExtrusionBaseTransition, forKey: .fillExtrusionBaseTransition)
         try paintContainer.encodeIfPresent(fillExtrusionBaseAlignment, forKey: .fillExtrusionBaseAlignment)
-        try paintContainer.encodeIfPresent(fillExtrusionCastShadows, forKey: .fillExtrusionCastShadows)
         try paintContainer.encodeIfPresent(fillExtrusionColor, forKey: .fillExtrusionColor)
         try paintContainer.encodeIfPresent(fillExtrusionColorTransition, forKey: .fillExtrusionColorTransition)
         try paintContainer.encodeIfPresent(fillExtrusionColorUseTheme, forKey: .fillExtrusionColorUseTheme)
@@ -335,7 +330,6 @@ public struct FillExtrusionLayer: Layer, Equatable {
             fillExtrusionBase = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionBase)
             fillExtrusionBaseTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionBaseTransition)
             fillExtrusionBaseAlignment = try paintContainer.decodeIfPresent(Value<FillExtrusionBaseAlignment>.self, forKey: .fillExtrusionBaseAlignment)
-            fillExtrusionCastShadows = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .fillExtrusionCastShadows)
             fillExtrusionColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillExtrusionColor)
             fillExtrusionColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionColorTransition)
             fillExtrusionColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .fillExtrusionColorUseTheme)
@@ -411,7 +405,6 @@ public struct FillExtrusionLayer: Layer, Equatable {
         case fillExtrusionBase = "fill-extrusion-base"
         case fillExtrusionBaseTransition = "fill-extrusion-base-transition"
         case fillExtrusionBaseAlignment = "fill-extrusion-base-alignment"
-        case fillExtrusionCastShadows = "fill-extrusion-cast-shadows"
         case fillExtrusionColor = "fill-extrusion-color"
         case fillExtrusionColorTransition = "fill-extrusion-color-transition"
         case fillExtrusionColorUseTheme = "fill-extrusion-color-use-theme"
@@ -635,18 +628,6 @@ extension FillExtrusionLayer {
     @_spi(Experimental)
     public func fillExtrusionBaseAlignment(_ expression: Exp) -> Self {
         with(self, setter(\.fillExtrusionBaseAlignment, .expression(expression)))
-    }
-
-    /// Enable/Disable shadow casting for this layer
-    /// Default value: true.
-    public func fillExtrusionCastShadows(_ constant: Bool) -> Self {
-        with(self, setter(\.fillExtrusionCastShadows, .constant(constant)))
-    }
-
-    /// Enable/Disable shadow casting for this layer
-    /// Default value: true.
-    public func fillExtrusionCastShadows(_ expression: Exp) -> Self {
-        with(self, setter(\.fillExtrusionCastShadows, .expression(expression)))
     }
 
     /// The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root `light` settings. If this color is specified as `rgba` with an alpha component, the alpha component will be ignored; use `fill-extrusion-opacity` to set layer opacity.

@@ -2,7 +2,6 @@
 public struct FeatureState<T: FeaturesetFeatureType>: Equatable, MapContent, PrimitiveMapContent {
     var featureset: FeaturesetDescriptor<T>
     var featureId: FeaturesetFeatureId?
-    var expression: Exp?
     var state: T.State
 
     /// Sets the feature state using typed descriptor and feature id.
@@ -14,12 +13,6 @@ public struct FeatureState<T: FeaturesetFeatureType>: Equatable, MapContent, Pri
     public init(_ featureset: FeaturesetDescriptor<T>, id: FeaturesetFeatureId, state: T.State) {
         self.featureset = featureset
         self.featureId = id
-        self.state = state
-    }
-
-    public init(_ featureset: FeaturesetDescriptor<T>, expression: Exp, state: T.State) {
-        self.featureset = featureset
-        self.expression = expression
         self.state = state
     }
 

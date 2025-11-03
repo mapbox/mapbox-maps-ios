@@ -454,21 +454,6 @@ public struct IconTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable
     public static let viewport = IconTranslateAnchor(rawValue: "viewport")
 }
 
-/// Specify how opacity in case of being occluded should be applied
-public struct OcclusionOpacityMode: RawRepresentable, Codable, Hashable, Sendable {
-    public let rawValue: String
-
-    public init(rawValue: String) {
-        self.rawValue = rawValue
-    }
-
-    /// Whole symbol is treated as occluded if it's anchor point is occluded
-    public static let anchor = OcclusionOpacityMode(rawValue: "anchor")
-
-    /// Occlusion is applied on a per-pixel basis
-    public static let pixel = OcclusionOpacityMode(rawValue: "pixel")
-}
-
 /// Controls the frame of reference for `text-translate`.
 public struct TextTranslateAnchor: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String
@@ -617,50 +602,69 @@ public struct HillshadeIlluminationAnchor: RawRepresentable, Codable, Hashable, 
 }
 
 /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset.
+@_documentation(visibility: public)
+@_spi(Experimental)
 public struct ModelElevationReference: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
     public let rawValue: String
 
+    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// Elevated rendering is enabled. Use this mode to elevate models relative to the sea level.
+    @_documentation(visibility: public)
     public static let sea = ModelElevationReference(rawValue: "sea")
 
     /// Elevated rendering is enabled. Use this mode to elevate models relative to the ground's height below them.
+    @_documentation(visibility: public)
     public static let ground = ModelElevationReference(rawValue: "ground")
 
     /// Elevated rendering is enabled. Use this mode to describe additive and stackable features that should exist only on top of road polygons.
+    @_documentation(visibility: public)
     public static let hdRoadMarkup = ModelElevationReference(rawValue: "hd-road-markup")
 }
 
 /// Defines scaling mode. Only applies to location-indicator type layers.
+@_documentation(visibility: public)
+@_spi(Experimental)
 public struct ModelScaleMode: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
     public let rawValue: String
 
+    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// Model is scaled so that it's always the same size relative to other map features. The property model-scale specifies how many meters each unit in the model file should cover.
+    @_documentation(visibility: public)
     public static let map = ModelScaleMode(rawValue: "map")
 
     /// Model is scaled so that it's always the same size on the screen. The property model-scale specifies how many pixels each unit in model file should cover.
+    @_documentation(visibility: public)
     public static let viewport = ModelScaleMode(rawValue: "viewport")
 }
 
 /// Defines rendering behavior of model in respect to other 3D scene objects.
+@_documentation(visibility: public)
+@_spi(Experimental)
 public struct ModelType: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
     public let rawValue: String
 
+    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// Integrated to 3D scene, using depth testing, along with terrain, fill-extrusions and custom layer.
+    @_documentation(visibility: public)
     public static let common3d = ModelType(rawValue: "common-3d")
 
     /// Displayed over other 3D content, occluded by terrain.
+    @_documentation(visibility: public)
     public static let locationIndicator = ModelType(rawValue: "location-indicator")
 }
 

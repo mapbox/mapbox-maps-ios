@@ -219,41 +219,6 @@ final class PolylineAnnotationTests: XCTestCase {
         XCTAssertEqual(lineColor, annotation.lineColor.flatMap { $0.rawValue })
     }
 
-    func testLineEmissiveStrengthTransition() {
-        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-        annotation.lineEmissiveStrengthTransition = StyleTransition(duration: 1, delay: 1)
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .object(lineEmissiveStrengthTransition) = layerProperties["line-emissive-strength-transition"],
-              case let .number(duration) = lineEmissiveStrengthTransition["duration"],
-              case let .number(delay) = lineEmissiveStrengthTransition["delay"]
-        else {
-            return XCTFail("Layer property line-emissive-strength-transition should be set to a string.")
-        }
-
-        XCTAssertEqual(duration / 1000, annotation.lineEmissiveStrengthTransition?.duration)
-        XCTAssertEqual(delay / 1000, annotation.lineEmissiveStrengthTransition?.delay)
-    }
-
-    func testLineEmissiveStrength() {
-        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-        annotation.lineEmissiveStrength =  Double.testConstantValue()
-
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
-            return
-        }
-        guard case let .object(layerProperties) = featureProperties["layerProperties"],
-              case let .number(lineEmissiveStrength) = layerProperties["line-emissive-strength"] else {
-            return XCTFail("Layer property line-emissive-strength should be set to a number.")
-        }
-        XCTAssertEqual(lineEmissiveStrength, annotation.lineEmissiveStrength)
-    }
-
     func testLineGapWidthTransition() {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)

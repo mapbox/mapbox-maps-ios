@@ -375,16 +375,11 @@ final class MapboxMapTests: XCTestCase {
         mapboxMap.loadStyle(.dark) { _ in
             completionIsCalledOnce.fulfill()
         }
-
-        // Ensure loadStyle subscription is registered before firing events
-        // by dispatching event sends asynchronously on the main queue
         let interval = EventTimeInterval(begin: .init(), end: .init())
-        DispatchQueue.main.async {
-            self.events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
-            self.events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
-        }
+        events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
+        events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
 
-        waitForExpectations(timeout: 5.0)
+        waitForExpectations(timeout: 10)
     }
 
     func testEvents() {

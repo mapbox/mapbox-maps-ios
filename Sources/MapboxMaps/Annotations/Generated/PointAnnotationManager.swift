@@ -439,27 +439,6 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["icon-color"] = newValue?.rawValue }
     }
 
-    /// Increase or reduce the brightness of the symbols. The value is the maximum brightness.
-    /// Default value: 1. Value range: [0, 1]
-    public var iconColorBrightnessMax: Double? {
-        get { impl.layerProperties["icon-color-brightness-max"] as? Double }
-        set { impl.layerProperties["icon-color-brightness-max"] = newValue }
-    }
-
-    /// Increase or reduce the brightness of the symbols. The value is the minimum brightness.
-    /// Default value: 0. Value range: [0, 1]
-    public var iconColorBrightnessMin: Double? {
-        get { impl.layerProperties["icon-color-brightness-min"] as? Double }
-        set { impl.layerProperties["icon-color-brightness-min"] = newValue }
-    }
-
-    /// Increase or reduce the contrast of the symbol icon.
-    /// Default value: 0. Value range: [-1, 1]
-    public var iconColorContrast: Double? {
-        get { impl.layerProperties["icon-color-contrast"] as? Double }
-        set { impl.layerProperties["icon-color-contrast"] = newValue }
-    }
-
     /// Transition property for `iconColorSaturation`
     public var iconColorSaturationTransition: StyleTransition? {
         get { StyleTransition(impl.layerProperties["icon-color-saturation-transition"] as? [String: TimeInterval]) }
@@ -591,13 +570,6 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     public var iconTranslateAnchor: IconTranslateAnchor? {
         get { impl.layerProperties["icon-translate-anchor"].flatMap { $0 as? String }.flatMap(IconTranslateAnchor.init(rawValue:)) }
         set { impl.layerProperties["icon-translate-anchor"] = newValue?.rawValue }
-    }
-
-    /// Specify how opacity in case of being occluded should be applied
-    /// Default value: "anchor".
-    public var occlusionOpacityMode: OcclusionOpacityMode? {
-        get { impl.layerProperties["occlusion-opacity-mode"].flatMap { $0 as? String }.flatMap(OcclusionOpacityMode.init(rawValue:)) }
-        set { impl.layerProperties["occlusion-opacity-mode"] = newValue?.rawValue }
     }
 
     /// Transition property for `symbolZOffset`

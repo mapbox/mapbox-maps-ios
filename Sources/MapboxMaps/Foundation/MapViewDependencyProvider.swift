@@ -1,10 +1,47 @@
 import MetalKit
 
+/// A protocol that defines the interface for creating MapView dependencies.
+///
+/// `MapViewDependencyProviderProtocol` abstracts the creation of various components
+/// needed by `MapView`, allowing for dependency injection and improved testability.
+/// This protocol enables the use of mock implementations during testing and provides
+/// a clean separation between the MapView and its dependencies.
+///
+/// The protocol covers all major MapView subsystems:
+/// - Metal rendering infrastructure
+/// - Display link management
+/// - Camera animation system
+/// - Gesture handling
+/// - Viewport management
+/// - Event tracking
 protocol MapViewDependencyProviderProtocol: AnyObject {
+    /// The notification center used for system event notifications.
     var notificationCenter: NotificationCenterProtocol { get }
+    
+    /// The bundle used for accessing app resources and configuration.
     var bundle: BundleProtocol { get }
+    
+    /// Creates a Metal view for rendering the map content.
+    ///
+    /// - Parameters:
+    ///   - frame: The frame rectangle for the Metal view.
+    ///   - device: The Metal device to use for rendering, or nil to use the default device.
+    /// - Returns: A configured Metal view ready for map rendering.
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MetalView
+    
+    /// Creates a display link for synchronizing rendering with the display refresh rate.
+    ///
+    /// - Parameters:
+    ///   - window: The window associated with the display link.
+    ///   - target: The target object that will receive display link callbacks.
+    ///   - selector: The selector to call on the target when the display link fires.
+    /// - Returns: A display link instance, or nil if creation fails.
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
+    
+    /// Creates a camera animators runner for managing camera animations.
+    ///
+    /// - Parameter mapboxMap: The map instance to animate.
+    /// - Returns: A camera animators runner configured for the specified map.
     func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol
     func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
                                          mapboxMap: MapboxMapProtocol,
@@ -24,6 +61,15 @@ protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeEventsManager() -> EventsManagerProtocol
 }
 
+/// The default implementation of `MapViewDependencyProviderProtocol`.
+///
+/// `MapViewDependencyProvider` creates real instances of all MapView dependencies
+/// using the system's default implementations. This is the production implementation
+/// used in normal app usage, providing concrete instances of Metal views, display links,
+/// gesture managers, and other components.
+///
+/// The provider handles the complex initialization of interconnected components,
+/// ensuring proper dependency injection and configuration of all subsystems.
 final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
     internal let notificationCenter: NotificationCenterProtocol = NotificationCenter.default
 

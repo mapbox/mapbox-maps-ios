@@ -24,6 +24,104 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         }
     }
 
+    /// A set of application lifecycle states during which the map view is allowed to render and update.
+    ///
+    /// `DisplayState` controls when the map's display link should be active, which directly affects
+    /// rendering performance and battery usage. By default, the map renders in foreground states
+    /// (both active and inactive) but not in the background due to lack of GPU access.
+    ///
+    /// You can combine multiple states using set operations:
+    /// ```swift
+    /// // Allow rendering in all foreground states
+    /// mapView.displayState = [.foregroundActive, .foregroundInactive]
+    ///
+    /// // Allow rendering only when actively in foreground
+    /// mapView.displayState = [.foregroundActive]
+    ///
+    /// // Allow rendering in all states (including background)
+    /// mapView.displayState = [.foregroundActive, .foregroundInactive, .background]
+    /// ```
+    public struct DisplayState: OptionSet {
+
+        /// The scene is running in the foreground and currently receiving user events.
+        ///
+        /// This is the most common state for active map interaction and should typically be included
+        /// in your display state configuration.
+        public static let foregroundActive = DisplayState(rawValue: 1 << 0)
+
+        /// The scene is running in the foreground but not currently receiving user events.
+        ///
+        /// This state occurs when the app is in the foreground but another app or system UI
+        /// is receiving touch events (e.g., during a phone call or when Control Center is open).
+        /// Rendering in this state allows for smooth transitions and maintains visual continuity.
+        public static let foregroundInactive = DisplayState(rawValue: 1 << 1)
+
+        /// The scene is running in the background and is not visible on screen.
+        ///
+        /// Enabling rendering in this state allows the map to continue updating while the app
+        /// is backgrounded, which can be useful for location tracking or data updates.
+        /// However, this may significantly impact battery life and should be used sparingly.
+        public static let background = DisplayState(rawValue: 1 << 2)
+
+        /// The raw integer value representing the combined states.
+        public let rawValue: Int
+
+        /// Creates a new `DisplayState` with the specified raw value.
+        ///
+        /// - Parameter rawValue: The raw integer value representing the combined states.
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+
+        /// Determines whether the display link should continue running when the scene becomes inactive.
+        ///
+        /// This property returns `true` if the display state includes `.foregroundInactive`,
+        /// allowing the map to continue rendering even when not receiving user events.
+        var shouldRunDisplayLinkWhenInactive: Bool {
+            return self.contains(.foregroundInactive)
+        }
+
+        /// Converts the display state to a set of corresponding `UIScene.ActivationState` values.
+        ///
+        /// This method maps the display state flags to their equivalent scene activation states,
+        /// which are used internally to determine when the display link should be active.
+        ///
+        /// - Returns: A set of `UIScene.ActivationState` values corresponding to the enabled display states.
+        var sceneActivationStates: Set<UIScene.ActivationState> {
+            var result: Set<UIScene.ActivationState> = []
+            if self.contains(.foregroundActive) {
+                result.insert(.foregroundActive)
+            }
+            if self.contains(.foregroundInactive) {
+                result.insert(.foregroundInactive)
+            }
+
+            if self.contains(.background) {
+                result.insert(.background)
+            }
+            return result
+        }
+    }
+
+    /// Controls the application lifecycle states during which the map view is allowed to render.
+    ///
+    /// This property determines when the map's display link should be active, directly affecting
+    /// rendering performance and battery usage. By default, the map renders in foreground states
+    /// (both active and inactive) but not in the background to conserve resources.
+    ///
+    /// Setting this property will immediately update the display link's running state based on
+    /// the current scene activation state.
+    ///
+    /// - SeeAlso: `DisplayState` for available state options and usage examples.
+    public var displayState: DisplayState = [.foregroundActive, .foregroundInactive] {
+        didSet {
+            // cache activation state for efficiency
+            permissibleActivationStates = displayState.sceneActivationStates
+            displayLink?.isRunning = shouldRunDisplayLink(for: window?.parentScene)
+        }
+    }
+    private var permissibleActivationStates: Set<UIScene.ActivationState> = [.foregroundActive, .foregroundInactive]
+
     /// The `gestures` object will be responsible for all gestures on the map.
     public private(set) var gestures: GestureManager!
 
@@ -210,8 +308,6 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
 
     internal let attributionUrlOpener: AttributionURLOpener
 
-    internal let applicationStateProvider: Ref<UIApplication.State>?
-
     internal let eventsManager: EventsManagerProtocol
 
     /// Initialize a MapView
@@ -225,7 +321,6 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
 
         dependencyProvider = MapViewDependencyProvider()
         attributionUrlOpener = DefaultAttributionURLOpener()
-        applicationStateProvider = .global
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         eventsManager = dependencyProvider.makeEventsManager()
@@ -258,7 +353,6 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         defer { trace?.end() }
         dependencyProvider = MapViewDependencyProvider()
         attributionUrlOpener = urlOpener
-        self.applicationStateProvider = nil
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         eventsManager = dependencyProvider.makeEventsManager()
@@ -276,7 +370,6 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         attributionUrlOpener = DefaultAttributionURLOpener()
-        applicationStateProvider = .global
         eventsManager = dependencyProvider.makeEventsManager()
 
         let defaultMapInitOptions = MapInitOptions()
@@ -288,13 +381,11 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
     internal init(frame: CGRect,
                   mapInitOptions: MapInitOptions,
                   dependencyProvider: MapViewDependencyProviderProtocol,
-                  urlOpener: AttributionURLOpener,
-                  applicationStateProvider: Ref<UIApplication.State>?) {
+                  urlOpener: AttributionURLOpener) {
         let trace = OSLog.platform.beginInterval("MapView.init")
         defer { trace?.end() }
         self.dependencyProvider = dependencyProvider
         attributionUrlOpener = urlOpener
-        self.applicationStateProvider = applicationStateProvider
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         eventsManager = dependencyProvider.makeEventsManager()
@@ -322,7 +413,6 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
 
         mapboxMap = makeMapboxMap(resolvedMapInitOptions: resolvedMapInitOptions)
 
-        subscribeToLifecycleNotifications()
         notificationCenter.addObserver(
             self,
             selector: #selector(didReceiveMemoryWarning),
@@ -445,7 +535,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         cameraAnimatorsRunner.isEnabled = false
     }
 
-    private func subscribeToLifecycleNotifications() {
+    private func subscribeSceneToLifecycleNotifications() {
         notificationCenter.addObserver(self,
                                         selector: #selector(sceneDidEnterBackground(_:)),
                                         name: UIScene.didEnterBackgroundNotification,
@@ -458,41 +548,24 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
                                         selector: #selector(sceneDidActivate(_:)),
                                         name: UIScene.didActivateNotification,
                                         object: window?.parentScene)
-        notificationCenter.addObserver(self,
-                                       selector: #selector(appDidEnterBackground),
-                                       name: UIApplication.didEnterBackgroundNotification,
-                                       object: nil)
-        notificationCenter.addObserver(self,
-                                       selector: #selector(appWillResignActive),
-                                       name: UIApplication.willResignActiveNotification,
-                                       object: nil)
-    }
-
-    @objc private func appDidEnterBackground() {
-        displayLink?.isPaused = true
-        reduceMemoryUse()
-    }
-
-    @objc private func appWillResignActive() {
-        displayLink?.isPaused = true
     }
 
     @objc private func sceneDidActivate(_ notification: Notification) {
         guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
-        displayLink?.isPaused = false
+        displayLink?.isRunning = true
     }
 
     @objc private func sceneWillDeactivate(_ notification: Notification) {
         guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
-        displayLink?.isPaused = true
+        displayLink?.isRunning = displayState.shouldRunDisplayLinkWhenInactive
     }
 
     @objc private func sceneDidEnterBackground(_ notification: Notification) {
         guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
-        displayLink?.isPaused = true
+        displayLink?.isRunning = shouldRunDisplayLink(for: scene)
         reduceMemoryUse()
     }
 
@@ -617,6 +690,11 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
 
     @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
+        if !shouldRunDisplayLink(for: window?.parentScene) {
+            displayLink.isPaused = true
+            return
+        }
+
         let displayLinkTrace = OSLog.platform.beginInterval(SignpostName.mapViewDisplayLink,
                                                             beginMessage: "CADisplayLink update")
         defer {
@@ -701,21 +779,24 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
 
         updateDisplayLinkPreferredFramesPerSecond()
 
-        // this will make sure that display link is only running on an active scene in foreground,
-        // preventing metal view drawing on background if the view is added to window not on foreground
-        if shouldDisplayLinkBePaused(window: window) {
-            displayLink.isPaused = true
-        }
+        subscribeSceneToLifecycleNotifications()
+
+        // make sure that the display link is (de)activated for a current app/scene state
+        displayLink.isRunning = shouldRunDisplayLink(for: window.parentScene)
 
         displayLink.add(to: .current, forMode: .common)
     }
 
-    private func shouldDisplayLinkBePaused(window: UIWindow) -> Bool {
-        if let state = applicationStateProvider?.value, state != .active {
-            return true
-        }
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
 
-        if let scene = window.parentScene, scene.activationState != .foregroundActive {
+        // make sure display link is running in case it was paused inadvertently when handling lifecycle events
+        assert(displayLink?.isRunning == true)
+        displayLink?.isRunning = true
+    }
+
+    private func shouldRunDisplayLink(for scene: UIScene?) -> Bool {
+        if let scene, permissibleActivationStates.contains(scene.activationState) {
             return true
         }
 

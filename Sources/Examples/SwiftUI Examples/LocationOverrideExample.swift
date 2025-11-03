@@ -6,12 +6,6 @@ struct LocationOverrideExample: View {
     private class LocationProvider {
         @Published var location = Location(coordinate: .zero)
         @Published var heading = Heading(direction: 0, accuracy: 0)
-
-        lazy var model = {
-            LocationDataModel(
-                location: $location.map {[$0]}.eraseToAnyPublisher(),
-                heading: $heading.eraseToAnyPublisher())
-        }()
     }
 
     @State private var provider = LocationProvider()
@@ -32,7 +26,12 @@ struct LocationOverrideExample: View {
                     return false
                 }
             }
-            .locationDataModel(provider.model)
+            .onAppear {
+                /// Override the location and Heading provider with Combine publishers.
+                proxy.location?.override(
+                    locationProvider: provider.$location.map {[$0]}.eraseToSignal(),
+                    headingProvider: provider.$heading.eraseToSignal())
+            }
         }
         .ignoresSafeArea()
         .overlay(alignment: .bottom) {

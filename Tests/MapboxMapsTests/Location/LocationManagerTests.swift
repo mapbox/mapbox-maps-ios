@@ -1,6 +1,5 @@
 @testable @_spi(Experimental) import MapboxMaps
 import XCTest
-import Combine
 
 final class LocationManagerTests: XCTestCase {
     @TestPublished var location = [Location]()
@@ -12,18 +11,16 @@ final class LocationManagerTests: XCTestCase {
     var tokens = Set<AnyCancelable>()
 
     var me: LocationManager!
+
     override func setUp() {
         styleManager = MockStyle()
         mapboxMap = MockMapboxMap()
-        let dataModel = LocationDataModel(
-            location: $location.eraseToAnyPublisher(),
-            heading: $heading.skipNil().eraseToAnyPublisher())
         me = LocationManager(
-            interfaceOrientationView: Ref { nil },
             styleManager: styleManager,
             mapboxMap: mapboxMap,
             displayLink: displayLink,
-            dataModel: dataModel,
+            locationProvider: $location,
+            headingProvider: $heading.skipNil(),
             nowTimestamp: $now)
     }
 
@@ -216,29 +213,6 @@ final class LocationManagerTests: XCTestCase {
         let observedModel = try XCTUnwrap(modelSource?.models?["puck-model"] as? Model)
         XCTAssertEqual(observedModel.uri, URL(string: "file://foo.glb"))
         XCTAssertEqual(observedModel.position, [coordinate.latitude, coordinate.longitude])
-    }
-    
-    func testHeadingAdjustment() {
-        let baseHeading = Heading(direction: 45, accuracy: 10)
-        
-        let portraitResult = adjust(heading: baseHeading, toViewOrientation: .portrait)
-        XCTAssertEqual(portraitResult.direction, 45)
-        XCTAssertEqual(portraitResult.accuracy, 10)
-        
-        let portraitUpsideDownResult = adjust(heading: baseHeading, toViewOrientation: .portraitUpsideDown)
-        XCTAssertEqual(portraitUpsideDownResult.direction, 225)
-        
-        let landscapeLeftResult = adjust(heading: baseHeading, toViewOrientation: .landscapeLeft)
-        XCTAssertEqual(landscapeLeftResult.direction, 135)
-        
-        let landscapeRightResult = adjust(heading: baseHeading, toViewOrientation: .landscapeRight)
-        XCTAssertEqual(landscapeRightResult.direction, 315)
-        
-        let unknownResult = adjust(heading: baseHeading, toViewOrientation: .unknown)
-        XCTAssertEqual(unknownResult.direction, 45)
-        
-        let nilResult = adjust(heading: baseHeading, toViewOrientation: nil)
-        XCTAssertEqual(nilResult.direction, 45)
     }
 }
 

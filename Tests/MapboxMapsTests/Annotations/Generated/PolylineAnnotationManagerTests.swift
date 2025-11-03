@@ -82,6 +82,84 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cross-slope"] as! Double, defaultValue)
     }
+    func testInitialLineCutoutFadeWidth() {
+        let initialValue = manager.lineCutoutFadeWidth
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineCutoutFadeWidth() {
+        let value = 0.5
+        manager.lineCutoutFadeWidth = value
+        XCTAssertEqual(manager.lineCutoutFadeWidth, value)
+        XCTAssertEqual(manager.impl.layerProperties["line-cutout-fade-width"] as! Double, value)
+    }
+
+
+    func testSetToNilLineCutoutFadeWidth() {
+        let newLineCutoutFadeWidthProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cutout-fade-width").value as! Double
+        manager.lineCutoutFadeWidth = newLineCutoutFadeWidthProperty
+        XCTAssertNotNil(manager.impl.layerProperties["line-cutout-fade-width"])
+        harness.triggerDisplayLink()
+
+        manager.lineCutoutFadeWidth = nil
+        XCTAssertNil(manager.lineCutoutFadeWidth)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cutout-fade-width"] as! Double, defaultValue)
+    }
+    func testInitialLineCutoutOpacity() {
+        let initialValue = manager.lineCutoutOpacity
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineCutoutOpacity() {
+        let value = 0.5
+        manager.lineCutoutOpacity = value
+        XCTAssertEqual(manager.lineCutoutOpacity, value)
+        XCTAssertEqual(manager.impl.layerProperties["line-cutout-opacity"] as! Double, value)
+    }
+
+
+    func testSetToNilLineCutoutOpacity() {
+        let newLineCutoutOpacityProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cutout-opacity").value as! Double
+        manager.lineCutoutOpacity = newLineCutoutOpacityProperty
+        XCTAssertNotNil(manager.impl.layerProperties["line-cutout-opacity"])
+        harness.triggerDisplayLink()
+
+        manager.lineCutoutOpacity = nil
+        XCTAssertNil(manager.lineCutoutOpacity)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cutout-opacity"] as! Double, defaultValue)
+    }
+    func testInitialLineCutoutWidth() {
+        let initialValue = manager.lineCutoutWidth
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineCutoutWidth() {
+        let value = 25.0
+        manager.lineCutoutWidth = value
+        XCTAssertEqual(manager.lineCutoutWidth, value)
+        XCTAssertEqual(manager.impl.layerProperties["line-cutout-width"] as! Double, value)
+    }
+
+
+    func testSetToNilLineCutoutWidth() {
+        let newLineCutoutWidthProperty = 25.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cutout-width").value as! Double
+        manager.lineCutoutWidth = newLineCutoutWidthProperty
+        XCTAssertNotNil(manager.impl.layerProperties["line-cutout-width"])
+        harness.triggerDisplayLink()
+
+        manager.lineCutoutWidth = nil
+        XCTAssertNil(manager.lineCutoutWidth)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cutout-width"] as! Double, defaultValue)
+    }
     func testInitialLineElevationReference() {
         let initialValue = manager.lineElevationReference
         XCTAssertNil(initialValue)
@@ -377,84 +455,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
-    }
-    func testInitialLineCutoutFadeWidth() {
-        let initialValue = manager.lineCutoutFadeWidth
-        XCTAssertNil(initialValue)
-    }
-
-    func testSetLineCutoutFadeWidth() {
-        let value = 0.5
-        manager.lineCutoutFadeWidth = value
-        XCTAssertEqual(manager.lineCutoutFadeWidth, value)
-        XCTAssertEqual(manager.impl.layerProperties["line-cutout-fade-width"] as! Double, value)
-    }
-
-
-    func testSetToNilLineCutoutFadeWidth() {
-        let newLineCutoutFadeWidthProperty = 0.5
-        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cutout-fade-width").value as! Double
-        manager.lineCutoutFadeWidth = newLineCutoutFadeWidthProperty
-        XCTAssertNotNil(manager.impl.layerProperties["line-cutout-fade-width"])
-        harness.triggerDisplayLink()
-
-        manager.lineCutoutFadeWidth = nil
-        XCTAssertNil(manager.lineCutoutFadeWidth)
-        harness.triggerDisplayLink()
-
-        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cutout-fade-width"] as! Double, defaultValue)
-    }
-    func testInitialLineCutoutOpacity() {
-        let initialValue = manager.lineCutoutOpacity
-        XCTAssertNil(initialValue)
-    }
-
-    func testSetLineCutoutOpacity() {
-        let value = 0.5
-        manager.lineCutoutOpacity = value
-        XCTAssertEqual(manager.lineCutoutOpacity, value)
-        XCTAssertEqual(manager.impl.layerProperties["line-cutout-opacity"] as! Double, value)
-    }
-
-
-    func testSetToNilLineCutoutOpacity() {
-        let newLineCutoutOpacityProperty = 0.5
-        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cutout-opacity").value as! Double
-        manager.lineCutoutOpacity = newLineCutoutOpacityProperty
-        XCTAssertNotNil(manager.impl.layerProperties["line-cutout-opacity"])
-        harness.triggerDisplayLink()
-
-        manager.lineCutoutOpacity = nil
-        XCTAssertNil(manager.lineCutoutOpacity)
-        harness.triggerDisplayLink()
-
-        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cutout-opacity"] as! Double, defaultValue)
-    }
-    func testInitialLineCutoutWidth() {
-        let initialValue = manager.lineCutoutWidth
-        XCTAssertNil(initialValue)
-    }
-
-    func testSetLineCutoutWidth() {
-        let value = 25.0
-        manager.lineCutoutWidth = value
-        XCTAssertEqual(manager.lineCutoutWidth, value)
-        XCTAssertEqual(manager.impl.layerProperties["line-cutout-width"] as! Double, value)
-    }
-
-
-    func testSetToNilLineCutoutWidth() {
-        let newLineCutoutWidthProperty = 25.0
-        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cutout-width").value as! Double
-        manager.lineCutoutWidth = newLineCutoutWidthProperty
-        XCTAssertNotNil(manager.impl.layerProperties["line-cutout-width"])
-        harness.triggerDisplayLink()
-
-        manager.lineCutoutWidth = nil
-        XCTAssertNil(manager.lineCutoutWidth)
-        harness.triggerDisplayLink()
-
-        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cutout-width"] as! Double, defaultValue)
     }
     func testInitialLineDasharray() {
         let initialValue = manager.lineDasharray

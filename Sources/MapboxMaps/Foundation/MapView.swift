@@ -439,7 +439,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         sendInitialTelemetryEvents()
 
         // Set up managers
-        setupManagers(initOptions: resolvedMapInitOptions)
+        setupManagers()
     }
 
     private func makeMapboxMap(resolvedMapInitOptions: MapInitOptions) -> MapboxMap {
@@ -456,7 +456,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
     }
 
     // swiftlint:disable:next function_body_length
-    internal func setupManagers(initOptions: MapInitOptions) {
+    internal func setupManagers() {
 
         // Initialize/Configure camera manager first since Gestures needs it as dependency
         cameraAnimatorsRunner = dependencyProvider.makeCameraAnimatorsRunner(
@@ -501,11 +501,9 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         // Initialize/Configure location source and location manager
         location = LocationManager(
             interfaceOrientationView: .weakRef(self),
-            styleManager: mapboxMap,
-            mapboxMap: mapboxMap,
             displayLink: displayLinkSignalSubject.signal,
-            dataModel: initOptions.locationDataModel ?? .createDefault(),
-            nowTimestamp: .now
+            styleManager: mapboxMap,
+            mapboxMap: mapboxMap
         )
 
         // Initialize/Configure view annotations manager

@@ -22,7 +22,6 @@ struct MapDependencies {
     var performanceStatisticsParameters: Map.PerformanceStatisticsParameters?
     var attributionMenuFilter: ((AttributionMenuItem) -> Bool)?
     var screenCullingShape = [CGPoint]()
-    var locationDataModel: LocationDataModel?
 
     var onMapTap: ((InteractionContext) -> Void)?
     var onMapLongPress: ((InteractionContext) -> Void)?

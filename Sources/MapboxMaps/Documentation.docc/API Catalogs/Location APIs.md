@@ -5,7 +5,6 @@
 ### Location
 
 - ``LocationManager``
-- ``LocationDataModel``
 - ``LocationOptions``
 - ``PuckType``
 - ``Puck2DConfiguration``

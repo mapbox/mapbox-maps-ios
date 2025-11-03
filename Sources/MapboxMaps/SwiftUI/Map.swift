@@ -1,5 +1,4 @@
 import SwiftUI
-import Combine
 
 /// A SwiftUI view that displays a Mapbox Map.
 ///
@@ -98,11 +97,7 @@ public struct Map: UIViewControllerRepresentable {
     public func makeCoordinator() -> Coordinator {
         let urlOpener = ClosureURLOpener()
         sendTelemetry(\.swiftUI)
-
-        let initOptions = MapInitOptions(
-            mapStyle: mapDependencies.mapStyle,
-            locationDataModel: mapDependencies.locationDataModel
-        )
+        let initOptions = MapInitOptions(mapStyle: mapDependencies.mapStyle)
         let mapView = MapView(frame: .zero, mapInitOptions: initOptions, urlOpener: urlOpener)
         let viewController = MapViewController(mapView: mapView)
 
@@ -145,9 +140,6 @@ public struct Map: UIViewControllerRepresentable {
 
     public func updateUIViewController(_ mapController: UIViewController, context: Context) {
         mapController.additionalSafeAreaInsets = UIEdgeInsets(insets: mapDependencies.additionalSafeArea, layoutDirection: layoutDirection)
-        if let locationDataModel = mapDependencies.locationDataModel {
-            context.coordinator.mapView.location.dataModel = locationDataModel
-        }
         context.coordinator.basic.update(
             viewport: viewport,
             deps: mapDependencies,
@@ -388,19 +380,8 @@ public extension Map {
     func screenCullingShape(_ shape: [CGPoint]) -> Self {
         copyAssigned(self, \.mapDependencies.screenCullingShape, shape)
     }
-
-    /// Location data model.
-    ///
-    /// Use this property to access or override the raw location and heading data used by the map.
-    ///
-    /// - Important: When overriding the data model, make sure the data is delivered on main thread.
-    ///
-    /// - Parameters:
-    ///    - model: A location data model.
-    func locationDataModel(_ model: LocationDataModel) -> Self {
-        copyAssigned(self, \.mapDependencies.locationDataModel, model)
-    }
 }
+
 extension Map {
 
     /// Map Coordinator.

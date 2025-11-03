@@ -19,34 +19,6 @@ let options = MapInitOptions(mapStyle: .standardSatellite(lightPreset: .dusk))
 let mapView = MapView(frame: view.bounds, mapInitOptions: options)
 ```
 * Add `StyleReloadPolicy` to control style reload behavior. Use `reloadPolicy: .always` parameter in `loadStyle()` methods or `MapStyle` initializers to always reload the style even when the URI or JSON matches the currently loaded style. Defaults to `.onlyIfChanged` for optimal performance.
-## 11.16.2 - 31 October, 2025
-
-## 11.16.1 - 28 October, 2025
-
-* Introduce the `LocationManager.locationDataModel` and make it possible to use location provider from MapboxCommon. Deprecate the `LocationManager.override*` methods.
-Now you can choose to use the location provider from MapboxCommon.
-```swift
-@_spi(Experimental) import MapboxMaps
-
-// UIKit
-let initOptions = MapInitOptions(
-    locationDataModel: .createCore()
-)
-let mapView = MapView(mapInitOptions: initOptions) // specify at init time (recommended)
-mapView.mapboxMap.locationDataModel = .createCore() // or, override it at runtime
-
-
-// SwiftUI
-struct MyView: View {
-   @State var locationDataModel = LocationDataModel.createCore()
-   var body: some View {
-       Map(viewport: $viewport) {
-           Puck2D(bearing: .heading)
-       }
-       .locationDataModel(locationDataModel)
-   }
-}
-```
 
 ## 11.16.0 - 21 October, 2025
 

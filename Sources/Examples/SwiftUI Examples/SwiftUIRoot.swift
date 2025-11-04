@@ -42,6 +42,7 @@ struct SwiftUIExamples {
             Example("Puck playground", note: "Display user location using puck.", destination: PuckPlayground())
             Example("Annotation Order", note: "Test the rendering order of annotations.", destination: AnnotationsOrderTestExample())
             Example("Snapshot Map", note: "Make a snapshot of the map.", destination: SnapshotMapExample())
+            Example("Locate Me (Core Location Provider)", note: "Use Viewport to create user location control. This example uses Location Provider from MabpoxCommon", destination: LocateMeCoreLocationProviderExample())
 
             Example("Attribution url via callback", note: "Works on iOS 13+", destination: AttributionManualURLOpen())
             Example("Raster particles", note: "Rendering of raster particles.", destination: RasterParticleExample())

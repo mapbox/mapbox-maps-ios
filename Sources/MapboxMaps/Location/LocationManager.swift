@@ -1,8 +1,84 @@
 import CoreLocation
 import UIKit
-import MapboxCommon
+@_spi(Experimental) import MapboxCommon
+import Combine
 
-/// An object responsible for managing user location Puck.
+/// The data model delivers the raw location and compass updates to the map features.
+///
+/// Currently the `Puck` (location indicator) and ``Viewport`` are using this data.
+public class LocationDataModel {
+    /// A publisher that delivers location updates.
+    ///
+    /// - Important:The publisher must deliver updates on main thread.
+    let location: AnyPublisher<[Location], Never>
+
+    /// A publisher that delivers compass heading updates.
+    ///
+    /// Optional, if you don't need Viewport and Puck to use the compass (heading) data, see ``PuckBearing``.
+    ///
+    /// The heading values should not be adjusted to to the user interface orientation. The ``LocationManager`` adjusts the user interface orientation internally.
+    /// If you use `CLLocationManager` as heading source, don't update the `headingOrientation` property.
+    ///
+    /// - Important: The publisher must deliver updates on main thread.
+    let heading: AnyPublisher<Heading, Never>?
+
+    /// Creates the model.
+    ///
+    /// - Important: The publisher must deliver updates on main thread.
+    ///
+    /// - Parameters:
+    ///   - location: A publisher that delivers location updates.
+    ///   - heading: A publisher that delivers heading updates.
+    public init (location: AnyPublisher<[Location], Never>,
+                 heading: AnyPublisher<Heading, Never>? = nil) {
+        self.location = location
+        self.heading = heading
+    }
+
+    /// Creates the default location data model.
+    ///
+    /// It uses ``AppleLocationProvider`` internally and automatically requests the location permissions upon first location indicator render request.
+    ///
+    /// - Parameters:
+    ///   - options: The options of the location provider.
+    /// - Returns: Location data model.
+    static public func createDefault(_ options: AppleLocationProvider.Options? = nil) -> LocationDataModel {
+        let provider = AppleLocationProvider()
+        if let options {
+            provider.options = options
+        }
+        return LocationDataModel(
+            location: provider.onLocationUpdate.retaining(provider).eraseToAnyPublisher(),
+            heading: provider.onHeadingUpdate.retaining(provider).eraseToAnyPublisher()
+        )
+    }
+
+    
+    /// Creates the default location driven by the MapboxCommon implementation.
+    ///
+    /// This variant uses implementation from ``LocationServiceFactory`` found in MapboxCommon.
+    ///
+    /// The core location model has some difference:
+    /// - It doesn't automatically asks user permissions. You control when to ask user for the location permission.
+    /// - It works with `CLLocationManager` on background thread.
+    /// - The underlying `CLLocationManager` will be shared with Mapbox Navigation SDK if you use it.
+    ///
+    /// - Important: When using this option, request the location permissions manually.
+    ///
+    /// - Returns: Location data model.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    static public func createCore() -> LocationDataModel {
+        let location = LocationServiceFactory.createDefaultLocationPublisher()
+        let heading = LocationServiceFactory.createDefaultHeadingPublisher()
+
+        return LocationDataModel(
+            location: location.receive(on: DispatchQueue.main).eraseToAnyPublisher(),
+            heading: heading.receive(on: DispatchQueue.main).eraseToAnyPublisher())
+    }
+}
+
+/// An object responsible for managing user location indicator(Puck).
 public final class LocationManager {
     /// A stream of location change events that drive the puck.
     public var onLocationChange: Signal<[Location]> { onLocationChangeProxy.signal }
@@ -27,17 +103,32 @@ public final class LocationManager {
         set { puckManager.locationOptions = newValue }
     }
 
+    /// Location data model.
+    ///
+    /// Use this property to access or override the raw location and heading data used by the map.
+    ///
+    /// - Important: When overriding the data model, make sure the data is delivered on main thread.
+    public var dataModel: LocationDataModel {
+        didSet {
+            if self.dataModel !== oldValue {
+                self.updateDataModel()
+            }
+        }
+    }
+
     /// Sets the custom providers that supply puck with the location data.
     ///
     /// - Parameters:
     ///   - locationProvider: Signal that drives puck location.
     ///   - headingProvider: Signal that drives the puck's bearing when it's configured as ``PuckBearing/heading``.
+    @available(*, deprecated, message: "Use dataModel instead")
     public func override(
         locationProvider: Signal<[Location]>,
         headingProvider: Signal<Heading>? = nil
     ) {
-        onLocationChangeProxy.proxied = locationProvider
-        onHeadingChangeProxy.proxied = headingProvider
+        self.dataModel = LocationDataModel(
+            location: locationProvider.eraseToAnyPublisher(),
+            heading: headingProvider?.eraseToAnyPublisher())
     }
 
     /// Sets the custom providers that supply puck with the location data.
@@ -45,17 +136,12 @@ public final class LocationManager {
     /// - Parameters:
     ///   - locationProvider: Provider that drives puck location.
     ///   - headingProvider: Provider that drives the puck's bearing when it's configured as ``PuckBearing/heading``.
+    @available(*, deprecated, message: "Use dataModel instead")
     public func override(
         locationProvider: LocationProvider,
         headingProvider: HeadingProvider? = nil
     ) {
-#if !(swift(>=5.9) && os(visionOS))
-        // Patch the default location provider with the proper interface orientation view.
-        (headingProvider as? AppleLocationProvider)?.orientationProvider?.view = interfaceOrientationView
-#endif
-
-        onLocationChangeProxy.proxied = locationProvider.toSignal()
-        onHeadingChangeProxy.proxied = headingProvider?.toSignal()
+        self.override(locationProvider: locationProvider.toSignal(), headingProvider: headingProvider?.toSignal())
     }
 
     /// Sets the custom provider that supply puck with the location and heading data.
@@ -65,6 +151,7 @@ public final class LocationManager {
     ///
     /// - Parameters:
     ///   - provider: An object that provides both location and heading data, such as ``AppleLocationProvider``.
+    @available(*, deprecated, message: "Use dataModel instead")
     public func override(provider: LocationProvider & HeadingProvider) {
         self.override(locationProvider: provider, headingProvider: provider)
     }
@@ -73,41 +160,24 @@ public final class LocationManager {
     private let onHeadingChangeProxy = CurrentValueSignalProxy<Heading>()
     private let puckAnimator: ValueAnimator<PuckRenderingData?>
     private let puckManager: PuckManager<Puck2DRenderer, Puck3DRenderer>
-    private var interfaceOrientationView: Ref<UIView?>?
 
-    convenience init(
-        interfaceOrientationView: Ref<UIView?>,
-        displayLink: Signal<Void>,
-        styleManager: StyleProtocol,
-        mapboxMap: MapboxMapProtocol
-    ) {
-        let provider = AppleLocationProvider()
-#if swift(>=5.9) && os(visionOS)
-        let headingProvider = Signal<Heading> {_ in .empty }
-#else
-        provider.orientationProvider?.view = interfaceOrientationView
-        let headingProvider = provider.onHeadingUpdate.retaining(provider)
+#if !os(visionOS)
+    private let orientationProvider = DefaultInterfaceOrientationProvider()
 #endif
 
-        self.init(styleManager: styleManager,
-                  mapboxMap: mapboxMap,
-                  displayLink: displayLink,
-                  locationProvider: provider.onLocationUpdate.retaining(provider),
-                  headingProvider: headingProvider,
-                  nowTimestamp: .now)
-        self.interfaceOrientationView = interfaceOrientationView
-    }
-
     init(
+        interfaceOrientationView: Ref<UIView?>,
         styleManager: StyleProtocol,
         mapboxMap: MapboxMapProtocol,
         displayLink: Signal<Void>,
-        locationProvider: Signal<[Location]>,
-        headingProvider: Signal<Heading>,
+        dataModel: LocationDataModel,
         nowTimestamp: Ref<Date>
     ) {
-        onLocationChangeProxy.proxied = locationProvider
-        onHeadingChangeProxy.proxied = headingProvider
+        self.dataModel = dataModel
+
+#if !os(visionOS)
+        self.orientationProvider.view = interfaceOrientationView
+#endif
 
         let tracedDisplayLink = displayLink
             .tracingInterval(SignpostName.mapViewDisplayLink, "Participant: LocationManager")
@@ -145,6 +215,28 @@ public final class LocationManager {
                 Puck3DRenderer(style: styleManager)
             }
         )
+
+        self.updateDataModel()
+    }
+
+    private func updateDataModel() {
+        onLocationChangeProxy.proxied = dataModel.location.eraseToSignal()
+
+#if !os(visionOS)
+        if let heading = dataModel.heading {
+            onHeadingChangeProxy.proxied = Signal
+                .combineLatest(
+                    heading.eraseToSignal(),
+                    orientationProvider.onInterfaceOrientationChange
+                )
+                .map { heading, orientation in
+                    assert(Thread.isMainThread)
+                    return adjust(heading: heading, toViewOrientation: orientation)
+                }
+        } else {
+            onHeadingChangeProxy.proxied = nil
+        }
+#endif
     }
 
     /// Represents the latest location received from the location provider.
@@ -190,4 +282,22 @@ public final class LocationManager {
     /// Use this property to override the default (CoreLocation based) location provider with the supplied one.
     @available(*, unavailable, message: "Use onLocationChange instead")
     public var locationProvider: LocationProvider? { nil }
+}
+
+func adjust(heading: Heading, toViewOrientation orientation: UIInterfaceOrientation?) -> Heading {
+    guard let orientation else { return heading }
+
+    let adjustment: CLLocationDirection = switch orientation {
+    case .portrait: 0
+    case .portraitUpsideDown: 180
+    case .landscapeLeft: 90 // home button on the right side
+    case .landscapeRight: -90 // home button on the left side
+    case .unknown: 0
+    @unknown default: 0
+    }
+
+    var heading = heading
+    heading.direction += adjustment
+    heading.direction = heading.direction.wrapped(to: 0..<360)
+    return heading
 }

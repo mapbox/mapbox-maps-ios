@@ -2,9 +2,7 @@ import Foundation
 import UIKit
 import CoreLocation
 
-#if swift(>=5.9)
-    @available(visionOS, unavailable)
-#endif
+@available(visionOS, unavailable)
 internal final class DefaultInterfaceOrientationProvider {
     var onInterfaceOrientationChange: Signal<UIInterfaceOrientation> { subject.signal }
 
@@ -29,6 +27,11 @@ internal final class DefaultInterfaceOrientationProvider {
         self.notificationCenter = notificationCenter
         self.device = device
     }
+    
+    convenience init() {
+        self.init(notificationCenter: NotificationCenter.default, device: UIDevice.current)
+    }
+
 
     private func startUpdatingInterfaceOrientation() {
         device.beginGeneratingDeviceOrientationNotifications()

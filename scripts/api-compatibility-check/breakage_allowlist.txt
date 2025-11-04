@@ -2212,3 +2212,7 @@ Constructor MapStyle.init(json:configuration:) has been removed
 Constructor MapStyle.init(uri:configuration:) has been removed
 Func MapboxMap.loadStyle(_:transition:completion:) has been renamed to Func loadStyle(_:transition:reloadPolicy:completion:)
 Func MapboxMap.loadStyle(_:transition:completion:) has parameter 2 type change from (((any Swift.Error)?) -> ())? to MapboxMaps.StyleReloadPolicy?
+
+// Allow MapboxCommon's location provider to be used in MapView, Heading is moved to MapboxCommon
+Constructor MapInitOptions.init(mapOptions:cameraOptions:styleURI:styleJSON:antialiasingSampleCount:) has been removed
+Struct Heading has been removed

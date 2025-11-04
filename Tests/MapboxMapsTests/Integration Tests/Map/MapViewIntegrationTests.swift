@@ -1,6 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 import MapboxCoreMaps
+import Combine
 
 final class MapViewIntegrationTests: IntegrationTestCase {
     var rootView: UIView!
@@ -110,5 +111,35 @@ final class MapViewIntegrationTests: IntegrationTestCase {
         }
 
         wait(for: [mainQueueExpectation], timeout: 1)
+    }
+
+    func testMapViewWithCustomLocationDataModel() {
+        let date = Date()
+        let location = Location(
+            coordinate: CLLocationCoordinate2D(latitude: 10, longitude: 20),
+            timestamp: date)
+
+        let heading = Heading(
+            direction: 30,
+            accuracy: 1,
+            timestamp: date)
+
+        let locationSubject = CurrentValueSubject<[Location], Never>([location])
+        let headingSubject = CurrentValueSubject<Heading, Never>(heading)
+
+        let locationModel = LocationDataModel(
+            location: locationSubject.eraseToAnyPublisher(),
+            heading: headingSubject.eraseToAnyPublisher())
+
+        let options = MapInitOptions(mapStyle: .featuresetTestsStyle, locationDataModel: locationModel)
+
+        AppleLocationProvider.__createdCountForTesting = 0
+        let mapView = MapView(frame: .zero, mapInitOptions: options)
+
+        XCTAssertEqual(AppleLocationProvider.__createdCountForTesting, 0, "No AppleLocationProvider created when init with custom LocationDataModel")
+
+        // initial values
+        XCTAssertEqual(mapView.location.onLocationChange.latestValue, [location])
+        XCTAssertEqual(mapView.location.onHeadingChange.latestValue, heading)
     }
 }

@@ -17,23 +17,21 @@ struct LocationOverrideExample: View {
     @State private var provider = LocationProvider()
 
     var body: some View {
-        MapReader { proxy in
-            Map {
-                /// The location indicator puck position and heading is controlled by the location provider.
-                Puck2D(bearing: .heading)
+        Map {
+            /// The location indicator puck position and heading is controlled by the location provider.
+            Puck2D(bearing: .heading)
 
-                /// Handle tap on the map.
-                TapInteraction { context in
-                    /// As a demonstration, override location with the last tap coordinate.
-                    let direction = provider.location.coordinate.direction(to: context.coordinate)
-                    provider.location = Location(coordinate: context.coordinate)
-                    provider.heading = Heading(direction: direction, accuracy: 0)
+            /// Handle tap on the map.
+            TapInteraction { context in
+                /// As a demonstration, override location with the last tap coordinate.
+                let direction = provider.location.coordinate.direction(to: context.coordinate)
+                provider.location = Location(coordinate: context.coordinate)
+                provider.heading = Heading(direction: direction, accuracy: 0)
 
-                    return false
-                }
+                return false
             }
-            .locationDataModel(provider.model)
         }
+        .locationDataModel(provider.model)
         .ignoresSafeArea()
         .overlay(alignment: .bottom) {
             Text("Tap on map to move the puck")

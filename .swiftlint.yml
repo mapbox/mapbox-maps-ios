@@ -5,12 +5,14 @@ included:
   - Tests
 excluded:
   - "**/Generated"
+  - "Sources/Vendors/**"
 disabled_rules:
   - comment_spacing
   - computed_accessors_order
   - force_try
   - identifier_name
   - line_length
+  - nesting
   - shorthand_operator
   - todo
   - trailing_comma

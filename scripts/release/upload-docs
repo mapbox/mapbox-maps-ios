@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 
-import os, argparse, subprocess, tempfile, logging, shutil
+import os
+import argparse
+import subprocess
+import tempfile
+import logging
+import shutil
 import git
 from pathlib import Path
 
@@ -9,9 +14,7 @@ logging.basicConfig(level=logging.INFO)
 
 def main():
     parser = argparse.ArgumentParser(description="Upload documentation.")
-    parser.add_argument(
-        "--docc-docs", default=None, type=dir_path, help="Path to DocC docs"
-    )
+    parser.add_argument("--docc-docs", default=None, type=dir_path, help="Path to DocC docs")
     parser.add_argument(
         "--version",
         default=None,
@@ -26,10 +29,7 @@ def main():
         help="Do not upload docs to GitHub",
     )
     parser.add_argument(
-        "--extra-commit",
-        action="store_true",
-        default=False,
-        help="Push an extra empty commit to trigger CI"
+        "--extra-commit", action="store_true", default=False, help="Push an extra empty commit to trigger CI"
     )
     args = parser.parse_args()
 
@@ -54,13 +54,9 @@ def main():
         ).release()
 
     if args.docc_docs and args.docc_docs.exists() and args.docc_docs.is_dir():
-        print(
-            f"Copy DocC docs from {args.docc_docs} to {repo.working_dir}/{args.version}"
-        )
+        print(f"Copy DocC docs from {args.docc_docs} to {repo.working_dir}/{args.version}")
 
-        shutil.copytree(
-            args.docc_docs, Path(repo.working_dir) / args.version, dirs_exist_ok=True
-        )
+        shutil.copytree(args.docc_docs, Path(repo.working_dir) / args.version, dirs_exist_ok=True)
         repo.index.add([args.version])
         repo.index.commit(f"Add DocC documentation for {args.version} version")
 

@@ -12,9 +12,7 @@ import hashlib
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Build and check the API compatibility."
-    )
+    parser = argparse.ArgumentParser(description="Build and check the API compatibility.")
 
     subparsers = parser.add_subparsers(dest="command")
 
@@ -38,9 +36,7 @@ def main():
         help="Path to the Maps SDK release zip archive.",
     )
     dumpSDKParser.add_argument("--module", help="Name of the module to dump.")
-    dumpSDKParser.add_argument(
-        "--triplet-target", help="Clang target triplet like 'arm64-apple-ios11.0'"
-    )
+    dumpSDKParser.add_argument("--triplet-target", help="Clang target triplet like 'arm64-apple-ios11.0'")
     dumpSDKParser.add_argument(
         "--abi",
         default=False,
@@ -88,9 +84,7 @@ def main():
     args = parser.parse_args()
 
     if args.command == "dump":
-        dump_sdk(
-            args.sdk_path, args.output_path, args.abi, args.module, args.triplet_target
-        )
+        dump_sdk(args.sdk_path, args.output_path, args.abi, args.module, args.triplet_target)
     elif args.command == "check-api":
         check_api_breaking_changes(
             args.base_dump,
@@ -129,15 +123,11 @@ def dump_sdk(
             # Support raw folder of swiftmodule files like the one in DerivedData.
             return sdk_path
         else:
-            raise Exception(
-                "SDK path must contain a zip archive, XCFrameworks or a folder of swiftmodule files"
-            )
+            raise Exception("SDK path must contain a zip archive, XCFrameworks or a folder of swiftmodule files")
 
     def detect_module_name(sdk_path: str, frameworks_root: str) -> str:
         if os.path.splitext(sdk_path)[1] == ".zip":
-            modules = [
-                f for f in os.listdir(frameworks_root) if f.endswith(".xcframework")
-            ]
+            modules = [f for f in os.listdir(frameworks_root) if f.endswith(".xcframework")]
             if len(modules) != 1:
                 raise Exception(f"Could not detect module name from {sdk_path}")
             else:
@@ -145,9 +135,7 @@ def dump_sdk(
         elif os.path.splitext(sdk_path)[1] == ".xcframework":
             return os.path.splitext(os.path.basename(sdk_path))[0]
         else:
-            raise Exception(
-                "Cannot detect module name from SDK path. Please specify the module name with --module"
-            )
+            raise Exception("Cannot detect module name from SDK path. Please specify the module name with --module")
 
     frameworks_root = dittoSDK(sdk_path, tempDir)
     if module_name is None:
@@ -164,18 +152,14 @@ def dump_sdk(
     if os.path.exists(xcframework_path):
         current_xcframework = XCFramework(xcframework_path)
 
-        digester.dump_sdk_xcframework(
-            current_xcframework, frameworks_root, output_path, abi
-        )
+        digester.dump_sdk_xcframework(current_xcframework, frameworks_root, output_path, abi)
     else:
         # We are in the DerivedData folder.
         if triplet_target is None:
             raise Exception(
                 "Please specify the triplet target with --triplet-target. That option is required when dumping from modules folder."
             )
-        digester.dump_sdk(
-            frameworks_root, module_name, triplet_target, output_path, abi
-        )
+        digester.dump_sdk(frameworks_root, module_name, triplet_target, output_path, abi)
 
 
 def check_api_breaking_changes(
@@ -187,9 +171,7 @@ def check_api_breaking_changes(
 ):
     tool = APIDigester()
 
-    report = tool.compare(
-        baseline_dump_path, latest_dump_path, report_path, breakage_allow_list_path
-    )
+    report = tool.compare(baseline_dump_path, latest_dump_path, report_path, breakage_allow_list_path)
 
     if should_comment_pr:
         add_comment_to_pr(report)
@@ -218,7 +200,11 @@ def add_comment_to_pr(report: "APIDigester.BreakageReport"):
         if comments is None:
             return None
         for comment in comments:
-            if "API compatibility report" in comment["body"] and comment["performed_via_github_app"] is not None and comment["performed_via_github_app"]["owner"]["login"] == "mapbox":
+            if (
+                "API compatibility report" in comment["body"]
+                and comment["performed_via_github_app"] is not None
+                and comment["performed_via_github_app"]["owner"]["login"] == "mapbox"
+            ):
                 return comment
         return None
 
@@ -233,6 +219,7 @@ def add_comment_to_pr(report: "APIDigester.BreakageReport"):
     else:
         helper.updateCommentToPR(apiReportComment["id"], report.reportComment())
 
+
 class GHHelper:
     def __init__(self):
         pass
@@ -246,28 +233,38 @@ class GHHelper:
         return proc.stdout.rstrip()
 
     def findPRComments(self, prNumber):
-        proc = subprocess.run(["gh", "api", "repos/{owner}/{repo}/issues" + f"/{prNumber}/comments"], capture_output=True, text=True)
+        proc = subprocess.run(
+            ["gh", "api", "repos/{owner}/{repo}/issues" + f"/{prNumber}/comments"], capture_output=True, text=True
+        )
         if proc.returncode != 0:
             print(f"Failed to find PR comments. Error: {proc.stderr}")
             return None
         return json.loads(proc.stdout)
 
     def addCommentToPR(self, prNumber, body):
-        proc = subprocess.run(["gh", "api", "repos/{owner}/{repo}/issues" + f"/{prNumber}/comments", "-f", f"body={body}"], capture_output=True, text=True)
+        proc = subprocess.run(
+            ["gh", "api", "repos/{owner}/{repo}/issues" + f"/{prNumber}/comments", "-f", f"body={body}"],
+            capture_output=True,
+            text=True,
+        )
         if proc.returncode != 0:
             print(f"Failed to add comment. Error: {proc.stderr}")
             return None
         return json.loads(proc.stdout)
 
     def updateCommentToPR(self, commentId, body):
-        proc = subprocess.run(["gh", "api", "repos/{owner}/{repo}/issues" + f"/comments/{commentId}", "-f", f"body={body}"], capture_output=True, text=True)
+        proc = subprocess.run(
+            ["gh", "api", "repos/{owner}/{repo}/issues" + f"/comments/{commentId}", "-f", f"body={body}"],
+            capture_output=True,
+            text=True,
+        )
         if proc.returncode != 0:
             print(f"Failed to update comment. Error: {proc.stderr}")
             return None
         return json.loads(proc.stdout)
 
-class APIDigester:
 
+class APIDigester:
     def compare(
         self,
         baseline_path,
@@ -300,9 +297,7 @@ class APIDigester:
             raise Exception("swift-api-digester failed")
 
         if breakage_allow_list_path:
-            self.apply_breakage_allow_list_workaround(
-                breakage_allow_list_path, output_path
-            )
+            self.apply_breakage_allow_list_workaround(breakage_allow_list_path, output_path)
 
         return APIDigester.BreakageReport(output_path)
 
@@ -314,11 +309,7 @@ class APIDigester:
         with open(allowlist_path, "r") as f:
             allow_list = [line.strip() for line in f.readlines() if line.strip() != ""]
 
-        report_list = [
-            line
-            for line in report_list
-            if line.strip() not in allow_list or line.startswith("/* ")
-        ]
+        report_list = [line for line in report_list if line.strip() not in allow_list or line.startswith("/* ")]
         with open(report_path, "w") as f:
             f.write("".join(report_list))
 
@@ -352,9 +343,7 @@ class APIDigester:
         if abi:
             arguments.append("-abi")
 
-        proc = subprocess.run(
-            arguments, capture_output=True, text=True, cwd=modules_path
-        )
+        proc = subprocess.run(arguments, capture_output=True, text=True, cwd=modules_path)
         if proc.returncode != 0:
             print(proc.stderr)
             raise Exception("swift-api-digester failed")
@@ -386,15 +375,13 @@ class APIDigester:
 
         def append_dependencies(arguments: list):
             deps = module.list_dependencies()
-            deps_names = map(lambda dep: os.path.basename(dep), deps)
             xcDeps = list(
                 map(
                     lambda dep: XCFramework(os.path.join(dependencies_path, dep)),
                     [
                         d
                         for d in os.listdir(dependencies_path)
-                        if os.path.isdir(os.path.join(dependencies_path, d))
-                        and d.endswith(".xcframework")
+                        if os.path.isdir(os.path.join(dependencies_path, d)) and d.endswith(".xcframework")
                     ],
                 )
             )
@@ -475,9 +462,7 @@ class Executable:
         self.path = path
 
     def parse_load_commands(self):
-        otool_proc = subprocess.run(
-            ["otool", "-l", self.path], capture_output=True, text=True
-        )
+        otool_proc = subprocess.run(["otool", "-l", self.path], capture_output=True, text=True)
         if otool_proc.returncode != 0:
             print(otool_proc.stderr)
             raise Exception(f"Failed to run otool -l {self.path}")
@@ -509,9 +494,7 @@ class Executable:
 
     def list_all_dependencies(self):
         dynamic_dependencies = (
-            subprocess.run(
-                ["xcrun", "otool", "-L", self.path], capture_output=True, text=True
-            )
+            subprocess.run(["xcrun", "otool", "-L", self.path], capture_output=True, text=True)
             .stdout.strip()
             .split("\n\t")
         )
@@ -558,9 +541,7 @@ class SDKModule:
         return list(map(lambda x: x.split()[0], dynamic_dependencies[1:]))
 
     def list_dependencies(self):
-        module_path = os.path.join(
-            self.library.library["LibraryPath"], self.executable_path()
-        )
+        module_path = os.path.join(self.library.library["LibraryPath"], self.executable_path())
 
         def filter_system_dependencies(dependency):
             return (
@@ -570,11 +551,7 @@ class SDKModule:
                 and not dependency.endswith(module_path)
             )
 
-        return list(
-            filter(
-                filter_system_dependencies, self.executable().list_all_dependencies()
-            )
-        )
+        return list(filter(filter_system_dependencies, self.executable().list_all_dependencies()))
 
 
 class XCFramework:
@@ -605,7 +582,7 @@ class XCFramework:
             return self.supported_platform_variant() == "simulator"
 
         def is_device(self):
-            return not "SupportedPlatformVariant" in self.library
+            return "SupportedPlatformVariant" not in self.library
 
         def is_ios(self):
             return self.supported_platform() == "ios"
@@ -633,9 +610,7 @@ class XCFramework:
             )
 
     def iOSDeviceModule(self):
-        deviceLibrary = list(
-            filter(lambda x: x.is_ios() and x.is_device(), self.libraries)
-        )[0]
+        deviceLibrary = list(filter(lambda x: x.is_ios() and x.is_device(), self.libraries))[0]
         # return SDKModule(os.path.join(self.path, deviceLibrary.libraryIdentifier(), deviceLibrary.path()))
         return SDKModule(self.path, deviceLibrary)
 

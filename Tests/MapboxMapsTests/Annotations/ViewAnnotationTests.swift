@@ -216,7 +216,7 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(visibilities, [true])
     }
 
-    /// Marker Tests 
+    /// Marker Tests
     func testSettingMarkerProperties() {
         let marker = Marker(coordinate: .testConstantValue())
             .color(.blue)

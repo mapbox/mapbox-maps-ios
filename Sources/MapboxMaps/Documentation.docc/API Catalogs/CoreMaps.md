@@ -9,4 +9,3 @@ Maps rendering SDK also known as GL-Native
 
 ### Free Camera
 - <doc://MapboxMaps/Free-Camera>
-

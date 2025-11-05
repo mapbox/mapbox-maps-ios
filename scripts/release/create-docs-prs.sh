@@ -120,7 +120,7 @@ ios_sdk_open_pr() {
     pwd
     popd
     echo "$PR_URL" > "ios-sdk-pr.txt"
-    
+
     if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
         echo "Docs PR: $PR_URL " >> $GITHUB_STEP_SUMMARY
     fi

@@ -11,8 +11,8 @@ struct ClearableTextField: View {
     @Binding var text: String
     var keyboardType: UIKeyboardType = .default
     var autocapitalization: TextInputAutocapitalization = .never
-    var focused: FocusState<Bool>.Binding? = nil
-    var onSubmit: (() -> Void)? = nil
+    var focused: FocusState<Bool>.Binding?
+    var onSubmit: (() -> Void)?
 
     var body: some View {
         HStack {
@@ -30,9 +30,9 @@ struct ClearableTextField: View {
                 }
 
             if !text.isEmpty {
-                Button(action: {
+                Button {
                     text = ""
-                }) {
+                } label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
                 }
@@ -174,12 +174,12 @@ struct StyleChooserView: View {
                 }
             res += previouslyUsedURIs
         }
-        
+
         for style in predefinedStyles {
             if res.contains(where: { $0.uri == style.uri }) { continue }
             res.append(style)
         }
-        
+
         return res
     }
 
@@ -205,9 +205,10 @@ struct StyleChooserView: View {
 
                 Section {
                     ForEach(suggestions, id: \.uri) { suggestion in
-                        Button(action: {
+                        Button {
                             customURL = suggestion.uri
-                        }) {
+                        }
+                        label: {
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
                                     if let name = suggestion.name {
@@ -312,9 +313,9 @@ struct StyleOverrideEditView: View {
     var body: some View {
         Form {
             Section {
-                Button(action: {
+                Button {
                     showingBaseStyleChooser = true
-                }) {
+                } label: {
                     if !baseStyle.isEmpty {
                         Text(baseStyle)
                             .monospaced()
@@ -328,9 +329,9 @@ struct StyleOverrideEditView: View {
                 Text("This style will be replaced.")
             }
             Section {
-                Button(action: {
+                Button {
                     showingReplacementStyleChooser = true
-                }) {
+                } label: {
                     if !style.isEmpty {
                         Text(style)
                             .monospaced()
@@ -344,13 +345,12 @@ struct StyleOverrideEditView: View {
                 Text("This style will be used instead.")
             }
 
-
             Section {
                 ForEach(options) { keyValue in
-                    Button(action: {
+                    Button {
                         editingConfigKey = keyValue.key
                         showingConfigEditor = true
-                    }) {
+                    } label: {
                         HStack( spacing: 2) {
                             Text(keyValue.key)
                                 .foregroundColor(.primary)
@@ -366,10 +366,10 @@ struct StyleOverrideEditView: View {
                     options.remove(atOffsets: indexSet)
                 }
 
-                Button(action: {
+                Button {
                     editingConfigKey = nil
                     showingConfigEditor = true
-                }) {
+                } label: {
                     Text("Add")
                 }
             } header: {
@@ -383,10 +383,10 @@ struct StyleOverrideEditView: View {
                     Toggle("Active", isOn: $active)
 
                     if let onDelete {
-                        Button(action: {
+                        Button {
                             onDelete()
                             dismiss()
-                        }) {
+                        } label: {
                             Text("Delete")
                                 .frame(maxWidth: .infinity)
                         }

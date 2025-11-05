@@ -217,26 +217,26 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(observedModel.uri, URL(string: "file://foo.glb"))
         XCTAssertEqual(observedModel.position, [coordinate.latitude, coordinate.longitude])
     }
-    
+
     func testHeadingAdjustment() {
         let baseHeading = Heading(direction: 45, accuracy: 10)
-        
+
         let portraitResult = adjust(heading: baseHeading, toViewOrientation: .portrait)
         XCTAssertEqual(portraitResult.direction, 45)
         XCTAssertEqual(portraitResult.accuracy, 10)
-        
+
         let portraitUpsideDownResult = adjust(heading: baseHeading, toViewOrientation: .portraitUpsideDown)
         XCTAssertEqual(portraitUpsideDownResult.direction, 225)
-        
+
         let landscapeLeftResult = adjust(heading: baseHeading, toViewOrientation: .landscapeLeft)
         XCTAssertEqual(landscapeLeftResult.direction, 135)
-        
+
         let landscapeRightResult = adjust(heading: baseHeading, toViewOrientation: .landscapeRight)
         XCTAssertEqual(landscapeRightResult.direction, 315)
-        
+
         let unknownResult = adjust(heading: baseHeading, toViewOrientation: .unknown)
         XCTAssertEqual(unknownResult.direction, 45)
-        
+
         let nilResult = adjust(heading: baseHeading, toViewOrientation: nil)
         XCTAssertEqual(nilResult.direction, 45)
     }

@@ -7,7 +7,7 @@ struct LocateMeExample: View {
     @State var viewport: Viewport = .followPuck(zoom: 13, bearing: .constant(0))
 
     var body: some View {
-        MapReader { proxy in
+        MapReader { _ in
             Map(viewport: $viewport) {
                 Puck2D(bearing: .heading)
                     .showsAccuracyRing(true)
@@ -21,7 +21,6 @@ struct LocateMeExample: View {
     }
 }
 
-
 /// The example demonstrates Puck and Viewport configuration that allow to follow user location.
 /// In this example the CoreLocationProvider is use instead of default `AppleLocationProvider`.
 struct LocateMeCoreLocationProviderExample: View {
@@ -29,7 +28,7 @@ struct LocateMeCoreLocationProviderExample: View {
     @State var viewport: Viewport = .followPuck(zoom: 13, bearing: .constant(0))
 
     var body: some View {
-        MapReader { proxy in
+        MapReader { _ in
             Map(viewport: $viewport) {
                 Puck2D(bearing: .heading)
                     .showsAccuracyRing(true)
@@ -53,7 +52,6 @@ struct LocateMeCoreLocationProviderExample: View {
         }
     }
 }
-
 
 struct LocateMeButton: View {
     @Binding var viewport: Viewport

@@ -27,11 +27,10 @@ internal final class DefaultInterfaceOrientationProvider {
         self.notificationCenter = notificationCenter
         self.device = device
     }
-    
+
     convenience init() {
         self.init(notificationCenter: NotificationCenter.default, device: UIDevice.current)
     }
-
 
     private func startUpdatingInterfaceOrientation() {
         device.beginGeneratingDeviceOrientationNotifications()

@@ -53,7 +53,6 @@ public class LocationDataModel {
         )
     }
 
-    
     /// Creates the default location driven by the MapboxCommon implementation.
     ///
     /// This variant uses implementation from ``LocationServiceFactory`` found in MapboxCommon.

@@ -17,10 +17,10 @@ import MetalKit
 protocol MapViewDependencyProviderProtocol: AnyObject {
     /// The notification center used for system event notifications.
     var notificationCenter: NotificationCenterProtocol { get }
-    
+
     /// The bundle used for accessing app resources and configuration.
     var bundle: BundleProtocol { get }
-    
+
     /// Creates a Metal view for rendering the map content.
     ///
     /// - Parameters:
@@ -28,7 +28,7 @@ protocol MapViewDependencyProviderProtocol: AnyObject {
     ///   - device: The Metal device to use for rendering, or nil to use the default device.
     /// - Returns: A configured Metal view ready for map rendering.
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MetalView
-    
+
     /// Creates a display link for synchronizing rendering with the display refresh rate.
     ///
     /// - Parameters:
@@ -37,7 +37,7 @@ protocol MapViewDependencyProviderProtocol: AnyObject {
     ///   - selector: The selector to call on the target when the display link fires.
     /// - Returns: A display link instance, or nil if creation fails.
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
-    
+
     /// Creates a camera animators runner for managing camera animations.
     ///
     /// - Parameter mapboxMap: The map instance to animate.

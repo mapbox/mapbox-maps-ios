@@ -17,8 +17,8 @@
 	<key>CFBundleShortVersionString</key>
 	<string>11.18.0</string>
 	<key>CFBundleVersion</key>
-	<string>302</string>
+	<string>303</string>
 	<key>MBXBundleVersion</key>
-	<string>11.18.0-SNAPSHOT-11-06--04-30.git-f04528a</string>
+	<string>11.18.0-SNAPSHOT-11-07--04-29.git-ddaaffa</string>
 </dict>
 </plist>

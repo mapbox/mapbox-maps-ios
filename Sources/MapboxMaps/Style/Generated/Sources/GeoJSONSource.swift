@@ -16,6 +16,10 @@ public struct GeoJSONSource: Source {
     /// Default value: 18.
     public var maxzoom: Double?
 
+    /// Minimum zoom level at which to create vector tiles
+    /// Default value: 0.
+    public var minzoom: Double?
+
     /// Contains an attribution to be displayed when the map is shown to a user.
     public var attribution: String?
 
@@ -71,7 +75,7 @@ public struct GeoJSONSource: Source {
         set { promoteId2 = newValue.flatMap { .init(from: $0) } }
     }
 
-    /// When set to true, the maxZoom property is ignored and is instead calculated automatically based on the largest bounding box from the geoJSON features. This resolves rendering artifacts for features that use wide blur (e.g. fill extrusion ground flood light or circle layer) and would bring performance improvement on lower zoom levels, especially for geoJSON sources that update data frequently. However, it can lead to flickering and precision loss on zoom levels above 19.
+    /// When set to true, the maxZoom property is ignored and is instead calculated automatically based on the largest bounding box from the geojson features. This resolves rendering artifacts for features that use wide blur (e.g. fill extrusion ground flood light or circle layer) and would bring performance improvement on lower zoom levels, especially for geoJSON sources that update data frequently. However, it can lead to flickering and precision loss on zoom levels above 19. This option is not supported in combination with clustering.
     /// Default value: false.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -96,6 +100,7 @@ extension GeoJSONSource {
         case type = "type"
         case data = "data"
         case maxzoom = "maxzoom"
+        case minzoom = "minzoom"
         case attribution = "attribution"
         case buffer = "buffer"
         case tolerance = "tolerance"
@@ -135,6 +140,7 @@ extension GeoJSONSource {
         try container.encodeIfPresent(type, forKey: .type)
         try container.encodeIfPresent(data, forKey: .data)
         try container.encodeIfPresent(maxzoom, forKey: .maxzoom)
+        try container.encodeIfPresent(minzoom, forKey: .minzoom)
         try container.encodeIfPresent(attribution, forKey: .attribution)
         try container.encodeIfPresent(buffer, forKey: .buffer)
         try container.encodeIfPresent(tolerance, forKey: .tolerance)
@@ -155,6 +161,12 @@ extension GeoJSONSource {
     /// A URL to a GeoJSON file, or inline GeoJSON.
     public func data(_ newValue: GeoJSONSourceData) -> Self {
         with(self, setter(\.data, newValue))
+    }
+
+    /// Minimum zoom level at which to create vector tiles
+    /// Default value: 0.
+    public func minzoom(_ newValue: Double) -> Self {
+        with(self, setter(\.minzoom, newValue))
     }
 
     /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom.

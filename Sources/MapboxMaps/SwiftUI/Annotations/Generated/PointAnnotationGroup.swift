@@ -121,6 +121,9 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         assign(manager, \.iconColor, value: iconColor)
         assign(manager, \.iconColorUseTheme, value: iconColorUseTheme)
         assign(manager, \.iconColorTransition, value: iconColorTransition)
+        assign(manager, \.iconColorBrightnessMax, value: iconColorBrightnessMax)
+        assign(manager, \.iconColorBrightnessMin, value: iconColorBrightnessMin)
+        assign(manager, \.iconColorContrast, value: iconColorContrast)
         assign(manager, \.iconColorSaturation, value: iconColorSaturation)
         assign(manager, \.iconColorSaturationTransition, value: iconColorSaturationTransition)
         assign(manager, \.iconEmissiveStrength, value: iconEmissiveStrength)
@@ -141,6 +144,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         assign(manager, \.iconTranslate, value: iconTranslate)
         assign(manager, \.iconTranslateTransition, value: iconTranslateTransition)
         assign(manager, \.iconTranslateAnchor, value: iconTranslateAnchor)
+        assign(manager, \.occlusionOpacityMode, value: occlusionOpacityMode)
         assign(manager, \.symbolZOffset, value: symbolZOffset)
         assign(manager, \.symbolZOffsetTransition, value: symbolZOffsetTransition)
         assign(manager, \.textColor, value: textColor)
@@ -518,6 +522,27 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
         with(self, setter(\.iconColor, newValue))
     }
 
+    private var iconColorBrightnessMax: Double?
+    /// Increase or reduce the brightness of the symbols. The value is the maximum brightness.
+    /// Default value: 1. Value range: [0, 1]
+    public func iconColorBrightnessMax(_ newValue: Double) -> Self {
+        with(self, setter(\.iconColorBrightnessMax, newValue))
+    }
+
+    private var iconColorBrightnessMin: Double?
+    /// Increase or reduce the brightness of the symbols. The value is the minimum brightness.
+    /// Default value: 0. Value range: [0, 1]
+    public func iconColorBrightnessMin(_ newValue: Double) -> Self {
+        with(self, setter(\.iconColorBrightnessMin, newValue))
+    }
+
+    private var iconColorContrast: Double?
+    /// Increase or reduce the contrast of the symbol icon.
+    /// Default value: 0. Value range: [-1, 1]
+    public func iconColorContrast(_ newValue: Double) -> Self {
+        with(self, setter(\.iconColorContrast, newValue))
+    }
+
     private var iconColorSaturationTransition: StyleTransition?
     /// Transition property for `iconColorSaturation`
     public func iconColorSaturationTransition(_ transition: StyleTransition) -> Self {
@@ -655,6 +680,13 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     /// Default value: "map".
     public func iconTranslateAnchor(_ newValue: IconTranslateAnchor) -> Self {
         with(self, setter(\.iconTranslateAnchor, newValue))
+    }
+
+    private var occlusionOpacityMode: OcclusionOpacityMode?
+    /// Specify how opacity in case of being occluded should be applied
+    /// Default value: "anchor".
+    public func occlusionOpacityMode(_ newValue: OcclusionOpacityMode) -> Self {
+        with(self, setter(\.occlusionOpacityMode, newValue))
     }
 
     private var symbolZOffsetTransition: StyleTransition?

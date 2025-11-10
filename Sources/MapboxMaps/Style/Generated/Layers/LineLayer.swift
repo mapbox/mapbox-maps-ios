@@ -124,7 +124,7 @@ public struct LineLayer: Layer, Equatable {
     /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var lineColorUseTheme: Value<ColorUseTheme>?
 
-    /// The width of the cutout fade effect
+    /// The width of the cutout fade effect as a proportion of the cutout width.
     /// Default value: 0.4. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineCutoutFadeWidth: Value<Double>?
@@ -134,7 +134,7 @@ public struct LineLayer: Layer, Equatable {
     @_spi(Experimental) public var lineCutoutFadeWidthTransition: StyleTransition?
 
     /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
-    /// Default value: 0.3. Value range: [0, 1]
+    /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineCutoutOpacity: Value<Double>?
 
@@ -155,7 +155,7 @@ public struct LineLayer: Layer, Equatable {
     /// Minimum value: 0. The unit of lineDasharray is in line widths.
     public var lineDasharray: Value<[Double]>?
 
-    /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
+    /// This property is deprecated and replaced by line-occlusion-opacity. Value 0 disables occlusion, value 1 means fully occluded. Note: line-occlusion-opacity has the opposite effect - value 1 disables occlusion, value 0 means fully occluded.
     /// Default value: 1. Value range: [0, 1]
     public var lineDepthOcclusionFactor: Value<Double>?
 
@@ -762,7 +762,7 @@ extension LineLayer {
         with(self, setter(\.lineColorUseTheme, .expression(expression)))
     }
 
-    /// The width of the cutout fade effect
+    /// The width of the cutout fade effect as a proportion of the cutout width.
     /// Default value: 0.4. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -777,7 +777,7 @@ extension LineLayer {
         with(self, setter(\.lineCutoutFadeWidthTransition, transition))
     }
 
-    /// The width of the cutout fade effect
+    /// The width of the cutout fade effect as a proportion of the cutout width.
     /// Default value: 0.4. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -786,7 +786,7 @@ extension LineLayer {
     }
 
     /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
-    /// Default value: 0.3. Value range: [0, 1]
+    /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func lineCutoutOpacity(_ constant: Double) -> Self {
@@ -801,7 +801,7 @@ extension LineLayer {
     }
 
     /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
-    /// Default value: 0.3. Value range: [0, 1]
+    /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func lineCutoutOpacity(_ expression: Exp) -> Self {
@@ -843,7 +843,7 @@ extension LineLayer {
         with(self, setter(\.lineDasharray, .expression(expression)))
     }
 
-    /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
+    /// This property is deprecated and replaced by line-occlusion-opacity. Value 0 disables occlusion, value 1 means fully occluded. Note: line-occlusion-opacity has the opposite effect - value 1 disables occlusion, value 0 means fully occluded.
     /// Default value: 1. Value range: [0, 1]
     public func lineDepthOcclusionFactor(_ constant: Double) -> Self {
         with(self, setter(\.lineDepthOcclusionFactor, .constant(constant)))
@@ -854,7 +854,7 @@ extension LineLayer {
         with(self, setter(\.lineDepthOcclusionFactorTransition, transition))
     }
 
-    /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
+    /// This property is deprecated and replaced by line-occlusion-opacity. Value 0 disables occlusion, value 1 means fully occluded. Note: line-occlusion-opacity has the opposite effect - value 1 disables occlusion, value 0 means fully occluded.
     /// Default value: 1. Value range: [0, 1]
     public func lineDepthOcclusionFactor(_ expression: Exp) -> Self {
         with(self, setter(\.lineDepthOcclusionFactor, .expression(expression)))

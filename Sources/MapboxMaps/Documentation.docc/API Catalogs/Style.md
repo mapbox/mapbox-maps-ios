@@ -35,6 +35,7 @@
 - ``ColorTheme``
 - ``ColorUseTheme``
 - ``Image``
+- ``OcclusionOpacityMode``
 
 ### Declarative Map Styling
 

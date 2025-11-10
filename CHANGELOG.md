@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Promote `ModelLayer` to stable.
+* Add `SymbolLayer.occlusionOpacityMode`, `SymbolLayer.iconColorBrightnessMax`, `SymbolLayer.iconColorBrightnessMin`, `SymbolLayer.iconColorContrast` properties.
+* Add `FillExtrusionLayer.castShadows` property.
+* Add `GeoJSONSource.minZoom` property.
+* Add `RasterArraySource.volatile` experimental property.
+
 ## 11.17.0-beta.1 - 05 November, 2025
 
 * Introduced `ScaleBarViewOptions.units` property supporting metric, imperial, and nautical units, replacing the boolean `useMetricUnits` property.

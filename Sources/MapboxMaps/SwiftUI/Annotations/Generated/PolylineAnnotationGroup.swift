@@ -300,7 +300,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 
     private var lineCutoutFadeWidth: Double?
-    /// The width of the cutout fade effect
+    /// The width of the cutout fade effect as a proportion of the cutout width.
     /// Default value: 0.4. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -318,7 +318,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     private var lineCutoutOpacity: Double?
     /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
-    /// Default value: 0.3. Value range: [0, 1]
+    /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func lineCutoutOpacity(_ newValue: Double) -> Self {
@@ -356,7 +356,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 
     private var lineDepthOcclusionFactor: Double?
-    /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
+    /// This property is deprecated and replaced by line-occlusion-opacity. Value 0 disables occlusion, value 1 means fully occluded. Note: line-occlusion-opacity has the opposite effect - value 1 disables occlusion, value 0 means fully occluded.
     /// Default value: 1. Value range: [0, 1]
     public func lineDepthOcclusionFactor(_ newValue: Double) -> Self {
         with(self, setter(\.lineDepthOcclusionFactor, newValue))

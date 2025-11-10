@@ -37,6 +37,7 @@ final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.fillExtrusionBase = Value<Double>.testConstantValue()
             layer.fillExtrusionBaseTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionBaseAlignment = Value<FillExtrusionBaseAlignment>.testConstantValue()
+            layer.fillExtrusionCastShadows = Value<Bool>.testConstantValue()
             layer.fillExtrusionColor = Value<StyleColor>.testConstantValue()
             layer.fillExtrusionColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionColorUseTheme = .testConstantValue()

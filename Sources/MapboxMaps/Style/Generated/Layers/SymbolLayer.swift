@@ -229,6 +229,18 @@ public struct SymbolLayer: Layer, Equatable {
     /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var iconColorUseTheme: Value<ColorUseTheme>?
 
+    /// Increase or reduce the brightness of the symbols. The value is the maximum brightness.
+    /// Default value: 1. Value range: [0, 1]
+    public var iconColorBrightnessMax: Value<Double>?
+
+    /// Increase or reduce the brightness of the symbols. The value is the minimum brightness.
+    /// Default value: 0. Value range: [0, 1]
+    public var iconColorBrightnessMin: Value<Double>?
+
+    /// Increase or reduce the contrast of the symbol icon.
+    /// Default value: 0. Value range: [-1, 1]
+    public var iconColorContrast: Value<Double>?
+
     /// Increase or reduce the saturation of the symbol icon.
     /// Default value: 0. Value range: [-1, 1]
     public var iconColorSaturation: Value<Double>?
@@ -300,6 +312,10 @@ public struct SymbolLayer: Layer, Equatable {
     /// Controls the frame of reference for `icon-translate`.
     /// Default value: "map".
     public var iconTranslateAnchor: Value<IconTranslateAnchor>?
+
+    /// Specify how opacity in case of being occluded should be applied
+    /// Default value: "anchor".
+    public var occlusionOpacityMode: Value<OcclusionOpacityMode>?
 
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
@@ -402,6 +418,9 @@ public struct SymbolLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(iconColor, forKey: .iconColor)
         try paintContainer.encodeIfPresent(iconColorTransition, forKey: .iconColorTransition)
         try paintContainer.encodeIfPresent(iconColorUseTheme, forKey: .iconColorUseTheme)
+        try paintContainer.encodeIfPresent(iconColorBrightnessMax, forKey: .iconColorBrightnessMax)
+        try paintContainer.encodeIfPresent(iconColorBrightnessMin, forKey: .iconColorBrightnessMin)
+        try paintContainer.encodeIfPresent(iconColorContrast, forKey: .iconColorContrast)
         try paintContainer.encodeIfPresent(iconColorSaturation, forKey: .iconColorSaturation)
         try paintContainer.encodeIfPresent(iconColorSaturationTransition, forKey: .iconColorSaturationTransition)
         try paintContainer.encodeIfPresent(iconEmissiveStrength, forKey: .iconEmissiveStrength)
@@ -422,6 +441,7 @@ public struct SymbolLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(iconTranslate, forKey: .iconTranslate)
         try paintContainer.encodeIfPresent(iconTranslateTransition, forKey: .iconTranslateTransition)
         try paintContainer.encodeIfPresent(iconTranslateAnchor, forKey: .iconTranslateAnchor)
+        try paintContainer.encodeIfPresent(occlusionOpacityMode, forKey: .occlusionOpacityMode)
         try paintContainer.encodeIfPresent(symbolZOffset, forKey: .symbolZOffset)
         try paintContainer.encodeIfPresent(symbolZOffsetTransition, forKey: .symbolZOffsetTransition)
         try paintContainer.encodeIfPresent(textColor, forKey: .textColor)
@@ -508,6 +528,9 @@ public struct SymbolLayer: Layer, Equatable {
             iconColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .iconColor)
             iconColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconColorTransition)
             iconColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .iconColorUseTheme)
+            iconColorBrightnessMax = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconColorBrightnessMax)
+            iconColorBrightnessMin = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconColorBrightnessMin)
+            iconColorContrast = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconColorContrast)
             iconColorSaturation = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconColorSaturation)
             iconColorSaturationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconColorSaturationTransition)
             iconEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconEmissiveStrength)
@@ -528,6 +551,7 @@ public struct SymbolLayer: Layer, Equatable {
             iconTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .iconTranslate)
             iconTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconTranslateTransition)
             iconTranslateAnchor = try paintContainer.decodeIfPresent(Value<IconTranslateAnchor>.self, forKey: .iconTranslateAnchor)
+            occlusionOpacityMode = try paintContainer.decodeIfPresent(Value<OcclusionOpacityMode>.self, forKey: .occlusionOpacityMode)
             symbolZOffset = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .symbolZOffset)
             symbolZOffsetTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .symbolZOffsetTransition)
             textColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .textColor)
@@ -669,6 +693,9 @@ public struct SymbolLayer: Layer, Equatable {
         case iconColor = "icon-color"
         case iconColorTransition = "icon-color-transition"
         case iconColorUseTheme = "icon-color-use-theme"
+        case iconColorBrightnessMax = "icon-color-brightness-max"
+        case iconColorBrightnessMin = "icon-color-brightness-min"
+        case iconColorContrast = "icon-color-contrast"
         case iconColorSaturation = "icon-color-saturation"
         case iconColorSaturationTransition = "icon-color-saturation-transition"
         case iconEmissiveStrength = "icon-emissive-strength"
@@ -689,6 +716,7 @@ public struct SymbolLayer: Layer, Equatable {
         case iconTranslate = "icon-translate"
         case iconTranslateTransition = "icon-translate-transition"
         case iconTranslateAnchor = "icon-translate-anchor"
+        case occlusionOpacityMode = "occlusion-opacity-mode"
         case symbolZOffset = "symbol-z-offset"
         case symbolZOffsetTransition = "symbol-z-offset-transition"
         case textColor = "text-color"
@@ -1331,6 +1359,42 @@ extension SymbolLayer {
         with(self, setter(\.iconColorUseTheme, .expression(expression)))
     }
 
+    /// Increase or reduce the brightness of the symbols. The value is the maximum brightness.
+    /// Default value: 1. Value range: [0, 1]
+    public func iconColorBrightnessMax(_ constant: Double) -> Self {
+        with(self, setter(\.iconColorBrightnessMax, .constant(constant)))
+    }
+
+    /// Increase or reduce the brightness of the symbols. The value is the maximum brightness.
+    /// Default value: 1. Value range: [0, 1]
+    public func iconColorBrightnessMax(_ expression: Exp) -> Self {
+        with(self, setter(\.iconColorBrightnessMax, .expression(expression)))
+    }
+
+    /// Increase or reduce the brightness of the symbols. The value is the minimum brightness.
+    /// Default value: 0. Value range: [0, 1]
+    public func iconColorBrightnessMin(_ constant: Double) -> Self {
+        with(self, setter(\.iconColorBrightnessMin, .constant(constant)))
+    }
+
+    /// Increase or reduce the brightness of the symbols. The value is the minimum brightness.
+    /// Default value: 0. Value range: [0, 1]
+    public func iconColorBrightnessMin(_ expression: Exp) -> Self {
+        with(self, setter(\.iconColorBrightnessMin, .expression(expression)))
+    }
+
+    /// Increase or reduce the contrast of the symbol icon.
+    /// Default value: 0. Value range: [-1, 1]
+    public func iconColorContrast(_ constant: Double) -> Self {
+        with(self, setter(\.iconColorContrast, .constant(constant)))
+    }
+
+    /// Increase or reduce the contrast of the symbol icon.
+    /// Default value: 0. Value range: [-1, 1]
+    public func iconColorContrast(_ expression: Exp) -> Self {
+        with(self, setter(\.iconColorContrast, .expression(expression)))
+    }
+
     /// Increase or reduce the saturation of the symbol icon.
     /// Default value: 0. Value range: [-1, 1]
     public func iconColorSaturation(_ constant: Double) -> Self {
@@ -1516,6 +1580,18 @@ extension SymbolLayer {
     /// Default value: "map".
     public func iconTranslateAnchor(_ expression: Exp) -> Self {
         with(self, setter(\.iconTranslateAnchor, .expression(expression)))
+    }
+
+    /// Specify how opacity in case of being occluded should be applied
+    /// Default value: "anchor".
+    public func occlusionOpacityMode(_ constant: OcclusionOpacityMode) -> Self {
+        with(self, setter(\.occlusionOpacityMode, .constant(constant)))
+    }
+
+    /// Specify how opacity in case of being occluded should be applied
+    /// Default value: "anchor".
+    public func occlusionOpacityMode(_ expression: Exp) -> Self {
+        with(self, setter(\.occlusionOpacityMode, .expression(expression)))
     }
 
     /// Specifies an uniform elevation from the ground, in meters.

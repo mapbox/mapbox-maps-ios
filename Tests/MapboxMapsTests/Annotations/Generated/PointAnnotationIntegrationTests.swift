@@ -739,6 +739,84 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.textWritingMode, .constant(StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]))
     }
 
+    func testIconColorBrightnessMax() throws {
+        // Test that the setter and getter work
+        let value = 0.5
+        manager.iconColorBrightnessMax = value
+        XCTAssertEqual(manager.iconColorBrightnessMax, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.iconColorBrightnessMax {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.iconColorBrightnessMax = nil
+        XCTAssertNil(manager.iconColorBrightnessMax)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.iconColorBrightnessMax, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-brightness-max").value as! NSNumber).doubleValue))
+    }
+
+    func testIconColorBrightnessMin() throws {
+        // Test that the setter and getter work
+        let value = 0.5
+        manager.iconColorBrightnessMin = value
+        XCTAssertEqual(manager.iconColorBrightnessMin, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.iconColorBrightnessMin {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.iconColorBrightnessMin = nil
+        XCTAssertNil(manager.iconColorBrightnessMin)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.iconColorBrightnessMin, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-brightness-min").value as! NSNumber).doubleValue))
+    }
+
+    func testIconColorContrast() throws {
+        // Test that the setter and getter work
+        let value = 0.0
+        manager.iconColorContrast = value
+        XCTAssertEqual(manager.iconColorContrast, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.iconColorContrast {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.iconColorContrast = nil
+        XCTAssertNil(manager.iconColorContrast)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.iconColorContrast, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-contrast").value as! NSNumber).doubleValue))
+    }
+
     func testIconColorSaturation() throws {
         // Test that the setter and getter work
         let value = 0.0
@@ -843,6 +921,32 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
         XCTAssertEqual(layer.iconTranslateAnchor, .constant(IconTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String)))
+    }
+
+    func testOcclusionOpacityMode() throws {
+        // Test that the setter and getter work
+        let value = OcclusionOpacityMode.testConstantValue()
+        manager.occlusionOpacityMode = value
+        XCTAssertEqual(manager.occlusionOpacityMode, value)
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.occlusionOpacityMode {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.occlusionOpacityMode = nil
+        XCTAssertNil(manager.occlusionOpacityMode)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.occlusionOpacityMode, .constant(OcclusionOpacityMode(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "occlusion-opacity-mode").value as! String)))
     }
 
     func testTextTranslate() throws {

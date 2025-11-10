@@ -1237,6 +1237,84 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
+    func testInitialIconColorBrightnessMax() {
+        let initialValue = manager.iconColorBrightnessMax
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconColorBrightnessMax() {
+        let value = 0.5
+        manager.iconColorBrightnessMax = value
+        XCTAssertEqual(manager.iconColorBrightnessMax, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-color-brightness-max"] as! Double, value)
+    }
+
+
+    func testSetToNilIconColorBrightnessMax() {
+        let newIconColorBrightnessMaxProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-brightness-max").value as! Double
+        manager.iconColorBrightnessMax = newIconColorBrightnessMaxProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-color-brightness-max"])
+        harness.triggerDisplayLink()
+
+        manager.iconColorBrightnessMax = nil
+        XCTAssertNil(manager.iconColorBrightnessMax)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-brightness-max"] as! Double, defaultValue)
+    }
+    func testInitialIconColorBrightnessMin() {
+        let initialValue = manager.iconColorBrightnessMin
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconColorBrightnessMin() {
+        let value = 0.5
+        manager.iconColorBrightnessMin = value
+        XCTAssertEqual(manager.iconColorBrightnessMin, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-color-brightness-min"] as! Double, value)
+    }
+
+
+    func testSetToNilIconColorBrightnessMin() {
+        let newIconColorBrightnessMinProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-brightness-min").value as! Double
+        manager.iconColorBrightnessMin = newIconColorBrightnessMinProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-color-brightness-min"])
+        harness.triggerDisplayLink()
+
+        manager.iconColorBrightnessMin = nil
+        XCTAssertNil(manager.iconColorBrightnessMin)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-brightness-min"] as! Double, defaultValue)
+    }
+    func testInitialIconColorContrast() {
+        let initialValue = manager.iconColorContrast
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetIconColorContrast() {
+        let value = 0.0
+        manager.iconColorContrast = value
+        XCTAssertEqual(manager.iconColorContrast, value)
+        XCTAssertEqual(manager.impl.layerProperties["icon-color-contrast"] as! Double, value)
+    }
+
+
+    func testSetToNilIconColorContrast() {
+        let newIconColorContrastProperty = 0.0
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color-contrast").value as! Double
+        manager.iconColorContrast = newIconColorContrastProperty
+        XCTAssertNotNil(manager.impl.layerProperties["icon-color-contrast"])
+        harness.triggerDisplayLink()
+
+        manager.iconColorContrast = nil
+        XCTAssertNil(manager.iconColorContrast)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-contrast"] as! Double, defaultValue)
+    }
     func testInitialIconColorSaturation() {
         let initialValue = manager.iconColorSaturation
         XCTAssertNil(initialValue)
@@ -1501,6 +1579,32 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         harness.triggerDisplayLink()
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"] as! String, defaultValue)
+    }
+    func testInitialOcclusionOpacityMode() {
+        let initialValue = manager.occlusionOpacityMode
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetOcclusionOpacityMode() {
+        let value = OcclusionOpacityMode.testConstantValue()
+        manager.occlusionOpacityMode = value
+        XCTAssertEqual(manager.occlusionOpacityMode, value)
+        XCTAssertEqual(manager.impl.layerProperties["occlusion-opacity-mode"] as! String, value.rawValue)
+    }
+
+
+    func testSetToNilOcclusionOpacityMode() {
+        let newOcclusionOpacityModeProperty = OcclusionOpacityMode.testConstantValue()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "occlusion-opacity-mode").value as! String
+        manager.occlusionOpacityMode = newOcclusionOpacityModeProperty
+        XCTAssertNotNil(manager.impl.layerProperties["occlusion-opacity-mode"])
+        harness.triggerDisplayLink()
+
+        manager.occlusionOpacityMode = nil
+        XCTAssertNil(manager.occlusionOpacityMode)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["occlusion-opacity-mode"] as! String, defaultValue)
     }
     func testInitialSymbolZOffset() {
         let initialValue = manager.symbolZOffset

@@ -309,6 +309,20 @@ extension IconTranslateAnchor {
     }
 }
 
+// MARK: OCCLUSION_OPACITY_MODE
+
+extension Value where T == OcclusionOpacityMode {
+    static func testConstantValue() -> Value<OcclusionOpacityMode> {
+        return .constant(OcclusionOpacityMode.testConstantValue())
+    }
+}
+
+extension OcclusionOpacityMode {
+    static func testConstantValue() -> OcclusionOpacityMode {
+        return .anchor
+    }
+}
+
 // MARK: TEXT_TRANSLATE_ANCHOR
 
 extension Value where T == TextTranslateAnchor {

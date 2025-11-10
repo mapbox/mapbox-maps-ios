@@ -56,6 +56,12 @@ import Foundation
     @_spi(Experimental)
     public private(set) var rasterLayers: [RasterArraySource.RasterDataLayer]?
 
+    /// A setting to determine whether a source's tiles are cached locally.
+    /// Default value: false.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var volatile: Bool?
+
     /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -80,6 +86,7 @@ extension RasterArraySource {
         case tileSize = "tileSize"
         case attribution = "attribution"
         case rasterLayers = "rasterLayers"
+        case volatile = "volatile"
         case tileCacheBudget = "tile-cache-budget"
     }
 
@@ -111,6 +118,7 @@ extension RasterArraySource {
         try container.encodeIfPresent(tileSize, forKey: .tileSize)
         try container.encodeIfPresent(attribution, forKey: .attribution)
         try container.encodeIfPresent(rasterLayers, forKey: .rasterLayers)
+        try container.encodeIfPresent(volatile, forKey: .volatile)
     }
 }
 
@@ -136,6 +144,12 @@ extension RasterArraySource {
     /// Default value: 22.
     public func maxzoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxzoom, newValue))
+    }
+
+    /// A setting to determine whether a source's tiles are cached locally.
+    /// Default value: false.
+    public func volatile(_ newValue: Bool) -> Self {
+        with(self, setter(\.volatile, newValue))
     }
 
     /// This property defines a source-specific resource budget, either in tile units or in megabytes. Whenever the tile cache goes over the defined limit, the least recently used tile will be evicted from the in-memory cache. Note that the current implementation does not take into account resources allocated by the visible tiles.

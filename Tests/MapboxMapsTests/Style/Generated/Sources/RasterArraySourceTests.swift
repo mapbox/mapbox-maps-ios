@@ -10,6 +10,7 @@ final class RasterArraySourceTests: XCTestCase {
         source.tiles = [String].testSourceValue()
         source.minzoom = Double.testSourceValue()
         source.maxzoom = Double.testSourceValue()
+        source.volatile = Bool.testSourceValue()
         source.tileCacheBudget = TileCacheBudgetSize.testSourceValue()
 
         var data: Data?
@@ -31,6 +32,7 @@ final class RasterArraySourceTests: XCTestCase {
             XCTAssert(decodedSource.tiles == [String].testSourceValue())
             XCTAssert(decodedSource.minzoom == Double.testSourceValue())
             XCTAssert(decodedSource.maxzoom == Double.testSourceValue())
+            XCTAssert(decodedSource.volatile == Bool.testSourceValue())
             XCTAssert(decodedSource.tileCacheBudget == TileCacheBudgetSize.testSourceValue())
         } catch {
             XCTFail("Failed to decode RasterArraySource.")
@@ -43,12 +45,14 @@ final class RasterArraySourceTests: XCTestCase {
             .tiles([String].testSourceValue())
             .minzoom(Double.testSourceValue())
             .maxzoom(Double.testSourceValue())
+            .volatile(Bool.testSourceValue())
             .tileCacheBudget(TileCacheBudgetSize.testSourceValue())
 
         XCTAssertEqual(source.url, String.testSourceValue())
         XCTAssertEqual(source.tiles, [String].testSourceValue())
         XCTAssertEqual(source.minzoom, Double.testSourceValue())
         XCTAssertEqual(source.maxzoom, Double.testSourceValue())
+        XCTAssertEqual(source.volatile, Bool.testSourceValue())
         XCTAssertEqual(source.tileCacheBudget, TileCacheBudgetSize.testSourceValue())
     }
 }

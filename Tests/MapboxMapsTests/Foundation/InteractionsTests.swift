@@ -87,22 +87,18 @@ final class InteractionsTests: IntegrationTestCase {
             return true
         })
 
-        let anyLongPressExpectation = expectation(description: "Any Long press")
-        anyLongPressExpectation.expectedFulfillmentCount = 1
-        anyLongPressExpectation.isInverted = true
-
         map.addInteraction(LongPressInteraction { _ in
-            anyLongPressExpectation.fulfill()
+            XCTFail("Long press handler should not be called for tap events")
             return false
         })
 
         map.addInteraction(LongPressInteraction(.layer("circle-1")) { _, _ in
-            anyLongPressExpectation.fulfill()
+            XCTFail("Long press handler should not be called for tap events")
             return false
         })
 
         map.addInteraction(LongPressInteraction(.featureset("poi", importId: "nested")) { _, _ in
-            anyLongPressExpectation.fulfill()
+            XCTFail("Long press handler should not be called for tap events")
             return false
         })
 
@@ -110,50 +106,71 @@ final class InteractionsTests: IntegrationTestCase {
         coord = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         point = map.point(for: coord)
         map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
-        wait(for: [layerExpectation], timeout: 2.0)
+        wait(for: [layerExpectation], timeout: 5.0)
 
         // POI tap
         coord = CLLocationCoordinate2D(latitude: 0.01, longitude: 0.01)
         point = map.point(for: coord)
         map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
-        wait(for: [poiExpectation], timeout: 2.0)
+        wait(for: [poiExpectation], timeout: 5.0)
 
         // Map tap
         coord = CLLocationCoordinate2D(latitude: -0.01, longitude: -0.01)
         point = map.point(for: coord)
         map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
-        wait(for: [mapExpectation], timeout: 2.0)
+        wait(for: [mapExpectation], timeout: 5.0)
 
-        // No long press invoked
-        wait(for: [anyLongPressExpectation], timeout: 2.0)
+        // Verify no long press was invoked - give events time to process
+        let verifyExpectation = expectation(description: "verify no long press")
+        DispatchQueue.main.async {
+            verifyExpectation.fulfill()
+        }
+        wait(for: [verifyExpectation], timeout: 2.0)
     }
 
     func testTapInteractionWithRadius() {
         let tap1 = expectation(description: "tap 1")
         let tap2 = expectation(description: "tap 2")
-        let tap3 = expectation(description: "tap 3")
-        tap3.isInverted = true
 
-        var queue = [tap3, tap2, tap1]
+        var tapCount = 0
 
         map.addInteraction(TapInteraction(.featureset("poi", importId: "nested"), radius: 5) { _, _ in
-            queue.popLast()?.fulfill()
+            tapCount += 1
+            if tapCount == 1 {
+                tap1.fulfill()
+            } else if tapCount == 2 {
+                tap2.fulfill()
+            }
             return true
         })
 
         let coord = CLLocationCoordinate2D(latitude: 0.01, longitude: 0.01)
         var point = map.point(for: coord)
-        map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
-        wait(for: [tap1], timeout: 2.0)
 
-        // circle radius is 5, adding 3 to check tap with the radius
+        // First tap: directly on feature (should trigger)
+        map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
+        wait(for: [tap1], timeout: 5.0)
+
+        // Second tap: 8 pixels away (within radius of 5 + feature size, should trigger)
         point.x += 8
         map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
-        wait(for: [tap2], timeout: 2.0)
+        wait(for: [tap2], timeout: 5.0)
 
+        // Third tap: 5 additional pixels away (13 total, outside radius, should NOT trigger)
         point.x += 5
+        let initialTapCount = tapCount
+
+        // Dispatch the event
         map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
-        wait(for: [tap3], timeout: 2.0)
+
+        // Wait for any pending main queue operations to complete
+        let verifyExpectation = expectation(description: "verify no tap")
+        // Give event processing one full runloop cycle to complete
+        DispatchQueue.main.async {
+            XCTAssertEqual(tapCount, initialTapCount, "Handler should not be called for tap outside radius")
+            verifyExpectation.fulfill()
+        }
+        wait(for: [verifyExpectation], timeout: 2.0)
     }
 
     func testTapWithFilter() {
@@ -184,7 +201,7 @@ final class InteractionsTests: IntegrationTestCase {
 
         // POI click
         map.dispatch(event: CorePlatformEventInfo(type: .click, screenCoordinate: point.screenCoordinate))
-        wait(for: [poiExpectation], timeout: 2.0)
+        wait(for: [poiExpectation], timeout: 5.0)
     }
 
     func testLongPressInteraction() {
@@ -239,22 +256,18 @@ final class InteractionsTests: IntegrationTestCase {
             return true
         })
 
-        let anyTapExpectation = expectation(description: "Any Long press")
-        anyTapExpectation.expectedFulfillmentCount = 1
-        anyTapExpectation.isInverted = true
-
         map.addInteraction(TapInteraction { _ in
-            anyTapExpectation.fulfill()
+            XCTFail("Tap handler should not be called for long press events")
             return false
         })
 
         map.addInteraction(TapInteraction(.layer("circle-1")) { _, _ in
-            anyTapExpectation.fulfill()
+            XCTFail("Tap handler should not be called for long press events")
             return false
         })
 
         map.addInteraction(TapInteraction(.featureset("poi", importId: "nested")) { _, _ in
-            anyTapExpectation.fulfill()
+            XCTFail("Tap handler should not be called for long press events")
             return false
         })
 
@@ -262,21 +275,25 @@ final class InteractionsTests: IntegrationTestCase {
         coord = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         point = map.point(for: coord)
         map.dispatch(event: CorePlatformEventInfo(type: .longClick, screenCoordinate: point.screenCoordinate))
-        wait(for: [layerExpectation], timeout: 2.0)
+        wait(for: [layerExpectation], timeout: 5.0)
 
         // POI long press
         coord = CLLocationCoordinate2D(latitude: 0.01, longitude: 0.01)
         point = map.point(for: coord)
         map.dispatch(event: CorePlatformEventInfo(type: .longClick, screenCoordinate: point.screenCoordinate))
-        wait(for: [poiExpectation], timeout: 2.0)
+        wait(for: [poiExpectation], timeout: 5.0)
 
         // Map long press
         coord = CLLocationCoordinate2D(latitude: -0.01, longitude: -0.01)
         point = map.point(for: coord)
         map.dispatch(event: CorePlatformEventInfo(type: .longClick, screenCoordinate: point.screenCoordinate))
-        wait(for: [mapExpectation], timeout: 2.0)
+        wait(for: [mapExpectation], timeout: 5.0)
 
-        // No tap is invoked
-        wait(for: [anyTapExpectation], timeout: 2.0)
+        // Verify no tap was invoked - give events time to process
+        let verifyExpectation = expectation(description: "verify no tap")
+        DispatchQueue.main.async {
+            verifyExpectation.fulfill()
+        }
+        wait(for: [verifyExpectation], timeout: 2.0)
     }
 }

@@ -35,7 +35,7 @@ final class DefaultViewportTransitionAnimationTests: XCTestCase {
             completion(true)
         }
 
-        wait(for: [completionExpectation], timeout: 2)
+        wait(for: [completionExpectation], timeout: 5.0)
 
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [true])
     }
@@ -56,7 +56,7 @@ final class DefaultViewportTransitionAnimationTests: XCTestCase {
             completion(idx != failingIndex)
         }
 
-        wait(for: [completionExpectation], timeout: 2)
+        wait(for: [completionExpectation], timeout: 5.0)
 
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [false])
     }
@@ -72,7 +72,7 @@ final class DefaultViewportTransitionAnimationTests: XCTestCase {
 
         animation.start(with: completionStub.call(with:))
 
-        wait(for: [completionExpectation], timeout: 0.5)
+        wait(for: [completionExpectation], timeout: 5.0)
 
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [true])
     }

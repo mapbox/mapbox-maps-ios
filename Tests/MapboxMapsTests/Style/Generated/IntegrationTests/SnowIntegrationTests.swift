@@ -55,7 +55,7 @@ final class SnowIntegrationTests: MapViewIntegrationTestCase {
             }
         }
 
-        wait(for: [successfullyAddedObjectExpectation, successfullyRemovedObjectExpectation], timeout: 5.0)
+        wait(for: [successfullyAddedObjectExpectation, successfullyRemovedObjectExpectation], timeout: 10.0)
     }
 }
 

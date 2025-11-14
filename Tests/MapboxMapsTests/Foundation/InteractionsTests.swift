@@ -11,15 +11,22 @@ final class InteractionsTests: IntegrationTestCase {
 
         let rootView = try XCTUnwrap(rootViewController?.view)
         let size = CGSize(width: 200, height: 200)
-        mapView = MapView(frame: .init(origin: CGPoint(x: 100, y: 100), size: size))
+
+        // Pass style and camera in mapInitOptions to avoid loading default style first
+        let mapInitOptions = MapInitOptions(
+            mapStyle: .featuresetTestsStyle,
+            cameraOptions: CameraOptions(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), zoom: 10)
+        )
+        mapView = MapView(frame: .init(origin: CGPoint(x: 100, y: 100), size: size), mapInitOptions: mapInitOptions)
         rootView.addSubview(mapView)
 
-        map.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), zoom: 10))
+        // Force layout pass to ensure map view has correct bounds before rendering
+        // This ensures coordinate-to-screen-point conversions are accurate
+        rootView.layoutIfNeeded()
 
         let expectation = expectation(description: "Load the map")
 
-        map.load(mapStyle: .featuresetTestsStyle)
-
+        // Set up observer to wait for map to be fully loaded
         map.onMapLoaded.observeNext { _ in
             expectation.fulfill()
         }.store(in: &cancelables)

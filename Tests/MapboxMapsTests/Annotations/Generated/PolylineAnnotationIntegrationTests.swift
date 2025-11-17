@@ -348,32 +348,6 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.lineDepthOcclusionFactor, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-depth-occlusion-factor").value as! NSNumber).doubleValue))
     }
 
-    func testLineEmissiveStrength() throws {
-        // Test that the setter and getter work
-        let value = 50000.0
-        manager.lineEmissiveStrength = value
-        XCTAssertEqual(manager.lineEmissiveStrength, value)
-
-        // Test that the value is synced to the layer
-        manager.impl.syncSourceAndLayerIfNeeded()
-        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        if case .constant(let actualValue) = layer.lineEmissiveStrength {
-            XCTAssertEqual(actualValue, value, accuracy: 0.1)
-        } else {
-            XCTFail("Expected constant")
-        }
-
-        // Test that the property can be reset to nil
-        manager.lineEmissiveStrength = nil
-        XCTAssertNil(manager.lineEmissiveStrength)
-
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
-        manager.impl.syncSourceAndLayerIfNeeded()
-        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineEmissiveStrength, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-emissive-strength").value as! NSNumber).doubleValue))
-    }
-
     func testLineOcclusionOpacity() throws {
         // Test that the setter and getter work
         let value = 0.5
@@ -821,6 +795,40 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-color").value as! [Any], options: []))))
+    }
+
+    func testLineEmissiveStrength() throws {
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+        // Test that the setter and getter work
+        let value = 50000.0
+        annotation.lineEmissiveStrength = value
+        XCTAssertEqual(annotation.lineEmissiveStrength, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        let fallbackValue = self.manager.lineEmissiveStrength ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-emissive-strength").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"line-emissive-strength\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineEmissiveStrength.toString(), expectedString)
+
+        // Test that the property can be reset to nil
+        annotation.lineEmissiveStrength = nil
+        XCTAssertNil(annotation.lineEmissiveStrength)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineEmissiveStrength, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-emissive-strength").value as! NSNumber).doubleValue))
     }
 
     func testLineGapWidth() throws {

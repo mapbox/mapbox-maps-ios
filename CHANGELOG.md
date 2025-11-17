@@ -9,6 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add `FillExtrusionLayer.castShadows` property.
 * Add `GeoJSONSource.minZoom` property.
 * Add `RasterArraySource.volatile` experimental property.
+* Make `line-emissive-strength` property data-driven.
 
 ## 11.17.0-beta.1 - 05 November, 2025
 

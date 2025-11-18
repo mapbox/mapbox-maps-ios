@@ -415,6 +415,38 @@ class MockStyleManager: StyleManagerProtocol {
         )
     }
 
+    struct SetStyleLayerPropertyAsyncParameters {
+        let layerId: String
+        let property: String
+        let value: Any
+        let callback: CoreAsyncOperationResultCallback
+    }
+    let setStyleLayerPropertyAsyncStub = Stub<SetStyleLayerPropertyAsyncParameters, Cancelable>(
+        defaultReturnValue: AnyCancelable { }
+    )
+    func __setStyleLayerPropertyAsyncForLayerId(_ layerId: String, property: String, value: Any, callback: @escaping CoreAsyncOperationResultCallback) -> Cancelable {
+        let result = setStyleLayerPropertyAsyncStub.call(
+            with: SetStyleLayerPropertyAsyncParameters(layerId: layerId, property: property, value: value, callback: callback)
+        )
+        callback(.init(value: NSNull()))
+        return result
+    }
+    struct SetStyleLayerPropertiesAsyncParameters {
+        let layerId: String
+        let properties: Any
+        let callback: CoreAsyncOperationResultCallback
+    }
+    let setStyleLayerPropertiesAsyncStub = Stub<SetStyleLayerPropertiesAsyncParameters, Cancelable>(
+        defaultReturnValue: AnyCancelable { }
+    )
+    func __setStyleLayerPropertiesAsyncForLayerId(_ layerId: String, properties: Any, callback: @escaping CoreAsyncOperationResultCallback) -> Cancelable {
+        let result = setStyleLayerPropertiesAsyncStub.call(
+            with: SetStyleLayerPropertiesAsyncParameters(layerId: layerId, properties: properties, callback: callback)
+        )
+        callback(.init(value: NSNull()))
+        return result
+    }
+
     struct SetStyleSourceParameters {
         let sourceId: String
         let properties: Any

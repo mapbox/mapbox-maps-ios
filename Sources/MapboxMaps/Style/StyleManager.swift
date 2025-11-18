@@ -193,6 +193,34 @@ public class StyleManager {
     public func updateLayer<T>(withId id: String,
                                type: T.Type,
                                update: (inout T) throws -> Void) throws where T: Layer {
+        let layerProperties = try resolveUpdatedLayerProperties(withId: id, update)
+        // Apply the changes to the layer properties to the style
+        try setLayerProperties(for: id, properties: layerProperties)
+    }
+
+    /// Updates a `layer` that exists in the `style` already
+    ///
+    /// - Parameters:
+    ///   - id: identifier of layer to update
+    ///   - type: Type of the layer
+    ///   - update: Closure that mutates a layer passed to it
+    ///
+    /// - Throws: ``TypeConversionError`` if there is a problem getting a layer data.
+    /// - Throws: ``StyleError`` if there is a problem updating the layer.
+    /// - Throws: An error when executing `update` block.
+    @_spi(Experimental)
+    public func updateLayer<T>(withId id: String,
+                               type: T.Type,
+                               update: (inout T) throws -> Void) async throws where T: Layer {
+        let layerProperties = try resolveUpdatedLayerProperties(withId: id, update)
+        // Apply the changes to the layer properties to the style
+        try await setLayerProperties(for: id, properties: layerProperties)
+    }
+
+    private func resolveUpdatedLayerProperties<T: Layer>(
+        withId id: String,
+        _ update: (inout T) throws -> Void
+    ) throws -> [String: Any] {
         let oldLayerProperties = try layerProperties(for: id)
         var layer = try T(jsonObject: oldLayerProperties)
 
@@ -222,9 +250,7 @@ public class StyleManager {
                     reduceStrategy(&result, element)
                 }
             })
-
-        // Apply the changes to the layer properties to the style
-        try setLayerProperties(for: id, properties: layerProperties)
+        return layerProperties
     }
 
     // MARK: - Sources
@@ -822,6 +848,22 @@ public class StyleManager {
         }
     }
 
+    /// Sets a JSON value to a style layer property.
+    ///
+    /// - Parameters:
+    ///   - layerId: Style layer identifier.
+    ///   - property: Style layer property name.
+    ///   - value: Style layer property value.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    @_spi(Experimental)
+    public func setLayerProperty(for layerId: String, property: String, value: Any) async throws {
+        try await handleExpected { callback in
+            return styleManager.__setStyleLayerPropertyAsyncForLayerId(layerId, property: property, value: value, callback: callback)
+        }
+    }
+
     /// Gets the default value of style layer property.
     ///
     /// - Parameters:
@@ -868,6 +910,29 @@ public class StyleManager {
     public func setLayerProperties(for layerId: String, properties: [String: Any]) throws {
         try handleExpected {
             return styleManager.setStyleLayerPropertiesForLayerId(layerId, properties: properties)
+        }
+    }
+
+    /// Sets style layer properties.
+    ///
+    /// This method can be used to perform batch update for a style layer properties.
+    /// The structure of a provided `properties` value must conform to the
+    /// [format for a corresponding layer type](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/).
+    ///
+    /// Modification of a [layer identifier](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#id)
+    /// and/or [layer type](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#type)
+    /// is not allowed.
+    ///
+    /// - Parameters:
+    ///   - layerId: Style layer identifier.
+    ///   - properties: JSON dictionary representing the updated layer properties.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    @_spi(Experimental)
+    public func setLayerProperties(for layerId: String, properties: [String: Any]) async throws {
+        try await handleExpected { callback in
+            return styleManager.__setStyleLayerPropertiesAsyncForLayerId(layerId, properties: properties, callback: callback)
         }
     }
 

@@ -1606,6 +1606,112 @@ extension StyleManagerProtocol {
 
 // MARK: - Conversion helpers
 
+private actor ActorCancelable {
+    private var _isCanceled: Bool = false
+
+    var isCanceled: Bool {
+        _isCanceled
+    }
+
+    private func setCanceled() {
+        _isCanceled = true
+    }
+
+    nonisolated func markCanceled() {
+        Task { await setCanceled() }
+    }
+}
+
+// TODO: When Swift 6 actor isolation is available merge main and non-main variants into one
+
+// non cancelable variant
+@MainActor
+internal func handleExpectedOnMain<Value, Error>(closure: ((@escaping (Expected<Value, Error>) -> Void) -> Void)) async throws {
+    try await handleExpectedOnMain { wrapped in
+        closure(wrapped)
+        return AnyCancelable { }
+    }
+}
+
+@MainActor
+internal func handleExpectedOnMain<Value, Error>(closure: ((@escaping (Expected<Value, Error>) -> Void) -> Cancelable)) async throws {
+    let sendableCancelable = ActorCancelable()
+
+    return try await withTaskCancellationHandler {
+        return try await withCheckedThrowingContinuation { continuation in
+            if Task.isCancelled {
+                continuation.resume(throwing: CancellationError())
+                return
+            }
+
+            var cancelable: Cancelable!
+            cancelable = closure { expected in
+                Task { @MainActor in
+                    if await sendableCancelable.isCanceled {
+                        cancelable?.cancel()
+                        cancelable = nil
+                        continuation.resume(throwing: CancellationError())
+                        return
+                    }
+
+                    do {
+                        try handleExpected(closure: { expected })
+                        continuation.resume(with: .success(()))
+                    } catch {
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        }
+
+    } onCancel: {
+        sendableCancelable.markCanceled()
+    }
+}
+
+// non cancelable variant
+internal func handleExpected<Value, Error>(closure: ((@escaping (Expected<Value, Error>) -> Void) -> Void)) async throws {
+    try await handleExpected { wrapped in
+        closure(wrapped)
+        return AnyCancelable { }
+    }
+}
+
+internal func handleExpected<Value, Error>(closure: ((@escaping (Expected<Value, Error>) -> Void) -> Cancelable)) async throws {
+    let sendableCancelable = ActorCancelable()
+
+    return try await withTaskCancellationHandler {
+        return try await withCheckedThrowingContinuation { continuation in
+            if Task.isCancelled {
+                continuation.resume(throwing: CancellationError())
+                return
+            }
+
+            var cancelable: Cancelable!
+            cancelable = closure { expected in
+                Task {
+                    if await sendableCancelable.isCanceled {
+                        cancelable?.cancel()
+                        cancelable = nil
+                        continuation.resume(throwing: CancellationError())
+                        return
+                    }
+
+                    do {
+                        try handleExpected(closure: { expected })
+                        continuation.resume(with: .success(()))
+                    } catch {
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        }
+
+    } onCancel: {
+        sendableCancelable.markCanceled()
+    }
+}
+
 internal func handleExpected<Value, Error>(closure: () -> (Expected<Value, Error>)) throws {
     let expected = closure()
 

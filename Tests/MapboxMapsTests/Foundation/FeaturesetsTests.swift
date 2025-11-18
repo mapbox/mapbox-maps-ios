@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 import XCTest
 
 final class FeaturesetsTests: IntegrationTestCase {
@@ -176,6 +176,29 @@ final class FeaturesetsTests: IntegrationTestCase {
         }
 
         wait(for: [resetStatesExp], timeout: 10)
+    }
+
+    func testAsyncFeatureStateMethods() async throws {
+        let expressionId: UInt = 123
+
+        let map = await mapView.mapboxMap!
+        try await map.setFeatureStateExpression(
+            expressionId: expressionId,
+            featureset: .featureset("poi", importId: "nested"),
+            expression: Exp(.boolean) { true },
+            state: ["foo": "bar"]
+        )
+
+        try await map.setFeatureStateExpression(
+            expressionId: 1111111,
+            featureset: .featureset("poi", importId: "nested"),
+            expression: Exp(.boolean) { true },
+            state: ["one": "two"]
+        )
+
+        try await map.removeFeatureStateExpression(expressionId: expressionId)
+
+        try await map.resetFeatureStateExpressions()
     }
 
     func testStateIsQueried() throws {

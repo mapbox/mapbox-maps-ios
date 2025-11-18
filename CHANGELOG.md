@@ -13,6 +13,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add `RasterArraySource.volatile` experimental property.
 * Make `line-emissive-strength` property data-driven.
 * Add experimental `MapboxMap.setFeatureStateExpression()`, `removeFeatureStateExpression()`, and `resetFeatureStateExpressions()` APIs to efficiently update feature state for multiple features at once using expressions.
+* Add experimental async variants of `MapboxMap.setLayerProperty()`, `setLayerProperties` and `updateLayer()`.
 
 ## 11.17.0-beta.1 - 05 November, 2025
 

@@ -4,6 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.17.0-rc.1 - 20 November, 2025
+
+## 11.17.0-beta.2 - 14 November, 2025
+
 * Promote `ModelLayer` to stable.
 * Add `SymbolLayer.occlusionOpacityMode`, `SymbolLayer.iconColorBrightnessMax`, `SymbolLayer.iconColorBrightnessMin`, `SymbolLayer.iconColorContrast` properties.
 * Add `FillExtrusionLayer.castShadows` property.

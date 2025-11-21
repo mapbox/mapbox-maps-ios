@@ -430,32 +430,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cutout-opacity"] as! Double, defaultValue)
     }
-    func testInitialLineCutoutWidth() {
-        let initialValue = manager.lineCutoutWidth
-        XCTAssertNil(initialValue)
-    }
-
-    func testSetLineCutoutWidth() {
-        let value = 25.0
-        manager.lineCutoutWidth = value
-        XCTAssertEqual(manager.lineCutoutWidth, value)
-        XCTAssertEqual(manager.impl.layerProperties["line-cutout-width"] as! Double, value)
-    }
-
-
-    func testSetToNilLineCutoutWidth() {
-        let newLineCutoutWidthProperty = 25.0
-        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cutout-width").value as! Double
-        manager.lineCutoutWidth = newLineCutoutWidthProperty
-        XCTAssertNotNil(manager.impl.layerProperties["line-cutout-width"])
-        harness.triggerDisplayLink()
-
-        manager.lineCutoutWidth = nil
-        XCTAssertNil(manager.lineCutoutWidth)
-        harness.triggerDisplayLink()
-
-        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cutout-width"] as! Double, defaultValue)
-    }
     func testInitialLineDasharray() {
         let initialValue = manager.lineDasharray
         XCTAssertNil(initialValue)

@@ -134,22 +134,13 @@ public struct LineLayer: Layer, Equatable {
     @_spi(Experimental) public var lineCutoutFadeWidthTransition: StyleTransition?
 
     /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
-    /// Default value: 0. Value range: [0, 1]
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineCutoutOpacity: Value<Double>?
 
     /// Transition options for `lineCutoutOpacity`.
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineCutoutOpacityTransition: StyleTransition?
-
-    /// The width of the line cutout in meters. If set to 0, the cutout is disabled. The cutout does not apply to location-indicator type layers.
-    /// Default value: 0. Value range: [0, 50]
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var lineCutoutWidth: Value<Double>?
-
-    /// Transition options for `lineCutoutWidth`.
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var lineCutoutWidthTransition: StyleTransition?
 
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     /// Minimum value: 0. The unit of lineDasharray is in line widths.
@@ -286,8 +277,6 @@ public struct LineLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(lineCutoutFadeWidthTransition, forKey: .lineCutoutFadeWidthTransition)
         try paintContainer.encodeIfPresent(lineCutoutOpacity, forKey: .lineCutoutOpacity)
         try paintContainer.encodeIfPresent(lineCutoutOpacityTransition, forKey: .lineCutoutOpacityTransition)
-        try paintContainer.encodeIfPresent(lineCutoutWidth, forKey: .lineCutoutWidth)
-        try paintContainer.encodeIfPresent(lineCutoutWidthTransition, forKey: .lineCutoutWidthTransition)
         try paintContainer.encodeIfPresent(lineDasharray, forKey: .lineDasharray)
         try paintContainer.encodeIfPresent(lineDepthOcclusionFactor, forKey: .lineDepthOcclusionFactor)
         try paintContainer.encodeIfPresent(lineDepthOcclusionFactorTransition, forKey: .lineDepthOcclusionFactorTransition)
@@ -355,8 +344,6 @@ public struct LineLayer: Layer, Equatable {
             lineCutoutFadeWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineCutoutFadeWidthTransition)
             lineCutoutOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineCutoutOpacity)
             lineCutoutOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineCutoutOpacityTransition)
-            lineCutoutWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineCutoutWidth)
-            lineCutoutWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineCutoutWidthTransition)
             lineDasharray = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineDasharray)
             lineDepthOcclusionFactor = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineDepthOcclusionFactor)
             lineDepthOcclusionFactorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineDepthOcclusionFactorTransition)
@@ -443,8 +430,6 @@ public struct LineLayer: Layer, Equatable {
         case lineCutoutFadeWidthTransition = "line-cutout-fade-width-transition"
         case lineCutoutOpacity = "line-cutout-opacity"
         case lineCutoutOpacityTransition = "line-cutout-opacity-transition"
-        case lineCutoutWidth = "line-cutout-width"
-        case lineCutoutWidthTransition = "line-cutout-width-transition"
         case lineDasharray = "line-dasharray"
         case lineDepthOcclusionFactor = "line-depth-occlusion-factor"
         case lineDepthOcclusionFactorTransition = "line-depth-occlusion-factor-transition"
@@ -786,7 +771,7 @@ extension LineLayer {
     }
 
     /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
-    /// Default value: 0. Value range: [0, 1]
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func lineCutoutOpacity(_ constant: Double) -> Self {
@@ -801,34 +786,11 @@ extension LineLayer {
     }
 
     /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
-    /// Default value: 0. Value range: [0, 1]
+    /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func lineCutoutOpacity(_ expression: Exp) -> Self {
         with(self, setter(\.lineCutoutOpacity, .expression(expression)))
-    }
-
-    /// The width of the line cutout in meters. If set to 0, the cutout is disabled. The cutout does not apply to location-indicator type layers.
-    /// Default value: 0. Value range: [0, 50]
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func lineCutoutWidth(_ constant: Double) -> Self {
-        with(self, setter(\.lineCutoutWidth, .constant(constant)))
-    }
-
-    /// Transition property for `lineCutoutWidth`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func lineCutoutWidthTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.lineCutoutWidthTransition, transition))
-    }
-
-    /// The width of the line cutout in meters. If set to 0, the cutout is disabled. The cutout does not apply to location-indicator type layers.
-    /// Default value: 0. Value range: [0, 50]
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func lineCutoutWidth(_ expression: Exp) -> Self {
-        with(self, setter(\.lineCutoutWidth, .expression(expression)))
     }
 
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.

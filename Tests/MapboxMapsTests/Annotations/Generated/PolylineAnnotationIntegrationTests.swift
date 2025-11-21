@@ -268,32 +268,6 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.lineCutoutOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cutout-opacity").value as! NSNumber).doubleValue))
     }
 
-    func testLineCutoutWidth() throws {
-        // Test that the setter and getter work
-        let value = 25.0
-        manager.lineCutoutWidth = value
-        XCTAssertEqual(manager.lineCutoutWidth, value)
-
-        // Test that the value is synced to the layer
-        manager.impl.syncSourceAndLayerIfNeeded()
-        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        if case .constant(let actualValue) = layer.lineCutoutWidth {
-            XCTAssertEqual(actualValue, value, accuracy: 0.1)
-        } else {
-            XCTFail("Expected constant")
-        }
-
-        // Test that the property can be reset to nil
-        manager.lineCutoutWidth = nil
-        XCTAssertNil(manager.lineCutoutWidth)
-
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
-        manager.impl.syncSourceAndLayerIfNeeded()
-        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineCutoutWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cutout-width").value as! NSNumber).doubleValue))
-    }
-
     func testLineDasharray() throws {
         // Test that the setter and getter work
         let value = Array.testFixture(withLength: 10, generator: { 0.0 })

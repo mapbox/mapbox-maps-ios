@@ -46,8 +46,6 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.lineCutoutFadeWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineCutoutOpacity = Value<Double>.testConstantValue()
             layer.lineCutoutOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.lineCutoutWidth = Value<Double>.testConstantValue()
-            layer.lineCutoutWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineDepthOcclusionFactor = Value<Double>.testConstantValue()
             layer.lineDepthOcclusionFactorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineEmissiveStrength = Value<Double>.testConstantValue()

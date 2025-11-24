@@ -241,6 +241,7 @@ private final class Route {
         didSet { updateVisible() }
     }
     var layerId: String { "route-\(name)" }
+    var cutoutLayerId: String { "route-\(name)-cutout" }
     private(set) var etaAnnotation: ViewAnnotation?
     private var etaView: ETAView?
     private var displayed = false
@@ -296,11 +297,15 @@ private final class Route {
         routeLayer.lineBorderWidth = .constant(2)
         routeLayer.lineBorderColor = .expression(colorExpression(normal: "#666666", selected: "#327AC2"))
         routeLayer.slot = .middle
-        // make route lines visible through obstructing 3D buildings and other aboveground features
-        routeLayer.lineCutoutWidth = .constant(30)
-        routeLayer.lineCutoutFadeWidth = .constant(0.5)
-        routeLayer.lineCutoutOpacity = .constant(0)
         try! mapView.mapboxMap.addLayer(routeLayer)
+
+        // make route lines visible through obstructing 3D buildings and other aboveground features
+        var cutoutLayer = LineLayer(id: cutoutLayerId, source: layerId)
+        cutoutLayer.lineWidth = .constant(30.0)
+        cutoutLayer.slot = .middle
+        cutoutLayer.lineCutoutFadeWidth = .constant(0.5)
+        cutoutLayer.lineCutoutOpacity = .constant(0)
+        try! mapView.mapboxMap.addLayer(cutoutLayer)
 
         // Annotation
         let etaView = ETAView(text: time)

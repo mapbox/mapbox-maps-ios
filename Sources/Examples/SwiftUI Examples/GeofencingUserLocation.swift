@@ -1,9 +1,8 @@
 import Foundation
 import SwiftUI
 @_spi(Experimental) import MapboxMaps
-@_spi(Experimental) import MapboxCommon
+import MapboxCommon
 
-/// This is an Example for Experimental API that is subject to change.
 struct GeofencingUserLocation: View {
     @State private var region: CircularRegion?
     @ObservedObject private var geofencing = Geofencing()

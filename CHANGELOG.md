@@ -4,12 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-## 11.17.0-rc.2 - 21 November, 2025
-
 ## 11.17.0
 
 ### Features ✨ and improvements 🏁
 * Promote Geofencing APIs to stable. Remove `@_spi(Experimental)` from Geofencing APIs.
+
+## 11.17.0-rc.2 - 21 November, 2025
 
 ## 11.17.0-rc.1 - 20 November, 2025
 

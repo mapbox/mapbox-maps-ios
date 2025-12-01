@@ -12,12 +12,18 @@ extension MapStyle {
     ///   - showPlaceLabels: Show or hide place labels. Default value: `true`.
     ///   - showRoadLabels: Show or hide road labels including road shields. Default value: `true`.
     ///   - showPedestrianRoads: Show or hide pedestrian roads, paths, and trails. Default value: `true`.
-    ///   - show3dObjects: Show or hide 3d objects (buildings, landmarks, trees, etc.) including shadows, ambient occlusion, and flood lights. Default value: `true`.
+    ///   - show3dObjects: Show or hide all 3D objects, including buildings, landmarks, and trees. Default value: `true`.
     ///   - backgroundPointOfInterestLabels: Set background shape for POI labels. Default value: `circle`.
     ///   - colorAdminBoundaries: Set a custom color for administrative boundaries. Default value: `hsl(345, 100%, 70%)`.
     ///   - colorBuildingHighlight: Set a custom color for building fill extrusion when setting highlight state. Default value: `hsl(34, 30%, 93%)`.
+    ///   - colorBuildings: Set a custom color for 3D & 2D buildings. Default value: `hsl(40, 43%, 93%)`.
     ///   - colorBuildingSelect: Set a custom color for building fill extrusion when setting select state. Default value: `hsl(214, 82%, 63%)`.
+    ///   - colorCommercial: Set a custom color for commercial areas. Default value: `hsl(24, 100%, 94%)`.
+    ///   - colorEducation: Set a custom color for education areas. Default value: `hsl(40, 50%, 88%)`.
     ///   - colorGreenspace: Set a custom color for greenspaces such as forests, parks, and woods. Default value: `hsl(115, 60%, 84%)`.
+    ///   - colorIndustrial: Set a custom color for industrial areas and airports. Default value: `hsl(230, 15%, 92%)`.
+    ///   - colorLand: Set a custom color for land. Default value: `hsl(20, 20%, 95%)`.
+    ///   - colorMedical: Set a custom color for medical areas. Default value: `hsl(0, 50%, 92%)`.
     ///   - colorModePointOfInterestLabels: Use the default categorical colors or set a single custom color for POI labels. Default value: `default`.
     ///   - colorMotorways: Set a custom color for motorway roads. Default value: `hsl(214, 23%, 70%)`.
     ///   - colorPlaceLabelHighlight: Set a custom color for place labels when setting highlight state. Default value: `hsl(4, 43%, 55%)`.
@@ -26,11 +32,16 @@ extension MapStyle {
     ///   - colorPointOfInterestLabels: Set a custom color for POI labels. Default value: `#848e94`.
     ///   - colorRoadLabels: Set a custom color for road labels. Default value: `hsl(0, 0%, 25%)`.
     ///   - colorRoads: Set a custom color for other roads. Default value: `hsl(224, 25%, 80%)`.
+    ///   - colorSnow: Set a custom color for snow. Default value: `hsl(0, 0%, 100%)`.
     ///   - colorTrunks: Set a custom color for trunk roads. Default value: `hsl(235, 20%, 70%)`.
     ///   - colorWater: Set a custom color for water. Default value: `hsl(200, 100%, 80%)`.
     ///   - densityPointOfInterestLabels: Set the density of POI labels. Default value: `3`.
     ///   - fuelingStationModePointOfInterestLabels: Control the visibility of fuel and electric charging station POI labels. Default displays both types. Default value: `default`.
     ///   - roadsBrightness: Control how bright roads appear in dark styles. Default value: `0.4`.
+    ///   - show3dBuildings: Show or hide 3D buildings. Default value: `true`.
+    ///   - show3dFacades: Show or hide 3D building facades.
+    ///   - show3dLandmarks: Show or hide 3D landmark buildings. Default value: `true`.
+    ///   - show3dTrees: Show or hide 3D trees. Default value: `true`.
     ///   - showAdminBoundaries: Show or hide administrative boundaries. Default value: `true`.
     ///   - showLandmarkIconLabels: Show or hide Landmark icon labels. Default value: `true`.
     ///   - showLandmarkIcons: Show or hide Landmark icons.
@@ -48,8 +59,14 @@ extension MapStyle {
         backgroundPointOfInterestLabels: StandardBackgroundPointOfInterestLabels? = nil,
         colorAdminBoundaries: StyleColor? = nil,
         colorBuildingHighlight: StyleColor? = nil,
+        colorBuildings: StyleColor? = nil,
         colorBuildingSelect: StyleColor? = nil,
+        colorCommercial: StyleColor? = nil,
+        colorEducation: StyleColor? = nil,
         colorGreenspace: StyleColor? = nil,
+        colorIndustrial: StyleColor? = nil,
+        colorLand: StyleColor? = nil,
+        colorMedical: StyleColor? = nil,
         colorModePointOfInterestLabels: StandardColorModePointOfInterestLabels? = nil,
         colorMotorways: StyleColor? = nil,
         colorPlaceLabelHighlight: StyleColor? = nil,
@@ -58,11 +75,16 @@ extension MapStyle {
         colorPointOfInterestLabels: StyleColor? = nil,
         colorRoadLabels: StyleColor? = nil,
         colorRoads: StyleColor? = nil,
+        colorSnow: StyleColor? = nil,
         colorTrunks: StyleColor? = nil,
         colorWater: StyleColor? = nil,
         densityPointOfInterestLabels: Double? = nil,
         fuelingStationModePointOfInterestLabels: StandardFuelingStationModePointOfInterestLabels? = nil,
         roadsBrightness: Double? = nil,
+        show3dBuildings: Bool? = nil,
+        show3dFacades: Bool? = nil,
+        show3dLandmarks: Bool? = nil,
+        show3dTrees: Bool? = nil,
         showAdminBoundaries: Bool? = nil,
         showLandmarkIconLabels: Bool? = nil,
         showLandmarkIcons: Bool? = nil,
@@ -81,8 +103,14 @@ extension MapStyle {
         config.encode(key: "backgroundPointOfInterestLabels", value: backgroundPointOfInterestLabels)
         config.encode(key: "colorAdminBoundaries", value: colorAdminBoundaries)
         config.encode(key: "colorBuildingHighlight", value: colorBuildingHighlight)
+        config.encode(key: "colorBuildings", value: colorBuildings)
         config.encode(key: "colorBuildingSelect", value: colorBuildingSelect)
+        config.encode(key: "colorCommercial", value: colorCommercial)
+        config.encode(key: "colorEducation", value: colorEducation)
         config.encode(key: "colorGreenspace", value: colorGreenspace)
+        config.encode(key: "colorIndustrial", value: colorIndustrial)
+        config.encode(key: "colorLand", value: colorLand)
+        config.encode(key: "colorMedical", value: colorMedical)
         config.encode(key: "colorModePointOfInterestLabels", value: colorModePointOfInterestLabels)
         config.encode(key: "colorMotorways", value: colorMotorways)
         config.encode(key: "colorPlaceLabelHighlight", value: colorPlaceLabelHighlight)
@@ -91,11 +119,16 @@ extension MapStyle {
         config.encode(key: "colorPointOfInterestLabels", value: colorPointOfInterestLabels)
         config.encode(key: "colorRoadLabels", value: colorRoadLabels)
         config.encode(key: "colorRoads", value: colorRoads)
+        config.encode(key: "colorSnow", value: colorSnow)
         config.encode(key: "colorTrunks", value: colorTrunks)
         config.encode(key: "colorWater", value: colorWater)
         config.encode(key: "densityPointOfInterestLabels", value: densityPointOfInterestLabels)
         config.encode(key: "fuelingStationModePointOfInterestLabels", value: fuelingStationModePointOfInterestLabels)
         config.encode(key: "roadsBrightness", value: roadsBrightness)
+        config.encode(key: "show3dBuildings", value: show3dBuildings)
+        config.encode(key: "show3dFacades", value: show3dFacades)
+        config.encode(key: "show3dLandmarks", value: show3dLandmarks)
+        config.encode(key: "show3dTrees", value: show3dTrees)
         config.encode(key: "showAdminBoundaries", value: showAdminBoundaries)
         config.encode(key: "showLandmarkIconLabels", value: showLandmarkIconLabels)
         config.encode(key: "showLandmarkIcons", value: showLandmarkIcons)

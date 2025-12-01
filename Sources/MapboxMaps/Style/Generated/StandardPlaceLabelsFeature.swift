@@ -26,7 +26,7 @@ public final class StandardPlaceLabelsFeature: FeaturesetFeatureType {
     /// ```
     ///
     /// To configure appearance of the states use the following configuration options: `colorPlaceLabelHighlight`, `colorPlaceLabelSelect`.
-    /// For more information see ``MapStyle/standardSatellite(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showRoadsAndTransit:showPedestrianRoads:backgroundPointOfInterestLabels:colorAdminBoundaries:colorModePointOfInterestLabels:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabels:colorPlaceLabelSelect:colorPointOfInterestLabels:colorRoadLabels:colorRoads:colorTrunks:densityPointOfInterestLabels:roadsBrightness:showAdminBoundaries:)``.
+    /// For more information see ``MapStyle/standardSatellite(lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showRoadsAndTransit:showPedestrianRoads:backgroundPointOfInterestLabels:colorAdminBoundaries:colorModePointOfInterestLabels:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabels:colorPlaceLabelSelect:colorPointOfInterestLabels:colorRoadLabels:colorRoads:colorTrunks:densityPointOfInterestLabels:fuelingStationModePointOfInterestLabels:roadsBrightness:showAdminBoundaries:)``.
     public struct State: Codable, Equatable {
         /// When `true`, hides the label. Use this state when displaying a custom annotation on top.
         public var hide: Bool?

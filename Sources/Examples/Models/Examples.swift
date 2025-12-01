@@ -70,9 +70,6 @@ struct Examples {
         Example(title: "Animate Marker Position",
                 description: "Animate updates to a marker/annotation's position.",
                 type: AnimatedMarkerExample.self)
-        Example(title: "Change icon size",
-                description: "Change icon size with Symbol layer.",
-                type: IconSizeChangeExample.self)
         Example(title: "Draw multiple geometries",
                 description: "Draw multiple shapes on a map.",
                 type: MultipleGeometriesExample.self)

@@ -91,6 +91,7 @@
 		6B040F65241ABF600D70D14D /* Custom3DPuckExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C957F9CA07061B793C2DD4A /* Custom3DPuckExample.swift */; platformFilter = ios; };
 		7036A19FCD2CCE85BDDF4E00 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5E598A16FA446F583344CB /* TrackingModeExample.swift */; platformFilter = ios; };
 		732DD7412EA8308000CCDD65 /* AppearancesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732DD7402EA8308000CCDD65 /* AppearancesExample.swift */; };
+		7363B8EE2ED0D7E4002D00B3 /* CustomVectorIconsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363B8ED2ED0D7E4002D00B3 /* CustomVectorIconsExample.swift */; };
 		7365170E39A459EB4DFA198B /* ExamplesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE18E37A8652B4807D2459F1 /* ExamplesUITests.swift */; platformFilter = ios; };
 		73C81A0F2EC3D14D00387773 /* SettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C81A0E2EC3D14D00387773 /* SettingsSheet.swift */; };
 		754B87ED0F8761A02C8C09C2 /* StyleOverridesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF257763AFD6E4964B28C9EB /* StyleOverridesModel.swift */; platformFilter = ios; };
@@ -132,7 +133,6 @@
 		B304BACFCD08802A740E8919 /* PuckPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CC67084BA1191D0B179A94 /* PuckPlayground.swift */; };
 		B53EA441C54E2B680A7E99F0 /* BuildingExtrusionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF80A86D7DEF54E0A7256DF /* BuildingExtrusionsExample.swift */; platformFilter = ios; };
 		B6AA94E58F828EDE740BD047 /* RadarExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2980F63F3B84D7031779978 /* RadarExtensions.swift */; platformFilter = ios; };
-		B9B1EE72E6203358F2785916 /* IconSizeChangeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6F479FB7FFD90FA95F400E /* IconSizeChangeExample.swift */; platformFilter = ios; };
 		B9D4B9C3042383738AB5B667 /* DebugMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59EF8798357CF55109A4E56 /* DebugMapExample.swift */; platformFilter = ios; };
 		BD99E89F050E7D93846147FF /* ViewAnnotationBasicExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C6CF222C8EE9AE69563E39 /* ViewAnnotationBasicExample.swift */; platformFilter = ios; };
 		BDABAAC8727AF67A0DEE2020 /* AnimateGeoJSONLineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7274E152F7FBB7894447F822 /* AnimateGeoJSONLineExample.swift */; platformFilter = ios; };
@@ -257,7 +257,6 @@
 		3DCA3CFE97357EF7D190E2A2 /* DetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsView.swift; sourceTree = "<group>"; };
 		3E2F68B22AFF73A71F86CABC /* ExamplesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExamplesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E3A0CCD53B02FF2BAD830A2 /* CameraAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAnimationExample.swift; sourceTree = "<group>"; };
-		3F6F479FB7FFD90FA95F400E /* IconSizeChangeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconSizeChangeExample.swift; sourceTree = "<group>"; };
 		3FB717239BBFE5103C1EB1A4 /* AdvancedViewportGesturesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedViewportGesturesExample.swift; sourceTree = "<group>"; };
 		3FC5980DD30479F30127BA71 /* NavigationSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSimulator.swift; sourceTree = "<group>"; };
 		450C8D5E4B84428FE51BCA97 /* route.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = route.geojson; sourceTree = "<group>"; };
@@ -299,6 +298,8 @@
 		7274E152F7FBB7894447F822 /* AnimateGeoJSONLineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGeoJSONLineExample.swift; sourceTree = "<group>"; };
 		732DD7402EA8308000CCDD65 /* AppearancesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearancesExample.swift; sourceTree = "<group>"; };
 		73C81A0E2EC3D14D00387773 /* SettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsSheet.swift; path = Sources/Examples/Controllers/SettingsSheet.swift; sourceTree = "<group>"; };
+		7363B8ED2ED0D7E4002D00B3 /* CustomColorizedVectorIconsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomColorizedVectorIconsExample.swift; path = "Sources/Examples/SwiftUI Examples/CustomColorizedVectorIconsExample.swift"; sourceTree = "<group>"; };
+		7363B8ED2ED0D7E4002D00B3 /* CustomVectorIconsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomVectorIconsExample.swift; path = "Sources/Examples/SwiftUI Examples/CustomVectorIconsExample.swift"; sourceTree = "<group>"; };
 		73E23CA02EB25A510035A052 /* AppearancesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppearancesExample.swift; path = "Sources/Examples/SwiftUI Examples/AppearancesExample.swift"; sourceTree = "<group>"; };
 		75D03F5A3A0E879717BFE421 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		75F4874FE9742DF10F0D0483 /* ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
@@ -577,7 +578,6 @@
 				4D5DB9BD5E97D3C0080EC5D3 /* CustomPointAnnotationExample.swift */,
 				3333EF3E0F1C789809F385AF /* DynamicViewAnnotationExample.swift */,
 				5FC0F09FF1EF1A88BC1C6545 /* FrameViewAnnotationsExample.swift */,
-				3F6F479FB7FFD90FA95F400E /* IconSizeChangeExample.swift */,
 				3BDE7738CA55957F3FAC3ECE /* LineAnnotationExample.swift */,
 				B7A7586D05B960928AB17A0D /* MultipleGeometriesExample.swift */,
 				A8359ECB5024BEF3722C3CA1 /* PointAnnotationClusteringExample.swift */,
@@ -721,6 +721,8 @@
 			isa = PBXGroup;
 			children = (
 				73C81A0E2EC3D14D00387773 /* SettingsSheet.swift */,
+				7363B8ED2ED0D7E4002D00B3 /* CustomColorizedVectorIconsExample.swift */,
+				7363B8ED2ED0D7E4002D00B3 /* CustomVectorIconsExample.swift */,
 				73E23CA02EB25A510035A052 /* AppearancesExample.swift */,
 				52909911727F239150D4FE30 /* Examples */,
 				DA93D15473B052576C7D2965 /* ExamplesTests */,
@@ -1022,6 +1024,7 @@
 				A1FABB64B1C3EEC9E5AF06A0 /* ContentView.swift in Sources */,
 				60A1572CCF5763FA3C946B89 /* Custom2DPuckExample.swift in Sources */,
 				6B040F65241ABF600D70D14D /* Custom3DPuckExample.swift in Sources */,
+				7363B8EE2ED0D7E4002D00B3 /* CustomVectorIconsExample.swift in Sources */,
 				4E64A70408A69F2BC9F70610 /* CustomGeometrySourceExample.swift in Sources */,
 				EE4064D753E360A6A6AC5BAC /* CustomLayerExample.swift in Sources */,
 				08DD7D352E50C412B667D6F6 /* CustomLayerExampleShaders.metal in Sources */,
@@ -1056,7 +1059,6 @@
 				5F2AD73C8104089C9291574E /* GeofencingUserLocation.swift in Sources */,
 				0414AD72988F405F5BA1D843 /* GlobeFlyToExample.swift in Sources */,
 				49F6209402BF34C06C90107A /* HeatmapLayerGlobeExample.swift in Sources */,
-				B9B1EE72E6203358F2785916 /* IconSizeChangeExample.swift in Sources */,
 				2D3DF43CEE3D4C2B0B012E0E /* IndoorExample.swift in Sources */,
 				423A42B555DD0B3AD4856FCF /* InsetMapExample.swift in Sources */,
 				94DB7E8C829041DC5F5B2300 /* InstrumentClusterCarPlaySceneDelegate.swift in Sources */,

@@ -289,8 +289,8 @@ func adjust(heading: Heading, toViewOrientation orientation: UIInterfaceOrientat
     let adjustment: CLLocationDirection = switch orientation {
     case .portrait: 0
     case .portraitUpsideDown: 180
-    case .landscapeLeft: 90 // home button on the right side
-    case .landscapeRight: -90 // home button on the left side
+    case .landscapeLeft: -90 // home button on the left side
+    case .landscapeRight: 90 // home button on the right side
     case .unknown: 0
     @unknown default: 0
     }

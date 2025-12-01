@@ -229,10 +229,10 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(portraitUpsideDownResult.direction, 225)
 
         let landscapeLeftResult = adjust(heading: baseHeading, toViewOrientation: .landscapeLeft)
-        XCTAssertEqual(landscapeLeftResult.direction, 135)
+        XCTAssertEqual(landscapeLeftResult.direction, 315)
 
         let landscapeRightResult = adjust(heading: baseHeading, toViewOrientation: .landscapeRight)
-        XCTAssertEqual(landscapeRightResult.direction, 315)
+        XCTAssertEqual(landscapeRightResult.direction, 135)
 
         let unknownResult = adjust(heading: baseHeading, toViewOrientation: .unknown)
         XCTAssertEqual(unknownResult.direction, 45)

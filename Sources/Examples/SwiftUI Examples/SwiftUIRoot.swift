@@ -28,6 +28,7 @@ struct SwiftUIExamples {
 #endif
             Example("Clustering data", note: "Display GeoJSON data with clustering using custom layers and handle interactions with them.", destination: ClusteringExample())
             Example("Appearances", note: "Change icon images dynamically using the Appearances API with feature-state.", destination: AppearancesExample())
+            Example("Custom Vector Icons", note: "Dynamically style vector icons with custom colors and interactively change their size on tap.", destination: CustomVectorIconsExample())
             Example("Geofencing User Location", note: "Set geofence on user initial location.", destination: GeofencingUserLocation())
             Example("Geofencing Playground", note: "Showcase isochrone API together with geofences.", destination: GeofencingPlayground())
             Example("Color Themes", note: "Showcase the Color Theme API", destination: ColorThemeExample())

@@ -163,12 +163,6 @@ extension GeoJSONSource {
         with(self, setter(\.data, newValue))
     }
 
-    /// Minimum zoom level at which to create vector tiles
-    /// Default value: 0.
-    public func minzoom(_ newValue: Double) -> Self {
-        with(self, setter(\.minzoom, newValue))
-    }
-
     /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom.
     /// Default value: 4.
     public func prefetchZoomDelta(_ newValue: Double) -> Self {

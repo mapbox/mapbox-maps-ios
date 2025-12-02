@@ -142,8 +142,6 @@ Map {
 
 ## 11.13.0-rc.1 - 03 June, 2025
 
-## 11.13.0-rc.1
-
 * Added new `FillLayer.fillPatternCrossFade`, `FillExtrusionLayer.fillExtrusionPatternCrossFade`, `LineLayer.fillExtrusionPatternCrossFade` properties.
 
 ## 11.12.0 - 07 May, 2025
@@ -219,8 +217,6 @@ mapView.mapboxMap.addInteraction(TapInteraction(.standardPoi) { poi, feature in
 * Expose new experimental properties: `CircleLayer.circleElevationReference`, `FillLayer.fillConstructBridgeGuardRail`, `FillLayer.fillBridgeGuardRailColor`, `FillLayer.fillTunnelStructureColor`.
 * Expose new `showLandmarkIcons` property in `MapStyle.standard`.
 * New example for elevated spiral line. Utilized the experimental API `LineLayer/linezOffset`.
-
-## 11.12.0 - 07 May, 2025
 
 ## 11.12.0-rc.1 - 23 April, 2025
 
@@ -315,7 +311,7 @@ Use this property to define view annotation sort order.
 * Fix the encoding/decoding key for `Rain/centerThinning` and `Snow/centerThinning`.
 * Update CoreMaps to 11.9.0 and Common to 24.9.0.
 
-## 11.9.0-beta.1 - 9 December, 2024
+## 11.9.0-rc.1 - 9 December, 2024
 
 * Add a new API to disable custom resizing implementation of the MapView. To disable the custom resizing implementation, set `MapView.resizingAnimation` to `.none`.
 * Add `to-hsla` expression support.

@@ -445,7 +445,7 @@ without including the above copyright and permission notices.
 
 ---
 
-### Boost C++ Libraries,1.84.0,BSL-1.0,Boost authors,https://www.boost.org
+### Boost C++ Libraries,1.89.0,BSL-1.0,Boost authors,https://www.boost.org
 
 ```
 Boost Software License - Version 1.0 - August 17th, 2003

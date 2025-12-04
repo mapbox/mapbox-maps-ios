@@ -10,6 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add Standard Style color and 3D configuration options: `colorBuildings`, `colorCommercial`, `colorEducation`, `colorIndustrial`, `colorLand`, `colorMedical`, `colorSnow`, `show3dBuildings`, `show3dFacades`, `show3dLandmarks`, and `show3dTrees`.
 
 ## 11.17.0
+## 11.17.0-rc.3 - 28 November, 2025
 
 ### Features ✨ and improvements 🏁
 * Promote Geofencing APIs to stable. Remove `@_spi(Experimental)` from Geofencing APIs.

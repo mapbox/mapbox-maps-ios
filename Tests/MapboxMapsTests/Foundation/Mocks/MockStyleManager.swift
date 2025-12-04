@@ -1,5 +1,5 @@
 import Foundation
-@testable import MapboxMaps
+@testable @_spi(Marshalling) import MapboxMaps
 @_implementationOnly import MapboxCommon_Private
 
 class MockStyleManager: StyleManagerProtocol {
@@ -68,7 +68,7 @@ class MockStyleManager: StyleManagerProtocol {
     }
 
     let getStyleDefaultCameraStub = Stub<Void, CoreCameraOptions>(
-        defaultReturnValue: .init(MapboxMaps.CameraOptions())
+        defaultReturnValue: CameraOptions.Marshaller.toObjc(MapboxMaps.CameraOptions())
     )
     func getStyleDefaultCamera() -> CoreCameraOptions {
         getStyleDefaultCameraStub.call()

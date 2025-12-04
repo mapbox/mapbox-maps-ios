@@ -1,6 +1,6 @@
 import XCTest
 import MetalKit
-@_spi(Experimental) @testable import MapboxMaps
+@_spi(Experimental) @_spi(Marshalling) @testable import MapboxMaps
 
 final class MapboxMapTests: XCTestCase {
 
@@ -114,7 +114,7 @@ final class MapboxMapTests: XCTestCase {
     }
 
     func testGetCameraOptions() {
-        XCTAssertEqual(mapboxMap.cameraState, CameraState(mapboxMap.__testingMap.getCameraState()))
+        XCTAssertEqual(mapboxMap.cameraState, CameraState.Marshaller.toSwift(mapboxMap.__testingMap.getCameraState()))
     }
 
     func testGetScreenCullingShape() {

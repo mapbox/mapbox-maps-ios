@@ -1,5 +1,5 @@
 import XCTest
-@_spi(Experimental) @testable import MapboxMaps
+@_spi(Experimental) @_spi(Marshalling) @testable import MapboxMaps
 @_implementationOnly import MapboxCommon_Private
 import CoreLocation
 
@@ -78,7 +78,7 @@ final class SnapshotterTests: XCTestCase {
         snapshotter.setCamera(to: cameraOptions)
 
         XCTAssertEqual(mockMapSnapshotter.setCameraStub.invocations.count, 1)
-        XCTAssertEqual(CameraOptions(mockMapSnapshotter.setCameraStub.invocations[0].parameters), cameraOptions)
+        XCTAssertEqual(CameraOptions.Marshaller.toSwift(mockMapSnapshotter.setCameraStub.invocations[0].parameters), cameraOptions)
     }
 
     //Test snapshot coordinate bounds for camera match those of mock
@@ -98,7 +98,7 @@ final class SnapshotterTests: XCTestCase {
 
         XCTAssertEqual(mockMapSnapshotter.coordinateBoundsForCameraStub.invocations.count, 1)
         XCTAssertEqual(
-            CameraOptions(mockMapSnapshotter.coordinateBoundsForCameraStub.invocations[0].parameters),
+            CameraOptions.Marshaller.toSwift(mockMapSnapshotter.coordinateBoundsForCameraStub.invocations[0].parameters),
             cameraOptions
         )
         XCTAssertEqual(coordinateBounds, returnedCoordinateBounds)
@@ -121,7 +121,7 @@ final class SnapshotterTests: XCTestCase {
         let pitch = 90.0
 
         let cameraOptions = CameraOptions(center: center, padding: padding.toUIEdgeInsetsValue(), anchor: anchor, zoom: zoom, bearing: CLLocationDirection(bearing), pitch: CGFloat(pitch))
-        mockMapSnapshotter.cameraForCoordinatesStub.defaultReturnValue = CoreCameraOptions(cameraOptions)
+        mockMapSnapshotter.cameraForCoordinatesStub.defaultReturnValue = CameraOptions.Marshaller.toObjc(cameraOptions)
 
         let returnedOptions = snapshotter.camera(for: coordinates, padding: padding.toUIEdgeInsetsValue(), bearing: bearing, pitch: pitch)
 

@@ -1,8 +1,9 @@
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
+@_spi(Internal) import MapboxCoreMaps
 
-typealias CoreCameraOptions = MapboxCoreMaps_Private.CameraOptions
-typealias CoreCameraState = MapboxCoreMaps_Private.CameraState
+typealias CoreCameraOptions = MapboxCoreMaps_Private.__CameraOptions
+typealias CoreCameraState = MapboxCoreMaps_Private.__CameraState
 typealias CoreCameraBounds = MapboxCoreMaps_Private.CameraBounds
 typealias CoreCameraBoundsOptions = MapboxCoreMaps_Private.CameraBoundsOptions
 typealias CoreMapSnapshotOptions = MapboxCoreMaps_Private.MapSnapshotOptions
@@ -15,9 +16,9 @@ typealias CoreAnnotatedFeature = MapboxCoreMaps_Private.AnnotatedFeature
 typealias CoreAnnotatedLayerFeature = MapboxCoreMaps_Private.AnnotatedLayerFeature
 typealias CoreProjection = MapboxCoreMaps_Private.Projection
 typealias CoreMap = MapboxCoreMaps_Private.Map
-typealias CoreScreenCoordinate = MapboxCoreMaps_Private.ScreenCoordinate
+typealias CoreScreenCoordinate = MapboxCoreMaps_Private.__ScreenCoordinate
 typealias CoreScreenBox = MapboxCoreMaps_Private.ScreenBox
-typealias CoreEdgeInsets = MapboxCoreMaps_Private.EdgeInsets
+typealias CoreEdgeInsets = MapboxCoreMaps_Private.__EdgeInsets
 typealias CoreTileCoverOptions = MapboxCoreMaps_Private.TileCoverOptions
 typealias CoreMapsImage = MapboxCoreMaps_Private.__Image
 typealias CoreCustomRasterSourceTileData = MapboxCoreMaps_Private.CustomRasterSourceTileData
@@ -47,3 +48,4 @@ typealias CoreFeaturesetQueryTarget = MapboxCoreMaps_Private.FeaturesetQueryTarg
 typealias CoreFeaturesetDescriptor = MapboxCoreMaps_Private.FeaturesetDescriptor
 typealias CoreColorTheme = MapboxCoreMaps_Private.ColorTheme
 typealias CoreAsyncOperationResultCallback = MapboxCoreMaps_Private.AsyncOperationResultCallback
+typealias UIEdgeInsetsCodable = MapboxCoreMaps.UIEdgeInsetsCodable

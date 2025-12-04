@@ -549,7 +549,7 @@ public class StyleManager {
     ///
     /// The `style` default camera is re-evaluated when a new `style` is loaded. Values default to 0.0 if they are not defined in the `style`.
     public var styleDefaultCamera: CameraOptions {
-        return CameraOptions(styleManager.getStyleDefaultCamera())
+        return CameraOptions.Marshaller.toSwift(styleManager.getStyleDefaultCamera())
     }
 
     /// Get or set the map `style`'s transition options.

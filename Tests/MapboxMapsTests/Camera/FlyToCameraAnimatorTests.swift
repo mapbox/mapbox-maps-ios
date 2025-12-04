@@ -3,18 +3,17 @@ import XCTest
 
 final class FlyToCameraAnimatorTests: XCTestCase {
     let initialCameraState = CameraState(
-        CoreCameraState(
-            center: .init(
-                latitude: 42.3601,
-                longitude: -71.0589),
-            padding: .init(
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0),
-            zoom: 10,
-            bearing: 10,
-            pitch: 10))
+        center: .init(
+            latitude: 42.3601,
+            longitude: -71.0589),
+        padding: .init(
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0),
+        zoom: 10,
+        bearing: 10,
+        pitch: 10)
 
     let finalCameraOptions = CameraOptions(
         center: CLLocationCoordinate2D(

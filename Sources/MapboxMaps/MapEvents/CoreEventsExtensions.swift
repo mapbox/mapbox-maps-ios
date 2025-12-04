@@ -1,4 +1,4 @@
-import MapboxCoreMaps
+@_spi(Marshalling) import MapboxCoreMaps
 
 extension MapLoadingError: LocalizedError {
     public var errorDescription: String? { message }
@@ -7,13 +7,13 @@ extension MapLoadingError: LocalizedError {
 extension CameraChanged {
     /// The current state of the camera.
     public var cameraState: CameraState {
-        CameraState(__cameraState)
+        CameraState.Marshaller.toSwift(__cameraState)
     }
 
     /// Creates `CameraChanged` event.
     public convenience init(cameraState: CameraState, timestamp: Date) {
         self.init(
-            __cameraState: CoreCameraState(cameraState),
+            __cameraState: CameraState.Marshaller.toObjc(cameraState),
             timestamp: timestamp
         )
     }

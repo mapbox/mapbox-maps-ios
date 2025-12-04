@@ -11,6 +11,8 @@ Maps rendering SDK also known as GL-Native. These are for internal use only.
 - ``Size``
 - ``StylePackError-class``
 - ``RequestErrorType``
+- ``EdgeInsets``
+- ``ScreenCoordinate``
 
 <!-- functions -->
 - ``MBMMapLoadingErrorTypeToString(_:)``

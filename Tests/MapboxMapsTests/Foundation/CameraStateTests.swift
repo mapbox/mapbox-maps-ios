@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@testable @_spi(Marshalling) import MapboxMaps
 
 final class CameraStateTests: XCTestCase {
     var center: CLLocationCoordinate2D!
@@ -48,7 +48,7 @@ final class CameraStateTests: XCTestCase {
     }
 
     func testInitWithObjCValue() {
-        let cameraState = CameraState(
+        let cameraState = CameraState.Marshaller.toSwift(
             CoreCameraState(
                 center: center,
                 padding: padding.toMBXEdgeInsetsValue(),

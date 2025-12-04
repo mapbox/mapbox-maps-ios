@@ -21,16 +21,15 @@ internal class FlyToTests: XCTestCase {
     fileprivate func privateTestFlyTo(s0: CLLocationCoordinate2D, s2: CLLocationCoordinate2D) {
 
         let source = CameraState(
-            CoreCameraState(
-                center: s0,
-                padding: .init(
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0),
-                zoom: 10,
-                bearing: 0,
-                pitch: 0))
+            center: s0,
+            padding: .init(
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0),
+            zoom: 10,
+            bearing: 0,
+            pitch: 0)
 
         let dest = CameraOptions(
             center: s2,
@@ -87,16 +86,15 @@ internal class FlyToTests: XCTestCase {
             )
 
             let source = CameraState(
-                CoreCameraState(
-                    center: sourceCoord,
-                    padding: .init(
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        right: 0),
-                    zoom: 14,
-                    bearing: 0,
-                    pitch: 0))
+                center: sourceCoord,
+                padding: .init(
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0),
+                zoom: 14,
+                bearing: 0,
+                pitch: 0)
 
             let dest = CameraOptions(center: destCoord,
                                      zoom: 18,

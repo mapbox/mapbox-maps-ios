@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable @_spi(Experimental) import MapboxMaps
+@testable @_spi(Experimental) @_spi(Marshalling) import MapboxMaps
 @_implementationOnly import MapboxCommon_Private
 
 final class StyleManagerTests: XCTestCase {
@@ -140,7 +140,7 @@ final class StyleManagerTests: XCTestCase {
 
     func testDefaultCamera() {
         let stubCamera = MapboxMaps.CameraOptions.testConstantValue()
-        styleManager.getStyleDefaultCameraStub.defaultReturnValue = CoreCameraOptions(stubCamera)
+        styleManager.getStyleDefaultCameraStub.defaultReturnValue = CameraOptions.Marshaller.toObjc(stubCamera)
 
         XCTAssertEqual(style.styleDefaultCamera, stubCamera)
     }

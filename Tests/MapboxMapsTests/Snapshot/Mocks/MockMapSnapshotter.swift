@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@testable @_spi(Marshalling) import MapboxMaps
 @_implementationOnly import MapboxCommon_Private
 
 final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
@@ -52,7 +52,7 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
         var pitch: NSNumber?
     }
 
-    var cameraForCoordinatesStub = Stub<CameraForCoordinatesParams, CoreCameraOptions>(defaultReturnValue: .init(.testConstantValue()))
+    var cameraForCoordinatesStub = Stub<CameraForCoordinatesParams, CoreCameraOptions>(defaultReturnValue: CameraOptions.Marshaller.toObjc(.testConstantValue()))
     func cameraForCoordinates(for coordinates: [Coordinate2D], padding: CoreEdgeInsets?, bearing: NSNumber?, pitch: NSNumber?) -> CoreCameraOptions {
         cameraForCoordinatesStub.call(with: CameraForCoordinatesParams(coordinates: coordinates, padding: padding, bearing: bearing, pitch: pitch))
     }

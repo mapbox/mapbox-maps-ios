@@ -2,7 +2,7 @@
 import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
-
+@_spi(Marshalling) import MapboxCoreMaps
 @_implementationOnly import MapboxCommon_Private
 
 internal protocol MapSnapshotterProtocol: StyleManagerProtocol {
@@ -91,13 +91,13 @@ public class Snapshotter: StyleManager {
 
     /// The current camera state of the snapshotter
     public var cameraState: CameraState {
-        return CameraState(mapSnapshotter.getCameraState())
+        CameraState.Marshaller.toSwift(mapSnapshotter.getCameraState())
     }
 
     /// Sets the camera of the snapshotter
     /// - Parameter cameraOptions: The target camera options
     public func setCamera(to cameraOptions: CameraOptions) {
-        mapSnapshotter.setCameraFor(CoreCameraOptions(cameraOptions))
+        mapSnapshotter.setCameraFor(CameraOptions.Marshaller.toObjc(cameraOptions))
     }
 
     /**
@@ -286,7 +286,7 @@ public class Snapshotter: StyleManager {
     /// - Parameter camera: The camera for which the coordinate bounds will be returned.
     /// - Returns: `CoordinateBounds` for the given `CameraOptions`
     public func coordinateBounds(for camera: CameraOptions) -> CoordinateBounds {
-        return mapSnapshotter.coordinateBoundsForCamera(forCamera: CoreCameraOptions(camera))
+        return mapSnapshotter.coordinateBoundsForCamera(forCamera: CameraOptions.Marshaller.toObjc(camera))
     }
 
     /// Calculates a `CameraOptions` to fit a list of coordinates.
@@ -301,7 +301,7 @@ public class Snapshotter: StyleManager {
                        padding: UIEdgeInsets?,
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
-        return CameraOptions(mapSnapshotter.cameraForCoordinates(
+        return CameraOptions.Marshaller.toSwift(mapSnapshotter.cameraForCoordinates(
             for: coordinates.map { Coordinate2D(value: $0) },
             padding: padding?.toMBXEdgeInsetsValue(),
             bearing: bearing?.NSNumber,

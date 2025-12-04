@@ -573,7 +573,7 @@ public final class MapboxMap: StyleManager {
                        pitch: Double?,
                        maxZoom: Double?,
                        offset: CGPoint?) -> CameraOptions {
-        return CameraOptions(
+        return CameraOptions.Marshaller.toSwift(
             __map.cameraForCoordinateBounds(
                 for: coordinateBounds,
                 padding: padding?.toMBXEdgeInsetsValue(),
@@ -630,7 +630,7 @@ public final class MapboxMap: StyleManager {
                        padding: UIEdgeInsets?,
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
-        return CameraOptions(
+        return CameraOptions.Marshaller.toSwift(
             __map.cameraForCoordinates(
                 for: coordinates.map { Coordinate2D(value: $0) },
                 padding: padding?.toMBXEdgeInsetsValue(),
@@ -662,10 +662,10 @@ public final class MapboxMap: StyleManager {
     public func camera(for coordinates: [CLLocationCoordinate2D],
                        camera: CameraOptions,
                        rect: CGRect) -> CameraOptions {
-        return CameraOptions(
+        return CameraOptions.Marshaller.toSwift(
             __map.cameraForCoordinates(
                 for: coordinates.map { Coordinate2D(value: $0) },
-                camera: CoreCameraOptions(camera),
+                camera: CameraOptions.Marshaller.toObjc(camera),
                 box: CoreScreenBox(rect)))
     }
 
@@ -687,7 +687,7 @@ public final class MapboxMap: StyleManager {
                        offset: CGPoint?) throws -> CameraOptions {
         let expected = __map.cameraForCoordinates(
             for: coordinates.map { Coordinate2D(value: $0) },
-            camera: CoreCameraOptions(camera),
+            camera: CameraOptions.Marshaller.toObjc(camera),
             coordinatesPadding: coordinatesPadding?.toMBXEdgeInsetsValue(),
             maxZoom: maxZoom as? NSNumber,
             offset: offset?.screenCoordinate
@@ -699,7 +699,7 @@ public final class MapboxMap: StyleManager {
         guard let options = expected.value else {
             throw MapError(coreError: "Failed to unwrap CameraOptions")
         }
-        return CameraOptions(options)
+        return CameraOptions.Marshaller.toSwift(options)
     }
 
     /// Calculates a `CameraOptions` to fit a geometry
@@ -744,7 +744,7 @@ public final class MapboxMap: StyleManager {
                        padding: UIEdgeInsets,
                        bearing: CGFloat?,
                        pitch: CGFloat?) -> CameraOptions {
-        return CameraOptions(
+        return CameraOptions.Marshaller.toSwift(
             __map.cameraForGeometry(
                 for: MapboxCommon.Geometry(geometry),
                 padding: padding.toMBXEdgeInsetsValue(),
@@ -762,7 +762,7 @@ public final class MapboxMap: StyleManager {
     /// - Returns: `CoordinateBounds` for the given `CameraOptions`
     public func coordinateBounds(for camera: CameraOptions) -> CoordinateBounds {
         return __map.coordinateBoundsForCamera(
-            forCamera: CoreCameraOptions(camera))
+            forCamera: CameraOptions.Marshaller.toObjc(camera))
     }
 
     /// Returns the unwrapped coordinate bounds to a given ``CameraOptions-swift.struct``.
@@ -774,7 +774,7 @@ public final class MapboxMap: StyleManager {
     /// - Parameter camera: The camera for which the coordinate bounds will be returned.
     /// - Returns: `CoordinateBounds` for the given ``CameraOptions-swift.struct``.
     public func coordinateBoundsUnwrapped(for camera: CameraOptions) -> CoordinateBounds {
-        return __map.coordinateBoundsForCameraUnwrapped(forCamera: CoreCameraOptions(camera))
+        return __map.coordinateBoundsForCameraUnwrapped(forCamera: CameraOptions.Marshaller.toObjc(camera))
     }
 
     /// Returns the coordinate bounds and zoom for a given `CameraOptions`.
@@ -784,7 +784,7 @@ public final class MapboxMap: StyleManager {
     /// - Parameter camera: The camera for which the `CoordinateBoundsZoom` will be returned.
     /// - Returns: `CoordinateBoundsZoom` for the given `CameraOptions`
     public func coordinateBoundsZoom(for camera: CameraOptions) -> CoordinateBoundsZoom {
-        return __map.coordinateBoundsZoomForCamera(forCamera: CoreCameraOptions(camera))
+        return __map.coordinateBoundsZoomForCamera(forCamera: CameraOptions.Marshaller.toObjc(camera))
     }
 
     /// Returns the unwrapped coordinate bounds and zoom for a given `CameraOptions`.
@@ -797,7 +797,7 @@ public final class MapboxMap: StyleManager {
     ///     be returned.
     /// - Returns: `CoordinateBoundsZoom` for the given `CameraOptions`
     public func coordinateBoundsZoomUnwrapped(for camera: CameraOptions) -> CoordinateBoundsZoom {
-        return __map.coordinateBoundsZoomForCameraUnwrapped(forCamera: CoreCameraOptions(camera))
+        return __map.coordinateBoundsZoomForCameraUnwrapped(forCamera: CameraOptions.Marshaller.toObjc(camera))
     }
 
     // MARK: - Screen coordinate conversion
@@ -897,12 +897,12 @@ public final class MapboxMap: StyleManager {
     ///
     /// - Parameter cameraOptions: New camera options
     public func setCamera(to cameraOptions: CameraOptions) {
-        __map.setCameraFor(CoreCameraOptions(cameraOptions))
+        __map.setCameraFor(CameraOptions.Marshaller.toObjc(cameraOptions) as CoreCameraOptions)
     }
 
     /// Returns the current camera state
     public var cameraState: CameraState {
-        return CameraState(__map.getCameraState())
+        CameraState.Marshaller.toSwift(__map.getCameraState())
     }
 
     /// The map's current anchor, calculated after applying padding (if it exists)
@@ -960,7 +960,7 @@ public final class MapboxMap: StyleManager {
     ///     The camera options object showing end point.
     public func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions {
         let options = __map.cameraForDrag(forStart: from.screenCoordinate, end: to.screenCoordinate)
-        return CameraOptions(options)
+        return CameraOptions.Marshaller.toSwift(options)
     }
 
     /// :nodoc:

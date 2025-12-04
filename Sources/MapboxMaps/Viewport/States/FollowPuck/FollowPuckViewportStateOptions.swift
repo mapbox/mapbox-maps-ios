@@ -1,4 +1,5 @@
 import UIKit
+@_spi(Internal) import MapboxCoreMaps
 
 /// Configuration options for ``FollowPuckViewportState``.
 ///

@@ -2,6 +2,7 @@ import Foundation
 import CoreLocation
 import CoreGraphics
 import MapboxCoreMaps
+@_implementationOnly import MapboxCoreMaps_Private
 
 // MARK: - CGPoint
 extension CGPoint {

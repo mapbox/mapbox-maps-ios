@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@testable @_spi(Marshalling) import MapboxMaps
 
 final class CameraOptionsTests: XCTestCase {
     var center: CLLocationCoordinate2D!
@@ -68,14 +68,14 @@ final class CameraOptionsTests: XCTestCase {
 
     func testInitWithObjCValue() {
         let objcCameraOptions = CoreCameraOptions(
-            __center: Coordinate2D(value: center),
+            center: Coordinate2D(value: center),
             padding: padding.toMBXEdgeInsetsValue(),
             anchor: anchor.screenCoordinate,
             zoom: zoom.NSNumber,
             bearing: bearing.NSNumber,
             pitch: pitch.NSNumber)
 
-        let cameraOptions = CameraOptions(objcCameraOptions)
+        let cameraOptions = CameraOptions.Marshaller.toSwift(objcCameraOptions)
 
         XCTAssertEqual(cameraOptions.center?.latitude, center.latitude)
         XCTAssertEqual(cameraOptions.center?.longitude, center.longitude)
@@ -88,14 +88,14 @@ final class CameraOptionsTests: XCTestCase {
 
     func testInitWithObjCValueWithNils() {
         let objcCameraOptions = CoreCameraOptions(
-            __center: nil,
+            center: nil,
             padding: nil,
             anchor: nil,
             zoom: nil,
             bearing: nil,
             pitch: nil)
 
-        let cameraOptions = CameraOptions(objcCameraOptions)
+        let cameraOptions = CameraOptions.Marshaller.toSwift(objcCameraOptions)
 
         XCTAssertNil(cameraOptions.center)
         XCTAssertNil(cameraOptions.padding)
@@ -195,28 +195,28 @@ final class CameraOptionsTests: XCTestCase {
             bearing: bearing,
             pitch: pitch)
 
-        let objcCameraOptions = CoreCameraOptions(cameraOptions)
+        let objcCameraOptions: CoreCameraOptions = CameraOptions.Marshaller.toObjc(cameraOptions)
 
-        XCTAssertEqual(objcCameraOptions.__center?.value.latitude, center.latitude)
-        XCTAssertEqual(objcCameraOptions.__center?.value.longitude, center.longitude)
-        XCTAssertEqual(objcCameraOptions.__padding, padding.toMBXEdgeInsetsValue())
-        XCTAssertEqual(objcCameraOptions.__anchor, anchor.screenCoordinate)
-        XCTAssertEqual(objcCameraOptions.__zoom, zoom.NSNumber)
-        XCTAssertEqual(objcCameraOptions.__bearing, bearing.NSNumber)
-        XCTAssertEqual(objcCameraOptions.__pitch, pitch.NSNumber)
+        XCTAssertEqual(objcCameraOptions.center?.value.latitude, center.latitude)
+        XCTAssertEqual(objcCameraOptions.center?.value.longitude, center.longitude)
+        XCTAssertEqual(objcCameraOptions.padding, padding.toMBXEdgeInsetsValue())
+        XCTAssertEqual(objcCameraOptions.anchor, anchor.screenCoordinate)
+        XCTAssertEqual(objcCameraOptions.zoom, zoom.NSNumber)
+        XCTAssertEqual(objcCameraOptions.bearing, bearing.NSNumber)
+        XCTAssertEqual(objcCameraOptions.pitch, pitch.NSNumber)
     }
 
     func testConversionToMapboxCoreMapsCameraOptionsWithNils() {
         let cameraOptions = CameraOptions()
 
-        let objcCameraOptions = CoreCameraOptions(cameraOptions)
+        let objcCameraOptions: CoreCameraOptions = CameraOptions.Marshaller.toObjc(cameraOptions)
 
-        XCTAssertNil(objcCameraOptions.__center)
-        XCTAssertNil(objcCameraOptions.__center)
-        XCTAssertNil(objcCameraOptions.__padding)
-        XCTAssertNil(objcCameraOptions.__anchor)
-        XCTAssertNil(objcCameraOptions.__zoom)
-        XCTAssertNil(objcCameraOptions.__bearing)
-        XCTAssertNil(objcCameraOptions.__pitch)
+        XCTAssertNil(objcCameraOptions.center)
+        XCTAssertNil(objcCameraOptions.center)
+        XCTAssertNil(objcCameraOptions.padding)
+        XCTAssertNil(objcCameraOptions.anchor)
+        XCTAssertNil(objcCameraOptions.zoom)
+        XCTAssertNil(objcCameraOptions.bearing)
+        XCTAssertNil(objcCameraOptions.pitch)
     }
 }

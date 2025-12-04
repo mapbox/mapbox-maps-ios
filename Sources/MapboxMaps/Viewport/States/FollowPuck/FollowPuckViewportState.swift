@@ -26,8 +26,11 @@ public final class FollowPuckViewportState {
         self.mapboxMap = mapboxMap
 
         let resultCamera = Signal
-            .combineLatest(optionsSubject.signal.skipRepeats(), onPuckRender.map(\.followPuckState).skipRepeats())
-            .map { (options, renderingState) in
+            .combineLatest(
+                optionsSubject.signal.skipRepeats(),
+                mapboxMap.sizeSignal, // trigger viewport reevaluation on map size change
+                onPuckRender.map(\.followPuckState).skipRepeats())
+            .map { (options, _, renderingState) in
                 CameraOptions(
                     center: renderingState.coordinate,
                     padding: options.padding,

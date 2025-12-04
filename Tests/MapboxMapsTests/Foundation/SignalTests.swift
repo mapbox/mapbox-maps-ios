@@ -304,7 +304,7 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(observedValues, [true, false, true, false])
     }
 
-    func testCombineLatest() {
+    func testCombineLatest2() {
         let subject1 = SignalSubject<Int>()
         let subject2 = SignalSubject<Int>()
 
@@ -334,6 +334,39 @@ final class SignalTests: XCTestCase {
         subject1.send(6)
         subject1.send(7)
         XCTAssertEqual(received, [Pair(1, 2), Pair(3, 2), Pair(3, 4), Pair(3, 5)])
+    }
+
+    func testCombineLatest3() {
+        let subject1 = SignalSubject<Int>()
+        let subject2 = SignalSubject<Int>()
+        let subject3 = SignalSubject<Int>()
+
+        typealias P = Triple<Int, Int, Int>
+
+        var received = [P]()
+        let token = Signal.combineLatest(subject1.signal, subject2.signal, subject3.signal)
+            .observe { received.append(Triple($0)) }
+
+        subject1.send(1)
+        XCTAssertEqual(received, [])
+
+        subject2.send(2)
+        XCTAssertEqual(received, [])
+
+        subject3.send(3)
+        XCTAssertEqual(received, [P(1, 2, 3)])
+
+        subject1.send(4)
+        XCTAssertEqual(received, [P(1, 2, 3), P(4, 2, 3)])
+
+        subject3.send(5)
+        XCTAssertEqual(received, [P(1, 2, 3), P(4, 2, 3), P(4, 2, 5)])
+
+        token.cancel()
+
+        subject1.send(6)
+        subject1.send(7)
+        XCTAssertEqual(received, [P(1, 2, 3), P(4, 2, 3), P(4, 2, 5)])
     }
 
     func testObserveWithCancellingHandler() {
@@ -477,5 +510,21 @@ private struct Pair<T: Equatable, U: Equatable>: Equatable {
 
     init(_ pair: (T, U)) {
         self.init(pair.0, pair.1)
+    }
+}
+
+private struct Triple<T: Equatable, U: Equatable, S: Equatable>: Equatable {
+    let first: T
+    let second: U
+    let third: S
+
+    init(_ first: T, _ second: U, _ third: S) {
+        self.first = first
+        self.second = second
+        self.third = third
+    }
+
+    init(_ pair: (T, U, S)) {
+        self.init(pair.0, pair.1, pair.2)
     }
 }

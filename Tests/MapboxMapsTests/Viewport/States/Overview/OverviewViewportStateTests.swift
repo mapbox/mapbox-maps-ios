@@ -88,6 +88,10 @@ final class OverviewViewportStateTest: XCTestCase {
         options = apply(options) { _ in }
         try checkCameraCalcCall(5)
         try checkStubCall(4)
+
+        mapboxMap.size = CGSize(width: 200, height: 200)
+        try checkCameraCalcCall(6) // when size is updated the new camera is requested
+        try checkStubCall(4) // but it's ignored due to size not affecting camera in tests.
     }
 
     func testStartUpdatingCamera() throws {

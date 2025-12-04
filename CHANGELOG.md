@@ -17,6 +17,7 @@ Mapbox welcomes participation and contributions from everyone.
 ### Features ✨ and improvements 🏁
 * Promote Geofencing APIs to stable. Remove `@_spi(Experimental)` from Geofencing APIs.
 * Fix an issue where the location indicator could show incorrect direction in landscape orientation.
+* Update viewport state when map size is changed.
 
 ## 11.17.0-rc.1 - 20 November, 2025
 

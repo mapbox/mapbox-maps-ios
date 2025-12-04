@@ -11,6 +11,7 @@ protocol MapboxMapProtocol: AnyObject {
     var size: CGSize { get }
     var anchor: CGPoint { get }
     var options: MapOptions { get }
+    var sizeSignal: Signal<CGSize> { get }
     func setCamera(to cameraOptions: CameraOptions)
     func setCameraBounds(with options: CameraBoundsOptions) throws
     func setNorthOrientation(_ northOrientation: NorthOrientation)
@@ -202,6 +203,9 @@ public final class MapboxMap: StyleManager {
     private let events: MapEvents
 
     private let _isDefaultCameraInitialized = CurrentValueSignalProxy<Bool>()
+
+    private let sizeSubject = CurrentValueSignalSubject(CGSize.zero)
+    private(set) lazy var sizeSignal = sizeSubject.signal.skipRepeats()
 
     /// Triggered when map is loaded for the first time, and camera is initialized with default style camera options.
     var isDefaultCameraInitialized: Signal<Bool> { _isDefaultCameraInitialized.signal.skipRepeats() }
@@ -467,6 +471,7 @@ public final class MapboxMap: StyleManager {
         }
         set {
             __map.setSizeFor(Size(newValue))
+            self.sizeSubject.value = newValue
         }
     }
 

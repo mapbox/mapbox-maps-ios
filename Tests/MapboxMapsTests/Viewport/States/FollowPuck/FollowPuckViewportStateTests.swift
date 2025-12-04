@@ -71,6 +71,9 @@ final class FollowPuckViewportStateTest: XCTestCase {
         XCTAssertEqual(params.padding, safeAreaPadding + options.padding)
         XCTAssertEqual(params.bearing, puck.location.bearing)
         XCTAssertEqual(params.pitch, options.pitch)
+
+        mapboxMap.size = CGSize(width: 200, height: 200)
+        XCTAssertEqual(stub.invocations.count, 5)
     }
 
     func testStartAndStopUpdatingCamera() throws {

@@ -34,8 +34,13 @@ public final class OverviewViewportState {
         self.optionsSubject = .init(options)
         self.mapboxMap = mapboxMap
         self.cameraAnimationsManager = cameraAnimationsManager
-        self.cameraOptions = Signal.combineLatest(safeAreaPadding, optionsSubject.signal.skipRepeats())
-            .map { safeAreaPadding, options in
+        self.cameraOptions =
+            Signal.combineLatest(
+                safeAreaPadding,
+                mapboxMap.sizeSignal, // trigger viewport reevaluation on map size change
+                optionsSubject.signal.skipRepeats()
+            )
+            .map { safeAreaPadding, _, options in
                 let padding = safeAreaPadding + options.padding
                 let cam = try? mapboxMap.camera(
                     for: options.geometry.coordinates,

@@ -169,13 +169,14 @@ extension Signal {
 }
 
 extension Signal {
-    static func combineLatest<P1, P2>(_ s1: Signal<P1>, _ s2: Signal<P2>) -> Signal where Payload == (P1, P2) {
+    static func combineLatest<P1, P2, P3>(_ s1: Signal<P1>, _ s2: Signal<P2>, _ s3: Signal<P3>) -> Signal where Payload == (P1, P2, P3) {
         Signal { handler in
             var last1: P1?
             var last2: P2?
+            var last3: P3?
             let handle = {
-                if let last1, let last2 {
-                    handler((last1, last2))
+                if let last1, let last2, let last3 {
+                    handler((last1, last2, last3))
                 }
             }
             return AnyCancelable([
@@ -186,9 +187,16 @@ extension Signal {
                 s2.observe { value in
                     last2 = value
                     handle()
+                },
+                s3.observe { value in
+                    last3 = value
+                    handle()
                 }
             ])
         }
+    }
+    static func combineLatest<P1, P2>(_ s1: Signal<P1>, _ s2: Signal<P2>) -> Signal where Payload == (P1, P2) {
+        Signal<(P1, P2, Int)>.combineLatest(s1, s2, Signal<Int>(just: 1)).map { ($0.0, $0.1) }
     }
 }
 

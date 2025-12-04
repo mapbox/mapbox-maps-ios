@@ -25,7 +25,8 @@ final class MockMapboxMap: MapboxMapProtocol {
     var onRenderFrameFinished: Signal<RenderFrameFinished> { events.signal(for: \.onRenderFrameFinished) }
     var onResourceRequest: Signal<ResourceRequest> { events.signal(for: \.onResourceRequest) }
 
-    var size: CGSize = .zero
+    @TestPublished var size: CGSize = .zero
+    var sizeSignal: Signal<CGSize> { $size }
 
     var cameraBounds = MapboxMaps.CameraBounds(
         bounds: CoordinateBounds(

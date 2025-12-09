@@ -18,7 +18,7 @@ extension MapStyle {
     ///   - colorBuildingHighlight: Set a custom color for building fill extrusion when setting highlight state. Default value: `hsl(34, 30%, 93%)`.
     ///   - colorBuildings: Set a custom color for 3D & 2D buildings. Default value: `hsl(40, 43%, 93%)`.
     ///   - colorBuildingSelect: Set a custom color for building fill extrusion when setting select state. Default value: `hsl(214, 82%, 63%)`.
-    ///   - colorCommercial: Set a custom color for commercial areas. Default value: `hsl(24, 100%, 94%)`.
+    ///   - colorCommercial: Set a custom color for commercial areas. Default value: `hsla(24, 100%, 94%, 1)`.
     ///   - colorEducation: Set a custom color for education areas. Default value: `hsl(40, 50%, 88%)`.
     ///   - colorGreenspace: Set a custom color for greenspaces such as forests, parks, and woods. Default value: `hsl(115, 60%, 84%)`.
     ///   - colorIndustrial: Set a custom color for industrial areas and airports. Default value: `hsl(230, 15%, 92%)`.
@@ -32,7 +32,6 @@ extension MapStyle {
     ///   - colorPointOfInterestLabels: Set a custom color for POI labels. Default value: `#848e94`.
     ///   - colorRoadLabels: Set a custom color for road labels. Default value: `hsl(0, 0%, 25%)`.
     ///   - colorRoads: Set a custom color for other roads. Default value: `hsl(224, 25%, 80%)`.
-    ///   - colorSnow: Set a custom color for snow. Default value: `hsl(0, 0%, 100%)`.
     ///   - colorTrunks: Set a custom color for trunk roads. Default value: `hsl(235, 20%, 70%)`.
     ///   - colorWater: Set a custom color for water. Default value: `hsl(200, 100%, 80%)`.
     ///   - densityPointOfInterestLabels: Set the density of POI labels. Default value: `3`.
@@ -75,7 +74,6 @@ extension MapStyle {
         colorPointOfInterestLabels: StyleColor? = nil,
         colorRoadLabels: StyleColor? = nil,
         colorRoads: StyleColor? = nil,
-        colorSnow: StyleColor? = nil,
         colorTrunks: StyleColor? = nil,
         colorWater: StyleColor? = nil,
         densityPointOfInterestLabels: Double? = nil,
@@ -119,7 +117,6 @@ extension MapStyle {
         config.encode(key: "colorPointOfInterestLabels", value: colorPointOfInterestLabels)
         config.encode(key: "colorRoadLabels", value: colorRoadLabels)
         config.encode(key: "colorRoads", value: colorRoads)
-        config.encode(key: "colorSnow", value: colorSnow)
         config.encode(key: "colorTrunks", value: colorTrunks)
         config.encode(key: "colorWater", value: colorWater)
         config.encode(key: "densityPointOfInterestLabels", value: densityPointOfInterestLabels)

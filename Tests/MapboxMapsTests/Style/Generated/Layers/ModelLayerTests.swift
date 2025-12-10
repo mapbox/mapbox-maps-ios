@@ -52,6 +52,7 @@ final class ModelLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = ModelLayer(id: "test-id", source: "source")
         layer.visibility = .constant(.visible)
+        layer.modelAllowDensityReduction = Value<Bool>.testConstantValue()
         layer.modelId = Value<String>.testConstantValue()
 
         var data: Data?
@@ -69,6 +70,7 @@ final class ModelLayerTests: XCTestCase {
         do {
             let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
             XCTAssert(decodedLayer.visibility == .constant(.visible))
+            XCTAssertEqual(layer.modelAllowDensityReduction, Value<Bool>.testConstantValue())
             XCTAssertEqual(layer.modelId, Value<String>.testConstantValue())
         } catch {
             XCTFail("Failed to decode ModelLayer")
@@ -149,6 +151,7 @@ final class ModelLayerTests: XCTestCase {
             .slot(Slot.testConstantValue())
             .minZoom(Double.testConstantValue())
             .maxZoom(Double.testConstantValue())
+            .modelAllowDensityReduction(Bool.testConstantValue())
             .modelId(String.testConstantValue())
             .modelAmbientOcclusionIntensity(Double.testConstantValue())
             .modelCastShadows(Bool.testConstantValue())
@@ -173,6 +176,7 @@ final class ModelLayerTests: XCTestCase {
         XCTAssertEqual(layer.slot, Slot.testConstantValue())
         XCTAssertEqual(layer.minZoom, Double.testConstantValue())
         XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.modelAllowDensityReduction, Value.constant(Bool.testConstantValue()))
         XCTAssertEqual(layer.modelId, Value.constant(String.testConstantValue()))
         XCTAssertEqual(layer.modelAmbientOcclusionIntensity, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.modelCastShadows, Value.constant(Bool.testConstantValue()))

@@ -23,6 +23,7 @@ final class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
+            layer.modelAllowDensityReduction = Value<Bool>.testConstantValue()
             layer.modelId = Value<String>.testConstantValue()
             layer.modelAmbientOcclusionIntensity = Value<Double>.testConstantValue()
             layer.modelAmbientOcclusionIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)

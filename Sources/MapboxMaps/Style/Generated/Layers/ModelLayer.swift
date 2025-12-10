@@ -39,6 +39,11 @@ public struct ModelLayer: Layer, Equatable {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>
 
+    /// If true, the models will be reduced in density based on the zoom level. This is useful for large datasets that may be slow to render.
+    /// Default value: true.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var modelAllowDensityReduction: Value<Bool>?
+
     /// Model to render. It can be either a string referencing an element to the models root property or an internal or external URL
     /// Default value: "".
     public var modelId: Value<String>?
@@ -191,6 +196,7 @@ public struct ModelLayer: Layer, Equatable {
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encode(visibility, forKey: .visibility)
+        try layoutContainer.encodeIfPresent(modelAllowDensityReduction, forKey: .modelAllowDensityReduction)
         try layoutContainer.encodeIfPresent(modelId, forKey: .modelId)
     }
 
@@ -238,6 +244,7 @@ public struct ModelLayer: Layer, Equatable {
         var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
             visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            modelAllowDensityReduction = try layoutContainer.decodeIfPresent(Value<Bool>.self, forKey: .modelAllowDensityReduction)
             modelId = try layoutContainer.decodeIfPresent(Value<String>.self, forKey: .modelId)
         }
         visibility = visibilityEncoded ?? .constant(.visible)
@@ -257,6 +264,7 @@ public struct ModelLayer: Layer, Equatable {
     }
 
     enum LayoutCodingKeys: String, CodingKey {
+        case modelAllowDensityReduction = "model-allow-density-reduction"
         case modelId = "model-id"
         case visibility = "visibility"
     }
@@ -327,6 +335,22 @@ extension ModelLayer {
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// If true, the models will be reduced in density based on the zoom level. This is useful for large datasets that may be slow to render.
+    /// Default value: true.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelAllowDensityReduction(_ constant: Bool) -> Self {
+        with(self, setter(\.modelAllowDensityReduction, .constant(constant)))
+    }
+
+    /// If true, the models will be reduced in density based on the zoom level. This is useful for large datasets that may be slow to render.
+    /// Default value: true.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func modelAllowDensityReduction(_ expression: Exp) -> Self {
+        with(self, setter(\.modelAllowDensityReduction, .expression(expression)))
     }
 
     /// Model to render. It can be either a string referencing an element to the models root property or an internal or external URL

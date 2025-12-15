@@ -32,6 +32,11 @@ public struct OrnamentOptions: Equatable, Sendable {
     /// The ornament options for the map's attribution button.
     public var attributionButton: AttributionButtonOptions
 
+    // MARK: - Indoor Selector
+
+    /// The ornament options for the map's indoor selector view.
+    var indoorSelector: IndoorSelectorViewOptions
+
     /// Initializes an `OrnamentOptions`.
     /// - Parameters:
     ///   - scaleBar: The ornament options for the map's scale bar.
@@ -48,6 +53,7 @@ public struct OrnamentOptions: Equatable, Sendable {
         self.compass = compass
         self.logo = logo
         self.attributionButton = attributionButton
+        self.indoorSelector = IndoorSelectorViewOptions()
     }
 }
 
@@ -262,5 +268,40 @@ public struct LogoViewOptions: Equatable, Sendable {
     ) {
         self.position = position
         self.margins = margins
+    }
+}
+
+/// Used to configure position, margin, and visibility for the map's indoor selector view.
+struct IndoorSelectorViewOptions: Equatable, Sendable {
+
+    /// The position of the indoor selector view.
+    ///
+    /// The default value for this property is `.topTrailing`.
+    var position: OrnamentPosition
+
+    /// The margins of the indoor selector view.
+    ///
+    /// The default value for this property is `CGPoint(x: 8.0, y: 0.0)`.
+    var margins: CGPoint
+
+    /// The visibility of the indoor selector view.
+    ///
+    /// The default value for this property is `.adaptive`. When set to `.adaptive`,
+    /// the indoor selector is visible only when indoor floor data is available.
+    var visibility: OrnamentVisibility
+
+    /// Initializes an `IndoorSelectorViewOptions`.
+    /// - Parameters:
+    ///   - position: The position of the indoor selector view.
+    ///   - margins: The margins of the indoor selector view.
+    ///   - visibility: The visibility of the indoor selector view.
+    init(
+        position: OrnamentPosition = .topTrailing,
+        margins: CGPoint = .init(x: 8.0, y: 0.0),
+        visibility: OrnamentVisibility = .adaptive
+    ) {
+        self.position = position
+        self.margins = margins
+        self.visibility = visibility
     }
 }

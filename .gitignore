@@ -1,6 +1,8 @@
 .DS_Store
 /build
 .build
+.create-xcframework
+artifacts
 /Packages
 xcuserdata
 node_modules

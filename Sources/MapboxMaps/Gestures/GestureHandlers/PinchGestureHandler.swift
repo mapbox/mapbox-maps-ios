@@ -95,6 +95,15 @@ extension PinchGestureHandler: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch
+    ) -> Bool {
+        /// Only handle touches that targeting the map, but any of its subviews (including view annotations and ornaments)
+        assert(self.gestureRecognizer == gestureRecognizer)
+        return gestureRecognizer.attachedToSameView(as: touch)
+    }
+
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
         guard gestureRecognizer === self.gestureRecognizer else { return true }

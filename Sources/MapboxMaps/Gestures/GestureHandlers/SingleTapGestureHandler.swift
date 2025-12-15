@@ -36,9 +36,7 @@ final class SingleTapGestureHandler: GestureHandler {
 extension SingleTapGestureHandler: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         assert(self.gestureRecognizer == gestureRecognizer)
-
         guard gestureRecognizer.attachedToSameView(as: otherGestureRecognizer) else { return true }
-
         return otherGestureRecognizer is UITapGestureRecognizer
     }
 
@@ -46,13 +44,8 @@ extension SingleTapGestureHandler: UIGestureRecognizerDelegate {
         _ gestureRecognizer: UIGestureRecognizer,
         shouldReceive touch: UITouch
     ) -> Bool {
+        /// Only handle touches that targeting the map, but any of its subviews (including view annotations and ornaments)
         assert(self.gestureRecognizer == gestureRecognizer)
-
-        /// Only handle touches that targeting the map not view annotations.
-        guard gestureRecognizer.attachedToSameView(as: touch) else {
-            return false
-        }
-
-        return true
+        return gestureRecognizer.attachedToSameView(as: touch)
     }
 }

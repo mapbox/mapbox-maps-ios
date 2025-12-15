@@ -496,7 +496,8 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
             logoView: LogoView(logoSize: .regular()),
             scaleBarView: MapboxScaleBarOrnamentView(),
             compassView: MapboxCompassOrnamentView(),
-            attributionButton: InfoButtonOrnament())
+            attributionButton: InfoButtonOrnament(),
+            indoorSelectorView: IndoorSelectorView(model: IndoorSelectorModel(indoorManager: mapboxMap.indoor)))
 
         // Initialize/Configure location source and location manager
         location = LocationManager(

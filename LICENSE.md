@@ -1,6 +1,6 @@
 ## License
 
-Mapbox Maps for iOS version 11.18.0-SNAPSHOT-12-15--04-32.git-68558c6
+Mapbox Maps for iOS version 11.18.0-beta.1
 Mapbox Maps iOS SDK
 
 Copyright &copy; 2021 - 2025 Mapbox, Inc. All rights reserved.
@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### MapboxCoreMaps,11.18.0-SNAPSHOT-12-15--04-32.git-68558c6,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### MapboxCoreMaps,11.18.0-beta.1,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Core Maps version 11.0
@@ -522,19 +522,6 @@ INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
 OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
-
-```
-
----
-
-### dreieck,1.0.0,PROPRIETARY,Mapbox,https://github.com/mapbox/dreieck
-
-```
-Mapbox Dreieck
-
-All rights reserved.
-
-Copyright (c) 2025 Mapbox
 
 ```
 

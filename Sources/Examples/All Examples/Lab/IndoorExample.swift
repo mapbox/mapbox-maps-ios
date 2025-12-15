@@ -6,7 +6,6 @@ final class IndoorExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     // Set indoor style. Do not commit staging style URIs.
     private var styleURI: String?
-    private var cancellables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,10 +23,10 @@ final class IndoorExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.ornaments.options.scaleBar.visibility = .visible
         // EXPERIMENTAL: Not intended for usage in current stata. Subject to change or deletion.
-        mapView.mapboxMap.indoor.selectFloor(selectedFloorId: "b937e2aa3423453ab0552d9f")
-        mapView.mapboxMap.indoor.onIndoorUpdated.sink { indoorState in
-             print(indoorState)
-        }.store(in: &cancellables)
+        // mapView.mapboxMap.indoor.selectFloor(selectedFloorId: "b937e2aa3423453ab0552d9f")
+        // mapView.mapboxMap.indoor.onIndoorUpdate { indoorState in
+        //     print(indoorState)
+        // }
 
         view.addSubview(mapView)
     }

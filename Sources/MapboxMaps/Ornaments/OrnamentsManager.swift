@@ -1,5 +1,4 @@
 import UIKit
-@_spi(Experimental) import MapboxCoreMaps
 
 /// Options used to configure the corner position of an ornament
 public enum OrnamentPosition: String, Equatable, Sendable {
@@ -68,16 +67,6 @@ public final class OrnamentsManager {
     public var attributionButton: UIView {
         return _attributionButton
     }
-
-    /// The view for the indoor selector ornament. This view can be used to position other views relative
-    /// to the indoor selector ornament, but it should not be manipulated. Use
-    /// ``OrnamentOptions/indoorSelector`` to configure the indoor selector presentation
-    /// if customization is needed.
-    @_spi(Experimental)
-    public var indoorSelectorView: UIView {
-        return _indoorSelectorView
-    }
-
     private var cachedCamera: CameraState?
 
     private var cameraDebugView: CameraDebugView?
@@ -121,23 +110,19 @@ public final class OrnamentsManager {
     private let _scaleBarView: MapboxScaleBarOrnamentView
     private let _compassView: MapboxCompassOrnamentView
     private let _attributionButton: InfoButtonOrnament
-    private let _indoorSelectorView: IndoorSelectorView
 
     private var constraints = [NSLayoutConstraint]()
-    private var viewsByPosition: [OrnamentPosition: [UIView]] = [:] // Allow to stack views at the same position
     private var cancellables = Set<AnyCancelable>()
 
-    init(options: OrnamentOptions,
-         view: UIView,
-         onCameraChanged: Signal<CameraChanged>,
-         cameraAnimationsManager: CameraAnimationsManagerProtocol,
-         infoButtonOrnamentDelegate: InfoButtonOrnamentDelegate,
-         logoView: LogoView,
-         scaleBarView: MapboxScaleBarOrnamentView,
-         compassView: MapboxCompassOrnamentView,
-         attributionButton: InfoButtonOrnament,
-         indoorSelectorView: IndoorSelectorView
-    ) {
+    internal init(options: OrnamentOptions,
+                  view: UIView,
+                  onCameraChanged: Signal<CameraChanged>,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                  infoButtonOrnamentDelegate: InfoButtonOrnamentDelegate,
+                  logoView: LogoView,
+                  scaleBarView: MapboxScaleBarOrnamentView,
+                  compassView: MapboxCompassOrnamentView,
+                  attributionButton: InfoButtonOrnament) {
         self.options = options
         self.view = view
 
@@ -173,11 +158,6 @@ public final class OrnamentsManager {
         view.addSubview(attributionButton)
         self._attributionButton = attributionButton
 
-        // Indoor Selector View
-        indoorSelectorView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(indoorSelectorView)
-        self._indoorSelectorView = indoorSelectorView
-
         _attributionButton.delegate = infoButtonOrnamentDelegate
         _attributionButton.onTintColorDidChange = { [weak self] tintColor in
             self?.options.attributionButton.tintColor = tintColor
@@ -207,7 +187,6 @@ public final class OrnamentsManager {
         // Remove previously-added constraints
         NSLayoutConstraint.deactivate(constraints)
         constraints.removeAll()
-        viewsByPosition.removeAll()
 
         // Update the position for the ornaments
         let logoViewConstraints = constraints(with: _logoView,
@@ -232,11 +211,6 @@ public final class OrnamentsManager {
                                                        margins: options.attributionButton.margins)
         constraints.append(contentsOf: attributionButtonConstraints)
 
-        let indoorSelectorViewConstraints = constraints(with: _indoorSelectorView,
-                                                        position: options.indoorSelector.position,
-                                                        margins: options.indoorSelector.margins)
-        constraints.append(contentsOf: indoorSelectorViewConstraints)
-
         if let cameraDebugView {
             let cameraDebugViewConstraints = constraints(with: cameraDebugView,
                                                          position: .topLeft,
@@ -259,59 +233,45 @@ public final class OrnamentsManager {
         if _attributionButton.tintColor != options.attributionButton.tintColor {
             _attributionButton.tintColor = options.attributionButton.tintColor
         }
-
-        switch options.indoorSelector.visibility {
-        case .visible:
-            _indoorSelectorView.isHidden = false
-        case .hidden:
-            _indoorSelectorView.isHidden = true
-        case .adaptive:
-            break // Adaptive visibility is handled by the IndoorSelectorView itself based on floor data
-        }
     }
 
     private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {
         guard let layoutGuide = view.superview?.safeAreaLayoutGuide else {
             return []
         }
-
-        let stackSpacing: CGFloat = 8.0
-        var viewsAtPosition = viewsByPosition[position] ?? []
-        let previousView = viewsAtPosition.last
-        viewsAtPosition.append(view)
-        viewsByPosition[position] = viewsAtPosition
-
-        var result: [NSLayoutConstraint] = []
-
         switch position {
-        case .topLeft, .bottomLeft:
-            result.append(view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x))
-        case .topRight, .bottomRight:
-            result.append(view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x))
-        case .topLeading, .bottomLeading:
-            result.append(view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x))
-        case .topTrailing, .bottomTrailing:
-            result.append(view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x))
+        case .topLeft:
+            return [
+                view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .topRight:
+            return  [
+                view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .bottomLeft:
+            return [
+                view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
+        case .bottomRight:
+            return [
+                view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
+        case .topLeading:
+            return [
+                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .topTrailing:
+            return  [
+                view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .bottomLeading:
+            return [
+                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
+        case .bottomTrailing:
+            return [
+                view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
         }
-
-        let isTopPosition = [.topLeft, .topRight, .topLeading, .topTrailing].contains(position)
-        let isBottomPosition = [.bottomLeft, .bottomRight, .bottomLeading, .bottomTrailing].contains(position)
-
-        if let previousView = previousView {
-            if isTopPosition {
-                result.append(view.topAnchor.constraint(equalTo: previousView.bottomAnchor, constant: stackSpacing))
-            } else if isBottomPosition {
-                result.append(view.bottomAnchor.constraint(equalTo: previousView.topAnchor, constant: -stackSpacing))
-            }
-        } else {
-            // First view at this position - anchor to safe area
-            if isTopPosition {
-                result.append(view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y))
-            } else if isBottomPosition {
-                result.append(view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y))
-            }
-        }
-
-        return result
     }
 }

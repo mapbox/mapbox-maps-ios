@@ -213,8 +213,8 @@ public final class MapboxMap: StyleManager {
     @_spi(Internal)
     public lazy var map: MapboxCoreMaps.Map = .Marshaller.toSwift(__map)
 
-    @_spi(Experimental)
-    public lazy var indoor: IndoorManager = .Marshaller.toSwift(__map.getIndoorManager())
+    // @_spi(Experimental)
+    // public lazy var indoor: IndoorManager = .Marshaller.toSwift(__map.getIndoorManager())
 
     deinit {
         __map.destroyRenderer()

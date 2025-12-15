@@ -16,7 +16,6 @@ internal final class DoubleTapToZoomInGestureHandler: GestureHandler, FocusableG
         self.mapboxMap = mapboxMap
         self.cameraAnimationsManager = cameraAnimationsManager
         super.init(gestureRecognizer: gestureRecognizer)
-        gestureRecognizer.delegate = self
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
@@ -37,16 +36,5 @@ internal final class DoubleTapToZoomInGestureHandler: GestureHandler, FocusableG
         default:
             break
         }
-    }
-}
-
-extension DoubleTapToZoomInGestureHandler: UIGestureRecognizerDelegate {
-    func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldReceive touch: UITouch
-    ) -> Bool {
-        /// Only handle touches that targeting the map, but any of its subviews (including view annotations and ornaments)
-        assert(self.gestureRecognizer == gestureRecognizer)
-        return gestureRecognizer.attachedToSameView(as: touch)
     }
 }

@@ -41,9 +41,6 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
     /// Transition property for `intensity`
     public var intensityTransition: StyleTransition?
 
-    /// Specify a layer before which shadows are drawn on the ground. If not specified, shadows are drawn after the last 3D layer. This property does not affect shadows on terrain.
-    @_spi(Experimental) public var shadowDrawBeforeLayer: Value<String>?
-
     /// Determines the shadow strength, affecting the shadow receiver surfaces final color. Values near 0.0 reduce the shadow contribution to the final color. Values near to 1.0 make occluded surfaces receive almost no directional light. Designed to be used mostly for transitioning between values 0 and 1.
     /// Default value: 1. Value range: [0, 1]
     public var shadowIntensity: Value<Double>?
@@ -70,7 +67,6 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
         try propertiesContainer.encodeIfPresent(directionTransition, forKey: .directionTransition)
         try propertiesContainer.encodeIfPresent(intensity, forKey: .intensity)
         try propertiesContainer.encodeIfPresent(intensityTransition, forKey: .intensityTransition)
-        try propertiesContainer.encodeIfPresent(shadowDrawBeforeLayer, forKey: .shadowDrawBeforeLayer)
         try propertiesContainer.encodeIfPresent(shadowIntensity, forKey: .shadowIntensity)
         try propertiesContainer.encodeIfPresent(shadowIntensityTransition, forKey: .shadowIntensityTransition)
     }
@@ -88,7 +84,6 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
             self.directionTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .directionTransition)
             self.intensity = try propertiesContainer.decodeIfPresent(Value<Double>.self, forKey: .intensity)
             self.intensityTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .intensityTransition)
-            self.shadowDrawBeforeLayer = try propertiesContainer.decodeIfPresent(Value<String>.self, forKey: .shadowDrawBeforeLayer)
             self.shadowIntensity = try propertiesContainer.decodeIfPresent(Value<Double>.self, forKey: .shadowIntensity)
             self.shadowIntensityTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .shadowIntensityTransition)
         }
@@ -109,7 +104,6 @@ public struct DirectionalLight: Codable, StyleEncodable, Equatable {
         case directionTransition = "direction-transition"
           case intensity = "intensity"
         case intensityTransition = "intensity-transition"
-          case shadowDrawBeforeLayer = "shadow-draw-before-layer"
           case shadowIntensity = "shadow-intensity"
         case shadowIntensityTransition = "shadow-intensity-transition"
       }
@@ -199,20 +193,6 @@ extension DirectionalLight {
     /// Default value: 0.5. Value range: [0, 1]
     public func intensity(_ expression: Exp) -> Self {
         with(self, setter(\.intensity, .expression(expression)))
-    }
-
-    /// Specify a layer before which shadows are drawn on the ground. If not specified, shadows are drawn after the last 3D layer. This property does not affect shadows on terrain.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func shadowDrawBeforeLayer(_ constant: String) -> Self {
-        with(self, setter(\.shadowDrawBeforeLayer, .constant(constant)))
-    }
-
-    /// Specify a layer before which shadows are drawn on the ground. If not specified, shadows are drawn after the last 3D layer. This property does not affect shadows on terrain.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
-    public func shadowDrawBeforeLayer(_ expression: Exp) -> Self {
-        with(self, setter(\.shadowDrawBeforeLayer, .expression(expression)))
     }
 
     /// Determines the shadow strength, affecting the shadow receiver surfaces final color. Values near 0.0 reduce the shadow contribution to the final color. Values near to 1.0 make occluded surfaces receive almost no directional light. Designed to be used mostly for transitioning between values 0 and 1.

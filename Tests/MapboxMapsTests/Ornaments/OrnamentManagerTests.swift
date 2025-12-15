@@ -1,6 +1,5 @@
 import XCTest
-@testable @_spi(Experimental) import MapboxMaps
-@_spi(Experimental) import MapboxCoreMaps
+@testable import MapboxMaps
 
 final class OrnamentManagerTests: XCTestCase {
     var options: OrnamentOptions!
@@ -12,7 +11,6 @@ final class OrnamentManagerTests: XCTestCase {
     var scaleBarView: MapboxScaleBarOrnamentView!
     var compassView: MapboxCompassOrnamentView!
     var attributionButton: InfoButtonOrnament!
-    var indoorSelectorView: IndoorSelectorView!
     var ornamentsManager: OrnamentsManager!
     var onCameraChanged: SignalSubject<CameraChanged>!
 
@@ -26,7 +24,6 @@ final class OrnamentManagerTests: XCTestCase {
         logoView = LogoView(logoSize: .regular())
         scaleBarView = MapboxScaleBarOrnamentView()
         compassView = MapboxCompassOrnamentView()
-        indoorSelectorView = IndoorSelectorView(model: MockIndoorSelectorModel())
         attributionButton = InfoButtonOrnament()
 
         ornamentsManager = OrnamentsManager(
@@ -38,8 +35,7 @@ final class OrnamentManagerTests: XCTestCase {
             logoView: logoView,
             scaleBarView: scaleBarView,
             compassView: compassView,
-            attributionButton: attributionButton,
-            indoorSelectorView: indoorSelectorView)
+            attributionButton: attributionButton)
     }
 
     override func tearDown() {
@@ -48,7 +44,6 @@ final class OrnamentManagerTests: XCTestCase {
         compassView = nil
         scaleBarView = nil
         logoView = nil
-        indoorSelectorView = nil
         infoButtonOrnamentDelegate = nil
         cameraAnimationsManager = nil
         onCameraChanged = nil
@@ -58,7 +53,7 @@ final class OrnamentManagerTests: XCTestCase {
     }
 
     func testInitializer() {
-        XCTAssertEqual(view.subviews.count, 5)
+        XCTAssertEqual(view.subviews.count, 4)
         XCTAssertEqual(ornamentsManager.options.attributionButton.margins, options.attributionButton.margins)
     }
 
@@ -152,10 +147,6 @@ final class OrnamentManagerTests: XCTestCase {
 
     func testAttributionButton() {
         XCTAssertIdentical(ornamentsManager.attributionButton, attributionButton)
-    }
-
-    func testIndoorSelectorView() {
-        XCTAssertIdentical(ornamentsManager.indoorSelectorView, indoorSelectorView)
     }
 
     func testTintColor() {
@@ -294,63 +285,5 @@ final class OrnamentManagerTests: XCTestCase {
         scaleBarOptions.useMetricUnits = true  // Same value
         XCTAssertEqual(scaleBarOptions.units, initialUnits, "Setting same useMetricUnits value should not change anything")
         XCTAssertEqual(scaleBarOptions.useMetricUnits, initialUseMetric, "Setting same useMetricUnits value should not change itself")
-    }
-
-    // MARK: - IndoorSelector Tests
-
-    func testIndoorSelectorInitiallyHidden() throws {
-        let indoorSelector = try XCTUnwrap(view.subviews.compactMap { $0 as? IndoorSelectorView }.first)
-        XCTAssertTrue(indoorSelector.isHidden, "Indoor selector should be hidden initially when model has no floors")
-    }
-
-    func testIndoorSelectorVisibility() throws {
-        let mockModel = MockIndoorSelectorModel()
-        let testIndoorSelector = IndoorSelectorView(model: mockModel)
-
-        view.addSubview(testIndoorSelector)
-
-        XCTAssertTrue(testIndoorSelector.isHidden, "Indoor selector should be hidden when no floors")
-
-        mockModel.isHidden = false
-        mockModel.onVisibilityChanged?()
-
-        XCTAssertFalse(testIndoorSelector.isHidden, "Indoor selector should be visible when model is not hidden")
-    }
-
-    func testIndoorSelectorIntrinsicContentSizeUpdates() throws {
-        let mockModel = MockIndoorSelectorModel()
-        let testIndoorSelector = IndoorSelectorView(model: mockModel)
-
-        mockModel.floors = []
-        let emptySize = testIndoorSelector.intrinsicContentSize
-        XCTAssertEqual(emptySize.height, 0, "Height should be 0 with no floors")
-
-        mockModel.floors = [
-            IndoorFloor(id: "0", name: "0"),
-            IndoorFloor(id: "1", name: "1"),
-            IndoorFloor(id: "2", name: "2")
-        ]
-        mockModel.onFloorsUpdated?()
-
-        let updatedSize = testIndoorSelector.intrinsicContentSize
-        XCTAssertEqual(updatedSize.height, 132, "Height should be 132 (3 floors * 44) with 3 floors")
-    }
-
-    func testIndoorSelectorMaxVisibleFloors() throws {
-        let mockModel = MockIndoorSelectorModel()
-        let testIndoorSelector = IndoorSelectorView(model: mockModel)
-
-        mockModel.floors = [
-            IndoorFloor(id: "0", name: "0"),
-            IndoorFloor(id: "1", name: "1"),
-            IndoorFloor(id: "2", name: "2"),
-            IndoorFloor(id: "3", name: "3"),
-            IndoorFloor(id: "4", name: "4"),
-            IndoorFloor(id: "5", name: "5")
-        ]
-        mockModel.onFloorsUpdated?()
-
-        let size = testIndoorSelector.intrinsicContentSize
-        XCTAssertEqual(size.height, 176, "Height should be capped at 176 (4 floors * 44) even with 6 floors")
     }
 }

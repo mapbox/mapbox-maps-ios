@@ -14,7 +14,6 @@ internal final class QuickZoomGestureHandler: GestureHandler, FocusableGestureHa
         gestureRecognizer.minimumPressDuration = 0
         self.mapboxMap = mapboxMap
         super.init(gestureRecognizer: gestureRecognizer)
-        gestureRecognizer.delegate = self
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
@@ -47,16 +46,5 @@ internal final class QuickZoomGestureHandler: GestureHandler, FocusableGestureHa
         default:
             break
         }
-    }
-}
-
-extension QuickZoomGestureHandler: UIGestureRecognizerDelegate {
-    func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldReceive touch: UITouch
-    ) -> Bool {
-        /// Only handle touches that targeting the map, but any of its subviews (including view annotations and ornaments)
-        assert(self.gestureRecognizer == gestureRecognizer)
-        return gestureRecognizer.attachedToSameView(as: touch)
     }
 }

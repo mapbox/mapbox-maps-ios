@@ -527,6 +527,19 @@ THIS SOFTWARE.
 
 ---
 
+### dreieck,1.0.0,PROPRIETARY,Mapbox,https://github.com/mapbox/dreieck
+
+```
+Mapbox Dreieck
+
+All rights reserved.
+
+Copyright (c) 2025 Mapbox
+
+```
+
+---
+
 ### eternal,1.0.1,ISC,Mapbox,https://github.com/mapbox/eternal
 
 ```

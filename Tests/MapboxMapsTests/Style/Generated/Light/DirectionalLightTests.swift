@@ -15,6 +15,7 @@ final class DirectionalLightTests: XCTestCase {
         light.directionTransition = StyleTransition(duration: 10.0, delay: 10.0)
           light.intensity = Value<Double>.testConstantValue()
         light.intensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+          light.shadowDrawBeforeLayer = Value<String>.testConstantValue()
           light.shadowIntensity = Value<Double>.testConstantValue()
         light.shadowIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
   
@@ -35,6 +36,7 @@ final class DirectionalLightTests: XCTestCase {
         XCTAssertEqual(decodedLight.intensity, Value<Double>.testConstantValue())
         XCTAssertEqual(decodedLight.intensityTransition?.duration, 10)
         XCTAssertEqual(decodedLight.intensityTransition?.delay, 10)
+        XCTAssertEqual(decodedLight.shadowDrawBeforeLayer, Value<String>.testConstantValue())
         XCTAssertEqual(decodedLight.shadowIntensity, Value<Double>.testConstantValue())
         XCTAssertEqual(decodedLight.shadowIntensityTransition?.duration, 10)
         XCTAssertEqual(decodedLight.shadowIntensityTransition?.delay, 10)

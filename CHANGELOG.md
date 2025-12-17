@@ -6,12 +6,19 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 11.18.0-beta.1 - 17 December, 2025
 
-### ⚠️ Breaking changes
+### Breaking changes ⚠️
 * Remove line-cutout-width and change line-cutout-opacity default to 1.0
+* Add `ModelLayer.modelAllowDensityReduction` property to disable density reduction in model layers.
 
 ### Features ✨ and improvements 🏁
 * Add Standard Style color and 3D configuration options: `colorBuildings`, `colorCommercial`, `colorEducation`, `colorIndustrial`, `colorLand`, `colorMedical`, `show3dBuildings`, `show3dFacades`, `show3dLandmarks`, and `show3dTrees`.
-* Add `shadowDrawBeforeLayer` property to directional light to allow specifying the position in the layer stack for drawing shadows on the ground.
+* Add experimental `shadowDrawBeforeLayer` property to directional light to allow specifying the position in the layer stack for drawing shadows on the ground.
+* [tile_store] Add method to set tilestore path to be used by default.
+* Faster polygon triangulation for complex polygons.
+* General fixes and performance improvements.
+
+### Bug fixes 🐞
+* Fix `userData` payload for `onSourceDataLoaded` event during GeoJSON partial update.
 
 ## 11.17.0
 ## 11.17.0 - 04 December, 2025

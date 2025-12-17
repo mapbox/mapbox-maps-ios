@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.18.0-beta.1 - 17 December, 2025
+
 ### ⚠️ Breaking changes
 * Remove line-cutout-width and change line-cutout-opacity default to 1.0
 

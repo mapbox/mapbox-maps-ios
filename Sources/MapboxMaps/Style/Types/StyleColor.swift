@@ -1,5 +1,4 @@
 import UIKit
-import RegexBuilder
 
 /// Represents a color as defined by the [Mapbox Style Spec](https://docs.mapbox.com/style-spec/reference/types/#color)
 public struct StyleColor: Codable, Hashable, Sendable, RawRepresentable, ExpressibleByStringInterpolation {

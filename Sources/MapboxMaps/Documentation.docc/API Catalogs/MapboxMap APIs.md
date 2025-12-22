@@ -34,3 +34,5 @@
 - ``QueriedSourceFeature``
 - ``RenderedQueryOptions``
 - ``AnnotatedFeature``
+- ``QueriedRasterValues``
+- ``RenderedRasterQueryOptions``

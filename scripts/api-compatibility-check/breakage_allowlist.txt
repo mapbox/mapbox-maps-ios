@@ -2246,3 +2246,6 @@ Func GeoJSONSource.minzoom(_:) has been removed
 // CameraState and CameraOptions moved to GL Native
 Struct CameraState has been removed
 Struct CameraOptions has been removed
+
+// unused import RegexBuilder was removed
+Extension String has removed conformance to RegexComponent

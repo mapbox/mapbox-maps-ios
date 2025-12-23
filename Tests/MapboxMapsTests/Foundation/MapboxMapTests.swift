@@ -369,22 +369,24 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(mapboxMap.__testingMap.getCenterAltitudeMode(), .sea)
     }
 
-    func testLoadStyleHandlerIsInvokedExactlyOnce() throws {
-        let completionIsCalledOnce = expectation(description: "loadStyle completion should be called once")
+    func testLoadStyle() throws {
+        let completionIsCalledOncePerSubscriber = expectation(
+            description: "loadStyle completion should be called once per subscriber"
+        )
+        completionIsCalledOncePerSubscriber.expectedFulfillmentCount = 2
+        let styleJSON = String.testStyleJSON()
 
+        // this load should be cancelled to the succeeding load,
+        // but the completion is expected to be invoked after successfull style load
         mapboxMap.loadStyle(.dark) { _ in
-            completionIsCalledOnce.fulfill()
+            completionIsCalledOncePerSubscriber.fulfill()
         }
-
-        // Ensure loadStyle subscription is registered before firing events
-        // by dispatching event sends asynchronously on the main queue
-        let interval = EventTimeInterval(begin: .init(), end: .init())
-        DispatchQueue.main.async {
-            self.events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
-            self.events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
+        mapboxMap.loadStyle(styleJSON) { _ in
+            completionIsCalledOncePerSubscriber.fulfill()
         }
+        XCTAssertEqual(mapboxMap.styleJSON, styleJSON)
 
-        waitForExpectations(timeout: 5.0)
+        waitForExpectations(timeout: 3.0)
     }
 
     func testEvents() {

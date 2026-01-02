@@ -37,7 +37,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 Mapbox Core Maps version 11.0
 Mapbox Core Maps SDK
 
-Copyright (c) 2025 Mapbox
+Copyright (c) 2026 Mapbox
 
 All rights reserved.
 

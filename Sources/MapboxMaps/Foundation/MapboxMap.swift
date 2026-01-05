@@ -539,7 +539,8 @@ public final class MapboxMap: StyleManager {
     ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
     ///   - maxZoom: The maximum zoom level to allow when the camera would transition to the specified bounds.
     ///   - offset: The center of the given bounds relative to the map's center, measured in points.
-    /// - Returns: A `CameraOptions` that fits the provided constraints
+    /// - Returns: A `CameraOptions` that fits the provided constraints. Returns an empty CameraOptions if the
+    ///     calculation fails (e.g., when coordinates are invalid).
     /// - Important:
     ///  The equivalent of the following deprecated call, where `point1` and `point2` are the most southwestern and northeastern points:
     ///  ```swift
@@ -578,14 +579,21 @@ public final class MapboxMap: StyleManager {
                        pitch: Double?,
                        maxZoom: Double?,
                        offset: CGPoint?) -> CameraOptions {
-        return CameraOptions.Marshaller.toSwift(
-            __map.cameraForCoordinateBounds(
-                for: coordinateBounds,
-                padding: padding?.toMBXEdgeInsetsValue(),
-                bearing: bearing?.NSNumber,
-                pitch: pitch?.NSNumber,
-                maxZoom: maxZoom?.NSNumber,
-                offset: offset?.screenCoordinate))
+        do {
+            let coreOptions = try NSExceptionHandler.try {
+                __map.cameraForCoordinateBounds(
+                    for: coordinateBounds,
+                    padding: padding?.toMBXEdgeInsetsValue(),
+                    bearing: bearing?.NSNumber,
+                    pitch: pitch?.NSNumber,
+                    maxZoom: maxZoom?.NSNumber,
+                    offset: offset?.screenCoordinate)
+            }
+            return CameraOptions.Marshaller.toSwift(coreOptions)
+        } catch {
+            Log.error("camera(for coordinateBounds:) failed with error: \(error). Returning empty CameraOptions.")
+            return CameraOptions()
+        }
     }
 
     /// Calculates a `CameraOptions` to fit a list of coordinates.
@@ -599,7 +607,8 @@ public final class MapboxMap: StyleManager {
     ///              If you want to apply padding to the map use `camera` parameter on ``camera(for:camera:coordinatesPadding:maxZoom:offset:)``
     ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
     ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
-    /// - Returns: A `CameraOptions` that fits the provided constraints
+    /// - Returns: A `CameraOptions` that fits the provided constraints. Returns an empty CameraOptions if the
+    ///     calculation fails (e.g., when coordinates are invalid).
     /// - Important:
     ///  The equivalent of the following deprecated call:
     ///  ```swift
@@ -635,12 +644,19 @@ public final class MapboxMap: StyleManager {
                        padding: UIEdgeInsets?,
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
-        return CameraOptions.Marshaller.toSwift(
-            __map.cameraForCoordinates(
-                for: coordinates.map { Coordinate2D(value: $0) },
-                padding: padding?.toMBXEdgeInsetsValue(),
-                bearing: bearing?.NSNumber,
-                pitch: pitch?.NSNumber))
+        do {
+            let coreOptions = try NSExceptionHandler.try {
+                __map.cameraForCoordinates(
+                    for: coordinates.map { Coordinate2D(value: $0) },
+                    padding: padding?.toMBXEdgeInsetsValue(),
+                    bearing: bearing?.NSNumber,
+                    pitch: pitch?.NSNumber)
+            }
+            return CameraOptions.Marshaller.toSwift(coreOptions)
+        } catch {
+            Log.error("camera(for coordinates:) failed with error: \(error). Returning empty CameraOptions.")
+            return CameraOptions()
+        }
     }
 
     /// Calculates a `CameraOptions` to fit a list of coordinates into a sub-rect of the map.
@@ -716,7 +732,8 @@ public final class MapboxMap: StyleManager {
     ///   - padding: The new padding to be used by the camera.
     ///   - bearing: The new bearing to be used by the camera.
     ///   - pitch: The new pitch to be used by the camera.
-    /// - Returns: A `CameraOptions` that fits the provided constraints
+    /// - Returns: A `CameraOptions` that fits the provided constraints. Returns an empty CameraOptions if the
+    ///     calculation fails (e.g., when coordinates are invalid).
     ///
     /// - Important:
     ///  The equivalent of the following deprecated call:
@@ -749,12 +766,19 @@ public final class MapboxMap: StyleManager {
                        padding: UIEdgeInsets,
                        bearing: CGFloat?,
                        pitch: CGFloat?) -> CameraOptions {
-        return CameraOptions.Marshaller.toSwift(
-            __map.cameraForGeometry(
-                for: MapboxCommon.Geometry(geometry),
-                padding: padding.toMBXEdgeInsetsValue(),
-                bearing: bearing?.NSNumber,
-                pitch: pitch?.NSNumber))
+        do {
+            let coreOptions = try NSExceptionHandler.try {
+                __map.cameraForGeometry(
+                    for: MapboxCommon.Geometry(geometry),
+                    padding: padding.toMBXEdgeInsetsValue(),
+                    bearing: bearing?.NSNumber,
+                    pitch: pitch?.NSNumber)
+            }
+            return CameraOptions.Marshaller.toSwift(coreOptions)
+        } catch {
+            Log.error("camera(for geometry:) failed with error: \(error). Returning empty CameraOptions.")
+            return CameraOptions()
+        }
     }
 
     // MARK: - CameraOptions to CoordinateBounds
@@ -962,10 +986,19 @@ public final class MapboxMap: StyleManager {
     ///   - to: The point to which the map is dragged.
     ///
     /// - Returns:
-    ///     The camera options object showing end point.
+    ///     The camera options object showing end point. Returns an empty CameraOptions if the
+    ///     drag calculation fails (e.g., when coordinates are invalid). An empty CameraOptions
+    ///     passed to `setCamera` acts as a no-op, leaving the camera unchanged.
     public func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions {
-        let options = __map.cameraForDrag(forStart: from.screenCoordinate, end: to.screenCoordinate)
-        return CameraOptions.Marshaller.toSwift(options)
+        do {
+            let coreOptions = try NSExceptionHandler.try {
+                __map.cameraForDrag(forStart: from.screenCoordinate, end: to.screenCoordinate)
+            }
+            return CameraOptions.Marshaller.toSwift(coreOptions)
+        } catch {
+            Log.error("dragCameraOptions failed with error: \(error). Returning empty CameraOptions.")
+            return CameraOptions()
+        }
     }
 
     /// :nodoc:

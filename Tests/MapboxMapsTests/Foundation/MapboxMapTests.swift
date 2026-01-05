@@ -539,4 +539,108 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(mapboxMap.viewAnnotationAvoidLayers, layers)
         XCTAssertEqual(mapboxMap.__testingMap.getViewAnnotationAvoidLayers(), layers)
     }
+
+    // MARK: - Exception Handling Tests
+
+    func testDragCameraOptionsWithNaNCoordinates() {
+        // This test verifies that dragCameraOptions catches exceptions from the native layer
+        // when given invalid coordinates (NaN) and returns empty CameraOptions instead of crashing.
+
+        let fromPoint = CGPoint(x: 0, y: 0)
+        let toPoint = CGPoint(x: Double.nan, y: Double.nan)
+
+        let cameraOptions = mapboxMap.dragCameraOptions(from: fromPoint, to: toPoint)
+
+        // Should not crash and should return empty CameraOptions (all properties nil)
+        XCTAssertNotNil(cameraOptions, "dragCameraOptions should not crash with NaN coordinates")
+        XCTAssertNil(cameraOptions.center, "CameraOptions should be empty after exception")
+        XCTAssertNil(cameraOptions.zoom, "CameraOptions should be empty after exception")
+        XCTAssertNil(cameraOptions.bearing, "CameraOptions should be empty after exception")
+        XCTAssertNil(cameraOptions.pitch, "CameraOptions should be empty after exception")
+    }
+
+    func testDragCameraOptionsWithInfiniteCoordinates() {
+        // This test verifies that dragCameraOptions catches exceptions from the native layer
+        // when given invalid coordinates (infinity) and returns empty CameraOptions instead of crashing.
+
+        let fromPoint = CGPoint(x: 0, y: 0)
+        let toPoint = CGPoint(x: Double.infinity, y: Double.infinity)
+
+        let cameraOptions = mapboxMap.dragCameraOptions(from: fromPoint, to: toPoint)
+
+        // Should not crash and should return empty CameraOptions (all properties nil)
+        XCTAssertNotNil(cameraOptions, "dragCameraOptions should not crash with infinite coordinates")
+        XCTAssertNil(cameraOptions.center, "CameraOptions should be empty after exception")
+        XCTAssertNil(cameraOptions.zoom, "CameraOptions should be empty after exception")
+        XCTAssertNil(cameraOptions.bearing, "CameraOptions should be empty after exception")
+        XCTAssertNil(cameraOptions.pitch, "CameraOptions should be empty after exception")
+    }
+
+    func testCameraForCoordinateBoundsWithNaNCoordinates() {
+        // Test camera(for coordinateBounds:...) with invalid bounds containing NaN
+        // Note: The native method handles this gracefully with its own try/catch,
+        // but we wrap it with NSExceptionHandler.try for additional safety.
+
+        let invalidBounds = CoordinateBounds(
+            southwest: CLLocationCoordinate2D(latitude: Double.nan, longitude: Double.nan),
+            northeast: CLLocationCoordinate2D(latitude: Double.nan, longitude: Double.nan)
+        )
+
+        let cameraOptions = mapboxMap.camera(
+            for: invalidBounds,
+            padding: nil,
+            bearing: nil,
+            pitch: nil,
+            maxZoom: nil,
+            offset: nil
+        )
+
+        // Should not crash and should return empty CameraOptions
+        XCTAssertNotNil(cameraOptions)
+        XCTAssertNil(cameraOptions.center, "CameraOptions should be empty when given invalid bounds")
+        XCTAssertNil(cameraOptions.zoom, "CameraOptions should be empty when given invalid bounds")
+    }
+
+    func testCameraForCoordinatesWithNaNCoordinates() {
+        // Test camera(for coordinates:...) with array containing only invalid NaN/infinity coordinates
+        // Note: The native method handles this gracefully with its own try/catch,
+        // but we wrap it with NSExceptionHandler.try for additional safety.
+
+        let invalidCoordinates = [
+            CLLocationCoordinate2D(latitude: Double.nan, longitude: Double.nan),
+            CLLocationCoordinate2D(latitude: Double.infinity, longitude: Double.infinity)
+        ]
+
+        let cameraOptions = mapboxMap.camera(
+            for: invalidCoordinates,
+            padding: nil,
+            bearing: nil,
+            pitch: nil
+        )
+
+        // Should not crash and should return empty CameraOptions
+        XCTAssertNotNil(cameraOptions)
+        XCTAssertNil(cameraOptions.center, "CameraOptions should be empty when given invalid coordinates")
+        XCTAssertNil(cameraOptions.zoom, "CameraOptions should be empty when given invalid coordinates")
+    }
+
+    func testCameraForGeometryWithNaNCoordinates() {
+        // Test camera(for geometry:...) with geometry containing NaN coordinates
+        // This method can throw exceptions from the native layer, similar to dragCameraOptions.
+
+        let invalidPoint = Point(CLLocationCoordinate2D(latitude: Double.nan, longitude: Double.nan))
+        let geometry = Geometry.point(invalidPoint)
+
+        let cameraOptions = mapboxMap.camera(
+            for: geometry,
+            padding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
+            bearing: nil,
+            pitch: nil
+        )
+
+        // Should not crash and should return empty CameraOptions
+        XCTAssertNotNil(cameraOptions)
+        XCTAssertNil(cameraOptions.center, "CameraOptions should be empty after exception")
+        XCTAssertNil(cameraOptions.zoom, "CameraOptions should be empty after exception")
+    }
 }

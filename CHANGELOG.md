@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Bug fixes 🐞
+* Fixed crash in camera API methods when given invalid coordinates (NaN or infinity values). Methods now return empty `CameraOptions` instead of crashing.
+
 ## 11.18.0-beta.1 - 17 December, 2025
 
 ### Breaking changes ⚠️

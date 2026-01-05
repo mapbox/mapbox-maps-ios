@@ -157,8 +157,8 @@ internal extension String {
                  41.8781
             ],
             "zoom": 12,
-            "sources": [Any](),
-            "layers": [Any]()
+            "sources": [String: Any](),
+            "layers": [String: Any]()
         ]
         return ValueConverter.toJson(forValue: styleJSONObject)
     }

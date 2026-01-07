@@ -565,6 +565,9 @@ final class StyleSourceManagerTests: XCTestCase {
             let dummyQueue = DispatchQueue(label: "Dummy queue", qos: .userInitiated)
             let sourceId = "sourceId"
 
+            // Make mainQueue execute cleanup blocks synchronously
+            mainQueue.asyncClosureStub.defaultSideEffect = { $0.parameters.work() }
+
             sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [], dataId: nil)
             sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [], dataId: nil)
             sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: [], dataId: nil)

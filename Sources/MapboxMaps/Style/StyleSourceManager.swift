@@ -110,6 +110,11 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         let identifier = UUID()
         let item = DispatchWorkItem { [weak self] in
             guard let self else { return }
+            defer {
+                self.mainQueue.async { [weak self] in
+                    self?.workItemTracker.removePartialUpdateCancelable(for: sourceId, uuid: identifier)
+                }
+            }
             do {
                 try handleExpected {
                     return self.styleManager.addGeoJSONSourceFeatures(forSourceId: sourceId,
@@ -119,9 +124,6 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             } catch {
                 Log.error("Failed to add features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
             }
-        }
-        item.notify(queue: .main) { [weak self] in
-            self?.workItemTracker.removePartialUpdateCancelable(for: sourceId, uuid: identifier)
         }
         workItemTracker.addPartialUpdateCancelable(AnyCancelable(item.cancel), for: sourceId, uuid: identifier)
         backgroundQueue.async(execute: item)
@@ -167,6 +169,11 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         let identifier = UUID()
         let item = DispatchWorkItem { [weak self] in
             guard let self else { return }
+            defer {
+                self.mainQueue.async { [weak self] in
+                    self?.workItemTracker.removePartialUpdateCancelable(for: sourceId, uuid: identifier)
+                }
+            }
             do {
                 try handleExpected {
                     return self.styleManager.updateGeoJSONSourceFeatures(forSourceId: sourceId,
@@ -177,9 +184,6 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
                 Log.error("Failed to update features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
             }
         }
-        item.notify(queue: .main) { [weak self] in
-            self?.workItemTracker.removePartialUpdateCancelable(for: sourceId, uuid: identifier)
-        }
 
         workItemTracker.addPartialUpdateCancelable(AnyCancelable(item.cancel), for: sourceId, uuid: identifier)
         backgroundQueue.async(execute: item)
@@ -189,6 +193,11 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         let identifier = UUID()
         let item = DispatchWorkItem { [weak self] in
             guard let self else { return }
+            defer {
+                self.mainQueue.async { [weak self] in
+                    self?.workItemTracker.removePartialUpdateCancelable(for: sourceId, uuid: identifier)
+                }
+            }
             do {
                 try handleExpected {
                     return self.styleManager.removeGeoJSONSourceFeatures(forSourceId: sourceId,
@@ -198,9 +207,6 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             } catch {
                 Log.error("Failed to remove features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
             }
-        }
-        item.notify(queue: .main) { [weak self] in
-            self?.workItemTracker.removePartialUpdateCancelable(for: sourceId, uuid: identifier)
         }
 
         workItemTracker.addPartialUpdateCancelable(AnyCancelable(item.cancel), for: sourceId, uuid: identifier)

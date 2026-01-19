@@ -7,29 +7,51 @@ struct RasterParticleExample: View {
     @State var rasterParticleFadeOpacityFactor = 0.8
     @State var resetRateFactor = 0.4
     @State var speedFactor = 0.4
+    @State private var queryRenderedRasterValue: Double?
 
     var body: some View {
-        Map(initialViewport: .camera(zoom: 1)) {
-            RasterArraySource(id: "wind-mrt-source")
-                .url("mapbox://mapbox.gfs-winds")
+        MapReader { proxy in
+            Map(initialViewport: .camera(zoom: 1)) {
+                RasterArraySource(id: "wind-mrt-source")
+                    .url("mapbox://mapbox.gfs-winds")
 
-            RasterParticleLayer(id: "layer_particles", source: "wind-mrt-source")
-                .sourceLayer("10winds")
-                .rasterParticleSpeedFactor(speedFactor)
-                .rasterParticleMaxSpeed(70)
-                .rasterParticleCount(rasterParticleCount)
-                .rasterParticleFadeOpacityFactor(rasterParticleFadeOpacityFactor)
-                .rasterParticleResetRateFactor(resetRateFactor)
-                .rasterParticleColor(particlesSpeedGradient)
+                RasterParticleLayer(id: "layer_particles", source: "wind-mrt-source")
+                    .sourceLayer("10winds")
+                    .rasterParticleSpeedFactor(speedFactor)
+                    .rasterParticleMaxSpeed(70)
+                    .rasterParticleCount(rasterParticleCount)
+                    .rasterParticleFadeOpacityFactor(rasterParticleFadeOpacityFactor)
+                    .rasterParticleResetRateFactor(resetRateFactor)
+                    .rasterParticleColor(particlesSpeedGradient)
+
+                TapInteraction { context in
+                    if let map = proxy.map, context.isOnSurface {
+                        map.queryRenderedRasterValues(
+                            for: context.point,
+                            options: RenderedRasterQueryOptions(layers: ["layer_particles"])
+                        ) { result in
+                            switch result {
+                            case .success(let rasterValues):
+                                let values = rasterValues.layers["layer_particles"] ?? []
+                                queryRenderedRasterValue = values.first?.doubleValue
+                            case .failure(let failure):
+                                print("Error querying raster values: \(failure)")
+                            }
+                        }
+                    }
+                    return true
+                }
+            }
+            .mapStyle(mapStyle)
+            .debugOptions(.camera)
         }
-        .mapStyle(mapStyle)
-        .debugOptions(.camera)
         .ignoresSafeArea()
         .overlay(alignment: .trailing) {
             MapStyleSelectorButton(mapStyle: $mapStyle)
         }
         .overlay(alignment: .bottom) {
             VStack(alignment: .center) {
+                QueryRenderedRasterValuesView(value: queryRenderedRasterValue)
                 SliderSettingView(title: "Particle Count", value: $rasterParticleCount, range: 1...4096, step: 1)
                 SliderSettingView(title: "Opacity Factor", value: $rasterParticleFadeOpacityFactor, range: 0...1, step: 0.01)
                 SliderSettingView(title: "Reset Rate", value: $resetRateFactor, range: 0...1, step: 0.01)
@@ -58,7 +80,25 @@ private struct SliderSettingView: View {
                 Text("\(String(format: "%.2f", value))")
                     .font(.system(size: 12))
             }
+        }
+    }
+}
 
+private struct QueryRenderedRasterValuesView: View {
+    var value: Double?
+
+    var body: some View {
+        HStack {
+            Text("Raster values")
+            Spacer()
+            Group {
+                if let value {
+                    Text("\(value)")
+                } else {
+                    Text("n/a")
+                }
+            }
+            .font(.system(size: 12))
         }
     }
 }

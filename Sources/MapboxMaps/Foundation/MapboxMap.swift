@@ -1222,6 +1222,34 @@ extension MapboxMap: MapFeatureQueryable {
                                                                   concreteErrorType: MapError.self))
     }
 
+    /// Queries raster array sources for values at a specific screen coordinate.
+    ///
+    /// - Parameters:
+    ///   - point: The position on the screen to query.
+    ///   - options: Options to configure the rendered raster value query.
+    ///   - completion: Callback called when the query completes with either the queried raster values or an error.
+    ///
+    /// - Returns: A Cancelable token that can be used to cancel the pending query.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    @discardableResult
+    public func queryRenderedRasterValues(
+        for point: CGPoint,
+        options: RenderedRasterQueryOptions,
+        completion: @escaping (Result<QueriedRasterValues, Error>) -> Void
+    ) -> Cancelable {
+
+        __map.__queryRenderedRasterValues(
+            for: point.screenCoordinate,
+            options: options,
+            callback: coreAPIClosureAdapter(
+                for: completion,
+                type: QueriedRasterValues.self,
+                concreteErrorType: MapError.self
+            )
+        )
+    }
+
     /// Returns all the leaves (original points) of a cluster (given its cluster_id) from a GeoJSON source, with pagination support: limit is the number of leaves
     /// to return (set to Infinity for all points), and offset is the amount of points to skip (for pagination).
     ///

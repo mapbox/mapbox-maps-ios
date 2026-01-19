@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+* Introduce experimental `queryRenderedRasterValues` API for querying the rendered raster array value at a point on the map.
+
 ### Bug fixes 🐞
 * Fixed crash in camera API methods when given invalid coordinates (NaN or infinity values). Methods now return empty `CameraOptions` instead of crashing.
 

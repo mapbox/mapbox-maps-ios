@@ -82,7 +82,7 @@ public struct ModelLayer: Layer, Equatable {
     /// Default value: 0. Value range: [0, 1]
     public var modelCutoffFadeRange: Value<Double>?
 
-    /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset.
+    /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset. When using vector tiled source as the model layer source and hd-road-markup elevation reference, this property acts as layout property and elevation is evaluated only in tile loading time.
     /// Default value: "ground".
     public var modelElevationReference: Value<ModelElevationReference>?
 
@@ -462,13 +462,13 @@ extension ModelLayer {
         with(self, setter(\.modelCutoffFadeRange, .expression(expression)))
     }
 
-    /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset.
+    /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset. When using vector tiled source as the model layer source and hd-road-markup elevation reference, this property acts as layout property and elevation is evaluated only in tile loading time.
     /// Default value: "ground".
     public func modelElevationReference(_ constant: ModelElevationReference) -> Self {
         with(self, setter(\.modelElevationReference, .constant(constant)))
     }
 
-    /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset.
+    /// Selects the base of the model. Some modes might require precomputed elevation data in the tileset. When using vector tiled source as the model layer source and hd-road-markup elevation reference, this property acts as layout property and elevation is evaluated only in tile loading time.
     /// Default value: "ground".
     public func modelElevationReference(_ expression: Exp) -> Self {
         with(self, setter(\.modelElevationReference, .expression(expression)))

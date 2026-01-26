@@ -85,7 +85,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Transition options for `rasterContrast`.
     public var rasterContrastTransition: StyleTransition?
 
-    /// Defines an uniform elevation from the base specified in raster-elevation-reference, in meters.
+    /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental) public var rasterElevation: Value<Double>?
@@ -436,7 +436,7 @@ extension RasterLayer {
         with(self, setter(\.rasterContrast, .expression(expression)))
     }
 
-    /// Defines an uniform elevation from the base specified in raster-elevation-reference, in meters.
+    /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -451,7 +451,7 @@ extension RasterLayer {
         with(self, setter(\.rasterElevationTransition, transition))
     }
 
-    /// Defines an uniform elevation from the base specified in raster-elevation-reference, in meters.
+    /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
     @_documentation(visibility: public)
     @_spi(Experimental)

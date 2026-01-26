@@ -134,43 +134,24 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
 
     private func addAnnotations() {
         func makeView(text: String) -> UIView {
-            let shadowRadius: CGFloat = 8
-            let shadowOffset = CGSize(width: 0, height: 2)
-            // Shadow blur extends beyond shadowRadius. Use ~2x multiplier for smooth fade.
-            let shadowPadding = shadowRadius * 2 + max(abs(shadowOffset.width), abs(shadowOffset.height))
-            let labelPadding: CGFloat = 4
-
-            let container = UIView()
-
-            let card = UIView()
-            card.backgroundColor = .white
-            card.layer.shadowOpacity = 0.25
-            card.layer.shadowRadius = shadowRadius
-            card.layer.shadowOffset = shadowOffset
-            card.layer.cornerRadius = 8
-            card.translatesAutoresizingMaskIntoConstraints = false
-
+            let view = UIView()
+            view.backgroundColor = .white
+            view.layer.shadowOpacity = 0.25
+            view.layer.shadowRadius = 8
+            view.layer.shadowOffset = CGSize(width: 0, height: 2)
+            view.layer.cornerRadius = 8
             let label = UILabel()
             label.text = text
             label.textColor = .black
             label.translatesAutoresizingMaskIntoConstraints = false
-
-            card.addSubview(label)
-            container.addSubview(card)
-
+            view.addSubview(label)
             NSLayoutConstraint.activate([
-                label.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: labelPadding),
-                label.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -labelPadding),
-                label.topAnchor.constraint(equalTo: card.topAnchor, constant: labelPadding),
-                label.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -labelPadding),
-
-                card.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: shadowPadding),
-                card.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -shadowPadding),
-                card.topAnchor.constraint(equalTo: container.topAnchor, constant: shadowPadding),
-                card.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -shadowPadding),
+                label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 4),
+                label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -4),
+                label.topAnchor.constraint(equalTo: view.topAnchor, constant: 4),
+                label.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -4),
             ])
-
-            return container
+            return view
         }
 
         self.annotations = annotationData.map {

@@ -73,6 +73,19 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-cross-slope"] = newValue }
     }
 
+    /// Transition property for `lineElevationGroundScale`
+    public var lineElevationGroundScaleTransition: StyleTransition? {
+        get { StyleTransition(impl.layerProperties["line-elevation-ground-scale-transition"] as? [String: TimeInterval]) }
+        set { impl.layerProperties["line-elevation-ground-scale-transition"] = newValue?.asDictionary }
+    }
+
+    /// Controls how much the elevation of lines with `line-elevation-reference` set to `sea` scales with terrain exaggeration. A value of 0 keeps the line at a fixed altitude above sea level. A value of 1 scales the elevation proportionally with terrain exaggeration.
+    /// Default value: 0. Value range: [0, 1]
+    public var lineElevationGroundScale: Double? {
+        get { impl.layerProperties["line-elevation-ground-scale"] as? Double }
+        set { impl.layerProperties["line-elevation-ground-scale"] = newValue }
+    }
+
     /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
     @_documentation(visibility: public)

@@ -49,6 +49,13 @@ public struct LineLayer: Layer, Equatable {
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineCrossSlope: Value<Double>?
 
+    /// Controls how much the elevation of lines with `line-elevation-reference` set to `sea` scales with terrain exaggeration. A value of 0 keeps the line at a fixed altitude above sea level. A value of 1 scales the elevation proportionally with terrain exaggeration.
+    /// Default value: 0. Value range: [0, 1]
+    public var lineElevationGroundScale: Value<Double>?
+
+    /// Transition options for `LineElevationGroundScale`.
+    public var lineElevationGroundScaleTransition: StyleTransition?
+
     /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
     @_documentation(visibility: public)
@@ -309,6 +316,8 @@ public struct LineLayer: Layer, Equatable {
         try layoutContainer.encode(visibility, forKey: .visibility)
         try layoutContainer.encodeIfPresent(lineCap, forKey: .lineCap)
         try layoutContainer.encodeIfPresent(lineCrossSlope, forKey: .lineCrossSlope)
+        try layoutContainer.encodeIfPresent(lineElevationGroundScale, forKey: .lineElevationGroundScale)
+        try layoutContainer.encodeIfPresent(lineElevationGroundScaleTransition, forKey: .lineElevationGroundScaleTransition)
         try layoutContainer.encodeIfPresent(lineElevationReference, forKey: .lineElevationReference)
         try layoutContainer.encodeIfPresent(lineJoin, forKey: .lineJoin)
         try layoutContainer.encodeIfPresent(lineMiterLimit, forKey: .lineMiterLimit)
@@ -378,6 +387,8 @@ public struct LineLayer: Layer, Equatable {
             visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
             lineCap = try layoutContainer.decodeIfPresent(Value<LineCap>.self, forKey: .lineCap)
             lineCrossSlope = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineCrossSlope)
+            lineElevationGroundScale = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineElevationGroundScale)
+            lineElevationGroundScaleTransition = try layoutContainer.decodeIfPresent(StyleTransition.self, forKey: .lineElevationGroundScaleTransition)
             lineElevationReference = try layoutContainer.decodeIfPresent(Value<LineElevationReference>.self, forKey: .lineElevationReference)
             lineJoin = try layoutContainer.decodeIfPresent(Value<LineJoin>.self, forKey: .lineJoin)
             lineMiterLimit = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineMiterLimit)
@@ -405,6 +416,8 @@ public struct LineLayer: Layer, Equatable {
     enum LayoutCodingKeys: String, CodingKey {
         case lineCap = "line-cap"
         case lineCrossSlope = "line-cross-slope"
+        case lineElevationGroundScale = "line-elevation-ground-scale"
+        case lineElevationGroundScaleTransition = "line-elevation-ground-scale-transition"
         case lineElevationReference = "line-elevation-reference"
         case lineJoin = "line-join"
         case lineMiterLimit = "line-miter-limit"
@@ -525,6 +538,23 @@ extension LineLayer {
     @_spi(Experimental)
     public func lineCrossSlope(_ expression: Exp) -> Self {
         with(self, setter(\.lineCrossSlope, .expression(expression)))
+    }
+
+    /// Controls how much the elevation of lines with `line-elevation-reference` set to `sea` scales with terrain exaggeration. A value of 0 keeps the line at a fixed altitude above sea level. A value of 1 scales the elevation proportionally with terrain exaggeration.
+    /// Default value: 0. Value range: [0, 1]
+    public func lineElevationGroundScale(_ constant: Double) -> Self {
+        with(self, setter(\.lineElevationGroundScale, .constant(constant)))
+    }
+
+    /// Transition property for `lineElevationGroundScale`
+    public func lineElevationGroundScaleTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.lineElevationGroundScaleTransition, transition))
+    }
+
+    /// Controls how much the elevation of lines with `line-elevation-reference` set to `sea` scales with terrain exaggeration. A value of 0 keeps the line at a fixed altitude above sea level. A value of 1 scales the elevation proportionally with terrain exaggeration.
+    /// Default value: 0. Value range: [0, 1]
+    public func lineElevationGroundScale(_ expression: Exp) -> Self {
+        with(self, setter(\.lineElevationGroundScale, .expression(expression)))
     }
 
     /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.

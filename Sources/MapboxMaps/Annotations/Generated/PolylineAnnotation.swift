@@ -85,6 +85,8 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
 
     var layerProperties: [String: Any] {
         var properties: [String: Any] = [:]
+        properties["line-elevation-ground-scale"] = lineElevationGroundScale
+        properties["line-elevation-ground-scale-transition"] = lineElevationGroundScaleTransition?.asDictionary
         properties["line-join"] = lineJoin?.rawValue
         properties["line-sort-key"] = lineSortKey
         properties["line-z-offset"] = lineZOffset
@@ -144,6 +146,13 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
     }
 
     // MARK: - Style Properties -
+
+    /// Transition property for `lineElevationGroundScale`
+    public var lineElevationGroundScaleTransition: StyleTransition?
+
+    /// Controls how much the elevation of lines with `line-elevation-reference` set to `sea` scales with terrain exaggeration. A value of 0 keeps the line at a fixed altitude above sea level. A value of 1 scales the elevation proportionally with terrain exaggeration.
+    /// Default value: 0. Value range: [0, 1]
+    public var lineElevationGroundScale: Double?
 
     /// The display of lines when joining.
     /// Default value: "miter".
@@ -291,6 +300,17 @@ extension PolylineAnnotation {
 }
 
 extension PolylineAnnotation {
+    /// Transition property for `lineElevationGroundScale`
+    public func lineElevationGroundScaleTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.lineElevationGroundScaleTransition, transition))
+    }
+
+    /// Controls how much the elevation of lines with `line-elevation-reference` set to `sea` scales with terrain exaggeration. A value of 0 keeps the line at a fixed altitude above sea level. A value of 1 scales the elevation proportionally with terrain exaggeration.
+    /// Default value: 0. Value range: [0, 1]
+    public func lineElevationGroundScale(_ newValue: Double) -> Self {
+        with(self, setter(\.lineElevationGroundScale, newValue))
+    }
+
     /// The display of lines when joining.
     /// Default value: "miter".
     public func lineJoin(_ newValue: LineJoin) -> Self {

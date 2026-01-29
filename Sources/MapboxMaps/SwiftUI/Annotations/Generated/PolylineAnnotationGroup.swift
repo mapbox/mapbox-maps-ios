@@ -76,6 +76,8 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     private func updateProperties(manager: PolylineAnnotationManager) {
         assign(manager, \.lineCap, value: lineCap)
         assign(manager, \.lineCrossSlope, value: lineCrossSlope)
+        assign(manager, \.lineElevationGroundScale, value: lineElevationGroundScale)
+        assign(manager, \.lineElevationGroundScaleTransition, value: lineElevationGroundScaleTransition)
         assign(manager, \.lineElevationReference, value: lineElevationReference)
         assign(manager, \.lineJoin, value: lineJoin)
         assign(manager, \.lineMiterLimit, value: lineMiterLimit)
@@ -144,6 +146,19 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     @_spi(Experimental)
     public func lineCrossSlope(_ newValue: Double) -> Self {
         with(self, setter(\.lineCrossSlope, newValue))
+    }
+
+    private var lineElevationGroundScaleTransition: StyleTransition?
+    /// Transition property for `lineElevationGroundScale`
+    public func lineElevationGroundScaleTransition(_ transition: StyleTransition) -> Self {
+        with(self, setter(\.lineElevationGroundScaleTransition, transition))
+    }
+
+    private var lineElevationGroundScale: Double?
+    /// Controls how much the elevation of lines with `line-elevation-reference` set to `sea` scales with terrain exaggeration. A value of 0 keeps the line at a fixed altitude above sea level. A value of 1 scales the elevation proportionally with terrain exaggeration.
+    /// Default value: 0. Value range: [0, 1]
+    public func lineElevationGroundScale(_ newValue: Double) -> Self {
+        with(self, setter(\.lineElevationGroundScale, newValue))
     }
 
     private var lineElevationReference: LineElevationReference?

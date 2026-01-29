@@ -6,9 +6,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Features ✨ and improvements 🏁
 * Introduce experimental `queryRenderedRasterValues` API for querying the rendered raster array value at a point on the map.
+* Introduce new `LineLayer.lineElevationGroundScale` property to scale elevated lines with terrain exaggeration.
 
 ### Bug fixes 🐞
 * Fix `FrameViewAnnotationsExample` annotations disappearing before shadow leaves the screen.
+
 ## 11.18.0 - 15 January, 2026
 
 ### Bug fixes 🐞

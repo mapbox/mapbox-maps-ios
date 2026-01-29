@@ -4,6 +4,41 @@ import XCTest
 
 final class PolylineAnnotationTests: XCTestCase {
 
+    func testLineElevationGroundScaleTransition() {
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+        annotation.lineElevationGroundScaleTransition = StyleTransition(duration: 1, delay: 1)
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .object(lineElevationGroundScaleTransition) = layerProperties["line-elevation-ground-scale-transition"],
+              case let .number(duration) = lineElevationGroundScaleTransition["duration"],
+              case let .number(delay) = lineElevationGroundScaleTransition["delay"]
+        else {
+            return XCTFail("Layer property line-elevation-ground-scale-transition should be set to a string.")
+        }
+
+        XCTAssertEqual(duration / 1000, annotation.lineElevationGroundScaleTransition?.duration)
+        XCTAssertEqual(delay / 1000, annotation.lineElevationGroundScaleTransition?.delay)
+    }
+
+    func testLineElevationGroundScale() {
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+        annotation.lineElevationGroundScale =  Double.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(lineElevationGroundScale) = layerProperties["line-elevation-ground-scale"] else {
+            return XCTFail("Layer property line-elevation-ground-scale should be set to a number.")
+        }
+        XCTAssertEqual(lineElevationGroundScale, annotation.lineElevationGroundScale)
+    }
+
     func testLineJoin() {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)

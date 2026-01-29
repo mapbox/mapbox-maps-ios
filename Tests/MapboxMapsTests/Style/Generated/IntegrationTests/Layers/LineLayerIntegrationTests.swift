@@ -25,6 +25,8 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.visibility = .constant(.visible)
             layer.lineCap = Value<LineCap>.testConstantValue()
             layer.lineCrossSlope = Value<Double>.testConstantValue()
+            layer.lineElevationGroundScale = Value<Double>.testConstantValue()
+            layer.lineElevationGroundScaleTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineElevationReference = Value<LineElevationReference>.testConstantValue()
             layer.lineJoin = Value<LineJoin>.testConstantValue()
             layer.lineMiterLimit = Value<Double>.testConstantValue()

@@ -533,6 +533,40 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.slot, nil)
     }
 
+    func testLineElevationGroundScale() throws {
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+        // Test that the setter and getter work
+        let value = 0.5
+        annotation.lineElevationGroundScale = value
+        XCTAssertEqual(annotation.lineElevationGroundScale, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.impl.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        let fallbackValue = self.manager.lineElevationGroundScale ?? StyleManager.layerPropertyDefaultValue(for: .line, property: "line-elevation-ground-scale").value
+        let fallbackValueData = JSONSerialization.isValidJSONObject(fallbackValue)
+            ? try XCTUnwrap(JSONSerialization.data(withJSONObject: fallbackValue))
+            : Data(String(describing: fallbackValue).utf8)
+        let fallbackValueString = try XCTUnwrap(String(decoding: fallbackValueData, as: UTF8.self))
+        let expectedString = "[\"number\",[\"coalesce\",[\"get\",\"line-elevation-ground-scale\",[\"object\",[\"get\",\"layerProperties\"]]],\(fallbackValueString)]]"
+        XCTAssertEqual(try layer.lineElevationGroundScale.toString(), expectedString)
+
+        // Test that the property can be reset to nil
+        annotation.lineElevationGroundScale = nil
+        XCTAssertNil(annotation.lineElevationGroundScale)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.impl.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineElevationGroundScale, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-elevation-ground-scale").value as! NSNumber).doubleValue))
+    }
+
     func testLineJoin() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)

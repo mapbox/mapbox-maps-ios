@@ -82,6 +82,32 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cross-slope"] as! Double, defaultValue)
     }
+    func testInitialLineElevationGroundScale() {
+        let initialValue = manager.lineElevationGroundScale
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineElevationGroundScale() {
+        let value = 0.5
+        manager.lineElevationGroundScale = value
+        XCTAssertEqual(manager.lineElevationGroundScale, value)
+        XCTAssertEqual(manager.impl.layerProperties["line-elevation-ground-scale"] as! Double, value)
+    }
+
+
+    func testSetToNilLineElevationGroundScale() {
+        let newLineElevationGroundScaleProperty = 0.5
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-elevation-ground-scale").value as! Double
+        manager.lineElevationGroundScale = newLineElevationGroundScaleProperty
+        XCTAssertNotNil(manager.impl.layerProperties["line-elevation-ground-scale"])
+        harness.triggerDisplayLink()
+
+        manager.lineElevationGroundScale = nil
+        XCTAssertNil(manager.lineElevationGroundScale)
+        harness.triggerDisplayLink()
+
+        XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-elevation-ground-scale"] as! Double, defaultValue)
+    }
     func testInitialLineElevationReference() {
         let initialValue = manager.lineElevationReference
         XCTAssertNil(initialValue)

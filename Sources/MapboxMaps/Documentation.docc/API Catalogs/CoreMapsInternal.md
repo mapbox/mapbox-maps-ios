@@ -40,6 +40,7 @@ Maps rendering SDK also known as GL-Native. These are for internal use only.
 - ``SourceRemovedCallback``
 - ``StyleDataLoadedCallback``
 - ``StyleImageMissingCallback``
+- ``StyleAttributionsChangedCallback``
 - ``MapIdleCallback``
 - ``MapLoadedCallback``
 - ``StyleImageRemoveUnusedCallback``

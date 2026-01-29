@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.18.1 - 29 January, 2026
+
 ## 11.18.0 - 15 January, 2026
 
 ### Bug fixes 🐞

@@ -19,6 +19,7 @@ The simplified diagram of the events emitted by the map is displayed below.
 - ``SourceDataLoaded``
 - ``StyleImageMissing``
 - ``StyleImageRemoveUnused``
+- ``StyleAttributionsChanged``
 - ``RenderFrameStarted``
 - ``RenderFrameFinished``
 - ``ResourceRequest``

@@ -19,6 +19,8 @@ final class IndoorSelectorView: UIView {
             self?.updateVisibility()
             self?.invalidateIntrinsicContentSize()
             self?.collectionView.reloadData()
+            self?.setNeedsLayout()
+            self?.updateLayout()
         }
 
         self.model.onFloorSelected = { [weak self] in
@@ -96,7 +98,9 @@ final class IndoorSelectorView: UIView {
         guard isHidden != model.isHidden else { return }
         isHidden = model.isHidden
         if !isHidden {
+            invalidateIntrinsicContentSize()
             collectionView.reloadData()
+            setNeedsLayout()
             updateLayout()
         }
     }

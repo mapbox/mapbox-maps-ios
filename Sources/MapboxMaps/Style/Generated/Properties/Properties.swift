@@ -53,31 +53,23 @@ public struct LineCap: RawRepresentable, Codable, Hashable, Sendable {
 }
 
 /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.
-@_documentation(visibility: public)
-@_spi(Experimental)
 public struct LineElevationReference: RawRepresentable, Codable, Hashable, Sendable {
-    @_documentation(visibility: public)
     public let rawValue: String
 
-    @_documentation(visibility: public)
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
     /// Elevated rendering is disabled.
-    @_documentation(visibility: public)
     public static let none = LineElevationReference(rawValue: "none")
 
     /// Elevated rendering is enabled. Use this mode to elevate lines relative to the sea level.
-    @_documentation(visibility: public)
     public static let sea = LineElevationReference(rawValue: "sea")
 
     /// Elevated rendering is enabled. Use this mode to elevate lines relative to the ground's height below them.
-    @_documentation(visibility: public)
     public static let ground = LineElevationReference(rawValue: "ground")
 
     /// Elevated rendering is enabled. Use this mode to describe additive and stackable features that should exist only on top of road polygons.
-    @_documentation(visibility: public)
     public static let hdRoadMarkup = LineElevationReference(rawValue: "hd-road-markup")
 }
 

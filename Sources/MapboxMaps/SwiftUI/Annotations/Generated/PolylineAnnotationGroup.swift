@@ -164,8 +164,6 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     private var lineElevationReference: LineElevationReference?
     /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func lineElevationReference(_ newValue: LineElevationReference) -> Self {
         with(self, setter(\.lineElevationReference, newValue))
     }
@@ -207,17 +205,8 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 
     private var lineZOffset: Double?
-    /// Vertical offset from ground, in meters. Defaults to 0. This is an experimental property with some known issues:
-    ///  - Not supported for globe projection at the moment
-    ///  - Elevated line discontinuity is possible on tile borders with terrain enabled
-    ///  - Rendering artifacts can happen near line joins and line caps depending on the line styling
-    ///  - Rendering artifacts relating to `line-opacity` and `line-blur`
-    ///  - Elevated line visibility is determined by layer order
-    ///  - Z-fighting issues can happen with intersecting elevated lines
-    ///  - Elevated lines don't cast shadows
+    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
     /// Default value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func lineZOffset(_ newValue: Double) -> Self {
         with(self, setter(\.lineZOffset, newValue))
     }

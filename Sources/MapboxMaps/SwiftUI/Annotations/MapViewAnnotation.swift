@@ -19,6 +19,11 @@ import SwiftUI
 /// The view annotations are great for displaying unique interactive features. However, they may be suboptimal for large amounts of data and don't support clustering. For those cases use ``PointAnnotation`` or Runtime Styling API, for example, ``SymbolLayer`` with ``GeoJSONSource``.
 ///
 /// - Note: View Annotations appear above all content of MapView (e.g. layers, annotations, puck). If you need to display annotation between layers or below puck, use ``PointAnnotation``.
+///
+/// - Important: When using shadows, blur, or other visual effects that extend beyond the view's bounds,
+///   the annotation may disappear while the effect is still visible. This occurs because visibility is calculated
+///   using the view's frame, which doesn't include the shadow extent. To prevent this, wrap your content in a
+///   container view with padding that accounts for the effect. See ``ViewAnnotation`` documentation for details.
 
 public struct MapViewAnnotation {
     struct Actions {

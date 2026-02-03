@@ -31,6 +31,13 @@ import MapboxCommon
 ///
 /// - Important: Don't set `UIView.isHidden` property to hide the annotation. Instead, use ``visible`` property.
 ///
+/// - Important: When using shadows, blur, or other visual effects that extend beyond the view's bounds
+///   (such as `CALayer.shadow*` properties), the annotation may disappear while the effect is still visible.
+///   This occurs because visibility is calculated using the view's frame, which doesn't include the shadow extent.
+///   To prevent this, wrap your content in a container view with padding that accounts for the effect.
+///   For shadows, use padding of approximately `shadowRadius * 2 + max(abs(shadowOffset.width), abs(shadowOffset.height))`.
+///   See `FrameViewAnnotationsExample` in the Examples app for a reference implementation.
+///
 /// When view content or layout is updated, use ``setNeedsUpdateSize()`` to update the the annotation size. It's safe to use it multiple times, only one update will be performed.
 ///
 /// ```swift

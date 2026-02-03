@@ -58,8 +58,7 @@ public struct LineLayer: Layer, Equatable {
 
     /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var lineElevationReference: Value<LineElevationReference>?
+    public var lineElevationReference: Value<LineElevationReference>?
 
     /// The display of lines when joining.
     /// Default value: "miter".
@@ -81,17 +80,9 @@ public struct LineLayer: Layer, Equatable {
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineWidthUnit: Value<LineWidthUnit>?
 
-    /// Vertical offset from ground, in meters. Defaults to 0. This is an experimental property with some known issues:
-    ///  - Not supported for globe projection at the moment
-    ///  - Elevated line discontinuity is possible on tile borders with terrain enabled
-    ///  - Rendering artifacts can happen near line joins and line caps depending on the line styling
-    ///  - Rendering artifacts relating to `line-opacity` and `line-blur`
-    ///  - Elevated line visibility is determined by layer order
-    ///  - Z-fighting issues can happen with intersecting elevated lines
-    ///  - Elevated lines don't cast shadows
+    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
     /// Default value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var lineZOffset: Value<Double>?
+    public var lineZOffset: Value<Double>?
 
     /// Blur applied to the line, in pixels.
     /// Default value: 0. Minimum value: 0. The unit of lineBlur is in pixels.
@@ -559,16 +550,12 @@ extension LineLayer {
 
     /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func lineElevationReference(_ constant: LineElevationReference) -> Self {
         with(self, setter(\.lineElevationReference, .constant(constant)))
     }
 
     /// Selects the base of line-elevation. Some modes might require precomputed elevation data in the tileset.
     /// Default value: "none".
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func lineElevationReference(_ expression: Exp) -> Self {
         with(self, setter(\.lineElevationReference, .expression(expression)))
     }
@@ -635,32 +622,14 @@ extension LineLayer {
         with(self, setter(\.lineWidthUnit, .expression(expression)))
     }
 
-    /// Vertical offset from ground, in meters. Defaults to 0. This is an experimental property with some known issues:
-    ///  - Not supported for globe projection at the moment
-    ///  - Elevated line discontinuity is possible on tile borders with terrain enabled
-    ///  - Rendering artifacts can happen near line joins and line caps depending on the line styling
-    ///  - Rendering artifacts relating to `line-opacity` and `line-blur`
-    ///  - Elevated line visibility is determined by layer order
-    ///  - Z-fighting issues can happen with intersecting elevated lines
-    ///  - Elevated lines don't cast shadows
+    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
     /// Default value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func lineZOffset(_ constant: Double) -> Self {
         with(self, setter(\.lineZOffset, .constant(constant)))
     }
 
-    /// Vertical offset from ground, in meters. Defaults to 0. This is an experimental property with some known issues:
-    ///  - Not supported for globe projection at the moment
-    ///  - Elevated line discontinuity is possible on tile borders with terrain enabled
-    ///  - Rendering artifacts can happen near line joins and line caps depending on the line styling
-    ///  - Rendering artifacts relating to `line-opacity` and `line-blur`
-    ///  - Elevated line visibility is determined by layer order
-    ///  - Z-fighting issues can happen with intersecting elevated lines
-    ///  - Elevated lines don't cast shadows
+    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
     /// Default value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func lineZOffset(_ expression: Exp) -> Self {
         with(self, setter(\.lineZOffset, .expression(expression)))
     }

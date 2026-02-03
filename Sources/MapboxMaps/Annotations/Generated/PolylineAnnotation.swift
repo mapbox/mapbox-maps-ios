@@ -161,17 +161,8 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var lineSortKey: Double?
 
-    /// Vertical offset from ground, in meters. Defaults to 0. This is an experimental property with some known issues:
-    ///  - Not supported for globe projection at the moment
-    ///  - Elevated line discontinuity is possible on tile borders with terrain enabled
-    ///  - Rendering artifacts can happen near line joins and line caps depending on the line styling
-    ///  - Rendering artifacts relating to `line-opacity` and `line-blur`
-    ///  - Elevated line visibility is determined by layer order
-    ///  - Z-fighting issues can happen with intersecting elevated lines
-    ///  - Elevated lines don't cast shadows
+    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
     /// Default value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public var lineZOffset: Double?
 
     /// Transition property for `lineBlur`
@@ -322,17 +313,8 @@ extension PolylineAnnotation {
         with(self, setter(\.lineSortKey, newValue))
     }
 
-    /// Vertical offset from ground, in meters. Defaults to 0. This is an experimental property with some known issues:
-    ///  - Not supported for globe projection at the moment
-    ///  - Elevated line discontinuity is possible on tile borders with terrain enabled
-    ///  - Rendering artifacts can happen near line joins and line caps depending on the line styling
-    ///  - Rendering artifacts relating to `line-opacity` and `line-blur`
-    ///  - Elevated line visibility is determined by layer order
-    ///  - Z-fighting issues can happen with intersecting elevated lines
-    ///  - Elevated lines don't cast shadows
+    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
     /// Default value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func lineZOffset(_ newValue: Double) -> Self {
         with(self, setter(\.lineZOffset, newValue))
     }

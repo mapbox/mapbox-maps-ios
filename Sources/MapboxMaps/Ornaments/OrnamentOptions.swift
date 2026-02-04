@@ -35,7 +35,9 @@ public struct OrnamentOptions: Equatable, Sendable {
     // MARK: - Indoor Selector
 
     /// The ornament options for the map's indoor selector view.
-    var indoorSelector: IndoorSelectorViewOptions
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public var indoorSelector: IndoorSelectorViewOptions
 
     /// Initializes an `OrnamentOptions`.
     /// - Parameters:
@@ -272,33 +274,35 @@ public struct LogoViewOptions: Equatable, Sendable {
 }
 
 /// Used to configure position, margin, and visibility for the map's indoor selector view.
-struct IndoorSelectorViewOptions: Equatable, Sendable {
+@_spi(Experimental)
+@_documentation(visibility: public)
+public struct IndoorSelectorViewOptions: Equatable, Sendable {
 
     /// The position of the indoor selector view.
     ///
     /// The default value for this property is `.topTrailing`.
-    var position: OrnamentPosition
+    public var position: OrnamentPosition
 
     /// The margins of the indoor selector view.
     ///
     /// The default value for this property is `CGPoint(x: 8.0, y: 0.0)`.
-    var margins: CGPoint
+    public var margins: CGPoint
 
     /// The visibility of the indoor selector view.
     ///
     /// The default value for this property is `.adaptive`. When set to `.adaptive`,
     /// the indoor selector is visible only when indoor floor data is available.
-    var visibility: OrnamentVisibility
+    public var visibility: OrnamentVisibility
 
     /// Initializes an `IndoorSelectorViewOptions`.
     /// - Parameters:
     ///   - position: The position of the indoor selector view.
     ///   - margins: The margins of the indoor selector view.
     ///   - visibility: The visibility of the indoor selector view.
-    init(
+    public init(
         position: OrnamentPosition = .topTrailing,
         margins: CGPoint = .init(x: 8.0, y: 0.0),
-        visibility: OrnamentVisibility = .adaptive
+        visibility: OrnamentVisibility = .hidden
     ) {
         self.position = position
         self.margins = margins

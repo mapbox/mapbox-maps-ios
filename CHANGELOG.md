@@ -2,66 +2,69 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-# 10.19.4 - March 6, 2025
+## 10.19.5 - February 4, 2025
+
+* Update MapboxCommon to 23.12.0
+
+## 10.19.4 - March 6, 2025
 
 * Address the `EXC_BAD_ACCESS` crash in the `LocationProducer.latestCLLocation.setter`
 * Add logs to indicate that deallocating MapView out of the main thread is an undefined behaviour
 
-# 10.19.3 - February 3, 2025
+## 10.19.3 - February 3, 2025
 
 * Update MapboxCommon to 23.11.4
 
-# 10.19.2 - January 23, 2025
+## 10.19.2 - January 23, 2025
 
 * Update MapboxCommon to 23.11.3
 
-# 10.19.1 - December 11, 2024
+## 10.19.1 - December 11, 2024
 
 * Update MapboxCoreMaps to 10.19.2
 * Update MapboxCommon to 23.11.2
 
-# 10.19.0 - September 24, 2024
+## 10.19.0 - September 24, 2024
 
 * Remove bitcode from framework binaries across the stack
 * Update MapboxCoreMaps to 10.19.1 and MapboxCommon to 23.11.0, MapboxMobileEvents to 2.0.0
 
-# 10.18.2 - June 12, 2024
+## 10.18.2 - June 12, 2024
 
 * Update Turf to 2.8.0
 * Add support for building with Xcode 16 beta
 
-# 10.18.1 - May 30, 2024
+## 10.18.1 - May 30, 2024
 
 * Update MapboxCommpon to 23.10.1
 
-# 10.18.0 - May 23, 2024
+## 10.18.0 - May 23, 2024
 
 * Update MapboxCoreMaps to 10.18.0 and MapboxCommon to 23.10.0
 
-# 10.17.0 - April 3, 2024
+## 10.17.0 - April 3, 2024
 
 * Update MapboxCoreMaps to 10.17.0 and MapboxCommon to 23.9.2
 
-# 10.16.6 - March 4, 2023
+## 10.16.6 - March 4, 2023
 
 * Update MapboxCoreMaps to 10.16.6 and MapboxCommon to 23.9.1
 
-# 10.16.5 - February 22, 2023
+## 10.16.5 - February 22, 2023
 
 * Update MapboxCoreMaps to 10.16.5 and MapboxCommon to 23.9.0
 
-# 10.16.4 - January 9, 2023
+## 10.16.4 - January 9, 2023
 
 * Update MapboxCoreMaps to 10.16.4 and MapboxCommon to 23.8.6
 
-# 10.16.3 - December 8, 2023
+## 10.16.3 - December 8, 2023
 
 * Update MapboxCoreMaps to 10.16.3 and MapboxCommon to 23.8.5
 
 ## 10.16.2 - November 8, 2023
 
 * Update MapboxCoreMaps to 10.16.2 and MapboxCommon to 23.8.4.
-
 
 ## 10.16.1 - October 3, 2023
 

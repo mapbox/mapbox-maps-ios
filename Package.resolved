@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
           "branch": null,
-          "revision": "fb04cb619192455fbcb46efdb8c19d6f9e1433a9",
-          "version": "23.11.4"
+          "revision": "5b8e52f53616353229a7de653310a657e595ff42",
+          "version": "23.12.0"
         }
       },
       {

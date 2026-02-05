@@ -95,8 +95,9 @@ final class IndoorSelectorView: UIView {
     }
 
     private func updateVisibility() {
-        guard isHidden != model.isHidden else { return }
-        isHidden = model.isHidden
+        let newOpacity: Float = model.isHidden ? 0 : 1
+        guard layer.opacity != newOpacity else { return }
+        layer.opacity = newOpacity
         if !isHidden {
             invalidateIntrinsicContentSize()
             collectionView.reloadData()
@@ -208,7 +209,7 @@ extension IndoorSelectorView {
 
         isUserInteractionEnabled = true
         isExclusiveTouch = true
-        isHidden = model.isHidden
+        layer.opacity =  model.isHidden ? 0 : 1
 
         addSubview(containerView)
         containerView.addSubview(collectionView)

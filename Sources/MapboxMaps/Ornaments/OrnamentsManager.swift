@@ -266,7 +266,7 @@ public final class OrnamentsManager {
         case .hidden:
             _indoorSelectorView.isHidden = true
         case .adaptive:
-            break // Adaptive visibility is handled by the IndoorSelectorView itself based on floor data
+            indoorSelectorView.isHidden = false // Handled by the IndoorSelectorView itself based on floor data and uses opacity
         }
     }
 

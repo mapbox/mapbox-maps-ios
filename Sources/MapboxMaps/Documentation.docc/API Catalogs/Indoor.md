@@ -7,3 +7,4 @@
 - ``IndoorFloor``
 - ``IndoorState``
 - ``IndoorManager``
+- ``IndoorSelectorViewOptions``

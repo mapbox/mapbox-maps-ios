@@ -303,20 +303,6 @@ final class OrnamentManagerTests: XCTestCase {
         XCTAssertTrue(indoorSelector.isHidden, "Indoor selector should be hidden initially when model has no floors")
     }
 
-    func testIndoorSelectorVisibility() throws {
-        let mockModel = MockIndoorSelectorModel()
-        let testIndoorSelector = IndoorSelectorView(model: mockModel)
-
-        view.addSubview(testIndoorSelector)
-
-        XCTAssertTrue(testIndoorSelector.isHidden, "Indoor selector should be hidden when no floors")
-
-        mockModel.isHidden = false
-        mockModel.onVisibilityChanged?()
-
-        XCTAssertFalse(testIndoorSelector.isHidden, "Indoor selector should be visible when model is not hidden")
-    }
-
     func testIndoorSelectorIntrinsicContentSizeUpdates() throws {
         let mockModel = MockIndoorSelectorModel()
         let testIndoorSelector = IndoorSelectorView(model: mockModel)

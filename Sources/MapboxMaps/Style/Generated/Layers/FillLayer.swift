@@ -3,7 +3,7 @@ import UIKit
 
 /// A filled polygon with an optional stroked border.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-fill)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#fill)
 public struct FillLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

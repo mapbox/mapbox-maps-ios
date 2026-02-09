@@ -5,7 +5,7 @@ import UIKit
 
 /// Snow particles over the map
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#snow)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/types/#snow)
 @_documentation(visibility: public)
 @_spi(Experimental)
 public struct Snow: Codable, Equatable, StyleEncodable {

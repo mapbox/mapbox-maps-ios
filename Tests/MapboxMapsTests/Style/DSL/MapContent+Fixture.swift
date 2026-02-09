@@ -37,7 +37,7 @@ struct MapContentFixture: MapContent {
 
         mapViewAnnotation
 
-        Puck3D(model: Model(), bearing: nil)
+        Puck3D(model: Model(id: "3d-puck"), bearing: nil)
 
         SymbolLayer(id: id, source: "test")
         RouteLine(route: route)

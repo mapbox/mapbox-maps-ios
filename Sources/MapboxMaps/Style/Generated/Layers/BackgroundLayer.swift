@@ -3,7 +3,7 @@ import UIKit
 
 /// The background color or pattern of the map.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-background)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#background)
 public struct BackgroundLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

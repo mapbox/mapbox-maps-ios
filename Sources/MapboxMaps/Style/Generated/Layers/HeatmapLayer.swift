@@ -3,7 +3,7 @@ import UIKit
 
 /// A heatmap.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-heatmap)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#heatmap)
 public struct HeatmapLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

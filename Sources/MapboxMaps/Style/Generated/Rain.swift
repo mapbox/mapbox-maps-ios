@@ -5,7 +5,7 @@ import UIKit
 
 /// Rain particles over the map
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#rain)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/types/#rain)
 @_documentation(visibility: public)
 @_spi(Experimental)
 public struct Rain: Codable, Equatable, StyleEncodable {

@@ -3,7 +3,7 @@ import UIKit
 
 /// A 3D model
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-model)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#model)
 public struct ModelLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

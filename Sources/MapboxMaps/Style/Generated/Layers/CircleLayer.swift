@@ -3,7 +3,7 @@ import UIKit
 
 /// A filled circle.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-circle)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#circle)
 public struct CircleLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

@@ -3,7 +3,7 @@ import UIKit
 
 /// Raster map textures such as satellite imagery.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-raster)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#raster)
 public struct RasterLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

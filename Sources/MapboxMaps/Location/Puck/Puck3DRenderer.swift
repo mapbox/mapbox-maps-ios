@@ -59,7 +59,7 @@ final class Puck3DRenderer: PuckRenderer {
         }
 
         var source = ModelSource(id: Self.sourceID)
-        source.models = ["puck-model": model]
+        source.models = [model]
 
         do {
             // update or create the source

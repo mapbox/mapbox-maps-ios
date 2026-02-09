@@ -3,7 +3,7 @@ import UIKit
 
 /// Location Indicator layer.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-location-indicator)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#location-indicator)
 public struct LocationIndicatorLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

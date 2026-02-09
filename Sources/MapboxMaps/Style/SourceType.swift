@@ -22,8 +22,11 @@ public struct SourceType: ExpressibleByStringLiteral, RawRepresentable, Codable,
     /// An image source.
     public static let image: SourceType = "image"
 
-    /// A model source.
+    /// A collection of 3D models source.
     public static let model: SourceType = "model"
+
+    /// A collection of 3D models with anchor data source.
+    public static let modelBatched: SourceType = "batched-model"
 
     /// A raster array tile source.
     @_spi(Experimental)
@@ -57,7 +60,7 @@ public struct SourceType: ExpressibleByStringLiteral, RawRepresentable, Codable,
             return GeoJSONSource.self
         case .image:
             return ImageSource.self
-        case .model:
+        case .model, .modelBatched:
             return ModelSource.self
         case .customGeometry:
             return CustomGeometrySource.self

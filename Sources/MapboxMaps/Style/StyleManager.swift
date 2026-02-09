@@ -418,6 +418,49 @@ public class StyleManager {
         sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIds, dataId: dataId)
     }
 
+    /// Removes models from a model source by their IDs.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the model source.
+    ///   - modelIds: An array of model IDs to remove from the source.
+    /// - Throws: ``StyleError`` if there is a problem removing models from the source.
+    public func removeModelSourceModel(forSourceId sourceId: String, modelIds: [String]) throws {
+        try sourceManager.setSourceProperty(
+            for: sourceId,
+            property: ModelSource.CodingKeys.models.rawValue,
+            value: modelIds.reduce(into: [:], { partialResult, id in
+                partialResult[id] = NSNull()
+            })
+        )
+    }
+
+    /// Removes a single model from a model source by its ID.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the model source.
+    ///   - modelId: The ID of the model to remove from the source.
+    /// - Throws: ``StyleError`` if there is a problem removing the model from the source.
+    public func removeModelSourceModel(forSourceId sourceId: String, modelId: String) throws {
+        try sourceManager.setSourceProperty(
+            for: sourceId,
+            property: ModelSource.CodingKeys.models.rawValue,
+            value: [modelId: NSNull()]
+        )
+    }
+
+    /// Removes all models from a model source.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the model source.
+    /// - Throws: ``StyleError`` if there is a problem removing models from the source.
+    public func removeAllModelSourceModel(forSourceId sourceId: String) throws {
+        try sourceManager.setSourceProperty(
+            for: sourceId,
+            property: ModelSource.CodingKeys.models.rawValue,
+            value: NSNull()
+        )
+    }
+
     /// `true` if and only if the style JSON contents, the style specified sprite,
     /// and sources are all loaded, otherwise returns `false`.
     public var isStyleLoaded: Bool {

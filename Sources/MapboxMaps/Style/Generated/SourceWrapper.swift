@@ -105,6 +105,32 @@ extension ImageSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
 }
 
 @_spi(Experimental)
+extension ModelSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
+    func update(from old: ModelSource, with manager: StyleSourceManagerProtocol) throws {
+        assert(old.id == id)
+        var props = [String: Any]()
+        encodeUpdate(\.url, old: old, new: self, container: &props, key: "url")
+        encodeUpdate(\.maxzoom, old: old, new: self, container: &props, key: "maxzoom")
+        encodeUpdate(\.minzoom, old: old, new: self, container: &props, key: "minzoom")
+        encodeUpdate(\.tiles, old: old, new: self, container: &props, key: "tiles")
+        if !isEqual(by: \.models, lhs: old, rhs: self) {
+            try props["models"] = models?
+                .reduce(into: [:], { partialResult, model in
+                    partialResult[model.id] = model
+                })
+                .mapValues { try $0.allStyleProperties() }
+        }
+        if !props.isEmpty {
+            try manager.setSourceProperties(for: id, properties: props)
+        }
+    }
+
+    func visit(_ node: MapContentNode) {
+        node.mount(MountedSource(source: self))
+    }
+}
+
+@_spi(Experimental)
 extension GeoJSONSource: UpdatableSource, MapStyleContent, PrimitiveMapContent {
     func update(from old: GeoJSONSource, with manager: StyleSourceManagerProtocol) throws {
         assert(old.id == id)

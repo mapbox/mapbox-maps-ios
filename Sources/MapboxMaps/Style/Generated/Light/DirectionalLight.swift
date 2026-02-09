@@ -3,7 +3,7 @@ import UIKit
 
 /// A light that has a direction and is located at infinite distance, so its rays are parallel. It simulates the sun light and can cast shadows.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#light)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/light/)
 public struct DirectionalLight: Codable, StyleEncodable, Equatable {
 
     /// Unique light name

@@ -36,6 +36,9 @@ struct Examples {
         Example(title: "Display a 3D model in a model layer",
                 description: "Showcase the usage of a 3D model layer.",
                 type: ModelLayerExample.self)
+        Example(title: "3D model with source-driven interactions",
+                description: "Use a model layer and source to interactively change material and orientation of model parts.",
+                type: Interactive3DModelSourceExample.self)
         Example(title: "3D Lights",
                 description: "Configure lights in 3D environment.",
                 type: Lights3DExample.self)

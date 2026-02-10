@@ -12,11 +12,11 @@ internal class PuckTypeTests: XCTestCase {
     }
 
     var model1: Model {
-        return Model(uri: URL(string: "some-url"), position: [1.0, 2.0])
+        return Model(id: "model1", uri: URL(string: "some-url"), position: [1.0, 2.0])
     }
 
     var model2: Model {
-        return Model(uri: URL(string: "some-other-url"), position: [1.0, 2.0])
+        return Model(id: "model2", uri: URL(string: "some-other-url"), position: [1.0, 2.0])
     }
 
     func testPuck2DEqual() throws {

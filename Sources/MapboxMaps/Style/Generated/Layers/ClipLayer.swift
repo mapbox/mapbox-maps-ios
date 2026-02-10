@@ -3,7 +3,7 @@ import UIKit
 
 /// Layer that removes 3D content from map.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-clip)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#clip)
 public struct ClipLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

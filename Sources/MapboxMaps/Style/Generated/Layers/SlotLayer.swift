@@ -3,7 +3,7 @@ import UIKit
 
 /// Marks the position of a slot.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-slot)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#slot)
 public struct SlotLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

@@ -10,7 +10,6 @@
 - ``PuckType``
 - ``Puck2DConfiguration``
 - ``Puck3DConfiguration``
-- ``Model``
 - ``PuckBearing``
 - ``MapboxCommon/Location``
 - ``MapboxCommon/LocationProvider``

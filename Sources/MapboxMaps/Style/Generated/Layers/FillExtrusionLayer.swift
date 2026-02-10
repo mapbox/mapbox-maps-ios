@@ -3,7 +3,7 @@ import UIKit
 
 /// An extruded (3D) polygon.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-fill-extrusion)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#fill-extrusion)
 public struct FillExtrusionLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

@@ -10,6 +10,10 @@
 - ``GeoJSONSource``
 - ``GeoJSONSourceData-swift.enum``
 - ``ImageSource``
+- ``ModelSource``
+- ``Model``
+- ``ModelMaterialOverride``
+- ``ModelNodeOverride``
 - ``RasterDemSource``
 - ``RasterSource``
 - ``RasterArraySource``

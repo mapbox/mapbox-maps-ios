@@ -3,7 +3,7 @@ import UIKit
 
 /// Client-side hillshading visualization based on DEM data. Currently, the implementation only supports Mapbox Terrain RGB and Mapzen Terrarium tiles.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-hillshade)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#hillshade)
 public struct HillshadeLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

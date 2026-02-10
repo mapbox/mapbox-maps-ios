@@ -3,7 +3,7 @@ import Foundation
 
 /// The global terrain source.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#terrain)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/terrain/)
 public struct Terrain: Codable, Equatable {
 
     public var source: String

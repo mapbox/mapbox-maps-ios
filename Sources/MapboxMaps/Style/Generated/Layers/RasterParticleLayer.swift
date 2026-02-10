@@ -3,7 +3,7 @@ import UIKit
 
 /// Particle animation driven by textures such as wind maps.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-raster-particle)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#raster-particle)
 @_documentation(visibility: public)
 @_spi(Experimental) public struct RasterParticleLayer: Layer, Equatable {
 

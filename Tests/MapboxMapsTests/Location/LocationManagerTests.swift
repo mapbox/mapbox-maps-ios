@@ -213,7 +213,7 @@ final class LocationManagerTests: XCTestCase {
             .filter { $0.id == puckModelLayer?.source }
             .last
 
-        let observedModel = try XCTUnwrap(modelSource?.models?["puck-model"] as? Model)
+        let observedModel = try XCTUnwrap(modelSource?.models?.first)
         XCTAssertEqual(observedModel.uri, URL(string: "file://foo.glb"))
         XCTAssertEqual(observedModel.position, [coordinate.latitude, coordinate.longitude])
     }

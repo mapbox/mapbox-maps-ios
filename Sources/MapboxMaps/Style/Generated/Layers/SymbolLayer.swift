@@ -3,7 +3,7 @@ import UIKit
 
 /// An icon or a text label.
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-symbol)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/layers/#symbol)
 public struct SymbolLayer: Layer, Equatable {
 
     // MARK: - Conformance to `Layer` protocol

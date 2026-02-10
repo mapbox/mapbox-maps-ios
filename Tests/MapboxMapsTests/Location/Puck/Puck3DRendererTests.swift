@@ -31,7 +31,7 @@ final class Puck3DRendererTests: XCTestCase {
     }
 
     func test_SetNewDuplicatedState_With3DPuck_DoNothing() throws {
-        let configuration = Puck3DConfiguration(model: Model())
+        let configuration = Puck3DConfiguration(model: Model(id: "test"))
         let newState: PuckRendererState = .fixture()
         var expectedModel = configuration.model
         expectedModel.position = [newState.coordinate.longitude, newState.coordinate.latitude]
@@ -88,13 +88,13 @@ final class Puck3DRendererTests: XCTestCase {
 
     }
     func test_SetNewState_WithNewConfiguration_UpdatesSourcesAndLayer() throws {
-        let firstConfiguration = Puck3DConfiguration(model: Model())
+        let firstConfiguration = Puck3DConfiguration(model: Model(id: "first"))
         let firstState: PuckRendererState = .fixture(configuration: firstConfiguration)
         var firstModel = firstConfiguration.model
         firstModel.position = [firstState.coordinate.longitude, firstState.coordinate.latitude]
         firstModel.orientation = [0, 0, 0]
 
-        let secondConfiguration = Puck3DConfiguration(model: Model(), modelScale: .constant([3]))
+        let secondConfiguration = Puck3DConfiguration(model: Model(id: "second"), modelScale: .constant([3]))
         let secondState: PuckRendererState = .fixture(configuration: secondConfiguration)
         var secondModel = secondConfiguration.model
         secondModel.position = [secondState.coordinate.longitude, secondState.coordinate.latitude]
@@ -113,7 +113,7 @@ final class Puck3DRendererTests: XCTestCase {
 
     private func assertSourceAddedOnce(model: Model) throws {
         var expectedSource = ModelSource(id: "puck-model-source")
-        expectedSource.models = ["puck-model": model]
+        expectedSource.models = [model]
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         let actualSource = try XCTUnwrap(style.addSourceStub.invocations.first?.parameters.source as? ModelSource)
@@ -124,7 +124,7 @@ final class Puck3DRendererTests: XCTestCase {
 
     private func assertSourceUpdated(model: Model) throws {
         var expectedSource = ModelSource(id: "puck-model-source")
-        expectedSource.models = ["puck-model": model]
+        expectedSource.models = [model]
 
         XCTAssertEqual(style.setSourcePropertiesStub.invocations.first?.parameters.sourceId, expectedSource.id)
         let actualProperties = try XCTUnwrap(style.setSourcePropertiesStub.invocations.first?.parameters.properties)
@@ -163,7 +163,7 @@ extension PuckRendererState where Configuration == Puck3DConfiguration {
     static func fixture(
         coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 10, longitude: 20),
         accuracyAuthorization: CLAccuracyAuthorization = .reducedAccuracy,
-        configuration: Puck3DConfiguration = Puck3DConfiguration(model: Model()),
+        configuration: Puck3DConfiguration = Puck3DConfiguration(model: Model(id: "test")),
         bearingEnabled: Bool = false,
         bearingType: PuckBearing = .heading
     ) -> Self {

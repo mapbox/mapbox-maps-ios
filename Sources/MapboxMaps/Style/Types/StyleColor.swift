@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 
 /// Represents a color as defined by the [Mapbox Style Spec](https://docs.mapbox.com/style-spec/reference/types/#color)
 public struct StyleColor: Codable, Hashable, Sendable, RawRepresentable, ExpressibleByStringInterpolation {
@@ -86,7 +87,27 @@ public struct StyleColor: Codable, Hashable, Sendable, RawRepresentable, Express
         var blue: CGFloat = 0.0
         var alpha: CGFloat = 1.0
 
-        if let components = color.sRGBComponents, components.count == 4 {
+        if let components = color.cgColor.sRGBComponents, components.count == 4 {
+            red = components[0]
+            green = components[1]
+            blue = components[2]
+            alpha = components[3]
+        } else {
+            Log.error("Failed to convert the color \(color) to sRGB color space. Falling back to black.")
+        }
+
+        self.rawValue = String(format: "rgba(%.2f, %.2f, %.2f, %.2f)", red * 255, green * 255, blue * 255, alpha)
+    }
+
+    /// Creates a `StyleColor` from a `Color`
+    /// - Parameter color: An instance of `Color`.
+    @_disfavoredOverload
+    public init(_ color: Color) {
+        var red: CGFloat = 0.0
+        var green: CGFloat = 0.0
+        var blue: CGFloat = 0.0
+        var alpha: CGFloat = 1.0
+        if let components = color.cgColor?.sRGBComponents, components.count == 4 {
             red = components[0]
             green = components[1]
             blue = components[2]
@@ -179,11 +200,11 @@ public struct StyleColor: Codable, Hashable, Sendable, RawRepresentable, Express
     }
 }
 
-private extension UIColor {
+private extension CGColor {
     var sRGBComponents: [CGFloat]? {
         guard let sRGBSpace = CGColorSpace(name: CGColorSpace.sRGB) else {
             return nil
         }
-        return cgColor.converted(to: sRGBSpace, intent: .relativeColorimetric, options: nil)?.components
+        return converted(to: sRGBSpace, intent: .relativeColorimetric, options: nil)?.components
     }
 }

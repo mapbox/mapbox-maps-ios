@@ -77,6 +77,12 @@ internal extension Dictionary where Key == String, Value == Exp {
     }
 }
 
+internal extension Array where Element == Model {
+    static func testSourceValue() -> [Model] {
+        return [Model(id: "test", uri: URL(string: "something://somewhere")!, position: [0, 0])]
+    }
+}
+
 extension TileCacheBudgetSize {
     static func testSourceValue(_ tileCacheBudget: TileCacheBudgetSize = .tiles(200)) -> TileCacheBudgetSize {
         tileCacheBudget

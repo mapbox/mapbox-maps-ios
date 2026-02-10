@@ -2249,3 +2249,6 @@ Struct CameraOptions has been removed
 
 // unused import RegexBuilder was removed
 Extension String has removed conformance to RegexComponent
+
+// Add more parameters to Model initializer when exposing ModelSource
+Constructor Model.init(id:uri:position:orientation:) has been removed

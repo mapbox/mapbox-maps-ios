@@ -38,6 +38,7 @@ struct SwiftUIExamples {
             Example("Color Themes", note: "Showcase the Color Theme API", destination: ColorThemeExample())
         },
         Examples.Category("🔬 Experimental APIs") {
+            Example("Accessibility Scale", note: "Automatic map symbol scaling based on system text size preferences.", destination: AccessibilityScaleExample())
             Example("Line elevation", note: "Showcase of the Line Elevation API.", destination: ElevatedLineMapView())
         },
         Examples.Category("Testing Examples") {

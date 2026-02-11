@@ -412,6 +412,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         self.pixelRatio = CGFloat(resolvedMapInitOptions.mapOptions.pixelRatio)
 
         mapboxMap = makeMapboxMap(resolvedMapInitOptions: resolvedMapInitOptions)
+        mapboxMap.associatedView = self
 
         notificationCenter.addObserver(
             self,

@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 * Introduce new `LineLayer.lineElevationGroundScale` property to scale elevated lines with terrain exaggeration.
 * Promote elevated lines properties to stable: `LineLayer.lineZOffset` and `LineLayer.lineElevationReference`.
+* Introduce experimental `SymbolScaleBehavior` API to automatically scale map symbols (icons and text) based on system accessibility text size settings. Set `MapboxMap.symbolScaleBehavior` property to configure: `.system` (automatic scaling), `.system(mapping:)` (custom mapping function), or `.fixed(scaleFactor:)` (fixed scale, default is 1.0). Valid scale factor range is [0.8, 2.0]. Automatic scaling is opt-in; symbols default to fixed 1.0x scale.
 
 ### Features ✨ and improvements 🏁
 * Add `ModelSource` support with `Model`, `ModelMaterialOverride`, and `ModelNodeOverride` to enable interactive 3D models. Material overrides allow customization of color, emissive strength, opacity, and color mix intensity. Node overrides enable control of model part transformations such as rotating doors, landing gear, or propellers. Models can be updated via source-driven approach (modifying `ModelSource.models` directly) or feature-state driven approach (using expressions with feature state for dynamic control). For implementation examples, see `Interactive3DModelFeatureStateExample` (SwiftUI), `Interactive3DModelSourceExample` (UIKit), and `Animated3DModelSourceExample` (SwiftUI).

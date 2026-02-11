@@ -33,6 +33,11 @@
 		1FCA58860B3F23CAC57B32CA /* SegmentedToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09006C566A72E52201CA7EFB /* SegmentedToggleView.swift */; platformFilter = ios; };
 		215230836B6AD1040D3DA547 /* CombineLocationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EE8F38428A64B5B9D4DBBE /* CombineLocationExample.swift */; platformFilter = ios; };
 		274074283C558652C5969BB9 /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076D23DADD44F2CA269F947E /* FavoritesManager.swift */; platformFilter = ios; };
+		DD30C30DDDB84C7FA9AEC91C /* AccessibilityScaleExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD131A61DC14B378EC39AA9 /* AccessibilityScaleExample.swift */; };
+		1F860D5B445E75772C4C3B6C /* SkyLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B8372871DB4BC991737A06 /* SkyLayerExample.swift */; platformFilters = (ios, ); };
+		1FCA58860B3F23CAC57B32CA /* SegmentedToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09006C566A72E52201CA7EFB /* SegmentedToggleView.swift */; platformFilters = (ios, ); };
+		215230836B6AD1040D3DA547 /* CombineLocationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EE8F38428A64B5B9D4DBBE /* CombineLocationExample.swift */; platformFilters = (ios, ); };
+		274074283C558652C5969BB9 /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076D23DADD44F2CA269F947E /* FavoritesManager.swift */; platformFilters = (ios, ); };
 		2997D21A7DB20098C6D03D3B /* StandardStyleImportExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 640198169EEDFC7CBEFCFCCF /* StandardStyleImportExample.swift */; };
 		2B44F3E8EF3A50D9AE6B825F /* route.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 450C8D5E4B84428FE51BCA97 /* route.geojson */; };
 		2C03342240D5487880316518 /* AddOneMarkerSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCBE814694CF08A9C2E4A42 /* AddOneMarkerSymbolExample.swift */; platformFilter = ios; };
@@ -267,6 +272,7 @@
 		455C0B9F01316D0FF38ED62B /* CLLocationCoordinate2D+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Random.swift"; sourceTree = "<group>"; };
 		45B39AE24486FED5ED30392D /* LocationOverrideExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationOverrideExample.swift; sourceTree = "<group>"; };
 		46CE3D9C2873C0767DD76D85 /* ClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusteringExample.swift; sourceTree = "<group>"; };
+		CFD131A61DC14B378EC39AA9 /* AccessibilityScaleExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityScaleExample.swift; sourceTree = "<group>"; };
 		4D5DB9BD5E97D3C0080EC5D3 /* CustomPointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPointAnnotationExample.swift; sourceTree = "<group>"; };
 		4DCBE814694CF08A9C2E4A42 /* AddOneMarkerSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOneMarkerSymbolExample.swift; sourceTree = "<group>"; };
 		4E4FEA4443F430EC8957AB0A /* EditPolygonExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPolygonExample.swift; sourceTree = "<group>"; };
@@ -520,6 +526,7 @@
 				D60D739017FD720A98C10C68 /* AppearancesExample.swift */,
 				63A3027A7DA59E090DAD25F1 /* ClipLayerExample.swift */,
 				46CE3D9C2873C0767DD76D85 /* ClusteringExample.swift */,
+				CFD131A61DC14B378EC39AA9 /* AccessibilityScaleExample.swift */,
 				29DD4C2F0049E575A6B5BF66 /* ColorThemeExample.swift */,
 				7DED80ACD1618F8EE8F95A4A /* CustomGeometrySourceExample.swift */,
 				C61CC711054A032EE0446036 /* DynamicStylingExample.swift */,
@@ -1025,6 +1032,7 @@
 				CA2209956E93ECB18C4C9DEC /* CircleAnnotationExample.swift in Sources */,
 				3B4862E6832F23CB115D444A /* ClipLayerExample.swift in Sources */,
 				1DAE02D73D16E543777C2025 /* ClusteringExample.swift in Sources */,
+				DD30C30DDDB84C7FA9AEC91C /* AccessibilityScaleExample.swift in Sources */,
 				5A28C124249725578389175A /* ColorExpressionExample.swift in Sources */,
 				4AB9DBA1D6C978B02061F9C6 /* ColorPaletteView.swift in Sources */,
 				B0EDC87982D17000DF731503 /* ColorScheme.swift in Sources */,

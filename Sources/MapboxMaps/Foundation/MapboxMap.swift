@@ -217,6 +217,7 @@ public final class MapboxMap: StyleManager {
     public lazy var indoor: IndoorManager = .Marshaller.toSwift(__map.getIndoorManager())
 
     deinit {
+        stopObservingContentSizeCategory()
         __map.destroyRenderer()
     }
 
@@ -1099,6 +1100,104 @@ public final class MapboxMap: StyleManager {
 
     func dispatch(event: CorePlatformEventInfo) {
         __map.dispatch(for: event)
+    }
+
+    // MARK: - Accessibility Scale Support
+
+    private var isObservingContentSizeCategory = false
+    private var currentContentSizeCategory: UIContentSizeCategory = .large
+    internal weak var associatedView: UIView?
+
+    /// Configures how map symbols scale in response to system text size settings.
+    ///
+    /// **Modes:**
+    /// - `.fixed(scaleFactor:)` - Fixed scale (default)
+    /// - `.system` or `.system(mapping:)` - Automatic scaling (opt-in)
+    ///
+    /// **Examples:**
+    /// ```swift
+    /// symbolScaleBehavior = .system  // Auto-scale
+    /// symbolScaleBehavior = .system { min($0 * 1.2, 1.5) }  // Custom
+    /// ```
+    @_spi(Experimental)
+    public var symbolScaleBehavior: SymbolScaleBehavior = .fixed(scaleFactor: 1.0) {
+        didSet {
+            if symbolScaleBehavior.isSystem {
+                startObservingContentSizeCategory()
+                applyCurrentScale()
+            } else if symbolScaleBehavior.isFixed {
+                stopObservingContentSizeCategory()
+                // Fixed mode: scaleFactor is always present
+                if let scaleFactor = symbolScaleBehavior.scaleFactor {
+                    setScaleFactor(Float(scaleFactor))
+                }
+            }
+        }
+    }
+
+    private func startObservingContentSizeCategory() {
+        guard !isObservingContentSizeCategory else { return }
+        updateCurrentContentSizeCategory()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(contentSizeCategoryDidChange),
+            name: UIContentSizeCategory.didChangeNotification,
+            object: nil
+        )
+        isObservingContentSizeCategory = true
+    }
+
+    private func stopObservingContentSizeCategory() {
+        guard isObservingContentSizeCategory else { return }
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIContentSizeCategory.didChangeNotification,
+            object: nil
+        )
+        isObservingContentSizeCategory = false
+    }
+
+    @objc private func contentSizeCategoryDidChange(_ notification: Notification) {
+        // Extract the new category from the notification's userInfo.
+        if let newCategory = notification.userInfo?[UIContentSizeCategory.newValueUserInfoKey] as? UIContentSizeCategory {
+            currentContentSizeCategory = newCategory
+        } else {
+            // Fallback: Read from trait collection if notification doesn't contain the expected key.
+            updateCurrentContentSizeCategory()
+        }
+        applyCurrentScale()
+    }
+
+    private func updateCurrentContentSizeCategory() {
+        // Get trait collection from the associated view if available (works in both apps and extensions)
+        if let view = associatedView {
+            currentContentSizeCategory = view.traitCollection.preferredContentSizeCategory
+            return
+        }
+
+        // Fallback to current trait collection
+        currentContentSizeCategory = UITraitCollection.current.preferredContentSizeCategory
+    }
+
+    /// Applies current system text size using the configured mapping function.
+    /// Only called for System mode (Fixed mode doesn't respond to system changes).
+    private func applyCurrentScale() {
+        let category = currentContentSizeCategory
+        let normalizedScale = SymbolScaleBehavior.normalizedScale(for: category)
+
+        // Apply mapping function if custom, otherwise use default
+        let scaleFactor: Double
+        if let mapping = symbolScaleBehavior.mappingFunction {
+            scaleFactor = mapping(normalizedScale)
+        } else {
+            scaleFactor = normalizedScale
+        }
+
+        setScaleFactor(Float(scaleFactor))
+    }
+
+    private func setScaleFactor(_ scaleFactor: Float) {
+        __map.setScaleFactorForScaleFactor(scaleFactor)
     }
 }
 

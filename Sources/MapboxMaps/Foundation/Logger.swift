@@ -1,5 +1,6 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private.MBXLog_Internal
+@_spi(Logging) import MapboxCommon
 
 /// A logging utility with MapboxCommon backend by default.
 @_spi(Logging) public struct Log {
@@ -38,13 +39,7 @@ import Foundation
     /// - Parameter category: The logging category to check. If `nil`, returns the global logging level.
     /// - Returns: The current logging level. Returns `.debug` if no level is configured.
     @_spi(Logging) public static func loggingLevel(category: Category? = nil) -> LoggingLevel {
-        let level: NSNumber?
-        if let category {
-            level = LogConfiguration.getLoggingLevel(forCategory: logCategory(category.rawValue))
-        } else {
-            level = LogConfiguration.getLoggingLevel()
-        }
-        return (level?.intValue).flatMap(LoggingLevel.init) ?? .debug
+        return MapboxCommon.Log.loggingLevel(category: logCategory(category?.rawValue))
     }
 
     /// Set the logging level for a specific category or globally.
@@ -52,12 +47,7 @@ import Foundation
     ///   - level: The logging level to set.
     ///   - category: The logging category to configure. If `nil`, sets the global logging level.
     @_spi(Logging) public static func setLogging(level: LoggingLevel, category: Category? = nil) {
-        let nsLevel = NSNumber(value: level.rawValue)
-        if let category {
-            LogConfiguration.setLoggingLevelForCategory(category.fullCategoryName, upTo: nsLevel)
-        } else {
-            LogConfiguration.setLoggingLevelForUpTo(nsLevel)
-        }
+        MapboxCommon.Log.setLogging(level: level, category: category?.fullCategoryName)
     }
 }
 

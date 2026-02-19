@@ -46,6 +46,9 @@ public struct MapViewAnnotation {
     var actions = Actions()
     var content: AnyView
 
+    // Marker disappear animation effects for lifecycle handling
+    var disappearEffects: [MarkerAnimationEffect.Effect]?
+
     /// Creates a view annotation at geographical coordinate.
     ///
     /// - Parameters:

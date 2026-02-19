@@ -10,6 +10,7 @@ final class MountedViewAnnotation: MapContentMountedComponent {
     let mapViewAnnotation: MapViewAnnotation
     var update: ((MapViewAnnotation) -> Void)?
     var remove: (() -> Void)?
+    weak var hostingController: UIHostingController<AnyView>?
 
     init(mapViewAnnotation: MapViewAnnotation) {
         self.mapViewAnnotation = mapViewAnnotation
@@ -27,9 +28,10 @@ final class MountedViewAnnotation: MapContentMountedComponent {
                 }
         }
 
-        let vc = UIHostingController(rootView: makeContent(mapViewAnnotation))
+        let vc = UIHostingController(rootView: AnyView(makeContent(mapViewAnnotation)))
         vc.view.backgroundColor = .clear
         vc.disableSafeArea()
+        self.hostingController = vc
 
         let viewAnnotation = ViewAnnotation(
             annotatedFeature: mapViewAnnotation.annotatedFeature,
@@ -40,7 +42,7 @@ final class MountedViewAnnotation: MapContentMountedComponent {
         weakViewAnnotation = viewAnnotation
 
         self.update = { mapViewAnnotation in
-            vc.rootView = makeContent(mapViewAnnotation)
+            vc.rootView = AnyView(makeContent(mapViewAnnotation))
             vc.view.isUserInteractionEnabled = mapViewAnnotation.allowHitTesting
 
             weakViewAnnotation?.annotatedFeature = mapViewAnnotation.annotatedFeature
@@ -74,7 +76,40 @@ final class MountedViewAnnotation: MapContentMountedComponent {
         guard let remove else {
             return Log.error("Could not remove the view annotation", category: "Annotations")
         }
-        remove()
+
+        // Check if there's a disappear animation to run
+        if let effects = mapViewAnnotation.disappearEffects,
+           let vc = hostingController {
+
+            let hasScaleOrWiggle = effects.contains {
+                if case .scale = $0 { return true }
+                if case .wiggle = $0 { return true }
+                return false
+            }
+
+            // Use easeInOut for smooth disappear (no bounce)
+            UIView.animate(withDuration: 0.8, delay: 0, options: .curveEaseInOut, animations: {
+                if hasScaleOrWiggle {
+                    // Scale out for scale/wiggle effects
+                    vc.view.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
+                } else {
+                    // Fade out - honor the fade effect's 'to' parameter if present
+                    let fadeEffect = effects.first { if case .fade = $0 { return true }; return false }
+                    let targetAlpha: CGFloat = {
+                        if case .fade(_, let to) = fadeEffect {
+                            return CGFloat(to)
+                        }
+                        return 0  // Default to fully transparent if no fade effect found
+                    }()
+                    vc.view.alpha = targetAlpha
+                }
+            }, completion: { _ in
+                remove()
+            })
+        } else {
+            // No animation - remove immediately
+            remove()
+        }
     }
 
     func tryUpdate(from old: MapContentMountedComponent, with context: MapContentNodeContext) throws -> Bool {
@@ -84,6 +119,7 @@ final class MountedViewAnnotation: MapContentMountedComponent {
 
         update = oldUpdate
         remove = oldRemove
+        hostingController = old.hostingController
         update?(mapViewAnnotation)
 
         return true

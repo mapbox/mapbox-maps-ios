@@ -21,7 +21,7 @@ struct SwiftUIExamples {
             Example("Animated 3D airplane model", note: "Animate a 3D airplane model along a flight path with animated propellers, landing gear, and lights using feature state.", destination: Animated3DModelSourceExample())
         },
         Examples.Category("Annotations") {
-            Example("Add Map Markers", note: "Add/remove Markers to your map.", destination: MarkersExample())
+            Example("Add Map Markers", note: "Add Markers to your map.", destination: MarkersExample())
             Example("View Annotations", note: "Add/remove view annotation on tap.", destination: ViewAnnotationsExample())
             Example("Weather annotations", note: "Show view annotations with contents changed on selection.", destination: WeatherAnnotationExample())
             Example("Layer Annotations", note: "Add/remove layer annotation on tap.", destination: AnnotationsExample())

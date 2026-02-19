@@ -2252,3 +2252,5 @@ Extension String has removed conformance to RegexComponent
 
 // Add more parameters to Model initializer when exposing ModelSource
 Constructor Model.init(id:uri:position:orientation:) has been removed
+// Update experimental Marker interaction APIs
+Func Marker.onTapGesture(perform:) has been removed

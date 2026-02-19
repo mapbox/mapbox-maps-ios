@@ -14,6 +14,9 @@
 - ``Viewport``
 - ``ViewportAnimation``
 - ``withViewportAnimation(_:body:completion:)``
+- ``Marker``
+- ``MarkerAnimationEffect``
+- ``MarkerAnimationTrigger``
 - ``MapViewAnnotation``
 - ``PointAnnotationGroup``
 - ``CircleAnnotationGroup``

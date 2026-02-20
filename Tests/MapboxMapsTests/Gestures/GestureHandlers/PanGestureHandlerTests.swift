@@ -489,4 +489,114 @@ final class PanGestureHandlerTests: XCTestCase {
 
         panGestureHandler.assertNotRecognizedSimultaneously(gestureRecognizer, with: interruptingRecognizers)
     }
+
+    // MARK: - shouldReceive touch tests
+
+    func testShouldReceiveTouchOnMapView() {
+        // Given: A touch directly on the map view
+        let touch = MockUITouch(view: view)
+
+        // When: Checking if gesture should receive the touch
+        let shouldReceive = panGestureHandler.gestureRecognizer(gestureRecognizer, shouldReceive: touch)
+
+        // Then: Should accept the touch
+        XCTAssertTrue(shouldReceive, "Gesture should receive touches directly on the map view")
+    }
+
+    func testShouldReceiveTouchOnViewAnnotation() {
+        // Given: A ViewAnnotationsContainer (conforms to AllowsMapGestures)
+        let viewAnnotationsContainer = ViewAnnotationsContainer()
+        view.addSubview(viewAnnotationsContainer)
+
+        // And: A view annotation inside the container
+        let annotationView = UIView()
+        viewAnnotationsContainer.addSubview(annotationView)
+
+        // And: A touch on the annotation view
+        let touch = MockUITouch(view: annotationView)
+
+        // When: Checking if gesture should receive the touch
+        let shouldReceive = panGestureHandler.gestureRecognizer(gestureRecognizer, shouldReceive: touch)
+
+        // Then: Should accept the touch (this would have failed before the fix)
+        XCTAssertTrue(shouldReceive, "Gesture should receive touches on view annotations to allow map panning")
+    }
+
+    func testShouldReceiveTouchOnViewAnnotationsContainer() {
+        // Given: A ViewAnnotationsContainer
+        let viewAnnotationsContainer = ViewAnnotationsContainer()
+        view.addSubview(viewAnnotationsContainer)
+
+        // And: A touch directly on the container
+        let touch = MockUITouch(view: viewAnnotationsContainer)
+
+        // When: Checking if gesture should receive the touch
+        let shouldReceive = panGestureHandler.gestureRecognizer(gestureRecognizer, shouldReceive: touch)
+
+        // Then: Should accept the touch
+        XCTAssertTrue(shouldReceive, "Gesture should receive touches on ViewAnnotationsContainer")
+    }
+
+    func testShouldNotReceiveTouchOnOrnament() {
+        // Given: A regular UIView representing an ornament (does not conform to AllowsMapGestures)
+        let ornamentView = UIView()
+        view.addSubview(ornamentView)
+
+        // And: A touch on the ornament
+        let touch = MockUITouch(view: ornamentView)
+
+        // When: Checking if gesture should receive the touch
+        let shouldReceive = panGestureHandler.gestureRecognizer(gestureRecognizer, shouldReceive: touch)
+
+        // Then: Should reject the touch to allow ornament to handle it
+        XCTAssertFalse(shouldReceive, "Gesture should not receive touches on ornaments/UI controls")
+    }
+
+    func testShouldNotReceiveTouchOutsideMapView() {
+        // Given: A view outside the map view hierarchy
+        let externalView = UIView()
+
+        // And: A touch on the external view
+        let touch = MockUITouch(view: externalView)
+
+        // When: Checking if gesture should receive the touch
+        let shouldReceive = panGestureHandler.gestureRecognizer(gestureRecognizer, shouldReceive: touch)
+
+        // Then: Should reject the touch
+        XCTAssertFalse(shouldReceive, "Gesture should not receive touches outside the map view hierarchy")
+    }
+
+    func testShouldReceiveTouchOnNestedViewAnnotation() {
+        // Given: A ViewAnnotationsContainer
+        let viewAnnotationsContainer = ViewAnnotationsContainer()
+        view.addSubview(viewAnnotationsContainer)
+
+        // And: A nested view hierarchy inside a view annotation
+        let annotationView = UIView()
+        viewAnnotationsContainer.addSubview(annotationView)
+        let button = UIButton()
+        annotationView.addSubview(button)
+        let label = UILabel()
+        button.addSubview(label)
+
+        // And: A touch on a deeply nested view
+        let touch = MockUITouch(view: label)
+
+        // When: Checking if gesture should receive the touch
+        let shouldReceive = panGestureHandler.gestureRecognizer(gestureRecognizer, shouldReceive: touch)
+
+        // Then: Should accept the touch (walks up hierarchy to find AllowsMapGestures)
+        XCTAssertTrue(shouldReceive, "Gesture should receive touches on nested views within view annotations")
+    }
+}
+
+// MARK: - MockUITouch
+
+private final class MockUITouch: UITouch {
+    override var view: UIView? { _view }
+    private let _view: UIView
+
+    init(view: UIView) {
+        self._view = view
+    }
 }

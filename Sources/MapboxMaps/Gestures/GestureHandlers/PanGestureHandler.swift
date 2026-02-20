@@ -192,9 +192,8 @@ extension PanGestureHandler: UIGestureRecognizerDelegate {
         _ gestureRecognizer: UIGestureRecognizer,
         shouldReceive touch: UITouch
     ) -> Bool {
-        /// Only handle touches that targeting the map, but any of its subviews (including view annotations and ornaments).
         assert(self.gestureRecognizer == gestureRecognizer)
-        return gestureRecognizer.attachedToSameView(as: touch)
+        return gestureRecognizer.shouldAllowMapGesture(for: touch)
     }
 }
 

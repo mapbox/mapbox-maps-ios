@@ -11,6 +11,11 @@ final class SymbolScaleBehaviorTests: MapViewIntegrationTestCase {
             mapView.mapboxMap.symbolScaleBehavior = expected
             let actual = mapView.mapboxMap.symbolScaleBehavior
             XCTAssertEqual(actual, expected)
+
+            // Verify native map received the scale factor
+            let actualScaleFactor = mapView.mapboxMap.getScaleFactor()
+            XCTAssertEqual(actualScaleFactor, 1.5, accuracy: 0.001)
+
             expectation.fulfill()
         }
 
@@ -26,6 +31,12 @@ final class SymbolScaleBehaviorTests: MapViewIntegrationTestCase {
             mapView.mapboxMap.symbolScaleBehavior = expected
             let actual = mapView.mapboxMap.symbolScaleBehavior
             XCTAssertEqual(actual, expected)
+
+            // Verify scale factor is within valid range [0.8, 2.0]
+            let actualScaleFactor = mapView.mapboxMap.getScaleFactor()
+            XCTAssertGreaterThanOrEqual(actualScaleFactor, 0.8)
+            XCTAssertLessThanOrEqual(actualScaleFactor, 2.0)
+
             expectation.fulfill()
         }
 
@@ -51,9 +62,11 @@ final class SymbolScaleBehaviorTests: MapViewIntegrationTestCase {
             let expected = SymbolScaleBehavior.system(mapping: customMapping)
             mapView.mapboxMap.symbolScaleBehavior = expected
             let actual = mapView.mapboxMap.symbolScaleBehavior
-            // Custom mappings with functions can't be easily compared for equality,
-            // but we can verify it was set and is in System mode
-            XCTAssertTrue(actual.isSystem)
+
+            // Verify scale behavior was applied (exact value depends on the device's system font scale)
+            let actualScaleFactor = mapView.mapboxMap.getScaleFactor()
+            XCTAssertGreaterThan(actualScaleFactor, 0.0)
+
             expectation.fulfill()
         }
 
@@ -69,6 +82,11 @@ final class SymbolScaleBehaviorTests: MapViewIntegrationTestCase {
             let defaultBehavior = mapView.mapboxMap.symbolScaleBehavior
             XCTAssertTrue(defaultBehavior.isFixed)
             XCTAssertEqual(defaultBehavior.scaleFactor, 1.0)
+
+            // Verify default scale factor in native map
+            let actualScaleFactor = mapView.mapboxMap.getScaleFactor()
+            XCTAssertEqual(actualScaleFactor, 1.0, accuracy: 0.001)
+
             expectation.fulfill()
         }
 

@@ -1199,6 +1199,11 @@ public final class MapboxMap: StyleManager {
     private func setScaleFactor(_ scaleFactor: Float) {
         __map.setScaleFactorForScaleFactor(scaleFactor)
     }
+
+    // Internal accessor to retrieve the current scale factor from the native map.
+    internal func getScaleFactor() -> Float {
+        __map.getScaleFactor()
+    }
 }
 
 extension MapboxMap: MapboxMapProtocol {}

@@ -1,6 +1,9 @@
 import UIKit
 
-final class ViewAnnotationsContainer: UIView {
+/// Views conforming to this protocol allow map gestures to pass through them.
+protocol AllowsMapGestures {}
+
+final class ViewAnnotationsContainer: UIView, AllowsMapGestures {
     var subviewDebugFrames: Bool = false {
         didSet {
             if subviewDebugFrames != oldValue {

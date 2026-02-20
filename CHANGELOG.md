@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+* Add animation to experimental `Marker` with two animation triggers: `appear` and `disappear`. Each trigger accepts `MarkerAnimationEffect` including `wiggle` (pendulum rotation), `scale`, `fadeIn`, and `fadeOut`. Effects can be customized with parameters (e.g., `scale(from: 0.5, to: 1.5)`, `fade(from: 0.5, to: 1.0)`) and combined for rich animations. See `MarkersExample` for usage.
+
+### Bug fixes 🐞
+* Fix map panning not working on ViewAnnotations
+
 ## 11.19.0-rc.1 - 12 February, 2026
 
 ## 11.19.0-rc.1

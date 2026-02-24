@@ -105,6 +105,15 @@ struct Interactive3DModelFeatureStateExample: View {
                     )
             }
             .mapStyle(.standard(show3dObjects: false))
+            .additionalSafeAreaInsets(.bottom, settingsHeight)
+            .onStyleLoaded { _ in
+                updateVehicleColor(mapProxy: mapProxy)
+                updateBrakeLights(mapProxy: mapProxy)
+                updateLeftDoor(mapProxy: mapProxy)
+                updateRightDoor(mapProxy: mapProxy)
+                updateHood(mapProxy: mapProxy)
+                updateTrunk(mapProxy: mapProxy)
+            }
             .ignoresSafeArea()
             .overlay(alignment: .bottom) {
                 settingsPanel
@@ -225,11 +234,13 @@ struct Interactive3DModelFeatureStateExample: View {
     }
 
     private func updateBrakeLights(mapProxy: MapProxy) {
+        let brakeColor = StyleColor(UIColor(red: 0.88, green: 0.0, blue: 0.0, alpha: 1.0))
+
         mapProxy.map?.setFeatureState(
             sourceId: sourceId,
             sourceLayerId: nil,
             featureId: carModelKey,
-            state: ["brake-light-emission": viewModel.brakeLights]
+            state: ["brake-light-color": brakeColor.rawValue, "brake-light-emission": viewModel.brakeLights]
         ) { _ in }
     }
 

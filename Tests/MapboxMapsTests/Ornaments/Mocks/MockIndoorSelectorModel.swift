@@ -3,7 +3,7 @@
 
 final class MockIndoorSelectorModel: IndoorSelectorModelProtocol {
     var floors: [IndoorFloor] = []
-    var selectedFloorId: String = ""
+    var selectedFloorId: String?
     var isHidden: Bool = true
     var onFloorsUpdated: (() -> Void)?
     var onFloorSelected: (() -> Void)?
@@ -13,4 +13,9 @@ final class MockIndoorSelectorModel: IndoorSelectorModelProtocol {
     func selectFloor(_ floorId: String) {
         selectFloorCallArgs.append(floorId)
     }
- }
+
+    private(set) var clearFloorCallCount: Int = 0
+    func clearFloor() {
+        clearFloorCallCount += 1
+    }
+}

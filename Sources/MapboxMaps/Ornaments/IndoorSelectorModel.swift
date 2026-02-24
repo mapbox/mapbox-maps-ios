@@ -3,18 +3,19 @@ import UIKit
 
 protocol IndoorSelectorModelProtocol: AnyObject {
     var floors: [IndoorFloor] { get }
-    var selectedFloorId: String { get }
+    var selectedFloorId: String? { get }
     var isHidden: Bool { get }
     var onFloorsUpdated: (() -> Void)? { get set }
     var onFloorSelected: (() -> Void)? { get set }
     var onVisibilityChanged: (() -> Void)? { get set }
 
     func selectFloor(_ floorId: String)
+    func clearFloor()
 }
 
 final class IndoorSelectorModel: IndoorSelectorModelProtocol {
     private(set) var floors: [IndoorFloor] = []
-    private(set) var selectedFloorId: String = ""
+    private(set) var selectedFloorId: String?
     private(set) var isHidden: Bool = true
 
     private let indoorManager: IndoorManager
@@ -38,14 +39,21 @@ final class IndoorSelectorModel: IndoorSelectorModelProtocol {
         onFloorSelected?()
     }
 
+    func clearFloor() {
+        selectedFloorId = nil
+        indoorManager.selectFloor(selectedFloorId: nil)
+        onFloorSelected?()
+    }
+
     private func onIndoorUpdated(_ state: IndoorState) {
         if floors != state.floors {
             floors = state.floors
             onFloorsUpdated?()
         }
 
-        if selectedFloorId != state.selectedFloorId {
-            selectedFloorId = state.selectedFloorId
+        let incomingFloorId: String? = state.selectedFloorId.isEmpty ? nil : state.selectedFloorId
+        if selectedFloorId != incomingFloorId {
+            selectedFloorId = incomingFloorId
             onFloorSelected?()
         }
 

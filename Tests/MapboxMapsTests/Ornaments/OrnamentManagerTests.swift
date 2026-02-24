@@ -319,7 +319,7 @@ final class OrnamentManagerTests: XCTestCase {
         mockModel.onFloorsUpdated?()
 
         let updatedSize = testIndoorSelector.intrinsicContentSize
-        XCTAssertEqual(updatedSize.height, 132, "Height should be 132 (3 floors * 44) with 3 floors")
+        XCTAssertEqual(updatedSize.height, 176, "Height should be 176 (3 floors * 44 + 44 building button) with 3 floors")
     }
 
     func testIndoorSelectorMaxVisibleFloors() throws {
@@ -337,6 +337,6 @@ final class OrnamentManagerTests: XCTestCase {
         mockModel.onFloorsUpdated?()
 
         let size = testIndoorSelector.intrinsicContentSize
-        XCTAssertEqual(size.height, 176, "Height should be capped at 176 (4 floors * 44) even with 6 floors")
+        XCTAssertEqual(size.height, 220, "Height should be capped at 220 (4 floors * 44 + 44 building button) even with 6 floors")
     }
 }

@@ -52,6 +52,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 * Fix `userData` payload for `onSourceDataLoaded` event during GeoJSON partial update.
+## 11.17.2 - 24 February, 2026
 
 ## 11.17.1 - 11 December, 2025
 

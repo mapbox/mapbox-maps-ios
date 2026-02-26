@@ -37,14 +37,14 @@ final class StyleManagerTests: XCTestCase {
 
     func testProjection() {
         let projectionName = StyleProjectionName.testConstantValue()
-        styleManager.getStyleProjectionPropertyStub.defaultReturnValue = StylePropertyValue(
+        styleManager.getStyleProjectionPropertyStub.defaultReturnValue = CoreStylePropertyValue(
             value: projectionName.rawValue,
             kind: .constant
         )
 
         XCTAssertEqual(style.projection?.name, projectionName)
 
-        styleManager.getStyleProjectionPropertyStub.defaultReturnValue = StylePropertyValue(
+        styleManager.getStyleProjectionPropertyStub.defaultReturnValue = CoreStylePropertyValue(
             value: projectionName.rawValue,
             kind: .undefined
         )
@@ -336,7 +336,8 @@ final class StyleManagerTests: XCTestCase {
     func testGetSourceProperty() throws {
         let id = String.testConstantASCII(withLength: 10)
         let property = String.testConstantASCII(withLength: 10)
-        let value = StylePropertyValue(value: "foo", kind: .constant)
+        let testValue = "foo"
+        let value = StylePropertyValue(value: testValue, kind: .constant)
         sourceManager.sourcePropertyForStub.defaultReturnValue = value
 
         let returnedValue = style.sourceProperty(for: id, property: property)
@@ -345,7 +346,8 @@ final class StyleManagerTests: XCTestCase {
         let params = try XCTUnwrap(sourceManager.sourcePropertyForStub.invocations.first?.parameters)
         XCTAssertEqual(params.sourceId, id)
         XCTAssertEqual(params.property, property)
-        XCTAssertEqual(value, returnedValue)
+        XCTAssertEqual(value.kind, returnedValue.kind)
+        XCTAssertEqual(testValue, returnedValue.value as? String)
     }
 
     func testGetSourceProperties() throws {

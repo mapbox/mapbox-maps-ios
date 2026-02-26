@@ -1,4 +1,5 @@
 import UIKit
+@_spi(Marshalling) import MapboxCoreMaps
 
 /// Map color theme.
 ///
@@ -59,6 +60,21 @@ public struct ColorTheme: Equatable {
         self.uiimage = uiimage
         self.base64 = nil
     }
+
+    public static func == (lhs: ColorTheme, rhs: ColorTheme) -> Bool {
+        switch (lhs.base64?.value, rhs.base64?.value) {
+        case (let lhse as any Equatable, let rhse as any Equatable):
+            func isEqual<T: Equatable>(_ lhs: T, _ rhs: any Equatable) -> Bool {
+                lhs == rhs as? T
+            }
+            return isEqual(lhse, rhse) && lhs.uiimage == rhs.uiimage
+
+        case (.none, .none):
+            return lhs.uiimage == rhs.uiimage
+        default:
+            return false
+        }
+    }
 }
 
 @available(iOS 13.0, *)
@@ -71,7 +87,7 @@ extension ColorTheme: MapStyleContent, PrimitiveMapContent {
 extension ColorTheme {
     var core: CoreColorTheme? {
         if let base64 {
-            return .fromStylePropertyValue(base64)
+            return .fromStylePropertyValue(StylePropertyValue.Marshaller.toObjc(base64))
         } else if let uiimage, let coreImage = CoreMapsImage(uiImage: uiimage) {
             return .fromImage(coreImage)
         } else {

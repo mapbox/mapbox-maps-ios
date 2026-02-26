@@ -50,3 +50,4 @@ typealias CoreColorTheme = MapboxCoreMaps_Private.ColorTheme
 typealias CoreAsyncOperationResultCallback = MapboxCoreMaps_Private.AsyncOperationResultCallback
 typealias UIEdgeInsetsCodable = MapboxCoreMaps.UIEdgeInsetsCodable
 typealias CoreIndoorManager = MapboxCoreMaps_Private.__IndoorManager
+typealias CoreStylePropertyValue = MapboxCoreMaps_Private.__StylePropertyValue

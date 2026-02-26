@@ -1,5 +1,6 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private
+@_spi(Marshalling) import MapboxCoreMaps
 
 internal protocol StyleSourceManagerProtocol: AnyObject {
     static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue
@@ -26,7 +27,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private typealias SourceId = String
 
     internal static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
-        return CoreStyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
+        return StylePropertyValue.Marshaller.toSwift(CoreStyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property))
     }
 
     private let styleManager: StyleManagerProtocol
@@ -242,7 +243,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     }
 
     internal func sourceProperty(for sourceId: String, property: String) -> StylePropertyValue {
-        return styleManager.getStyleSourceProperty(forSourceId: sourceId, property: property)
+        return StylePropertyValue.Marshaller.toSwift(styleManager.getStyleSourceProperty(forSourceId: sourceId, property: property))
     }
 
     internal func sourceProperties(for sourceId: String) throws -> [String: Any] {

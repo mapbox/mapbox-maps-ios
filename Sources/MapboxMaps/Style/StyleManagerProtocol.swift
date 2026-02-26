@@ -31,7 +31,7 @@ internal protocol StyleManagerProtocol {
     func getStyleImportConfigProperties(forImportId importId: String) -> Expected<NSDictionary, NSString>
     func getStyleImportConfigProperty(
         forImportId importId: String,
-        config: String) -> Expected<MapboxCoreMaps.StylePropertyValue, NSString>
+        config: String) -> Expected<CoreStylePropertyValue, NSString>
     func setStyleImportConfigPropertiesForImportId(_ importId: String, configs: [String: Any]) -> Expected<NSNull, NSString>
     func setStyleImportConfigPropertyForImportId(_  importId: String, config: String, value: Any) -> Expected<NSNull, NSString>
 
@@ -47,15 +47,15 @@ internal protocol StyleManagerProtocol {
     func getStyleLayers() -> [MapboxCoreMaps.StyleObjectInfo]
     func getStyleSlots() -> [String]
 
-    func getStyleLayerProperty(forLayerId layerId: String, property: String) -> MapboxCoreMaps.StylePropertyValue
+    func getStyleLayerProperty(forLayerId layerId: String, property: String) -> CoreStylePropertyValue
 
-    func getStyleSourceProperty(forSourceId sourceId: String, property: String) -> MapboxCoreMaps.StylePropertyValue
+    func getStyleSourceProperty(forSourceId sourceId: String, property: String) -> CoreStylePropertyValue
 
     func styleSourceExists(forSourceId sourceId: String) -> Bool
     func getStyleSources() -> [MapboxCoreMaps.StyleObjectInfo]
 
-    func getStyleTerrainProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
-    func getStyleProjectionProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
+    func getStyleTerrainProperty(forProperty property: String) -> CoreStylePropertyValue
+    func getStyleProjectionProperty(forProperty property: String) -> CoreStylePropertyValue
 
     func getStyleImage(forImageId imageId: String) -> CoreMapsImage?
     func hasStyleImage(forImageId imageId: String) -> Bool
@@ -134,7 +134,7 @@ internal protocol StyleManagerProtocol {
     // 3D Light
     func getStyleLights() -> [StyleObjectInfo]
     func setStyleLightsForLights(_ lights: Any) -> Expected<NSNull, NSString>
-    func getStyleLightProperty(forId id: String, property: String) -> StylePropertyValue
+    func getStyleLightProperty(forId id: String, property: String) -> CoreStylePropertyValue
     func setStyleLightPropertyForId(_ id: String, property: String, value: Any) -> Expected<NSNull, NSString>
 
     @discardableResult
@@ -152,11 +152,11 @@ internal protocol StyleManagerProtocol {
 
     // Snow
     func setStyleSnowForProperties(_ properties: Any) -> Expected<NSNull, NSString>
-    func getStyleSnowProperty(forProperty: String) -> StylePropertyValue
+    func getStyleSnowProperty(forProperty: String) -> CoreStylePropertyValue
 
     // Rain
     func setStyleRainForProperties(_ properties: Any) -> Expected<NSNull, NSString>
-    func getStyleRainProperty(forProperty: String) -> StylePropertyValue
+    func getStyleRainProperty(forProperty: String) -> CoreStylePropertyValue
 
     // Style Model API
     func addStyleModel(forModelId modelId: String, modelUri: String) -> Expected<NSNull, NSString>
@@ -210,7 +210,7 @@ internal protocol StyleManagerProtocol {
 
     func setStyleAtmospherePropertyForProperty(_ property: String, value: Any) -> Expected<NSNull, NSString>
 
-    func getStyleAtmosphereProperty(forProperty: String) -> StylePropertyValue
+    func getStyleAtmosphereProperty(forProperty: String) -> CoreStylePropertyValue
     func addGeoJSONSourceFeatures(forSourceId sourceId: String,
                                   dataId: String,
                                   features: [MapboxCommon.Feature]) -> Expected<NSNull, NSString>

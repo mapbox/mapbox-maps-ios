@@ -109,13 +109,13 @@ class MockStyleManager: StyleManagerProtocol {
     }
 
     typealias GetStyleLayerPropertyParameters = (layerID: String, property: String)
-    let getStyleLayerPropertyStub = Stub<GetStyleLayerPropertyParameters, StylePropertyValue>(
-        defaultReturnValue: StylePropertyValue(value: "foo", kind: .undefined)
+    let getStyleLayerPropertyStub = Stub<GetStyleLayerPropertyParameters, CoreStylePropertyValue>(
+        defaultReturnValue: CoreStylePropertyValue(value: "foo", kind: .undefined)
     )
     func getStyleLayerProperty(
         forLayerId layerId: String,
         property: String
-    ) -> MapboxCoreMaps.StylePropertyValue {
+    ) -> CoreStylePropertyValue {
 
         getStyleLayerPropertyStub.call(with: (layerID: layerId, property: property))
     }
@@ -126,10 +126,10 @@ class MockStyleManager: StyleManagerProtocol {
         let sourceId: String
         let property: String
     }
-    let getStyleSourcePropertyStub = Stub<GetStyleSourcePropertyParameters, MapboxCoreMaps.StylePropertyValue>(
+    let getStyleSourcePropertyStub = Stub<GetStyleSourcePropertyParameters, CoreStylePropertyValue>(
         defaultReturnValue: .init(value: "stub", kind: .undefined)
     )
-    func getStyleSourceProperty(forSourceId sourceId: String, property: String) -> MapboxCoreMaps.StylePropertyValue {
+    func getStyleSourceProperty(forSourceId sourceId: String, property: String) -> CoreStylePropertyValue {
         getStyleSourcePropertyStub.call(with: GetStyleSourcePropertyParameters(sourceId: sourceId, property: property))
     }
 
@@ -143,10 +143,10 @@ class MockStyleManager: StyleManagerProtocol {
         getStyleSourcesStub.call()
     }
 
-    let getStyleLightPropertyStub = Stub<String, MapboxCoreMaps.StylePropertyValue>(
+    let getStyleLightPropertyStub = Stub<String, CoreStylePropertyValue>(
         defaultReturnValue: .init(value: "stub", kind: .undefined)
     )
-    func getStyleLightProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue {
+    func getStyleLightProperty(forProperty property: String) -> CoreStylePropertyValue {
         getStyleLightPropertyStub.call(with: property)
     }
 
@@ -163,10 +163,10 @@ class MockStyleManager: StyleManagerProtocol {
     struct GetStyleLightPropertyForIdParameters {
         let id, property: String
     }
-    let getStyleLightPropertyForIdStub = Stub<GetStyleLightPropertyForIdParameters, StylePropertyValue>(
+    let getStyleLightPropertyForIdStub = Stub<GetStyleLightPropertyForIdParameters, CoreStylePropertyValue>(
         defaultReturnValue: .init(value: "stub", kind: .undefined)
     )
-    func getStyleLightProperty(forId id: String, property: String) -> StylePropertyValue {
+    func getStyleLightProperty(forId id: String, property: String) -> CoreStylePropertyValue {
         getStyleLightPropertyForIdStub.call(with: .init(id: id, property: property))
     }
 
@@ -182,18 +182,18 @@ class MockStyleManager: StyleManagerProtocol {
     }
 
     // MARK: Terrain
-    let getStyleTerrainPropertyStub = Stub<String, MapboxCoreMaps.StylePropertyValue>(
+    let getStyleTerrainPropertyStub = Stub<String, CoreStylePropertyValue>(
         defaultReturnValue: .init(value: "stub", kind: .undefined)
     )
-    func getStyleTerrainProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue {
+    func getStyleTerrainProperty(forProperty property: String) -> CoreStylePropertyValue {
         getStyleTerrainPropertyStub.call(with: property)
     }
 
     // MARK: Projection
-    let getStyleProjectionPropertyStub = Stub<String, MapboxCoreMaps.StylePropertyValue>(
+    let getStyleProjectionPropertyStub = Stub<String, CoreStylePropertyValue>(
         defaultReturnValue: .init(value: "stub", kind: .undefined)
     )
-    func getStyleProjectionProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue {
+    func getStyleProjectionProperty(forProperty property: String) -> CoreStylePropertyValue {
         getStyleProjectionPropertyStub.call(with: property)
     }
 
@@ -204,8 +204,8 @@ class MockStyleManager: StyleManagerProtocol {
         setStyleSnowForPropertiesStub.call(with: properties)
     }
 
-    let getStyleSnowPropertyStub = Stub<String, StylePropertyValue>(defaultReturnValue: .init(value: "stub", kind: .undefined))
-    func getStyleSnowProperty(forProperty: String) -> StylePropertyValue {
+    let getStyleSnowPropertyStub = Stub<String, CoreStylePropertyValue>(defaultReturnValue: .init(value: "stub", kind: .undefined))
+    func getStyleSnowProperty(forProperty: String) -> CoreStylePropertyValue {
         getStyleSnowPropertyStub.call(with: forProperty)
     }
 
@@ -214,8 +214,8 @@ class MockStyleManager: StyleManagerProtocol {
         setStyleRainForPropertiesStub.call(with: properties)
     }
 
-    let getStyleRainPropertyStub = Stub<String, StylePropertyValue>(defaultReturnValue: .init(value: "stub", kind: .undefined))
-    func getStyleRainProperty(forProperty: String) -> StylePropertyValue {
+    let getStyleRainPropertyStub = Stub<String, CoreStylePropertyValue>(defaultReturnValue: .init(value: "stub", kind: .undefined))
+    func getStyleRainProperty(forProperty: String) -> CoreStylePropertyValue {
         getStyleRainPropertyStub.call(with: forProperty)
     }
 
@@ -262,7 +262,7 @@ class MockStyleManager: StyleManagerProtocol {
     struct GetStyleImportConfigPropertiesParameters {
         let importId: String
     }
-    let getStyleImportConfigPropertiesStub = Stub<GetStyleImportConfigPropertiesParameters, Expected<NSDictionary, NSString>>(defaultReturnValue: .init(value: NSDictionary(dictionary: ["stub": StylePropertyValue.init(value: "stub", kind: .undefined)])))
+    let getStyleImportConfigPropertiesStub = Stub<GetStyleImportConfigPropertiesParameters, Expected<NSDictionary, NSString>>(defaultReturnValue: .init(value: NSDictionary(dictionary: ["stub": CoreStylePropertyValue.init(value: "stub", kind: .undefined)])))
     func getStyleImportConfigProperties(forImportId importId: String) -> Expected<NSDictionary, NSString> {
         getStyleImportConfigPropertiesStub.call(with: GetStyleImportConfigPropertiesParameters(importId: importId))
     }
@@ -271,8 +271,8 @@ class MockStyleManager: StyleManagerProtocol {
         let importId: String
         let config: String
     }
-    let getStyleImportConfigPropertyStub = Stub<GetStyleImportConfigPropertyParameters, Expected<MapboxCoreMaps.StylePropertyValue, NSString>>(defaultReturnValue: .init(value: .init(value: "stub", kind: .undefined)))
-    func getStyleImportConfigProperty(forImportId importId: String, config: String) -> Expected<StylePropertyValue, NSString> {
+    let getStyleImportConfigPropertyStub = Stub<GetStyleImportConfigPropertyParameters, Expected<CoreStylePropertyValue, NSString>>(defaultReturnValue: .init(value: .init(value: "stub", kind: .undefined)))
+    func getStyleImportConfigProperty(forImportId importId: String, config: String) -> Expected<CoreStylePropertyValue, NSString> {
         getStyleImportConfigPropertyStub.call(with: GetStyleImportConfigPropertyParameters(importId: importId, config: config))
     }
 
@@ -736,10 +736,10 @@ class MockStyleManager: StyleManagerProtocol {
         hasStyleModelStub.call(with: HasStyleModelParams(modelId: modelId))
     }
 
-    let getStyleAtmospherePropertyStub = Stub<String, MapboxCoreMaps.StylePropertyValue>(
+    let getStyleAtmospherePropertyStub = Stub<String, CoreStylePropertyValue>(
         defaultReturnValue: .init(value: "stub", kind: .undefined)
     )
-    func getStyleAtmosphereProperty(forProperty property: String) -> StylePropertyValue {
+    func getStyleAtmosphereProperty(forProperty property: String) -> CoreStylePropertyValue {
         getStyleAtmospherePropertyStub.call(with: property)
     }
 

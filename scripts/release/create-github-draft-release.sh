@@ -12,7 +12,6 @@ XCODE_MIN_VERSION=$2
 GITHUB_TOKEN=$3
 GITHUB_WRITER_TOKEN=$4
 
-set -euo pipefail
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 UTILS_PATH="$SCRIPT_DIR/../utils.sh"
 
@@ -42,14 +41,28 @@ $CHANGELOG
 * Compatible version of Xcode: \`$XCODE_MIN_VERSION\`
 EOF
 
-    PRODUCTION_DOCS_PR_URL=$(GITHUB_TOKEN=$GITHUB_WRITER_TOKEN \
+    MAIN_RELEASE_URL=$(GITHUB_TOKEN=$GITHUB_WRITER_TOKEN \
         gh release create "v$VERSION" --repo mapbox/mapbox-maps-ios \
             --prerelease \
             --draft \
             --title "v$VERSION" \
             --notes-file notes.txt)
 
-    info "New Release: $PRODUCTION_DOCS_PR_URL"
+    info "New Release: $MAIN_RELEASE_URL"
+
+    if [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+- ]]; then
+        PRERELEASE_FLAG="--prerelease"
+    else
+        PRERELEASE_FLAG=""
+    fi
+
+    BINARY_RELEASE_URL=$(GITHUB_TOKEN=$GITHUB_WRITER_TOKEN \
+        gh release create "v$VERSION" --repo mapbox/mapbox-maps-ios-binary \
+            $PRERELEASE_FLAG \
+            --title "v$VERSION" \
+            --notes "📖 For release notes and changelog, see: [mapbox-maps-ios v$VERSION](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v$VERSION)")
+
+    info "Binary Release: $BINARY_RELEASE_URL"
 }
 
 main

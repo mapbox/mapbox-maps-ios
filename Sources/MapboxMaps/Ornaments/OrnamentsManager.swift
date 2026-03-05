@@ -124,7 +124,6 @@ public final class OrnamentsManager {
     private let _indoorSelectorView: IndoorSelectorView
 
     private var constraints = [NSLayoutConstraint]()
-    private var viewsByPosition: [OrnamentPosition: [UIView]] = [:] // Allow to stack views at the same position
     private var cancellables = Set<AnyCancelable>()
 
     init(options: OrnamentOptions,
@@ -207,7 +206,6 @@ public final class OrnamentsManager {
         // Remove previously-added constraints
         NSLayoutConstraint.deactivate(constraints)
         constraints.removeAll()
-        viewsByPosition.removeAll()
 
         // Update the position for the ornaments
         let logoViewConstraints = constraints(with: _logoView,
@@ -274,44 +272,39 @@ public final class OrnamentsManager {
         guard let layoutGuide = view.superview?.safeAreaLayoutGuide else {
             return []
         }
-
-        let stackSpacing: CGFloat = 8.0
-        var viewsAtPosition = viewsByPosition[position] ?? []
-        let previousView = viewsAtPosition.last
-        viewsAtPosition.append(view)
-        viewsByPosition[position] = viewsAtPosition
-
-        var result: [NSLayoutConstraint] = []
-
         switch position {
-        case .topLeft, .bottomLeft:
-            result.append(view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x))
-        case .topRight, .bottomRight:
-            result.append(view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x))
-        case .topLeading, .bottomLeading:
-            result.append(view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x))
-        case .topTrailing, .bottomTrailing:
-            result.append(view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x))
+        case .topLeft:
+            return [
+                view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .topRight:
+            return  [
+                view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .bottomLeft:
+            return [
+                view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
+        case .bottomRight:
+            return [
+                view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
+        case .topLeading:
+            return [
+                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .topTrailing:
+            return  [
+                view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .bottomLeading:
+            return [
+                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
+        case .bottomTrailing:
+            return [
+                view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
         }
-
-        let isTopPosition = [.topLeft, .topRight, .topLeading, .topTrailing].contains(position)
-        let isBottomPosition = [.bottomLeft, .bottomRight, .bottomLeading, .bottomTrailing].contains(position)
-
-        if let previousView = previousView {
-            if isTopPosition {
-                result.append(view.topAnchor.constraint(equalTo: previousView.bottomAnchor, constant: stackSpacing))
-            } else if isBottomPosition {
-                result.append(view.bottomAnchor.constraint(equalTo: previousView.topAnchor, constant: -stackSpacing))
-            }
-        } else {
-            // First view at this position - anchor to safe area
-            if isTopPosition {
-                result.append(view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y))
-            } else if isBottomPosition {
-                result.append(view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y))
-            }
-        }
-
-        return result
     }
 }

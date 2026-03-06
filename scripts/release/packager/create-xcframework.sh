@@ -74,10 +74,6 @@ inject_build_info() {
   plutil -insert "MBXBuildInfo.Xcode version" -string "$(xcodebuild -version | head -n 1 | cut -d ' ' -f2)" "$plist_path"
   plutil -insert "MBXBuildInfo.SDK version" -string "$(jq -r .version "$MAPS_SDK_VERSION_FILE_PATH")" "$plist_path"
 
-  if [[ -n "${CIRCLE_BUILD_NUM:-}" ]]; then
-    echo "Injecting CI build info into info.plist"
-    plutil -insert "MBXBuildInfo.CI Build Number" -string "$CIRCLE_BUILD_NUM" "$plist_path"
-  fi
 }
 
 BUILD_XCFRAMEWORK_COMMAND="xcodebuild -create-xcframework -output "$OUTPUT_DIR/$PRODUCT.xcframework""

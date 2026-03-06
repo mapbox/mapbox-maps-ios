@@ -80,7 +80,7 @@ platform :ios do
     end
 
     api_key_if_needed
-    setup_circle_ci
+    setup_ci
 
     # Sync code signing with the extracted app identifier
     sync_code_signing(type: type, app_identifier: app_identifier, readonly: true)
@@ -100,7 +100,7 @@ platform :ios do
 
   lane :build_examples_tests do
     api_key_if_needed
-    setup_circle_ci
+    setup_ci
     sync_code_signing
     update_code_signing_settings(
       use_automatic_signing: false,
@@ -180,7 +180,7 @@ platform :ios do
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure that the signing certificate and provisioning profiles are up to date."
   lane :build_and_submit do
-    setup_circle_ci
+    setup_ci
     sync_code_signing(type: "development")
     update_code_signing_settings(
       use_automatic_signing: false,
@@ -213,7 +213,7 @@ platform :ios do
   lane :build_tests do
     sh("cd .. && xcodegen")
     api_key_if_needed # Generate API Token
-    setup_circle_ci
+    setup_ci
     sync_code_signing(app_identifier: "com.mapbox.MapboxMapsTestHost")
     update_code_signing_settings(
       use_automatic_signing: false,

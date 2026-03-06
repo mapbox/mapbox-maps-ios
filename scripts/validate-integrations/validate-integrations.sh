@@ -45,11 +45,7 @@ main() {
     fi
 
     set +u
-    if [[ -n "$CIRCLE_REPOSITORY_URL" ]]; then
-        REPOSITORY_NAME=${CIRCLE_REPOSITORY_URL##*/}
-    else
-        REPOSITORY_NAME="mapbox-maps-ios.git"
-    fi
+    REPOSITORY_NAME="mapbox-maps-ios.git"
     set -u
 
     step "Generate Xcode project with Xcodegen"

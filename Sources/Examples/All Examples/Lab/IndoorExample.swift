@@ -21,6 +21,7 @@ final class IndoorExample: UIViewController, ExampleProtocol {
 
         mapView.ornaments.options.scaleBar.visibility = .visible
         mapView.ornaments.options.indoorSelector.visibility = .visible
+        mapView.ornaments.options.indoorSelector.margins = CGPoint(x: 8.0, y: 56.0)
 
         var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
         puckConfiguration.pulsing = nil

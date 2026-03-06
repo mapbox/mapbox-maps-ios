@@ -5,6 +5,8 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Fix incorrect positioning of map ornaments when multiple ornaments are placed in the same corner.
+* Expose `MapboxMap.onStyleAttributionsChanged`, use this event to observe when attributions have been changed due to style change, source metadata change, or if sources were removed or added.
+
 ## 11.20.0-rc.1 - 03 March, 2026
 
 ## 11.19.0 - 24 February, 2026

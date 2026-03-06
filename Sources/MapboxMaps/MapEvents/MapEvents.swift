@@ -20,6 +20,7 @@ internal final class MapEvents {
     let onRenderFrameStarted: SignalSubject<RenderFrameStarted>
     let onRenderFrameFinished: SignalSubject<RenderFrameFinished>
     let onResourceRequest: SignalSubject<ResourceRequest>
+    let onStyleAttributionsChanged: SignalSubject<StyleAttributionsChanged>
     let makeGenericSubject: (String) -> SignalSubject<GenericEvent>
 
     private var genericSubjects = [String: SignalSubject<GenericEvent>]()
@@ -40,6 +41,7 @@ internal final class MapEvents {
         onRenderFrameStarted = .from(method: observable.subscribe(forRenderFrameStarted:))
         onRenderFrameFinished = .from(method: observable.subscribe(forRenderFrameFinished:))
         onResourceRequest = .from(method: observable.subscribe(forResourceRequest:))
+        onStyleAttributionsChanged = .from(method: observable.subscribe(forStyleAttributionsChanged:))
         makeGenericSubject = { eventName in
             .from(parameter: eventName, method: observable.subscribe(forEventName:callback:))
         }
@@ -61,6 +63,7 @@ internal final class MapEvents {
         onRenderFrameStarted = SignalSubject()
         onRenderFrameFinished = SignalSubject()
         onResourceRequest = SignalSubject()
+        onStyleAttributionsChanged = SignalSubject()
         self.makeGenericSubject = makeGenericSubject
     }
 

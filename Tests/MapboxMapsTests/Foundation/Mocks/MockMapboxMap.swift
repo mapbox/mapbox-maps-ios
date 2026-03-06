@@ -24,6 +24,7 @@ final class MockMapboxMap: MapboxMapProtocol {
     var onRenderFrameStarted: Signal<RenderFrameStarted> { events.signal(for: \.onRenderFrameStarted) }
     var onRenderFrameFinished: Signal<RenderFrameFinished> { events.signal(for: \.onRenderFrameFinished) }
     var onResourceRequest: Signal<ResourceRequest> { events.signal(for: \.onResourceRequest) }
+    var onStyleAttributionsChanged: Signal<StyleAttributionsChanged> { events.signal(for: \.onStyleAttributionsChanged)}
 
     @TestPublished var size: CGSize = .zero
     var sizeSignal: Signal<CGSize> { $size }

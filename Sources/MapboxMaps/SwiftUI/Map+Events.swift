@@ -120,4 +120,9 @@ public extension Map {
     func onResourceRequest(action: @escaping (ResourceRequest) -> Void) -> Self {
         copyAppended(self, \.mapDependencies.eventsSubscriptions, AnyEventSubscription(keyPath: \.onResourceRequest, perform: action))
     }
+
+    /// Adds an action to perform when style attributions are changed.
+    func onStyleAttributionsChanged(action: @escaping (StyleAttributionsChanged) -> Void) -> Self {
+        copyAppended(self, \.mapDependencies.eventsSubscriptions, AnyEventSubscription(keyPath: \.onStyleAttributionsChanged, perform: action))
+    }
 }

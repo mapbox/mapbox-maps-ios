@@ -62,6 +62,7 @@ protocol MapboxMapProtocol: AnyObject {
     var onRenderFrameStarted: Signal<RenderFrameStarted> { get }
     var onRenderFrameFinished: Signal<RenderFrameFinished> { get }
     var onResourceRequest: Signal<ResourceRequest> { get }
+    var onStyleAttributionsChanged: Signal<StyleAttributionsChanged> { get }
 
     func dispatch(event: CorePlatformEventInfo)
     @discardableResult func addInteraction(_ interaction: some Interaction) -> Cancelable
@@ -1435,82 +1436,89 @@ extension MapboxMap {
     /// The style has been fully loaded, and the map has rendered all visible tiles.
     public var onMapLoaded: Signal<MapLoaded> { events.signal(for: \.onMapLoaded) }
 
-        /// An error that has occurred while loading the Map. The `type` property defines what resource could
-        /// not be loaded and the `message` property will contain a descriptive error message.
-        /// In case of `source` or `tile` loading errors, `sourceID` or `tileID` will contain the identifier of the source failing.
+    /// An error that has occurred while loading the Map. The `type` property defines what resource could
+    /// not be loaded and the `message` property will contain a descriptive error message.
+    /// In case of `source` or `tile` loading errors, `sourceID` or `tileID` will contain the identifier of the source failing.
     public var onMapLoadingError: Signal<MapLoadingError> { events.signal(for: \.onMapLoadingError) }
 
-        /// The requested style has been fully loaded, including the style, specified sprite and sources' metadata.
-        ///
-        /// The style specified sprite would be marked as loaded even with sprite loading error (an error will be emitted via ``MapboxMap/onMapLoadingError``).
-        /// Sprite loading error is not fatal and we don't want it to block the map rendering, thus this event will still be emitted if style and sources are fully loaded.
+    /// The requested style has been fully loaded, including the style, specified sprite and sources' metadata.
+    ///
+    /// The style specified sprite would be marked as loaded even with sprite loading error (an error will be emitted via ``MapboxMap/onMapLoadingError``).
+    /// Sprite loading error is not fatal and we don't want it to block the map rendering, thus this event will still be emitted if style and sources are fully loaded.
     public var onStyleLoaded: Signal<StyleLoaded> { events.signal(for: \.onStyleLoaded) }
 
-        /// The requested style data has been loaded. The `type` property defines what kind of style data has been loaded.
-        /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyle(_:transition:completion:)-1ilz1`` is used to load style.
-        ///
-        /// Based on an event data `type` property value, following use-cases may be implemented:
-        /// - `style`: Style is parsed, style layer properties could be read and modified, style layers and sources could be
-        /// added or removed before rendering is started.
-        /// - `sprite`: Style's sprite sheet is parsed and it is possible to add or update images.
-        /// - `sources`: All sources defined by the style are loaded and their properties could be read and updated if needed.
+    /// The requested style data has been loaded. The `type` property defines what kind of style data has been loaded.
+    /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyle(_:transition:reloadPolicy:completion:)`` is used to load style.
+    ///
+    /// Based on an event data `type` property value, following use-cases may be implemented:
+    /// - `style`: Style is parsed, style layer properties could be read and modified, style layers and sources could be
+    /// added or removed before rendering is started.
+    /// - `sprite`: Style's sprite sheet is parsed and it is possible to add or update images.
+    /// - `sources`: All sources defined by the style are loaded and their properties could be read and updated if needed.
     public var onStyleDataLoaded: Signal<StyleDataLoaded> { events.signal(for: \.onStyleDataLoaded) }
 
-        /// The camera has changed. This event is emitted whenever the visible viewport
-        /// changes due to the MapView's size changing or when the camera
-        /// is modified by calling camera methods. The event is emitted synchronously,
-        /// so that an updated camera state can be fetched immediately.
+    /// The camera has changed. This event is emitted whenever the visible viewport
+    /// changes due to the MapView's size changing or when the camera
+    /// is modified by calling camera methods. The event is emitted synchronously,
+    /// so that an updated camera state can be fetched immediately.
     public var onCameraChanged: Signal<CameraChanged> { events.signal(for: \.onCameraChanged) }
 
-        /// The map has entered the idle state. The map is in the idle state when there are no ongoing transitions
-        /// and the map has rendered all requested non-volatile tiles. The event will not be emitted if animation is in progress (see ``MapboxMap/beginAnimation()``, ``MapboxMap/endAnimation()``)
-        /// and / or gesture is in progress (see ``MapboxMap/beginGesture()``, ``MapboxMap/endGesture()``).
+    /// The map has entered the idle state. The map is in the idle state when there are no ongoing transitions
+    /// and the map has rendered all requested non-volatile tiles. The event will not be emitted if animation is in progress (see ``MapboxMap/beginAnimation()``, ``MapboxMap/endAnimation()``)
+    /// and / or gesture is in progress (see ``MapboxMap/beginGesture()``, ``MapboxMap/endGesture()``).
     public var onMapIdle: Signal<MapIdle> { events.signal(for: \.onMapIdle) }
 
-        /// The source has been added with ``StyleManager/addSource(_:dataId:)``  or ``StyleManager/addSource(withId:properties:)``.
-        /// The event is emitted synchronously, therefore, it is possible to immediately
-        /// read added source's properties.
+    /// The source has been added with ``StyleManager/addSource(_:dataId:)``  or ``StyleManager/addSource(withId:properties:)``.
+    /// The event is emitted synchronously, therefore, it is possible to immediately
+    /// read added source's properties.
     public var onSourceAdded: Signal<SourceAdded> { events.signal(for: \.onSourceAdded) }
 
-        /// The source has been removed with ``StyleManager/removeSource(withId:)``.
-        /// The event is emitted synchronously, thus, ``StyleManager/allSourceIdentifiers`` will be
-        /// in sync when the observer receives the notification.
+    /// The source has been removed with ``StyleManager/removeSource(withId:)``.
+    /// The event is emitted synchronously, thus, ``StyleManager/allSourceIdentifiers`` will be
+    /// in sync when the observer receives the notification.
     public var onSourceRemoved: Signal<SourceRemoved> { events.signal(for: \.onSourceRemoved) }
 
-        /// A source data has been loaded.
-        /// Event may be emitted synchronously in cases when source's metadata is available when source is added to the style.
-        ///
-        /// The `dataID` property defines the source id.
-        ///
-        /// The `type` property defines if source's metadata (e.g., TileJSON) or tile has been loaded. The property of `metadata`
-        /// value might be useful to identify when particular source's metadata is loaded, thus all source's properties are
-        /// readable and can be updated before map will start requesting data to be rendered.
-        ///
-        /// The `loaded` property will be set to `true` if all source's data required for visible viewport of the map, are loaded.
-        /// The `tileID` property defines the tile id if the `type` field equals `tile`.
-        /// The `dataID` property will be returned if it has been set for this source.
+    /// A source data has been loaded.
+    /// Event may be emitted synchronously in cases when source's metadata is available when source is added to the style.
+    ///
+    /// The `dataID` property defines the source id.
+    ///
+    /// The `type` property defines if source's metadata (e.g., TileJSON) or tile has been loaded. The property of `metadata`
+    /// value might be useful to identify when particular source's metadata is loaded, thus all source's properties are
+    /// readable and can be updated before map will start requesting data to be rendered.
+    ///
+    /// The `loaded` property will be set to `true` if all source's data required for visible viewport of the map, are loaded.
+    /// The `tileID` property defines the tile id if the `type` field equals `tile`.
+    /// The `dataID` property will be returned if it has been set for this source.
     public var onSourceDataLoaded: Signal<SourceDataLoaded> { events.signal(for: \.onSourceDataLoaded) }
 
-        /// A style has a missing image. This event is emitted when the map renders visible tiles and
-        /// one of the required images is missing in the sprite sheet. Subscriber has to provide the missing image
-        /// by calling ``StyleManager/addImage(_:id:sdf:contentInsets:)``.
+    /// A style has a missing image. This event is emitted when the map renders visible tiles and
+    /// one of the required images is missing in the sprite sheet. Subscriber has to provide the missing image
+    /// by calling ``StyleManager/addImage(_:id:sdf:contentInsets:)``.
     public var onStyleImageMissing: Signal<StyleImageMissing> { events.signal(for: \.onStyleImageMissing) }
 
-        /// An image added to the style is no longer needed and can be removed using ``StyleManager/removeImage(withId:)``.
+    /// An image added to the style is no longer needed and can be removed using ``StyleManager/removeImage(withId:)``.
     public var onStyleImageRemoveUnused: Signal<StyleImageRemoveUnused> { events.signal(for: \.onStyleImageRemoveUnused) }
 
-        /// The map started rendering a frame.
+    /// The map started rendering a frame.
     public var onRenderFrameStarted: Signal<RenderFrameStarted> { events.signal(for: \.onRenderFrameStarted) }
 
-        /// The map finished rendering a frame.
-        /// The `renderMode` property tells whether the map has all data (`full`) required to render the visible viewport.
-        /// The `needsRepaint` property provides information about ongoing transitions that trigger map repaint.
-        /// The `placementChanged` property tells if the symbol placement has been changed in the visible viewport.
+    /// The map finished rendering a frame.
+    /// The `renderMode` property tells whether the map has all data (`full`) required to render the visible viewport.
+    /// The `needsRepaint` property provides information about ongoing transitions that trigger map repaint.
+    /// The `placementChanged` property tells if the symbol placement has been changed in the visible viewport.
     public var onRenderFrameFinished: Signal<RenderFrameFinished> { events.signal(for: \.onRenderFrameFinished) }
 
-        /// The `ResourceRequest` event allows client to observe resource requests made by a
-        /// map or snapshotter.
-    public var  onResourceRequest: Signal<ResourceRequest> { events.signal(for: \.onResourceRequest) }
+    /// The `ResourceRequest` event allows client to observe resource requests made by a
+    /// map or snapshotter.
+    public var onResourceRequest: Signal<ResourceRequest> { events.signal(for: \.onResourceRequest) }
+
+    /// The style attributions has been changed. The event will be emitted every time attributions have been changed
+    /// due to style change, source metadata change, or if sources were removed or added.
+    ///
+    /// Note: The event may be emitted synchronously, for example, when `removeSource` was called
+    /// or if newly added source doesn't require to load metadata from network.
+    public var onStyleAttributionsChanged: Signal<StyleAttributionsChanged> { events.signal(for: \.onStyleAttributionsChanged) }
 
     /// Returns a ``Signal`` that allows to subscribe to the event with specified string name.
     /// This method is reserved for the future use.

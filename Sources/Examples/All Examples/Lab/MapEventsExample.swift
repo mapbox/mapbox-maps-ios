@@ -47,6 +47,7 @@ final class MapEventsExample: UIViewController, ExampleProtocol {
         logEvent(map.onStyleImageRemoveUnused)
         // onResourceRequest produces too much logs for demonstration, uncomment it if needed.
         // logEvent(mapView.mapboxMap.onResourceRequest)
+        logEvent(map.onStyleAttributionsChanged)
 
         map.onCameraChanged.observe { [weak self] event in
             self?.cameraLabel.attributedText = .formatted(cameraSate: event.cameraState)
@@ -228,6 +229,11 @@ extension StyleImageRemoveUnused: LogableEvent {
 extension ResourceRequest: LogableEvent {
     var name: String { "ResourceRequest" }
     var info: String { "ti: \(timeInterval), source: \(source), url: \(request.url)" }
+}
+
+extension StyleAttributionsChanged: LogableEvent {
+    var name: String { "StyleAttributionsChanged" }
+    var info: String { "ts: \(timestamp), attributions: \(attributions)" }
 }
 
 extension Optional where Wrapped: CustomStringConvertible {

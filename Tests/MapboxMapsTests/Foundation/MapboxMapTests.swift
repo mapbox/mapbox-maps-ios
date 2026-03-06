@@ -442,6 +442,9 @@ final class MapboxMapTests: XCTestCase {
                 loadingMethod: [NSNumber(value: RequestLoadingMethodType.network.rawValue)]),
             response: nil, cancelled: false, timeInterval: timeInterval)
         checkEvent(\.onResourceRequest, \.onResourceRequest, value: resourceRequest)
+
+        let styleAttributionsChanged = StyleAttributionsChanged(attributions: ["foo", "bar"], timestamp: Date())
+        checkEvent(\.onStyleAttributionsChanged, \.onStyleAttributionsChanged, value: styleAttributionsChanged)
     }
 
     func testGenericEvents() {

@@ -6,6 +6,7 @@ import UIKit
 /// Use factory methods to create instances:
 /// - `.system` - Automatic scaling with default or custom mapping
 /// - `.fixed(scaleFactor:)` - Fixed scale factor, no dynamic updates
+@_documentation(visibility: public)
 @_spi(Experimental)
 public struct SymbolScaleBehavior: Equatable {
     internal enum Mode {

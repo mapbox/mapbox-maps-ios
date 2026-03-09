@@ -2254,3 +2254,6 @@ Extension String has removed conformance to RegexComponent
 Constructor Model.init(id:uri:position:orientation:) has been removed
 // Update experimental Marker interaction APIs
 Func Marker.onTapGesture(perform:) has been removed
+
+Struct SymbolScaleBehavior is now with @_documentation
+Var MapboxMap.symbolScaleBehavior is now with @_documentation

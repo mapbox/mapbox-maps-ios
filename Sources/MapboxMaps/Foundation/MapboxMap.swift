@@ -1120,6 +1120,7 @@ public final class MapboxMap: StyleManager {
     /// symbolScaleBehavior = .system  // Auto-scale
     /// symbolScaleBehavior = .system { min($0 * 1.2, 1.5) }  // Custom
     /// ```
+    @_documentation(visibility: public)
     @_spi(Experimental)
     public var symbolScaleBehavior: SymbolScaleBehavior = .fixed(scaleFactor: 1.0) {
         didSet {

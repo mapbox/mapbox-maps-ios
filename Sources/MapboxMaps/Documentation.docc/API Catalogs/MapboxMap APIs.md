@@ -20,6 +20,7 @@
 - ``MapCenterAltitudeMode``
 - ``RenderedQueryGeometry``
 - ``RenderedQueryGeometryConvertible``
+- ``SymbolScaleBehavior``
 
 ### Camera
 - ``FreeCameraOptions``

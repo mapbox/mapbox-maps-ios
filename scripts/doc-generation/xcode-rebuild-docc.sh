@@ -81,6 +81,10 @@ generateSymbolGraphs() {
 
     # Exporting symbol graphs for MapboxMaps
     $SYMBOLGRAPH_TOOL -module-name "MapboxMaps" -output-dir "$SWIFTEXTRACT_OUTPUT_DIR" -F "$TARGET_BUILD_DIR"
+
+    # Rename MapboxCoreMaps to MapboxMaps in the extension symbol graph so docc
+    # correctly associates extensions with the renamed module.
+    mv "$SWIFTEXTRACT_OUTPUT_DIR/MapboxMaps@MapboxCoreMaps.symbols.json" "$SWIFTEXTRACT_OUTPUT_DIR/MapboxMaps@MapboxMaps.symbols.json"
 }
 
 # Generate a dependency file to support incremental builds

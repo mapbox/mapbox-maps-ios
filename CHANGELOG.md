@@ -9,6 +9,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 11.20.0-rc.1 - 03 March, 2026
 
+
+## 11.19.1 - 10 March, 2026
+
+
 ## 11.19.0 - 24 February, 2026
 
 ### Features ✨ and improvements 🏁

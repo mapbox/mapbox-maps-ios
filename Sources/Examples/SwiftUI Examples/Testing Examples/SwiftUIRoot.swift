@@ -142,6 +142,8 @@ struct ExampleView<Content>: View where Content: View {
         content
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(isNavigationBarHidden)
+            .toolbar(isNavigationBarHidden ? .hidden : .automatic, for: .tabBar)
+            .statusBarHidden(isNavigationBarHidden)
             .onShake {
                 isNavigationBarHidden.toggle()
             }

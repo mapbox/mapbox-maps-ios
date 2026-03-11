@@ -1581,7 +1581,7 @@ The EGL Specification and various headers:
 
 ---
 
-### abseil-containers,,Apache-2.0,Google,https://github.com/abseil/abseil-cpp.git
+### abseil-containers,76bb2432,Apache-2.0,Google,https://github.com/abseil/abseil-cpp.git
 
 ```
 

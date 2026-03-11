@@ -9,6 +9,7 @@ import MapboxMaps
 // swiftlint:disable:next type_body_length
 
 struct Examples {
+#if !os(visionOS)
     // Examples that show how to get started with Mapbox, such as creating a basic map view or setting a style once.
     static let gettingStartedExamples: [Example] = .init {
         Example(title: "Display a map view",
@@ -310,6 +311,7 @@ struct Examples {
                 description: "Display your heatmap using the globe projection.",
                 type: HeatmapLayerGlobeExample.self)
     }
+#endif
 }
 
 extension Examples {
@@ -338,6 +340,7 @@ extension Examples {
         }
     }
 
+#if !os(visionOS)
     static let all: [Category] = .init {
         Category(title: "Getting started", examples: gettingStartedExamples)
         Category(title: "3D and Fill Extrusions", examples: threeDExamples)
@@ -352,6 +355,7 @@ extension Examples {
         Category(title: "Accessibility", examples: accessibilityExamples)
         Category(title: "Globe and Atmosphere", examples: globeAndAtmosphere)
     }
+#endif
 }
 
 extension Array {

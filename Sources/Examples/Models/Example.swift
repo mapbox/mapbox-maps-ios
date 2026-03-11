@@ -16,6 +16,7 @@ public struct Example: Sendable {
         self.destination = destination
     }
 
+#if !os(visionOS)
     init(title: String, description: String, testTimeout: TimeInterval = 20.0, type: ExampleProtocol.Type) {
         self.title = title
         self.description = description
@@ -51,6 +52,7 @@ public struct Example: Sendable {
     }
 
     func makeViewController() -> UIViewController { Self.viewControllerFrom(type: type, title: title) }
+#endif
 }
 
 @resultBuilder

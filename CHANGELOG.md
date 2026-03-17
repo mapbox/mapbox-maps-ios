@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.20.1 - 17 March, 2026
+
 ## 11.20.0 - 13 March, 2026
 
 * Fix incorrect positioning of map ornaments when multiple ornaments are placed in the same corner.

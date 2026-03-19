@@ -13,6 +13,7 @@ Maps rendering SDK also known as GL-Native. These are for internal use only.
 - ``RequestErrorType``
 - ``EdgeInsets``
 - ``ScreenCoordinate``
+- ``MBXImage``
 
 <!-- functions -->
 - ``MBMMapLoadingErrorTypeToString(_:)``

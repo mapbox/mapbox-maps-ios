@@ -8,7 +8,6 @@ import plistlib
 import shutil
 import sys
 import tempfile
-import hashlib
 
 
 def main():
@@ -420,8 +419,7 @@ class APIDigester:
             self.path = path
             self.breakage = {}
             self.__parseReport()
-            self.hashsum = self.__hashsum()
-            self.is_good = self.hashsum == self.__empty_report_hashsum()
+            self.is_good = not self.breakage
 
         def __parseReport(self):
             for line in open(self.path).readlines():
@@ -432,18 +430,6 @@ class APIDigester:
                     category = line[3:-4]
                 elif category:
                     self.breakage[category] = self.breakage.get(category, []) + [line]
-
-        def __hashsum(self):
-            sha_hash = hashlib.sha1()
-            with open(self.path, "rb") as f:
-                # Read and update hash string value in blocks of 4K
-                for byte_block in iter(lambda: f.read(4096), b""):
-                    sha_hash.update(byte_block)
-                return sha_hash.hexdigest()
-
-        def __empty_report_hashsum(self):
-            # Represents a sha1 hashsum of an empty report (including section names).
-            return "afd2a1b542b33273920d65821deddc653063c700"
 
         def reportComment(self):
             if self.is_good:

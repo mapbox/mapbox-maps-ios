@@ -88,7 +88,7 @@ internal class StyleImportIntegrationTests: MapViewIntegrationTestCase {
             do {
                 _ = try self?.mapView.mapboxMap.getStyleImportSchema(for: "no_id")
             } catch {
-                XCTAssertEqual(error.localizedDescription, "Import no_id does not exist")
+                XCTAssertEqual(error.localizedDescription, "Import 'no_id' does not exist")
                 getSchemaIncorrectIdExpectation.fulfill()
             }
         }.store(in: &cancelables)

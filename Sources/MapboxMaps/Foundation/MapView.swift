@@ -117,10 +117,16 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         didSet {
             // cache activation state for efficiency
             permissibleActivationStates = displayState.sceneActivationStates
-            displayLink?.isRunning = shouldRunDisplayLink(for: window?.parentScene)
+            displayLink?.isRunning = shouldRunDisplayLink(for: window?.windowScene)
         }
     }
     private var permissibleActivationStates: Set<UIScene.ActivationState> = [.foregroundActive, .foregroundInactive]
+
+    /// The scene that is currently connected to this map view.
+    ///
+    /// This property is set when a scene containing the map view's window becomes activated,
+    /// and reset to `nil` when that scene becomes deactivated.
+    private weak var connectedScene: UIScene?
 
     /// The `gestures` object will be responsible for all gestures on the map.
     public private(set) var gestures: GestureManager!
@@ -543,26 +549,28 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         notificationCenter.addObserver(self,
                                         selector: #selector(sceneDidEnterBackground(_:)),
                                         name: UIScene.didEnterBackgroundNotification,
-                                        object: window?.parentScene)
+                                        object: window?.windowScene)
         notificationCenter.addObserver(self,
                                         selector: #selector(sceneWillDeactivate(_:)),
                                         name: UIScene.willDeactivateNotification,
-                                        object: window?.parentScene)
+                                        object: window?.windowScene)
         notificationCenter.addObserver(self,
                                         selector: #selector(sceneDidActivate(_:)),
                                         name: UIScene.didActivateNotification,
-                                        object: window?.parentScene)
+                                        object: window?.windowScene)
     }
 
     @objc private func sceneDidActivate(_ notification: Notification) {
         guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
+        connectedScene = scene
         displayLink?.isRunning = true
     }
 
     @objc private func sceneWillDeactivate(_ notification: Notification) {
         guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
+        connectedScene = nil
         displayLink?.isRunning = displayState.shouldRunDisplayLinkWhenInactive
     }
 
@@ -694,7 +702,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
 
     @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
-        if !shouldRunDisplayLink(for: window?.parentScene) {
+        if !shouldRunDisplayLink(for: window?.windowScene) {
             displayLink.isPaused = true
             return
         }
@@ -786,7 +794,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         subscribeSceneToLifecycleNotifications()
 
         // make sure that the display link is (de)activated for a current app/scene state
-        displayLink.isRunning = shouldRunDisplayLink(for: window.parentScene)
+        displayLink.isRunning = shouldRunDisplayLink(for: window.windowScene)
 
         displayLink.add(to: .current, forMode: .common)
     }
@@ -799,8 +807,8 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         displayLink?.isRunning = true
     }
 
-    private func shouldRunDisplayLink(for scene: UIScene?) -> Bool {
-        if let scene, permissibleActivationStates.contains(scene.activationState) {
+    private func shouldRunDisplayLink(for scene: UIScene? = nil) -> Bool {
+        if let scene = scene ?? connectedScene, permissibleActivationStates.contains(scene.activationState) {
             return true
         }
 

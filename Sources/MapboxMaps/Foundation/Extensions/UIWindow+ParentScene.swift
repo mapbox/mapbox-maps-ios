@@ -5,20 +5,6 @@ import UIKit
 
 extension UIWindow {
 
-    /// The `UIScene` containing this window.
-    internal var parentScene: UIScene? {
-#if canImport(CarPlay)
-        switch self {
-        case let carPlayWindow as CPWindow:
-            return carPlayWindow.templateApplicationScene
-        default:
-            return windowScene
-        }
-#else
-        return windowScene
-#endif
-    }
-
     var isCarPlay: Bool {
 #if canImport(CarPlay)
         return self is CPWindow

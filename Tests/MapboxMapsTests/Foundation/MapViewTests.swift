@@ -407,7 +407,7 @@ final class MapViewTestsWithScene: XCTestCase {
     func testDisplayLinkResumedWhenSceneDidActivate() throws {
         displayLink.$isPausedStub.setStub.reset()
 
-        notificationCenter.post(name: UIScene.didActivateNotification, object: window.parentScene)
+        notificationCenter.post(name: UIScene.didActivateNotification, object: window.windowScene)
 
         XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [false])
     }
@@ -415,13 +415,13 @@ final class MapViewTestsWithScene: XCTestCase {
     func testDisplayLinkRunningWhenSceneWillDeactivate() throws {
         displayLink.$isPausedStub.setStub.reset()
 
-        notificationCenter.post(name: UIScene.willDeactivateNotification, object: window.parentScene)
+        notificationCenter.post(name: UIScene.willDeactivateNotification, object: window.windowScene)
 
         XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [false])
     }
 
     func testReleaseDrawablesInvokedWhenSceneMovingToBackground() throws {
-        notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
+        notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.windowScene)
 
         XCTAssertEqual(metalView.releaseDrawablesStub.invocations.count, 1)
     }

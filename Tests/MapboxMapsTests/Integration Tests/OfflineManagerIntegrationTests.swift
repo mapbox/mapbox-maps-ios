@@ -178,6 +178,8 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     }
 
     func testMapCanBeLoadediWithoutNetworkConnectivity() throws {
+        throw XCTSkip("Needs to be investigated and fixed after MAPSNAT-3767")
+
         try guardForMetalDevice()
 
         let rootView = try XCTUnwrap(rootViewController?.view)

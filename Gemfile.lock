@@ -180,7 +180,7 @@ GEM
     httpclient (2.9.0)
       mutex_m
     jmespath (1.6.2)
-    json (2.18.1)
+    json (2.19.3)
     jwt (2.10.2)
       base64
     logger (1.7.0)
@@ -242,11 +242,13 @@ GEM
 
 PLATFORMS
   arm64-darwin-24
+  arm64-darwin-25
 
 DEPENDENCIES
   faraday (~> 1.10.5)
   fastlane (>= 2.232.1)
   fastlane-plugin-firebase_test_lab!
+  json (>= 2.19.2)
 
 BUNDLED WITH
    2.5.4

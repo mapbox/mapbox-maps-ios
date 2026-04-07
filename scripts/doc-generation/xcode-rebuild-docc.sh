@@ -85,6 +85,10 @@ generateSymbolGraphs() {
     # Rename MapboxCoreMaps to MapboxMaps in the extension symbol graph so docc
     # correctly associates extensions with the renamed module.
     mv "$SWIFTEXTRACT_OUTPUT_DIR/MapboxMaps@MapboxCoreMaps.symbols.json" "$SWIFTEXTRACT_OUTPUT_DIR/MapboxMaps@MapboxMaps.symbols.json"
+
+    # Remove compiler-artifact symbols (e.g. char8_t leaked via -Swift.h bridging
+    # headers) from all symbol graphs so they don't appear in published docs.
+    "$MAPBOXMAPS_PATH/scripts/doc-generation/strip-compiler-artifacts.py" "$SYMBOL_GRAPH_DIR"
 }
 
 # Generate a dependency file to support incremental builds

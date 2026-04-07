@@ -18,7 +18,7 @@ final class Puck3DRendererTests: XCTestCase {
     }
 
     func test_SetNewState_With3DPuck_StartsRendering() throws {
-        let configuration = Puck3DConfiguration(model: Model())
+        let configuration = Puck3DConfiguration(model: Model(id: "puck-model"))
         let newState: PuckRendererState = .fixture(configuration: configuration)
         var expectedModel = configuration.model
         expectedModel.position = [newState.coordinate.longitude, newState.coordinate.latitude]
@@ -31,7 +31,7 @@ final class Puck3DRendererTests: XCTestCase {
     }
 
     func test_SetNewDuplicatedState_With3DPuck_DoNothing() throws {
-        let configuration = Puck3DConfiguration(model: Model(id: "test"))
+        let configuration = Puck3DConfiguration(model: Model(id: "puck-model"))
         let newState: PuckRendererState = .fixture()
         var expectedModel = configuration.model
         expectedModel.position = [newState.coordinate.longitude, newState.coordinate.latitude]
@@ -45,7 +45,7 @@ final class Puck3DRendererTests: XCTestCase {
     }
 
     func test_SetNewState_WithNil_RemovesLayerAndSource() throws {
-        let configuration = Puck3DConfiguration(model: Model())
+        let configuration = Puck3DConfiguration(model: Model(id: "puck-model"))
         let newState: PuckRendererState = .fixture(configuration: configuration)
         var expectedModel = configuration.model
         expectedModel.position = [newState.coordinate.longitude, newState.coordinate.latitude]
@@ -59,7 +59,7 @@ final class Puck3DRendererTests: XCTestCase {
     }
 
     func test_SetNewState_WithSameConfiguration_UpdatesOnlySources() throws {
-        let configuration = Puck3DConfiguration(model: Model())
+        let configuration = Puck3DConfiguration(model: Model(id: "puck-model"))
         let firstState: PuckRendererState = .fixture(
             accuracyAuthorization: .reducedAccuracy,
             configuration: configuration
@@ -88,13 +88,13 @@ final class Puck3DRendererTests: XCTestCase {
 
     }
     func test_SetNewState_WithNewConfiguration_UpdatesSourcesAndLayer() throws {
-        let firstConfiguration = Puck3DConfiguration(model: Model(id: "first"))
+        let firstConfiguration = Puck3DConfiguration(model: Model(id: "puck-model"))
         let firstState: PuckRendererState = .fixture(configuration: firstConfiguration)
         var firstModel = firstConfiguration.model
         firstModel.position = [firstState.coordinate.longitude, firstState.coordinate.latitude]
         firstModel.orientation = [0, 0, 0]
 
-        let secondConfiguration = Puck3DConfiguration(model: Model(id: "second"), modelScale: .constant([3]))
+        let secondConfiguration = Puck3DConfiguration(model: Model(id: "puck-model"), modelScale: .constant([3]))
         let secondState: PuckRendererState = .fixture(configuration: secondConfiguration)
         var secondModel = secondConfiguration.model
         secondModel.position = [secondState.coordinate.longitude, secondState.coordinate.latitude]

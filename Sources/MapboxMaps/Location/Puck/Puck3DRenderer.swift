@@ -32,6 +32,7 @@ final class Puck3DRenderer: PuckRenderer {
 
     private func updateSourceModel(newState: PuckRendererState<Puck3DConfiguration>, oldState: PuckRendererState<Puck3DConfiguration>?) {
         var model = newState.configuration.model
+        model.id = "puck-model"
         model.position = [newState.coordinate.longitude, newState.coordinate.latitude]
 
         model.orientation = model.orientation

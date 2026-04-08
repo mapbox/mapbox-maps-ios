@@ -58,6 +58,12 @@ public final class StandardBuildingsFeature: FeaturesetFeatureType {
     /// A high-level building group like building-2d, building-3d, etc.
     public var group: String? { impl.properties["group"]??.string }
 
+    /// The height in meters of a building or building part (rounded to the nearest integer). 
+    public var height: Double? { impl.properties["height"]??.number }
+
+    /// The height in meters from the ground to the bottom of a building part, for cases where the bottom of the part is not on the ground.
+    public var minHeight: Double? { impl.properties["min_height"]??.number }
+
     private let impl: FeaturesetFeature
 
     /// An identifier of the feature.

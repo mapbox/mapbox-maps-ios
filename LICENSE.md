@@ -109,7 +109,7 @@ SPDX-License-Identifier: Unicode-3.0
 
 ---
 
-### filesystem,1.5.10,MIT,Steffen Schümann,https://github.com/gulrak/filesystem/
+### filesystem,0e72911ba0f37f3eb883b181b855a5f4eb046ca1,MIT,Steffen Schümann,https://github.com/gulrak/filesystem/
 
 ```
 Copyright (c) 2018, Steffen Schümann <s.schuemann@pobox.com>

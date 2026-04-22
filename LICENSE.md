@@ -252,7 +252,7 @@ SPDX-License-Identifier: Unicode-3.0
 
 ---
 
-### filesystem,0e72911ba0f37f3eb883b181b855a5f4eb046ca1,MIT,Steffen Schümann,https://github.com/gulrak/filesystem/
+### filesystem,0e72911ba0,MIT,Steffen Schümann,https://github.com/gulrak/filesystem/
 
 ```
 Copyright (c) 2018, Steffen Schümann <s.schuemann@pobox.com>
@@ -379,7 +379,7 @@ without including the above copyright and permission notices.
 
 ---
 
-### basis_universal,dev,Apache-2.0,Binomial LLC,https://github.com/BinomialLLC/basis_universal
+### basis_universal,ad9386a4a1,Apache-2.0,Binomial LLC,https://github.com/BinomialLLC/basis_universal
 
 ```
                                  Apache License
@@ -647,7 +647,7 @@ IN THE SOFTWARE.
 
 ---
 
-### earcut.hpp,2.2.4,ISC,Mapbox,https://github.com/mapbox/earcut.hpp
+### earcut.hpp,447fa4991e,ISC,Mapbox,https://github.com/mapbox/earcut.hpp
 
 ```
 ISC License
@@ -815,7 +815,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 
-### unique_resource,dev,BSL-1.0,Shintarou Okada,https://github.com/okdshin/unique_resource
+### unique_resource,cba309e92e,BSL-1.0,Shintarou Okada,https://github.com/okdshin/unique_resource
 
 ```
 Boost Software License - Version 1.0 - August 17th, 2003
@@ -914,7 +914,7 @@ DEALINGS IN THE SOFTWARE.
 
 ---
 
-### vtzero,1.1.0,BSD-2-Clause,Mapbox,https://github.com/mapbox/vtzero
+### vtzero,v1.1.0,BSD-2-Clause,Mapbox,https://github.com/mapbox/vtzero
 
 ```
 BSD 2-Clause License
@@ -1207,7 +1207,7 @@ For more information, please refer to <http://unlicense.org>
 
 ---
 
-### cgltf,1.15,MIT,Johannes Kuhlmann,https://github.com/jkuhlmann/cgltf
+### cgltf,85cd62382d,MIT,Johannes Kuhlmann,https://github.com/jkuhlmann/cgltf
 
 ```
 Copyright (c) 2018-2021 Johannes Kuhlmann
@@ -1222,7 +1222,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---
 
-### meshoptimizer,1.2,MIT,zeux,https://github.com/zeux/meshoptimizer
+### meshoptimizer,f843aae0b3,MIT,zeux,https://github.com/zeux/meshoptimizer
 
 ```
 MIT License
@@ -1276,7 +1276,7 @@ accordance with the Mapbox TOS. [Updated 2023-01]
 
 ---
 
-### vtcomposite,2.1.0,CC0,Mapbox,https://github.com/mapbox/vtcomposite
+### vtcomposite,v2.1.0,CC0,Mapbox,https://github.com/mapbox/vtcomposite
 
 ```
 CC0 1.0 Universal
@@ -1399,7 +1399,7 @@ For more information, please see
 
 ---
 
-### building-gen,1.0.0,ISC,Mapbox,https://github.com/mapbox/building-gen
+### building-gen,0a926394d0,ISC,Mapbox,https://github.com/mapbox/building-gen
 
 ```
 Copyright (c) 2025 Mapbox
@@ -1487,7 +1487,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 
-### expected-lite,0.4.0,BSL-1.0,Martin Moene,https://github.com/martinmoene/expected-lite
+### expected-lite,a0c4e02499,BSL-1.0,Martin Moene,https://github.com/martinmoene/expected-lite
 
 ```
 Boost Software License - Version 1.0 - August 17th, 2003
@@ -1518,7 +1518,7 @@ DEALINGS IN THE SOFTWARE.
 
 ---
 
-### RapidJSON,1.1.0,MIT,THL A29 Limited and Milo Yip,https://rapidjson.org
+### RapidJSON,858451e5b7,MIT,THL A29 Limited and Milo Yip,https://rapidjson.org
 
 ```
 Tencent is pleased to support the open source community by making RapidJSON available. 
@@ -1935,7 +1935,7 @@ The EGL Specification and various headers:
 
 ---
 
-### msgpack,6.1.0,boost,FURUHASHI Sadayuki,https://github.com/msgpack/msgpack-c.git
+### msgpack,cpp-6.1.0,boost,FURUHASHI Sadayuki,https://github.com/msgpack/msgpack-c.git
 
 ```
 Boost Software License - Version 1.0 - August 17th, 2003

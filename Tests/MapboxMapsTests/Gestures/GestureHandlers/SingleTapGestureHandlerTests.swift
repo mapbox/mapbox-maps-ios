@@ -68,6 +68,44 @@ final class SingleTapGestureHandlerTests: XCTestCase {
         gestureHandler.assertRecognizedSimultaneously(gestureRecognizer, with: interruptingRecognizers)
     }
 
+    func testShouldRequireDoubleTapToZoomInGestureRecognizerToFailByDefault() {
+        let doubleTapToZoomInGestureRecognizer = UITapGestureRecognizer()
+        gestureHandler.doubleTapToZoomInGestureRecognizer = doubleTapToZoomInGestureRecognizer
+
+        let shouldRequireFailure = gestureHandler.gestureRecognizer(
+            gestureRecognizer,
+            shouldRequireFailureOf: doubleTapToZoomInGestureRecognizer
+        )
+
+        XCTAssertTrue(shouldRequireFailure)
+    }
+
+    func testShouldNotRequireDoubleTapToZoomInGestureRecognizerToFailWhenDisabled() {
+        let doubleTapToZoomInGestureRecognizer = UITapGestureRecognizer()
+        gestureHandler.doubleTapToZoomInGestureRecognizer = doubleTapToZoomInGestureRecognizer
+        gestureHandler.requiresDoubleTapToZoomInGestureRecognizerToFail = false
+
+        let shouldRequireFailure = gestureHandler.gestureRecognizer(
+            gestureRecognizer,
+            shouldRequireFailureOf: doubleTapToZoomInGestureRecognizer
+        )
+
+        XCTAssertFalse(shouldRequireFailure)
+    }
+
+    func testShouldNotRequireOtherGestureRecognizerToFail() {
+        let doubleTapToZoomInGestureRecognizer = UITapGestureRecognizer()
+        let otherGestureRecognizer = UITapGestureRecognizer()
+        gestureHandler.doubleTapToZoomInGestureRecognizer = doubleTapToZoomInGestureRecognizer
+
+        let shouldRequireFailure = gestureHandler.gestureRecognizer(
+            gestureRecognizer,
+            shouldRequireFailureOf: otherGestureRecognizer
+        )
+
+        XCTAssertFalse(shouldRequireFailure)
+    }
+
     func testShouldNotReceiveTouchTargetingDifferentView() {
         let touch = MockUITouch(view: UIView())
 

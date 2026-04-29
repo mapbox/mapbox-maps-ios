@@ -12,7 +12,7 @@ final class GestureManagerTests: XCTestCase {
     var doubleTapToZoomInGestureHandler: MockFocusableGestureHandler!
     var doubleTouchToZoomOutGestureHandler: MockFocusableGestureHandler!
     var quickZoomGestureHandler: MockFocusableGestureHandler!
-    var singleTapGestureHandler: GestureHandler!
+    var singleTapGestureHandler: SingleTapGestureHandler!
     var longPressGestureHandler: GestureHandler!
     var anyTouchGestureHandler: GestureHandler!
     var interruptDecelerationGestureHandler: GestureHandler!
@@ -36,7 +36,7 @@ final class GestureManagerTests: XCTestCase {
         doubleTouchToZoomOutGestureHandler = MockFocusableGestureHandler(
             gestureRecognizer: MockGestureRecognizer())
         quickZoomGestureHandler = MockFocusableGestureHandler(gestureRecognizer: MockGestureRecognizer())
-        singleTapGestureHandler = makeGestureHandler()
+        singleTapGestureHandler = makeSingleTapGestureHandler()
         longPressGestureHandler = makeGestureHandler()
         anyTouchGestureHandler = makeGestureHandler()
         interruptDecelerationGestureHandler = makeGestureHandler()
@@ -76,6 +76,13 @@ final class GestureManagerTests: XCTestCase {
 
     func makeGestureHandler() -> GestureHandler {
         return GestureHandler(gestureRecognizer: MockGestureRecognizer())
+    }
+
+    func makeSingleTapGestureHandler() -> SingleTapGestureHandler {
+        return SingleTapGestureHandler(
+            gestureRecognizer: MockTapGestureRecognizer(),
+            map: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
     }
 
     func testPanGestureRecognizer() {
@@ -164,12 +171,10 @@ final class GestureManagerTests: XCTestCase {
                         === doubleTapToZoomInGestureHandler.gestureRecognizer)
     }
 
-    func testSingleTapGestureRecognizerRequiresDoubleTapToZoomInGestureRecognizerToFail() throws {
-        let singleTapGestureRecognizer = try XCTUnwrap(singleTapGestureHandler.gestureRecognizer as? MockGestureRecognizer)
-
-        XCTAssertEqual(singleTapGestureRecognizer.requireToFailStub.invocations.count, 1)
-        XCTAssertTrue(singleTapGestureRecognizer.requireToFailStub.invocations.first?.parameters
+    func testSingleTapGestureRecognizerFailureRequirementConfigured() {
+        XCTAssertTrue(singleTapGestureHandler.doubleTapToZoomInGestureRecognizer
                         === doubleTapToZoomInGestureHandler.gestureRecognizer)
+        XCTAssertTrue(singleTapGestureHandler.requiresDoubleTapToZoomInGestureRecognizerToFail)
     }
 
     func testGestureBegan() {
@@ -306,6 +311,26 @@ final class GestureManagerTests: XCTestCase {
 
         XCTAssertTrue(gestureManager.options.doubleTapToZoomInEnabled)
         XCTAssertTrue(gestureManager.doubleTapToZoomInGestureRecognizer.isEnabled)
+    }
+
+    func testOptionsSingleTapRequiresDoubleTapToFail() {
+        XCTAssertTrue(gestureManager.options.singleTapRequiresDoubleTapToFail)
+        XCTAssertTrue(singleTapGestureHandler.requiresDoubleTapToZoomInGestureRecognizerToFail)
+
+        gestureManager.options.singleTapRequiresDoubleTapToFail = false
+
+        XCTAssertFalse(gestureManager.options.singleTapRequiresDoubleTapToFail)
+        XCTAssertFalse(singleTapGestureHandler.requiresDoubleTapToZoomInGestureRecognizerToFail)
+
+        gestureManager.options.singleTapRequiresDoubleTapToFail = true
+
+        XCTAssertTrue(gestureManager.options.singleTapRequiresDoubleTapToFail)
+        XCTAssertTrue(singleTapGestureHandler.requiresDoubleTapToZoomInGestureRecognizerToFail)
+
+        singleTapGestureHandler.requiresDoubleTapToZoomInGestureRecognizerToFail = false
+
+        XCTAssertFalse(gestureManager.options.singleTapRequiresDoubleTapToFail)
+        XCTAssertFalse(singleTapGestureHandler.requiresDoubleTapToZoomInGestureRecognizerToFail)
     }
 
     func testOptionsDoubleTouchToZoomOutEnabled() {

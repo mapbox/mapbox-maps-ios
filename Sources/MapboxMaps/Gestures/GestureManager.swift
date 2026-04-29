@@ -28,6 +28,7 @@ public final class GestureManager: GestureHandlerDelegate {
             rotateGestureHandler.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
             pitchGestureRecognizer.isEnabled = newValue.pitchEnabled
             doubleTapToZoomInGestureRecognizer.isEnabled = newValue.doubleTapToZoomInEnabled
+            singleTapGestureHandler.requiresDoubleTapToZoomInGestureRecognizerToFail = newValue.singleTapRequiresDoubleTapToFail
             doubleTouchToZoomOutGestureRecognizer.isEnabled = newValue.doubleTouchToZoomOutEnabled
             quickZoomGestureRecognizer.isEnabled = newValue.quickZoomEnabled
             panGestureHandler.panMode = newValue.panMode
@@ -48,6 +49,7 @@ public final class GestureManager: GestureHandlerDelegate {
             gestureOptions.simultaneousRotateAndPinchZoomEnabled = pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled
             gestureOptions.pitchEnabled = pitchGestureRecognizer.isEnabled
             gestureOptions.doubleTapToZoomInEnabled = doubleTapToZoomInGestureRecognizer.isEnabled
+            gestureOptions.singleTapRequiresDoubleTapToFail = singleTapGestureHandler.requiresDoubleTapToZoomInGestureRecognizerToFail
             gestureOptions.doubleTouchToZoomOutEnabled = doubleTouchToZoomOutGestureRecognizer.isEnabled
             gestureOptions.quickZoomEnabled = quickZoomGestureRecognizer.isEnabled
             gestureOptions.panMode = panGestureHandler.panMode
@@ -151,7 +153,7 @@ public final class GestureManager: GestureHandlerDelegate {
     private let doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol
     private let doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol
     private let quickZoomGestureHandler: FocusableGestureHandlerProtocol
-    private let singleTapGestureHandler: GestureHandler
+    private let singleTapGestureHandler: SingleTapGestureHandler
     private let longPressGestureHandler: GestureHandler
     private let anyTouchGestureHandler: GestureHandler
     private let interruptDecelerationGestureHandler: GestureHandler
@@ -168,7 +170,7 @@ public final class GestureManager: GestureHandlerDelegate {
         doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol,
         doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol,
         quickZoomGestureHandler: FocusableGestureHandlerProtocol,
-        singleTapGestureHandler: GestureHandler,
+        singleTapGestureHandler: SingleTapGestureHandler,
         longPressGestureHandler: GestureHandler,
         anyTouchGestureHandler: GestureHandler,
         interruptDecelerationGestureHandler: GestureHandler,
@@ -198,7 +200,7 @@ public final class GestureManager: GestureHandlerDelegate {
 
         panGestureHandler.gestureRecognizer.require(toFail: pitchGestureHandler.gestureRecognizer)
         quickZoomGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
-        singleTapGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
+        singleTapGestureHandler.doubleTapToZoomInGestureRecognizer = doubleTapToZoomInGestureHandler.gestureRecognizer
 
         // Invoke the setter to ensure the defaults are synchronized
         self.options = GestureOptions()

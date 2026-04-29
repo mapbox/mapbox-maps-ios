@@ -12,6 +12,7 @@ final class GestureOptionsTests: XCTestCase {
         XCTAssertTrue(options.pinchPanEnabled)
         XCTAssertTrue(options.pitchEnabled)
         XCTAssertTrue(options.doubleTapToZoomInEnabled)
+        XCTAssertTrue(options.singleTapRequiresDoubleTapToFail)
         XCTAssertTrue(options.doubleTouchToZoomOutEnabled)
         XCTAssertTrue(options.quickZoomEnabled)
         XCTAssertEqual(options.panMode, .horizontalAndVertical)

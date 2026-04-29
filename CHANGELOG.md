@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## Features ✨ and improvements 🏁
 * Expose `FeaturesetFeature.originalFeature` property.
+* Add `GestureOptions.singleTapRequiresDoubleTapToFail` so apps can allow single-tap gestures to resolve without waiting for double-tap zoom recognition.
 
 ## 11.23.0-rc.1 - 20 April, 2026
 * Use TileStore::setRootPath(path) and TileStore::create() instead of deprecated TileStore::create(path).

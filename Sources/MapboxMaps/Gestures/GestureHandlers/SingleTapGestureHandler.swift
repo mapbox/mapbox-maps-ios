@@ -2,6 +2,9 @@ import UIKit
 
 /// `SingleTapGestureHandler` manages a gesture recognizer looking for single tap touch events
 final class SingleTapGestureHandler: GestureHandler {
+    weak var doubleTapToZoomInGestureRecognizer: UIGestureRecognizer?
+    var requiresDoubleTapToZoomInGestureRecognizerToFail = true
+
     private let map: MapboxMapProtocol
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
@@ -38,6 +41,15 @@ extension SingleTapGestureHandler: UIGestureRecognizerDelegate {
         assert(self.gestureRecognizer == gestureRecognizer)
         guard gestureRecognizer.attachedToSameView(as: otherGestureRecognizer) else { return true }
         return otherGestureRecognizer is UITapGestureRecognizer
+    }
+
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        assert(self.gestureRecognizer == gestureRecognizer)
+        return requiresDoubleTapToZoomInGestureRecognizerToFail
+            && otherGestureRecognizer === doubleTapToZoomInGestureRecognizer
     }
 
     func gestureRecognizer(

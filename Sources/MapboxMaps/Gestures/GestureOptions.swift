@@ -57,6 +57,12 @@ public struct GestureOptions: Equatable, Sendable {
     /// Defaults to `true`.
     public var doubleTapToZoomInEnabled: Bool
 
+    /// Whether single tap gestures require the double tap gesture to fail.
+    ///
+    /// Defaults to `true`. Set this to `false` to allow single tap gestures to resolve without waiting for double tap recognition.
+    /// When `false`, a double tap can also trigger single tap interactions for its first tap.
+    public var singleTapRequiresDoubleTapToFail: Bool
+
     /// Whether single tapping the map with two touches results in a zoom-out animation.
     ///
     /// Defaults to `true`.
@@ -94,6 +100,7 @@ public struct GestureOptions: Equatable, Sendable {
     ///   - pinchPanEnabled: Whether pan is enabled during the pinch gesture.
     ///   - pitchEnabled: Whether the pitch gesture is enabled.
     ///   - doubleTapToZoomInEnabled: Whether double tapping the map with one touch results in a zoom-in animation.
+    ///   - singleTapRequiresDoubleTapToFail: Whether single tap gestures require the double tap to zoom in gesture to fail.
     ///   - doubleTouchToZoomOutEnabled: Whether single tapping the map with two touches results in a zoom-out animation.
     ///   - quickZoomEnabled: Whether the quick zoom gesture is enabled.
     ///   - panMode: The directions in which the map is allowed to move during a pan gesture.
@@ -108,6 +115,7 @@ public struct GestureOptions: Equatable, Sendable {
         pinchPanEnabled: Bool = true,
         pitchEnabled: Bool = true,
         doubleTapToZoomInEnabled: Bool = true,
+        singleTapRequiresDoubleTapToFail: Bool = true,
         doubleTouchToZoomOutEnabled: Bool = true,
         quickZoomEnabled: Bool = true,
         panMode: PanMode = .horizontalAndVertical,
@@ -122,6 +130,7 @@ public struct GestureOptions: Equatable, Sendable {
         self.pinchPanEnabled = pinchPanEnabled
         self.pitchEnabled = pitchEnabled
         self.doubleTapToZoomInEnabled = doubleTapToZoomInEnabled
+        self.singleTapRequiresDoubleTapToFail = singleTapRequiresDoubleTapToFail
         self.doubleTouchToZoomOutEnabled = doubleTouchToZoomOutEnabled
         self.quickZoomEnabled = quickZoomEnabled
         self.panMode = panMode

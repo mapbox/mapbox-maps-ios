@@ -4,12 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-## 11.24.0-alpha.6 - 04 May, 2026
-
 * Fix `MapView` rendering blank when attached to an already-active CarPlay scene.
 
 ## Features ✨ and improvements 🏁
 * Expose `FeaturesetFeature.originalFeature` property.
+## 11.23.0 - 29 April, 2026
 
 ## 11.23.0-rc.1 - 20 April, 2026
 * Use TileStore::setRootPath(path) and TileStore::create() instead of deprecated TileStore::create(path).

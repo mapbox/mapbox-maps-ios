@@ -209,12 +209,77 @@ final class AnnotationManagerImplTests: XCTestCase {
         XCTAssertEqual(props2["x"] as? String, "X")
         XCTAssertEqual(props2["bar"] as? String, "qux")
 
-        // resets to default
+        // `icon-allow-overlap` was never set by any annotation in this test, so it resets
+        // to the literal style default — not a coalesce expression.
         let def = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-allow-overlap").value as? Bool
         XCTAssertEqual(props2["icon-allow-overlap"] as? Bool, def)
 
         try checkExpression(key: "text-field", props: props2)
         XCTAssertEqual(props2.count, 6)
+    }
+
+    // Regression test for MAPSIOS-2180: when a key that was data-driven (some annotation
+    // carried it in its own layerProperties) becomes unused, it must reset as a coalesce
+    // expression so that stale features awaiting the async source removal keep rendering
+    // their own stored values instead of a literal default (which would cause a black flash
+    // for fill-color).
+    func testDataDrivenKeyResetsAsCoalesceExpression() throws {
+        // Annotation with a per-annotation data-driven property
+        me.annotations = [
+            PointAnnotation(id: "foo", coordinate: .init(latitude: 0, longitude: 0))
+                .textSize(10)
+        ]
+        harness.triggerDisplayLink()
+        style.setLayerPropertiesStub.reset()
+
+        // Remove all annotations — the key is now unused but was data-driven last sync
+        me.annotations = []
+        harness.triggerDisplayLink()
+
+        let props = try XCTUnwrap(style.setLayerPropertiesStub.invocations.last?.parameters.properties)
+        let resetValue = try XCTUnwrap(props["text-size"] as? [Any])
+        XCTAssertEqual(resetValue[0] as? String, "coalesce", "data-driven reset should be a coalesce expression")
+        let lookup = try XCTUnwrap(resetValue[1] as? [Any])
+        XCTAssertEqual(lookup[0] as? String, "get")
+        XCTAssertEqual(lookup[1] as? String, "text-size")
+    }
+
+    // Pins the contract that `previouslyDataDrivenLayerPropertyKeys` accumulates across syncs:
+    // once a key has been data-driven, its coalesce expression keeps being pushed to the layer
+    // on subsequent syncs — even for syncs whose current annotations no longer carry it, and
+    // even across intervening annotations with entirely different properties.
+    func testDataDrivenKeysAccumulateAcrossSyncs() throws {
+        // Sync 1: annotation carries text-size
+        me.annotations = [
+            PointAnnotation(id: "a", coordinate: .init(latitude: 0, longitude: 0))
+                .textSize(10)
+        ]
+        harness.triggerDisplayLink()
+
+        // Sync 2: annotations removed
+        me.annotations = []
+        harness.triggerDisplayLink()
+
+        // Sync 3: different annotation with a different data-driven property (text-field)
+        me.annotations = [
+            PointAnnotation(id: "b", coordinate: .init(latitude: 0, longitude: 0))
+                .textField("x")
+        ]
+        harness.triggerDisplayLink()
+
+        // Sync 4: annotations removed again
+        style.setLayerPropertiesStub.reset()
+        me.annotations = []
+        harness.triggerDisplayLink()
+
+        // At sync 4, BOTH text-size (from sync 1) and text-field (from sync 3) must still be
+        // pushed as coalesce expressions — the accumulation is what keeps stale features
+        // rendering their own colors during async removes for any key that has ever been data-driven.
+        let props = try XCTUnwrap(style.setLayerPropertiesStub.invocations.last?.parameters.properties)
+        let textSize = try XCTUnwrap(props["text-size"] as? [Any])
+        XCTAssertEqual(textSize[0] as? String, "coalesce", "text-size coalesce should persist after later syncs")
+        let textField = try XCTUnwrap(props["text-field"] as? [Any])
+        XCTAssertEqual(textField[0] as? String, "coalesce", "text-field coalesce should persist after later syncs")
     }
 
     @available(*, deprecated)

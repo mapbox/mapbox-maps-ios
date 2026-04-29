@@ -53,6 +53,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconAllowOverlap)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-allow-overlap"] as! Bool, defaultValue)
     }
     func testInitialIconAnchor() {
@@ -79,6 +80,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconAnchor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-anchor"] as! String, defaultValue)
     }
     func testInitialIconIgnorePlacement() {
@@ -105,6 +107,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconIgnorePlacement)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-ignore-placement"] as! Bool, defaultValue)
     }
     func testInitialIconImage() {
@@ -131,6 +134,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconImage)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-image"] as! String, defaultValue)
     }
     func testInitialIconKeepUpright() {
@@ -157,6 +161,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconKeepUpright)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-keep-upright"] as! Bool, defaultValue)
     }
     func testInitialIconOffset() {
@@ -183,6 +188,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconOffset)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-offset"] as! [Double], defaultValue)
     }
     func testInitialIconOptional() {
@@ -209,6 +215,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconOptional)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-optional"] as! Bool, defaultValue)
     }
     func testInitialIconPadding() {
@@ -235,6 +242,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconPadding)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-padding"] as! Double, defaultValue)
     }
     func testInitialIconPitchAlignment() {
@@ -261,6 +269,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconPitchAlignment)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-pitch-alignment"] as! String, defaultValue)
     }
     func testInitialIconRotate() {
@@ -287,6 +296,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconRotate)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotate"] as! Double, defaultValue)
     }
     func testInitialIconRotationAlignment() {
@@ -313,6 +323,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconRotationAlignment)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotation-alignment"] as! String, defaultValue)
     }
     func testInitialIconSize() {
@@ -339,6 +350,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconSize)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-size"] as! Double, defaultValue)
     }
     func testInitialIconSizeScaleRange() {
@@ -365,6 +377,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconSizeScaleRange)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-size-scale-range"] as! [Double], defaultValue)
     }
     func testInitialIconTextFit() {
@@ -391,6 +404,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconTextFit)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"] as! String, defaultValue)
     }
     func testInitialIconTextFitPadding() {
@@ -417,6 +431,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconTextFitPadding)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"] as! [Double], defaultValue)
     }
     func testInitialSymbolAvoidEdges() {
@@ -443,6 +458,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.symbolAvoidEdges)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-avoid-edges"] as! Bool, defaultValue)
     }
     func testInitialSymbolElevationReference() {
@@ -469,6 +485,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.symbolElevationReference)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-elevation-reference"] as! String, defaultValue)
     }
     func testInitialSymbolPlacement() {
@@ -495,6 +512,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.symbolPlacement)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-placement"] as! String, defaultValue)
     }
     func testInitialSymbolSortKey() {
@@ -521,6 +539,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.symbolSortKey)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-sort-key"] as! Double, defaultValue)
     }
     func testInitialSymbolSpacing() {
@@ -547,6 +566,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.symbolSpacing)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-spacing"] as! Double, defaultValue)
     }
     func testInitialSymbolZElevate() {
@@ -573,6 +593,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.symbolZElevate)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-elevate"] as! Bool, defaultValue)
     }
     func testInitialSymbolZOrder() {
@@ -599,6 +620,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.symbolZOrder)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-order"] as! String, defaultValue)
     }
     func testInitialTextAllowOverlap() {
@@ -625,6 +647,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textAllowOverlap)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-allow-overlap"] as! Bool, defaultValue)
     }
     func testInitialTextAnchor() {
@@ -651,6 +674,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textAnchor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-anchor"] as! String, defaultValue)
     }
     func testInitialTextField() {
@@ -680,6 +704,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textField)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValueData = try! JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last!.parameters.properties["text-field"]!)
         let currentValueString = String(data: currentValueData, encoding: .utf8)
         XCTAssertEqual(currentValueString, try! defaultValue.jsonString())
@@ -708,6 +733,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textFont)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-font"] as! [String], defaultValue)
     }
     func testInitialTextIgnorePlacement() {
@@ -734,6 +760,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textIgnorePlacement)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-ignore-placement"] as! Bool, defaultValue)
     }
     func testInitialTextJustify() {
@@ -760,6 +787,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textJustify)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-justify"] as! String, defaultValue)
     }
     func testInitialTextKeepUpright() {
@@ -786,6 +814,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textKeepUpright)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-keep-upright"] as! Bool, defaultValue)
     }
     func testInitialTextLetterSpacing() {
@@ -812,6 +841,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textLetterSpacing)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-letter-spacing"] as! Double, defaultValue)
     }
     func testInitialTextLineHeight() {
@@ -838,6 +868,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textLineHeight)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-line-height"] as! Double, defaultValue)
     }
     func testInitialTextMaxAngle() {
@@ -864,6 +895,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textMaxAngle)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-max-angle"] as! Double, defaultValue)
     }
     func testInitialTextMaxWidth() {
@@ -890,6 +922,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textMaxWidth)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-max-width"] as! Double, defaultValue)
     }
     func testInitialTextOffset() {
@@ -916,6 +949,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textOffset)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-offset"] as! [Double], defaultValue)
     }
     func testInitialTextOptional() {
@@ -942,6 +976,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textOptional)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-optional"] as! Bool, defaultValue)
     }
     func testInitialTextPadding() {
@@ -968,6 +1003,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textPadding)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-padding"] as! Double, defaultValue)
     }
     func testInitialTextPitchAlignment() {
@@ -994,6 +1030,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textPitchAlignment)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-pitch-alignment"] as! String, defaultValue)
     }
     func testInitialTextRadialOffset() {
@@ -1020,6 +1057,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textRadialOffset)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-radial-offset"] as! Double, defaultValue)
     }
     func testInitialTextRotate() {
@@ -1046,6 +1084,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textRotate)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-rotate"] as! Double, defaultValue)
     }
     func testInitialTextRotationAlignment() {
@@ -1072,6 +1111,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textRotationAlignment)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-rotation-alignment"] as! String, defaultValue)
     }
     func testInitialTextSize() {
@@ -1098,6 +1138,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textSize)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-size"] as! Double, defaultValue)
     }
     func testInitialTextSizeScaleRange() {
@@ -1124,6 +1165,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textSizeScaleRange)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-size-scale-range"] as! [Double], defaultValue)
     }
     func testInitialTextTransform() {
@@ -1150,6 +1192,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textTransform)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-transform"] as! String, defaultValue)
     }
     func testInitialTextVariableAnchor() {
@@ -1177,6 +1220,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textVariableAnchor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-variable-anchor"] as! [TextAnchor], defaultValue)
     }
     func testInitialTextWritingMode() {
@@ -1204,6 +1248,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textWritingMode)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-writing-mode"] as! [TextWritingMode], defaultValue)
     }
     func testInitialIconColor() {
@@ -1234,6 +1279,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -1261,6 +1307,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconColorBrightnessMax)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-brightness-max"] as! Double, defaultValue)
     }
     func testInitialIconColorBrightnessMin() {
@@ -1287,6 +1334,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconColorBrightnessMin)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-brightness-min"] as! Double, defaultValue)
     }
     func testInitialIconColorContrast() {
@@ -1313,6 +1361,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconColorContrast)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-contrast"] as! Double, defaultValue)
     }
     func testInitialIconColorSaturation() {
@@ -1339,6 +1388,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconColorSaturation)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-color-saturation"] as! Double, defaultValue)
     }
     func testInitialIconEmissiveStrength() {
@@ -1365,6 +1415,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconEmissiveStrength)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-emissive-strength"] as! Double, defaultValue)
     }
     func testInitialIconHaloBlur() {
@@ -1391,6 +1442,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconHaloBlur)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-halo-blur"] as! Double, defaultValue)
     }
     func testInitialIconHaloColor() {
@@ -1421,6 +1473,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconHaloColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-halo-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -1448,6 +1501,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconHaloWidth)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-halo-width"] as! Double, defaultValue)
     }
     func testInitialIconImageCrossFade() {
@@ -1474,6 +1528,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconImageCrossFade)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-image-cross-fade"] as! Double, defaultValue)
     }
     func testInitialIconOcclusionOpacity() {
@@ -1500,6 +1555,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconOcclusionOpacity)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-occlusion-opacity"] as! Double, defaultValue)
     }
     func testInitialIconOpacity() {
@@ -1526,6 +1582,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconOpacity)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-opacity"] as! Double, defaultValue)
     }
     func testInitialIconTranslate() {
@@ -1552,6 +1609,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconTranslate)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate"] as! [Double], defaultValue)
     }
     func testInitialIconTranslateAnchor() {
@@ -1578,6 +1636,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconTranslateAnchor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"] as! String, defaultValue)
     }
     func testInitialOcclusionOpacityMode() {
@@ -1604,6 +1663,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.occlusionOpacityMode)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["occlusion-opacity-mode"] as! String, defaultValue)
     }
     func testInitialSymbolZOffset() {
@@ -1630,6 +1690,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.symbolZOffset)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-offset"] as! Double, defaultValue)
     }
     func testInitialTextColor() {
@@ -1660,6 +1721,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -1687,6 +1749,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textEmissiveStrength)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-emissive-strength"] as! Double, defaultValue)
     }
     func testInitialTextHaloBlur() {
@@ -1713,6 +1776,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textHaloBlur)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-halo-blur"] as! Double, defaultValue)
     }
     func testInitialTextHaloColor() {
@@ -1743,6 +1807,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textHaloColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-halo-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -1770,6 +1835,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textHaloWidth)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-halo-width"] as! Double, defaultValue)
     }
     func testInitialTextOcclusionOpacity() {
@@ -1796,6 +1862,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textOcclusionOpacity)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-occlusion-opacity"] as! Double, defaultValue)
     }
     func testInitialTextOpacity() {
@@ -1822,6 +1889,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textOpacity)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-opacity"] as! Double, defaultValue)
     }
     func testInitialTextTranslate() {
@@ -1848,6 +1916,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textTranslate)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate"] as! [Double], defaultValue)
     }
     func testInitialTextTranslateAnchor() {
@@ -1874,6 +1943,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.textTranslateAnchor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate-anchor"] as! String, defaultValue)
     }
     func testInitialSlot() {
@@ -1900,6 +1970,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.slot)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, defaultValue)
     }
 

@@ -1,11 +1,12 @@
 import SwiftUI
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
-/// Example demonstrating the experimental Appearances API for dynamic icon states.
-/// Shows how to use appearances with feature-state to change icon images based on user interaction.
-/// - Default: hotel icon
-/// - Currently Selected: hotel-active icon
-/// - Previously Clicked: hotel-clicked icon
+/// Example demonstrating the Appearances API for dynamic icon and text states.
+/// Shows how to use appearances with feature-state to change icon images and paint properties
+/// based on user interaction.
+/// - Default: hotel icon with dark label
+/// - Currently Selected: hotel-active icon, floats up with blue label and halo
+/// - Previously Clicked: hotel-clicked icon, dimmed
 struct AppearancesExample: View {
     private static let currentlySelectedKey = "currentlySelected"
     private static let hasBeenClickedKey = "hasBeenClicked"
@@ -100,15 +101,15 @@ struct AppearancesExample: View {
             "data": [
                 "type": "FeatureCollection",
                 "features": [
-                    ["type": "Feature", "id": 1, "properties": [:], "geometry": ["type": "Point", "coordinates": [1.8452993238082342, 42.100164223399275]]],
-                    ["type": "Feature", "id": 2, "properties": [:], "geometry": ["type": "Point", "coordinates": [1.8438590191857145, 42.1004178052402]]],
-                    ["type": "Feature", "id": 3, "properties": [:], "geometry": ["type": "Point", "coordinates": [1.844225198327564, 42.10130533369667]]],
-                    ["type": "Feature", "id": 4, "properties": [:], "geometry": ["type": "Point", "coordinates": [1.8443594640122, 42.0990955459275]]],
-                    ["type": "Feature", "id": 5, "properties": [:], "geometry": ["type": "Point", "coordinates": [1.8449697625811154, 42.09869705141318]]],
-                    ["type": "Feature", "id": 6, "properties": [:], "geometry": ["type": "Point", "coordinates": [1.8471058075726603, 42.09978384873651]]],
-                    ["type": "Feature", "id": 7, "properties": [:], "geometry": ["type": "Point", "coordinates": [1.8455739474818813, 42.10182152060625]]],
-                    ["type": "Feature", "id": 8, "properties": [:], "geometry": ["type": "Point", "coordinates": [1.8427787800360136, 42.10039061289771]]],
-                    ["type": "Feature", "id": 9, "properties": [:], "geometry": ["type": "Point", "coordinates": [1.8433280487479635, 42.0994396753579]]]
+                    ["type": "Feature", "id": 1, "properties": ["name": "Hotel Carlemany"], "geometry": ["type": "Point", "coordinates": [1.8452993238082342, 42.100164223399275]]],
+                    ["type": "Feature", "id": 2, "properties": ["name": "Hotel Panorama"], "geometry": ["type": "Point", "coordinates": [1.8438590191857145, 42.1004178052402]]],
+                    ["type": "Feature", "id": 3, "properties": ["name": "Hotel Andorra"], "geometry": ["type": "Point", "coordinates": [1.844225198327564, 42.10130533369667]]],
+                    ["type": "Feature", "id": 4, "properties": ["name": "Hotel Plaza"], "geometry": ["type": "Point", "coordinates": [1.8443594640122, 42.0990955459275]]],
+                    ["type": "Feature", "id": 5, "properties": ["name": "Hotel Cervol"], "geometry": ["type": "Point", "coordinates": [1.8449697625811154, 42.09869705141318]]],
+                    ["type": "Feature", "id": 6, "properties": ["name": "Hotel Diplomatic"], "geometry": ["type": "Point", "coordinates": [1.8471058075726603, 42.09978384873651]]],
+                    ["type": "Feature", "id": 7, "properties": ["name": "Hotel Guillem"], "geometry": ["type": "Point", "coordinates": [1.8455739474818813, 42.10182152060625]]],
+                    ["type": "Feature", "id": 8, "properties": ["name": "Hotel Roc Blanc"], "geometry": ["type": "Point", "coordinates": [1.8427787800360136, 42.10039061289771]]],
+                    ["type": "Feature", "id": 9, "properties": ["name": "Hotel President"], "geometry": ["type": "Point", "coordinates": [1.8433280487479635, 42.0994396753579]]]
                 ]
             ]
         ]
@@ -121,7 +122,10 @@ struct AppearancesExample: View {
             return
         }
 
-        // Add a layer to show an icon on every point
+        // Add a symbol layer with appearances that change both layout and paint properties:
+        // - Currently selected: hotel-active icon, floats up, blue label with halo
+        // - Previously clicked: hotel-clicked icon, dimmed (opacity 0.45)
+        // - Default: hotel icon with dark label
         let layerJSON: [String: Any] = [
             "id": "points",
             "type": "symbol",
@@ -129,19 +133,42 @@ struct AppearancesExample: View {
             "layout": [
                 "icon-allow-overlap": true,
                 "icon-image": "hotel",
-                "icon-size": 0.75
+                "icon-size": 0.75,
+                "text-field": ["get", "name"],
+                "text-font": ["DIN Pro Medium", "Arial Unicode MS Regular"],
+                "text-size": 12,
+                "text-offset": [0, 1.2],
+                "text-anchor": "top",
+                "text-allow-overlap": true
             ],
-            // appearances are experimental and subject to change in future versions
+            "paint": [
+                "text-color": "#333333",
+                "text-halo-color": "#ffffff",
+                "text-halo-width": 1,
+                "icon-translate": [0, 0],
+                "text-translate": [0, 0]
+            ],
             "appearances": [
                 [
                     "name": "clicked",
                     "condition": ["boolean", ["feature-state", Self.currentlySelectedKey], false],
-                    "properties": ["icon-image": "hotel-active"]
+                    "properties": [
+                        "icon-image": "hotel-active",
+                        "icon-translate": [0, -12],
+                        "text-translate": [0, -12],
+                        "text-color": "#4264fb",
+                        "text-halo-color": "#c0caff",
+                        "text-halo-width": 2
+                    ] as [String: Any]
                 ],
                 [
                     "name": "has-been-clicked",
                     "condition": ["boolean", ["feature-state", Self.hasBeenClickedKey], false],
-                    "properties": ["icon-image": "hotel-clicked"]
+                    "properties": [
+                        "icon-image": "hotel-clicked",
+                        "icon-opacity": 0.45,
+                        "text-opacity": 0.45
+                    ] as [String: Any]
                 ]
             ]
         ]

@@ -280,11 +280,14 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillConstructBridgeGuardRail, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-construct-bridge-guard-rail").value as! NSNumber).boolValue))
+        XCTAssertEqual(try layer.fillConstructBridgeGuardRail.toString(), expectedString)
     }
 
     func testFillSortKey() throws {
@@ -320,11 +323,14 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillSortKey, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-sort-key").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.fillSortKey.toString(), expectedString)
     }
 
     func testFillBridgeGuardRailColor() throws {
@@ -360,11 +366,14 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillBridgeGuardRailColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-bridge-guard-rail-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.fillBridgeGuardRailColor.toString(), expectedString)
     }
 
     func testFillColor() throws {
@@ -400,11 +409,14 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.fillColor.toString(), expectedString)
     }
 
     func testFillOpacity() throws {
@@ -440,11 +452,14 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.fillOpacity.toString(), expectedString)
     }
 
     func testFillOutlineColor() throws {
@@ -480,11 +495,14 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillOutlineColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-outline-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.fillOutlineColor.toString(), expectedString)
     }
 
     func testFillPattern() throws {
@@ -520,11 +538,14 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillPattern, .constant(.name(StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String)))
+        XCTAssertEqual(try layer.fillPattern.toString(), expectedString)
     }
 
     func testFillTunnelStructureColor() throws {
@@ -560,11 +581,14 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillTunnelStructureColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-tunnel-structure-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.fillTunnelStructureColor.toString(), expectedString)
     }
 
     func testFillZOffset() throws {
@@ -600,11 +624,14 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillZOffset, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-z-offset").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.fillZOffset.toString(), expectedString)
     }
 }
 

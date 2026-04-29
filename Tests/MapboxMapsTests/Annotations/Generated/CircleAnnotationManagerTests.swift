@@ -53,6 +53,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleElevationReference)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-elevation-reference"] as! String, defaultValue)
     }
     func testInitialCircleSortKey() {
@@ -79,6 +80,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleSortKey)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-sort-key"] as! Double, defaultValue)
     }
     func testInitialCircleBlur() {
@@ -105,6 +107,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleBlur)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-blur"] as! Double, defaultValue)
     }
     func testInitialCircleColor() {
@@ -135,6 +138,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -162,6 +166,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleEmissiveStrength)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-emissive-strength"] as! Double, defaultValue)
     }
     func testInitialCircleOpacity() {
@@ -188,6 +193,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleOpacity)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-opacity"] as! Double, defaultValue)
     }
     func testInitialCirclePitchAlignment() {
@@ -214,6 +220,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circlePitchAlignment)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-alignment"] as! String, defaultValue)
     }
     func testInitialCirclePitchScale() {
@@ -240,6 +247,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circlePitchScale)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-scale"] as! String, defaultValue)
     }
     func testInitialCircleRadius() {
@@ -266,6 +274,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleRadius)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-radius"] as! Double, defaultValue)
     }
     func testInitialCircleStrokeColor() {
@@ -296,6 +305,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleStrokeColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-stroke-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -323,6 +333,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleStrokeOpacity)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-stroke-opacity"] as! Double, defaultValue)
     }
     func testInitialCircleStrokeWidth() {
@@ -349,6 +360,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleStrokeWidth)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-stroke-width"] as! Double, defaultValue)
     }
     func testInitialCircleTranslate() {
@@ -375,6 +387,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleTranslate)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate"] as! [Double], defaultValue)
     }
     func testInitialCircleTranslateAnchor() {
@@ -401,6 +414,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.circleTranslateAnchor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate-anchor"] as! String, defaultValue)
     }
     func testInitialSlot() {
@@ -427,6 +441,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertNil(manager.slot)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, defaultValue)
     }
 

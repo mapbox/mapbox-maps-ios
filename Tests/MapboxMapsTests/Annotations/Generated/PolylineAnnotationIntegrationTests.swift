@@ -560,11 +560,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineElevationGroundScale, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-elevation-ground-scale").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.lineElevationGroundScale.toString(), expectedString)
     }
 
     func testLineJoin() throws {
@@ -594,11 +597,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineJoin, .constant(LineJoin(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-join").value as! String)))
+        XCTAssertEqual(try layer.lineJoin.toString(), expectedString)
     }
 
     func testLineSortKey() throws {
@@ -628,11 +634,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineSortKey, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-sort-key").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.lineSortKey.toString(), expectedString)
     }
 
     func testLineZOffset() throws {
@@ -662,11 +671,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineZOffset, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-z-offset").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.lineZOffset.toString(), expectedString)
     }
 
     func testLineBlur() throws {
@@ -696,11 +708,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineBlur, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-blur").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.lineBlur.toString(), expectedString)
     }
 
     func testLineBorderColor() throws {
@@ -730,11 +745,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineBorderColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-border-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.lineBorderColor.toString(), expectedString)
     }
 
     func testLineBorderWidth() throws {
@@ -764,11 +782,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineBorderWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-border-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.lineBorderWidth.toString(), expectedString)
     }
 
     func testLineColor() throws {
@@ -798,11 +819,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.lineColor.toString(), expectedString)
     }
 
     func testLineEmissiveStrength() throws {
@@ -832,11 +856,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineEmissiveStrength, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-emissive-strength").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.lineEmissiveStrength.toString(), expectedString)
     }
 
     func testLineGapWidth() throws {
@@ -866,11 +893,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineGapWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-gap-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.lineGapWidth.toString(), expectedString)
     }
 
     func testLineOffset() throws {
@@ -900,11 +930,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineOffset, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-offset").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.lineOffset.toString(), expectedString)
     }
 
     func testLineOpacity() throws {
@@ -934,11 +967,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.lineOpacity.toString(), expectedString)
     }
 
     func testLinePattern() throws {
@@ -968,11 +1004,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.linePattern, .constant(.name(StyleManager.layerPropertyDefaultValue(for: .line, property: "line-pattern").value as! String)))
+        XCTAssertEqual(try layer.linePattern.toString(), expectedString)
     }
 
     func testLineWidth() throws {
@@ -1002,11 +1041,14 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.lineWidth.toString(), expectedString)
     }
 }
 

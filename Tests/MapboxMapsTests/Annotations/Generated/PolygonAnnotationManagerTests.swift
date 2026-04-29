@@ -60,6 +60,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillConstructBridgeGuardRail)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-construct-bridge-guard-rail"] as! Bool, defaultValue)
     }
     func testInitialFillElevationReference() {
@@ -86,6 +87,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillElevationReference)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-elevation-reference"] as! String, defaultValue)
     }
     func testInitialFillSortKey() {
@@ -112,6 +114,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillSortKey)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-sort-key"] as! Double, defaultValue)
     }
     func testInitialFillAntialias() {
@@ -138,6 +141,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillAntialias)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-antialias"] as! Bool, defaultValue)
     }
     func testInitialFillBridgeGuardRailColor() {
@@ -168,6 +172,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillBridgeGuardRailColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-bridge-guard-rail-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -199,6 +204,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -226,6 +232,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillEmissiveStrength)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-emissive-strength"] as! Double, defaultValue)
     }
     func testInitialFillOpacity() {
@@ -252,6 +259,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillOpacity)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-opacity"] as! Double, defaultValue)
     }
     func testInitialFillOutlineColor() {
@@ -282,6 +290,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillOutlineColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-outline-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -309,6 +318,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillPattern)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-pattern"] as! String, defaultValue)
     }
     func testInitialFillPatternCrossFade() {
@@ -335,6 +345,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillPatternCrossFade)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-pattern-cross-fade"] as! Double, defaultValue)
     }
     func testInitialFillTranslate() {
@@ -361,6 +372,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillTranslate)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate"] as! [Double], defaultValue)
     }
     func testInitialFillTranslateAnchor() {
@@ -387,6 +399,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillTranslateAnchor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate-anchor"] as! String, defaultValue)
     }
     func testInitialFillTunnelStructureColor() {
@@ -417,6 +430,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillTunnelStructureColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-tunnel-structure-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -444,6 +458,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillZOffset)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-z-offset"] as! Double, defaultValue)
     }
     func testInitialSlot() {
@@ -470,6 +485,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.slot)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, defaultValue)
     }
 

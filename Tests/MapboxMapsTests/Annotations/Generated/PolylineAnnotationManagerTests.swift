@@ -54,6 +54,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineCap)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cap"] as! String, defaultValue)
     }
     func testInitialLineCrossSlope() {
@@ -80,6 +81,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineCrossSlope)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cross-slope"] as! Double, defaultValue)
     }
     func testInitialLineElevationGroundScale() {
@@ -106,6 +108,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineElevationGroundScale)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-elevation-ground-scale"] as! Double, defaultValue)
     }
     func testInitialLineElevationReference() {
@@ -132,6 +135,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineElevationReference)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-elevation-reference"] as! String, defaultValue)
     }
     func testInitialLineJoin() {
@@ -158,6 +162,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineJoin)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-join"] as! String, defaultValue)
     }
     func testInitialLineMiterLimit() {
@@ -184,6 +189,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineMiterLimit)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-miter-limit"] as! Double, defaultValue)
     }
     func testInitialLineRoundLimit() {
@@ -210,6 +216,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineRoundLimit)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-round-limit"] as! Double, defaultValue)
     }
     func testInitialLineSortKey() {
@@ -236,6 +243,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineSortKey)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-sort-key"] as! Double, defaultValue)
     }
     func testInitialLineWidthUnit() {
@@ -262,6 +270,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineWidthUnit)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-width-unit"] as! String, defaultValue)
     }
     func testInitialLineZOffset() {
@@ -288,6 +297,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineZOffset)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-z-offset"] as! Double, defaultValue)
     }
     func testInitialLineBlur() {
@@ -314,6 +324,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineBlur)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-blur"] as! Double, defaultValue)
     }
     func testInitialLineBorderColor() {
@@ -344,6 +355,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineBorderColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-border-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -371,6 +383,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineBorderWidth)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-border-width"] as! Double, defaultValue)
     }
     func testInitialLineColor() {
@@ -401,6 +414,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -428,6 +442,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineCutoutFadeWidth)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cutout-fade-width"] as! Double, defaultValue)
     }
     func testInitialLineCutoutOpacity() {
@@ -454,6 +469,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineCutoutOpacity)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cutout-opacity"] as! Double, defaultValue)
     }
     func testInitialLineDasharray() {
@@ -480,6 +496,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineDasharray)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-dasharray"] as! [Double], defaultValue)
     }
     func testInitialLineDepthOcclusionFactor() {
@@ -506,6 +523,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineDepthOcclusionFactor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-depth-occlusion-factor"] as! Double, defaultValue)
     }
     func testInitialLineEmissiveStrength() {
@@ -532,6 +550,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineEmissiveStrength)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-emissive-strength"] as! Double, defaultValue)
     }
     func testInitialLineGapWidth() {
@@ -558,6 +577,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineGapWidth)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-gap-width"] as! Double, defaultValue)
     }
     func testInitialLineOcclusionOpacity() {
@@ -584,6 +604,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineOcclusionOpacity)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-occlusion-opacity"] as! Double, defaultValue)
     }
     func testInitialLineOffset() {
@@ -610,6 +631,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineOffset)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-offset"] as! Double, defaultValue)
     }
     func testInitialLineOpacity() {
@@ -636,6 +658,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineOpacity)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-opacity"] as! Double, defaultValue)
     }
     func testInitialLinePattern() {
@@ -662,6 +685,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.linePattern)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-pattern"] as! String, defaultValue)
     }
     func testInitialLinePatternCrossFade() {
@@ -688,6 +712,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.linePatternCrossFade)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-pattern-cross-fade"] as! Double, defaultValue)
     }
     func testInitialLineTranslate() {
@@ -714,6 +739,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineTranslate)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-translate"] as! [Double], defaultValue)
     }
     func testInitialLineTranslateAnchor() {
@@ -740,6 +766,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineTranslateAnchor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-translate-anchor"] as! String, defaultValue)
     }
     func testInitialLineTrimColor() {
@@ -770,6 +797,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineTrimColor)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         let currentValue = try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-color"] as! [Any]))
         XCTAssertEqual(currentValue, defaultValue)
     }
@@ -797,6 +825,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineTrimFadeRange)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-fade-range"] as! [Double], defaultValue)
     }
     func testInitialLineTrimOffset() {
@@ -823,6 +852,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineTrimOffset)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-offset"] as! [Double], defaultValue)
     }
     func testInitialLineWidth() {
@@ -849,6 +879,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineWidth)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-width"] as! Double, defaultValue)
     }
     func testInitialSlot() {
@@ -875,6 +906,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.slot)
         harness.triggerDisplayLink()
 
+        // Manager-only (non-data-driven) properties reset to the literal style default.
         XCTAssertEqual(harness.style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, defaultValue)
     }
 

@@ -1052,11 +1052,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconAnchor, .constant(IconAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-anchor").value as! String)))
+        XCTAssertEqual(try layer.iconAnchor.toString(), expectedString)
     }
 
     func testIconImage() throws {
@@ -1085,11 +1088,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconImage, .constant(.name(StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-image").value as! String)))
+        XCTAssertEqual(try layer.iconImage.toString(), expectedString)
     }
 
     func testIconOffset() throws {
@@ -1118,11 +1124,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconOffset, .constant(StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-offset").value as! [Double]))
+        XCTAssertEqual(try layer.iconOffset.toString(), expectedString)
     }
 
     func testIconRotate() throws {
@@ -1151,11 +1160,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconRotate, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-rotate").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.iconRotate.toString(), expectedString)
     }
 
     func testIconSize() throws {
@@ -1184,11 +1196,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconSize, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-size").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.iconSize.toString(), expectedString)
     }
 
     func testIconTextFit() throws {
@@ -1217,11 +1232,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTextFit, .constant(IconTextFit(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value as! String)))
+        XCTAssertEqual(try layer.iconTextFit.toString(), expectedString)
     }
 
     func testIconTextFitPadding() throws {
@@ -1250,11 +1268,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTextFitPadding, .constant(StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit-padding").value as! [Double]))
+        XCTAssertEqual(try layer.iconTextFitPadding.toString(), expectedString)
     }
 
     func testSymbolSortKey() throws {
@@ -1283,11 +1304,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.symbolSortKey, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-sort-key").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.symbolSortKey.toString(), expectedString)
     }
 
     func testTextAnchor() throws {
@@ -1316,11 +1340,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textAnchor, .constant(TextAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-anchor").value as! String)))
+        XCTAssertEqual(try layer.textAnchor.toString(), expectedString)
     }
 
     func testTextField() throws {
@@ -1349,14 +1376,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textField, Value<String>.expression(Exp(.format) {
-            ""
-            FormatOptions()
-          }))
+        XCTAssertEqual(try layer.textField.toString(), expectedString)
     }
 
     func testTextJustify() throws {
@@ -1385,11 +1412,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textJustify, .constant(TextJustify(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-justify").value as! String)))
+        XCTAssertEqual(try layer.textJustify.toString(), expectedString)
     }
 
     func testTextLetterSpacing() throws {
@@ -1418,11 +1448,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textLetterSpacing, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-letter-spacing").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.textLetterSpacing.toString(), expectedString)
     }
 
     func testTextLineHeight() throws {
@@ -1451,11 +1484,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textLineHeight, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-line-height").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.textLineHeight.toString(), expectedString)
     }
 
     func testTextMaxWidth() throws {
@@ -1484,11 +1520,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textMaxWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-max-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.textMaxWidth.toString(), expectedString)
     }
 
     func testTextOffset() throws {
@@ -1517,11 +1556,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textOffset, .constant(StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-offset").value as! [Double]))
+        XCTAssertEqual(try layer.textOffset.toString(), expectedString)
     }
 
     func testTextRadialOffset() throws {
@@ -1550,11 +1592,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textRadialOffset, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-radial-offset").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.textRadialOffset.toString(), expectedString)
     }
 
     func testTextRotate() throws {
@@ -1583,11 +1628,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textRotate, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-rotate").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.textRotate.toString(), expectedString)
     }
 
     func testTextSize() throws {
@@ -1616,11 +1664,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textSize, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-size").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.textSize.toString(), expectedString)
     }
 
     func testTextTransform() throws {
@@ -1649,11 +1700,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textTransform, .constant(TextTransform(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-transform").value as! String)))
+        XCTAssertEqual(try layer.textTransform.toString(), expectedString)
     }
 
     func testIconColor() throws {
@@ -1682,11 +1736,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.iconColor.toString(), expectedString)
     }
 
     func testIconEmissiveStrength() throws {
@@ -1715,11 +1772,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconEmissiveStrength, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-emissive-strength").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.iconEmissiveStrength.toString(), expectedString)
     }
 
     func testIconHaloBlur() throws {
@@ -1748,11 +1808,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconHaloBlur, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-blur").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.iconHaloBlur.toString(), expectedString)
     }
 
     func testIconHaloColor() throws {
@@ -1781,11 +1844,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconHaloColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.iconHaloColor.toString(), expectedString)
     }
 
     func testIconHaloWidth() throws {
@@ -1814,11 +1880,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconHaloWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.iconHaloWidth.toString(), expectedString)
     }
 
     func testIconOcclusionOpacity() throws {
@@ -1847,11 +1916,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconOcclusionOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-occlusion-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.iconOcclusionOpacity.toString(), expectedString)
     }
 
     func testIconOpacity() throws {
@@ -1880,11 +1952,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.iconOpacity.toString(), expectedString)
     }
 
     func testSymbolZOffset() throws {
@@ -1913,11 +1988,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.symbolZOffset, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-offset").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.symbolZOffset.toString(), expectedString)
     }
 
     func testTextColor() throws {
@@ -1946,11 +2024,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.textColor.toString(), expectedString)
     }
 
     func testTextEmissiveStrength() throws {
@@ -1979,11 +2060,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textEmissiveStrength, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-emissive-strength").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.textEmissiveStrength.toString(), expectedString)
     }
 
     func testTextHaloBlur() throws {
@@ -2012,11 +2096,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textHaloBlur, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-halo-blur").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.textHaloBlur.toString(), expectedString)
     }
 
     func testTextHaloColor() throws {
@@ -2045,11 +2132,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textHaloColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-halo-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.textHaloColor.toString(), expectedString)
     }
 
     func testTextHaloWidth() throws {
@@ -2078,11 +2168,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textHaloWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-halo-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.textHaloWidth.toString(), expectedString)
     }
 
     func testTextOcclusionOpacity() throws {
@@ -2111,11 +2204,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textOcclusionOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-occlusion-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.textOcclusionOpacity.toString(), expectedString)
     }
 
     func testTextOpacity() throws {
@@ -2144,11 +2240,14 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.textOpacity.toString(), expectedString)
     }
 
     func testImagesAddedToStyleIfNotExist() throws {

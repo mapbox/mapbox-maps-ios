@@ -80,6 +80,13 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
     /// the subsequent sync.
     private var previouslySetLayerPropertyKeys: Set<String> = []
 
+    /// Keys that have been data-driven in any previous sync (monotonic — never shrinks
+    /// for the lifetime of the manager, bounded by the layer type's property count).
+    /// Keeping these keys routed through the data-driven coalesce path ensures stale
+    /// features (still visible while an async source removal is in flight) keep reading
+    /// their own stored values instead of snapping to literal defaults — MAPSIOS-2180.
+    private var previouslyDataDrivenLayerPropertyKeys: Set<String> = []
+
     private var draggedAnnotationIndex: Array<PointAnnotation>.Index?
     private var destroyOnce = Once()
     private var syncSourceOnce = Once(happened: true)
@@ -289,31 +296,31 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
 
         delegate?.syncImages()
 
-        // Construct the properties dictionary from the annotations
-        let dataDrivenLayerPropertyKeys = Set(annotations.flatMap(\.layerProperties.keys))
+        // Route both current-annotation keys and any previously-data-driven keys through the
+        // coalesce path. Keeping previously-seen keys ensures stale features (still visible
+        // while an async source removal is in flight) keep reading their own stored values
+        // instead of snapping to a literal default — MAPSIOS-2180 black flash.
+        let currentDataDrivenLayerPropertyKeys = Set(annotations.flatMap(\.layerProperties.keys))
+        let dataDrivenLayerPropertyKeys = currentDataDrivenLayerPropertyKeys
+            .union(previouslyDataDrivenLayerPropertyKeys)
 
-        /// The logic of the expression is the following
-        /// Firstly, it tries to get the the value for the given key from `layerProperties` in feature. Properties for the feature are set in <Type>Annotation.feature
-        /// Secondly, it tries to read the value from `layerProperties` dictionary from annotation manager.
-        /// In the end if the property is not set either on annotation or on annotation manager we just use default value from the style.gst
         let dataDrivenProperties = Dictionary(
-            uniqueKeysWithValues: dataDrivenLayerPropertyKeys.map { (key) -> (String, Any) in (key, [
-                "coalesce",
-                ["get", key, ["get", "layerProperties"]],
-                layerProperties[key] ?? StyleManager.layerPropertyDefaultValue(for: self.layerType, property: key).value
-            ] as [Any])})
+            uniqueKeysWithValues: dataDrivenLayerPropertyKeys.map { (key) -> (String, Any) in
+                (key, coalesceExpression(forKey: key))
+            })
 
-        // Merge the common layer properties
+        // Merge manager-level literals — data-driven coalesce wins on key collisions.
         let newLayerProperties = dataDrivenProperties.merging(layerProperties, uniquingKeysWith: { dataDriven, _ in dataDriven })
 
-        // Construct the properties dictionary to reset any properties that are no longer used
+        // Remaining unused keys are manager-only literals the user removed. Reset to literal
+        // style defaults — core maps doesn't always honor coalesce over non-data-driven paint properties.
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
             (key, StyleManager.layerPropertyDefaultValue(for: self.layerType, property: key).value)
         })
 
-        // Store the new set of property keys
         previouslySetLayerPropertyKeys = Set(newLayerProperties.keys)
+        previouslyDataDrivenLayerPropertyKeys = dataDrivenLayerPropertyKeys
 
         // Merge the new and unused properties
         let allLayerProperties = newLayerProperties.merging(unusedProperties, uniquingKeysWith: { $1 })
@@ -329,6 +336,16 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
                 "Could not set layer properties in PointAnnotationManager due to error \(error)",
                 category: "Annotations")
         }
+    }
+
+    /// Builds the coalesce expression used for data-driven layer properties:
+    /// feature's own `layerProperties` first, then the manager-level value, then the style default.
+    private func coalesceExpression(forKey key: String) -> [Any] {
+        return [
+            "coalesce",
+            ["get", key, ["get", "layerProperties"]],
+            layerProperties[key] ?? StyleManager.layerPropertyDefaultValue(for: self.layerType, property: key).value
+        ]
     }
 
     // MARK: - User interaction handling

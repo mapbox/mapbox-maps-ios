@@ -266,11 +266,14 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleSortKey, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-sort-key").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.circleSortKey.toString(), expectedString)
     }
 
     func testCircleBlur() throws {
@@ -299,11 +302,14 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleBlur, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-blur").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.circleBlur.toString(), expectedString)
     }
 
     func testCircleColor() throws {
@@ -332,11 +338,14 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.circleColor.toString(), expectedString)
     }
 
     func testCircleOpacity() throws {
@@ -365,11 +374,14 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.circleOpacity.toString(), expectedString)
     }
 
     func testCircleRadius() throws {
@@ -398,11 +410,14 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleRadius, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-radius").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.circleRadius.toString(), expectedString)
     }
 
     func testCircleStrokeColor() throws {
@@ -431,11 +446,14 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleStrokeColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-color").value as! [Any], options: []))))
+        XCTAssertEqual(try layer.circleStrokeColor.toString(), expectedString)
     }
 
     func testCircleStrokeOpacity() throws {
@@ -464,11 +482,14 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleStrokeOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.circleStrokeOpacity.toString(), expectedString)
     }
 
     func testCircleStrokeWidth() throws {
@@ -497,11 +518,14 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         manager.annotations = [annotation]
 
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
+        // Verify that when the annotation's property is reset to nil, the layer retains
+        // the coalesce expression falling back to the style default (or manager value).
+        // This keeps stale features rendering their own stored values during async source
+        // updates — the fix for MAPSIOS-2180. Expression form is visually equivalent to a
+        // literal default when no feature carries the property.
         manager.impl.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleStrokeWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(try layer.circleStrokeWidth.toString(), expectedString)
     }
 }
 

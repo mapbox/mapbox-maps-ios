@@ -12,6 +12,33 @@ extension UIWindow {
         return false
 #endif
     }
+
+    /// The scene this window is hosted in, if any.
+    ///
+    /// `windowScene` is nil for `CPWindow` because `CPTemplateApplicationScene`
+    /// is not a `UIWindowScene`. Walking the responder chain recovers the
+    /// owning scene uniformly across UIKit and CarPlay..
+    var parentScene: UIScene? {
+        if let windowScene {
+            return windowScene
+        }
+
+        #if canImport(CarPlay)
+        if let cpWindow = self as? CPWindow {
+            return cpWindow.templateApplicationScene
+        }
+        #endif
+
+        var responder: UIResponder? = next
+        while let r = responder {
+            if let scene = r as? UIScene {
+                return scene
+            }
+            responder = r.next
+        }
+
+        return nil
+    }
 }
 
 extension UIScene {

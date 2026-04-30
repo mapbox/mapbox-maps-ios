@@ -8,11 +8,19 @@ final class CarPlayRootVC: UIViewController {
         view.backgroundColor = .skyBlue
     }
 
-    func updateCarPlayViewController(_ controller: CarPlayViewController) {
-        controller.willMove(toParent: self)
+    private weak var currentChild: UIViewController?
+
+    func updateCarPlayViewController(_ controller: UIViewController) {
+        if let existing = currentChild {
+            existing.willMove(toParent: nil)
+            existing.view.removeFromSuperview()
+            existing.removeFromParent()
+        }
         addChild(controller)
         view.addSubview(controller.view)
         controller.view.frame = view.bounds
+        controller.didMove(toParent: self)
+        currentChild = controller
     }
 }
 
@@ -21,10 +29,7 @@ final class CarPlayViewController: UIViewController {
         let mapOptions = MapOptions(pixelRatio: UIScreen.screens[1].nativeScale)
 
         let mapInitOptions = MapInitOptions(mapOptions: mapOptions, cameraOptions: CameraOptions(
-            center: CLLocationCoordinate2D(
-                latitude: 59.31,
-                longitude: 18.06
-            ),
+            center: .helsinki,
             zoom: 15.0
         ))
 
@@ -81,6 +86,39 @@ final class CarPlayViewController: UIViewController {
 
         animateToBerlin(position: .start)
     }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        mapView.ornaments.options.scaleBar.visibility = .hidden
+        mapView.ornaments.options.attributionButton.position = .bottomRight
+
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(mapView)
+        NSLayoutConstraint.activate([
+            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mapView.topAnchor.constraint(equalTo: view.topAnchor),
+            mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+}
+
+final class CarPlayNavViewController: UIViewController {
+    lazy var mapView: MapView = {
+        let mapOptions = MapOptions(pixelRatio: UIScreen.screens[1].nativeScale)
+
+        let mapInitOptions = MapInitOptions(mapOptions: mapOptions, cameraOptions: CameraOptions(
+            center: .helsinki,
+            zoom: 17.0,
+            pitch: 45
+        ))
+
+        return MapView(frame: UIScreen.screens[1].bounds, mapInitOptions: mapInitOptions)
+    }()
+
+    static let shared = CarPlayNavViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()

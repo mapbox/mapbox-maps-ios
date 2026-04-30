@@ -546,18 +546,20 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
     }
 
     private func subscribeSceneToLifecycleNotifications() {
+        let parentScene = window?.parentScene
+
         notificationCenter.addObserver(self,
                                         selector: #selector(sceneDidEnterBackground(_:)),
                                         name: UIScene.didEnterBackgroundNotification,
-                                        object: window?.windowScene)
+                                        object: parentScene)
         notificationCenter.addObserver(self,
                                         selector: #selector(sceneWillDeactivate(_:)),
                                         name: UIScene.willDeactivateNotification,
-                                        object: window?.windowScene)
+                                        object: parentScene)
         notificationCenter.addObserver(self,
                                         selector: #selector(sceneDidActivate(_:)),
                                         name: UIScene.didActivateNotification,
-                                        object: window?.windowScene)
+                                        object: parentScene)
     }
 
     @objc private func sceneDidActivate(_ notification: Notification) {
@@ -792,6 +794,14 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         updateDisplayLinkPreferredFramesPerSecond()
 
         subscribeSceneToLifecycleNotifications()
+
+        // Seed connectedScene proactively. Notification-only caching misses the case
+        // where this MapView is added to a CarPlay window whose scene already activated
+        // (e.g. a second MapView for active navigation), since didActivateNotification
+        // won't fire again.
+        if let scene = window.parentScene, permissibleActivationStates.contains(scene.activationState) {
+            connectedScene = scene
+        }
 
         // make sure that the display link is (de)activated for a current app/scene state
         displayLink.isRunning = shouldRunDisplayLink(for: window.windowScene)

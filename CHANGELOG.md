@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Fix `MapView` rendering blank when attached to an already-active CarPlay scene.
+
 ## Features ✨ and improvements 🏁
 * Expose `FeaturesetFeature.originalFeature` property.
 

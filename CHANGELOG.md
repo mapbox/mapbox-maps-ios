@@ -4,8 +4,6 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-## 11.25.0-alpha.2 - 06 May, 2026
-
 * Fix `MapView` rendering blank when attached to an already-active CarPlay scene.
 
 ## Features ✨ and improvements 🏁

@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Fix `MapView` rendering blank when attached to an already-active CarPlay scene.
+* Fix SF Symbols silently failing to display when used as style images via `PointAnnotation.image` or `StyleManager.addImage`.
 
 ## Features ✨ and improvements 🏁
 * Expose `FeaturesetFeature.originalFeature` property.

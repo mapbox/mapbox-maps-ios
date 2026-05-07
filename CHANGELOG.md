@@ -18,6 +18,13 @@ Mapbox welcomes participation and contributions from everyone.
 * Add setRootPath method to TileStore swift wrapper.
 
 ## 11.20.3 - 14 April, 2026
+
+## 11.22.3 - 06 May, 2026
+
+## 11.22.2 - 05 May, 2026
+
+## 11.22.1 - 28 April, 2026
+
 ## 11.22.0 - 16 April, 2026
 
 ## 11.22.0-rc.1 - 08 April, 2026

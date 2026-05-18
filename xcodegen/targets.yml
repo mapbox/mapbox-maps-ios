@@ -33,7 +33,7 @@ targetTemplates:
         outputFiles:
           - $(MAPBOXMAPS_PATH)/Tests/MapboxMapsTests/Helpers/MapboxAccessToken
 
-  application:
+  application-base:
     templates:
       - maps-dependencies
       - map-library
@@ -44,6 +44,10 @@ targetTemplates:
     settings:
       groups:
         - app_settings
+
+  application:
+    templates:
+      - application-base
     scheme:
       environmentVariables:
         - variable: MTL_HUD_ENABLED
@@ -54,6 +58,22 @@ targetTemplates:
         - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
           value: 1
           isEnabled: false
+        - variable: MAPBOX_MAPS_CONTENT_DSL_LOGS_ENABLED
+          value: 1
+          isEnabled: false
+
+  debug-application:
+    templates:
+      - application-base
+    scheme:
+      environmentVariables:
+        - variable: MTL_HUD_ENABLED
+          value: 1
+        - variable: MTL_HUD_ALIGNMENT
+          value: 20
+        - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
+          value: 1
+          isEnabled: true
         - variable: MAPBOX_MAPS_CONTENT_DSL_LOGS_ENABLED
           value: 1
           isEnabled: false

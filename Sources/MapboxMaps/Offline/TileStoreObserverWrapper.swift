@@ -1,4 +1,4 @@
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 internal class TileStoreObserverWrapper: MapboxCommon_Private.TileStoreObserver {
     private let observer: TileStoreObserver

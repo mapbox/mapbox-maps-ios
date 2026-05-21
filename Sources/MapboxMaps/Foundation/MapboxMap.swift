@@ -1,7 +1,7 @@
 // swiftlint:disable file_length
 import UIKit
 @_spi(Internal) @_spi(Marshalling) @_spi(Experimental) import MapboxCoreMaps
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 import Turf
 
 protocol MapboxMapProtocol: AnyObject {

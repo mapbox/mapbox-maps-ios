@@ -1,5 +1,5 @@
 @testable @_spi(Marshalling) import MapboxMaps
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
 

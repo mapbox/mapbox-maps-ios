@@ -1,4 +1,4 @@
-@_implementationOnly import MapboxCoreMaps_Private
+internal import MapboxCoreMaps_Private
 @_spi(Marshalling) @_spi(Internal) import MapboxCoreMaps
 import UIKit
 

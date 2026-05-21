@@ -1,5 +1,5 @@
 import Foundation
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 /// Returns a closure suitable for the OfflineManager and TileStore callback based
 /// APIs, that converts the expected type into a Swift Result type.

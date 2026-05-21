@@ -3,7 +3,7 @@ import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
 @_spi(Marshalling) import MapboxCoreMaps
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 internal protocol MapSnapshotterProtocol: StyleManagerProtocol {
     func setSizeFor(_ size: Size)

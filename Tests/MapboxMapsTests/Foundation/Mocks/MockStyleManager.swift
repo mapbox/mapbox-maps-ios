@@ -1,6 +1,6 @@
 import Foundation
 @testable @_spi(Marshalling) import MapboxMaps
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 class MockStyleManager: StyleManagerProtocol {
     struct ImportColorThemeParameters {

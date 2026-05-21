@@ -1,4 +1,4 @@
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 internal final class TileStoreObserverCancelable: Cancelable {
     private weak var observer: MapboxCommon_Private.TileStoreObserver?

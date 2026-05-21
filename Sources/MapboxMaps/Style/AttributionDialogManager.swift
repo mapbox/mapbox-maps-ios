@@ -1,6 +1,6 @@
 import UIKit
 import Foundation
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 protocol AttributionDataSource: AnyObject {
     func loadAttributions(completion: @escaping ([Attribution]) -> Void)

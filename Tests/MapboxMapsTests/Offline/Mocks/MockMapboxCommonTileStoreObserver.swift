@@ -1,4 +1,4 @@
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 final class MockMapboxCommonTileStoreObserver: MapboxCommon_Private.TileStoreObserver {
     func onRegionLoadProgress(forId id: String, progress: TileRegionLoadProgress) {

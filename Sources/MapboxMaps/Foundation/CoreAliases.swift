@@ -1,5 +1,5 @@
-@_implementationOnly import MapboxCoreMaps_Private
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCoreMaps_Private
+internal import MapboxCommon_Private
 @_spi(Internal) import MapboxCoreMaps
 
 typealias CoreCameraOptions = MapboxCoreMaps_Private.__CameraOptions

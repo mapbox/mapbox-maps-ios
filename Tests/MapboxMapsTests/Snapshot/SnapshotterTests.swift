@@ -1,6 +1,6 @@
 import XCTest
 @_spi(Experimental) @_spi(Marshalling) @testable import MapboxMaps
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 import CoreLocation
 
 final class SnapshotterTests: XCTestCase {

@@ -1,7 +1,7 @@
 import XCTest
 import os
 @_spi(Experimental) @testable import MapboxMaps
-@_implementationOnly import MapboxCoreMaps_Private.Tracing_Internal
+internal import MapboxCoreMaps_Private.Tracing_Internal
 
 final class TracingTests: XCTestCase {
     static var defaultTracing: TracingBackendType?

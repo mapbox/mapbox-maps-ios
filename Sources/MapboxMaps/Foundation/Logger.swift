@@ -1,5 +1,5 @@
 import Foundation
-@_implementationOnly import MapboxCommon_Private.MBXLog_Internal
+internal import MapboxCommon_Private.MBXLog_Internal
 @_spi(Logging) import MapboxCommon
 
 /// A logging utility with MapboxCommon backend by default.

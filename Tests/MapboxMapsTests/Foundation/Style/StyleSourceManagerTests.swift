@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 @testable import MapboxMaps
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 final class StyleSourceManagerTests: XCTestCase {
     var sourceManager: StyleSourceManager!

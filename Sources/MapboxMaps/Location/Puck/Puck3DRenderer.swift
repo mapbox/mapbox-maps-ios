@@ -1,4 +1,4 @@
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 final class Puck3DRenderer: PuckRenderer {
     var state: PuckRendererState<Puck3DConfiguration>? {

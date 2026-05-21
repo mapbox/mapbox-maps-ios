@@ -1,5 +1,5 @@
 import Foundation
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 /// Configurations for the external resources that are used by Maps API object,
 /// such as maps data directory and base URL.

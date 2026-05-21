@@ -1,5 +1,5 @@
 import UIKit
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 protocol OffsetGeometryCalculator {
     associatedtype GeometryType: GeometryConvertible

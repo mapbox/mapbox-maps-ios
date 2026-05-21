@@ -1,6 +1,6 @@
 import Foundation
 import WebKit
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 struct Attribution: Hashable {
 

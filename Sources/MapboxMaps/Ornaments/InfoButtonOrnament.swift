@@ -1,5 +1,5 @@
 import UIKit
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 internal protocol InfoButtonOrnamentDelegate: AnyObject {
     func didTap(_ infoButtonOrnament: InfoButtonOrnament)

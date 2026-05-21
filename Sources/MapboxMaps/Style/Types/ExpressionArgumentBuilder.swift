@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.

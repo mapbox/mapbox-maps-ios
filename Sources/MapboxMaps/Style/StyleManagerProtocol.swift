@@ -1,6 +1,6 @@
 import Foundation
-@_implementationOnly import MapboxCommon_Private
-@_implementationOnly import MapboxCoreMaps_Private
+internal import MapboxCommon_Private
+internal import MapboxCoreMaps_Private
 @_spi(Marshalling) import MapboxCoreMaps
 
 struct RuntimeStylingCallbacks {

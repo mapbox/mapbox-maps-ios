@@ -1,5 +1,5 @@
 import UIKit
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 internal protocol PinchGestureHandlerProtocol: FocusableGestureHandlerProtocol {
     var zoomEnabled: Bool { get set }

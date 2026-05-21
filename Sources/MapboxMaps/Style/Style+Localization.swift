@@ -1,4 +1,4 @@
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 /// Support for localization of labels
 extension StyleManager {

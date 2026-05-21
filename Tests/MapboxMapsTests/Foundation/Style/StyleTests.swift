@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 @testable @_spi(Experimental) @_spi(Marshalling) import MapboxMaps
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 final class StyleManagerTests: XCTestCase {
     var style: MapboxMaps.StyleManager!

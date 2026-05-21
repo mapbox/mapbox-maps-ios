@@ -1,5 +1,5 @@
 import UIKit
-@_implementationOnly import MapboxCommon_Private
+internal import MapboxCommon_Private
 
 extension UserDefaults {
     // dynamic var's name has to be the same as corresponding key in UserDefaults

@@ -8,6 +8,7 @@ final class CameraOptionsTests: XCTestCase {
     var zoom: CGFloat!
     var bearing: CLLocationDirection!
     var pitch: CGFloat!
+    var verticalFov: CGFloat!
 
     override func setUp() {
         super.tearDown()
@@ -25,6 +26,7 @@ final class CameraOptionsTests: XCTestCase {
         zoom = 3.34
         bearing = 359.0
         pitch = 39
+        verticalFov = 60.0
     }
 
     override func tearDown() {
@@ -55,7 +57,8 @@ final class CameraOptionsTests: XCTestCase {
             anchor: anchor,
             zoom: zoom,
             bearing: bearing,
-            pitch: pitch)
+            pitch: pitch,
+            verticalFov: verticalFov)
 
         XCTAssertEqual(cameraOptions.center?.latitude, center.latitude)
         XCTAssertEqual(cameraOptions.center?.longitude, center.longitude)
@@ -64,6 +67,7 @@ final class CameraOptionsTests: XCTestCase {
         XCTAssertEqual(cameraOptions.zoom, zoom)
         XCTAssertEqual(cameraOptions.bearing, bearing)
         XCTAssertEqual(cameraOptions.pitch, pitch)
+        XCTAssertEqual(cameraOptions.verticalFov, verticalFov)
     }
 
     func testInitWithObjCValue() {
@@ -73,7 +77,8 @@ final class CameraOptionsTests: XCTestCase {
             anchor: anchor.screenCoordinate,
             zoom: zoom.NSNumber,
             bearing: bearing.NSNumber,
-            pitch: pitch.NSNumber)
+            pitch: pitch.NSNumber,
+            verticalFov: verticalFov.NSNumber)
 
         let cameraOptions = CameraOptions.Marshaller.toSwift(objcCameraOptions)
 
@@ -84,6 +89,7 @@ final class CameraOptionsTests: XCTestCase {
         XCTAssertEqual(cameraOptions.zoom, zoom)
         XCTAssertEqual(cameraOptions.bearing, bearing)
         XCTAssertEqual(cameraOptions.pitch, pitch)
+        XCTAssertEqual(cameraOptions.verticalFov, verticalFov)
     }
 
     func testInitWithObjCValueWithNils() {
@@ -93,7 +99,8 @@ final class CameraOptionsTests: XCTestCase {
             anchor: nil,
             zoom: nil,
             bearing: nil,
-            pitch: nil)
+            pitch: nil,
+            verticalFov: nil)
 
         let cameraOptions = CameraOptions.Marshaller.toSwift(objcCameraOptions)
 
@@ -103,6 +110,7 @@ final class CameraOptionsTests: XCTestCase {
         XCTAssertNil(cameraOptions.zoom)
         XCTAssertNil(cameraOptions.bearing)
         XCTAssertNil(cameraOptions.pitch)
+        XCTAssertNil(cameraOptions.verticalFov)
     }
 
     func testEquatable() {
@@ -112,7 +120,8 @@ final class CameraOptionsTests: XCTestCase {
             anchor: anchor,
             zoom: zoom,
             bearing: bearing,
-            pitch: pitch)
+            pitch: pitch,
+            verticalFov: verticalFov)
 
         XCTAssertEqual(cameraOptions, cameraOptions)
         XCTAssertEqual(CameraOptions(), CameraOptions())
@@ -162,6 +171,10 @@ final class CameraOptionsTests: XCTestCase {
         XCTAssertNotEqual(cameraOptions, other)
 
         other = cameraOptions
+        other.verticalFov? += 1
+        XCTAssertNotEqual(cameraOptions, other)
+
+        other = cameraOptions
         other.center = nil
         XCTAssertNotEqual(cameraOptions, other)
 
@@ -184,6 +197,10 @@ final class CameraOptionsTests: XCTestCase {
         other = cameraOptions
         other.pitch = nil
         XCTAssertNotEqual(cameraOptions, other)
+
+        other = cameraOptions
+        other.verticalFov = nil
+        XCTAssertNotEqual(cameraOptions, other)
     }
 
     func testConversionToMapboxCoreMapsCameraOptions() {
@@ -204,6 +221,7 @@ final class CameraOptionsTests: XCTestCase {
         XCTAssertEqual(objcCameraOptions.zoom, zoom.NSNumber)
         XCTAssertEqual(objcCameraOptions.bearing, bearing.NSNumber)
         XCTAssertEqual(objcCameraOptions.pitch, pitch.NSNumber)
+        XCTAssertNil(objcCameraOptions.verticalFov)
     }
 
     func testConversionToMapboxCoreMapsCameraOptionsWithNils() {
@@ -218,5 +236,6 @@ final class CameraOptionsTests: XCTestCase {
         XCTAssertNil(objcCameraOptions.zoom)
         XCTAssertNil(objcCameraOptions.bearing)
         XCTAssertNil(objcCameraOptions.pitch)
+        XCTAssertNil(objcCameraOptions.verticalFov)
     }
 }

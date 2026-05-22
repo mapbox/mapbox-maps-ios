@@ -48,6 +48,7 @@ public final class EventGenerator {
         self.mainView = mainView
         self.window.layoutIfNeeded()
         self.debugWindow.frame = self.window.frame
+        self.debugWindow.addToMainSceneIfNeeded()
 
         UIApplication.swizzle()
         UIApplication.registerForHIDEvents(ObjectIdentifier(self)) { [weak self] event in

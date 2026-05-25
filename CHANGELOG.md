@@ -39,6 +39,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 11.22.0-rc.1 - 08 April, 2026
 
 * Fix old 3D puck model remaining after updating the puck model.
+## 11.21.6 - 25 May, 2026
 
 ## 11.21.5 - 15 May, 2026
 

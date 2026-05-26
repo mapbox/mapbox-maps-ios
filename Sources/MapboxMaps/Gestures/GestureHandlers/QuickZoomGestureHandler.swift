@@ -56,6 +56,6 @@ extension QuickZoomGestureHandler: UIGestureRecognizerDelegate {
         shouldReceive touch: UITouch
     ) -> Bool {
         assert(self.gestureRecognizer == gestureRecognizer)
-        return gestureRecognizer.shouldAllowMapGesture(for: touch)
+        return gestureRecognizer.attachedToSameView(as: touch)
     }
 }

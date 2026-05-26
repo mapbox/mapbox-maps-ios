@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Bug fixes 🐞
+* Fix bug when tap on a view annotation triggered tap handler on Map view itself.
+
 ## 11.24.2 - 20 May, 2026
 
 ## 11.24.1 - 19 May, 2026

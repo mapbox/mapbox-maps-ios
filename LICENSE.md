@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### MapboxCoreMaps,11.25.0-SNAPSHOT-05-27--02-04.git-5942ed2,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### MapboxCoreMaps,11.25.0-SNAPSHOT-05-27--11-05.git-ae12777,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Core Maps version 11.0

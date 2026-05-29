@@ -19,7 +19,7 @@ extension MapStyle {
     ///   - colorPlaceLabelHighlight: Place label color used when setting highlight state. Default value: `hsl(5, 80%, 75%)`.
     ///   - colorPlaceLabels: Set a custom color for place labels. Default value: `hsl(0, 0%, 100%)`.
     ///   - colorPlaceLabelSelect: Place label color used when setting select state. Default value: `hsl(5, 95%, 70%)`.
-    ///   - colorPointOfInterestLabels: Set a custom color for POI labels. Default value: `#848e94`.
+    ///   - colorPointOfInterestLabels: Set a custom color for POI labels. Default value: `hsl(203, 7%, 55%)`.
     ///   - colorRoadLabels: Set a custom color for road labels. Default value: `hsl(0, 0%, 100%)`.
     ///   - colorRoads: Set a custom color for roads. Default value: `hsl(224, 25%, 75%)`.
     ///   - colorTrunks: Set a custom color for trunk roads. Default value: `hsl(235, 20%, 80%)`.

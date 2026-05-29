@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+* Add Standard `IndoorLabels` featureset and indoor configuration options (`showIndoor`, `showIndoorLabels`, `colorIndoorLabelHighlight`, `colorIndoorLabelSelect`) for the Mapbox Standard style.
+
 ### Bug fixes 🐞
 * Fix bug when tap on a view annotation triggered tap handler on Map view itself.
 * Source attribution strings are no longer parsed through `NSAttributedString`'s HTML importer, which silently fetched remote subresources referenced by attacker-influenced TileJSON `attribution` fields. Attribution markup is now extracted with a restricted in-process parser, and only `http`/`https` URLs are surfaced as actionable links.

@@ -1,15 +1,15 @@
 // This file is generated.
 
-/// Featureset describing the buildings.
+/// Labels for indoor buildings.
 ///
-/// Use ``FeaturesetDescriptor/standardBuildings`` descriptor to handle interactions on Buildings features:
+/// Use ``FeaturesetDescriptor/standardIndoorLabels`` descriptor to handle interactions on Indoor Labels features:
 ///
 /// ```swift
-/// mapboxMap.addInteraction(TapInteraction(.standardBuildings) { feature, ctx in
+/// mapboxMap.addInteraction(TapInteraction(.standardIndoorLabels) { feature, ctx in
 ///     // Handle the tapped feature here
 /// })
 /// ```
-public final class StandardBuildingsFeature: FeaturesetFeatureType {
+public final class StandardIndoorLabelsFeature: FeaturesetFeatureType {
     /// The state that can be set for the feature.
     ///
     /// Each feature of this class can receive the following states: `highlight`, `select`.
@@ -18,27 +18,27 @@ public final class StandardBuildingsFeature: FeaturesetFeatureType {
     /// ```swift
     /// // SwiftUI
     /// Map {
-    ///     FeatureState(aBuildingsFeature, state: .init(highlight: true))
+    ///     FeatureState(aIndoorLabelsFeature, state: .init(highlight: true))
     /// }
     ///
     /// // UIKit:
-    /// mapboxMap.setFeatureState(aBuildingsFeature, state: .init(highlight: true))
+    /// mapboxMap.setFeatureState(aIndoorLabelsFeature, state: .init(highlight: true))
     /// ```
     ///
-    /// To configure appearance of the states use the following configuration options: `colorBuildingHighlight`, `colorBuildingSelect`.
+    /// To configure appearance of the states use the following configuration options: `colorIndoorLabelHighlight`, `colorIndoorLabelSelect`.
     /// For more information see ``MapStyle/standard(theme:lightPreset:font:showPointOfInterestLabels:showTransitLabels:showPlaceLabels:showRoadLabels:showPedestrianRoads:show3dObjects:backgroundPointOfInterestLabels:colorAdminBoundaries:colorBuildingHighlight:colorBuildings:colorBuildingSelect:colorCommercial:colorEducation:colorGreenspace:colorIndoorLabelHighlight:colorIndoorLabelSelect:colorIndustrial:colorLand:colorMedical:colorModePointOfInterestLabels:colorMotorways:colorPlaceLabelHighlight:colorPlaceLabels:colorPlaceLabelSelect:colorPointOfInterestLabels:colorRoadLabels:colorRoads:colorTrunks:colorWater:densityPointOfInterestLabels:fuelingStationModePointOfInterestLabels:roadsBrightness:show3dBuildings:show3dFacades:show3dLandmarks:show3dTrees:showAdminBoundaries:showIndoor:showIndoorLabels:showLandmarkIconLabels:showLandmarkIcons:themeData:)``.
     public struct State: Codable, Equatable {
-        /// When `true`, the building is highlighted. Use this state to create a temporary effect (e.g. hover).
+        /// When `true`, the feature is highlighted. Use this state to create a temporary effect (e.g. hover).
         public var highlight: Bool?
 
-        /// When `true`, the building is selected. Use this state to create a permanent effect. Note: the `select` state has a higher priority than `highlight`.
+        /// When `true`, the feature is selected. Use this state to create a permanent effect. Note: the `select` state has a higher priority than `highlight`.
         public var select: Bool?
 
         /// Creates the state.
         ///
         /// - Parameters:
-        ///   - highlight: When `true`, the building is highlighted. Use this state to create a temporary effect (e.g. hover).
-        ///   - select: When `true`, the building is selected. Use this state to create a permanent effect. Note: the `select` state has a higher priority than `highlight`.
+        ///   - highlight: When `true`, the feature is highlighted. Use this state to create a temporary effect (e.g. hover).
+        ///   - select: When `true`, the feature is selected. Use this state to create a permanent effect. Note: the `select` state has a higher priority than `highlight`.
         public init(highlight: Bool? = nil, select: Bool? = nil) {
             self.highlight = highlight
             self.select = select
@@ -48,21 +48,24 @@ public final class StandardBuildingsFeature: FeaturesetFeatureType {
     public struct StateKey: CustomStringConvertible {
         public let description: String
 
-        /// When `true`, the building is highlighted. Use this state to create a temporary effect (e.g. hover).
+        /// When `true`, the feature is highlighted. Use this state to create a temporary effect (e.g. hover).
         public static let highlight: StateKey = .init(description: "highlight")
 
-        /// When `true`, the building is selected. Use this state to create a permanent effect. Note: the `select` state has a higher priority than `highlight`.
+        /// When `true`, the feature is selected. Use this state to create a permanent effect. Note: the `select` state has a higher priority than `highlight`.
         public static let select: StateKey = .init(description: "select")
     }
 
-    /// A high-level building group like building-2d, building-3d, etc.
-    public var group: String? { impl.properties["group"]??.string }
+    /// Name of the point of interest.
+    public var name: String? { impl.properties["name"]??.string }
 
-    /// The height in meters of a building or building part (rounded to the nearest integer). 
-    public var height: Double? { impl.properties["height"]??.number }
+    /// A description of the room or area type.
+    public var shapeType: String? { impl.properties["shape_type"]??.string }
 
-    /// The height in meters from the ground to the bottom of a building part, for cases where the bottom of the part is not on the ground.
-    public var minHeight: Double? { impl.properties["min_height"]??.number }
+    /// A sub-category, like cafe, newsstand, etc.
+    public var type: String? { impl.properties["type"]??.string }
+
+    /// A high-level category, like restaurant, retail, etc.
+    public var `class`: String? { impl.properties["class"]??.string }
 
     private let impl: FeaturesetFeature
 
@@ -73,7 +76,7 @@ public final class StandardBuildingsFeature: FeaturesetFeatureType {
     public var id: FeaturesetFeatureId? { impl.id }
 
     /// A featureset descriptor denoting a featureset this feature belongs to.
-    public var featureset: FeaturesetDescriptor<StandardBuildingsFeature> { impl.featureset.converted() }
+    public var featureset: FeaturesetDescriptor<StandardIndoorLabelsFeature> { impl.featureset.converted() }
 
     /// A feature state.
     ///
@@ -96,20 +99,20 @@ public final class StandardBuildingsFeature: FeaturesetFeatureType {
     }
 }
 
-extension FeaturesetDescriptor where FeatureType == StandardBuildingsFeature {
-    /// Featureset describing the buildings.
-    public static var standardBuildings: FeaturesetDescriptor {
-       FeaturesetDescriptor<FeaturesetFeature>.featureset("buildings").converted()
+extension FeaturesetDescriptor where FeatureType == StandardIndoorLabelsFeature {
+    /// Labels for indoor buildings.
+    public static var standardIndoorLabels: FeaturesetDescriptor {
+       FeaturesetDescriptor<FeaturesetFeature>.featureset("indoor-labels").converted()
     }
 
-    /// Featureset describing the buildings.
+    /// Labels for indoor buildings.
     ///
     /// Use this function if you import the style instead of loading it directly. See ``StyleImport`` for more information.
     ///
     ///
     /// - Parameters:
     ///   - importId: The import identifier of the imported style that defines the featureset.
-    public static func standardBuildings(importId: String) -> FeaturesetDescriptor {
-        FeaturesetDescriptor<FeaturesetFeature>.featureset("buildings", importId: importId).converted()
+    public static func standardIndoorLabels(importId: String) -> FeaturesetDescriptor {
+        FeaturesetDescriptor<FeaturesetFeature>.featureset("indoor-labels", importId: importId).converted()
     }
 }

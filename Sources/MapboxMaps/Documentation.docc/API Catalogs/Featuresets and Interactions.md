@@ -128,3 +128,4 @@ In UIKit applications, use ``MapboxMap/setFeatureState(_:state:callback:)`` and 
 - ``StandardPlaceLabelsFeature``
 - ``StandardBuildingsFeature``
 - ``StandardLandmarkIconsFeature``
+- ``StandardIndoorLabelsFeature``

@@ -4,6 +4,14 @@
 <dict>
 	<key>MBXAccessToken</key>
 	<string>MAPBOX_ACCESS_TOKEN</string>
+	<!-- Required by AttributionTests.testAttributionParseDoesNotPerformNetworkIO,
+	     which binds a local NWListener on 127.0.0.1 to verify that
+	     Attribution.parse performs no outbound network IO. -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 </dict>

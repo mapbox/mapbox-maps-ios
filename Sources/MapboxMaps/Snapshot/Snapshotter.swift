@@ -150,15 +150,13 @@ public class Snapshotter: StyleManager {
             guard let self = self else { return }
 
             // Render attributions over the snapshot
-            Attribution.parse(snapshot.attributions()) { [weak self] attributions in
-                self?.overlaySnapshotWith(
-                    attributions: attributions,
-                    snapshotImage: uiImage,
-                    options: options,
-                    overlayDescriptor: overlayDescriptor,
-                    completion: completion
-                )
-            }
+            self.overlaySnapshotWith(
+                attributions: Attribution.parse(snapshot.attributions()),
+                snapshotImage: uiImage,
+                options: options,
+                overlayDescriptor: overlayDescriptor,
+                completion: completion
+            )
         }
     }
 

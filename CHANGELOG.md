@@ -6,6 +6,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 * Fix bug when tap on a view annotation triggered tap handler on Map view itself.
+* Source attribution strings are no longer parsed through `NSAttributedString`'s HTML importer, which silently fetched remote subresources referenced by attacker-influenced TileJSON `attribution` fields. Attribution markup is now extracted with a restricted in-process parser, and only `http`/`https` URLs are surfaced as actionable links.
+
 ## 11.24.3 - 27 May, 2026
 
 ## 11.24.2 - 20 May, 2026

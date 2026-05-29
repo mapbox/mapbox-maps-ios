@@ -1590,7 +1590,7 @@ extension MapboxMap {
 
 extension MapboxMap: AttributionDataSource {
     func loadAttributions(completion: @escaping ([Attribution]) -> Void) {
-        Attribution.parse(__map.getAttributions(), completion: completion)
+        completion(Attribution.parse(__map.getAttributions()))
     }
 }
 

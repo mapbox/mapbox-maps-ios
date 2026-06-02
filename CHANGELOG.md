@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.25.0-rc.1 - 02 June, 2026
+
 ### Features ✨ and improvements 🏁
 * Add Standard `IndoorLabels` featureset and indoor configuration options (`showIndoor`, `showIndoorLabels`, `colorIndoorLabelHighlight`, `colorIndoorLabelSelect`) for the Mapbox Standard style.
 

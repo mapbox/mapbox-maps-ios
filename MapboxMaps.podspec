@@ -19,8 +19,8 @@ Pod::Spec.new do |m|
   m.source_files = 'Sources/MapboxMaps/**/*.{swift,h}'
   m.resource_bundles = { 'MapboxMapsResources' => ['Sources/MapboxMaps/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json', 'Sources/MapboxMaps/PrivacyInfo.xcprivacy'] }
 
-  m.dependency 'MapboxCoreMaps', '11.26.0-SNAPSHOT-06-05--02-05.git-c8e5654'
-  m.dependency 'MapboxCommon', '24.26.0-SNAPSHOT-06-05--02-05.git-c8e5654'
+  m.dependency 'MapboxCoreMaps', '11.26.0-SNAPSHOT-06-05--08-55.git-979d3a3'
+  m.dependency 'MapboxCommon', '24.26.0-SNAPSHOT-06-05--08-55.git-979d3a3'
   m.dependency 'Turf', '4.0.0'
 
 end

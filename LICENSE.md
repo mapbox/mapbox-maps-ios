@@ -1207,7 +1207,7 @@ For more information, please refer to <http://unlicense.org>
 
 ---
 
-### cgltf,1.13,MIT,Johannes Kuhlmann,https://github.com/jkuhlmann/cgltf
+### cgltf,1.15,MIT,Johannes Kuhlmann,https://github.com/jkuhlmann/cgltf
 
 ```
 Copyright (c) 2018-2021 Johannes Kuhlmann
@@ -1222,12 +1222,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---
 
-### meshoptimizer,0.20,MIT,zeux,https://github.com/zeux/meshoptimizer
+### meshoptimizer,1.1.1,MIT,zeux,https://github.com/zeux/meshoptimizer
 
 ```
 MIT License
 
-Copyright (c) 2016-2023 Arseny Kapoulkine
+Copyright (c) 2016-2026 Arseny Kapoulkine
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

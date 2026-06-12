@@ -104,6 +104,7 @@ public struct Marker {
         .allowOverlap(true)
         .allowHitTesting(tapAction != nil)
         .variableAnchors([ViewAnnotationAnchorConfig(anchor: .top, offsetY: 40)])
+        .enableSymbolLayerCollision(true)
 
         if let disappearAnimation = disappearAnimation {
             annotation.disappearEffects = disappearAnimation
@@ -171,6 +172,7 @@ struct MarkerView: View {
             .shadow(color: .white, radius: 0, x: 1, y: -1)
             .shadow(color: .white, radius: 0, x: -1, y: 1)
             .shadow(color: .white, radius: 0, x: 1, y: 1)
+            .mbxCollisionBox()
     }
 }
 
@@ -192,6 +194,7 @@ struct AnimatableMarkerPin: View {
             .scaleEffect(scale, anchor: .bottom)
             .rotationEffect(.degrees(rotationAngle), anchor: .bottom)
             .opacity(opacity)
+            .mbxCollisionBox()
             .onAppear {
                 handleAppear()
             }

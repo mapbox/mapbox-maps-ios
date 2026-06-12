@@ -42,6 +42,7 @@ public struct MapViewAnnotation {
     var allowOverlapWithPuck = false
     var allowZElevate: Bool?
     var ignoreCameraPadding = false
+    var enableSymbolLayerCollision = false
     var variableAnchors: [ViewAnnotationAnchorConfig] = .center
     var actions = Actions()
     var content: AnyView
@@ -120,6 +121,23 @@ public struct MapViewAnnotation {
     /// Default value is `false`.
     public func ignoreCameraPadding(_ ignoreCameraPadding: Bool) -> MapViewAnnotation {
         with(self, setter(\.ignoreCameraPadding, ignoreCameraPadding))
+    }
+
+    /// When `true`, this annotation participates in symbol-layer collision detection.
+    ///
+    /// Use this property to hide symbols below view annotation.
+    ///
+    /// If the view has views with `View.mbxCollisionBox(true)` in it's hierarchy, each box is used individually.
+    /// Otherwise the full annotation bounding box is used as the collision region.
+    ///
+    /// Use ``Map/debugOptions(_:)`` and ``MapViewDebugOptions.collision``  to debug the collision boxes.
+    ///
+    /// The annotations that enable this property will be placed in a separate pass with higher priority;
+    /// they will also ignore symbol layers in the ``Map/viewAnnotationAvoidLayers(_:)``.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func enableSymbolLayerCollision(_ enabled: Bool) -> MapViewAnnotation {
+        with(self, setter(\.enableSymbolLayerCollision, enabled))
     }
 
     /// Specifies if this view annotation is visible or not. Defaults to `true`.

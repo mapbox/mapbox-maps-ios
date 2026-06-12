@@ -1,13 +1,14 @@
 import SwiftUI
+@_spi(Experimental) import MapboxMaps
 
 struct PinView: View {
     var text: String
     var type: String?
+    var size = 35.0
 
     @State private var scale: CGFloat = 0.0
 
     var body: some View {
-        let size = 35.0
         VStack {
             ZStack {
                 let gradient = switch type {
@@ -34,7 +35,9 @@ struct PinView: View {
                 }
             }
             .frame(width: size, height: size * 3 / 2)
+            .mbxCollisionBox()
             .padding(.bottom, 3)
+
             Text(text)
                 .foregroundColor(Color.red)
                 .font(.system(size: 13.5).bold())
@@ -44,6 +47,7 @@ struct PinView: View {
                 .shadow(color: .white, radius: 0, x: -0.5, y: -0.5)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 130)
+                .mbxCollisionBox()
         }
     }
 

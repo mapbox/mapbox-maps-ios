@@ -45,6 +45,7 @@ struct SwiftUIExamples {
             Example("Map settings", note: "Showcase of the most possible map configurations.", destination: MapSettingsExample())
             Example("Interactions playground", note: "Interactions edge cases", destination: InteractionsPlayground())
             Example("Viewport Playground", note: "Showcase of the possible viewport states.", destination: ViewportPlayground())
+            Example("View Annotation Collision", note: "Make view annotations to hide basemap symbols", destination: ViewAnnotationsCollisionExample())
             Example("Viewport In Fixed Frame", note: "Overview viewport in Map with fixed frame", destination: ViewportInFixedFrameExample())
             Example("Puck playground", note: "Display user location using puck.", destination: PuckPlayground())
             Example("Annotation Order", note: "Test the rendering order of annotations.", destination: AnnotationsOrderTestExample())

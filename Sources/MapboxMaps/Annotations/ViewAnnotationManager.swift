@@ -84,6 +84,7 @@ public final class ViewAnnotationManager {
 
     /// Specify layers that view annotations should avoid. This applies to ALL view annotations associated to any layer.
     /// The API currently only supports line layers.
+    /// If view annotation enables ``ViewAnnotation/enableSymbolLayerCollision`` this property will be ignored.
     @_spi(Experimental)
     @_documentation(visibility: public)
     public var viewAnnotationAvoidLayers: Set<String> {

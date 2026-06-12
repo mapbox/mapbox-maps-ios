@@ -1,5 +1,5 @@
-import UIKit
 import Turf
+import UIKit
 
 /// Stores layout and visibility settings for a view annotation.
 ///
@@ -102,6 +102,22 @@ public struct ViewAnnotationOptions: Equatable {
     /// If not provided or is out of range, defaults to 22.
     public var maxZoom: Double?
 
+    /// Sub-element collision boxes relative to the annotation view's top-left corner.
+    ///
+    /// When set and non-empty, each box is tested independently for collision
+    /// instead of using the full annotation bounding box.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var collisionBoxes: [CGRect]?
+
+    /// When `true`, this annotation participates in symbol-layer collision detection.
+    ///
+    /// If ``collisionBoxes`` are provided, each box is used individually. Otherwise the full
+    /// annotation bounding box is used as the collision region.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var enableSymbolLayerCollision: Bool?
+
     /// Initializes a `ViewAnnotationOptions`
     public init(
         annotatedFeature: AnnotatedFeature? = nil,
@@ -193,16 +209,18 @@ public struct ViewAnnotationOptions: Equatable {
 
     /// Initializes a `ViewAnnotationOptions` with geometry.
     @available(*, deprecated, message: "Use ViewAnnotation to create view annotations.")
-    public init(geometry: GeometryConvertible? = nil,
-                width: CGFloat? = nil,
-                height: CGFloat? = nil,
-                associatedFeatureId: String? = nil,
-                allowOverlap: Bool? = nil,
-                visible: Bool? = nil,
-                anchor: ViewAnnotationAnchor? = nil,
-                offsetX: CGFloat? = nil,
-                offsetY: CGFloat? = nil,
-                selected: Bool? = nil) {
+    public init(
+        geometry: GeometryConvertible? = nil,
+        width: CGFloat? = nil,
+        height: CGFloat? = nil,
+        associatedFeatureId: String? = nil,
+        allowOverlap: Bool? = nil,
+        visible: Bool? = nil,
+        anchor: ViewAnnotationAnchor? = nil,
+        offsetX: CGFloat? = nil,
+        offsetY: CGFloat? = nil,
+        selected: Bool? = nil
+    ) {
         var anchorConfig: ViewAnnotationAnchorConfig?
         if anchor != nil || offsetX != nil || offsetY != nil {
             anchorConfig = ViewAnnotationAnchorConfig(
@@ -237,6 +255,13 @@ public struct ViewAnnotationOptions: Equatable {
             minZoom: objcValue.__minZoom?.doubleValue,
             maxZoom: objcValue.__maxZoom?.doubleValue
         )
+        self.collisionBoxes = objcValue.collisionBoxes?.map { box in
+            CGRect(x: box.min.x,
+                   y: box.min.y,
+                   width: box.max.x - box.min.x,
+                   height: box.max.y - box.min.y)
+        }
+        self.enableSymbolLayerCollision = objcValue.__enableSymbolLayerCollision?.boolValue
     }
 
     internal func frame(with chosenAnchorConfig: ViewAnnotationAnchorConfig?) -> CGRect {
@@ -276,19 +301,23 @@ public struct ViewAnnotationOptions: Equatable {
 
 extension CoreViewAnnotationOptions {
     internal convenience init(_ swiftValue: ViewAnnotationOptions) {
-        self.init(__annotatedFeature: swiftValue.annotatedFeature?.asCoreFeature,
-                  width: swiftValue.width as NSNumber?,
-                  height: swiftValue.height as NSNumber?,
-                  allowOverlap: swiftValue.allowOverlap as NSNumber?,
-                  allowOverlapWithPuck: swiftValue.allowOverlapWithPuck as NSNumber?,
-                  allowZElevate: swiftValue.allowZElevate as NSNumber?,
-                  visible: swiftValue.visible as NSNumber?,
-                  variableAnchors: swiftValue.variableAnchors,
-                  selected: swiftValue.selected as NSNumber?,
-                  priority: swiftValue.priority as NSNumber?,
-                  ignoreCameraPadding: swiftValue.ignoreCameraPadding as NSNumber?,
-                  minZoom: swiftValue.minZoom as NSNumber?,
-                  maxZoom: swiftValue.maxZoom as NSNumber?
+        let coreCollisionBoxes = swiftValue.collisionBoxes?.map(CoreScreenBox.init)
+        self.init(
+            __annotatedFeature: swiftValue.annotatedFeature?.asCoreFeature,
+            width: swiftValue.width as NSNumber?,
+            height: swiftValue.height as NSNumber?,
+            allowOverlap: swiftValue.allowOverlap as NSNumber?,
+            allowOverlapWithPuck: swiftValue.allowOverlapWithPuck as NSNumber?,
+            allowZElevate: swiftValue.allowZElevate as NSNumber?,
+            visible: swiftValue.visible as NSNumber?,
+            variableAnchors: swiftValue.variableAnchors,
+            selected: swiftValue.selected as NSNumber?,
+            priority: swiftValue.priority as NSNumber?,
+            ignoreCameraPadding: swiftValue.ignoreCameraPadding as NSNumber?,
+            minZoom: swiftValue.minZoom as NSNumber?,
+            maxZoom: swiftValue.maxZoom as NSNumber?,
+            collisionBoxes: coreCollisionBoxes,
+            enableSymbolLayerCollision: swiftValue.enableSymbolLayerCollision as NSNumber?
         )
     }
 }

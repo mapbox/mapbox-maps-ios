@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class ViewAnnotationOptionsTests: XCTestCase {
 
@@ -18,12 +18,14 @@ final class ViewAnnotationOptionsTests: XCTestCase {
     let priority: Int = 43
     let minZoom: Double = 10.0
     let maxZoom: Double = 20.0
+    let collisionBoxes: [CGRect] = [CGRect(x: 10, y: 20, width: 30, height: 40)]
+    let enableSymbolLayerCollision: Bool = true
     var variableAnchors: [ViewAnnotationAnchorConfig] {
         [ViewAnnotationAnchorConfig(anchor: anchor, offsetX: offsetX, offsetY: offsetY)]
     }
 
     func testMemberwiseInit() {
-        let options = ViewAnnotationOptions(
+        var options = ViewAnnotationOptions(
             annotatedFeature: annotatedLayerFeature,
             width: width,
             height: height,
@@ -41,10 +43,15 @@ final class ViewAnnotationOptionsTests: XCTestCase {
         XCTAssertEqual(options.variableAnchors?.first?.offsetX, offsetX)
         XCTAssertEqual(options.variableAnchors?.first?.offsetY, offsetY)
         XCTAssertEqual(options.priority, priority)
+
+        options.collisionBoxes = collisionBoxes
+        options.enableSymbolLayerCollision = enableSymbolLayerCollision
+        XCTAssertEqual(options.collisionBoxes, collisionBoxes)
+        XCTAssertEqual(options.enableSymbolLayerCollision, enableSymbolLayerCollision)
     }
 
     func testCoreInit() {
-        let swiftValue = ViewAnnotationOptions(
+        var swiftValue = ViewAnnotationOptions(
             annotatedFeature: .geometry(point),
             width: width,
             height: height,
@@ -57,6 +64,8 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             minZoom: minZoom,
             maxZoom: maxZoom
         )
+        swiftValue.collisionBoxes = collisionBoxes
+        swiftValue.enableSymbolLayerCollision = enableSymbolLayerCollision
 
         let objcValue = CoreViewAnnotationOptions(
             __annotatedFeature: .fromGeometry(MapboxCommon.Geometry(point)),
@@ -71,7 +80,9 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             priority: priority as NSNumber?,
             ignoreCameraPadding: ignoreCameraPadding as NSNumber?,
             minZoom: minZoom as NSNumber?,
-            maxZoom: maxZoom as NSNumber?
+            maxZoom: maxZoom as NSNumber?,
+            collisionBoxes: [CoreScreenBox(CGRect(x: 10, y: 20, width: 30, height: 40))],
+            enableSymbolLayerCollision: enableSymbolLayerCollision as NSNumber?
         )
 
         let convertedOptions = ViewAnnotationOptions(objcValue)

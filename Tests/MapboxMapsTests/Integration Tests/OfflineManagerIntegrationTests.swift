@@ -22,7 +22,7 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         tileStore = TileStore.default
         let ss = SettingsServiceFactory.getInstance(storageType: SettingsServiceStorageType.nonPersistent)
         let pathResult = ss.getForKey("com.mapbox.common.tilestore.location")
-        tileStorePathURL = pathResult.isValue() ? (pathResult.value as? String).flatMap({ URL(string: $0) }) : nil
+        tileStorePathURL = pathResult.isValue() ? (pathResult.value as? String).flatMap({ URL(fileURLWithPath: $0) }) : nil
 
         MapboxMapsOptions.dataPath = tileStorePathURL
         MapboxMapsOptions.tileStore = tileStore

@@ -1,6 +1,6 @@
 ## License
 
-Mapbox Maps for iOS version 11.25.0
+Mapbox Maps for iOS version 11.26.0-SNAPSHOT-06-18--02-06.git-acc13f8
 Mapbox Maps iOS SDK
 
 Copyright &copy; 2021 - 2026 Mapbox, Inc. All rights reserved.
@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### MapboxCoreMaps,11.25.0,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### MapboxCoreMaps,11.26.0-SNAPSHOT-06-18--02-06.git-acc13f8,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Core Maps version 11.0
@@ -1207,7 +1207,7 @@ For more information, please refer to <http://unlicense.org>
 
 ---
 
-### cgltf,1.13,MIT,Johannes Kuhlmann,https://github.com/jkuhlmann/cgltf
+### cgltf,1.15,MIT,Johannes Kuhlmann,https://github.com/jkuhlmann/cgltf
 
 ```
 Copyright (c) 2018-2021 Johannes Kuhlmann
@@ -1222,12 +1222,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---
 
-### meshoptimizer,0.20,MIT,zeux,https://github.com/zeux/meshoptimizer
+### meshoptimizer,1.1.1,MIT,zeux,https://github.com/zeux/meshoptimizer
 
 ```
 MIT License
 
-Copyright (c) 2016-2023 Arseny Kapoulkine
+Copyright (c) 2016-2026 Arseny Kapoulkine
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

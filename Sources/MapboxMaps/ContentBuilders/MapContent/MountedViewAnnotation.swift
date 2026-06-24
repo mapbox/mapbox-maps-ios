@@ -1,5 +1,5 @@
-import UIKit
 import SwiftUI
+import UIKit
 import os.log
 
 protocol ViewAnnotationsManaging: AnyObject {
@@ -26,6 +26,11 @@ final class MountedViewAnnotation: MapContentMountedComponent {
                 .onChangeOfSize { _ in
                     weakViewAnnotation?.setNeedsUpdateSize()
                 }
+                .modifier(
+                    CollisionBoxCoordinateSpaceModifier { boxes in
+                        let resolvedBoxes = boxes.isEmpty ? nil : boxes
+                        weakViewAnnotation?.view.overrideCollisionBoxes = resolvedBoxes
+                    })
         }
 
         let vc = UIHostingController(rootView: AnyView(makeContent(mapViewAnnotation)))
@@ -45,20 +50,7 @@ final class MountedViewAnnotation: MapContentMountedComponent {
             vc.rootView = AnyView(makeContent(mapViewAnnotation))
             vc.view.isUserInteractionEnabled = mapViewAnnotation.allowHitTesting
 
-            weakViewAnnotation?.annotatedFeature = mapViewAnnotation.annotatedFeature
-            weakViewAnnotation?.allowOverlap = mapViewAnnotation.allowOverlap
-            weakViewAnnotation?.allowOverlapWithPuck = mapViewAnnotation.allowOverlapWithPuck
-            weakViewAnnotation?.allowZElevate = mapViewAnnotation.allowZElevate
-            weakViewAnnotation?.ignoreCameraPadding = mapViewAnnotation.ignoreCameraPadding
-            weakViewAnnotation?.visible = mapViewAnnotation.visible
-            weakViewAnnotation?.selected = mapViewAnnotation.selected
-            weakViewAnnotation?.priority = mapViewAnnotation.priority
-            weakViewAnnotation?.variableAnchors = mapViewAnnotation.variableAnchors
-            weakViewAnnotation?.onAnchorChanged = mapViewAnnotation.actions.anchor
-            weakViewAnnotation?.onVisibilityChanged = mapViewAnnotation.actions.visibility
-            weakViewAnnotation?.onAnchorCoordinateChanged = mapViewAnnotation.actions.anchorCoordinate
-            weakViewAnnotation?.minZoom = mapViewAnnotation.minZoom
-            weakViewAnnotation?.maxZoom = mapViewAnnotation.maxZoom
+            weakViewAnnotation?.applyProperties(from: mapViewAnnotation)
             os_log(.debug, log: .contentDSL, "view annotation update %s", weakViewAnnotation?.id ?? "<nil>")
         }
 
@@ -79,7 +71,7 @@ final class MountedViewAnnotation: MapContentMountedComponent {
 
         // Check if there's a disappear animation to run
         if let effects = mapViewAnnotation.disappearEffects,
-           let vc = hostingController {
+            let vc = hostingController {
 
             let hasScaleOrWiggle = effects.contains {
                 if case .scale = $0 { return true }
@@ -88,24 +80,30 @@ final class MountedViewAnnotation: MapContentMountedComponent {
             }
 
             // Use easeInOut for smooth disappear (no bounce)
-            UIView.animate(withDuration: 0.8, delay: 0, options: .curveEaseInOut, animations: {
-                if hasScaleOrWiggle {
-                    // Scale out for scale/wiggle effects
-                    vc.view.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
-                } else {
-                    // Fade out - honor the fade effect's 'to' parameter if present
-                    let fadeEffect = effects.first { if case .fade = $0 { return true }; return false }
-                    let targetAlpha: CGFloat = {
-                        if case .fade(_, let to) = fadeEffect {
-                            return CGFloat(to)
+            UIView.animate(
+                withDuration: 0.8, delay: 0, options: .curveEaseInOut,
+                animations: {
+                    if hasScaleOrWiggle {
+                        // Scale out for scale/wiggle effects
+                        vc.view.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
+                    } else {
+                        // Fade out - honor the fade effect's 'to' parameter if present
+                        let fadeEffect = effects.first {
+                            if case .fade = $0 { return true }
+                            return false
                         }
-                        return 0  // Default to fully transparent if no fade effect found
-                    }()
-                    vc.view.alpha = targetAlpha
-                }
-            }, completion: { _ in
-                remove()
-            })
+                        let targetAlpha: CGFloat = {
+                            if case .fade(_, let to) = fadeEffect {
+                                return CGFloat(to)
+                            }
+                            return 0  // Default to fully transparent if no fade effect found
+                        }()
+                        vc.view.alpha = targetAlpha
+                    }
+                },
+                completion: { _ in
+                    remove()
+                })
         } else {
             // No animation - remove immediately
             remove()
@@ -128,8 +126,8 @@ final class MountedViewAnnotation: MapContentMountedComponent {
     func updateMetadata(with: MapContentNodeContext) {}
 }
 
-private extension UIHostingController {
-    func disableSafeArea() {
+extension UIHostingController {
+    fileprivate func disableSafeArea() {
         if #available(iOS 16.4, *) {
             safeAreaRegions = SafeAreaRegions()
         } else {
@@ -141,3 +139,23 @@ private extension UIHostingController {
 }
 
 extension ViewAnnotationManager: ViewAnnotationsManaging {}
+
+private extension ViewAnnotation {
+    func applyProperties(from mapViewAnnotation: MapViewAnnotation) {
+        annotatedFeature = mapViewAnnotation.annotatedFeature
+        allowOverlap = mapViewAnnotation.allowOverlap
+        allowOverlapWithPuck = mapViewAnnotation.allowOverlapWithPuck
+        allowZElevate = mapViewAnnotation.allowZElevate
+        ignoreCameraPadding = mapViewAnnotation.ignoreCameraPadding
+        enableSymbolLayerCollision = mapViewAnnotation.enableSymbolLayerCollision
+        visible = mapViewAnnotation.visible
+        selected = mapViewAnnotation.selected
+        priority = mapViewAnnotation.priority
+        variableAnchors = mapViewAnnotation.variableAnchors
+        onAnchorChanged = mapViewAnnotation.actions.anchor
+        onVisibilityChanged = mapViewAnnotation.actions.visibility
+        onAnchorCoordinateChanged = mapViewAnnotation.actions.anchorCoordinate
+        minZoom = mapViewAnnotation.minZoom
+        maxZoom = mapViewAnnotation.maxZoom
+    }
+}

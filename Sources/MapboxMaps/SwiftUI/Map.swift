@@ -389,6 +389,15 @@ public extension Map {
         copyAssigned(self, \.mapDependencies.screenCullingShape, shape)
     }
 
+    /// Specify layers that view annotations should avoid. This applies to ALL view annotations associated to any layer.
+    /// The API currently only supports line layers.
+    /// If view annotation enables ``MapViewAnnotation/enableSymbolLayerCollision(_:)`` this property will be ignored.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    func viewAnnotationAvoidLayers(_ layers: Set<String>) -> Self {
+        copyAssigned(self, \.mapDependencies.viewAnnotationAvoidLayers, layers)
+    }
+
     /// Location data model.
     ///
     /// Use this property to access or override the raw location and heading data used by the map.

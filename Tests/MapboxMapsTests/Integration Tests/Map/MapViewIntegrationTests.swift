@@ -54,8 +54,10 @@ final class MapViewIntegrationTests: IntegrationTestCase {
             mapView.mapboxMap.onMapLoaded.observeNext { [weak mapView] _ in
                 mapLoadExpectation.fulfill()
                 let dest = CameraOptions(center: CLLocationCoordinate2D(latitude: 10, longitude: 10), zoom: 10)
-                mapView?.camera.ease(to: dest, duration: 5) { (_) in
-                    animationExpectation.fulfill()
+                _ = autoreleasepool {
+                    mapView?.camera.ease(to: dest, duration: 5) { (_) in
+                        animationExpectation.fulfill()
+                    }
                 }
             }.store(in: &cancelables)
             wait(for: [mapLoadExpectation, animationExpectation], timeout: 30.0)

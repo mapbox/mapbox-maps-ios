@@ -7,6 +7,13 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 ## Getting Started
 This README is intended for developers who are interested in contributing to the Mapbox Maps SDK for iOS. Please visit https://docs.mapbox.com/ios/maps/guides/ for general information and instructions on using the Maps SDK in your iOS application.
 
+> [!IMPORTANT]
+> **CocoaPods support is being sunset by December 2026.**
+>
+> Mapbox plans to discontinue distributing the Maps SDK for iOS via CocoaPods by **December 2026**. After that date, no new releases will be published to CocoaPods and the existing podspec will no longer be maintained.
+>
+> We strongly recommend migrating to [Swift Package Manager (SPM)](https://www.swift.org/documentation/package-manager/), which is Mapbox's preferred and actively supported distribution channel for iOS. Please plan your migration ahead of the December 2026 deadline.
+
 ## Examples App
 The Examples app shows how to use many of the features in the Maps SDK. See the [Examples project](https://github.com/mapbox/mapbox-maps-ios/tree/main/Examples.xcodeproj) for more information.
 

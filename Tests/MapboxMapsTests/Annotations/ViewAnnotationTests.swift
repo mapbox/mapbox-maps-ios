@@ -215,6 +215,191 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(anchorCoordinates, [descriotor1.anchorCoordinate, descriotor2.anchorCoordinate])
         XCTAssertEqual(visibilities, [true])
     }
+
+    func testMultiplePropertyChangesBatchedIntoSingleUpdate() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let va = ViewAnnotation(coordinate: .init(latitude: 1, longitude: 2), view: view)
+        va.bind(deps)
+
+        va.allowOverlap = true
+        va.visible = false
+        va.priority = 5
+        va.ignoreCameraPadding = true
+
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 0)
+        $displayLink.send()
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 1)
+
+        let options = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(options.allowOverlap, true)
+        XCTAssertEqual(options.visible, false)
+        XCTAssertEqual(options.priority, 5)
+        XCTAssertEqual(options.ignoreCameraPadding, true)
+    }
+
+    // MARK: - Collision Boxes
+
+    func testCollisionBoxesNoneMarked() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        let options = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertNil(options.collisionBoxes)
+    }
+
+    func testCollisionBoxesSingleSubviewMarked() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let innerFrame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        let inner = UIView()
+        inner.frame = innerFrame
+        inner.mbxCollisionBox = true
+        view.addSubview(inner)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        let options = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(options.collisionBoxes, [innerFrame])
+    }
+
+    func testCollisionBoxesTwoSubviewsMarked() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let frame1 = CGRect(x: 0, y: 0, width: 40, height: 40)
+        let inner1 = UIView()
+        inner1.frame = frame1
+        inner1.mbxCollisionBox = true
+        view.addSubview(inner1)
+        let frame2 = CGRect(x: 60, y: 60, width: 40, height: 40)
+        let inner2 = UIView()
+        inner2.frame = frame2
+        inner2.mbxCollisionBox = true
+        view.addSubview(inner2)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        let options = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(options.collisionBoxes, [frame1, frame2])
+    }
+
+    func testCollisionBoxesRootViewMarked() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        view.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        view.mbxCollisionBox = true
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        let options = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(options.collisionBoxes, [view.bounds])
+    }
+
+    func testCollisionBoxesOverrideTakesPrecedence() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let inner = UIView()
+        inner.frame = CGRect(x: 5, y: 5, width: 20, height: 20)
+        inner.mbxCollisionBox = true
+        view.addSubview(inner)
+        let overrideBoxes = [CGRect(x: 10, y: 20, width: 30, height: 40), CGRect(x: 50, y: 60, width: 10, height: 10)]
+        view.overrideCollisionBoxes = overrideBoxes
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        let options = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(options.collisionBoxes, overrideBoxes)
+    }
+
+    func testCollisionBoxesOverrideEmpty() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        view.overrideCollisionBoxes = []
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        let options = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertNil(options.collisionBoxes)
+    }
+
+    func testCollisionBoxesUpdatedOnSetNeedsUpdateSize() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        XCTAssertNil(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.options.collisionBoxes)
+
+        let newFrame = CGRect(x: 5, y: 5, width: 20, height: 20)
+        let newBox = UIView()
+        newBox.frame = newFrame
+        newBox.mbxCollisionBox = true
+        view.addSubview(newBox)
+
+        va.setNeedsUpdateSize()
+        $displayLink.send()
+
+        let updOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(updOptions.collisionBoxes, [newFrame])
+    }
+
+    // MARK: - enableSymbolLayerCollision
+
+    func testEnableSymbolLayerCollisionDefaultFalse() {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+
+        XCTAssertEqual(va.enableSymbolLayerCollision, false)
+    }
+
+    func testEnableSymbolLayerCollisionSetBeforeBind() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.enableSymbolLayerCollision = true
+
+        va.bind(deps)
+
+        let options = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(options.enableSymbolLayerCollision, true)
+    }
+
+    func testEnableSymbolLayerCollisionSetAfterBind() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        va.enableSymbolLayerCollision = true
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 0)
+
+        $displayLink.send()
+
+        let updParams = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters
+        XCTAssertEqual(updParams.options.enableSymbolLayerCollision, true)
+    }
+
+    func testEnableSymbolLayerCollisionNoUpdateWhenUnchanged() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.enableSymbolLayerCollision = true
+        va.bind(deps)
+
+        va.enableSymbolLayerCollision = true // no change
+        $displayLink.send()
+
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 0)
+    }
 }
 
 class DummyAnnotationView: UIView {

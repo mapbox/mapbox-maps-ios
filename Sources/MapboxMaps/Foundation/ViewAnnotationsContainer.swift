@@ -23,19 +23,35 @@ final class ViewAnnotationsContainer: UIView, AllowsMapGestures {
         toggleDebugBorder(subview)
     }
 
-    func toggleDebugBorder(_ subview: UIView) {
+    override func layoutSubviews() {
+        super.layoutSubviews()
         if subviewDebugFrames {
-            let debugFrame = UIView(frame: subview.bounds)
-            debugFrame.layer.borderWidth = 1.0
-            debugFrame.layer.borderColor = UIColor.red.withAlphaComponent(0.6).cgColor
-            debugFrame.isUserInteractionEnabled = false
-            debugFrame.tag = debugTag
-            debugFrame.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            subview.addSubview(debugFrame)
-        } else {
-            subview.subviews.first { $0.tag == debugTag }?.removeFromSuperview()
+            subviews.forEach(toggleDebugBorder)
         }
     }
+
+    func toggleDebugBorder(_ subview: UIView) {
+        subview.subviews.filter { $0.tag == debugTag }.forEach { $0.removeFromSuperview() }
+
+        guard subviewDebugFrames else { return }
+
+        if let boxes = subview.collisionBoxes() {
+            for box in boxes {
+                subview.addSubview(createDebugFrame(frame: box, color: .red))
+            }
+        } else {
+            subview.addSubview(createDebugFrame(frame: subview.bounds, color: .red))
+        }
+    }
+}
+
+private func createDebugFrame(frame: CGRect, color: UIColor) -> UIView {
+    let debugFrame = UIView(frame: frame)
+    debugFrame.layer.borderWidth = 1 / ScreenShim.scale
+    debugFrame.layer.borderColor = color.withAlphaComponent(0.6).cgColor
+    debugFrame.isUserInteractionEnabled = false
+    debugFrame.tag = debugTag
+    return debugFrame
 }
 
 private let debugTag = 0xdeba9

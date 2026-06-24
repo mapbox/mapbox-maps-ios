@@ -1,6 +1,6 @@
 import SwiftUI
 import Turf
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 struct ViewAnnotationsExample: View {
     @State private var taps: [Tap] = []
@@ -10,6 +10,7 @@ struct ViewAnnotationsExample: View {
     @State private var selected = false
     @State private var etaAnnotationAnchor = ViewAnnotationAnchor.center
     @State private var overlayHeight: CGFloat = 0
+    @State private var debugCollision = false
 
     var body: some View {
         Map(initialViewport: .camera(center: .helsinki, zoom: 5)) {
@@ -90,6 +91,7 @@ struct ViewAnnotationsExample: View {
         }
         // Add bottom padding for the bottom config panel, View Annotations won't appear there.
         .additionalSafeAreaInsets(.bottom, overlayHeight)
+        .debugOptions(debugCollision ? .collision : [])
         .ignoresSafeArea(edges: ignoreAllSafeArea ? [.all] : [.horizontal, .bottom])
         .overlay(alignment: .bottom) {
             VStack(alignment: .leading) {
@@ -97,6 +99,7 @@ struct ViewAnnotationsExample: View {
                 Toggle("Allow overlap", isOn: $allowOverlap)
                 Toggle("Allow Z elevation", isOn: $allowZElevate)
                 Toggle("Ignore all safe area", isOn: $ignoreAllSafeArea)
+                Toggle("Debug collision", isOn: $debugCollision)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
@@ -133,6 +136,7 @@ private struct ViewAnnotationContent: View {
         }
         .padding(5)
         .foregroundColor(.white)
+        .mbxCollisionBox(true)
         // Wrap annotation view into callout shape.
         .callout(anchor: tap.selectedAnchor?.anchor ?? .center, color: tap.color)
         .opacity(appeared ? 1 : 0)

@@ -55,12 +55,14 @@ final class MapBasicCoordinatorTests: XCTestCase {
         XCTAssertEqual(mapboxMap.setConstraintModeStub.invocations.count, 0)
         XCTAssertEqual(mapboxMap.setViewportModeStub.invocations.count, 0)
         XCTAssertEqual(mapboxMap.screenCullingShape, [])
+        XCTAssertEqual(mapboxMap.viewAnnotationAvoidLayers, [])
 
         update(with: MapDependencies(
             constrainMode: .none,
             viewportMode: .flippedY,
             orientation: .downwards,
-            screenCullingShape: [.init(x: 1, y: 2)]))
+            screenCullingShape: [.init(x: 1, y: 2)],
+            viewAnnotationAvoidLayers: ["layer1", "layer2"]))
         XCTAssertEqual(mapboxMap.setConstraintModeStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.setViewportModeStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.northOrientationStub.invocations.count, 1)
@@ -70,6 +72,7 @@ final class MapBasicCoordinatorTests: XCTestCase {
         XCTAssertEqual(mapboxMap.setViewportModeStub.invocations.first?.parameters, .flippedY)
         XCTAssertEqual(mapboxMap.northOrientationStub.invocations.first?.parameters, .downwards)
         XCTAssertEqual(mapboxMap.$screenCullingShape.setStub.invocations.first?.parameters, [CGPoint(x: 1, y: 2)])
+        XCTAssertEqual(mapboxMap.viewAnnotationAvoidLayers, ["layer1", "layer2"])
     }
 
     func testOrnamentOptions() {

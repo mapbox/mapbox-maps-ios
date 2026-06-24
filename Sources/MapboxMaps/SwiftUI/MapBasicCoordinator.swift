@@ -96,6 +96,7 @@ final class MapBasicCoordinator {
         assign(&mapView, \.presentationTransactionMode, value: deps.presentationTransactionMode)
         assign(&mapView, \.viewportManager.options, value: deps.viewportOptions)
         assign(mapboxMap.screenCullingShape, { mapboxMap.screenCullingShape = $0 }, value: deps.screenCullingShape)
+        assign(mapboxMap.viewAnnotationAvoidLayers, { mapboxMap.viewAnnotationAvoidLayers = $0 }, value: deps.viewAnnotationAvoidLayers)
 
         cameraChangeHandlers = deps.cameraChangeHandlers
         mapView.gestureManager.gestureHandlers = deps.gestureHandlers

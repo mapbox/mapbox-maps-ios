@@ -103,8 +103,9 @@ final class AnyCancelableTests: XCTestCase {
         XCTAssertEqual(counter.value, 1)
 
         var collection = [AnyCancelable]()
-        AnyCancelable(counter.cancel).store(in: &collection)
-
+        autoreleasepool {
+            AnyCancelable(counter.cancel).store(in: &collection)
+        }
         XCTAssertEqual(counter.value, 1)
         collection.removeAll()
         XCTAssertEqual(counter.value, 2)
@@ -121,8 +122,9 @@ final class AnyCancelableTests: XCTestCase {
         XCTAssertEqual(counter.value, 1)
 
         var collection = [AnyCancellable]()
-        AnyCancelable(counter.cancel).store(in: &collection)
-
+        autoreleasepool {
+            AnyCancelable(counter.cancel).store(in: &collection)
+        }
         XCTAssertEqual(counter.value, 1)
         collection.removeAll()
         XCTAssertEqual(counter.value, 2)

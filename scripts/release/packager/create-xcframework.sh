@@ -45,7 +45,8 @@ archive_framework() {
     ARCHS="$archs" \
     EXCLUDED_ARCHS= \
     MACH_O_TYPE="$MACH_O_TYPE" \
-    LLVM_LTO=NO
+    LLVM_LTO=NO \
+    CLANG_ENABLE_EXPLICIT_MODULES=NO
 }
 
 # Create per-platform archives

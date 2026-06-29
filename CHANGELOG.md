@@ -59,6 +59,11 @@ By default, the full bounding box of the view annotation is used for collision d
 ## 11.22.0-rc.1 - 08 April, 2026
 
 * Fix old 3D puck model remaining after updating the puck model.
+
+## 11.21.8 - 25 June, 2026
+
+## 11.21.7 - 01 June, 2026
+
 ## 11.21.6 - 25 May, 2026
 
 ## 11.21.5 - 15 May, 2026

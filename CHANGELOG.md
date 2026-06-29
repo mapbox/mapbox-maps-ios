@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.26.0-rc.1 - 29 June, 2026
+
 ### Features ✨ and improvements 🏁
 
 * Introduce new experimental `ViewAnnotation.enableSymbolLayerCollision` (`MapViewAnnotation.enableSymbolLayerCollision()` in SwiftUI) option which allows view annotations to hide underlying map symbols to avoid visual clutter.

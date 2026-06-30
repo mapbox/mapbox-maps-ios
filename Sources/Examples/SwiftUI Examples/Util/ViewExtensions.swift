@@ -71,6 +71,21 @@ extension String: Identifiable {
 }
 
 extension View {
+    @ViewBuilder
+    func safeGlassEffect(in shape: some Shape = RoundedRectangle(cornerRadius: 14)) -> some View {
+#if compiler(>=6.2)
+        if #available(iOS 26.0, *) {
+            self.glassEffect(in: shape)
+        } else {
+            self.floating(shape)
+        }
+#else
+        self.floating(shape)
+#endif
+    }
+}
+
+extension View {
     func onChangeOfSize(perform action: @escaping (CGSize) -> Void) -> some View {
         modifier(OnSizeChangeModifier(action: action))
     }

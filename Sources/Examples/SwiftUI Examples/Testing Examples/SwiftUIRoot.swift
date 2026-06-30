@@ -37,9 +37,10 @@ struct SwiftUIExamples {
             Example("Geofencing Playground", note: "Showcase isochrone API together with geofences.", destination: GeofencingPlayground())
             Example("Color Themes", note: "Showcase the Color Theme API", destination: ColorThemeExample())
         },
-        Examples.Category("🔬 Experimental APIs") {
+        Examples.Category("Experimental APIs") {
             Example("Accessibility Scale", note: "Automatic map symbol scaling based on system text size preferences.", destination: AccessibilityScaleExample())
             Example("Line elevation", note: "Showcase of the Line Elevation API.", destination: ElevatedLineMapView())
+            Example("Line Cutout", note: "Make route lines visible through 3D buildings using the line cutout API.", destination: LineCutoutExample())
         },
         Examples.Category("Testing Examples") {
             Example("Map settings", note: "Showcase of the most possible map configurations.", destination: MapSettingsExample())

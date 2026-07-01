@@ -42,7 +42,7 @@ $CHANGELOG
 EOF
 
     MAIN_RELEASE_URL=$(GITHUB_TOKEN=$GITHUB_WRITER_TOKEN \
-        gh release create "v$VERSION" --repo mapbox/mapbox-maps-ios \
+        gh release create "$VERSION" --repo mapbox/mapbox-maps-ios \
             --prerelease \
             --draft \
             --title "v$VERSION" \
@@ -57,10 +57,10 @@ EOF
     fi
 
     BINARY_RELEASE_URL=$(GITHUB_TOKEN=$GITHUB_WRITER_TOKEN \
-        gh release create "v$VERSION" --repo mapbox/mapbox-maps-ios-binary \
+        gh release create "$VERSION" --repo mapbox/mapbox-maps-ios-binary \
             $PRERELEASE_FLAG \
             --title "v$VERSION" \
-            --notes "📖 For release notes and changelog, see: [mapbox-maps-ios v$VERSION](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v$VERSION)")
+            --notes "📖 For release notes and changelog, see: [mapbox-maps-ios v$VERSION](https://github.com/mapbox/mapbox-maps-ios/releases/tag/$VERSION)")
 
     info "Binary Release: $BINARY_RELEASE_URL"
 }

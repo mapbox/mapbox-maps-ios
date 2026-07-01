@@ -257,7 +257,7 @@ final class ViewAnnotationTests: XCTestCase {
         let innerFrame = CGRect(x: 10, y: 10, width: 30, height: 30)
         let inner = UIView()
         inner.frame = innerFrame
-        inner.mbxCollisionBox = true
+        inner.mbxViewAnnotationCollisionBox = true
         view.addSubview(inner)
 
         let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
@@ -273,12 +273,12 @@ final class ViewAnnotationTests: XCTestCase {
         let frame1 = CGRect(x: 0, y: 0, width: 40, height: 40)
         let inner1 = UIView()
         inner1.frame = frame1
-        inner1.mbxCollisionBox = true
+        inner1.mbxViewAnnotationCollisionBox = true
         view.addSubview(inner1)
         let frame2 = CGRect(x: 60, y: 60, width: 40, height: 40)
         let inner2 = UIView()
         inner2.frame = frame2
-        inner2.mbxCollisionBox = true
+        inner2.mbxViewAnnotationCollisionBox = true
         view.addSubview(inner2)
 
         let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
@@ -292,7 +292,7 @@ final class ViewAnnotationTests: XCTestCase {
         let view = DummyAnnotationView()
         view.actualSize = CGSize(width: 100, height: 100)
         view.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        view.mbxCollisionBox = true
+        view.mbxViewAnnotationCollisionBox = true
 
         let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
         va.bind(deps)
@@ -306,7 +306,7 @@ final class ViewAnnotationTests: XCTestCase {
         view.actualSize = CGSize(width: 100, height: 100)
         let inner = UIView()
         inner.frame = CGRect(x: 5, y: 5, width: 20, height: 20)
-        inner.mbxCollisionBox = true
+        inner.mbxViewAnnotationCollisionBox = true
         view.addSubview(inner)
         let overrideBoxes = [CGRect(x: 10, y: 20, width: 30, height: 40), CGRect(x: 50, y: 60, width: 10, height: 10)]
         view.overrideCollisionBoxes = overrideBoxes
@@ -341,7 +341,7 @@ final class ViewAnnotationTests: XCTestCase {
         let newFrame = CGRect(x: 5, y: 5, width: 20, height: 20)
         let newBox = UIView()
         newBox.frame = newFrame
-        newBox.mbxCollisionBox = true
+        newBox.mbxViewAnnotationCollisionBox = true
         view.addSubview(newBox)
 
         va.setNeedsUpdateSize()

@@ -127,7 +127,7 @@ public struct MapViewAnnotation {
     ///
     /// Use this property to hide symbols below view annotation.
     ///
-    /// If the view has views with `View.mbxCollisionBox(true)` in it's hierarchy, each box is used individually.
+    /// If the view has views with `View.mbxViewAnnotationCollisionBox(true)` in it's hierarchy, each box is used individually.
     /// Otherwise the full annotation bounding box is used as the collision region.
     ///
     /// Use ``Map/debugOptions(_:)`` and ``MapViewDebugOptions.collision``  to debug the collision boxes.

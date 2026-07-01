@@ -10,3 +10,7 @@ Extension Array has removed conformance to ContentWithFormatDescription
 Extension CGPoint has removed conformance to SendableMetatype
 Extension CGRect has removed conformance to SendableMetatype
 Extension Never has removed conformance to Content
+
+// rename mbxCollisionBox -> mbxViewAnnotationCollisionBox
+Func View.mbxCollisionBox(_:) has been removed
+Var UIView.mbxCollisionBox has been removed

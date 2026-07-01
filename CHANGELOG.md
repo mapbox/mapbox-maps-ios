@@ -9,7 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 ### Features ✨ and improvements 🏁
 
 * Introduce new experimental `ViewAnnotation.enableSymbolLayerCollision` (`MapViewAnnotation.enableSymbolLayerCollision()` in SwiftUI) option which allows view annotations to hide underlying map symbols to avoid visual clutter.
-By default, the full bounding box of the view annotation is used for collision detection. If your annotation has a non-rectangular shape, it is highly recommended to mark the specific subviews that should participate via the new experimental `UIView.mbxCollisionBox` flag (`View.mbxCollisionBox()` in SwiftUI).
+By default, the full bounding box of the view annotation is used for collision detection. If your annotation has a non-rectangular shape, it is highly recommended to mark the specific subviews that should participate via the new experimental `UIView.mbxViewAnnotationCollisionBox` flag (`View.mbxViewAnnotationCollisionBox()` in SwiftUI).
 * Support drawing view annotation collision boxes when `MapView.debugOptions` is set to `.collision`.
 * Improved `Marker` -- now it automatically hides the underlying map symbols below it's icon and text.
 * [SwiftUI] Added experimental `Map.viewAnnotationAvoidLayers()` which allows to set view annotations to avoid layers.

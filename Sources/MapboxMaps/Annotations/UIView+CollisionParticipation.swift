@@ -10,7 +10,7 @@ extension UIView {
     /// When at least one subview is marked, only marked subviews' frames are used
     /// as collision boxes. When none are marked, the full annotation bounds are used.
     @_spi(Experimental)
-    public var mbxCollisionBox: Bool {
+    public var mbxViewAnnotationCollisionBox: Bool {
         get { objc_getAssociatedObject(self, &collisionBoxKey) as? Bool ?? false }
         set { objc_setAssociatedObject(self, &collisionBoxKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
@@ -35,7 +35,7 @@ extension UIView {
     }
 
     private func collectCollisionBoxes(relativeTo root: UIView, into boxes: inout [CGRect]) {
-        if mbxCollisionBox {
+        if mbxViewAnnotationCollisionBox {
             boxes.append(convert(bounds, to: root))
             return
         }

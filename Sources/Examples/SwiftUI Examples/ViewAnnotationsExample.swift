@@ -136,7 +136,7 @@ private struct ViewAnnotationContent: View {
         }
         .padding(5)
         .foregroundColor(.white)
-        .mbxCollisionBox(true)
+        .mbxViewAnnotationCollisionBox(true)
         // Wrap annotation view into callout shape.
         .callout(anchor: tap.selectedAnchor?.anchor ?? .center, color: tap.color)
         .opacity(appeared ? 1 : 0)

@@ -108,7 +108,7 @@ public final class ViewAnnotation {
     ///
     /// Use this property to hide symbols below view annotation.
     ///
-    /// If the view has views with `UIView.mbxCollisionBox = true` in it's hierarchy, each box is used individually.
+    /// If the view has views with `UIView.mbxViewAnnotationCollisionBox = true` in it's hierarchy, each box is used individually.
     /// Otherwise the full annotation bounding box is used as the collision region.
     ///
     /// Use ``MapView/debugOptions`` and ``MapViewDebugOptions.collision``  to debug the collision boxes.

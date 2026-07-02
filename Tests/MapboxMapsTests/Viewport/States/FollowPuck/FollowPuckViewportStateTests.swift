@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class FollowPuckViewportStateTest: XCTestCase {
 
@@ -58,6 +58,7 @@ final class FollowPuckViewportStateTest: XCTestCase {
             $0.bearing = .course
             $0.pitch = 20
             $0.padding = UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4)
+            $0.verticalFov = 83
         }
         safeAreaPadding = UIEdgeInsets(top: 10, left: 20, bottom: 30, right: 40)
         puck.location = Location(
@@ -71,6 +72,7 @@ final class FollowPuckViewportStateTest: XCTestCase {
         XCTAssertEqual(params.padding, safeAreaPadding + options.padding)
         XCTAssertEqual(params.bearing, puck.location.bearing)
         XCTAssertEqual(params.pitch, options.pitch)
+        XCTAssertEqual(params.verticalFov, options.verticalFov)
 
         mapboxMap.size = CGSize(width: 200, height: 200)
         XCTAssertEqual(stub.invocations.count, 5)

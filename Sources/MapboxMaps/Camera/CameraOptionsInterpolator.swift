@@ -57,12 +57,19 @@ internal final class CameraOptionsInterpolator: CameraOptionsInterpolatorProtoco
             fraction: fraction,
             interpolate: doubleInterpolator.interpolate(from:to:fraction:))
 
+        let verticalFov = optionalInterpolator.interpolate(
+            from: from.verticalFov.map(Double.init(_:)),
+            to: to.verticalFov.map(Double.init(_:)),
+            fraction: fraction,
+            interpolate: doubleInterpolator.interpolate(from:to:fraction:))
+
         return CameraOptions(
             center: center,
             padding: padding,
             anchor: nil,
             zoom: zoom.map(CGFloat.init(_:)),
             bearing: bearing,
-            pitch: pitch.map(CGFloat.init(_:)))
+            pitch: pitch.map(CGFloat.init(_:)),
+            verticalFov: verticalFov.map(CGFloat.init(_:)))
     }
 }

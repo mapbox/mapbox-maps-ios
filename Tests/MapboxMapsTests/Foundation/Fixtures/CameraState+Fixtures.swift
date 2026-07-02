@@ -1,4 +1,4 @@
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 import UIKit
 
 extension CameraState {
@@ -8,7 +8,8 @@ extension CameraState {
             padding: .init(top: 40, left: 29, bottom: 98, right: 83),
             zoom: 71,
             bearing: 93,
-            pitch: 45)
+            pitch: 45,
+            verticalFov: 46)
 
     }
 
@@ -24,6 +25,7 @@ extension CameraState {
             right: 0),
         zoom: 0,
         bearing: 0,
-        pitch: 0)
+        pitch: 0,
+        verticalFov: 0)
     }
 }

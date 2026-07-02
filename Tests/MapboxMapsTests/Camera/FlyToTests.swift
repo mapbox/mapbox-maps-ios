@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 internal class FlyToTests: XCTestCase {
 
@@ -29,7 +29,8 @@ internal class FlyToTests: XCTestCase {
                 right: 0),
             zoom: 10,
             bearing: 0,
-            pitch: 0)
+            pitch: 0,
+            verticalFov: 0)
 
         let dest = CameraOptions(
             center: s2,
@@ -37,7 +38,8 @@ internal class FlyToTests: XCTestCase {
             anchor: .zero,
             zoom: 10,
             bearing: 0,
-            pitch: 0)
+            pitch: 0,
+        verticalFov: 0)
 
         let flyTo = FlyToInterpolator(
             from: source,
@@ -72,6 +74,8 @@ internal class FlyToTests: XCTestCase {
         let latitudeStep = Double(latitudeRange.count) / Double(iterations.count)
         let longitudeStep = Double(longitudeRange.count) / Double(iterations.count)
         let destLongitudeStep = Double(destLongitudeRange.count) / Double(iterations.count)
+        let verticalFovRange = 12...90
+        let verticalFovStep = Double(verticalFovRange.count) / Double(iterations.count)
 
         for iteration in iterations {
             // Longitude increases easterly for this test.
@@ -84,6 +88,7 @@ internal class FlyToTests: XCTestCase {
                 latitude: Double(latitudeRange.lowerBound) + (Double(iteration) * latitudeStep),
                 longitude: Double(destLongitudeRange.lowerBound) + (Double(iteration) * destLongitudeStep)
             )
+            let verticalFovDest = Double(verticalFovRange.lowerBound) + (Double(iteration) * verticalFovStep)
 
             let source = CameraState(
                 center: sourceCoord,
@@ -94,12 +99,14 @@ internal class FlyToTests: XCTestCase {
                     right: 0),
                 zoom: 14,
                 bearing: 0,
-                pitch: 0)
+                pitch: 0,
+                verticalFov: 11)
 
             let dest = CameraOptions(center: destCoord,
                                      zoom: 18,
                                      bearing: 90,
-                                     pitch: 45)
+                                     pitch: 45,
+                                     verticalFov: verticalFovDest)
 
             let flyTo = FlyToInterpolator(from: source, to: dest, cameraBounds: CameraBounds.default, size: CGSize(width: 500.0, height: 500.0))
             guard var boundingBox = BoundingBox(from: [sourceCoord, destCoord]) else {
@@ -132,6 +139,10 @@ internal class FlyToTests: XCTestCase {
                 let pitch = CGFloat(flyTo.pitch(at: t))
                 XCTAssert(pitch >= source.pitch, "t=\(t) pitch=\(pitch)")
                 XCTAssert(pitch <= dest.pitch!, "t=\(t) pitch=\(pitch)")
+
+                let verticalFov = CGFloat(flyTo.verticalFov(at: t))
+                XCTAssert(verticalFov >= source.verticalFov, "t=\(t) verticalFov=\(verticalFov)")
+                XCTAssert(verticalFov <= dest.verticalFov!, "t=\(t) verticalFov=\(verticalFov)")
             }
         }
     }

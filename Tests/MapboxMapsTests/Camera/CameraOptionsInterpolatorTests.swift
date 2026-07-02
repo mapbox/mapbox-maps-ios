@@ -53,6 +53,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         XCTAssertNil(result.bearing)
         XCTAssertNil(result.pitch)
         XCTAssertNil(result.anchor)
+        XCTAssertNil(result.verticalFov)
     }
 
     func testFromNilToNonNil() {
@@ -75,6 +76,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         XCTAssertNil(result.bearing)
         XCTAssertNil(result.pitch)
         XCTAssertNil(result.anchor)
+        XCTAssertNil(result.verticalFov)
     }
 
     func testFromNonNilToNil() {
@@ -97,6 +99,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         XCTAssertNil(result.bearing)
         XCTAssertNil(result.pitch)
         XCTAssertNil(result.anchor)
+        XCTAssertNil(result.verticalFov)
     }
 
     func testFromNonNilToNonNil() {
@@ -107,10 +110,11 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
             anchor: .init(x: -28, y: -44),
             zoom: 19,
             bearing: 193,
-            pitch: 75)
+            pitch: 75,
+            verticalFov: 38)
         coordinateInterpolator.interpolateStub.defaultReturnValue = .init(latitude: 0, longitude: 0)
         uiEdgeInsetsInterpolator.interpolateStub.defaultReturnValue = .init(top: 0, left: 0, bottom: 0, right: 0)
-        doubleInterpolator.interpolateStub.returnValueQueue = [-50, 50]
+        doubleInterpolator.interpolateStub.returnValueQueue = [-50, 50, 30]
         directionInterpolator.interpolateStub.defaultReturnValue = 65
 
         let result = cameraOptionsInterpolator.interpolate(
@@ -120,12 +124,12 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
 
         XCTAssertEqual(coordinateInterpolator.interpolateStub.invocations.count, 1)
         XCTAssertEqual(uiEdgeInsetsInterpolator.interpolateStub.invocations.count, 1)
-        XCTAssertEqual(doubleInterpolator.interpolateStub.invocations.count, 2)
+        XCTAssertEqual(doubleInterpolator.interpolateStub.invocations.count, 3)
         XCTAssertEqual(directionInterpolator.interpolateStub.invocations.count, 1)
 
         guard coordinateInterpolator.interpolateStub.invocations.count == 1,
               uiEdgeInsetsInterpolator.interpolateStub.invocations.count == 1,
-              doubleInterpolator.interpolateStub.invocations.count == 2,
+              doubleInterpolator.interpolateStub.invocations.count == 3,
               directionInterpolator.interpolateStub.invocations.count == 1 else {
                   return
               }
@@ -161,5 +165,12 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         XCTAssertEqual(result.pitch, CGFloat(interpolatorInvocation1.returnValue))
 
         XCTAssertNil(result.anchor)
+
+        let interpolatorInvocation2 = doubleInterpolator.interpolateStub.invocations[2]
+        XCTAssertEqual(interpolatorInvocation2.parameters.from, from.verticalFov.map(Double.init(_:)))
+        XCTAssertEqual(interpolatorInvocation2.parameters.to, to.verticalFov.map(Double.init(_:)))
+        XCTAssertEqual(interpolatorInvocation2.parameters.fraction, fraction)
+        XCTAssertEqual(result.verticalFov, CGFloat(interpolatorInvocation2.returnValue))
+
     }
 }

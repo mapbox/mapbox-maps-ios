@@ -1,6 +1,6 @@
 import XCTest
 import UIKit
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class OverviewViewportStateTest: XCTestCase {
     var mapboxMap: MockMapboxMap!
@@ -55,6 +55,7 @@ final class OverviewViewportStateTest: XCTestCase {
             XCTAssertEqual(cameraParams.camera.padding, options.padding + safeAreaPadding)
             XCTAssertEqual(cameraParams.camera.bearing, options.bearing)
             XCTAssertEqual(cameraParams.camera.pitch, options.pitch)
+            XCTAssertEqual(cameraParams.camera.verticalFov, options.verticalFov)
         }
 
         func checkStubCall(_ count: Int) throws {

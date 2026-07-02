@@ -1,4 +1,4 @@
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 import XCTest
 
 final class OverviewViewportStateOptionsTests: XCTestCase {
@@ -12,6 +12,7 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
         XCTAssertEqual(options.bearing, 0)
         XCTAssertEqual(options.pitch, 0)
         XCTAssertEqual(options.animationDuration, 1)
+        XCTAssertEqual(options.verticalFov, 36.87)
     }
 
     func testInitWithNonDefaultValues() {
@@ -21,6 +22,7 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
         let bearing = 123.9
         let pitch = 43.9
         let animationDuration = TimeInterval.testConstantValue()
+        let verticalFov = 23.9
 
         let options = OverviewViewportStateOptions(
             geometry: geometry,
@@ -28,7 +30,8 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
             bearing: bearing,
             pitch: pitch,
             padding: padding,
-            animationDuration: animationDuration)
+            animationDuration: animationDuration,
+            verticalFov: verticalFov)
 
         XCTAssertEqual(options.geometry, geometry.geometry)
         XCTAssertEqual(options.geometryPadding, geometryPadding)
@@ -36,5 +39,6 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
         XCTAssertEqual(options.bearing, bearing)
         XCTAssertEqual(options.pitch, pitch)
         XCTAssertEqual(options.animationDuration, animationDuration)
+        XCTAssertEqual(options.verticalFov, verticalFov)
     }
 }

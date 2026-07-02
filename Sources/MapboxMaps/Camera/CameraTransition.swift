@@ -1,5 +1,6 @@
 import UIKit
 import CoreLocation
+@_spi(Experimental) import MapboxCoreMaps
 
 /// Structure used to represent a desired change to the map's camera
 public struct CameraTransition: Equatable, Sendable {
@@ -27,6 +28,11 @@ public struct CameraTransition: Equatable, Sendable {
     /// Represents a change to the pitch of the map.
     public var pitch: Change<CGFloat>
 
+    /// Represents a change to the vertical field of view of the map.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var verticalFov: Change<CGFloat>
+
     /// Generic struct used to represent a change in a value from a starting point (i.e. `fromValue`) to an end point (i.e. `toValue`).
     public struct Change<T>: Equatable where T: Equatable {
         public var fromValue: T
@@ -45,6 +51,7 @@ public struct CameraTransition: Equatable, Sendable {
         pitch   = Change(fromValue: cameraState.pitch)
         bearing = Change(fromValue: cameraState.bearing)
         anchor  = Change(fromValue: initialAnchor)
+        verticalFov = Change(fromValue: cameraState.verticalFov)
     }
 
     internal var toCameraOptions: CameraOptions {
@@ -53,7 +60,8 @@ public struct CameraTransition: Equatable, Sendable {
                              anchor: anchor.toValue,
                              zoom: zoom.toValue,
                              bearing: shouldOptimizeBearingPath ? optimizedBearingToValue : bearing.toValue,
-                             pitch: pitch.toValue)
+                             pitch: pitch.toValue,
+                             verticalFov: verticalFov.toValue)
     }
 
     internal var fromCameraOptions: CameraOptions {
@@ -62,7 +70,8 @@ public struct CameraTransition: Equatable, Sendable {
                              anchor: anchor.fromValue,
                              zoom: zoom.fromValue,
                              bearing: bearing.fromValue,
-                             pitch: pitch.fromValue)
+                             pitch: pitch.fromValue,
+                             verticalFov: verticalFov.fromValue)
 
     }
 

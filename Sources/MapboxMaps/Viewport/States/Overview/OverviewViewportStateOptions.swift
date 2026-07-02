@@ -28,6 +28,12 @@ public struct OverviewViewportStateOptions: Equatable, Sendable {
     /// The center of the given bounds relative to the map's center, measured in points.
     public var offset: CGPoint?
 
+    /// The value to use for ``CameraOptions-swift.struct/verticalFov`` when setting the camera. If `nil`, vertical fov will
+    /// not be modified.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var verticalFov: CGFloat?
+
     /// The length of the animation performed by ``OverviewViewportState`` when it starts updating
     /// the camera and any time ``OverviewViewportState/options`` is set. See
     /// ``OverviewViewportState/options`` for details.
@@ -62,5 +68,42 @@ public struct OverviewViewportStateOptions: Equatable, Sendable {
         self.maxZoom = maxZoom
         self.offset = offset
         self.animationDuration = animationDuration
+        self.verticalFov = 36.87
+    }
+
+    /// Memberwise initializer for `OverviewViewportStateOptions`.
+    ///
+    /// `geometry` is required, but all other parameters have default values.
+    ///
+    /// - Parameters:
+    ///   - geometry: The geometry for which an overview should be shown.
+    ///   - geometryPadding: The padding to add to geometry when calculating fitting camera.
+    ///   - bearing: Camera bearing.
+    ///   - pitch: Camera pitch.
+    ///   - padding: Camera padding.
+    ///   - maxZoom: The maximum zoom level to allow.
+    ///   - offset: The center of the given bounds relative to the map's center, measured in points.
+    ///   - animationDuration: Defaults to 1.
+    ///   - verticalFov: Camera vertical fov. Default value is 36.87.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public init(geometry: GeometryConvertible,
+                geometryPadding: UIEdgeInsets = .zero,
+                bearing: CLLocationDirection? = 0,
+                pitch: CGFloat? = 0,
+                padding: UIEdgeInsets? = nil,
+                maxZoom: Double? = nil,
+                offset: CGPoint? = nil,
+                animationDuration: TimeInterval = 1,
+                verticalFov: CGFloat? = 36.87) {
+        self.geometry = geometry.geometry
+        self.geometryPadding = geometryPadding
+        self.bearing = bearing
+        self.pitch = pitch
+        self.padding = padding
+        self.maxZoom = maxZoom
+        self.offset = offset
+        self.animationDuration = animationDuration
+        self.verticalFov = verticalFov
     }
 }

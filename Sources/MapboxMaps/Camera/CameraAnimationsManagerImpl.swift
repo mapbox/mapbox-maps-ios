@@ -130,6 +130,7 @@ internal final class CameraAnimationsManagerImpl: CameraAnimationsManagerProtoco
                 transition.zoom.toValue = to.zoom
                 transition.bearing.toValue = to.bearing
                 transition.pitch.toValue = to.pitch
+                transition.verticalFov.toValue = to.verticalFov
             })
         let animator = BasicCameraAnimator(impl: animatorImpl)
         if let completion = completion {

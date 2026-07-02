@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Animate verticalFov along with other camera parameters.
+
 ## 11.26.0-rc.1 - 29 June, 2026
 
 ### Features ✨ and improvements 🏁

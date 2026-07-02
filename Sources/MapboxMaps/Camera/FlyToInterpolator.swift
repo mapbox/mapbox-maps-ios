@@ -1,4 +1,5 @@
 import UIKit
+@_spi(Experimental) import MapboxCoreMaps
 
 // swiftlint:disable identifier_name
 
@@ -32,6 +33,9 @@ internal struct FlyToInterpolator {
     internal let sourcePadding: UIEdgeInsets
     internal let destPadding: UIEdgeInsets
 
+    private let sourceVerticalFov: CGFloat
+    private let destVerticalFov: CGFloat
+
     // Default values
     fileprivate let defaultVelocity = 1.2
 
@@ -61,12 +65,14 @@ internal struct FlyToInterpolator {
         let sourceZoomParam      = CGFloat(source.zoom)
         let sourcePitchParam     = CGFloat(source.pitch)
         let sourceBearingParam   = CLLocationDirection(source.bearing)
+        let sourceVerticalFovParam = CGFloat(source.verticalFov)
 
         sourceZoom  = sourceZoomParam
         sourceScale = pow(2, sourceZoom)
 
         sourcePadding = sourcePaddingParam
         sourcePitch = sourcePitchParam
+        sourceVerticalFov = sourceVerticalFovParam
 
         // Dest conditions
         destPadding = dest.padding ?? sourcePaddingParam
@@ -77,6 +83,7 @@ internal struct FlyToInterpolator {
         let destZoom = (dest.zoom ?? compilerWorkaround).clamped(to: CGFloat(cameraBounds.minZoom)...CGFloat(cameraBounds.maxZoom))
         destPitch = (dest.pitch ?? sourcePitchParam).clamped(to: CGFloat(cameraBounds.minPitch)...CGFloat(cameraBounds.maxPitch))
         destBearing = dest.bearing ?? sourceBearingParam
+        destVerticalFov = dest.verticalFov ?? sourceVerticalFovParam
 
         // Unwrap
         let sourceCoordUnwrapped = sourceCoord.unwrapForShortestPath(destCoord)
@@ -260,6 +267,15 @@ internal struct FlyToInterpolator {
         let right  = ((1.0 - t) * sourcePadding.right)  + (t * destPadding.right)
 
         return UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+    }
+
+    /// Calculates vertical fov given a fraction in [0,1].
+    /// This is a linear interpolation.
+    ///
+    /// - Parameter fraction: Parameter between 0 and 1. 0 represents the start position, 1 the end position.
+    /// - Returns: vertical fov
+    internal func verticalFov(at fraction: Double) -> Double {
+        return (1.0 - fraction) * Double(sourceVerticalFov) + fraction * Double(destVerticalFov)
     }
 
     // MARK: - Animation properties

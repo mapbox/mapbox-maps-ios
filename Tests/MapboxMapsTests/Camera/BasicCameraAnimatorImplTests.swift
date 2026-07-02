@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 let cameraOptionsTestValue = CameraOptions(
     center: CLLocationCoordinate2D(latitude: 10, longitude: 10),
@@ -7,7 +7,9 @@ let cameraOptionsTestValue = CameraOptions(
     anchor: .init(x: 10.0, y: 10.0),
     zoom: 10,
     bearing: 10,
-    pitch: 10)
+    pitch: 10,
+    verticalFov: 10
+)
 
 let cameraStateTestValue = CameraState(
     center: .init(
@@ -20,7 +22,8 @@ let cameraStateTestValue = CameraState(
         right: 10),
     zoom: 10,
     bearing: 10,
-    pitch: 10
+    pitch: 10,
+    verticalFov: 10
 )
 
 final class BasicCameraAnimatorImplTests: XCTestCase {

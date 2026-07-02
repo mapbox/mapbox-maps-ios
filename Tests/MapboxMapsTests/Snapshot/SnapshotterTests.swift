@@ -67,13 +67,15 @@ final class SnapshotterTests: XCTestCase {
         let zoom = 15.0
         let bearing = CLLocationDirection.zero
         let pitch = 90.0
+        let verticalFov = 73.0
         let cameraOptions = CameraOptions(
             center: center,
             padding: padding,
             anchor: anchor,
             zoom: zoom,
             bearing: bearing,
-            pitch: pitch)
+            pitch: pitch,
+            verticalFov: verticalFov)
 
         snapshotter.setCamera(to: cameraOptions)
 
@@ -89,7 +91,8 @@ final class SnapshotterTests: XCTestCase {
         let zoom = 15.0
         let bearing = 45.0
         let pitch = 90.0
-        let cameraOptions = CameraOptions(center: center, padding: padding, anchor: anchor, zoom: zoom, bearing: bearing, pitch: pitch)
+        let verticalFov = 73.0
+        let cameraOptions = CameraOptions(center: center, padding: padding, anchor: anchor, zoom: zoom, bearing: bearing, pitch: pitch, verticalFov: verticalFov)
 
         let coordinateBounds = CoordinateBounds(southwest: .testConstantValue(), northeast: .testConstantValue())
         mockMapSnapshotter.coordinateBoundsForCameraStub.defaultReturnValue = coordinateBounds
@@ -119,8 +122,9 @@ final class SnapshotterTests: XCTestCase {
         let zoom = 15.0
         let bearing = 45.0
         let pitch = 90.0
+        let verticalFov = 73.0
 
-        let cameraOptions = CameraOptions(center: center, padding: padding.toUIEdgeInsetsValue(), anchor: anchor, zoom: zoom, bearing: CLLocationDirection(bearing), pitch: CGFloat(pitch))
+        let cameraOptions = CameraOptions(center: center, padding: padding.toUIEdgeInsetsValue(), anchor: anchor, zoom: zoom, bearing: CLLocationDirection(bearing), pitch: CGFloat(pitch), verticalFov: verticalFov)
         mockMapSnapshotter.cameraForCoordinatesStub.defaultReturnValue = CameraOptions.Marshaller.toObjc(cameraOptions)
 
         let returnedOptions = snapshotter.camera(for: coordinates, padding: padding.toUIEdgeInsetsValue(), bearing: bearing, pitch: pitch)

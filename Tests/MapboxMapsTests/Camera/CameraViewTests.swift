@@ -17,7 +17,8 @@ final class CameraViewTests: XCTestCase {
             y: 10),
         zoom: 10,
         bearing: 10,
-        pitch: 10)
+        pitch: 10,
+        verticalFov: 10)
 
     var cameraView: CameraView!
 

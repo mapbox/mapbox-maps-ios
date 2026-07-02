@@ -123,6 +123,9 @@ struct Examples {
         Example(title: "Use camera(for:) bounding coordinates",
                 description: "Use camera(for:) bounding coordinaters",
                 type: CameraForExample.self)
+        Example(title: "Pinch to change field of view",
+                description: "Use a pinch gesture to adjust the camera's vertical field of view. Built-in pinch-to-zoom is disabled so the gesture exclusively controls FOV.",
+                type: PinchToChangeFovExample.self)
     }
 
     // Miscellaneous examples

@@ -36,7 +36,8 @@ public final class FollowPuckViewportState {
                     padding: options.padding,
                     zoom: options.zoom,
                     bearing: options.bearing?.evaluate(with: renderingState),
-                    pitch: options.pitch)
+                    pitch: options.pitch,
+                    verticalFov: options.verticalFov)
             }
 
         self.impl = CameraViewportState(cameraOptions: resultCamera, mapboxMap: mapboxMap, safeAreaPadding: safeAreaPadding)

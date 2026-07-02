@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class BasicCameraAnimatorImplIntegrationTests: XCTestCase {
 
@@ -29,6 +29,7 @@ final class BasicCameraAnimatorImplIntegrationTests: XCTestCase {
                 transition.anchor.toValue = cameraOptionsTestValue.anchor!
                 transition.pitch.toValue = cameraOptionsTestValue.pitch!
                 transition.padding.toValue = cameraOptionsTestValue.padding!
+                transition.verticalFov.toValue = cameraOptionsTestValue.verticalFov!
             }
     }
 

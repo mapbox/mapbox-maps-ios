@@ -38,7 +38,8 @@ internal class CameraView: UIView {
             anchor: layer.anchorPoint,
             zoom: CGFloat(layer.opacity),
             bearing: CLLocationDirection(layer.cornerRadius),
-            pitch: layer.borderWidth)
+            pitch: layer.borderWidth,
+            verticalFov: layer.zPosition)
     }
 
     internal func syncLayer(to cameraOptions: CameraOptions) {
@@ -65,6 +66,10 @@ internal class CameraView: UIView {
 
         if let anchor = cameraOptions.anchor {
             layer.anchorPoint = anchor
+        }
+
+        if let verticalFov = cameraOptions.verticalFov {
+            layer.zPosition = verticalFov
         }
     }
 }

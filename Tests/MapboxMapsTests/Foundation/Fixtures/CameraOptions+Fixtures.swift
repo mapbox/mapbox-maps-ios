@@ -8,7 +8,7 @@ extension CameraOptions {
             anchor: .init(x: -28, y: -74),
             zoom: 71,
             bearing: 93,
-            pitch: 45)
-
+            pitch: 45,
+            verticalFov: 78)
     }
 }

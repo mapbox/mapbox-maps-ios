@@ -31,6 +31,12 @@ public struct FollowPuckViewportStateOptions: Codable, Hashable, Sendable {
     /// not be modified.
     public var pitch: CGFloat?
 
+    /// The value to use for ``CameraOptions-swift.struct/verticalFov`` when setting the camera. If `nil`, vertical fov will
+    /// not be modified.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var verticalFov: CGFloat?
+
     /// Creates options.
     ///
     /// - Parameters:
@@ -38,13 +44,16 @@ public struct FollowPuckViewportStateOptions: Codable, Hashable, Sendable {
     ///   - zoom: Camera zoom. Default value is 16.35.
     ///   - bearing: camera bearing, by default bearing will be taken from heading data.
     ///   - pitch: Camera pitch. Default value is 45.
+    ///   - verticalFov: Camera vertical fov. Default value is 36.87.
     public init(padding: UIEdgeInsets? = nil,
                 zoom: CGFloat? = 16.35,
                 bearing: FollowPuckViewportStateBearing? = .heading,
-                pitch: CGFloat? = 45) {
+                pitch: CGFloat? = 45,
+                verticalFov: CGFloat? = 36.87) {
         self.padding = padding
         self.zoom = zoom
         self.bearing = bearing
         self.pitch = pitch
+        self.verticalFov = verticalFov
     }
 }

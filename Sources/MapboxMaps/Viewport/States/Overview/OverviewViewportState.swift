@@ -47,7 +47,8 @@ public final class OverviewViewportState {
                     camera: .init(
                         padding: padding,
                         bearing: options.bearing,
-                        pitch: options.pitch),
+                        pitch: options.pitch,
+                        verticalFov: options.verticalFov),
                     coordinatesPadding: options.geometryPadding,
                     maxZoom: options.maxZoom,
                     offset: options.offset)

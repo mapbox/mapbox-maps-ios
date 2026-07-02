@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class FlyToCameraAnimatorTests: XCTestCase {
     let initialCameraState = CameraState(
@@ -13,7 +13,8 @@ final class FlyToCameraAnimatorTests: XCTestCase {
             right: 0),
         zoom: 10,
         bearing: 10,
-        pitch: 10)
+        pitch: 10,
+        verticalFov: 10)
 
     let finalCameraOptions = CameraOptions(
         center: CLLocationCoordinate2D(
@@ -22,7 +23,8 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         padding: .zero,
         zoom: 10,
         bearing: 10,
-        pitch: 10)
+        pitch: 10,
+    verticalFov: 35)
 
     let duration: TimeInterval = 10
     let curve = TimingCurve.easeInOut

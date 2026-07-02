@@ -14,3 +14,7 @@ Extension Never has removed conformance to Content
 // rename mbxCollisionBox -> mbxViewAnnotationCollisionBox
 Func View.mbxCollisionBox(_:) has been removed
 Var UIView.mbxCollisionBox has been removed
+
+// Add verticalFov parameter to viewport state constructors
+Constructor FollowPuckViewportStateOptions.init(padding:zoom:bearing:pitch:) has been removed
+Constructor OverviewViewportStateOptions.init(geometry:geometryPadding:bearing:pitch:padding:maxZoom:offset:animationDuration:) has been removed

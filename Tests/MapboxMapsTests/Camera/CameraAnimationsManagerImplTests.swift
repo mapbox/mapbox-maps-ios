@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class CameraAnimationsManagerImplTests: XCTestCase {
 
@@ -145,6 +145,8 @@ final class CameraAnimationsManagerImplTests: XCTestCase {
         XCTAssertEqual(transition.bearing.toValue, camera.bearing)
         XCTAssertEqual(transition.pitch.fromValue, cameraState.pitch)
         XCTAssertEqual(transition.pitch.toValue, camera.pitch)
+        XCTAssertEqual(transition.verticalFov.fromValue, cameraState.verticalFov)
+        XCTAssertEqual(transition.verticalFov.toValue, camera.verticalFov)
         XCTAssertTrue(transition.shouldOptimizeBearingPath)
 
         // adds the completion block to the animator (exercise it to verify)
@@ -399,7 +401,8 @@ final class CameraAnimationsManagerImplTests: XCTestCase {
             anchor: .init(x: -28, y: -44),
             zoom: 19,
             bearing: 193,
-            pitch: 75)
+            pitch: 75,
+            verticalFov: 83)
         let duration = 9.4
         let curve = TimingCurve.easeIn
         let owner = AnimationOwner.init(rawValue: UUID().uuidString)

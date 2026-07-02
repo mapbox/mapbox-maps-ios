@@ -1,5 +1,5 @@
 import XCTest
-@testable @_spi(Marshalling) import MapboxMaps
+@testable @_spi(Experimental) @_spi(Marshalling) import MapboxMaps
 
 final class CameraStateTests: XCTestCase {
     var center: CLLocationCoordinate2D!
@@ -8,6 +8,7 @@ final class CameraStateTests: XCTestCase {
     var zoom: CGFloat!
     var bearing: CLLocationDirection!
     var pitch: CGFloat!
+    var verticalFov: CGFloat!
 
     override func setUp() {
         super.tearDown()
@@ -19,6 +20,7 @@ final class CameraStateTests: XCTestCase {
         zoom = 12.3
         bearing = 360
         pitch = 45
+        verticalFov = 48
     }
 
     override func tearDown() {
@@ -28,6 +30,7 @@ final class CameraStateTests: XCTestCase {
         anchor = nil
         padding = nil
         center = nil
+        verticalFov = nil
         super.tearDown()
     }
 
@@ -37,7 +40,8 @@ final class CameraStateTests: XCTestCase {
             padding: padding,
             zoom: zoom,
             bearing: bearing,
-            pitch: pitch)
+            pitch: pitch,
+            verticalFov: verticalFov)
 
         XCTAssertEqual(cameraState.center.latitude, center.latitude)
         XCTAssertEqual(cameraState.center.longitude, center.longitude)
@@ -45,6 +49,17 @@ final class CameraStateTests: XCTestCase {
         XCTAssertEqual(cameraState.zoom, zoom)
         XCTAssertEqual(cameraState.bearing, bearing)
         XCTAssertEqual(cameraState.pitch, pitch)
+        XCTAssertEqual(cameraState.verticalFov, verticalFov)
+    }
+
+    func testVerticalFovDefaultValue() {
+        let cameraState = CameraState(
+            center: center,
+            padding: padding,
+            zoom: zoom,
+            bearing: bearing,
+            pitch: pitch)
+        XCTAssertEqual(cameraState.verticalFov, 36.87)
     }
 
     func testInitWithObjCValue() {
@@ -54,7 +69,8 @@ final class CameraStateTests: XCTestCase {
                 padding: padding.toMBXEdgeInsetsValue(),
                 zoom: Double(zoom),
                 bearing: bearing,
-                pitch: Double(pitch)))
+                pitch: Double(pitch),
+                verticalFov: verticalFov))
 
         XCTAssertEqual(cameraState.center.latitude, center.latitude)
         XCTAssertEqual(cameraState.center.longitude, center.longitude)
@@ -62,6 +78,7 @@ final class CameraStateTests: XCTestCase {
         XCTAssertEqual(cameraState.zoom, zoom)
         XCTAssertEqual(cameraState.bearing, bearing)
         XCTAssertEqual(cameraState.pitch, pitch)
+        XCTAssertEqual(cameraState.verticalFov, verticalFov)
     }
 
     func testEquatable() {
@@ -70,7 +87,8 @@ final class CameraStateTests: XCTestCase {
             padding: padding,
             zoom: zoom,
             bearing: bearing,
-            pitch: pitch)
+            pitch: pitch,
+            verticalFov: verticalFov)
 
         XCTAssertEqual(cameraState, cameraState)
 
@@ -109,5 +127,10 @@ final class CameraStateTests: XCTestCase {
         other = cameraState
         other.pitch += 1
         XCTAssertNotEqual(cameraState, other)
+
+        other = cameraState
+        other.verticalFov += 1
+        XCTAssertNotEqual(cameraState, other)
+
     }
 }

@@ -183,6 +183,7 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
             padding: interpolator.padding(at: fractionComplete),
             zoom: CGFloat(interpolator.zoom(at: fractionComplete)),
             bearing: interpolator.bearing(at: fractionComplete),
-            pitch: CGFloat(interpolator.pitch(at: fractionComplete))))
+            pitch: CGFloat(interpolator.pitch(at: fractionComplete)),
+            verticalFov: CGFloat(interpolator.verticalFov(at: fractionComplete))))
     }
 }

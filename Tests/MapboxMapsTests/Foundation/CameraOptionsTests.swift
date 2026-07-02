@@ -36,6 +36,7 @@ final class CameraOptionsTests: XCTestCase {
         anchor = nil
         padding = nil
         center = nil
+        verticalFov = nil
         super.tearDown()
     }
 
@@ -48,6 +49,7 @@ final class CameraOptionsTests: XCTestCase {
         XCTAssertNil(cameraOptions.zoom)
         XCTAssertNil(cameraOptions.bearing)
         XCTAssertNil(cameraOptions.pitch)
+        XCTAssertNil(cameraOptions.verticalFov)
     }
 
     func testMemberwiseInit() {

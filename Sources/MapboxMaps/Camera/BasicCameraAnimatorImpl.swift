@@ -279,6 +279,10 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
             cameraOptions.pitch = cameraViewCameraOptions.pitch
         }
 
+        if transition.verticalFov.toValue != nil {
+            cameraOptions.verticalFov = cameraViewCameraOptions.verticalFov
+        }
+
         return cameraOptions
     }
 

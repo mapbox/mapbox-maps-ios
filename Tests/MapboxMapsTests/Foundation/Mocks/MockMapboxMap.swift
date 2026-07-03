@@ -4,6 +4,7 @@ import UIKit
 
 final class MockMapboxMap: MapboxMapProtocol {
     var viewAnnotationAvoidLayers = Set<String>()
+    var viewAnnotationAvoidRegions = [CGRect]()
     var options: MapOptions = MapOptions()
 
     let events = MapEvents(makeGenericSubject: { _ in

@@ -444,6 +444,22 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertEqual(manager.viewAnnotationAvoidLayers, layers)
     }
 
+    func testAvoidRegions() throws {
+        let regions = [
+            CGRect(x: 0, y: 0, width: 100, height: 100),
+            CGRect(x: 200, y: 300, width: 50, height: 80),
+        ]
+        manager.viewAnnotationAvoidRegions = regions
+
+        XCTAssertEqual(mapboxMap.viewAnnotationAvoidRegions, regions)
+        XCTAssertEqual(manager.viewAnnotationAvoidRegions, regions)
+
+        let updatedRegions = [CGRect(x: 10, y: 20, width: 30, height: 40)]
+        mapboxMap.viewAnnotationAvoidRegions = updatedRegions
+
+        XCTAssertEqual(manager.viewAnnotationAvoidRegions, updatedRegions)
+    }
+
     // MARK: - Helper functions
 
     @available(*, deprecated)

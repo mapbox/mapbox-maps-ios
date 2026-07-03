@@ -48,12 +48,21 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
 
     private var driveMode = false
 
+    // Debug overlay highlighting the view annotation avoid regions.
+    private let avoidRegionsView = AvoidRegionsView()
+    private var didSetupAvoidRegions = false
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
+
+        avoidRegionsView.frame = mapView.bounds
+        avoidRegionsView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        avoidRegionsView.isUserInteractionEnabled = false
+        mapView.addSubview(avoidRegionsView)
 
         updateModeButton()
 
@@ -226,9 +235,53 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
         }
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard !didSetupAvoidRegions, mapView.bounds.width > 0, mapView.bounds.height > 0 else { return }
+        didSetupAvoidRegions = true
+        setupAvoidRegions()
+    }
+
+    /// Adds rectangular regions that view annotations with `enableAvoidRegions` should avoid,
+    /// and renders a debug overlay highlighting them.
+    private func setupAvoidRegions() {
+        let size: CGFloat = 150
+        let bounds = mapView.bounds
+        let regions = [
+            CGRect(x: 0, y: 0, width: size, height: size),
+            CGRect(x: bounds.width - size, y: 0, width: size, height: size),
+            CGRect(x: bounds.width - size, y: (bounds.height - size) / 2, width: size, height: size),
+        ]
+        mapView.viewAnnotations.viewAnnotationAvoidRegions = regions
+        avoidRegionsView.regions = regions
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setToolbarHidden(false, animated: false)
+    }
+}
+
+/// A view that draws the view annotation avoid regions for debugging.
+private final class AvoidRegionsView: UIView {
+    var regions: [CGRect] = [] {
+        didSet { setNeedsDisplay() }
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .clear
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func draw(_ rect: CGRect) {
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        context.setStrokeColor(UIColor.red.cgColor)
+        context.setLineWidth(1)
+        regions.forEach { context.stroke($0) }
     }
 }
 
@@ -325,6 +378,7 @@ private final class Route {
         }
         etaAnnotation.variableAnchors = .all
         etaAnnotation.minZoom = 8
+        etaAnnotation.enableAvoidRegions = true
         etaView.onTap = { [weak self] in self?.onTap?() }
 
         self.etaAnnotation = etaAnnotation
@@ -482,7 +536,6 @@ final class ETAView: UIView {
         update()
 
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
-        self.mbxViewAnnotationCollisionBox = true
     }
 
     @objc private func handleTap() {

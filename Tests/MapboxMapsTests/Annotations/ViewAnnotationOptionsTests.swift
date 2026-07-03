@@ -20,6 +20,7 @@ final class ViewAnnotationOptionsTests: XCTestCase {
     let maxZoom: Double = 20.0
     let collisionBoxes: [CGRect] = [CGRect(x: 10, y: 20, width: 30, height: 40)]
     let enableSymbolLayerCollision: Bool = true
+    let enableAvoidRegions: Bool = true
     var variableAnchors: [ViewAnnotationAnchorConfig] {
         [ViewAnnotationAnchorConfig(anchor: anchor, offsetX: offsetX, offsetY: offsetY)]
     }
@@ -46,8 +47,10 @@ final class ViewAnnotationOptionsTests: XCTestCase {
 
         options.collisionBoxes = collisionBoxes
         options.enableSymbolLayerCollision = enableSymbolLayerCollision
+        options.enableAvoidRegions = enableAvoidRegions
         XCTAssertEqual(options.collisionBoxes, collisionBoxes)
         XCTAssertEqual(options.enableSymbolLayerCollision, enableSymbolLayerCollision)
+        XCTAssertEqual(options.enableAvoidRegions, enableAvoidRegions)
     }
 
     func testCoreInit() {
@@ -66,6 +69,7 @@ final class ViewAnnotationOptionsTests: XCTestCase {
         )
         swiftValue.collisionBoxes = collisionBoxes
         swiftValue.enableSymbolLayerCollision = enableSymbolLayerCollision
+        swiftValue.enableAvoidRegions = enableAvoidRegions
 
         let objcValue = CoreViewAnnotationOptions(
             __annotatedFeature: .fromGeometry(MapboxCommon.Geometry(point)),
@@ -82,7 +86,8 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             minZoom: minZoom as NSNumber?,
             maxZoom: maxZoom as NSNumber?,
             collisionBoxes: [CoreScreenBox(CGRect(x: 10, y: 20, width: 30, height: 40))],
-            enableSymbolLayerCollision: enableSymbolLayerCollision as NSNumber?
+            enableSymbolLayerCollision: enableSymbolLayerCollision as NSNumber?,
+            enableAvoidRegions: enableAvoidRegions as NSNumber?
         )
 
         let convertedOptions = ViewAnnotationOptions(objcValue)

@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Animate verticalFov along with other camera parameters.
+* Introduce new experimental `ViewAnnotationManager.viewAnnotationAvoidRegions` which allows to specify rectangular screen regions that view annotations should avoid. View annotations opt in to this behaviour via the new experimental `ViewAnnotation.enableAvoidRegions` option.
 
 ## 11.26.0-rc.1 - 29 June, 2026
 

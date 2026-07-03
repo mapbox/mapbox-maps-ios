@@ -118,6 +118,13 @@ public struct ViewAnnotationOptions: Equatable {
     @_spi(Experimental)
     public var enableSymbolLayerCollision: Bool?
 
+    /// When `true`, this annotation avoids the regions set by ``ViewAnnotationManager/viewAnnotationAvoidRegions``.
+    ///
+    /// Default value is `false`.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var enableAvoidRegions: Bool?
+
     /// Initializes a `ViewAnnotationOptions`
     public init(
         annotatedFeature: AnnotatedFeature? = nil,
@@ -262,6 +269,7 @@ public struct ViewAnnotationOptions: Equatable {
                    height: box.max.y - box.min.y)
         }
         self.enableSymbolLayerCollision = objcValue.__enableSymbolLayerCollision?.boolValue
+        self.enableAvoidRegions = objcValue.__enableAvoidRegions?.boolValue
     }
 
     internal func frame(with chosenAnchorConfig: ViewAnnotationAnchorConfig?) -> CGRect {
@@ -317,7 +325,8 @@ extension CoreViewAnnotationOptions {
             minZoom: swiftValue.minZoom as NSNumber?,
             maxZoom: swiftValue.maxZoom as NSNumber?,
             collisionBoxes: coreCollisionBoxes,
-            enableSymbolLayerCollision: swiftValue.enableSymbolLayerCollision as NSNumber?
+            enableSymbolLayerCollision: swiftValue.enableSymbolLayerCollision as NSNumber?,
+            enableAvoidRegions: swiftValue.enableAvoidRegions as NSNumber?
         )
     }
 }

@@ -482,7 +482,7 @@ final class ETAView: UIView {
         update()
 
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
-        self.mbxCollisionBox = true
+        self.mbxViewAnnotationCollisionBox = true
     }
 
     @objc private func handleTap() {

@@ -35,7 +35,7 @@ struct PinView: View {
                 }
             }
             .frame(width: size, height: size * 3 / 2)
-            .mbxCollisionBox()
+            .mbxViewAnnotationCollisionBox()
             .padding(.bottom, 3)
 
             Text(text)
@@ -47,7 +47,7 @@ struct PinView: View {
                 .shadow(color: .white, radius: 0, x: -0.5, y: -0.5)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 130)
-                .mbxCollisionBox()
+                .mbxViewAnnotationCollisionBox()
         }
     }
 

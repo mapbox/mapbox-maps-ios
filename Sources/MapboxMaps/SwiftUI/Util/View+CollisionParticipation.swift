@@ -38,7 +38,7 @@ extension View {
     /// When at least one subview is marked, only marked subviews' frames are used
     /// as collision boxes. When none are marked, the full annotation bounds are used.
     @_spi(Experimental)
-    public func mbxCollisionBox(_ enabled: Bool = true) -> some View {
+    public func mbxViewAnnotationCollisionBox(_ enabled: Bool = true) -> some View {
         modifier(CollisionParticipationModifier(participates: enabled))
     }
 }

@@ -42,10 +42,10 @@ final class ViewAnnotationsContainerTests: XCTestCase {
         view1.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         let box1a = UIView()
         box1a.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        box1a.mbxCollisionBox = true
+        box1a.mbxViewAnnotationCollisionBox = true
         let box1b = UIView()
         box1b.frame = CGRect(x: 60, y: 60, width: 40, height: 40)
-        box1b.mbxCollisionBox = true
+        box1b.mbxViewAnnotationCollisionBox = true
         view1.addSubview(box1a)
         view1.addSubview(box1b)
         container1.addSubview(view1)
@@ -62,7 +62,7 @@ final class ViewAnnotationsContainerTests: XCTestCase {
         view2.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         let box2 = UIView()
         box2.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
-        box2.mbxCollisionBox = true
+        box2.mbxViewAnnotationCollisionBox = true
         view2.addSubview(box2)
         container2.addSubview(view2)
         container2.subviewDebugFrames = true
@@ -78,7 +78,7 @@ final class ViewAnnotationsContainerTests: XCTestCase {
         let container3 = ViewAnnotationsContainer()
         let view3 = UIView()
         view3.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        view3.mbxCollisionBox = true
+        view3.mbxViewAnnotationCollisionBox = true
         container3.addSubview(view3)
         container3.subviewDebugFrames = true
 

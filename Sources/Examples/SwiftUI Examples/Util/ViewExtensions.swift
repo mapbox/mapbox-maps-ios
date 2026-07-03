@@ -73,7 +73,7 @@ extension String: Identifiable {
 extension View {
     @ViewBuilder
     func safeGlassEffect(in shape: some Shape = RoundedRectangle(cornerRadius: 14)) -> some View {
-#if compiler(>=6.2)
+#if compiler(>=6.2) && !os(visionOS)
         if #available(iOS 26.0, *) {
             self.glassEffect(in: shape)
         } else {

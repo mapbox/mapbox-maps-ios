@@ -13,8 +13,8 @@ GIT
 
 GIT
   remote: https://github.com/fastlane/fastlane.git
-  revision: 20f68fd02beeb623e5c43763f7556838123d3601
-  ref: 20f68fd02beeb623e5c43763f7556838123d3601
+  revision: b97b5415d47ee739f3cb5047e275a63e6865a8cf
+  ref: b97b5415d47ee739f3cb5047e275a63e6865a8cf
   specs:
     fastlane (2.236.1)
       CFPropertyList (>= 2.3, < 5.0.0)
@@ -78,7 +78,7 @@ GEM
     artifactory (3.0.17)
     atomos (0.1.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1262.0)
+    aws-partitions (1.1265.0)
     aws-sdk-core (3.252.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -168,7 +168,7 @@ GEM
       base64 (~> 0.2)
       faraday (>= 1.0, < 3.a)
     google-cloud-errors (1.6.0)
-    google-cloud-storage (1.61.0)
+    google-cloud-storage (1.62.0)
       addressable (~> 2.8)
       digest-crc (~> 0.4)
       google-apis-core (>= 0.18, < 2)

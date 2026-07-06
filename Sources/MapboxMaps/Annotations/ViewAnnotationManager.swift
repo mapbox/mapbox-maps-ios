@@ -92,6 +92,17 @@ public final class ViewAnnotationManager {
         set { mapboxMap.viewAnnotationAvoidLayers = newValue }
     }
 
+    /// Specify rectangular screen regions that view annotations should avoid.
+    ///
+    /// This applies to view annotations with ``ViewAnnotation/enableAvoidRegions`` set to `true`.
+    /// The regions are defined in screen points relative to the top-left corner of the map.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public var viewAnnotationAvoidRegions: [CGRect] {
+        get { mapboxMap.viewAnnotationAvoidRegions }
+        set { mapboxMap.viewAnnotationAvoidRegions = newValue }
+    }
+
     /// The complete list of annotations associated with the receiver.
     @available(*, deprecated, renamed: "allAnnotations", message: "Please use allAnnotations instead, or directly access ViewAnnotation itself")
     public var annotations: [UIView: ViewAnnotationOptions] {

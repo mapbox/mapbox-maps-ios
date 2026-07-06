@@ -122,6 +122,16 @@ public final class ViewAnnotation {
         set { setProperty(\.enableSymbolLayerCollision, value: newValue, oldValue: enableSymbolLayerCollision) }
     }
 
+    /// When `true`, this annotation avoids the regions set by ``ViewAnnotationManager/viewAnnotationAvoidRegions``.
+    ///
+    /// Default value is `false`.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var enableAvoidRegions: Bool {
+        get { property(\.enableAvoidRegions, default: false) }
+        set { setProperty(\.enableAvoidRegions, value: newValue, oldValue: enableAvoidRegions) }
+    }
+
     /// Specifies if this view annotation is visible or not.
     ///
     /// The property is `true` by default.

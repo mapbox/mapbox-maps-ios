@@ -17,6 +17,8 @@ By default, the full bounding box of the view annotation is used for collision d
 * Improved `Marker` -- now it automatically hides the underlying map symbols below it's icon and text.
 * [SwiftUI] Added experimental `Map.viewAnnotationAvoidLayers()` which allows to set view annotations to avoid layers.
 
+## 11.25.1 - 03 July, 2026
+
 ## 11.25.0 - 11 June, 2026
 
 ## 11.25.0-rc.2 - 04 June, 2026

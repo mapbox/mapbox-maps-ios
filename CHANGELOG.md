@@ -54,6 +54,7 @@ By default, the full bounding box of the view annotation is used for collision d
 * Add setRootPath method to TileStore swift wrapper.
 
 ## 11.20.3 - 14 April, 2026
+## 11.22.4 - 03 July, 2026
 
 ## 11.22.3 - 06 May, 2026
 

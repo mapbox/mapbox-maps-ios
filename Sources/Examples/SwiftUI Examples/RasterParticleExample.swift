@@ -52,7 +52,7 @@ struct RasterParticleExample: View {
         .overlay(alignment: .bottom) {
             VStack(alignment: .center) {
                 QueryRenderedRasterValuesView(value: queryRenderedRasterValue)
-                SliderSettingView(title: "Particle Count", value: $rasterParticleCount, range: 1...4096, step: 1)
+                SliderSettingView(title: "Particle Count", value: $rasterParticleCount, range: 1...4096, step: 1, commitOnEditingEnded: true)
                 SliderSettingView(title: "Opacity Factor", value: $rasterParticleFadeOpacityFactor, range: 0...1, step: 0.01)
                 SliderSettingView(title: "Reset Rate", value: $resetRateFactor, range: 0...1, step: 0.01)
                 SliderSettingView(title: "Speed Factor", value: $speedFactor, range: 0...1, step: 0.01)
@@ -61,6 +61,7 @@ struct RasterParticleExample: View {
             .padding(.bottom, 40)
             .padding(.horizontal, 16)
         }
+        .applyDarkNavigationBarOniOS26AndAbove()
     }
 }
 
@@ -70,16 +71,40 @@ private struct SliderSettingView: View {
     var range: ClosedRange<Double>
     var step: Double
 
+    /// When `true`, the bound value is updated only after the user finishes dragging.
+    /// Use it for properties that are expensive to reconfigure on every change
+    /// (e.g. particle count, which re-seeds the GPU particle buffers).
+    var commitOnEditingEnded = false
+
+    @State private var draggingValue: Double?
+
     var body: some View {
         HStack {
-            Text("\(title)")
-            Slider(value: $value, in: range, step: step) {
-            } minimumValueLabel: {
-                Text("")
-            } maximumValueLabel: {
-                Text("\(String(format: "%.2f", value))")
-                    .font(.system(size: 12))
-            }
+            Text(title)
+            Slider(
+                value: Binding(
+                    get: { draggingValue ?? value },
+                    set: { newValue in
+                        if commitOnEditingEnded {
+                            draggingValue = newValue
+                        } else {
+                            value = newValue
+                        }
+                    }
+                ),
+                in: range,
+                step: step,
+                onEditingChanged: { isEditing in
+                    if !isEditing, let draggingValue {
+                        value = draggingValue
+                        self.draggingValue = nil
+                    }
+                }
+            )
+            Text(String(format: "%.2f", draggingValue ?? value))
+                .font(.system(size: 12))
+                .monospacedDigit()
+                .frame(width: 64, alignment: .trailing)
         }
     }
 }

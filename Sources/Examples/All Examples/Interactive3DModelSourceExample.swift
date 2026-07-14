@@ -2,7 +2,7 @@ import UIKit
 import MapboxMaps
 
 @objc(Interactive3DModelSourceExample)
-final class Interactive3DModelSourceExample: UIViewController, ExampleProtocol {
+final class Interactive3DModelSourceExample: UIViewController, ExampleProtocol, UIColorPickerViewControllerDelegate {
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
@@ -19,6 +19,7 @@ final class Interactive3DModelSourceExample: UIViewController, ExampleProtocol {
 
     private var controlsStackView: UIStackView!
     private var containerView: UIVisualEffectView!
+    private weak var colorButton: UIButton?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -208,6 +209,7 @@ final class Interactive3DModelSourceExample: UIViewController, ExampleProtocol {
         colorButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         colorButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         colorButton.addTarget(self, action: #selector(colorButtonTapped), for: .touchUpInside)
+        self.colorButton = colorButton
 
         rowStack.addArrangedSubview(label)
         rowStack.addArrangedSubview(spacer)
@@ -218,38 +220,24 @@ final class Interactive3DModelSourceExample: UIViewController, ExampleProtocol {
     }
 
     @objc private func colorButtonTapped(_ sender: UIButton) {
-        let alert = UIAlertController(title: "Vehicle Color", message: nil, preferredStyle: .actionSheet)
-        alert.popoverPresentationController?.sourceView = sender
+        let picker = UIColorPickerViewController()
+        picker.selectedColor = vehicleColor
+        picker.delegate = self
+        present(picker, animated: true)
+    }
 
-        let colors: [(String, UIColor)] = [
-            ("White", .white),
-            ("Black", .black),
-            ("Red", .red),
-            ("Blue", UIColor(red: 0, green: 100/255, blue: 200/255, alpha: 1)),
-            ("Green", UIColor(red: 0, green: 150/255, blue: 0, alpha: 1)),
-            ("Yellow", .yellow),
-            ("Brown", UIColor(red: 150/255, green: 75/255, blue: 0, alpha: 1)),
-            ("Gray", .gray)
-        ]
-
-        for (name, color) in colors {
-            alert.addAction(UIAlertAction(title: name, style: .default) { [weak self] _ in
-                self?.vehicleColor = color
-                sender.backgroundColor = color
-                self?.updateModel(materialOverrides: [
-                    ModelMaterialOverride(
-                        name: "body",
-                        modelColor: StyleColor(color),
-                        modelColorMixIntensity: 1.0,
-                        modelEmissiveStrength: nil,
-                        modelOpacity: nil
-                    )
-                ])
-            })
-        }
-
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        present(alert, animated: true)
+    func colorPickerViewController(_ viewController: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
+        vehicleColor = color
+        colorButton?.backgroundColor = color
+        updateModel(materialOverrides: [
+            ModelMaterialOverride(
+                name: "body",
+                modelColor: StyleColor(color),
+                modelColorMixIntensity: 1.0,
+                modelEmissiveStrength: nil,
+                modelOpacity: nil
+            )
+        ])
     }
 
     private func addSliderControl(title: String, systemIcon: String, initialValue: Double, onChange: @escaping (Double) -> Void) {

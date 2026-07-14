@@ -30,6 +30,25 @@ extension View {
     func limitPaneWidth() -> some View {
         self.frame(maxWidth: 500)
     }
+
+    /// Forces light-colored navigation bar content (title, back button, status bar) on iOS 26+.
+    ///
+    /// iOS 18 and below have an opaque nav bar, so the default black title/status bar text is fine.
+    /// iOS 26 has a transparent nav bar: over a dark map the black title becomes unreadable, while the
+    /// system back button and status bar already adapt to the content underneath. Apply this to
+    /// examples whose map background is dark.
+    @ViewBuilder
+    func applyDarkNavigationBarOniOS26AndAbove() -> some View {
+#if compiler(>=6.2)
+        if #available(iOS 26.0, *) {
+            toolbarColorScheme(.dark, for: .navigationBar)
+        } else {
+            self
+        }
+#else
+        self
+#endif
+    }
 }
 
 extension Font {

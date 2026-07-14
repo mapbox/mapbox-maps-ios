@@ -26,7 +26,7 @@ struct RadarContentView: View {
         "mbxsolutions.6f0qjx4r",
         "mbxsolutions.bybqmlpw",
         "mbxsolutions.bhftnzh4",
-        "mbxsolutions.bded0cu7",
+        "mbxsolutions.bded0cu7"
     ]
     @State private var timer = Timer.publish(every: .infinity, on: .main, in: .common).autoconnect()
     @State private var state: AnimationState = .paused
@@ -186,17 +186,6 @@ struct RadarContentView: View {
 }
 
 extension View {
-    fileprivate func applyDarkNavigationBarOniOS26AndAbove() -> some View {
-        // iOS 18 and below have opaque nav bar so having black status and nav bar text is ok
-        // iOS 26 has transparent nav bar, this makes nav and status bar text white for good contrast with the map underneath
-#if compiler(>=6.2)
-        if #available(iOS 26.0, *) {
-            return self.toolbarColorScheme(.dark, for: .navigationBar)
-        }
-#endif
-        return self
-    }
-
     func safeFocusable() -> some View {
         if #available(iOS 17.0, *) {
             return self.focusable()

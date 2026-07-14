@@ -28,13 +28,23 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
     }
 
-    func addRuntimeLayers() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        applyDarkNavigationBarOniOS26AndAbove()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        resetDarkNavigationBarOniOS26AndAbove()
+    }
+
+    private func addRuntimeLayers() {
         createEarthquakeSource()
         createCircleLayer()
         createHeatmapLayer()
     }
 
-    func createEarthquakeSource() {
+    private func createEarthquakeSource() {
         var earthquakeSource = GeoJSONSource(id: self.earthquakeSourceId)
         earthquakeSource.data = .url(self.earthquakeURL)
         earthquakeSource.generateId = true
@@ -46,8 +56,7 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func createHeatmapLayer() {
-
+    private func createHeatmapLayer() {
         // Add earthquake-viz layer
         var heatmapLayer = HeatmapLayer(id: self.heatmapLayerId, source: self.earthquakeSourceId)
         heatmapLayer.maxZoom = 9.0
@@ -125,8 +134,7 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func createCircleLayer() {
-
+    private func createCircleLayer() {
         // Add circle layer
         var circleLayer = CircleLayer(id: self.circleLayerId, source: self.earthquakeSourceId)
 
@@ -205,7 +213,6 @@ final class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
             print("Ran into an error adding a layer: \(error)")
         }
     }
-
 }
 
 private extension HeatmapLayerGlobeExample {

@@ -8,6 +8,7 @@ final class ResizeMapViewExample: UIViewController, ExampleProtocol {
     private let mapsStackView = UIStackView(frame: .zero)
     private let mapsContentView: UIView = UIView(frame: .zero)
     private var mapboxMapView: MapView!
+    private var toolbar: UIToolbar?
 
     var cancellables: Set<AnyCancelable> = []
 
@@ -24,7 +25,14 @@ final class ResizeMapViewExample: UIViewController, ExampleProtocol {
         mapsContentView.addSubview(mapsStackView)
         view.addSubview(mapsContentView)
 
-        navigationController?.setToolbarHidden(false, animated: false)
+        if #available(iOS 26, *) {
+            let t = UIToolbar()
+            t.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(t)
+            toolbar = t
+        } else {
+            navigationController?.setToolbarHidden(false, animated: false)
+        }
 
         mapsStackView.addArrangedSubview(mapboxMapView)
 
@@ -57,14 +65,19 @@ final class ResizeMapViewExample: UIViewController, ExampleProtocol {
     }
 
     func updateToolbarItems(animated: Bool = true) {
-         setToolbarItems([
+        let items: [UIBarButtonItem] = [
             UIBarButtonItem(title: "Start", style: .done, target: self, action: #selector(startAnimation)),
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
             UIBarButtonItem(title: "Delay start", style: .plain, target: self, action: #selector(startFrameAnimationsNow_PropertyAnimator)),
             UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(startBackFrameAnimationsNow_PropertyAnimator)),
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
             UIBarButtonItem(title: "Manual", style: .plain, target: self, action: #selector(resizeWithoutAnimation)),
-        ], animated: animated)
+        ]
+        if let toolbar {
+            toolbar.setItems(items, animated: animated)
+        } else {
+            setToolbarItems(items, animated: animated)
+        }
     }
 
     enum AnimationDirection {
@@ -150,6 +163,8 @@ final class ResizeMapViewExample: UIViewController, ExampleProtocol {
             animationBehaviour = .none
         case .none:
             animationBehaviour = .automatic
+        @unknown default:
+            break
         }
 
         syncAnimationBehaviourButton(sender)
@@ -163,6 +178,8 @@ final class ResizeMapViewExample: UIViewController, ExampleProtocol {
         case .none:
             button.image = UIImage(systemName: "arrow.up.arrow.down.circle")
             button.title = "None"
+        @unknown default:
+            break
         }
     }
 
@@ -201,8 +218,18 @@ final class ResizeMapViewExample: UIViewController, ExampleProtocol {
             mapsContentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             mapsContentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             mapsContentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            mapsContentView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            mapsContentView.bottomAnchor.constraint(
+                equalTo: toolbar?.topAnchor ?? view.safeAreaLayoutGuide.bottomAnchor,
+                constant: toolbar != nil ? -8 : 0),
         ])
+
+        if let toolbar {
+            NSLayoutConstraint.activate([
+                toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                toolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                toolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8),
+            ])
+        }
 
         fullSizeConstraints.append(fullWidthConstraint)
         fullSizeConstraints.append(fullHeightConstraint)

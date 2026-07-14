@@ -25,7 +25,23 @@ final class PointClusteringExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
     }
 
-    func addPointClusters() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        applyDarkNavigationBarOniOS26AndAbove()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+         // The below line is used for internal testing purposes only.
+        finish()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        resetDarkNavigationBarOniOS26AndAbove()
+    }
+
+    private func addPointClusters() {
         // Parse GeoJSON data. This example uses all M1.0+ earthquakes from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
         guard let url = URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson") else { return }
 
@@ -57,7 +73,7 @@ final class PointClusteringExample: UIViewController, ExampleProtocol {
         try! mapView.mapboxMap.addLayer(clusterCountLayer)
     }
 
-    func createClusteredLayer(source: String) -> CircleLayer {
+    private func createClusteredLayer(source: String) -> CircleLayer {
         // Create a `CircleLayer` that only contains clustered points.
         var clusteredLayer = CircleLayer(id: "clustered-earthquake-layer", source: source)
         clusteredLayer.filter = Exp(.has) { "point_count" }
@@ -88,7 +104,7 @@ final class PointClusteringExample: UIViewController, ExampleProtocol {
         return clusteredLayer
     }
 
-    func createUnclusteredLayer(source: String) -> CircleLayer {
+    private func createUnclusteredLayer(source: String) -> CircleLayer {
         var unclusteredLayer = CircleLayer(id: "unclusteredPointLayer", source: source)
 
         // Filter out clusters by checking for point_count.
@@ -108,7 +124,7 @@ final class PointClusteringExample: UIViewController, ExampleProtocol {
         return unclusteredLayer
     }
 
-    func createNumberLayer(source: String) -> SymbolLayer {
+    private func createNumberLayer(source: String) -> SymbolLayer {
         var numberLayer = SymbolLayer(id: "cluster-count-layer", source: source)
 
         // Check whether the point feature is clustered.
@@ -118,11 +134,5 @@ final class PointClusteringExample: UIViewController, ExampleProtocol {
         numberLayer.textField = .expression(Exp(.get) { "point_count" })
         numberLayer.textSize = .constant(12)
         return numberLayer
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-         // The below line is used for internal testing purposes only.
-        finish()
     }
 }

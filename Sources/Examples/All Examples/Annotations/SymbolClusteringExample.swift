@@ -31,7 +31,17 @@ final class SymbolClusteringExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func addSymbolClusteringLayers() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        applyDarkNavigationBarOniOS26AndAbove()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        resetDarkNavigationBarOniOS26AndAbove()
+    }
+
+    private func addSymbolClusteringLayers() {
         // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
         // In order to recolor an image, you need to add a template image to the map's style.
         // The image's rendering mode can be set programmatically or in the asset catalogue.
@@ -102,7 +112,7 @@ final class SymbolClusteringExample: UIViewController, ExampleProtocol {
         finish()
     }
 
-    func createClusteredLayer(source: String) -> CircleLayer {
+    private func createClusteredLayer(source: String) -> CircleLayer {
         // Create a symbol layer to represent the clustered points.
         var clusteredLayer = CircleLayer(id: "clustered-circle-layer", source: source)
 
@@ -132,7 +142,7 @@ final class SymbolClusteringExample: UIViewController, ExampleProtocol {
         return clusteredLayer
     }
 
-    func createUnclusteredLayer(source: String) -> SymbolLayer {
+    private func createUnclusteredLayer(source: String) -> SymbolLayer {
         // Create a symbol layer to represent the points that aren't clustered.
         var unclusteredLayer = SymbolLayer(id: "unclustered-point-layer", source: source)
 
@@ -158,7 +168,7 @@ final class SymbolClusteringExample: UIViewController, ExampleProtocol {
         return unclusteredLayer
     }
 
-    func createNumberLayer(source: String) -> SymbolLayer {
+    private func createNumberLayer(source: String) -> SymbolLayer {
         var numberLayer = SymbolLayer(id: "cluster-count-layer", source: source)
 
         // check whether the point feature is clustered

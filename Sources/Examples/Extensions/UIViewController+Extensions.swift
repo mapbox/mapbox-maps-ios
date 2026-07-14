@@ -17,6 +17,18 @@ extension UIViewController {
         removeFromParent()
     }
 
+    func applyDarkNavigationBarOniOS26AndAbove() {
+        if #available(iOS 26, *) {
+            navigationController?.navigationBar.overrideUserInterfaceStyle = .dark
+        }
+    }
+
+    func resetDarkNavigationBarOniOS26AndAbove() {
+        if #available(iOS 26, *) {
+            navigationController?.navigationBar.overrideUserInterfaceStyle = .unspecified
+        }
+    }
+
     // Present an alert with a given title and message.
     func showAlert(withTitle title: String, and message: String) {
         let alertController = UIAlertController(title: title,

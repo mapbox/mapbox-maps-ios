@@ -35,6 +35,22 @@ final class InsetMapExample: UIViewController, ExampleProtocol {
         setupInsetMapView()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        applyDarkNavigationBarOniOS26AndAbove()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // The below line is used for internal testing purposes only.
+        finish()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        resetDarkNavigationBarOniOS26AndAbove()
+    }
+
     private func setupInsetMapView() {
         let myInsetMapInitOptions = MapInitOptions(cameraOptions: CameraOptions(zoom: 0), styleURI: Self.styleUri )
 
@@ -108,11 +124,5 @@ final class InsetMapExample: UIViewController, ExampleProtocol {
         )
 
         insetMapView.mapboxMap.updateGeoJSONSource(withId: "bounds", geoJSON: polygon.geometry.geoJSONObject)
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        // The below line is used for internal testing purposes only.
-        finish()
     }
 }

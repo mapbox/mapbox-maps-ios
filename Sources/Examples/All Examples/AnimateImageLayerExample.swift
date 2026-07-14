@@ -37,7 +37,17 @@ final class AnimateImageLayerExample: UIViewController, ExampleProtocol {
         }.store(in: &cancelables)
     }
 
-    func addImageLayer() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        applyDarkNavigationBarOniOS26AndAbove()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        resetDarkNavigationBarOniOS26AndAbove()
+    }
+
+    private func addImageLayer() {
         // Create an `ImageSource`. This will manage the image displayed in the `RasterLayer` as well
         // as the location of that image on the map.
         var imageSource = ImageSource(id: sourceId)
@@ -81,7 +91,7 @@ final class AnimateImageLayerExample: UIViewController, ExampleProtocol {
         manageTimer()
     }
 
-    func manageTimer() {
+    private func manageTimer() {
         if timer == nil {
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
                 guard let self = self else { return }

@@ -5,6 +5,7 @@ final class CameraForExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
     private var selectedPlace: [CLLocationCoordinate2D] = .baltic
+    private let bottomSheetHeight: CGFloat = 260
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -14,6 +15,8 @@ final class CameraForExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
         addBottomSheet()
+        mapView.ornaments.options.logo.margins.y = bottomSheetHeight + 8
+        mapView.ornaments.options.attributionButton.margins.y = bottomSheetHeight + 8
         addPolygons()
 
         setCamera(immediately: true, onMapLoaded: true)
@@ -83,12 +86,8 @@ final class CameraForExample: UIViewController, ExampleProtocol {
     }
 
     private func addBottomSheet() {
-        let bottomSheet = BottomSheet(frame: CGRect(
-            x: 0,
-            y: view.bounds.height - 280,
-            width: view.bounds.width,
-            height: 280
-        ))
+        let bottomSheet = BottomSheet()
+        bottomSheet.translatesAutoresizingMaskIntoConstraints = false
         bottomSheet.layer.cornerRadius = 16
         bottomSheet.layer.opacity = 0.8
         bottomSheet.backgroundColor = .white
@@ -98,33 +97,34 @@ final class CameraForExample: UIViewController, ExampleProtocol {
         }
 
         view.addSubview(bottomSheet)
+        NSLayoutConstraint.activate([
+            bottomSheet.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomSheet.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomSheet.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            bottomSheet.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -bottomSheetHeight)
+        ])
     }
 }
 
 private final class BottomSheet: UIView {
-    let placesControl = UISegmentedControl(items: places.map(\.name))
-    let mapAllEdgesInset = UISegmentedControl(items: insetValues)
-    let leftCoordinatesInset = UISegmentedControl(items: insetValues)
-    let rightCoordinatesInsets = UISegmentedControl(items: insetValues)
+    private let placesControl = UISegmentedControl(items: places.map(\.name))
+    private let mapAllEdgesInset = UISegmentedControl(items: insetValues)
+    private let leftCoordinatesInset = UISegmentedControl(items: insetValues)
+    private let rightCoordinatesInsets = UISegmentedControl(items: insetValues)
 
-    let titles = ["right coordinates padding", "left coordinates padding", "map padding", "place"]
-    var titleLabels: [UILabel] = []
+    private let titles = ["right coordinates padding", "left coordinates padding", "map padding", "place"]
+    private var titleLabels: [UILabel] = []
 
     var onSelectionChanged: (([CLLocationCoordinate2D], UIEdgeInsets, UIEdgeInsets) -> Void)?
-    var selectedPlace: [CLLocationCoordinate2D]?
+    var selectedPlace: [CLLocationCoordinate2D]? {
+        didSet {
+            placesControl.selectedSegmentIndex = places.firstIndex(where: { $0.coordinates == selectedPlace }) ?? 0
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        setupSegmentedControl(placesControl, selected: places.firstIndex(where: { $0.coordinates == selectedPlace }) ?? 0)
+        setupSegmentedControl(placesControl, selected: 0)
         setupSegmentedControl(mapAllEdgesInset)
         setupSegmentedControl(leftCoordinatesInset)
         setupSegmentedControl(rightCoordinatesInsets)
@@ -138,13 +138,17 @@ private final class BottomSheet: UIView {
         layoutViews()
     }
 
-    func setupSegmentedControl(_ segmentedControl: UISegmentedControl, selected: Int = 0) {
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setupSegmentedControl(_ segmentedControl: UISegmentedControl, selected: Int = 0) {
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.selectedSegmentIndex = selected
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
     }
 
-    @objc func segmentedControlValueChanged(_ segmentedControl: UISegmentedControl) {
+    @objc private func segmentedControlValueChanged(_ segmentedControl: UISegmentedControl) {
         let mapPadding = UIEdgeInsets(
             allEdges: CGFloat((insetValues[mapAllEdgesInset.selectedSegmentIndex] as NSString).floatValue)
         )
@@ -159,7 +163,7 @@ private final class BottomSheet: UIView {
         onSelectionChanged?(places[placesControl.selectedSegmentIndex].coordinates, mapPadding, coordinatesPadding)
     }
 
-    func createLabels() {
+    private func createLabels() {
         for title in titles {
             let label = UILabel()
             label.text = title
@@ -169,9 +173,9 @@ private final class BottomSheet: UIView {
         }
     }
 
-    func layoutViews() {
-        let spacing: CGFloat = 20
-        var lastBottomAnchor = bottomAnchor
+    private func layoutViews() {
+        let spacing: CGFloat = 16
+        var lastBottomAnchor = safeAreaLayoutGuide.bottomAnchor
 
         let controls = [rightCoordinatesInsets, leftCoordinatesInset, mapAllEdgesInset, placesControl]
 
@@ -179,7 +183,7 @@ private final class BottomSheet: UIView {
             NSLayoutConstraint.activate([
                 segmentedControl.leadingAnchor.constraint(equalTo: leadingAnchor, constant: spacing),
                 segmentedControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -spacing),
-                segmentedControl.bottomAnchor.constraint(equalTo: lastBottomAnchor, constant: -spacing - 10),
+                segmentedControl.bottomAnchor.constraint(equalTo: lastBottomAnchor, constant: -spacing - 8),
 
                 titleLabels[index].leftAnchor.constraint(equalTo: segmentedControl.leftAnchor),
                 titleLabels[index].bottomAnchor.constraint(equalTo: segmentedControl.topAnchor, constant: 0)

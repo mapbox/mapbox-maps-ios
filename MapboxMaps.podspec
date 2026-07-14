@@ -11,7 +11,7 @@ Pod::Spec.new do |m|
   m.social_media_url = 'https://twitter.com/mapbox'
   m.documentation_url = 'https://docs.mapbox.com/ios/maps/api-reference/'
 
-  m.source = { :git => 'https://github.com/mapbox/mapbox-maps-ios.git', :tag => "v#{m.version.to_s}" }
+  m.source = { :git => 'https://github.com/mapbox/mapbox-maps-ios.git', :tag => "#{m.version.to_s}" }
   m.platform = :ios
   m.ios.deployment_target = '14.0'
   m.swift_version = '5.9'

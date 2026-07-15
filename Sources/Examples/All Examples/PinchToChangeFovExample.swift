@@ -5,7 +5,7 @@ final class PinchToChangeFovExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var fovLabel: UILabel!
     private var fovAtGestureStart: CGFloat = 36.87
-    private let fovRange: ClosedRange<CGFloat> = 11...90
+    private let fovRange: ClosedRange<CGFloat> = 1...90
 
     override func viewDidLoad() {
         super.viewDidLoad()

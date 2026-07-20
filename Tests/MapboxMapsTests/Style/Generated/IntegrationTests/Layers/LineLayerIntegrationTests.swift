@@ -39,6 +39,8 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.lineBorderColor = Value<StyleColor>.testConstantValue()
             layer.lineBorderColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineBorderColorUseTheme = .testConstantValue()
+            layer.lineBorderGradient = Value<StyleColor>.testConstantValue()
+            layer.lineBorderGradientUseTheme = .testConstantValue()
             layer.lineBorderWidth = Value<Double>.testConstantValue()
             layer.lineBorderWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineColor = Value<StyleColor>.testConstantValue()

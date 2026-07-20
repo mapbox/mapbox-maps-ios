@@ -101,6 +101,8 @@ final class LineLayerTests: XCTestCase {
        layer.lineBorderColor = Value<StyleColor>.testConstantValue()
        layer.lineBorderColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineBorderColorUseTheme = .none
+       layer.lineBorderGradient = Value<StyleColor>.testConstantValue()
+       layer.lineBorderGradientUseTheme = .none
        layer.lineBorderWidth = Value<Double>.testConstantValue()
        layer.lineBorderWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineColor = Value<StyleColor>.testConstantValue()
@@ -155,6 +157,7 @@ final class LineLayerTests: XCTestCase {
            XCTAssert(decodedLayer.visibility == .constant(.visible))
            XCTAssertEqual(layer.lineBlur, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.lineBorderColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.lineBorderGradient, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.lineBorderWidth, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.lineColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.lineCutoutFadeWidth, Value<Double>.testConstantValue())
@@ -200,6 +203,7 @@ final class LineLayerTests: XCTestCase {
             .lineZOffset(Double.testConstantValue())
             .lineBlur(Double.testConstantValue())
             .lineBorderColor(StyleColor.testConstantValue())
+            .lineBorderGradient(StyleColor.testConstantValue())
             .lineBorderWidth(Double.testConstantValue())
             .lineColor(StyleColor.testConstantValue())
             .lineCutoutFadeWidth(Double.testConstantValue())
@@ -239,6 +243,7 @@ final class LineLayerTests: XCTestCase {
         XCTAssertEqual(layer.lineZOffset, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineBlur, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineBorderColor, Value.constant(StyleColor.testConstantValue()))
+        XCTAssertEqual(layer.lineBorderGradient, Value.constant(StyleColor.testConstantValue()))
         XCTAssertEqual(layer.lineBorderWidth, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.lineColor, Value.constant(StyleColor.testConstantValue()))
         XCTAssertEqual(layer.lineCutoutFadeWidth, Value.constant(Double.testConstantValue()))

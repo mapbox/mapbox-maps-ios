@@ -103,6 +103,15 @@ public struct LineLayer: Layer, Equatable {
     /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var lineBorderColorUseTheme: Value<ColorUseTheme>?
 
+    /// A gradient used to color the border of a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Takes precedence over `line-border-color`. Has no effect unless `line-border-width` is greater than zero. Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var lineBorderGradient: Value<StyleColor>?
+
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// NOTE: - Expressions set to this property currently don't work.
+    @_spi(Experimental) public var lineBorderGradientUseTheme: Value<ColorUseTheme>?
+
     /// The width of the line border. A value of zero means no border.
     /// Default value: 0. Minimum value: 0.
     public var lineBorderWidth: Value<Double>?
@@ -266,6 +275,8 @@ public struct LineLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(lineBorderColor, forKey: .lineBorderColor)
         try paintContainer.encodeIfPresent(lineBorderColorTransition, forKey: .lineBorderColorTransition)
         try paintContainer.encodeIfPresent(lineBorderColorUseTheme, forKey: .lineBorderColorUseTheme)
+        try paintContainer.encodeIfPresent(lineBorderGradient, forKey: .lineBorderGradient)
+        try paintContainer.encodeIfPresent(lineBorderGradientUseTheme, forKey: .lineBorderGradientUseTheme)
         try paintContainer.encodeIfPresent(lineBorderWidth, forKey: .lineBorderWidth)
         try paintContainer.encodeIfPresent(lineBorderWidthTransition, forKey: .lineBorderWidthTransition)
         try paintContainer.encodeIfPresent(lineColor, forKey: .lineColor)
@@ -335,6 +346,8 @@ public struct LineLayer: Layer, Equatable {
             lineBorderColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineBorderColor)
             lineBorderColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineBorderColorTransition)
             lineBorderColorUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .lineBorderColorUseTheme)
+            lineBorderGradient = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineBorderGradient)
+            lineBorderGradientUseTheme = try paintContainer.decodeIfPresent(Value<ColorUseTheme>.self, forKey: .lineBorderGradientUseTheme)
             lineBorderWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineBorderWidth)
             lineBorderWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineBorderWidthTransition)
             lineColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineColor)
@@ -425,6 +438,8 @@ public struct LineLayer: Layer, Equatable {
         case lineBorderColor = "line-border-color"
         case lineBorderColorTransition = "line-border-color-transition"
         case lineBorderColorUseTheme = "line-border-color-use-theme"
+        case lineBorderGradient = "line-border-gradient"
+        case lineBorderGradientUseTheme = "line-border-gradient-use-theme"
         case lineBorderWidth = "line-border-width"
         case lineBorderWidthTransition = "line-border-width-transition"
         case lineColor = "line-color"
@@ -688,6 +703,43 @@ extension LineLayer {
     @_spi(Experimental)
     public func lineBorderColorUseTheme(_ expression: Exp) -> Self {
         with(self, setter(\.lineBorderColorUseTheme, .expression(expression)))
+    }
+
+    /// A gradient used to color the border of a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Takes precedence over `line-border-color`. Has no effect unless `line-border-width` is greater than zero. Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineBorderGradient(_ constant: StyleColor) -> Self {
+        with(self, setter(\.lineBorderGradient, .constant(constant)))
+    }
+
+    /// A gradient used to color the border of a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Takes precedence over `line-border-color`. Has no effect unless `line-border-width` is greater than zero. Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineBorderGradient(_ color: UIColor) -> Self {
+        with(self, setter(\.lineBorderGradient, .constant(StyleColor(color))))
+    }
+
+    /// A gradient used to color the border of a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Takes precedence over `line-border-color`. Has no effect unless `line-border-width` is greater than zero. Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineBorderGradient(_ expression: Exp) -> Self {
+        with(self, setter(\.lineBorderGradient, .expression(expression)))
+    }
+
+    /// This property defines whether the `lineBorderGradient` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineBorderGradientUseTheme(_ useTheme: ColorUseTheme) -> Self {
+        with(self, setter(\.lineBorderGradientUseTheme, .constant(useTheme)))
+    }
+
+    /// This property defines whether the `lineBorderGradient` uses colorTheme from the style or not.
+    /// By default it will use color defined by the root theme in the style.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func lineBorderGradientUseTheme(_ expression: Exp) -> Self {
+        with(self, setter(\.lineBorderGradientUseTheme, .expression(expression)))
     }
 
     /// The width of the line border. A value of zero means no border.

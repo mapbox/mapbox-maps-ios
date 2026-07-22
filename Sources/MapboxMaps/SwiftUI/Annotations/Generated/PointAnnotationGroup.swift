@@ -691,8 +691,6 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
 
     private var symbolZOffsetTransition: StyleTransition?
     /// Transition property for `symbolZOffset`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func symbolZOffsetTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.symbolZOffsetTransition, transition))
     }
@@ -700,8 +698,6 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     private var symbolZOffset: Double?
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func symbolZOffset(_ newValue: Double) -> Self {
         with(self, setter(\.symbolZOffset, newValue))
     }

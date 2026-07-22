@@ -319,12 +319,10 @@ public struct SymbolLayer: Layer, Equatable {
 
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var symbolZOffset: Value<Double>?
+    public var symbolZOffset: Value<Double>?
 
     /// Transition options for `symbolZOffset`.
-    @_documentation(visibility: public)
-    @_spi(Experimental) public var symbolZOffsetTransition: StyleTransition?
+    public var symbolZOffsetTransition: StyleTransition?
 
     /// The color with which the text will be drawn.
     /// Default value: "#000000".
@@ -1596,23 +1594,17 @@ extension SymbolLayer {
 
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func symbolZOffset(_ constant: Double) -> Self {
         with(self, setter(\.symbolZOffset, .constant(constant)))
     }
 
     /// Transition property for `symbolZOffset`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func symbolZOffsetTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.symbolZOffsetTransition, transition))
     }
 
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func symbolZOffset(_ expression: Exp) -> Self {
         with(self, setter(\.symbolZOffset, .expression(expression)))
     }

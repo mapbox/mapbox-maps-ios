@@ -601,8 +601,6 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
     }
 
     /// Transition property for `symbolZOffset`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public var symbolZOffsetTransition: StyleTransition? {
         get { StyleTransition(impl.layerProperties["symbol-z-offset-transition"] as? [String: TimeInterval]) }
         set { impl.layerProperties["symbol-z-offset-transition"] = newValue?.asDictionary }
@@ -610,8 +608,6 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
 
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public var symbolZOffset: Double? {
         get { impl.layerProperties["symbol-z-offset"] as? Double }
         set { impl.layerProperties["symbol-z-offset"] = newValue }

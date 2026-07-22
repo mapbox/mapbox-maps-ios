@@ -8,6 +8,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fixed a crash caused by a data race when subscribing to or cancelling a `Signal` (such as `onCameraChanged`) from a background thread while it emits on another thread. Protected other `Signal`s from the same scenario.
 * Introduce experimental `RasterLayer.rasterAllowDraping` property which allows raster layers to opt out of draping.
 * Clarify the documentation of `RasterLayer.rasterColor`, `rasterColorMix`, and `rasterColorRange`.
+* Promote `SymbolLayer.symbolZOffset` to stable.
 
 ## 11.28.0-rc.1 - 27 July, 2026
 ### Features ✨ and improvements 🏁

@@ -324,14 +324,10 @@ public struct PointAnnotation: Annotation, Equatable, AnnotationInternal {
     public var iconOpacity: Double?
 
     /// Transition property for `symbolZOffset`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public var symbolZOffsetTransition: StyleTransition?
 
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public var symbolZOffset: Double?
 
     /// This property defines whether the `textColor` uses colorTheme from the style or not.
@@ -668,16 +664,12 @@ extension PointAnnotation {
     }
 
     /// Transition property for `symbolZOffset`
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func symbolZOffsetTransition(_ transition: StyleTransition) -> Self {
         with(self, setter(\.symbolZOffsetTransition, transition))
     }
 
     /// Specifies an uniform elevation from the ground, in meters.
     /// Default value: 0. Minimum value: 0.
-    @_documentation(visibility: public)
-    @_spi(Experimental)
     public func symbolZOffset(_ newValue: Double) -> Self {
         with(self, setter(\.symbolZOffset, newValue))
     }

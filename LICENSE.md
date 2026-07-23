@@ -1222,7 +1222,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---
 
-### meshoptimizer,1.1.1,MIT,zeux,https://github.com/zeux/meshoptimizer
+### meshoptimizer,1.2,MIT,zeux,https://github.com/zeux/meshoptimizer
 
 ```
 MIT License

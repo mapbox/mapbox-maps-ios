@@ -339,4 +339,83 @@ final class OrnamentManagerTests: XCTestCase {
         let size = testIndoorSelector.intrinsicContentSize
         XCTAssertEqual(size.height, 220, "Height should be capped at 220 (4 floors * 44 + 44 building button) even with 6 floors")
     }
+
+    func testIndoorSelectorScrollTracksSelectedFloorOnBuildingSwitch() throws {
+        let mockModel = MockIndoorSelectorModel()
+        let testIndoorSelector = IndoorSelectorView(model: mockModel)
+
+        // Find the internal UICollectionView via view hierarchy
+        let collectionView = try XCTUnwrap(
+            testIndoorSelector.subviews
+                .flatMap { $0.subviews }
+                .compactMap { $0 as? UICollectionView }
+                .first,
+            "Expected a UICollectionView in the IndoorSelectorView hierarchy"
+        )
+
+        // Load building A, simulate user scrolling down
+        mockModel.floors = [
+            IndoorFloor(id: "a0", name: "G"),
+            IndoorFloor(id: "a1", name: "1"),
+            IndoorFloor(id: "a2", name: "2"),
+            IndoorFloor(id: "a3", name: "3"),
+            IndoorFloor(id: "a4", name: "4"),
+            IndoorFloor(id: "a5", name: "5")
+        ]
+        mockModel.selectedFloorId = "a0"
+        mockModel.onFloorsUpdated?()
+        collectionView.contentOffset = CGPoint(x: 0, y: 88)
+
+        // >maxVisibleFloors(4), otherwise maxOffset=0 makes the assertion meaningless.
+        mockModel.floors = [
+            IndoorFloor(id: "b0", name: "G"),
+            IndoorFloor(id: "b1", name: "1"),
+            IndoorFloor(id: "b2", name: "2"),
+            IndoorFloor(id: "b3", name: "3"),
+            IndoorFloor(id: "b4", name: "4"),
+            IndoorFloor(id: "b5", name: "5")
+        ]
+        mockModel.selectedFloorId = "b2"
+        mockModel.onFloorsUpdated?()
+
+        // item size is 44pt; selected floor at index 2 → offset = (2-1) * 44 = 44 so floor above takes arrow overlay
+        XCTAssertEqual(collectionView.contentOffset.y, 44, "Scroll should position selected floor below the top-arrow overlay")
+    }
+
+    func testIndoorSelectorScrollBoundariesInLargeFloorList() throws {
+        let mockModel = MockIndoorSelectorModel()
+        let testIndoorSelector = IndoorSelectorView(model: mockModel)
+
+        let collectionView = try XCTUnwrap(
+            testIndoorSelector.subviews
+                .flatMap { $0.subviews }
+                .compactMap { $0 as? UICollectionView }
+                .first
+        )
+
+        // >maxVisibleFloors(4) so maxOffset>0; all via onFloorSelected (no floors change).
+        mockModel.floors = [
+            IndoorFloor(id: "a0", name: "0"),
+            IndoorFloor(id: "a1", name: "1"),
+            IndoorFloor(id: "a2", name: "2"),
+            IndoorFloor(id: "a3", name: "3"),
+            IndoorFloor(id: "a4", name: "4"),
+            IndoorFloor(id: "a5", name: "5")
+        ]
+        mockModel.selectedFloorId = "a5"
+        mockModel.onFloorsUpdated?()
+        XCTAssertEqual(collectionView.contentOffset.y, 88, "Last floor should clamp to maxOffset, not overscroll")
+
+        mockModel.selectedFloorId = nil
+        mockModel.onFloorSelected?()
+        XCTAssertEqual(collectionView.contentOffset.y, 0, "No selection should reset scroll to top")
+
+        mockModel.selectedFloorId = "a0"
+        mockModel.onFloorSelected?()
+        XCTAssertEqual(collectionView.contentOffset.y, 0, "First floor should clamp at 0, not a negative offset")
+
+        mockModel.selectedFloorId = "a2"
+        mockModel.onFloorSelected?()
+        XCTAssertEqual(collectionView.contentOffset.y, 44, "Middle floor should position via the raw (index-1)*itemSize formula")
+    }
 }

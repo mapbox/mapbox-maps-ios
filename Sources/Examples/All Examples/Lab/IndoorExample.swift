@@ -18,6 +18,7 @@ final class IndoorExample: UIViewController, ExampleProtocol {
 
         let options = MapInitOptions(cameraOptions: cameraOptions)
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView.mapboxMap.mapStyle = .standard(showIndoor: true)
 
         mapView.ornaments.options.scaleBar.visibility = .visible
         mapView.ornaments.options.indoorSelector.visibility = .visible

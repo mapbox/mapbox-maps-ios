@@ -56,6 +56,8 @@ private extension IndoorSelectorView {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.bounces = false
         collectionView.decelerationRate = .fast
+        // Prevent iOS from auto-adjusting contentOffset for safe-area insets, which desynced our scroll position.
+        collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(Cell.self, forCellWithReuseIdentifier: Cell.reuseIdentifier)
@@ -75,9 +77,14 @@ private extension IndoorSelectorView {
             invalidateIntrinsicContentSize()
             collectionView.reloadData()
             setNeedsLayout()
+            layoutIfNeeded()
+            scrollToSelectedFloor()
         }
         model.onFloorSelected = { [weak self] in
-            self?.collectionView.reloadData()
+            guard let self else { return }
+            collectionView.reloadData()
+            // Selection can change without floors changing, so re-sync scroll here too.
+            scrollToSelectedFloor()
         }
         model.onVisibilityChanged = { [weak self] in
             self?.updateOpacity()
@@ -179,6 +186,18 @@ private extension IndoorSelectorView {
 
     @objc func scrollUpTapped() { scrollByOneItem(direction: .up) }
     @objc func scrollDownTapped() { scrollByOneItem(direction: .down) }
+
+    func scrollToSelectedFloor() {
+        guard let selectedId = model.selectedFloorId,
+              let index = model.floors.firstIndex(where: { $0.id == selectedId }) else {
+            collectionView.setContentOffset(.zero, animated: false)
+            return
+        }
+        // Offset by 1 so the selected floor lands below the top-arrow overlay when floors exist above it.
+        let maxOffset = max(0, collectionView.contentSize.height - collectionView.bounds.height)
+        let targetOffset = min(CGFloat(max(0, index - 1)) * Constants.itemSize, maxOffset)
+        collectionView.setContentOffset(CGPoint(x: 0, y: targetOffset), animated: false)
+    }
 
     func updateBuildingButtonStyle() {
         buildingButton.backgroundColor = buildingButton.isSelected ? UIColor(white: 0.30, alpha: 1.0) : .clear

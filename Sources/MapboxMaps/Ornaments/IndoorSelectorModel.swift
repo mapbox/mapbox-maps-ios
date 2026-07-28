@@ -46,14 +46,16 @@ final class IndoorSelectorModel: IndoorSelectorModelProtocol {
     }
 
     private func onIndoorUpdated(_ state: IndoorState) {
+        let incomingFloorId: String? = state.selectedFloorId.isEmpty ? nil : state.selectedFloorId
+        let floorSelectionChanged = selectedFloorId != incomingFloorId
+        selectedFloorId = incomingFloorId
+
         if floors != state.floors {
             floors = state.floors
             onFloorsUpdated?()
         }
 
-        let incomingFloorId: String? = state.selectedFloorId.isEmpty ? nil : state.selectedFloorId
-        if selectedFloorId != incomingFloorId {
-            selectedFloorId = incomingFloorId
+        if floorSelectionChanged {
             onFloorSelected?()
         }
 

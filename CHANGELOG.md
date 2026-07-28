@@ -4,13 +4,13 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Fixed a crash caused by a data race when subscribing to or cancelling a `Signal` (such as `onCameraChanged`) from a background thread while it emits on another thread. Protected other `Signal`s from the same scenario.
+
 ## 11.28.0-rc.1 - 27 July, 2026
 ### Features ✨ and improvements 🏁
 * Introduce `LineLayer/lineBorderGradient` API to color the border of a line feature with a gradient along its length. Takes precedence over `lineBorderColor` and requires `lineBorderWidth` to be greater than zero.
 
 ## 11.27.0 - 24 July, 2026
-
-* Fixed a crash caused by a data race when subscribing to or cancelling a `Signal` (such as `onCameraChanged`) from a background thread while it emits on another thread. Protected other `Signal`s from the same scenario.
 
 ## 11.27.0-rc.1 - 13 July, 2026
 

@@ -4,21 +4,25 @@ class ClosureHandlersStore<Payload, ReturnType> {
     typealias ObservationHandler = (Bool) -> Void
     typealias ObjectHandler = ObjectWrapper<Handler>
 
-    var onObserved: ObservationHandler?
-
-    private var objectHandlers = [ObjectHandler]() {
-        didSet {
-            if oldValue.isEmpty && !objectHandlers.isEmpty {
-                onObserved?(true)
-            } else if objectHandlers.isEmpty && !oldValue.isEmpty {
-                onObserved?(false)
-            }
-        }
+    /// The handler is always invoked on the main thread.
+    var onObserved: ObservationHandler? {
+        get { lock.withLock { _onObserved } }
+        set { lock.withLock { _onObserved = newValue } }
     }
+
+    // Guards `objectHandlers` so add/cancel/iteration can run on different threads at once.
+    private let lock = NSLock()
+    private var objectHandlers = [ObjectHandler]()
+    // All guarded by `lock`.
+    private var _onObserved: ObservationHandler?
+    private var notifiedObserved = false
+    // Number of `onObserved` deliveries queued on the main queue but not yet run.
+    private var pendingObservations = 0
 
     func add(handler: @escaping Handler) -> AnyCancelable {
         let objectHandler = ObjectHandler(subject: handler)
-        objectHandlers.append(objectHandler)
+        lock.withLock { objectHandlers.append(objectHandler) }
+        notifyObservedIfNeeded()
 
         // Use of AnyCancelable here allows to have unambiguous cancellation behavior:
         // If you don't store the cancellable, it inevitably cancels the subscription.
@@ -28,7 +32,35 @@ class ClosureHandlersStore<Payload, ReturnType> {
     }
 
     private func cancel(handler: ObjectHandler) {
-        objectHandlers.removeAll(where: { $0 === handler })
+        lock.withLock { objectHandlers.removeAll(where: { $0 === handler }) }
+        notifyObservedIfNeeded()
+    }
+
+    /// Fires `onObserved` on the main thread exactly once per empty↔non-empty transition, in order.
+    /// The sync path exists so current-value signals can react and emit immediately when already
+    /// on main; `pendingObservations` stops it from jumping ahead of an already-queued async call.
+    private func notifyObservedIfNeeded() {
+        lock.lock()
+        let observed = !objectHandlers.isEmpty
+        guard observed != notifiedObserved else {
+            lock.unlock()
+            return
+        }
+        notifiedObserved = observed
+        let handler = _onObserved
+
+        if Thread.isMainThread && pendingObservations == 0 {
+            lock.unlock()
+            handler?(observed)
+            return
+        }
+
+        pendingObservations += 1
+        DispatchQueue.main.async { [self] in
+            handler?(observed)
+            lock.withLock { pendingObservations -= 1 }
+        }
+        lock.unlock()
     }
 }
 
@@ -45,7 +77,9 @@ extension ClosureHandlersStore: Sequence {
     }
 
     func makeIterator() -> Iterator {
-        return Iterator(proxy: objectHandlers.makeIterator())
+        // Snapshot the handlers under the lock (O(1) COW retain)
+        // `send` then iterates and calls them outside the lock.
+        lock.withLock { Iterator(proxy: objectHandlers.makeIterator()) }
     }
 }
 

@@ -14,7 +14,12 @@ private extension Signal {
     private class Subscription<S: Subscriber>: Combine.Subscription where S.Input == Payload {
         private let signal: Signal
         private let subscriber: S
+        // Combine allows `request` and `cancel` to arrive on different threads;
+        // the lock keeps them from tearing `cancelable`/`isCancelled`.
+        private let lock = NSLock()
         private var cancelable: AnyCancelable?
+        private var isCancelled = false
+        private var hasSubscribed = false
 
         init(signal: Signal, subscriber: S) {
             self.signal = signal
@@ -22,14 +27,38 @@ private extension Signal {
         }
 
         func request(_ demand: Subscribers.Demand) {
-            // Signal doesn't implement backpressure concept, so we ignore demand here.
-            cancelable = signal.observe { [weak self] payload in
+            // Signal has no backpressure — subscribe once, ignore any further demand.
+            let shouldSubscribe = lock.withLock { () -> Bool in
+                guard !isCancelled, !hasSubscribed else { return false }
+                hasSubscribed = true
+                return true
+            }
+            guard shouldSubscribe else { return }
+
+            // Observe outside the lock: a current-value signal delivers synchronously,
+            // and the subscriber may cancel from within that delivery (re-entering `cancel`).
+            let token = signal.observe { [weak self] payload in
                 _ = self?.subscriber.receive(payload)
+            }
+            let cancelledWhileSubscribing = lock.withLock { () -> Bool in
+                guard !isCancelled else { return true }
+                cancelable = token
+                return false
+            }
+            if cancelledWhileSubscribing {
+                // Cancelled while we were subscribing — tear down right away.
+                token.cancel()
             }
         }
 
         func cancel() {
-            cancelable?.cancel()
+            let token: AnyCancelable? = lock.withLock {
+                isCancelled = true
+                let token = cancelable
+                cancelable = nil
+                return token
+            }
+            token?.cancel()
         }
     }
 }

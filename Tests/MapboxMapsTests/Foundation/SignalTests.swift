@@ -68,6 +68,42 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(observedValues, [true, false, true, false])
     }
 
+    /// A current-value signal delivers its value synchronously during `observe`, before `takeFirst`
+    /// has stored its own cancellation token. That first value must still stop the stream — it must
+    /// not leak the subscription and keep delivering later values.
+    func testTakeFirstDeliversSynchronousCurrentValueExactlyOnce() {
+        let subject = CurrentValueSignalSubject<Int>(1)
+
+        var received = [Int]()
+        subject.signal.observeNext { received.append($0) }.store(in: &cancellables)
+
+        XCTAssertEqual(received, [1], "the synchronous current value must be delivered once")
+
+        subject.value = 2
+        subject.value = 3
+
+        XCTAssertEqual(received, [1], "takeFirst must stop after the first value even when it arrived synchronously")
+    }
+
+    /// The token returned by `observeNext`/`takeFirst` cancels on deinit; discarding it must tear
+    /// the subscription down immediately — the operator's internal state must not retain the token
+    /// itself, or the subscription would silently stay alive.
+    func testTakeFirstDiscardedTokenCancelsImmediately() {
+        let subject = SignalSubject<Int>()
+        var observedValues = [Bool]()
+        subject.onObserved = { observedValues.append($0) }
+
+        var received = [Int]()
+        autoreleasepool {
+            _ = subject.signal.observeNext { received.append($0) }
+        }
+
+        XCTAssertEqual(observedValues, [true, false], "discarding the token must cancel the subscription immediately")
+
+        subject.send(1)
+        XCTAssertEqual(received, [], "no delivery after the token was discarded")
+    }
+
     func testFilter() {
         let subj = SignalSubject<Int>()
 
@@ -304,6 +340,82 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(observedValues, [true, false, true, false])
     }
 
+    func testCombineCancelDuringSynchronousFirstValue() {
+        let subject = CurrentValueSignalSubject<Int>(1)
+        var observedValues = [Bool]()
+        subject.onObserved = { observedValues.append($0) }
+
+        // `first()` cancels the upstream subscription from within the synchronous
+        // delivery of the current value — before `request(_:)` has stored the token.
+        var received = [Int]()
+        let token = subject.signal.first().sink { received.append($0) }
+
+        XCTAssertEqual(received, [1])
+        XCTAssertEqual(observedValues, [true, false], "a subscription cancelled during its own setup must still be torn down")
+        _ = token
+    }
+
+    /// request : cancel — Combine allows a subscription's `request` and `cancel` to arrive on
+    /// different threads (e.g. `.subscribe(on:)` requests on its queue while the sink's token
+    /// deinits on main). Whatever the interleaving, the subscription must end torn down.
+    func testCombineRequestRacingCancelAlwaysTearsDown() {
+        let subject = SignalSubject<Int>()
+
+        for iteration in 0..<1_000 {
+            let grabber = SubscriptionGrabber<Int>()
+            subject.signal.receive(subscriber: grabber)
+            guard let subscription = grabber.subscription else {
+                return XCTFail("subscription was not delivered")
+            }
+
+            DispatchQueue.concurrentPerform(iterations: 2) { i in
+                if i == 0 {
+                    subscription.request(.unlimited)
+                } else {
+                    subscription.cancel()
+                }
+            }
+
+            // One leak is proof enough — stop at the first failed interleaving.
+            guard Array(subject).isEmpty else {
+                return XCTFail("a cancelled subscription must not stay registered in the store (leaked on iteration \(iteration))")
+            }
+        }
+    }
+
+    /// cancel before request — a subscriber may cancel before it ever requests demand
+    /// (e.g. its token is discarded right away). A later `request` must not subscribe.
+    func testCombineCancelBeforeRequestNeverSubscribes() {
+        let subject = SignalSubject<Int>()
+        let grabber = SubscriptionGrabber<Int>()
+        subject.signal.receive(subscriber: grabber)
+        guard let subscription = grabber.subscription else {
+            return XCTFail("subscription was not delivered")
+        }
+
+        subscription.cancel()
+        subscription.request(.unlimited)
+
+        XCTAssertEqual(Array(subject).count, 0, "request after cancel must not register a handler")
+    }
+
+    /// Combine may call `request` more than once; since Signal has no backpressure, that must not
+    /// create duplicate, never-cancelled subscriptions.
+    func testCombineRepeatedRequestSubscribesOnce() {
+        let subject = SignalSubject<Int>()
+        let grabber = SubscriptionGrabber<Int>()
+        subject.signal.receive(subscriber: grabber)
+        guard let subscription = grabber.subscription else {
+            return XCTFail("subscription was not delivered")
+        }
+
+        subscription.request(.unlimited)
+        subscription.request(.unlimited)
+        subscription.request(.unlimited)
+
+        XCTAssertEqual(Array(subject).count, 1, "repeated request must not create duplicate subscriptions")
+    }
+
     func testCombineLatest2() {
         let subject1 = SignalSubject<Int>()
         let subject2 = SignalSubject<Int>()
@@ -527,4 +639,14 @@ private struct Triple<T: Equatable, U: Equatable, S: Equatable>: Equatable {
     init(_ pair: (T, U, S)) {
         self.init(pair.0, pair.1, pair.2)
     }
+}
+
+/// Captures the `Subscription` a publisher hands out, so a test can drive
+/// `request`/`cancel` on it directly.
+private final class SubscriptionGrabber<Input>: Subscriber {
+    typealias Failure = Never
+    private(set) var subscription: Combine.Subscription?
+    func receive(subscription: Combine.Subscription) { self.subscription = subscription }
+    func receive(_ input: Input) -> Subscribers.Demand { .none }
+    func receive(completion: Subscribers.Completion<Never>) {}
 }

@@ -16,6 +16,9 @@
 internal class CurrentValueSignalSubject<Value> {
     typealias ObservationHandler = (Bool) -> Void
     private let store = ClosureHandlersStore<Value, Void>()
+    // `value` may be read on the subscribing thread (`.subscribe(on:)`) while the owner updates it.
+    private let valueLock = NSLock()
+    private var _value: Value
 
     var signal: Signal<Value> {
         Signal { [weak self] handler in
@@ -28,8 +31,10 @@ internal class CurrentValueSignalSubject<Value> {
         }
     }
     var value: Value {
-        didSet {
-            store.send(value)
+        get { valueLock.withLock { _value } }
+        set {
+            valueLock.withLock { _value = newValue }
+            store.send(newValue)
         }
     }
 
@@ -43,7 +48,7 @@ internal class CurrentValueSignalSubject<Value> {
     /// - Parameters:
     ///    - value: Initial value.
     init(_ value: Value) {
-        self.value = value
+        self._value = value
     }
 }
 

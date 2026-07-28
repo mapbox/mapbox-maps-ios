@@ -98,4 +98,55 @@ final class CurrentValueSignalSubjectTests: XCTestCase {
 
         XCTAssertEqual(obObservedValues, [true, false])
     }
+
+    /// value (read) : value (write) — a background subscriber (e.g. `onLocationUpdate` via
+    /// `.subscribe(on:)`) must never see a half-written value while the owner replaces it. Each
+    /// write uses a fresh object so a torn read is detectable via `isConsistent`.
+    func testValueIsNotTornWhenReadFromBackgroundSubscriber() {
+        final class Box {
+            let n: Int
+            init(_ n: Int) { self.n = n }
+        }
+        struct TrackedValue {
+            let box: Box
+            let n: Int
+            init(_ n: Int) { (box, self.n) = (Box(n), n) }
+            var isConsistent: Bool { box.n == n }
+        }
+
+        let subject = CurrentValueSignalSubject(TrackedValue(0))
+
+        let violationsLock = NSLock()
+        var violations = 0
+        let iterations = 100_000
+
+        let doneLock = NSLock()
+        var done = false
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            // Read `value` directly — the exact read `signal` performs for the first delivery
+            // (`handler(self.value)`) — in a tight loop, so the reads densely overlap the writes.
+            DispatchQueue.concurrentPerform(iterations: iterations) { _ in
+                let value = subject.value
+                if !value.isConsistent {
+                    violationsLock.withLock { violations += 1 }
+                }
+            }
+            doneLock.withLock { done = true }
+        }
+
+        // Write continuously until every reader has finished, so each racy read
+        // overlaps an active write.
+        let deadline = Date().addingTimeInterval(30)
+        var i = 1
+        while doneLock.withLock({ !done }) {
+            guard Date() < deadline else {
+                return XCTFail("timed out waiting for the subscribe loops to finish")
+            }
+            subject.value = TrackedValue(i)
+            i += 1
+        }
+
+        XCTAssertEqual(violations, 0, "a subscriber must never see a half-written value")
+    }
 }

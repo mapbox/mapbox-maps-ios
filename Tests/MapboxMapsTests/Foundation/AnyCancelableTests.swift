@@ -93,6 +93,36 @@ final class AnyCancelableTests: XCTestCase {
         XCTAssertEqual(counter.value, 1)
     }
 
+    /// cancel : cancel — the same cancellable cancelled from several threads at once
+    /// must run its closure exactly once.
+    func testConcurrentCancelRunsClosureExactlyOnce() {
+        for _ in 0..<1_000 {
+            let countLock = NSLock()
+            var count = 0
+            let cancelable = AnyCancelable {
+                countLock.withLock { count += 1 }
+            }
+
+            DispatchQueue.concurrentPerform(iterations: 8) { _ in
+                cancelable.cancel()
+            }
+
+            XCTAssertEqual(count, 1, "concurrent cancels must run the closure exactly once")
+        }
+    }
+
+    func testReentrantCancel() {
+        var cancelCount = 0
+        var cancelable: AnyCancelable!
+        cancelable = AnyCancelable {
+            cancelCount += 1
+            cancelable.cancel() // cancellation chains may loop back; must be a no-op
+        }
+
+        cancelable.cancel()
+        XCTAssertEqual(cancelCount, 1)
+    }
+
     func testStoreInCollection() {
         let counter = CancelCounter()
         var set = Set<AnyCancelable>()

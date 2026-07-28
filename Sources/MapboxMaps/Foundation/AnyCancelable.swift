@@ -4,6 +4,8 @@
 ///
 /// This class has similar behavior to `Combine.AnyCancellable`, but doesn't require iOS 13.
 public class AnyCancelable: Cancelable {
+    // Guards `closure` so concurrent or re-entrant cancels invoke it exactly once.
+    private let lock = NSLock()
     private var closure: (() -> Void)?
 
     /// Creates AnyCancelable with the cancelling closure.
@@ -36,8 +38,13 @@ public class AnyCancelable: Cancelable {
 
     /// Cancels the activity.
     public func cancel() {
+        // Run the closure outside the lock — it may re-enter `cancel()`.
+        let closure: (() -> Void)? = lock.withLock {
+            let closure = self.closure
+            self.closure = nil // Relinquish resources captured by closure
+            return closure
+        }
         closure?()
-        closure = nil // Relinquish resources captured by closure
     }
 
     deinit {

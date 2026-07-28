@@ -9,6 +9,8 @@ internal class CurrentValueSignalProxy<T> {
     }
 
     private let passthrough = SignalSubject<T>()
+    // `value` is written on the emitting thread and read on the subscribing thread (`.subscribe(on:)`).
+    private let valueLock = NSLock()
     private var value: T?
     private var token: AnyCancelable?
     private var observed: Bool = false {
@@ -25,16 +27,17 @@ internal class CurrentValueSignalProxy<T> {
     }
 
     private func observeImpl(_ handler: @escaping Signal<T>.Handler) -> AnyCancelable {
-        if let value {
+        if let value = valueLock.withLock({ value }) {
             handler(value)
         }
         return passthrough.signal.observe { [weak self] payload in
-            self?.value = payload
+            self?.valueLock.withLock { self?.value = payload }
             handler(payload)
         }
     }
 
     private func updateProxiedOserving() {
+        assert(Thread.isMainThread)
         token = observed ? proxied?.observe(passthrough.send(_:)) : nil
     }
 }

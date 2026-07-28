@@ -125,4 +125,60 @@ class CurrentValueSignalProxyTests: XCTestCase {
 
         XCTAssertEqual(observed, [2, 2, 8, 13])
     }
+
+    /// value (read) : value (write) — a background subscriber (e.g. `onLocationChange` via
+    /// `.subscribe(on:)`) must never see a half-written cached value while the emitting thread
+    /// replaces it. Each write uses a fresh object so a torn read is detectable via `isConsistent`.
+    func testCachedValueIsNotTornWhenReadFromBackgroundSubscriber() {
+        final class Box {
+            let n: Int
+            init(_ n: Int) { self.n = n }
+        }
+        struct TrackedValue {
+            let box: Box
+            let n: Int
+            init(_ n: Int) { (box, self.n) = (Box(n), n) }
+            var isConsistent: Bool { box.n == n }
+        }
+
+        let source = SignalSubject<TrackedValue>()
+        let proxy = CurrentValueSignalProxy<TrackedValue>()
+        proxy.proxied = source.signal
+
+        // Keep the proxy observed so it keeps caching every value sent below.
+        let keepAlive = proxy.signal.observe { _ in }
+        defer { keepAlive.cancel() }
+
+        let violationsLock = NSLock()
+        var violations = 0
+        let iterations = 20_000
+
+        let doneLock = NSLock()
+        var done = false
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            DispatchQueue.concurrentPerform(iterations: iterations) { _ in
+                proxy.signal.observe { value in
+                    if !value.isConsistent {
+                        violationsLock.withLock { violations += 1 }
+                    }
+                }.cancel()
+            }
+            doneLock.withLock { done = true }
+        }
+
+        // Write continuously until every reader has finished, so each racy read
+        // overlaps an active write.
+        let deadline = Date().addingTimeInterval(30)
+        var i = 0
+        while doneLock.withLock({ !done }) {
+            guard Date() < deadline else {
+                return XCTFail("timed out waiting for the subscribe loops to finish")
+            }
+            source.send(TrackedValue(i))
+            i += 1
+        }
+
+        XCTAssertEqual(violations, 0, "a subscriber must never see a half-written cached value")
+    }
 }

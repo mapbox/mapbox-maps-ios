@@ -70,13 +70,36 @@ extension Signal {
     /// Creates a signal that triggers once, then cancels itself.
     func takeFirst() -> Signal {
         return Signal { handler in
-            weak var weakToken: AnyCancelable?
-            let token = self.observe { payload in
-                weakToken?.cancel()
+            // First value may arrive synchronously (current-value signals) or on another thread;
+            // the lock ensures exactly-once delivery+cancel. `token` is weak — a strong capture
+            // would cycle through the store, keeping the subscription alive past the caller's cancel.
+            let lock = NSLock()
+            var fired = false
+            weak var token: AnyCancelable?
+
+            let newToken = self.observe { payload in
+                lock.lock()
+                guard !fired else {
+                    lock.unlock()
+                    return
+                }
+                fired = true
+                let tokenToCancel = token
+                lock.unlock()
+
+                tokenToCancel?.cancel()
                 handler(payload)
             }
-            weakToken = token
-            return token
+
+            let firedSynchronously = lock.withLock { () -> Bool in
+                if !fired { token = newToken }
+                return fired
+            }
+            if firedSynchronously {
+                // Delivered synchronously during `observe` — cancel the just-created subscription.
+                newToken.cancel()
+            }
+            return newToken
         }
     }
 

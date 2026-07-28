@@ -3,6 +3,8 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
+
+## 11.28.0-rc.1 - 27 July, 2026
 ### Features ✨ and improvements 🏁
 * Introduce `LineLayer/lineBorderGradient` API to color the border of a line feature with a gradient along its length. Takes precedence over `lineBorderColor` and requires `lineBorderWidth` to be greater than zero.
 

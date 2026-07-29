@@ -75,6 +75,7 @@ final class RasterLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
        var layer = RasterLayer(id: "test-id", source: "source")
+       layer.rasterAllowDraping = Value<Bool>.testConstantValue()
        layer.rasterArrayBand = Value<String>.testConstantValue()
        layer.rasterBrightnessMax = Value<Double>.testConstantValue()
        layer.rasterBrightnessMaxTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -116,6 +117,7 @@ final class RasterLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(RasterLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
+           XCTAssertEqual(layer.rasterAllowDraping, Value<Bool>.testConstantValue())
            XCTAssertEqual(layer.rasterArrayBand, Value<String>.testConstantValue())
            XCTAssertEqual(layer.rasterBrightnessMax, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.rasterBrightnessMin, Value<Double>.testConstantValue())
@@ -143,6 +145,7 @@ final class RasterLayerTests: XCTestCase {
             .slot(Slot.testConstantValue())
             .minZoom(Double.testConstantValue())
             .maxZoom(Double.testConstantValue())
+            .rasterAllowDraping(Bool.testConstantValue())
             .rasterArrayBand(String.testConstantValue())
             .rasterBrightnessMax(Double.testConstantValue())
             .rasterBrightnessMin(Double.testConstantValue())
@@ -164,6 +167,7 @@ final class RasterLayerTests: XCTestCase {
         XCTAssertEqual(layer.slot, Slot.testConstantValue())
         XCTAssertEqual(layer.minZoom, Double.testConstantValue())
         XCTAssertEqual(layer.maxZoom, Double.testConstantValue())
+        XCTAssertEqual(layer.rasterAllowDraping, Value.constant(Bool.testConstantValue()))
         XCTAssertEqual(layer.rasterArrayBand, Value.constant(String.testConstantValue()))
         XCTAssertEqual(layer.rasterBrightnessMax, Value.constant(Double.testConstantValue()))
         XCTAssertEqual(layer.rasterBrightnessMin, Value.constant(Double.testConstantValue()))

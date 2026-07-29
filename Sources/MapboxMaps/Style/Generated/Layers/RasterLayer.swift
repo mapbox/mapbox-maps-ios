@@ -39,6 +39,11 @@ public struct RasterLayer: Layer, Equatable {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>
 
+    /// Whether the raster layer is allowed to drape over terrain and globe. When disabled, the layer is rendered after all draped layers, which can change its position in the layer order. Disabling draping has a performance cost, since the terrain/globe geometry must be rendered again for each such layer.
+    /// Default value: true.
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var rasterAllowDraping: Value<Bool>?
+
     /// Displayed band of raster array source layer. Defaults to the first band if not set.
     @_documentation(visibility: public)
     @_spi(Experimental) public var rasterArrayBand: Value<String>?
@@ -149,6 +154,7 @@ public struct RasterLayer: Layer, Equatable {
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
+        try paintContainer.encodeIfPresent(rasterAllowDraping, forKey: .rasterAllowDraping)
         try paintContainer.encodeIfPresent(rasterArrayBand, forKey: .rasterArrayBand)
         try paintContainer.encodeIfPresent(rasterBrightnessMax, forKey: .rasterBrightnessMax)
         try paintContainer.encodeIfPresent(rasterBrightnessMaxTransition, forKey: .rasterBrightnessMaxTransition)
@@ -191,6 +197,7 @@ public struct RasterLayer: Layer, Equatable {
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
+            rasterAllowDraping = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .rasterAllowDraping)
             rasterArrayBand = try paintContainer.decodeIfPresent(Value<String>.self, forKey: .rasterArrayBand)
             rasterBrightnessMax = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterBrightnessMax)
             rasterBrightnessMaxTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterBrightnessMaxTransition)
@@ -243,6 +250,7 @@ public struct RasterLayer: Layer, Equatable {
     }
 
     enum PaintCodingKeys: String, CodingKey {
+        case rasterAllowDraping = "raster-allow-draping"
         case rasterArrayBand = "raster-array-band"
         case rasterBrightnessMax = "raster-brightness-max"
         case rasterBrightnessMaxTransition = "raster-brightness-max-transition"
@@ -306,6 +314,22 @@ extension RasterLayer {
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public func maxZoom(_ newValue: Double) -> Self {
         with(self, setter(\.maxZoom, newValue))
+    }
+
+    /// Whether the raster layer is allowed to drape over terrain and globe. When disabled, the layer is rendered after all draped layers, which can change its position in the layer order. Disabling draping has a performance cost, since the terrain/globe geometry must be rendered again for each such layer.
+    /// Default value: true.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func rasterAllowDraping(_ constant: Bool) -> Self {
+        with(self, setter(\.rasterAllowDraping, .constant(constant)))
+    }
+
+    /// Whether the raster layer is allowed to drape over terrain and globe. When disabled, the layer is rendered after all draped layers, which can change its position in the layer order. Disabling draping has a performance cost, since the terrain/globe geometry must be rendered again for each such layer.
+    /// Default value: true.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func rasterAllowDraping(_ expression: Exp) -> Self {
+        with(self, setter(\.rasterAllowDraping, .expression(expression)))
     }
 
     /// Displayed band of raster array source layer. Defaults to the first band if not set.

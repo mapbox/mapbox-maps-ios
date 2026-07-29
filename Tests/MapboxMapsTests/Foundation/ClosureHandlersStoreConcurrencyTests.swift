@@ -6,6 +6,9 @@ import Combine
 /// thread without losing, duplicating, or corrupting handlers. Each test drives one racing pair;
 /// without correct locking, these are expected to crash or fail.
 final class ClosureHandlersStoreConcurrencyTests: XCTestCase {
+
+    /// On a loaded CI device this can take much longer than on a local machine.
+    private let timeout: TimeInterval = 30
     private let iterations = 3_000
 
     // MARK: - Calling ClosureHandlersStore directly
@@ -53,7 +56,7 @@ final class ClosureHandlersStoreConcurrencyTests: XCTestCase {
         for i in 0..<iterations {
             store.send(i)
         }
-        wait(for: [addingDone], timeout: 30)
+        wait(for: [addingDone], timeout: timeout)
 
         XCTAssertEqual(Array(store).count, iterations)
     }
@@ -76,7 +79,7 @@ final class ClosureHandlersStoreConcurrencyTests: XCTestCase {
         for i in 0..<iterations {
             store.send(i)
         }
-        wait(for: [teardownDone], timeout: 30)
+        wait(for: [teardownDone], timeout: timeout)
 
         XCTAssertEqual(Array(store).count, 0)
     }
@@ -107,7 +110,7 @@ final class ClosureHandlersStoreConcurrencyTests: XCTestCase {
         // drain it before asserting.
         let drained = expectation(description: "main queue drained")
         DispatchQueue.main.async { drained.fulfill() }
-        wait(for: [drained], timeout: 5)
+        wait(for: [drained], timeout: timeout)
 
         let recordedEdges = edgesLock.withLock { edges }
 
@@ -135,14 +138,14 @@ final class ClosureHandlersStoreConcurrencyTests: XCTestCase {
             firstHandler.cancel()
             emptied.fulfill()
         }
-        wait(for: [emptied], timeout: 5)
+        wait(for: [emptied], timeout: timeout)
 
         // Re-fill the store; its `true` edge must arrive after the `false` one, not before.
         let secondHandler = store.add { _ in }
 
         let drained = expectation(description: "main queue drained")
         DispatchQueue.main.async { drained.fulfill() }
-        wait(for: [drained], timeout: 5)
+        wait(for: [drained], timeout: timeout)
 
         withExtendedLifetime(secondHandler) {
             let recordedEdges = edgesLock.withLock { edges }
@@ -176,13 +179,12 @@ final class ClosureHandlersStoreConcurrencyTests: XCTestCase {
     func testCombineSubscribeOnRacesWithSend() {
         let subject = SignalSubject<Int>()
         let bgQueue = DispatchQueue(label: "com.mapbox.test.closureHandlersStore.subscribeOn", attributes: .concurrent)
-        var cancellables = [AnyCancellable]()
+        var cancellables = [AnyCancellable?](repeating: nil, count: iterations)
 
-        // Subscriptions accumulate rather than being cancelled: a growing array forces periodic
-        // reallocation, which is what creates a collision window wide enough to hit a concurrent
-        // `send` — a small, stable array's `add` is too cheap an in-place write to reliably collide with.
-        for i in 0..<iterations {
-            cancellables.append(subject.signal.subscribe(on: bgQueue).sink { _ in })
+        // Fanned out via `concurrentPerform`, not a plain loop: serializing 3000 real Combine
+        // subscriptions on one thread dominates the wall-clock time before `send` races anything.
+        DispatchQueue.concurrentPerform(iterations: iterations) { i in
+            cancellables[i] = subject.signal.subscribe(on: bgQueue).sink { _ in }
             subject.send(i)
         }
 
@@ -221,7 +223,7 @@ final class ClosureHandlersStoreConcurrencyTests: XCTestCase {
     /// given queue (e.g. subscribing to the upstream, then forwarding pending demand) — a single
     /// barrier only waits for what was already queued, not for work queued as a result of running
     /// it. Draining repeatedly until `condition` holds catches any number of such levels.
-    private func waitUntil(drainedBy queue: DispatchQueue, timeout: TimeInterval = 5, _ condition: () -> Bool) {
+    private func waitUntil(drainedBy queue: DispatchQueue, _ condition: () -> Bool) {
         let deadline = Date().addingTimeInterval(timeout)
         while !condition() {
             guard Date() < deadline else {

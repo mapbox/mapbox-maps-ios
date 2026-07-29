@@ -47,6 +47,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
 
     // Regions and style pack downloads
     private var downloads: [Cancelable] = []
+    private var downloadError = false
 
     private let tokyoCoord = CLLocationCoordinate2D(latitude: 35.692897, longitude: 139.750451)
     private let tokyoPitch = 65.0
@@ -88,7 +89,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
         precondition(downloads.isEmpty)
 
         let dispatchGroup = DispatchGroup()
-        var downloadError = false
+        downloadError = false
 
         // - - - - - - - -
 
@@ -97,11 +98,10 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
                                                         metadata: ["tag": "my-style-pack"])!
 
         dispatchGroup.enter()
-        let stylePackDownload = offlineManager.loadStylePack(for: style, loadOptions: stylePackLoadOptions) { [weak self] progress in
+        let stylePackDownload = offlineManager.loadStylePack(for: style, loadOptions: stylePackLoadOptions) { progress in
             // These closures do not get called from the main thread. In this case
-            // we're updating the UI, so it's important to dispatch to the main
-            // queue.
-            DispatchQueue.main.async {
+            // we're updating the UI, so it's important to hop to the main actor.
+            Task { @MainActor [weak self] in
                 guard let stylePackProgressView = self?.stylePackProgressView else {
                     return
                 }
@@ -110,8 +110,8 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
                 stylePackProgressView.progress = Float(progress.completedResourceCount) / Float(progress.requiredResourceCount)
             }
 
-        } completion: { [weak self] result in
-            DispatchQueue.main.async {
+        } completion: { result in
+            Task { @MainActor [weak self] in
                 defer {
                     dispatchGroup.leave()
                 }
@@ -122,7 +122,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
 
                 case let .failure(error):
                     self?.logger?.log(message: "stylePack download Error = \(error)", category: "Example", color: .red)
-                    downloadError = true
+                    self?.downloadError = true
                 }
             }
         }
@@ -131,10 +131,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
 
         // 2. Create an offline region with tiles for the Standard or Satellite-Streets style.
         // If you are using a raster tileset you may need to set a different pixelRatio. The default is UIScreen.main.scale.
-        let styleOptions = TilesetDescriptorOptions(styleURI: style,
-                                                       zoomRange: 0...16,
-                                                       tilesets: nil)
-
+        let styleOptions = TilesetDescriptorOptions(styleURI: style, zoomRange: 0...16, tilesets: nil)
         let styleDescriptor = offlineManager.createTilesetDescriptor(for: styleOptions)
 
         // Load the tile region
@@ -149,11 +146,10 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
         // there is only ever one TileStore per unique path.
         dispatchGroup.enter()
         let tileRegionDownload = tileStore.loadTileRegion(forId: tileRegionId,
-                                                          loadOptions: tileRegionLoadOptions) { [weak self] (progress) in
+                                                          loadOptions: tileRegionLoadOptions) { (progress) in
             // These closures do not get called from the main thread. In this case
-            // we're updating the UI, so it's important to dispatch to the main
-            // queue.
-            DispatchQueue.main.async {
+            // we're updating the UI, so it's important to hop to the main actor.
+            Task { @MainActor [weak self] in
                 guard let tileRegionProgressView = self?.tileRegionProgressView else {
                     return
                 }
@@ -163,8 +159,8 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
                 // Update the progress bar
                 tileRegionProgressView.progress = Float(progress.completedResourceCount) / Float(progress.requiredResourceCount)
             }
-        } completion: { [weak self] result in
-            DispatchQueue.main.async {
+        } completion: { result in
+            Task { @MainActor [weak self] in
                 defer {
                     dispatchGroup.leave()
                 }
@@ -175,7 +171,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
 
                 case let .failure(error):
                     self?.logger?.log(message: "tileRegion download Error = \(error)", category: "Example", color: .red)
-                    downloadError = true
+                    self?.downloadError = true
                 }
             }
         }
@@ -183,7 +179,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
         // Wait for both downloads before moving to the next state
         dispatchGroup.notify(queue: .main) {
             self.downloads = []
-            self.state = downloadError ? .finished : .downloaded
+            self.state = self.downloadError ? .finished : .downloaded
         }
 
         downloads = [stylePackDownload, tileRegionDownload]
@@ -214,11 +210,15 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
         }
 
         offlineManager.allStylePacks { result in
-            self.logDownloadResult(message: "Style packs:", result: result)
+            Task { @MainActor [weak self] in
+                self?.logDownloadResult(message: "Style packs:", result: result)
+            }
         }
 
         tileStore.allTileRegions { result in
-            self.logDownloadResult(message: "Tile regions:", result: result)
+            Task { @MainActor [weak self] in
+                self?.logDownloadResult(message: "Tile regions:", result: result)
+            }
         }
         logger?.log(message: "\n", category: "Example")
     }
@@ -297,7 +297,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
                 showMapView()
 
             case (.mapViewDisplayed, .finished),
-                 (.downloading, .finished):
+                (.downloading, .finished):
                 button.setTitle("Reset", for: .normal)
 
             default:
@@ -340,10 +340,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
         // Add a point annotation that shows the point geometry that were passed
         // to the tile region API.
         mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
-            guard let self = self,
-                  let mapView = self.mapView else {
-                return
-            }
+            guard let self = self, let mapView = self.mapView else { return }
 
             var pointAnnotation = PointAnnotation(coordinate: self.tokyoCoord)
             pointAnnotation.image = .init(image: UIImage(named: "dest-pin")!, name: "custom-marker")
@@ -384,7 +381,7 @@ extension StylePack {
 }
 
 /// Convenience logger to write logs to the text view
-final class OfflineManagerLogWriter {
+@MainActor final class OfflineManagerLogWriter {
     weak var textView: UITextView?
     var log: NSMutableAttributedString
 
@@ -401,16 +398,8 @@ final class OfflineManagerLogWriter {
     func log(message: String, category: String?, color: UIColor = .black) {
         print("[\(category ?? "")] \(message)")
 
-        DispatchQueue.main.async { [weak self] in
-            guard let textView = self?.textView,
-                  let log = self?.log else {
-                return
-            }
-
-            let message = NSMutableAttributedString(string: "\(message)\n", attributes: [NSAttributedString.Key.foregroundColor: color])
-            log.append(message)
-
-            textView.attributedText = log
-        }
+        let attributed = NSMutableAttributedString(string: "\(message)\n", attributes: [NSAttributedString.Key.foregroundColor: color])
+        log.append(attributed)
+        textView?.attributedText = log
     }
 }

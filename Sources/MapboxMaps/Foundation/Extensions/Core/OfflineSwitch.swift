@@ -1,11 +1,9 @@
 /// Instance that allows connecting or disconnecting the Mapbox stack to the network.
-public class OfflineSwitch {
-    internal var internalOfflineSwitch: MapboxCommon.OfflineSwitch
+public final class OfflineSwitch: Sendable {
+    internal let internalOfflineSwitch: MapboxCommon.OfflineSwitch
 
     /// Returns the `OfflineSwitch` shared instance.
-    public static var shared = {
-        return OfflineSwitch()
-    }()
+    public static let shared = OfflineSwitch()
 
     private init() {
         internalOfflineSwitch = MapboxCommon.OfflineSwitch.getInstance()

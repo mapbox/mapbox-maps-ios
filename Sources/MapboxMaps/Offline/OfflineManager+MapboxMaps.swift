@@ -39,8 +39,8 @@ extension OfflineManager {
     @discardableResult
     public func loadStylePack(for styleURI: StyleURI,
                               loadOptions: StylePackLoadOptions,
-                              progress: StylePackLoadProgressCallback? = nil,
-                              completion: @escaping (Result<StylePack, Error>) -> Void) -> Cancelable {
+                              progress: (@Sendable (StylePackLoadProgress) -> Void)? = nil,
+                              completion: @escaping @Sendable (Result<StylePack, Error>) -> Void) -> Cancelable {
         if let progress = progress {
             return __loadStylePack(forStyleURI: styleURI.rawValue,
                                    loadOptions: loadOptions,
@@ -64,7 +64,7 @@ extension OfflineManager {
     ///     The user-provided callbacks will be executed on a worker thread; it
     ///     is the responsibility of the user to dispatch to a user-controlled
     ///     thread.
-    public func allStylePacks(completion: @escaping (Result<[StylePack], Error>) -> Void) {
+    public func allStylePacks(completion: @escaping @Sendable (Result<[StylePack], Error>) -> Void) {
         __getAllStylePacks(forCallback: offlineManagerClosureAdapter(for: completion, type: NSArray.self))
     }
 
@@ -79,7 +79,7 @@ extension OfflineManager {
     ///     The user-provided callbacks will be executed on a worker thread; it
     ///     is the responsibility of the user to dispatch to a user-controlled
     ///     thread.
-    public func stylePack(for styleURI: StyleURI, completion: @escaping (Result<StylePack, Error>) -> Void) {
+    public func stylePack(for styleURI: StyleURI, completion: @escaping @Sendable (Result<StylePack, Error>) -> Void) {
         __getStylePack(forStyleURI: styleURI.rawValue,
                        callback: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
     }
@@ -93,7 +93,7 @@ extension OfflineManager {
     ///
     /// The style package's associated metadata that a user previously set.
     public func stylePackMetadata(for styleURI: StyleURI,
-                                  completion: @escaping (Result<AnyObject, Error>) -> Void) {
+                                  completion: @escaping @Sendable (Result<AnyObject, Error>) -> Void) {
         __getStylePackMetadata(forStyleURI: styleURI.rawValue,
                                callback: offlineManagerClosureAdapter(for: completion, type: AnyObject.self))
     }
@@ -106,7 +106,7 @@ extension OfflineManager {
     /// Removes a style package from the existing packages list. The actual
     /// resources eviction might be deferred. All pending loading operations for
     /// the style package with the given id will fail with Canceled error.
-    public func removeStylePack(for styleURI: StyleURI, completion: ((Result<StylePack, Error>) -> Void)? = nil) {
+    public func removeStylePack(for styleURI: StyleURI, completion: (@Sendable (Result<StylePack, Error>) -> Void)? = nil) {
         if let completion {
             __removeStylePack(forStyleURI: styleURI.rawValue, callback: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
         } else {

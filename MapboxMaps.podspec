@@ -1,7 +1,7 @@
 Pod::Spec.new do |m|
 
   m.name = 'MapboxMaps'
-  m.version = '11.29.0-SNAPSHOT-07-29--02-03.git-8d39dd8'
+  m.version = '11.29.0-SNAPSHOT-07-30--09-28.git-0417397'
 
   m.summary = 'Vector map solution for iOS with full styling capabilities.'
   m.description = 'Metal-based vector map solution for iOS with full styling capabilities.'
@@ -19,8 +19,8 @@ Pod::Spec.new do |m|
   m.source_files = 'Sources/MapboxMaps/**/*.{swift,h}'
   m.resource_bundles = { 'MapboxMapsResources' => ['Sources/MapboxMaps/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json', 'Sources/MapboxMaps/PrivacyInfo.xcprivacy'] }
 
-  m.dependency 'MapboxCoreMaps', '11.29.0-SNAPSHOT-07-29--02-03.git-8d39dd8'
-  m.dependency 'MapboxCommon', '24.29.0-SNAPSHOT-07-29--02-03.git-8d39dd8'
+  m.dependency 'MapboxCoreMaps', '11.29.0-SNAPSHOT-07-30--09-28.git-0417397'
+  m.dependency 'MapboxCommon', '24.29.0-SNAPSHOT-07-30--09-28.git-0417397'
   m.dependency 'Turf', '4.0.0'
 
 end

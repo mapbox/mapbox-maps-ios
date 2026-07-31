@@ -62,7 +62,7 @@ public struct RasterLayer: Layer, Equatable {
     /// Transition options for `rasterBrightnessMin`.
     public var rasterBrightnessMinTransition: StyleTransition?
 
-    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
+    /// Defines the color ramp used to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated over the range specified by `raster-color-range`. Raster values are spaced evenly across the range by default.
     public var rasterColor: Value<StyleColor>?
 
     /// This property defines whether to use colorTheme defined color or not.
@@ -70,14 +70,14 @@ public struct RasterLayer: Layer, Equatable {
     /// NOTE: - Expressions set to this property currently don't work.
     @_spi(Experimental) public var rasterColorUseTheme: Value<ColorUseTheme>?
 
-    /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r - src.r + mix.g - src.g + mix.b - src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is -not- multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
+    /// When `raster-color` is active, specifies how the raster value is computed from a non-`rasterarray` source's channels, using the equation `mix.r - src.r + mix.g - src.g + mix.b - src.b + mix.a`. The first three components weight the source's red, green, and blue channels; the fourth is a constant offset and is not multiplied by source alpha. Source alpha is carried through and applied as opacity to the colorized result. The default corresponds to RGB luminosity. `rasterarray` sources ignore this property, as their raster value is decoded directly from the source data.
     /// Default value: [0.2126,0.7152,0.0722,0].
     public var rasterColorMix: Value<[Double]>?
 
     /// Transition options for `rasterColorMix`.
     public var rasterColorMixTransition: StyleTransition?
 
-    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`. For `rasterarray` sources, if `raster-color-range` is unspecified, the source's stated data range is used.
+    /// When `raster-color` is active, specifies the range of raster values mapped onto the color ramp, from the start of the ramp (low bound) to its end (high bound). For `rasterarray` sources the raster value is the decoded source data in the source's own units, and the source's stated data range is used when this property is unspecified. For other raster sources the raster value is computed from the source's channels via `raster-color-mix`. Defaults to `[0, 1]` when no range is otherwise available.
     public var rasterColorRange: Value<[Double]>?
 
     /// Transition options for `rasterColorRange`.
@@ -380,17 +380,17 @@ extension RasterLayer {
         with(self, setter(\.rasterBrightnessMin, .expression(expression)))
     }
 
-    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
+    /// Defines the color ramp used to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated over the range specified by `raster-color-range`. Raster values are spaced evenly across the range by default.
     public func rasterColor(_ constant: StyleColor) -> Self {
         with(self, setter(\.rasterColor, .constant(constant)))
     }
 
-    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
+    /// Defines the color ramp used to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated over the range specified by `raster-color-range`. Raster values are spaced evenly across the range by default.
     public func rasterColor(_ color: UIColor) -> Self {
         with(self, setter(\.rasterColor, .constant(StyleColor(color))))
     }
 
-    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 256 uniformly spaced steps over the range specified by `raster-color-range`.
+    /// Defines the color ramp used to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated over the range specified by `raster-color-range`. Raster values are spaced evenly across the range by default.
     public func rasterColor(_ expression: Exp) -> Self {
         with(self, setter(\.rasterColor, .expression(expression)))
     }
@@ -411,7 +411,7 @@ extension RasterLayer {
         with(self, setter(\.rasterColorUseTheme, .expression(expression)))
     }
 
-    /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r - src.r + mix.g - src.g + mix.b - src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is -not- multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
+    /// When `raster-color` is active, specifies how the raster value is computed from a non-`rasterarray` source's channels, using the equation `mix.r - src.r + mix.g - src.g + mix.b - src.b + mix.a`. The first three components weight the source's red, green, and blue channels; the fourth is a constant offset and is not multiplied by source alpha. Source alpha is carried through and applied as opacity to the colorized result. The default corresponds to RGB luminosity. `rasterarray` sources ignore this property, as their raster value is decoded directly from the source data.
     /// Default value: [0.2126,0.7152,0.0722,0].
     public func rasterColorMix(red: Double, green: Double, blue: Double, offset: Double) -> Self {
         with(self, setter(\.rasterColorMix, .constant([red, green, blue, offset])))
@@ -422,13 +422,13 @@ extension RasterLayer {
         with(self, setter(\.rasterColorMixTransition, transition))
     }
 
-    /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r - src.r + mix.g - src.g + mix.b - src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is -not- multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
+    /// When `raster-color` is active, specifies how the raster value is computed from a non-`rasterarray` source's channels, using the equation `mix.r - src.r + mix.g - src.g + mix.b - src.b + mix.a`. The first three components weight the source's red, green, and blue channels; the fourth is a constant offset and is not multiplied by source alpha. Source alpha is carried through and applied as opacity to the colorized result. The default corresponds to RGB luminosity. `rasterarray` sources ignore this property, as their raster value is decoded directly from the source data.
     /// Default value: [0.2126,0.7152,0.0722,0].
     public func rasterColorMix(_ expression: Exp) -> Self {
         with(self, setter(\.rasterColorMix, .expression(expression)))
     }
 
-    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`. For `rasterarray` sources, if `raster-color-range` is unspecified, the source's stated data range is used.
+    /// When `raster-color` is active, specifies the range of raster values mapped onto the color ramp, from the start of the ramp (low bound) to its end (high bound). For `rasterarray` sources the raster value is the decoded source data in the source's own units, and the source's stated data range is used when this property is unspecified. For other raster sources the raster value is computed from the source's channels via `raster-color-mix`. Defaults to `[0, 1]` when no range is otherwise available.
     public func rasterColorRange(min: Double, max: Double) -> Self {
         with(self, setter(\.rasterColorRange, .constant([min, max])))
     }
@@ -438,7 +438,7 @@ extension RasterLayer {
         with(self, setter(\.rasterColorRangeTransition, transition))
     }
 
-    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`. For `rasterarray` sources, if `raster-color-range` is unspecified, the source's stated data range is used.
+    /// When `raster-color` is active, specifies the range of raster values mapped onto the color ramp, from the start of the ramp (low bound) to its end (high bound). For `rasterarray` sources the raster value is the decoded source data in the source's own units, and the source's stated data range is used when this property is unspecified. For other raster sources the raster value is computed from the source's channels via `raster-color-mix`. Defaults to `[0, 1]` when no range is otherwise available.
     public func rasterColorRange(_ expression: Exp) -> Self {
         with(self, setter(\.rasterColorRange, .expression(expression)))
     }

@@ -43,6 +43,7 @@ EOF
 
     MAIN_RELEASE_URL=$(GITHUB_TOKEN=$GITHUB_WRITER_TOKEN \
         gh release create "$VERSION" --repo mapbox/mapbox-maps-ios \
+            --verify-tag \
             --prerelease \
             --draft \
             --title "v$VERSION" \
@@ -58,6 +59,7 @@ EOF
 
     BINARY_RELEASE_URL=$(GITHUB_TOKEN=$GITHUB_WRITER_TOKEN \
         gh release create "$VERSION" --repo mapbox/mapbox-maps-ios-binary \
+            --verify-tag \
             $PRERELEASE_FLAG \
             --title "v$VERSION" \
             --notes "📖 For release notes and changelog, see: [mapbox-maps-ios v$VERSION](https://github.com/mapbox/mapbox-maps-ios/releases/tag/$VERSION)")

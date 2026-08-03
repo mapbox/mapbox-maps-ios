@@ -1,0 +1,21 @@
+# Resolves the published package from its release tag.
+# SPM_PACKAGE_URL selects the repository, so one spec covers mapbox-maps-ios and mapbox-maps-ios-binary.
+include:
+  - project-base.yml
+name: ValidateRemoteSPM
+packages:
+  MapboxMapsRemote:
+    url: ${SPM_PACKAGE_URL}
+    exactVersion: ${MAPS_VERSION}
+targets:
+  RemoteSPMIntegration:
+    templates:
+      - Application
+    dependencies:
+      - package: MapboxMapsRemote
+        product: MapboxMaps
+  RemoteSPMIntegrationUITest:
+    templates:
+      - UITest
+    dependencies:
+      - target: RemoteSPMIntegration

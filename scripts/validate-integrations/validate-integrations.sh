@@ -15,6 +15,31 @@ ENABLE_DIRECT_DOWNLOADS_VALIDATION=1
 EXCLUSIVE_DIRECT_DOWNLOADS_VALIDATION=0
 SNAPSHOT=0
 
+validate_published_spm() {
+    for repo in "$@"; do
+        step "Validating published SPM package: $repo @ $MAPS_VERSION"
+
+        local scratch_path="$TMP_ROOT/spm-$repo"
+        local log_file="$ARTIFACTS_ROOT/RemoteSPM-${repo}_xcode-$(date +%Y%m%d%H%M%S).log"
+
+        MBX_TOKEN="$(cat ~/.mapbox)" SPM_PACKAGE_URL="https://github.com/mapbox/$repo.git" \
+            xcodegen --spec project-remote-spm.yml
+
+        if ! xcodebuild clean build COMPILER_INDEX_STORE_ENABLE=NO \
+            -project "$SCRIPT_DIR/ValidateRemoteSPM.xcodeproj" \
+            -scheme RemoteSPMIntegration \
+            -destination 'generic/platform=iOS Simulator' \
+            -clonedSourcePackagesDirPath "$scratch_path" \
+            CODE_SIGNING_ALLOWED='NO' &> "$log_file"; then
+            cat "$log_file"
+            error "$repo does not resolve or build at $MAPS_VERSION"
+            exit 1
+        fi
+
+        info "Finished $repo published SPM validation"
+    done
+}
+
 main() {
     PROJECTS_TO_TEST=("SwiftPackageManagerIntegration" "CocoaPodsIntegration")
     if [[ $VERSION_RULE == 1 && $ENABLE_DIRECT_DOWNLOADS_VALIDATION == 1 ]]; then
@@ -84,6 +109,15 @@ main() {
         set -e
         info "Finished $scheme building"
     done
+
+    if [[ $VERSION_RULE == 1 ]]; then
+        if [[ $SNAPSHOT == 1 ]]; then
+            # Snapshots are only published to the binary repo.
+            validate_published_spm "mapbox-maps-ios-binary"
+        else
+            validate_published_spm "mapbox-maps-ios" "mapbox-maps-ios-binary"
+        fi
+    fi
 
     git clean -fdx "$SCRIPT_DIR" --quiet
     git checkout HEAD -- Podfile

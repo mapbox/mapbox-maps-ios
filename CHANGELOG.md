@@ -9,6 +9,8 @@ Mapbox welcomes participation and contributions from everyone.
 * Introduce experimental `RasterLayer.rasterAllowDraping` property which allows raster layers to opt out of draping.
 * Clarify the documentation of `RasterLayer.rasterColor`, `rasterColorMix`, and `rasterColorRange`.
 * Promote `SymbolLayer.symbolZOffset` to stable.
+* Accept object as config option value.
+* Accept expression as `distance` expression argument.
 
 ## 11.28.0-rc.1 - 27 July, 2026
 ### Features ✨ and improvements 🏁

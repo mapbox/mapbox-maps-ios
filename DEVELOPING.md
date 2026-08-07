@@ -7,6 +7,7 @@ This guide contains the steps required to contribute to the development of this 
 * [Running Unit Tests On Devices](#running-unit-tests-on-devices)
 * [Running Integration Tests](#running-integration-tests)
 * [Making an Example](#making-an-example)
+* [Verifying AI coding-agent User-Agent tagging](#verifying-ai-coding-agent-user-agent-tagging)
 
 ## Setting Up a Development Environment
 
@@ -131,6 +132,23 @@ own `UIWindow` and root view controller, before adding the MapView to it.
 
 * Check out this [project](https://github.com/mapbox/mapbox-maps-ios/blob/main/Examples.xcodeproj)
   to get more information about adding examples to our project.
+
+## Verifying AI coding-agent User-Agent tagging
+
+Mapbox measures how much SDK traffic is driven by AI coding agents (Claude
+Code, Codex, Cursor, etc.) by appending an `agent/<id>` token to the outbound
+`User-Agent` header when one can be detected. `scripts/agent-detect.sh`
+detects the agent (if any) driving the current shell, and
+`scripts/run-uitests-with-agent-tag.sh` forwards that id into an
+`ExamplesUITests` simulator run so the tagging can be verified end-to-end:
+
+```sh
+scripts/run-uitests-with-agent-tag.sh
+```
+
+This is test-tooling only: a normal app run, or a UI test run started any
+other way, is unaffected. See the comments in both scripts for how the id
+is forwarded from the host shell into the launched app's environment.
 
 ## Tracing map performance
 

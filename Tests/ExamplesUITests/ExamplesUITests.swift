@@ -22,7 +22,7 @@ final class ExamplesUITests: XCTestCase {
 
     func test_GrantLocationPermission() throws {
         let app = XCUIApplication()
-        app.launch()
+        app.launchForwardingAgentTag()
 
         // Navigate to an example that should trigger location permissoon alert to be shown
         let searchField = app.searchFields.firstMatch
@@ -36,7 +36,7 @@ final class ExamplesUITests: XCTestCase {
     func testEveryExample() throws {
         // UI tests must launch the application that they test.
         let app = XCUIApplication()
-        app.launch()
+        app.launchForwardingAgentTag()
 
         // Tap every example cell in the table view, and then dismiss the example.
         for cell in app.tables.element(boundBy: 0).cells.allElementsBoundByIndex {
@@ -45,6 +45,36 @@ final class ExamplesUITests: XCTestCase {
             // Navigate back to the table view
             app.navigationBars.buttons.element(boundBy: 0).tap()
         }
+    }
+}
+
+extension XCUIApplication {
+    /// Name of the environment variable that, when present in this process's
+    /// (the XCUITest runner's) own environment, identifies the AI coding
+    /// agent (if any) driving the host machine that invoked `xcodebuild
+    /// test` - see `scripts/agent-detect.sh` and
+    /// `scripts/run-uitests-with-agent-tag.sh`.
+    private static let agentTagEnvKey = "MAPBOX_AGENT"
+
+    /// Launches the app, forwarding a detected AI coding-agent id (if any)
+    /// into its `launchEnvironment` so outbound Mapbox requests made during
+    /// this run can be verified to carry an `agent/<id>` token in their
+    /// User-Agent header.
+    ///
+    /// The app under test does not automatically inherit this test runner's
+    /// environment, so the value has to be copied into `launchEnvironment`
+    /// explicitly. When the variable isn't present (a normal run, not
+    /// launched via `run-uitests-with-agent-tag.sh`), nothing is added and
+    /// this behaves exactly like a plain `launch()`.
+    ///
+    /// This is test-tooling only, used to verify an upcoming Common SDK
+    /// User-Agent change; it has no effect on the production app.
+    func launchForwardingAgentTag() {
+        if let agentId = ProcessInfo.processInfo.environment[Self.agentTagEnvKey],
+            !agentId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            launchEnvironment[Self.agentTagEnvKey] = agentId
+        }
+        launch()
     }
 }
 

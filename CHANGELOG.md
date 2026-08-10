@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.29.0-rc.1 - 10 August, 2026
+
 * Fixed a crash in apps compiled with Swift 6 language mode when `TileStore`/`OfflineManager` offline callbacks fired off the main thread: their `completion`/`progress` closures are now `@Sendable`, along with `Sendable` model types.
 * Fixed a crash caused by a data race when subscribing to or cancelling a `Signal` (such as `onCameraChanged`) from a background thread while it emits on another thread. Protected other `Signal`s from the same scenario.
 * Introduce experimental `RasterLayer.rasterAllowDraping` property which allows raster layers to opt out of draping.

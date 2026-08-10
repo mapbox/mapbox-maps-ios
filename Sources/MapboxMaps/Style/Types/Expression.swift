@@ -234,6 +234,12 @@ public struct Exp: Codable, CustomStringConvertible, Equatable, Sendable {
 
             let container = try decoder.singleValueContainer()
 
+            // Must be checked before the other cases, none of which can consume a null.
+            if container.decodeNil() {
+                self = .null
+                return
+            }
+
             if let validString = try? container.decode(String.self) {
                 self = .string(validString)
             } else if let validNumber = try? container.decode(Double.self) {

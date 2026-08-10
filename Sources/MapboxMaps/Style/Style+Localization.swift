@@ -24,10 +24,14 @@ extension StyleManager {
         }
 
         for layerInfo in symbolLayers {
-            let symbolLayer = try layer(withId: layerInfo.id, type: SymbolLayer.self)
-            if let convertedExpression = try! convertExpressionForLocalization(symbolLayer: symbolLayer, localeValue: localeValue) {
-                try setLayerProperty(for: symbolLayer.id, property: "text-field", value: convertedExpression)
-            }
+            // Only the `text-field` property is read, rather than decoding the whole layer, so that
+            // a property this SDK cannot decode elsewhere in the layer does not break localization.
+            let textField = layerProperty(for: layerInfo.id, property: "text-field")
+            guard textField.kind == .expression, let expression = textField.value as? [Any] else { continue }
+
+            let convertedExpression = try convertExpressionForLocalization(textFieldExpression: expression,
+                                                                          localeValue: localeValue)
+            try setLayerProperty(for: layerInfo.id, property: "text-field", value: convertedExpression)
         }
     }
 
@@ -75,9 +79,8 @@ extension StyleManager {
 
         // Check for Mapbox Streets v7 source, adapt return to match v7 spec
         for sourceInfo in allSourceIdentifiers where sourceInfo.type == .vector {
-            // Force unwrapping since `allSourceIdentifiers` is getting a fresh list of valid sources
-            let vectorSource = try! source(withId: sourceInfo.id, type: VectorSource.self)
-            if vectorSource.url?.contains("mapbox.mapbox-streets-v7") == true {
+            let url = sourceProperty(for: sourceInfo.id, property: "url").value as? String
+            if url?.contains("mapbox.mapbox-streets-v7") == true {
                 // Streets v7 only supports "zh"
                 if locale.identifier.contains("Hant") || locale.identifier.contains("HK") || locale.identifier.contains("TW") {
                     return "zh"
@@ -92,12 +95,12 @@ extension StyleManager {
         return preferredMapboxStreetsLocalization(among: preferences, from: supportedLanguageCodesv8) ?? nil
     }
 
-    /// Converts the `SymbolLayer.textField` into the new locale
+    /// Converts a symbol layer's `text-field` expression into the new locale
     /// - Parameters:
-    ///   - symbolLayer: The layer that should be localized
+    ///   - textFieldExpression: The JSON array of the `text-field` expression that should be localized
     ///   - localeValue: The locale to convert to
-    /// - Returns: An update JSON serialized expression with the updated locale
-    internal func convertExpressionForLocalization(symbolLayer: SymbolLayer, localeValue: String) throws -> Any? {
+    /// - Returns: An updated JSON serialized expression with the updated locale
+    internal func convertExpressionForLocalization(textFieldExpression: [Any], localeValue: String) throws -> Any {
         // Expression to be applied to the `SymbolLayer.textField`to localize the language
         // Sample Expression JSON: `["format",["coalesce",["get","name_en"],["get","name"]],{}]`
         let replacement = "[\"get\",\"name_\(localeValue)\"]"
@@ -107,19 +110,15 @@ extension StyleManager {
         let expressionAbbr = try NSRegularExpression(pattern: "\\[\"get\",\\s*\"abbr\"\\]",
                                                      options: .caseInsensitive)
 
-        if case .expression(let textField) = symbolLayer.textField {
-            var stringExpression = String(data: try JSONEncoder().encode(textField), encoding: .utf8)!
-            stringExpression.updateOnceExpression(replacement: replacement, regex: expressionCoalesce)
-            stringExpression.updateExpression(replacement: replacement, regex: expressionAbbr)
+        let data = try JSONSerialization.data(withJSONObject: textFieldExpression)
+        // swiftlint:disable:next optional_data_string_conversion
+        var stringExpression = String(decoding: data, as: UTF8.self)
 
-            // Turn the new json string back into an Expression
-            let data = stringExpression.data(using: .utf8)
-            let convertedExpression = try JSONSerialization.jsonObject(with: data!, options: [])
+        stringExpression.updateOnceExpression(replacement: replacement, regex: expressionCoalesce)
+        stringExpression.updateExpression(replacement: replacement, regex: expressionAbbr)
 
-            return convertedExpression
-        }
-
-        return nil
+        // Turn the new json string back into an Expression
+        return try JSONSerialization.jsonObject(with: Data(stringExpression.utf8), options: [])
     }
 }
 

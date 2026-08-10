@@ -481,4 +481,75 @@ final class ExpressionTests: XCTestCase {
 
         XCTAssertEqual(expression, Exp(.literal) { ["opacity": 0.5, "bkey": "bval"] })
     }
+
+    func testDecodeNullArgument() throws {
+        let jsonString = #"["!=",["get","hoge"],null]"#
+
+        let expression = try JSONDecoder().decode(Exp.self, from: XCTUnwrap(jsonString.data(using: .utf8)))
+
+        XCTAssertEqual(expression.operator, .neq)
+        XCTAssertEqual(expression.arguments, [.expression(Exp(.get) { "hoge" }), .null])
+    }
+
+    func testDecodeNullArgumentAsFirstElement() throws {
+        let jsonString = #"["case",null,"A","B"]"#
+
+        let expression = try JSONDecoder().decode(Exp.self, from: XCTUnwrap(jsonString.data(using: .utf8)))
+
+        XCTAssertEqual(expression.operator, .switchCase)
+        XCTAssertEqual(expression.arguments, [.null, .string("A"), .string("B")])
+    }
+
+    func testNullArgumentRoundTrips() throws {
+        let jsonString = #"["case",["!=",["get","hoge"],null],"A","B"]"#
+
+        let expression = try JSONDecoder().decode(Exp.self, from: XCTUnwrap(jsonString.data(using: .utf8)))
+        let encoded = try JSONEncoder().encode(expression)
+
+        XCTAssertEqual(String(data: encoded, encoding: .utf8), jsonString)
+    }
+
+    // `asCore` encodes with `shouldEncodeNilValues = false`, which must not drop a null argument
+    // on the way to the engine.
+    func testNullArgumentSurvivesAsCore() throws {
+        let expression = Exp(operator: .neq, arguments: [.expression(Exp(.get) { "hoge" }), .null])
+
+        let core = try XCTUnwrap(expression.asCore)
+        let data = try JSONSerialization.data(withJSONObject: core)
+
+        XCTAssertEqual(String(data: data, encoding: .utf8), #"["!=",["get","hoge"],null]"#)
+    }
+
+    func testDecodeValueWithNullInExpression() throws {
+        let jsonString = #"["case",["!=",["get","hoge"],null],"A","B"]"#
+
+        let value = try JSONDecoder().decode(Value<String>.self, from: XCTUnwrap(jsonString.data(using: .utf8)))
+
+        XCTAssertEqual(value, .expression(Exp(.switchCase) {
+            Exp(operator: .neq, arguments: [.expression(Exp(.get) { "hoge" }), .null])
+            "A"
+            "B"
+        }))
+    }
+
+    // Regression test for https://github.com/mapbox/mapbox-maps-ios/issues/2423:
+    // decoding a layer whose text-field compares a property against null used to throw.
+    func testDecodeSymbolLayerWithNullComparisonInTextField() throws {
+        let layerJSON: [String: Any] = [
+            "id": "symbol-layer",
+            "type": "symbol",
+            "source": "test-source",
+            "layout": [
+                "text-field": ["case", ["!=", ["get", "hoge"], NSNull()], "A", "B"],
+            ],
+        ]
+
+        let layer = try SymbolLayer(jsonObject: layerJSON)
+
+        XCTAssertEqual(layer.textField, .expression(Exp(.switchCase) {
+            Exp(operator: .neq, arguments: [.expression(Exp(.get) { "hoge" }), .null])
+            "A"
+            "B"
+        }))
+    }
 }

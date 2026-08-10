@@ -11,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Promote `SymbolLayer.symbolZOffset` to stable.
 * Accept object as config option value.
 * Accept expression as `distance` expression argument.
+* Fixed decoding of expressions containing a `null` literal, such as `["case", ["!=", ["get", "foo"], null], "A", "B"]`. Reading a layer that used one — via `layer(withId:type:)` or `localizeLabels(into:forLayerIds:)` — failed with a `Failed to decode Value<…>` error ([#2423](https://github.com/mapbox/mapbox-maps-ios/issues/2423)).
 
 ## 11.28.0-rc.1 - 27 July, 2026
 ### Features ✨ and improvements 🏁

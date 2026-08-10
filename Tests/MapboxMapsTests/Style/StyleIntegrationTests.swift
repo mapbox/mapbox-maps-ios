@@ -209,8 +209,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(localeValue, "zh")
     }
 
-    func testConvertExpression() {
-        var symbolLayer = SymbolLayer(id: "testLayer", source: "source")
+    func testConvertExpression() throws {
         let originalExpression = Exp(.format) {
             Exp(.coalesce) {
                 Exp(.get) {
@@ -221,16 +220,40 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                 }
             }
         }
-        symbolLayer.textField = .expression(originalExpression)
 
-        XCTAssertNoThrow {
-            let convertedExpression = try self.mapView.mapboxMap.convertExpressionForLocalization(symbolLayer: symbolLayer, localeValue: "zh")
-            let data = try JSONSerialization.data(withJSONObject: XCTUnwrap(convertedExpression), options: [.prettyPrinted])
-            let convertedString = String(data: data, encoding: .utf8)!.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\n", with: "")
+        let convertedExpression = try mapView.mapboxMap.convertExpressionForLocalization(
+            textFieldExpression: try XCTUnwrap(originalExpression.toJSON() as? [Any]),
+            localeValue: "zh")
+        let data = try JSONSerialization.data(withJSONObject: convertedExpression)
 
-            let result = "[\"format\",[\"coalesce\",[\"get\",\"name_zh\"],[\"get\",\"name\"]]]"
-            XCTAssertEqual(result, convertedString)
-        }
+        XCTAssertEqual(String(data: data, encoding: .utf8),
+                       #"["format",["coalesce",["get","name_zh"],["get","name"]]]"#)
+    }
+
+    // The `text-field` expression is localized without decoding the layer, so an expression this
+    // SDK models but whose null literal previously broke SymbolLayer decoding still localizes.
+    func testLocalizesTextFieldContainingNullComparison() throws {
+        var source = GeoJSONSource(id: "a")
+        source.data = .feature(Feature(geometry: Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))))
+        try mapView.mapboxMap.addSource(source)
+
+        try mapView.mapboxMap.addLayer(SymbolLayer(id: "a", source: "a"))
+        try mapView.mapboxMap.setLayerProperty(
+            for: "a",
+            property: "text-field",
+            value: ["case", ["!=", ["get", "name_en"], NSNull()], ["get", "name_en"], ["get", "name"]] as [Any])
+
+        try mapView.mapboxMap.localizeLabels(into: Locale(identifier: "de"))
+
+        let textField = mapView.mapboxMap.layerProperty(for: "a", property: "text-field")
+        let data = try JSONSerialization.data(withJSONObject: textField.value)
+
+        // Only the first `name_*` is localized, and the engine normalizes the string-producing
+        // branches of a `text-field` into `["format", …, {}]`.
+        XCTAssertEqual(textField.kind, .expression)
+        XCTAssertEqual(
+            String(data: data, encoding: .utf8),
+            #"["case",["!=",["get","name_de"],null],["format",["get","name_en"],{}],["format",["get","name"],{}]]"#)
     }
 
     func testLocalizeLabelsv7() throws {

@@ -190,25 +190,7 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         wait(for: [allTileRegionsCompletionBlockInvoked], timeout: 120.0)
     }
 
-    private func disableOfflineCompositing() {
-        let ss = SettingsServiceFactory.getInstance(storageType: SettingsServiceStorageType.nonPersistent)
-        let setResult = ss.set(key: "com.mapbox.maps.experimental.offline_vt_compositing", value: false)
-        switch setResult {
-        case .success:
-            print("Turned off vt compositing")
-        case .failure(let error):
-            XCTFail("Error turning off vt compositing: \(String(describing: error.errorDescription))")
-        }
-    }
-
     func testMapCanBeLoadediWithoutNetworkConnectivity() throws {
-        // When asked for higher-level zoom tiles, and no tile with this specific zoom present in tile store,
-        // offline compositing overscales lower-zoom tiles and request higher-level tiles from the network,
-        // which leads to a test failure.
-        // In some future we won't have composite sources in styles which use compositing.
-        // So here we will mimick this future behavior for now.
-        disableOfflineCompositing()
-
         try guardForMetalDevice()
 
         let rootView = try XCTUnwrap(rootViewController?.view)
@@ -310,7 +292,7 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             let mapWasLoaded = XCTestExpectation(description: "Map was loaded")
 
             let cancelable = mapView.mapboxMap.onResourceRequest.observe { event in
-                if event.source == .network {
+                if event.source == .network && !event.cancelled && event.response?.error?.reason != .inOfflineMode {
                     XCTFail("Loading is occurring from the network")
                 } else {
                     mapIsUsingDatabase.fulfill()

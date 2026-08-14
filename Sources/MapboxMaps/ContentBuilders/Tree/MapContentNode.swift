@@ -75,6 +75,13 @@ final class MapContentNode: Identifiable {
     }
 
     func update(with primitive: some PrimitiveMapContent) {
+        if context.isPriming {
+            // Priming walk: expand containers/evaluate bodies, but never mount or touch the style.
+            content = nil
+            primitive.visit(self)
+            return
+        }
+
         let oldMounted = content?.asMounted
 
         content = nil

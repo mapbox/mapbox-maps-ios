@@ -4,6 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Fixed a bug where the first `MapContent` mounted on a `Map` before the style finished loading did not react to `@State`/`@Binding` changes read inside it (e.g. an annotation's color or position never updating on the first interaction).
 ## 11.29.0-rc.1 - 10 August, 2026
 
 * Fixed a crash in apps compiled with Swift 6 language mode when `TileStore`/`OfflineManager` offline callbacks fired off the main thread: their `completion`/`progress` closures are now `@Sendable`, along with `Sendable` model types.

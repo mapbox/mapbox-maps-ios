@@ -20,6 +20,9 @@ final class MapContentNodeContext {
     let style: MapContentStyleDependencies
     var isEqualContent: (Any, Any) -> Bool
 
+    /// When true, the tree walk only evaluates content bodies and never mounts or touches the style.
+    let isPriming: Bool
+
     var lastLayerId: String?
     var initialStyleLayers: [String] = []
 
@@ -32,10 +35,12 @@ final class MapContentNodeContext {
     init(
         styleManager: StyleManagerProtocol,
         sourceManager: StyleSourceManagerProtocol,
-        isEqualContent: @escaping (Any?, Any?) -> Bool
+        isEqualContent: @escaping (Any?, Any?) -> Bool,
+        isPriming: Bool = false
     ) {
         self.style = MapContentStyleDependencies(styleManager: styleManager, sourceManager: sourceManager)
         self.isEqualContent = isEqualContent
+        self.isPriming = isPriming
     }
 
     func resolveLayerPosition() -> LayerPosition {

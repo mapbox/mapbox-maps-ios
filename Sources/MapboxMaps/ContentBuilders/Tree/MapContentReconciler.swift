@@ -5,6 +5,10 @@ final class MapContentReconciler {
         didSet {
             if isStyleLoaded {
                 update(with: content)
+            } else {
+                // The real walk is deferred to style load, which runs outside SwiftUI's tracked update.
+                // Evaluate bodies now, in the tracked context, so @State/@Binding reads register dependencies.
+                primeSwiftUIDependencies(with: content)
             }
         }
     }
@@ -45,6 +49,20 @@ final class MapContentReconciler {
 
         context.update(mapContent: content, root: root)
         triggerTelemetryIfNeeded(for: root)
+    }
+
+    /// Walks a throwaway tree in priming mode: bodies are evaluated (registering SwiftUI dependencies
+    /// for the current tracked update), the style is untouched.
+    private func primeSwiftUIDependencies(with content: any MapContent) {
+        let primingContext = MapContentNodeContext(
+            styleManager: context.style.styleManager,
+            sourceManager: context.style.sourceManager,
+            isEqualContent: { _, _ in false },
+            isPriming: true
+        )
+        let uuidString = UUID().uuidString
+        let primingRoot = MapContentNode(id: MapContentNode.ID(anyId: uuidString, stringId: uuidString), context: primingContext)
+        content.update(primingRoot)
     }
 
     private func reloadStyle(with content: any MapContent) {

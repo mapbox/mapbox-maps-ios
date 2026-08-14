@@ -71,6 +71,7 @@
         "StyleIntegrationTests",
         "StyleLoadIntegrationTests",
         "StyleLocalizationTests",
+        "SwiftUIMapContentFirstMountRerenderIntegrationTests",
         "SymbolLayerIntegrationTests",
         "TileCoverIntegrationTests\/testTileCover()",
         "VectorSourceIntegrationTests"

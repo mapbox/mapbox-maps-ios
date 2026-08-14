@@ -1,6 +1,7 @@
 import XCTest
 @_spi(Experimental) @testable import MapboxMaps
 import Combine
+import SwiftUI
 
 final class MapContentReconcilerTests: XCTestCase {
     var me: MapContentReconciler!
@@ -693,6 +694,38 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertEqual(locationManager.options, LocationOptions())
 
     }
+
+    /// Before the style loads, assigning content must still evaluate its body (so SwiftUI registers
+    /// `@State`/`@Binding` reads) while leaving the style untouched; on style load it's applied normally.
+    func testFirstMountPrimesBodyWithoutTouchingStyle() {
+        styleIsLoaded = false
+
+        var bodyEvaluations = 0
+        setContent {
+            BodyCountingContent(onBody: { bodyEvaluations += 1 })
+        }
+
+        XCTAssertEqual(bodyEvaluations, 1, "priming walk must evaluate the body before the style loads")
+        XCTAssertEqual(styleManager.addStyleLayerStub.invocations.count, 0, "priming must not touch the style")
+        XCTAssertEqual(styleManager.addPersistentStyleLayerStub.invocations.count, 0, "priming must not touch the style")
+
+        styleIsLoaded = true
+        XCTAssertEqual(bodyEvaluations, 2, "style load walk applies the content")
+        XCTAssertEqual(styleManager.addStyleLayerStub.invocations.count, 1)
+    }
+
+    /// Same, but the probe sits inside a `MapViewAnnotation` view closure — the priming walk must reach it
+    /// too (the closure runs eagerly in `MapViewAnnotation.init` during the body walk).
+    func testFirstMountPrimesViewAnnotationContent() {
+        styleIsLoaded = false
+
+        var contentEvaluations = 0
+        setContent {
+            AnnotationProbeContent(onContentEval: { contentEvaluations += 1 })
+        }
+
+        XCTAssertEqual(contentEvaluations, 1, "priming walk must evaluate the view annotation content closure")
+    }
 }
 
 func verifyAnnotationOptions(
@@ -704,4 +737,34 @@ func verifyAnnotationOptions(
     XCTAssertEqual(annotation?.visible, mapViewAnnotation.visible)
     XCTAssertEqual(annotation?.selected, mapViewAnnotation.selected)
     XCTAssertEqual(annotation?.variableAnchors, mapViewAnnotation.variableAnchors)
+}
+
+/// Calls `onBody` every time its `body` is evaluated — lets tests count body evaluations.
+private struct BodyCountingContent: MapContent {
+    let onBody: () -> Void
+
+    var body: some MapContent {
+        LineLayer(id: countedId(), source: "bodyCountingSource")
+    }
+
+    private func countedId() -> String {
+        onBody()
+        return "bodyCounting"
+    }
+}
+
+/// Calls `onContentEval` every time its view annotation content closure is evaluated.
+private struct AnnotationProbeContent: MapContent {
+    let onContentEval: () -> Void
+
+    var body: some MapContent {
+        MapViewAnnotation(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)) {
+            probeText()
+        }
+    }
+
+    private func probeText() -> Text {
+        onContentEval()
+        return Text("probe")
+    }
 }

@@ -20,6 +20,7 @@
 - ``LineCap``
 - ``LineJoin``
 - ``LineTranslateAnchor``
+- ``RasterColorScale``
 - ``RasterResampling``
 - ``ResolvedImage``
 - ``ResolvedImageData``

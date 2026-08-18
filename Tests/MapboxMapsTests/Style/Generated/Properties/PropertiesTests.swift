@@ -421,6 +421,20 @@ extension FillExtrusionTranslateAnchor {
     }
 }
 
+// MARK: RASTER_COLOR_SCALE
+
+extension Value where T == RasterColorScale {
+    static func testConstantValue() -> Value<RasterColorScale> {
+        return .constant(RasterColorScale.testConstantValue())
+    }
+}
+
+extension RasterColorScale {
+    static func testConstantValue() -> RasterColorScale {
+        return .linear
+    }
+}
+
 // MARK: RASTER_RESAMPLING
 
 extension Value where T == RasterResampling {

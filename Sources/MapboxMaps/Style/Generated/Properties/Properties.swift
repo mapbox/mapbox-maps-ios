@@ -578,6 +578,27 @@ public struct FillExtrusionTranslateAnchor: RawRepresentable, Codable, Hashable,
     public static let viewport = FillExtrusionTranslateAnchor(rawValue: "viewport")
 }
 
+/// When `raster-color` is active, specifies how raster values are distributed across the color ramp over the range specified by `raster-color-range`.
+@_documentation(visibility: public)
+@_spi(Experimental)
+public struct RasterColorScale: RawRepresentable, Codable, Hashable, Sendable {
+    @_documentation(visibility: public)
+    public let rawValue: String
+
+    @_documentation(visibility: public)
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Raster values are spaced evenly across the color ramp.
+    @_documentation(visibility: public)
+    public static let linear = RasterColorScale(rawValue: "linear")
+
+    /// Raster values are spaced logarithmically, giving more of the color ramp to smaller values. Useful for data concentrated near the low end of a wide range.
+    @_documentation(visibility: public)
+    public static let log = RasterColorScale(rawValue: "log")
+}
+
 /// The resampling/interpolation method to use for overscaling, also known as texture magnification filter
 public struct RasterResampling: RawRepresentable, Codable, Hashable, Sendable {
     public let rawValue: String

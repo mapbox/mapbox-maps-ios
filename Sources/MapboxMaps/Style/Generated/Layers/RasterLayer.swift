@@ -83,6 +83,11 @@ public struct RasterLayer: Layer, Equatable {
     /// Transition options for `rasterColorRange`.
     public var rasterColorRangeTransition: StyleTransition?
 
+    /// When `raster-color` is active, specifies how raster values are distributed across the color ramp over the range specified by `raster-color-range`.
+    /// Default value: "linear".
+    @_documentation(visibility: public)
+    @_spi(Experimental) public var rasterColorScale: Value<RasterColorScale>?
+
     /// Increase or reduce the contrast of the image.
     /// Default value: 0. Value range: [-1, 1]
     public var rasterContrast: Value<Double>?
@@ -166,6 +171,7 @@ public struct RasterLayer: Layer, Equatable {
         try paintContainer.encodeIfPresent(rasterColorMixTransition, forKey: .rasterColorMixTransition)
         try paintContainer.encodeIfPresent(rasterColorRange, forKey: .rasterColorRange)
         try paintContainer.encodeIfPresent(rasterColorRangeTransition, forKey: .rasterColorRangeTransition)
+        try paintContainer.encodeIfPresent(rasterColorScale, forKey: .rasterColorScale)
         try paintContainer.encodeIfPresent(rasterContrast, forKey: .rasterContrast)
         try paintContainer.encodeIfPresent(rasterContrastTransition, forKey: .rasterContrastTransition)
         try paintContainer.encodeIfPresent(rasterElevation, forKey: .rasterElevation)
@@ -209,6 +215,7 @@ public struct RasterLayer: Layer, Equatable {
             rasterColorMixTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterColorMixTransition)
             rasterColorRange = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .rasterColorRange)
             rasterColorRangeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterColorRangeTransition)
+            rasterColorScale = try paintContainer.decodeIfPresent(Value<RasterColorScale>.self, forKey: .rasterColorScale)
             rasterContrast = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterContrast)
             rasterContrastTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterContrastTransition)
             rasterElevation = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterElevation)
@@ -262,6 +269,7 @@ public struct RasterLayer: Layer, Equatable {
         case rasterColorMixTransition = "raster-color-mix-transition"
         case rasterColorRange = "raster-color-range"
         case rasterColorRangeTransition = "raster-color-range-transition"
+        case rasterColorScale = "raster-color-scale"
         case rasterContrast = "raster-contrast"
         case rasterContrastTransition = "raster-contrast-transition"
         case rasterElevation = "raster-elevation"
@@ -441,6 +449,22 @@ extension RasterLayer {
     /// When `raster-color` is active, specifies the range of raster values mapped onto the color ramp, from the start of the ramp (low bound) to its end (high bound). For `rasterarray` sources the raster value is the decoded source data in the source's own units, and the source's stated data range is used when this property is unspecified. For other raster sources the raster value is computed from the source's channels via `raster-color-mix`. Defaults to `[0, 1]` when no range is otherwise available.
     public func rasterColorRange(_ expression: Exp) -> Self {
         with(self, setter(\.rasterColorRange, .expression(expression)))
+    }
+
+    /// When `raster-color` is active, specifies how raster values are distributed across the color ramp over the range specified by `raster-color-range`.
+    /// Default value: "linear".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func rasterColorScale(_ constant: RasterColorScale) -> Self {
+        with(self, setter(\.rasterColorScale, .constant(constant)))
+    }
+
+    /// When `raster-color` is active, specifies how raster values are distributed across the color ramp over the range specified by `raster-color-range`.
+    /// Default value: "linear".
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public func rasterColorScale(_ expression: Exp) -> Self {
+        with(self, setter(\.rasterColorScale, .expression(expression)))
     }
 
     /// Increase or reduce the contrast of the image.

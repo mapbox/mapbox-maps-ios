@@ -15,6 +15,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Accept object as config option value.
 * Accept expression as `distance` expression argument.
 * Fixed decoding of expressions containing a `null` literal, such as `["case", ["!=", ["get", "foo"], null], "A", "B"]`. Reading a layer that used one — via `layer(withId:type:)` or `localizeLabels(into:forLayerIds:)` — failed with a `Failed to decode Value<…>` error ([#2423](https://github.com/mapbox/mapbox-maps-ios/issues/2423)).
+* Introduce experimental `RasterLayer.rasterColorScale` property, resulting in more precise visualization with long-tailed raster-array data source.
 
 ## 11.28.2 - 13 August, 2026
 

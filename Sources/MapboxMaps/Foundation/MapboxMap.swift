@@ -1984,11 +1984,19 @@ extension MapboxMap {
 
     /// Returns array of tile identifiers that cover current map camera.
     ///
+    /// This is an experimental API and behavior might change in future. As of v11.30,
+    /// this returns `OverscaledTileID` (previously `CanonicalTileID`, which is still preserved
+    /// as the `canonical` field) so that callers can distinguish overscaled tiles from their
+    /// canonical zoom level, and distinguish tiles that repeat across the antimeridian via
+    /// their `wrap` offset. Overscaling only happens when `TileCoverOptions.maxZoom` is set
+    /// and the camera's zoom exceeds it: the tile is clamped to `maxZoom`, and `canonical`
+    /// holds the coordinate at that clamped zoom level.
+    ///
     /// - Parameters:
     ///   - options: Options for the tile cover method.
     @_documentation(visibility: public)
     @_spi(Experimental)
-    public func tileCover(for options: TileCoverOptions) -> [CanonicalTileID] {
+    public func tileCover(for options: TileCoverOptions) -> [OverscaledTileID] {
         __map.__tileCover(
             for: CoreTileCoverOptions(options),
             cameraOptions: nil)

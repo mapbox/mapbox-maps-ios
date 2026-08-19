@@ -230,7 +230,7 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testTileCover() throws {
-        let stubReturnTileIDs = [CanonicalTileID(z: 3, x: 5, y: 7)]
+        let stubReturnTileIDs = [OverscaledTileID(overscaledZ: 3, wrap: 0, canonical: CanonicalTileID(z: 3, x: 5, y: 7))]
 
         let options = TileCoverOptions(tileSize: 512, minZoom: 4, maxZoom: 8, roundZoom: true)
         mockMapSnapshotter.tileCoverStub.returnValueQueue.append(stubReturnTileIDs)

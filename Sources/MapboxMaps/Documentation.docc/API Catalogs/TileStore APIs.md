@@ -22,6 +22,7 @@
 - ``MapboxCommon/TilesetDescriptor``
 - ``TilesetDescriptorOptions``
 - ``CanonicalTileID``
+- ``OverscaledTileID``
 - ``TileStoreObserver``
 - ``MapboxCommon/TileRegionLoadProgressCallback``
 - ``TileStoreUsageMode``

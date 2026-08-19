@@ -24,3 +24,7 @@ Constructor OverviewViewportStateOptions.init(geometry:geometryPadding:bearing:p
 // initializer is private, so no external code could construct a replacement instance to assign.
 Accessor OfflineSwitch.shared.Modify() has been removed
 Accessor OfflineSwitch.shared.Set() has been removed
+
+// Update tileCover API to return OverscaledTileID instead of CanonicalTileID
+Func MapboxMap.tileCover(for:) has return type change from [MapboxCoreMaps.CanonicalTileID] to [MapboxCoreMaps.OverscaledTileID]
+Func Snapshotter.tileCover(for:) has return type change from [MapboxCoreMaps.CanonicalTileID] to [MapboxCoreMaps.OverscaledTileID]

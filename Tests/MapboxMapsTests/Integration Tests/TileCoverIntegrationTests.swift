@@ -7,7 +7,7 @@ class TileCoverIntegrationTests: MapViewIntegrationTestCase {
         let tileIds = mapView.mapboxMap.tileCover(for: TileCoverOptions(tileSize: 512, minZoom: 0, maxZoom: 22, roundZoom: false))
         XCTAssertFalse(tileIds.isEmpty)
         for tileId in tileIds {
-            XCTAssertEqual(tileId.z, 5) // sanity check
+            XCTAssertEqual(tileId.canonical.z, 5) // sanity check
         }
     }
 
@@ -16,7 +16,7 @@ class TileCoverIntegrationTests: MapViewIntegrationTestCase {
         let tileIds = mapView.mapboxMap.tileCover(for: TileCoverOptions())
         XCTAssertFalse(tileIds.isEmpty)
         for tileId in tileIds {
-            XCTAssertEqual(tileId.z, 5) // sanity check
+            XCTAssertEqual(tileId.canonical.z, 5) // sanity check
         }
     }
 }

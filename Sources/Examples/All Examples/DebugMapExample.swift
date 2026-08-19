@@ -136,7 +136,7 @@ final class DebugMapExample: UIViewController, ExampleProtocol {
     @objc private func showInfo() {
         // Get tiles information
         let tileIds = mapView.mapboxMap.tileCover(for: TileCoverOptions(tileSize: 512, minZoom: 0, maxZoom: 22, roundZoom: false))
-        let tilesMessage = tileIds.map { "\($0.z)/\($0.x)/\($0.y)" }.joined(separator: "\n")
+        let tilesMessage = tileIds.map { "\($0.canonical.z)/\($0.canonical.x)/\($0.canonical.y)" }.joined(separator: "\n")
 
         // Get style information
         let styleInfo = extractStyleInfo()

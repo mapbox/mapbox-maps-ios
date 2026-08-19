@@ -66,8 +66,8 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
         var options: CoreTileCoverOptions
         var cameraOptions: CoreCameraOptions?
     }
-    var tileCoverStub = Stub<TileCoverParams, [CanonicalTileID]>(defaultReturnValue: [])
-    func __tileCover(for options: CoreTileCoverOptions, cameraOptions: CoreCameraOptions?) -> [CanonicalTileID] {
+    var tileCoverStub = Stub<TileCoverParams, [OverscaledTileID]>(defaultReturnValue: [])
+    func __tileCover(for options: CoreTileCoverOptions, cameraOptions: CoreCameraOptions?) -> [OverscaledTileID] {
         tileCoverStub.call(with: TileCoverParams(options: options, cameraOptions: cameraOptions))
     }
 }

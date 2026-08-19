@@ -5,6 +5,10 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Fixed heading from a custom location provider (set via `override(locationProvider:headingProvider:)` or a custom `LocationDataModel`) being incorrectly rotated to match device orientation ([#2428](https://github.com/mapbox/mapbox-maps-ios/issues/2428)).
+### Breaking changes ⚠️
+* Breaking (experimental API only): `tileCover` now returns `OverscaledTileID` instead of `CanonicalTileID`, so callers can distinguish overscaled tiles from their canonical zoom level and identify tiles that repeat across the antimeridian via `wrap`.
+
+### Bug fixes 🐞
 * Fixed a bug where the first `MapContent` mounted on a `Map` before the style finished loading did not react to `@State`/`@Binding` changes read inside it (e.g. an annotation's color or position never updating on the first interaction).
 
 ## 11.29.0-rc.1 - 10 August, 2026

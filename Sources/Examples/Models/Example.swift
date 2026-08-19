@@ -22,7 +22,7 @@ public struct Example: Sendable {
         self.description = description
         self.testTimeout = testTimeout
         self.type = type
-        self.destination = { AnyView(UIKitExampleView(vc: Self.viewControllerFrom(type: type, title: title), title: title).ignoresSafeArea()) }
+        self.destination = { AnyView(UIKitExampleView(vc: NavigationItemBridgeController(child: Self.viewControllerFrom(type: type, title: title)), title: title).ignoresSafeArea()) }
     }
 
     static private func viewControllerFrom(type: ExampleProtocol.Type?, title: String) -> UIViewController {

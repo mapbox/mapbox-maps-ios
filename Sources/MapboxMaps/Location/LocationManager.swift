@@ -16,11 +16,24 @@ public class LocationDataModel {
     ///
     /// Optional, if you don't need Viewport and Puck to use the compass (heading) data, see ``PuckBearing``.
     ///
-    /// The heading values should not be adjusted to to the user interface orientation. The ``LocationManager`` adjusts the user interface orientation internally.
-    /// If you use `CLLocationManager` as heading source, don't update the `headingOrientation` property.
+    /// The heading values are not adjusted to the user interface orientation when you supply your custom heading publisher.
+    /// If you use `CLLocationManager` as the source, update its `headingOrientation` property when the interface orientation changes.
     ///
     /// - Important: The publisher must deliver updates on main thread.
     let heading: AnyPublisher<Heading, Never>?
+
+    /// `true` for device-sensor headings that need UI-orientation compensation; custom headings are left as-is.
+    let needsHeadingOrientationAdjustment: Bool
+
+    init(
+        location: AnyPublisher<[Location], Never>,
+        heading: AnyPublisher<Heading, Never>?,
+        needsHeadingOrientationAdjustment: Bool
+    ) {
+        self.location = location
+        self.heading = heading
+        self.needsHeadingOrientationAdjustment = needsHeadingOrientationAdjustment
+    }
 
     /// Creates the model.
     ///
@@ -29,10 +42,10 @@ public class LocationDataModel {
     /// - Parameters:
     ///   - location: A publisher that delivers location updates.
     ///   - heading: A publisher that delivers heading updates.
-    public init (location: AnyPublisher<[Location], Never>,
-                 heading: AnyPublisher<Heading, Never>? = nil) {
+    public init(location: AnyPublisher<[Location], Never>, heading: AnyPublisher<Heading, Never>? = nil) {
         self.location = location
         self.heading = heading
+        self.needsHeadingOrientationAdjustment = false
     }
 
     /// Creates the default location data model.
@@ -47,9 +60,14 @@ public class LocationDataModel {
         if let options {
             provider.options = options
         }
-        return LocationDataModel(
+        return createDefault(provider: provider)
+    }
+
+    static func createDefault(provider: AppleLocationProvider) -> LocationDataModel {
+        LocationDataModel(
             location: provider.onLocationUpdate.retaining(provider).eraseToAnyPublisher(),
-            heading: provider.onHeadingUpdate.retaining(provider).eraseToAnyPublisher()
+            heading: provider.onHeadingUpdate.retaining(provider).eraseToAnyPublisher(),
+            needsHeadingOrientationAdjustment: true
         )
     }
 
@@ -73,7 +91,9 @@ public class LocationDataModel {
 
         return LocationDataModel(
             location: location.receive(on: DispatchQueue.main).eraseToAnyPublisher(),
-            heading: heading.receive(on: DispatchQueue.main).eraseToAnyPublisher())
+            heading: heading.receive(on: DispatchQueue.main).eraseToAnyPublisher(),
+            needsHeadingOrientationAdjustment: true
+        )
     }
 }
 
@@ -161,7 +181,8 @@ public final class LocationManager {
     private let puckManager: PuckManager<Puck2DRenderer, Puck3DRenderer>
 
 #if !os(visionOS)
-    private let orientationProvider = DefaultInterfaceOrientationProvider()
+    // internal so tests can substitute a mock-device-backed provider
+    var orientationProvider = DefaultInterfaceOrientationProvider()
 #endif
 
     init(
@@ -222,21 +243,21 @@ public final class LocationManager {
         onLocationChangeProxy.proxied = dataModel.location.eraseToSignal()
 
 #if !os(visionOS)
-        if let heading = dataModel.heading {
-            onHeadingChangeProxy.proxied = Signal
-                .combineLatest(
-                    heading.eraseToSignal(),
-                    orientationProvider.onInterfaceOrientationChange
-                )
-                .map { heading, orientation in
-                    assert(Thread.isMainThread)
-                    return adjust(heading: heading, toViewOrientation: orientation)
-                }
-        } else {
-            onHeadingChangeProxy.proxied = nil
-        }
+        onHeadingChangeProxy.proxied = dataModel.heading.map(headingSignal(from:))
 #endif
     }
+
+#if !os(visionOS)
+    private func headingSignal(from heading: AnyPublisher<Heading, Never>) -> Signal<Heading> {
+        guard dataModel.needsHeadingOrientationAdjustment else { return heading.eraseToSignal() }
+        return Signal
+            .combineLatest(heading.eraseToSignal(), orientationProvider.onInterfaceOrientationChange)
+            .map { heading, orientation in
+                assert(Thread.isMainThread)
+                return adjust(heading: heading, toViewOrientation: orientation)
+            }
+    }
+#endif
 
     /// Represents the latest location received from the location provider.
     ///

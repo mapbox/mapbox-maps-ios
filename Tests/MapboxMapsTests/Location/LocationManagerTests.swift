@@ -218,6 +218,55 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(observedModel.position, [coordinate.latitude, coordinate.longitude])
     }
 
+#if !(swift(>=5.9) && os(visionOS))
+    @available(*, deprecated)
+    func testOverrideHeadingProviderIsNotOrientationAdjusted() {
+        let device = MockUIDevice()
+        device.$orientation.getStub.defaultReturnValue = .landscapeLeft
+        me.orientationProvider = DefaultInterfaceOrientationProvider(
+            notificationCenter: MockNotificationCenter(),
+            device: device
+        )
+
+        let headingProvider = HeadingProviderMock()
+        me.override(locationProvider: LocationProviderMock(), headingProvider: headingProvider)
+
+        var observedHeadings = [Heading]()
+        me.onHeadingChange.observe { observedHeadings.append($0) }.store(in: &tokens)
+
+        headingProvider.latestHeading = Heading(direction: 45, accuracy: 5)
+
+        XCTAssertEqual(observedHeadings.last?.direction, 45, "custom heading providers must not be rotated for interface orientation")
+    }
+
+    func testDefaultHeadingSourceIsOrientationAdjusted() {
+        let device = MockUIDevice()
+        device.$orientation.getStub.defaultReturnValue = .landscapeLeft
+        me.orientationProvider = DefaultInterfaceOrientationProvider(
+            notificationCenter: MockNotificationCenter(),
+            device: device
+        )
+
+        let mockLocationManager = MockCLLocationManager()
+        let provider = AppleLocationProvider(
+            locationManager: mockLocationManager,
+            mayRequestWhenInUseAuthorization: false,
+            locationManagerDelegateProxy: CLLocationManagerDelegateProxy()
+        )
+        me.dataModel = LocationDataModel.createDefault(provider: provider)
+
+        var observedHeadings = [Heading]()
+        me.onHeadingChange.observe { observedHeadings.append($0) }.store(in: &tokens)
+
+        let clHeading = MockHeading()
+        clHeading.trueHeadingStub.defaultReturnValue = 45
+        clHeading.headingAccuracyStub.defaultReturnValue = 5
+        provider.locationManager(CLLocationManager(), didUpdateHeading: clHeading)
+
+        XCTAssertEqual(observedHeadings.last?.direction, 315, "device-relative heading sources must still be compensated for interface orientation")
+    }
+#endif
+
     func testHeadingAdjustment() {
         let baseHeading = Heading(direction: 45, accuracy: 10)
 

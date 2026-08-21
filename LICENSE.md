@@ -1392,7 +1392,7 @@ For more information, please see
 
 ---
 
-### building-gen,0a926394d0,ISC,Mapbox,https://github.com/mapbox/building-gen
+### building-gen,60cfb878ef,ISC,Mapbox,https://github.com/mapbox/building-gen
 
 ```
 Copyright (c) 2025 Mapbox

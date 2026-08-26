@@ -54,7 +54,7 @@ struct Examples {
                 description: "Add a red teardrop-shaped marker image to a style and display it on the map using a SymbolLayer.",
                 type: AddOneMarkerSymbolExample.self)
         Example(title: "Add Circle Annotations",
-                description: "Show circle annotations on a map.",
+                description: "Show draggable circle annotations on a map.",
                 type: CircleAnnotationExample.self)
         Example(title: "Add Cluster Symbol Annotations",
                 description: "Show fire hydrants in Washington DC area in a cluster using a symbol layer.",
@@ -66,7 +66,7 @@ struct Examples {
                 description: "Add markers that use different icons.",
                 type: AddMarkersSymbolExample.self)
         Example(title: "Add Point Annotation",
-                description: "Show custom point annotation on a map.",
+                description: "Show draggable point annotation on a map.",
                 type: CustomPointAnnotationExample.self)
         Example(title: "Add Polyline annotations",
                 description: "Show polyline annotations on a map.",
@@ -96,6 +96,9 @@ struct Examples {
         Example(title: "Dynamic view annotations",
                 description: "Use Dynamic view annotations, Style, and the Viewport API to create a navigation experience.",
                 type: DynamicViewAnnotationExample.self)
+        Example(title: "Draggable View Annotations",
+                description: "Show draggable view annotations on a map.",
+                type: DraggableViewAnnotationExample.self)
     }
 
     // Examples that focus on setting, animating, or otherwise changing the map's camera and viewport.

@@ -216,6 +216,46 @@ public final class ViewAnnotation {
     /// The callback takes the `frame` parameter.
     public var onFrameChanged: ((CGRect) -> Void)?
 
+    /// When `true`, the user can drag this annotation to a new location on the map.
+    ///
+    /// Dragging is supported only when ``annotatedFeature`` is bound to a `Point` geometry.
+    /// It is not supported for dynamic view annotations — annotations attached to a feature
+    /// rendered on a layer (via ``AnnotatedFeature/layerFeature(layerId:featureId:)``).
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var isDraggable: Bool {
+        get { dragGestureRecognizer != nil }
+        set {
+            guard newValue != isDraggable else { return }
+            if newValue {
+                let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleDragGesture(_:)))
+                recognizer.minimumPressDuration = 0.3
+                recognizer.allowableMovement = .greatestFiniteMagnitude
+                view.addGestureRecognizer(recognizer)
+                dragGestureRecognizer = recognizer
+            } else if let recognizer = dragGestureRecognizer {
+                view.removeGestureRecognizer(recognizer)
+                dragGestureRecognizer = nil
+                dragData = nil
+            }
+        }
+    }
+
+    /// Called with the new coordinate while a drag is in progress.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var onDragCoordinateChanged: ((CLLocationCoordinate2D) -> Void)?
+
+    /// Called when dragging starts or stops.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var onDraggingChanged: ((Bool) -> Void)?
+
+    /// `true` while the user is dragging this annotation.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var isDragging: Bool { dragData != nil }
+
     /// Currently selected anchor configuration.
     private(set) public var anchorConfig: ViewAnnotationAnchorConfig? {
         didSet {
@@ -245,6 +285,27 @@ public final class ViewAnnotation {
     public var maxZoom: Double {
         get { property(\.maxZoom, default: 22) }
         set { setProperty(\.maxZoom, value: newValue, oldValue: maxZoom) }
+    }
+
+    /// When `false`, a drag only calls ``onDragCoordinateChanged`` - used by SwiftUI, where the
+    /// consumer's own `Binding` owns the coordinate and commits it back on its own.
+    var dragCommitsGeometry = true
+
+    private var dragGestureRecognizer: UILongPressGestureRecognizer?
+
+    /// In-progress drag state, `nil` when not dragging.
+    private struct DragData {
+        /// Screen position at the *last* frame (not gesture start).
+        /// So moving the view each frame doesn't compound into drift.
+        var viewPoint: CGPoint
+        /// Tracked separately from `annotatedFeature` so drag math works even when not committing.
+        var coordinate: CLLocationCoordinate2D
+    }
+    private var dragData: DragData? {
+        didSet {
+            guard (oldValue != nil) != (dragData != nil) else { return }
+            onDraggingChanged?(dragData != nil)
+        }
     }
 
     let id = UUID().uuidString
@@ -307,6 +368,7 @@ public final class ViewAnnotation {
     /// This method removes the view from its superview.
     public func remove() {
         guard let state else { return }
+        dragData = nil
         view.removeFromSuperview()
         state.deps.onRemove()
         wrapError("remove") {
@@ -425,6 +487,33 @@ public final class ViewAnnotation {
     private func updateCollisionBoxes() {
         let boxes = view.collisionBoxes()
         setProperty(\.collisionBoxes, value: boxes, oldValue: options.collisionBoxes)
+    }
+
+    @objc func handleDragGesture(_ recognizer: UILongPressGestureRecognizer) {
+        guard let deps = state?.deps else { return }
+        let location = recognizer.location(in: deps.superview)
+
+        switch recognizer.state {
+        case .began:
+            guard case .point(let point) = annotatedFeature.geometry else { return }
+            dragData = DragData(viewPoint: location, coordinate: point.coordinates)
+        case .changed:
+            guard let dragData else { return }
+            let currentPoint = deps.mapboxMap.point(for: dragData.coordinate)
+            let newPoint = CGPoint(
+                x: currentPoint.x + (location.x - dragData.viewPoint.x),
+                y: currentPoint.y + (location.y - dragData.viewPoint.y))
+            let newCoordinate = deps.mapboxMap.coordinate(for: newPoint)
+            self.dragData = DragData(viewPoint: location, coordinate: newCoordinate)
+            if dragCommitsGeometry {
+                annotatedFeature = .geometry(Point(newCoordinate))
+            }
+            onDragCoordinateChanged?(newCoordinate)
+        case .ended, .cancelled, .failed:
+            dragData = nil
+        default:
+            break
+        }
     }
 
     private func wrapError(_ action: String, _ body: () throws -> Void) {

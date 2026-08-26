@@ -157,5 +157,14 @@ private extension ViewAnnotation {
         onAnchorCoordinateChanged = mapViewAnnotation.actions.anchorCoordinate
         minZoom = mapViewAnnotation.minZoom
         maxZoom = mapViewAnnotation.maxZoom
+        isDraggable = mapViewAnnotation.dragCoordinate != nil
+        dragCommitsGeometry = false // the consumer's own Binding owns the coordinate
+        onDraggingChanged = { dragging in
+            // Deferred: a teardown-triggered cancel can arrive during a SwiftUI view update.
+            DispatchQueue.main.async { mapViewAnnotation.actions.onDraggingChanged?(dragging) }
+        }
+        onDragCoordinateChanged = { coordinate in
+            mapViewAnnotation.dragCoordinate?.wrappedValue = coordinate
+        }
     }
 }

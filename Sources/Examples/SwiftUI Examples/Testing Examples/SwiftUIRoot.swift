@@ -25,6 +25,7 @@ struct SwiftUIExamples {
             Example("View Annotations", note: "Add/remove view annotation on tap.", destination: ViewAnnotationsExample())
             Example("Weather annotations", note: "Show view annotations with contents changed on selection.", destination: WeatherAnnotationExample())
             Example("Layer Annotations", note: "Add/remove layer annotation on tap.", destination: AnnotationsExample())
+            Example("Draggable View Annotations", note: "Show draggable view annotations on a map.", destination: DraggableViewAnnotationsExample())
         },
         Examples.Category("Use cases") {
 #if !os(visionOS)

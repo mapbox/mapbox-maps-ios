@@ -30,8 +30,11 @@ public struct MapViewAnnotation {
         var visibility: ((Bool) -> Void)?
         var anchor: ((ViewAnnotationAnchorConfig) -> Void)?
         var anchorCoordinate: ((CLLocationCoordinate2D) -> Void)?
+        var onDraggingChanged: ((Bool) -> Void)?
     }
     var annotatedFeature: AnnotatedFeature
+    /// Consumer-owned source of truth for the coordinate; non-nil enables dragging.
+    var dragCoordinate: Binding<CLLocationCoordinate2D>?
     var allowOverlap = false
     var visible = true
     var allowHitTesting = true
@@ -60,6 +63,39 @@ public struct MapViewAnnotation {
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.init(annotatedFeature: .geometry(Point(coordinate)), content: content)
+    }
+
+    /// Creates a draggable view annotation bound to a geographical coordinate.
+    ///
+    /// After a long press, the user can drag the annotation, and `coordinate` is updated live to
+    /// track their finger. If you don't need dragging, use ``init(coordinate:content:)`` instead.
+    ///
+    /// ```swift
+    /// Map {
+    ///     MapViewAnnotation(coordinate: $coordinate) {
+    ///         Text("📍")
+    ///             .background(Circle().fill(.red))
+    ///             .scaleEffect(isDragging ? 1.2 : 1.0)
+    ///     } onDraggingChanged: { dragging in
+    ///         isDragging = dragging
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - coordinate: A binding to the coordinate the view annotation is bound to. Updated live while the user drags the annotation.
+    ///   - content: The view to place on the map.
+    ///   - onDraggingChanged: Called when the user starts or stops dragging the annotation.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public init<Content: View>(
+        coordinate: Binding<CLLocationCoordinate2D>,
+        @ViewBuilder content: @escaping () -> Content,
+        onDraggingChanged: @escaping (Bool) -> Void = { _ in }
+    ) {
+        self.init(annotatedFeature: .geometry(Point(coordinate.wrappedValue)), content: content)
+        self.dragCoordinate = coordinate
+        self.actions.onDraggingChanged = onDraggingChanged
     }
 
     /// Creates a view annotation on feature rendered on a layer.

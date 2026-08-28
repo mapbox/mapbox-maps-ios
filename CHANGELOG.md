@@ -16,6 +16,8 @@ Mapbox welcomes participation and contributions from everyone.
 ### Bug fixes 🐞
 * Fixed a bug where the first `MapContent` mounted on a `Map` before the style finished loading did not react to `@State`/`@Binding` changes read inside it (e.g. an annotation's color or position never updating on the first interaction).
 
+## 11.29.1 - 27 August, 2026
+
 ## 11.29.0-rc.1 - 10 August, 2026
 
 * Fixed a crash in apps compiled with Swift 6 language mode when `TileStore`/`OfflineManager` offline callbacks fired off the main thread: their `completion`/`progress` closures are now `@Sendable`, along with `Sendable` model types.
@@ -27,8 +29,6 @@ Mapbox welcomes participation and contributions from everyone.
 * Accept expression as `distance` expression argument.
 * Fixed decoding of expressions containing a `null` literal, such as `["case", ["!=", ["get", "foo"], null], "A", "B"]`. Reading a layer that used one — via `layer(withId:type:)` or `localizeLabels(into:forLayerIds:)` — failed with a `Failed to decode Value<…>` error ([#2423](https://github.com/mapbox/mapbox-maps-ios/issues/2423)).
 * Introduce experimental `RasterLayer.rasterColorScale` property, resulting in more precise visualization with long-tailed raster-array data source.
-
-## 11.29.1 - 27 August, 2026
 
 ## 11.28.4 - 20 August, 2026
 

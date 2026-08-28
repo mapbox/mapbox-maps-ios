@@ -15,6 +15,7 @@ extension MapOptions {
     ///   - size: Size of the map, if nil (the default), a minimal default size will be used.
     ///   - pixelRatio: Pixel scale of the map view; default is the main screen's native scale.
     ///   - glyphsRasterizationOptions: A `GlyphsRasterizationOptions` object.
+    ///   - emissiveColorPrecision: Controls precision of emissive color handling; default is `.approximate`.
     @available(*, unavailable, message: "'optimizeForTerrain' is obsolete and has no effect. Layer order is automatically adjusted for better performance based on the presence of terrain.")
     public convenience init(constrainMode: ConstrainMode = .heightOnly,
                             viewportMode: ViewportMode = .default,
@@ -42,6 +43,7 @@ extension MapOptions {
     ///   - pixelRatio: Pixel scale of the map view; default is the main screen's native scale.
     ///   - glyphsRasterizationOptions: A `GlyphsRasterizationOptions` object.
     ///   - scaleFactor: Scale factor to scale Map icons and texts; default is `1.0`.
+    ///   - emissiveColorPrecision: Controls precision of emissive color handling; default is `.approximate`.
     public convenience init(constrainMode: ConstrainMode = .heightOnly,
                             viewportMode: ViewportMode = .default,
                             orientation: NorthOrientation = .upwards,
@@ -49,7 +51,8 @@ extension MapOptions {
                             size: CGSize? = nil,
                             pixelRatio: CGFloat? = nil,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: []),
-                            scaleFactor: CGFloat = 1.0) {
+                            scaleFactor: CGFloat = 1.0,
+                            emissiveColorPrecision: EmissiveColorPrecision = .approximate) {
 
         let mbmSize: Size?
 
@@ -67,7 +70,8 @@ extension MapOptions {
                   size: mbmSize,
                   pixelRatio: Float(pixelRatio ?? ScreenShim.nativeScale),
                   glyphsRasterizationOptions: glyphsRasterizationOptions,
-                  scaleFactor: Float(scaleFactor))
+                  scaleFactor: Float(scaleFactor),
+                  emissiveColorPrecision: emissiveColorPrecision.NSNumber)
     }
 
     /// The map constrain mode. This can be used to limit the map to wrap around
@@ -119,6 +123,13 @@ extension MapOptions {
         return CGFloat(__scaleFactor)
     }
 
+    /// The emissive color precision to use for the Map. Default is `.approximate`.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public var emissiveColorPrecision: EmissiveColorPrecision {
+        return __emissiveColorPrecision?.intValueAsRawRepresentable() ?? .approximate
+    }
+
     public override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? MapOptions else {
             return false
@@ -136,7 +147,8 @@ extension MapOptions {
             (size == other.size) &&
             (pixelRatio == other.pixelRatio) &&
             (glyphsRasterizationOptions == other.glyphsRasterizationOptions) &&
-            (scaleFactor == other.scaleFactor)
+            (scaleFactor == other.scaleFactor) &&
+            (emissiveColorPrecision == other.emissiveColorPrecision)
     }
 
     open override var hash: Int {
@@ -148,6 +160,7 @@ extension MapOptions {
         hasher.combine(pixelRatio)
         hasher.combine(glyphsRasterizationOptions)
         hasher.combine(scaleFactor)
+        hasher.combine(emissiveColorPrecision)
         return hasher.finalize()
     }
 }

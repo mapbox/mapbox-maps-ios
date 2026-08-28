@@ -15,3 +15,4 @@
 - ``NorthOrientation``
 - ``ViewportMode``
 - ``PresentationTransactionMode``
+- ``EmissiveColorPrecision``

@@ -1,3 +1,7 @@
+/* Removed Decls */
+// Added additional -> emissiveColorPrecision parameter
+Constructor MapOptions.init(constrainMode:viewportMode:orientation:crossSourceCollisions:size:pixelRatio:glyphsRasterizationOptions:scaleFactor:) has been removed
+
 /* Decl Attribute changes */
 Extension CGPoint is now without @Sendable
 Extension CGRect is now without @Sendable

@@ -57,7 +57,8 @@ final class MapboxMapTests: XCTestCase {
             size: mapInitOptions.mapOptions.size.map(Size.init),
             pixelRatio: mapInitOptions.mapOptions.pixelRatio,
             glyphsRasterizationOptions: nil, // __map.getOptions() always returns nil for glyphsRasterizationOptions
-            scaleFactor: 1.0)
+            scaleFactor: 1.0,
+            emissiveColorPrecision: NSNumber(value: mapInitOptions.mapOptions.emissiveColorPrecision.rawValue))
 
         let actualMapOptions = mapboxMap.options
 

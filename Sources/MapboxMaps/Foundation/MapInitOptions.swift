@@ -137,7 +137,8 @@ extension MapInitOptions {
                 size: Size(width: Float(bounds.width), height: Float(bounds.height)),
                 pixelRatio: mapOptions.pixelRatio,
                 glyphsRasterizationOptions: mapOptions.glyphsRasterizationOptions,
-                scaleFactor: mapOptions.__scaleFactor)
+                scaleFactor: mapOptions.__scaleFactor,
+                emissiveColorPrecision: mapOptions.__emissiveColorPrecision)
 
             // Use the overriding style URI if provided (currently from IB)
             let resolvedStyle = if let overridingStyleURI,

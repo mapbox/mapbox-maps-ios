@@ -140,7 +140,7 @@ public struct LineLayer: Layer, Equatable {
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineCutoutFadeWidthTransition: StyleTransition?
 
-    /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
+    /// The opacity of the aboveground objects affected by the line cutout. It can only be used with GeoJSON sources that specify `"lineMetrics": true`. Cutout for tunnels isn't affected by this property. If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineCutoutOpacity: Value<Double>?
@@ -821,7 +821,7 @@ extension LineLayer {
         with(self, setter(\.lineCutoutFadeWidth, .expression(expression)))
     }
 
-    /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
+    /// The opacity of the aboveground objects affected by the line cutout. It can only be used with GeoJSON sources that specify `"lineMetrics": true`. Cutout for tunnels isn't affected by this property. If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -836,7 +836,7 @@ extension LineLayer {
         with(self, setter(\.lineCutoutOpacityTransition, transition))
     }
 
-    /// The opacity of the aboveground objects affected by the line cutout. Cutout for tunnels isn't affected by this property, If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
+    /// The opacity of the aboveground objects affected by the line cutout. It can only be used with GeoJSON sources that specify `"lineMetrics": true`. Cutout for tunnels isn't affected by this property. If set to 0, the cutout is fully transparent. Cutout opacity should have the same value for all layers that specify it. If all layers don't have the same value, it is not specified which value is used.
     /// Default value: 1. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)

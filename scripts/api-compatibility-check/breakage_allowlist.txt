@@ -5,8 +5,9 @@ Func RasterLayer.rasterAllowDraping(_:) has been removed
 Var RasterLayer.rasterAllowDraping has been removed
 
 /* Decl Attribute changes */
-Extension CGPoint is now without @Sendable
-Extension CGRect is now without @Sendable
+// Apple's CoreGraphics overlays gained @Sendable in the Xcode 26.5+ toolchain
+Extension CGPoint is now with @Sendable
+Extension CGRect is now with @Sendable
 
 /* Fixed-layout Type Changes */
 

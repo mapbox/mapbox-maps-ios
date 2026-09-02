@@ -115,7 +115,7 @@ struct FeatureDetailsView: View {
                     Image(uiImage: UIImage(named: icon) ?? UIImage(systemName: "mappin")!)
                         .renderingMode(.template)
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .scaledToFit()
                         .foregroundColor(.white)
                         .padding(8)
                         .frame(width: 40, height: 40)
@@ -233,7 +233,7 @@ struct FeatureDetailsView: View {
                 AsyncImage(url: URL(string: photoURL)) { image in
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
+                        .scaledToFill()
                         .frame(maxHeight: 200)
                         .clipped()
                         .cornerRadius(8)

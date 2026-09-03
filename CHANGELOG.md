@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.30.0 - 03 September, 2026
+
 ## 11.30.0-rc.1 - 24 August, 2026
 
 * Fixed heading from a custom location provider (set via `override(locationProvider:headingProvider:)` or a custom `LocationDataModel`) being incorrectly rotated to match device orientation ([#2428](https://github.com/mapbox/mapbox-maps-ios/issues/2428)).

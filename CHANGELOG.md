@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Introduce experimental support for draggable `ViewAnnotation`s. In UIKit, set `ViewAnnotation.isDraggable` and observe `onDraggingChanged`/`onDragCoordinateChanged`. In SwiftUI, use the new `MapViewAnnotation(coordinate:content:onDraggingChanged:)` initializer, keeping your own `Binding` as the source of truth for the coordinate.
 * Use default location puck appearance when enabling 2D puck without customization, e.g.: `mapView.location.options.puckType = .puck2D()`.
+## 11.30.0 - 03 September, 2026
 
 ## 11.30.0-rc.1 - 24 August, 2026
 

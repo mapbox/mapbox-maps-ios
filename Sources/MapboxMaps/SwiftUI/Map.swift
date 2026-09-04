@@ -48,6 +48,7 @@ public struct Map: UIViewControllerRepresentable {
     var mapDependencies = MapDependencies()
     private var viewport: ConstantOrBinding<Viewport>
     private let urlOpenerProvider: URLOpenerProvider
+    private let dependencyProvider: MapViewDependencyProviderProtocol
 
     @Environment(\.layoutDirection) var layoutDirection
 
@@ -86,24 +87,49 @@ public struct Map: UIViewControllerRepresentable {
     private init(
         _viewport: ConstantOrBinding<Viewport>,
         urlOpenerProvider: URLOpenerProvider,
+        dependencyProvider: MapViewDependencyProviderProtocol = MapViewDependencyProvider(),
         content: (() -> any MapContent)? = nil
     ) {
         self.viewport = _viewport
         self.urlOpenerProvider = urlOpenerProvider
+        self.dependencyProvider = dependencyProvider
         if let makeContent = content {
             mapDependencies.mapContent = makeContent
         }
+    }
+
+    /// Creates a map with an injected dependency provider, for testing purposes only.
+    @available(iOSApplicationExtension, unavailable)
+    init(
+        initialViewport: Viewport = .styleDefault,
+        dependencyProvider: MapViewDependencyProviderProtocol
+    ) {
+        self.init(
+            _viewport: .constant(initialViewport),
+            urlOpenerProvider: URLOpenerProvider(),
+            dependencyProvider: dependencyProvider)
+    }
+
+    /// Builds the `MapInitOptions` used to create the underlying `MapView`, reporting `.swiftUI` as the UI
+    /// framework on the `map.load` telemetry event.
+    func makeMapInitOptions() -> MapInitOptions {
+        MapInitOptions(
+            mapStyle: mapDependencies.mapStyle,
+            locationDataModel: mapDependencies.locationDataModel,
+            uiFramework: .swiftUI
+        )
     }
 
     public func makeCoordinator() -> Coordinator {
         let urlOpener = ClosureURLOpener()
         sendTelemetry(\.swiftUI)
 
-        let initOptions = MapInitOptions(
-            mapStyle: mapDependencies.mapStyle,
-            locationDataModel: mapDependencies.locationDataModel
-        )
-        let mapView = MapView(frame: .zero, mapInitOptions: initOptions, urlOpener: urlOpener)
+        let initOptions = makeMapInitOptions()
+        let mapView = MapView(
+            frame: .zero,
+            mapInitOptions: initOptions,
+            dependencyProvider: dependencyProvider,
+            urlOpener: urlOpener)
         let viewController = MapViewController(mapView: mapView)
 
         let mapContentDependencies = MapContentDependencies(

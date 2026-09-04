@@ -15,7 +15,7 @@ extension UserDefaults {
 }
 
 internal protocol EventsManagerProtocol: AnyObject {
-    func sendMapLoadEvent(with traits: UITraitCollection)
+    func sendMapLoadEvent(with traits: UITraitCollection, uiFramework: UIFramework)
 
     func sendTurnstile()
 
@@ -26,6 +26,8 @@ internal final class EventsManager: EventsManagerProtocol {
     private enum Constants {
         static let MGLAPIClientUserAgentBase = "mapbox-maps-ios"
         static let SDKVersion = Bundle.mapboxMapsMetadata.version
+        /// `uiFramework` was added in schema version 2.3.
+        static let eventSchemaVersion = "2.3"
     }
 
     /// Responsible for location and telemetry metrics events
@@ -105,7 +107,7 @@ internal final class EventsManager: EventsManagerProtocol {
         return String(cString: model)
     }
 
-    private func getMapLoadEventAttributes(for traits: UITraitCollection) -> [String: Any] {
+    private func getMapLoadEventAttributes(for traits: UITraitCollection, uiFramework: UIFramework) -> [String: Any] {
         let event = "map.load"
         let created = ISO8601DateFormatter().string(from: Date())
         let userId = UIDevice.current.identifierForVendor?.uuidString ?? ""
@@ -125,14 +127,16 @@ internal final class EventsManager: EventsManagerProtocol {
             "resolution": resolution,
             "accessibilityFontScale": accessibilityFontScale,
             "orientation": orientation,
-            "wifi": wifi
+            "wifi": wifi,
+            "version": Constants.eventSchemaVersion,
+            "uiFramework": uiFramework.rawValue
         ] as [String: Any]
 
         return eventAttributes
     }
 
-    internal func sendMapLoadEvent(with traits: UITraitCollection) {
-        let attributes = self.getMapLoadEventAttributes(for: traits)
+    internal func sendMapLoadEvent(with traits: UITraitCollection, uiFramework: UIFramework) {
+        let attributes = self.getMapLoadEventAttributes(for: traits, uiFramework: uiFramework)
         let mapLoadEvent = MapboxCommon_Private.Event(priority: .queued,
                                                       attributes: attributes,
                                                       deferredOptions: nil)

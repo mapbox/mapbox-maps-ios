@@ -443,7 +443,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         cameraViewContainerView.isHidden = true
         addSubview(cameraViewContainerView)
 
-        sendInitialTelemetryEvents()
+        sendInitialTelemetryEvents(uiFramework: resolvedMapInitOptions.uiFramework)
 
         // Set up managers
         setupManagers(initOptions: resolvedMapInitOptions)
@@ -457,9 +457,9 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         return MapboxMap(map: map, events: MapEvents(observable: map))
     }
 
-    internal func sendInitialTelemetryEvents() {
+    internal func sendInitialTelemetryEvents(uiFramework: UIFramework) {
         eventsManager.sendTurnstile()
-        eventsManager.sendMapLoadEvent(with: traitCollection)
+        eventsManager.sendMapLoadEvent(with: traitCollection, uiFramework: uiFramework)
     }
 
     // swiftlint:disable:next function_body_length

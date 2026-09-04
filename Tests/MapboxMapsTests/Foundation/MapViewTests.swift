@@ -103,6 +103,12 @@ final class MapViewTests: XCTestCase {
         XCTAssertNil(weakMapView)
     }
 
+    func testMapLoadEventUsesUIFrameworkFromMapInitOptions() throws {
+        let eventsManager = try XCTUnwrap(mapView.eventsManager as? EventsManagerMock)
+        XCTAssertEqual(eventsManager.sendMapLoadEventStub.invocations.count, 1)
+        XCTAssertEqual(eventsManager.sendMapLoadEventStub.invocations.first?.parameters.uiFramework, UIFramework.uiKit)
+    }
+
     /// Tests the complete lifecycle of display link management.
     ///
     /// This test verifies that:

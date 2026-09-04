@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@testable @_spi(Restricted) import MapboxMaps
 
 class MapInitOptionsTests: XCTestCase {
 
@@ -16,6 +16,18 @@ class MapInitOptionsTests: XCTestCase {
 
         let c = MapInitOptions(mapOptions: MapOptions(constrainMode: .widthAndHeight))
         XCTAssertNotEqual(a, c)
+    }
+
+    func testDefaultUIFrameworkIsUIKit() {
+        XCTAssertEqual(MapInitOptions().uiFramework, UIFramework.uiKit)
+    }
+
+    func testResolvedPreservesUIFramework() {
+        let options = MapInitOptions(mapStyle: nil, uiFramework: .swiftUI)
+
+        let resolved = options.resolved(in: CGRect(x: 0, y: 0, width: 100, height: 100), overridingStyleURI: nil)
+
+        XCTAssertEqual(resolved.uiFramework, UIFramework.swiftUI)
     }
 
     func testHashable() {

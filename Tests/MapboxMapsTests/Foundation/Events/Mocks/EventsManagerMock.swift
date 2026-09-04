@@ -1,5 +1,5 @@
 import UIKit
-@testable import MapboxMaps
+@testable @_spi(Restricted) import MapboxMaps
 
 class EventsManagerMock: EventsManagerProtocol {
 
@@ -9,9 +9,9 @@ class EventsManagerMock: EventsManagerProtocol {
         self.accessToken = accessToken
     }
 
-    let sendMapLoadEventStub = Stub<UITraitCollection, Void>()
-    func sendMapLoadEvent(with tratis: UITraitCollection) {
-        sendMapLoadEventStub.call(with: tratis)
+    let sendMapLoadEventStub = Stub<(traits: UITraitCollection, uiFramework: UIFramework), Void>()
+    func sendMapLoadEvent(with traits: UITraitCollection, uiFramework: UIFramework) {
+        sendMapLoadEventStub.call(with: (traits, uiFramework))
     }
 
     let sendTurnstileStub = Stub<Void, Void>()

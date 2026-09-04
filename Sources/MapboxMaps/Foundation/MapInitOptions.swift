@@ -39,6 +39,11 @@ public final class MapInitOptions: NSObject {
 
     public let locationDataModel: LocationDataModel?
 
+    /// UI framework reported on the `map.load` telemetry event. Defaults to UIKit.
+    /// SwiftUI ``Map`` sets this to ``UIFramework/swiftUI``.
+    @_spi(Restricted)
+    public let uiFramework: UIFramework
+
     /// Creates new instance of ``MapInitOptions``.
     ///
     /// - Parameters:
@@ -79,18 +84,41 @@ public final class MapInitOptions: NSObject {
     ///   - mapOptions: Map rendering options.
     ///   - cameraOptions:  Camera options overriding the default camera that has been specified in the style.
     ///   - antialiasingSampleCount: Sample count to control multisample anti-aliasing (MSAA) option for rendering.
-    public init(
+    convenience public init(
         mapStyle: MapStyle?,
         mapOptions: MapOptions = MapOptions(),
         cameraOptions: CameraOptions? = nil,
         antialiasingSampleCount: Int = 1,
         locationDataModel: LocationDataModel? = nil
     ) {
+        self.init(
+            mapStyle: mapStyle,
+            mapOptions: mapOptions,
+            cameraOptions: cameraOptions,
+            antialiasingSampleCount: antialiasingSampleCount,
+            locationDataModel: locationDataModel,
+            uiFramework: .uiKit)
+    }
+
+    /// Creates new map init options with a specific UI framework reported on the `map.load` telemetry event.
+    ///
+    /// Restricted API used by UI framework wrappers (e.g. SwiftUI ``Map`` or Flutter) that need to identify
+    /// themselves for telemetry purposes.
+    @_spi(Restricted)
+    public init(
+        mapStyle: MapStyle?,
+        mapOptions: MapOptions = MapOptions(),
+        cameraOptions: CameraOptions? = nil,
+        antialiasingSampleCount: Int = 1,
+        locationDataModel: LocationDataModel? = nil,
+        uiFramework: UIFramework
+    ) {
         self.mapOptions = mapOptions
         self.cameraOptions = cameraOptions
         self.mapStyle = mapStyle
         self.antialiasingSampleCount = antialiasingSampleCount
         self.locationDataModel = locationDataModel
+        self.uiFramework = uiFramework
     }
 
     /// :nodoc:
@@ -152,7 +180,8 @@ extension MapInitOptions {
                 mapStyle: resolvedStyle,
                 mapOptions: resolvedMapOptions,
                 cameraOptions: cameraOptions,
-                locationDataModel: locationDataModel)
+                locationDataModel: locationDataModel,
+                uiFramework: uiFramework)
         } else {
             return self
         }

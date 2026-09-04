@@ -44,7 +44,7 @@ final class CustomRasterSourceExample: UIViewController, ExampleProtocol {
                 }
                 try! self.mapView.mapboxMap.setCustomRasterSourceTileData(
                     forSourceId: ID.customRasterSource,
-                    tiles: [CustomRasterSourceTileData(tileId: tileID, image: nil)])
+                    tiles: [CustomRasterSourceTileData(tileId: tileID, image: nil as UIImage?)])
             default: break
             }
         }

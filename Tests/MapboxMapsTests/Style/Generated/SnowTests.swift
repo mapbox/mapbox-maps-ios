@@ -10,6 +10,7 @@ final class SnowTests: XCTestCase {
         instance.centerThinningTransition = .testConstantValue()
         instance.color = .testConstantValue()
         instance.colorTransition = .testConstantValue()
+        instance.colorUseTheme = .testConstantValue()
         instance.density = .testConstantValue()
         instance.densityTransition = .testConstantValue()
         instance.direction = .testConstantValue()
@@ -24,11 +25,13 @@ final class SnowTests: XCTestCase {
         instance.vignetteTransition = .testConstantValue()
         instance.vignetteColor = .testConstantValue()
         instance.vignetteColorTransition = .testConstantValue()
+        instance.vignetteColorUseTheme = .testConstantValue()
 
         XCTAssertEqual(instance.centerThinning, .testConstantValue())
         XCTAssertEqual(instance.centerThinningTransition, .testConstantValue())
         XCTAssertEqual(instance.color, .testConstantValue())
         XCTAssertEqual(instance.colorTransition, .testConstantValue())
+        XCTAssertEqual(instance.colorUseTheme, .testConstantValue())
         XCTAssertEqual(instance.density, .testConstantValue())
         XCTAssertEqual(instance.densityTransition, .testConstantValue())
         XCTAssertEqual(instance.direction, .testConstantValue())
@@ -43,6 +46,7 @@ final class SnowTests: XCTestCase {
         XCTAssertEqual(instance.vignetteTransition, .testConstantValue())
         XCTAssertEqual(instance.vignetteColor, .testConstantValue())
         XCTAssertEqual(instance.vignetteColorTransition, .testConstantValue())
+        XCTAssertEqual(instance.vignetteColorUseTheme, .testConstantValue())
     }
 
     func testSnowSetters() {
@@ -92,6 +96,7 @@ final class SnowTests: XCTestCase {
         instance.centerThinningTransition = .testConstantValue()
         instance.color = .testConstantValue()
         instance.colorTransition = .testConstantValue()
+        instance.colorUseTheme = .testConstantValue()
         instance.density = .testConstantValue()
         instance.densityTransition = .testConstantValue()
         instance.direction = .testConstantValue()
@@ -106,6 +111,7 @@ final class SnowTests: XCTestCase {
         instance.vignetteTransition = .testConstantValue()
         instance.vignetteColor = .testConstantValue()
         instance.vignetteColorTransition = .testConstantValue()
+        instance.vignetteColorUseTheme = .testConstantValue()
 
         let data = try JSONEncoder().encode(instance)
         let decodedInstance = try JSONDecoder().decode(Snow.self, from: data)
@@ -114,6 +120,7 @@ final class SnowTests: XCTestCase {
         XCTAssertEqual(decodedInstance.centerThinningTransition, .testConstantValue())
         XCTAssertEqual(decodedInstance.color, .testConstantValue())
         XCTAssertEqual(decodedInstance.colorTransition, .testConstantValue())
+        XCTAssertEqual(decodedInstance.colorUseTheme, .testConstantValue())
         XCTAssertEqual(decodedInstance.density, .testConstantValue())
         XCTAssertEqual(decodedInstance.densityTransition, .testConstantValue())
         XCTAssertEqual(decodedInstance.direction, .testConstantValue())
@@ -128,6 +135,7 @@ final class SnowTests: XCTestCase {
         XCTAssertEqual(decodedInstance.vignetteTransition, .testConstantValue())
         XCTAssertEqual(decodedInstance.vignetteColor, .testConstantValue())
         XCTAssertEqual(decodedInstance.vignetteColorTransition, .testConstantValue())
+        XCTAssertEqual(decodedInstance.vignetteColorUseTheme, .testConstantValue())
     }
 
     func testSnowSettersSerialization() throws {

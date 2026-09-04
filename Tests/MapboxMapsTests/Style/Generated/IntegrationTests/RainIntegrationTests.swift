@@ -23,6 +23,7 @@ final class RainIntegrationTests: MapViewIntegrationTestCase {
                 .centerThinningTransition(.testConstantValue())
                 .color(StyleColor.testConstantValue())
                 .colorTransition(.testConstantValue())
+                .colorUseTheme(.none)
                 .density(Double.testConstantValue())
                 .densityTransition(.testConstantValue())
                 .direction(azimuthal: 0, polar: 1)
@@ -39,6 +40,7 @@ final class RainIntegrationTests: MapViewIntegrationTestCase {
                 .vignetteTransition(.testConstantValue())
                 .vignetteColor(StyleColor.testConstantValue())
                 .vignetteColorTransition(.testConstantValue())
+                .vignetteColorUseTheme(.none)
 
             // Add the Rain
             do {
@@ -53,7 +55,7 @@ final class RainIntegrationTests: MapViewIntegrationTestCase {
                 try mapView.mapboxMap.removeRain()
                 successfullyRemovedObjectExpectation.fulfill()
             } catch {
-                XCTFail("Failed to add RainLayer because of error: \(error)")
+                XCTFail("Failed to remove RainLayer because of error: \(error)")
             }
         }
 

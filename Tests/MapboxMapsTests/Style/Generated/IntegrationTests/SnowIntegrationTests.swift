@@ -23,6 +23,7 @@ final class SnowIntegrationTests: MapViewIntegrationTestCase {
                 .centerThinningTransition(.testConstantValue())
                 .color(StyleColor.testConstantValue())
                 .colorTransition(.testConstantValue())
+                .colorUseTheme(.none)
                 .density(Double.testConstantValue())
                 .densityTransition(.testConstantValue())
                 .direction(azimuthal: 0, polar: 1)
@@ -37,6 +38,7 @@ final class SnowIntegrationTests: MapViewIntegrationTestCase {
                 .vignetteTransition(.testConstantValue())
                 .vignetteColor(StyleColor.testConstantValue())
                 .vignetteColorTransition(.testConstantValue())
+                .vignetteColorUseTheme(.none)
 
             // Add the Snow
             do {
@@ -51,7 +53,7 @@ final class SnowIntegrationTests: MapViewIntegrationTestCase {
                 try mapView.mapboxMap.removeSnow()
                 successfullyRemovedObjectExpectation.fulfill()
             } catch {
-                XCTFail("Failed to add SnowLayer because of error: \(error)")
+                XCTFail("Failed to remove SnowLayer because of error: \(error)")
             }
         }
 

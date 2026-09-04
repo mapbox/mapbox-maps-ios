@@ -35,3 +35,8 @@ Accessor OfflineSwitch.shared.Set() has been removed
 // Update tileCover API to return OverscaledTileID instead of CanonicalTileID
 Func MapboxMap.tileCover(for:) has return type change from [MapboxCoreMaps.CanonicalTileID] to [MapboxCoreMaps.OverscaledTileID]
 Func Snapshotter.tileCover(for:) has return type change from [MapboxCoreMaps.CanonicalTileID] to [MapboxCoreMaps.OverscaledTileID]
+
+// Atmosphere moved to the Generic style code generator template, same as Snow/Rain
+Var Atmosphere.colorUseTheme is now with @_documentation
+Var Atmosphere.highColorUseTheme is now with @_documentation
+Var Atmosphere.spaceColorUseTheme is now with @_documentation

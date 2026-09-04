@@ -5,7 +5,7 @@ import UIKit
 
 /// Snow particles over the map
 ///
-/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/types/#snow)
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/snow/)
 @_documentation(visibility: public)
 @_spi(Experimental)
 public struct Snow: Codable, Equatable, StyleEncodable {
@@ -35,7 +35,9 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var colorTransition: StyleTransition?
 
-    /// Use theme flag for color
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// - Note: Expressions set to this property currently don't work.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var colorUseTheme: Value<ColorUseTheme>?
@@ -117,7 +119,9 @@ public struct Snow: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var vignetteColorTransition: StyleTransition?
 
-    /// Use theme flag for vignette-color
+    /// This property defines whether to use colorTheme defined color or not.
+    /// By default it will use color defined by the root theme in the style.
+    /// - Note: Expressions set to this property currently don't work.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteColorUseTheme: Value<ColorUseTheme>?

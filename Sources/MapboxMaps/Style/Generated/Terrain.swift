@@ -1,24 +1,25 @@
-// This file is generated.
+// This file is generated. Do not edit.
+
 import Foundation
 
-/// The global terrain source.
+/// A global modifier that elevates layers and markers based on a DEM data source.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/style-spec/reference/terrain/)
-public struct Terrain: Codable, Equatable {
+public struct Terrain: Codable, Equatable, StyleEncodable {
 
-    public var source: String
-
+    /// Builds a new instance of Terrain.
     public init(sourceId: String) {
         self.source = sourceId
     }
+
+    public var source: String
 
     /// Exaggerates the elevation of the terrain by multiplying the data from the DEM with this value.
     /// Default value: 1. Value range: [0, 1000]
     public var exaggeration: Value<Double>?
 
-    /// Transition options for `Exaggeration`.
+    /// Transition options for exaggeration
     public var exaggerationTransition: StyleTransition?
-
 
     enum CodingKeys: String, CodingKey {
         case source = "source"
@@ -44,6 +45,7 @@ extension Terrain {
     public func exaggeration(_ expression: Exp) -> Self {
         with(self, setter(\.exaggeration, .expression(expression)))
     }
+
 }
 
 extension Terrain: MapStyleContent, PrimitiveMapContent {

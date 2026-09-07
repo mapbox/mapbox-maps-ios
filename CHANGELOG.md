@@ -4,8 +4,20 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.31.0-rc.1 - 07 September, 2026
+
 * Introduce experimental support for draggable `ViewAnnotation`s. In UIKit, set `ViewAnnotation.isDraggable` and observe `onDraggingChanged`/`onDragCoordinateChanged`. In SwiftUI, use the new `MapViewAnnotation(coordinate:content:onDraggingChanged:)` initializer, keeping your own `Binding` as the source of truth for the coordinate.
 * Use default location puck appearance when enabling 2D puck without customization, e.g.: `mapView.location.options.puckType = .puck2D()`.
+
+### Breaking changes ⚠️
+* Remove the experimental `raster-allow-draping` property from `RasterLayer`.
+
+### Features ✨ and improvements 🏁
+* Add experimental MapOptions.emissiveColorPrecision to control emissive color accuracy for draped layers.
+
+### Bug fixes 🐞
+* Ignored SDF images from text-field don't affect collision detection anymore
+
 ## 11.30.0 - 03 September, 2026
 
 ## 11.30.0-rc.1 - 24 August, 2026

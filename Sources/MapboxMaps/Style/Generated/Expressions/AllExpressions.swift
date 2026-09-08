@@ -52,7 +52,7 @@ public extension Exp {
         /// Returns the arccosine of the input, in radians between −π/2 and π/2.
         public static let acos = Operator(rawValue: "acos")
 
-        /// Returns a string which matches one of the values specified in the text-anchor layout property, depending on the best-fit anchor for the symbol during rendering. Using this expression the content of the layer can be dynamically configured for the specific anchor type.
+        /// Returns a string which matches one of the values specified in the text-anchor layout property, depending on the best-fit anchor for the symbol during rendering. Using this expression the content of the layer can be dynamically configured for the specific anchor type. Only symbol layout properties supporting data expressions can use it, except text-anchor and text-variable-anchor, which define the anchor themselves. It is also not supported in the properties prefixed with symbol-. It is rejected in filters, in visibility, in paint properties, in appearance conditions and in every other layer type.
         @_spi(Experimental) public static let activeAnchor = Operator(rawValue: "active-anchor")
 
         /// Returns `true` if all the inputs are `true`, `false` otherwise. The inputs are evaluated in order, and evaluation is short-circuiting: once an input expression evaluates to `false`, the result is `false` and no further input expressions are evaluated.

@@ -161,14 +161,14 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var lineSortKey: Double?
 
-    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
-    /// Default value: 0.
+    /// Vertical offset from ground. Not supported for globe projection at the moment.
+    /// Default value: 0. The unit of lineZOffset is in meters.
     public var lineZOffset: Double?
 
     /// Transition property for `lineBlur`
     public var lineBlurTransition: StyleTransition?
 
-    /// Blur applied to the line, in pixels.
+    /// Blur applied to the line.
     /// Default value: 0. Minimum value: 0. The unit of lineBlur is in pixels.
     public var lineBlur: Double?
 
@@ -189,7 +189,7 @@ public struct PolylineAnnotation: Annotation, Equatable, AnnotationInternal {
     public var lineBorderWidthTransition: StyleTransition?
 
     /// The width of the line border. A value of zero means no border.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of lineBorderWidth is in pixels.
     public var lineBorderWidth: Double?
 
     /// This property defines whether the `lineColor` uses colorTheme from the style or not.
@@ -313,8 +313,8 @@ extension PolylineAnnotation {
         with(self, setter(\.lineSortKey, newValue))
     }
 
-    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
-    /// Default value: 0.
+    /// Vertical offset from ground. Not supported for globe projection at the moment.
+    /// Default value: 0. The unit of lineZOffset is in meters.
     public func lineZOffset(_ newValue: Double) -> Self {
         with(self, setter(\.lineZOffset, newValue))
     }
@@ -324,7 +324,7 @@ extension PolylineAnnotation {
         with(self, setter(\.lineBlurTransition, transition))
     }
 
-    /// Blur applied to the line, in pixels.
+    /// Blur applied to the line.
     /// Default value: 0. Minimum value: 0. The unit of lineBlur is in pixels.
     public func lineBlur(_ newValue: Double) -> Self {
         with(self, setter(\.lineBlur, newValue))
@@ -361,7 +361,7 @@ extension PolylineAnnotation {
     }
 
     /// The width of the line border. A value of zero means no border.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of lineBorderWidth is in pixels.
     public func lineBorderWidth(_ newValue: Double) -> Self {
         with(self, setter(\.lineBorderWidth, newValue))
     }

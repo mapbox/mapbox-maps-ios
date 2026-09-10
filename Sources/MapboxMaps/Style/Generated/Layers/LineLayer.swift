@@ -80,11 +80,11 @@ public struct LineLayer: Layer, Equatable {
     @_documentation(visibility: public)
     @_spi(Experimental) public var lineWidthUnit: Value<LineWidthUnit>?
 
-    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
-    /// Default value: 0.
+    /// Vertical offset from ground. Not supported for globe projection at the moment.
+    /// Default value: 0. The unit of lineZOffset is in meters.
     public var lineZOffset: Value<Double>?
 
-    /// Blur applied to the line, in pixels.
+    /// Blur applied to the line.
     /// Default value: 0. Minimum value: 0. The unit of lineBlur is in pixels.
     public var lineBlur: Value<Double>?
 
@@ -113,7 +113,7 @@ public struct LineLayer: Layer, Equatable {
     @_spi(Experimental) public var lineBorderGradientUseTheme: Value<ColorUseTheme>?
 
     /// The width of the line border. A value of zero means no border.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of lineBorderWidth is in pixels.
     public var lineBorderWidth: Value<Double>?
 
     /// Transition options for `lineBorderWidth`.
@@ -637,19 +637,19 @@ extension LineLayer {
         with(self, setter(\.lineWidthUnit, .expression(expression)))
     }
 
-    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
-    /// Default value: 0.
+    /// Vertical offset from ground. Not supported for globe projection at the moment.
+    /// Default value: 0. The unit of lineZOffset is in meters.
     public func lineZOffset(_ constant: Double) -> Self {
         with(self, setter(\.lineZOffset, .constant(constant)))
     }
 
-    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
-    /// Default value: 0.
+    /// Vertical offset from ground. Not supported for globe projection at the moment.
+    /// Default value: 0. The unit of lineZOffset is in meters.
     public func lineZOffset(_ expression: Exp) -> Self {
         with(self, setter(\.lineZOffset, .expression(expression)))
     }
 
-    /// Blur applied to the line, in pixels.
+    /// Blur applied to the line.
     /// Default value: 0. Minimum value: 0. The unit of lineBlur is in pixels.
     public func lineBlur(_ constant: Double) -> Self {
         with(self, setter(\.lineBlur, .constant(constant)))
@@ -660,7 +660,7 @@ extension LineLayer {
         with(self, setter(\.lineBlurTransition, transition))
     }
 
-    /// Blur applied to the line, in pixels.
+    /// Blur applied to the line.
     /// Default value: 0. Minimum value: 0. The unit of lineBlur is in pixels.
     public func lineBlur(_ expression: Exp) -> Self {
         with(self, setter(\.lineBlur, .expression(expression)))
@@ -743,7 +743,7 @@ extension LineLayer {
     }
 
     /// The width of the line border. A value of zero means no border.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of lineBorderWidth is in pixels.
     public func lineBorderWidth(_ constant: Double) -> Self {
         with(self, setter(\.lineBorderWidth, .constant(constant)))
     }
@@ -754,7 +754,7 @@ extension LineLayer {
     }
 
     /// The width of the line border. A value of zero means no border.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of lineBorderWidth is in pixels.
     public func lineBorderWidth(_ expression: Exp) -> Self {
         with(self, setter(\.lineBorderWidth, .expression(expression)))
     }

@@ -74,8 +74,8 @@ public struct Atmosphere: Codable, Equatable, StyleEncodable {
     /// Transition options for star-intensity
     public var starIntensityTransition: StyleTransition?
 
-    /// An array of two number values, specifying the vertical range, measured in meters, over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
-    /// Default value: [0,0]. Minimum value: 0.
+    /// An array of two number values, specifying the vertical range over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
+    /// Default value: [0,0]. Minimum value: 0. The unit of verticalRange is in meters.
     public var verticalRange: Value<[Double]>?
 
     /// Transition options for vertical-range
@@ -271,8 +271,8 @@ extension Atmosphere {
         with(self, setter(\.starIntensity, .expression(expression)))
     }
 
-    /// An array of two number values, specifying the vertical range, measured in meters, over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
-    /// Default value: [0,0]. Minimum value: 0.
+    /// An array of two number values, specifying the vertical range over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
+    /// Default value: [0,0]. Minimum value: 0. The unit of verticalRange is in meters.
     public func verticalRange(start: Double, end: Double) -> Self {
         with(self, setter(\.verticalRange, .constant([start, end])))
     }
@@ -282,8 +282,8 @@ extension Atmosphere {
         with(self, setter(\.verticalRangeTransition, transition))
     }
 
-    /// An array of two number values, specifying the vertical range, measured in meters, over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
-    /// Default value: [0,0]. Minimum value: 0.
+    /// An array of two number values, specifying the vertical range over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
+    /// Default value: [0,0]. Minimum value: 0. The unit of verticalRange is in meters.
     public func verticalRange(_ expression: Exp) -> Self {
         with(self, setter(\.verticalRange, .expression(expression)))
     }

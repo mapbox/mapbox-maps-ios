@@ -39,7 +39,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>
 
-    /// Radius of a fill extrusion edge in meters. If not zero, rounds extrusion edges for a smoother appearance.
+    /// Radius of a fill extrusion edge. If not zero, rounds extrusion edges for a smoother appearance.
     /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionEdgeRadius: Value<Double>?
@@ -53,8 +53,8 @@ public struct FillExtrusionLayer: Layer, Equatable {
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionAmbientOcclusionGroundAttenuationTransition: StyleTransition?
 
-    /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings in meters.
-    /// Default value: 3. Minimum value: 0.
+    /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings.
+    /// Default value: 3. Minimum value: 0. The unit of fillExtrusionAmbientOcclusionGroundRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionAmbientOcclusionGroundRadius: Value<Double>?
 
@@ -147,7 +147,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionFloodLightGroundAttenuationTransition: StyleTransition?
 
-    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
+    /// The extent of the flood light effect on the ground beneath the extruded buildings. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
     /// Default value: 0. The unit of fillExtrusionFloodLightGroundRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionFloodLightGroundRadius: Value<Double>?
@@ -165,7 +165,7 @@ public struct FillExtrusionLayer: Layer, Equatable {
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionFloodLightIntensityTransition: StyleTransition?
 
-    /// The extent of the flood light effect on the walls of the extruded buildings in meters.
+    /// The extent of the flood light effect on the walls of the extruded buildings.
     /// Default value: 0. Minimum value: 0. The unit of fillExtrusionFloodLightWallRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental) public var fillExtrusionFloodLightWallRadius: Value<Double>?
@@ -485,7 +485,7 @@ extension FillExtrusionLayer {
         with(self, setter(\.maxZoom, newValue))
     }
 
-    /// Radius of a fill extrusion edge in meters. If not zero, rounds extrusion edges for a smoother appearance.
+    /// Radius of a fill extrusion edge. If not zero, rounds extrusion edges for a smoother appearance.
     /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -493,7 +493,7 @@ extension FillExtrusionLayer {
         with(self, setter(\.fillExtrusionEdgeRadius, .constant(constant)))
     }
 
-    /// Radius of a fill extrusion edge in meters. If not zero, rounds extrusion edges for a smoother appearance.
+    /// Radius of a fill extrusion edge. If not zero, rounds extrusion edges for a smoother appearance.
     /// Default value: 0. Value range: [0, 1]
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -524,8 +524,8 @@ extension FillExtrusionLayer {
         with(self, setter(\.fillExtrusionAmbientOcclusionGroundAttenuation, .expression(expression)))
     }
 
-    /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings in meters.
-    /// Default value: 3. Minimum value: 0.
+    /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings.
+    /// Default value: 3. Minimum value: 0. The unit of fillExtrusionAmbientOcclusionGroundRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func fillExtrusionAmbientOcclusionGroundRadius(_ constant: Double) -> Self {
@@ -539,8 +539,8 @@ extension FillExtrusionLayer {
         with(self, setter(\.fillExtrusionAmbientOcclusionGroundRadiusTransition, transition))
     }
 
-    /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings in meters.
-    /// Default value: 3. Minimum value: 0.
+    /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings.
+    /// Default value: 3. Minimum value: 0. The unit of fillExtrusionAmbientOcclusionGroundRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)
     public func fillExtrusionAmbientOcclusionGroundRadius(_ expression: Exp) -> Self {
@@ -787,7 +787,7 @@ extension FillExtrusionLayer {
         with(self, setter(\.fillExtrusionFloodLightGroundAttenuation, .expression(expression)))
     }
 
-    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
+    /// The extent of the flood light effect on the ground beneath the extruded buildings. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
     /// Default value: 0. The unit of fillExtrusionFloodLightGroundRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -802,7 +802,7 @@ extension FillExtrusionLayer {
         with(self, setter(\.fillExtrusionFloodLightGroundRadiusTransition, transition))
     }
 
-    /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
+    /// The extent of the flood light effect on the ground beneath the extruded buildings. Note: this experimental property is evaluated once per tile, during tile initialization. Changing the property value could trigger tile reload. The `feature-state` styling is deprecated and will get removed soon.
     /// Default value: 0. The unit of fillExtrusionFloodLightGroundRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -833,7 +833,7 @@ extension FillExtrusionLayer {
         with(self, setter(\.fillExtrusionFloodLightIntensity, .expression(expression)))
     }
 
-    /// The extent of the flood light effect on the walls of the extruded buildings in meters.
+    /// The extent of the flood light effect on the walls of the extruded buildings.
     /// Default value: 0. Minimum value: 0. The unit of fillExtrusionFloodLightWallRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)
@@ -848,7 +848,7 @@ extension FillExtrusionLayer {
         with(self, setter(\.fillExtrusionFloodLightWallRadiusTransition, transition))
     }
 
-    /// The extent of the flood light effect on the walls of the extruded buildings in meters.
+    /// The extent of the flood light effect on the walls of the extruded buildings.
     /// Default value: 0. Minimum value: 0. The unit of fillExtrusionFloodLightWallRadius is in meters.
     @_documentation(visibility: public)
     @_spi(Experimental)

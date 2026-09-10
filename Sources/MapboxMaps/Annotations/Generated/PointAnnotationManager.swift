@@ -606,8 +606,8 @@ public class PointAnnotationManager: AnnotationManager, AnnotationManagerInterna
         set { impl.layerProperties["symbol-z-offset-transition"] = newValue?.asDictionary }
     }
 
-    /// Specifies an uniform elevation from the ground, in meters.
-    /// Default value: 0. Minimum value: 0.
+    /// Specifies an uniform elevation from the ground.
+    /// Default value: 0. Minimum value: 0. The unit of symbolZOffset is in meters.
     public var symbolZOffset: Double? {
         get { impl.layerProperties["symbol-z-offset"] as? Double }
         set { impl.layerProperties["symbol-z-offset"] = newValue }

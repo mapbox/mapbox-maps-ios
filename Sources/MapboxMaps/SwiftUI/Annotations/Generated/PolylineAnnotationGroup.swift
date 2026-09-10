@@ -205,8 +205,8 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 
     private var lineZOffset: Double?
-    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
-    /// Default value: 0.
+    /// Vertical offset from ground. Not supported for globe projection at the moment.
+    /// Default value: 0. The unit of lineZOffset is in meters.
     public func lineZOffset(_ newValue: Double) -> Self {
         with(self, setter(\.lineZOffset, newValue))
     }
@@ -218,7 +218,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 
     private var lineBlur: Double?
-    /// Blur applied to the line, in pixels.
+    /// Blur applied to the line.
     /// Default value: 0. Minimum value: 0. The unit of lineBlur is in pixels.
     public func lineBlur(_ newValue: Double) -> Self {
         with(self, setter(\.lineBlur, newValue))
@@ -260,7 +260,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 
     private var lineBorderWidth: Double?
     /// The width of the line border. A value of zero means no border.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of lineBorderWidth is in pixels.
     public func lineBorderWidth(_ newValue: Double) -> Self {
         with(self, setter(\.lineBorderWidth, newValue))
     }

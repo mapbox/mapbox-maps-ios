@@ -136,8 +136,8 @@ public struct ModelLayer: Layer, Equatable {
     /// Default value: "map".
     public var modelScaleMode: Value<ModelScaleMode>?
 
-    /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
-    /// Default value: [0,0,0].
+    /// The translation of the model in form of [longitudal, latitudal, altitude] offsets.
+    /// Default value: [0,0,0]. The unit of modelTranslation is in meters.
     public var modelTranslation: Value<[Double]>?
 
     /// Transition options for `modelTranslation`.
@@ -600,8 +600,8 @@ extension ModelLayer {
         with(self, setter(\.modelScaleMode, .expression(expression)))
     }
 
-    /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
-    /// Default value: [0,0,0].
+    /// The translation of the model in form of [longitudal, latitudal, altitude] offsets.
+    /// Default value: [0,0,0]. The unit of modelTranslation is in meters.
     public func modelTranslation(x: Double, y: Double, z: Double) -> Self {
         with(self, setter(\.modelTranslation, .constant([x, y, z])))
     }
@@ -611,8 +611,8 @@ extension ModelLayer {
         with(self, setter(\.modelTranslationTransition, transition))
     }
 
-    /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
-    /// Default value: [0,0,0].
+    /// The translation of the model in form of [longitudal, latitudal, altitude] offsets.
+    /// Default value: [0,0,0]. The unit of modelTranslation is in meters.
     public func modelTranslation(_ expression: Exp) -> Self {
         with(self, setter(\.modelTranslation, .expression(expression)))
     }

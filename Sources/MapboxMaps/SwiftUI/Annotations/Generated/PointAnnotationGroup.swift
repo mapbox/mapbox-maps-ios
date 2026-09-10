@@ -696,8 +696,8 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     }
 
     private var symbolZOffset: Double?
-    /// Specifies an uniform elevation from the ground, in meters.
-    /// Default value: 0. Minimum value: 0.
+    /// Specifies an uniform elevation from the ground.
+    /// Default value: 0. Minimum value: 0. The unit of symbolZOffset is in meters.
     public func symbolZOffset(_ newValue: Double) -> Self {
         with(self, setter(\.symbolZOffset, newValue))
     }

@@ -65,7 +65,7 @@ public struct SkyLayer: Layer, Equatable {
     /// Default value: [0,0]. Minimum value: [0,0]. Maximum value: [360,180]. The unit of skyGradientCenter is in degrees.
     public var skyGradientCenter: Value<[Double]>?
 
-    /// The angular distance (measured in degrees) from `sky-gradient-center` up to which the gradient extends. A value of 180 causes the gradient to wrap around to the opposite direction from `sky-gradient-center`.
+    /// The angular distance from `sky-gradient-center` up to which the gradient extends. A value of 180 causes the gradient to wrap around to the opposite direction from `sky-gradient-center`.
     /// Default value: 90. Value range: [0, 180]
     public var skyGradientRadius: Value<Double>?
 
@@ -331,13 +331,13 @@ extension SkyLayer {
         with(self, setter(\.skyGradientCenter, .expression(expression)))
     }
 
-    /// The angular distance (measured in degrees) from `sky-gradient-center` up to which the gradient extends. A value of 180 causes the gradient to wrap around to the opposite direction from `sky-gradient-center`.
+    /// The angular distance from `sky-gradient-center` up to which the gradient extends. A value of 180 causes the gradient to wrap around to the opposite direction from `sky-gradient-center`.
     /// Default value: 90. Value range: [0, 180]
     public func skyGradientRadius(_ constant: Double) -> Self {
         with(self, setter(\.skyGradientRadius, .constant(constant)))
     }
 
-    /// The angular distance (measured in degrees) from `sky-gradient-center` up to which the gradient extends. A value of 180 causes the gradient to wrap around to the opposite direction from `sky-gradient-center`.
+    /// The angular distance from `sky-gradient-center` up to which the gradient extends. A value of 180 causes the gradient to wrap around to the opposite direction from `sky-gradient-center`.
     /// Default value: 90. Value range: [0, 180]
     public func skyGradientRadius(_ expression: Exp) -> Self {
         with(self, setter(\.skyGradientRadius, .expression(expression)))

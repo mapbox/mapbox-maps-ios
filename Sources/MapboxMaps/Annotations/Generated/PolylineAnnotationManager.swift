@@ -129,8 +129,8 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-width-unit"] = newValue?.rawValue }
     }
 
-    /// Vertical offset from ground, in meters. Not supported for globe projection at the moment.
-    /// Default value: 0.
+    /// Vertical offset from ground. Not supported for globe projection at the moment.
+    /// Default value: 0. The unit of lineZOffset is in meters.
     public var lineZOffset: Double? {
         get { impl.layerProperties["line-z-offset"] as? Double }
         set { impl.layerProperties["line-z-offset"] = newValue }
@@ -142,7 +142,7 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
         set { impl.layerProperties["line-blur-transition"] = newValue?.asDictionary }
     }
 
-    /// Blur applied to the line, in pixels.
+    /// Blur applied to the line.
     /// Default value: 0. Minimum value: 0. The unit of lineBlur is in pixels.
     public var lineBlur: Double? {
         get { impl.layerProperties["line-blur"] as? Double }
@@ -178,7 +178,7 @@ public class PolylineAnnotationManager: AnnotationManager, AnnotationManagerInte
     }
 
     /// The width of the line border. A value of zero means no border.
-    /// Default value: 0. Minimum value: 0.
+    /// Default value: 0. Minimum value: 0. The unit of lineBorderWidth is in pixels.
     public var lineBorderWidth: Double? {
         get { impl.layerProperties["line-border-width"] as? Double }
         set { impl.layerProperties["line-border-width"] = newValue }

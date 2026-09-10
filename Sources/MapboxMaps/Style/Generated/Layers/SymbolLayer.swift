@@ -317,8 +317,8 @@ public struct SymbolLayer: Layer, Equatable {
     /// Default value: "anchor".
     public var occlusionOpacityMode: Value<OcclusionOpacityMode>?
 
-    /// Specifies an uniform elevation from the ground, in meters.
-    /// Default value: 0. Minimum value: 0.
+    /// Specifies an uniform elevation from the ground.
+    /// Default value: 0. Minimum value: 0. The unit of symbolZOffset is in meters.
     public var symbolZOffset: Value<Double>?
 
     /// Transition options for `symbolZOffset`.
@@ -1592,8 +1592,8 @@ extension SymbolLayer {
         with(self, setter(\.occlusionOpacityMode, .expression(expression)))
     }
 
-    /// Specifies an uniform elevation from the ground, in meters.
-    /// Default value: 0. Minimum value: 0.
+    /// Specifies an uniform elevation from the ground.
+    /// Default value: 0. Minimum value: 0. The unit of symbolZOffset is in meters.
     public func symbolZOffset(_ constant: Double) -> Self {
         with(self, setter(\.symbolZOffset, .constant(constant)))
     }
@@ -1603,8 +1603,8 @@ extension SymbolLayer {
         with(self, setter(\.symbolZOffsetTransition, transition))
     }
 
-    /// Specifies an uniform elevation from the ground, in meters.
-    /// Default value: 0. Minimum value: 0.
+    /// Specifies an uniform elevation from the ground.
+    /// Default value: 0. Minimum value: 0. The unit of symbolZOffset is in meters.
     public func symbolZOffset(_ expression: Exp) -> Self {
         with(self, setter(\.symbolZOffset, .expression(expression)))
     }

@@ -1,5 +1,5 @@
 import XCTest
-@_spi(Experimental) @testable import MapboxMaps
+@_spi(Experimental) @_spi(Internal) @testable import MapboxMaps
 import Combine
 import SwiftUI
 
@@ -13,6 +13,8 @@ final class MapContentReconcilerTests: XCTestCase {
     var viewAnnotationsManager: ViewAnnotationManager!
     var locationManager: LocationManager!
     var map: MockMapboxMap!
+    var realMap: MapboxMap!
+    var mapClient: MockMapClient!
 
     @TestPublished var styleIsLoaded = true
 
@@ -22,6 +24,13 @@ final class MapContentReconcilerTests: XCTestCase {
         harness = AnnotationManagerTestingHarness()
         annotationsOrchestrator = AnnotationOrchestrator(deps: harness.makeDeps())
         map = MockMapboxMap()
+        let mapSize = CGSize(width: 100, height: 100)
+        mapClient = MockMapClient()
+        mapClient.getMetalViewStub.defaultReturnValue = MetalView(frame: CGRect(origin: .zero, size: mapSize), device: nil)
+        realMap = MapboxMap(
+            map: CoreMap(client: mapClient, mapOptions: MapInitOptions(mapOptions: MapOptions(size: mapSize)).mapOptions),
+            events: MapEvents(makeGenericSubject: { _ in .init() })
+        )
         viewAnnotationsManager = ViewAnnotationManager(containerView: UIView(), mapboxMap: map, displayLink: Signal(just: ()))
         locationManager = LocationManager(
             interfaceOrientationView: Ref({ nil }),
@@ -38,7 +47,7 @@ final class MapContentReconcilerTests: XCTestCase {
             layerAnnotations: Ref.weakRef(self, property: \.annotationsOrchestrator),
             viewAnnotations: Ref.weakRef(self, property: \.viewAnnotationsManager),
             location: Ref.weakRef(self, property: \.locationManager),
-            mapboxMap: Ref { [weak self] in self?.map },
+            mapboxMap: Ref { [weak self] in self?.realMap },
             addAnnotationViewController: { _ in },
             removeAnnotationViewController: { _ in }
         ))
@@ -46,6 +55,8 @@ final class MapContentReconcilerTests: XCTestCase {
 
     override func tearDown() {
         map = nil
+        realMap = nil
+        mapClient = nil
         me = nil
         sourceManager = nil
         styleManager = nil
@@ -779,6 +790,219 @@ final class MapContentReconcilerTests: XCTestCase {
 
         let updatedOptions = try XCTUnwrap(map.updateViewAnnotationStub.invocations.last).parameters.options
         XCTAssertEqual(updatedOptions.collisionBoxes?.first?.size, CGSize(width: 30, height: 30))
+    }
+
+    // MARK: - MapContentAttachment
+
+    func testAttachmentAttachesOnceAndDetachesOnRemoval() {
+        let spy = AttachmentSpy()
+
+        setContent {
+            CustomMapContent(attachment: spy)
+        }
+
+        XCTAssertEqual(spy.events, [.attached])
+        XCTAssertIdentical(spy.attachedMap, realMap)
+
+        setContent {}
+
+        XCTAssertEqual(spy.events, [.attached, .detached])
+    }
+
+    func testAttachmentSurvivesContentUpdates() {
+        let spy = AttachmentSpy()
+
+        for _ in 0..<3 {
+            setContent {
+                CustomMapContent(attachment: spy)
+                LineLayer(id: "line", source: "source")
+            }
+        }
+
+        XCTAssertEqual(spy.events, [.attached])
+    }
+
+    func testAttachmentRetriesWhenNoMapIsAvailable() {
+        let spy = AttachmentSpy()
+        let map = realMap
+        realMap = nil
+
+        setContent {
+            CustomMapContent(attachment: spy)
+        }
+
+        XCTAssertEqual(spy.events, [], "there is nothing to attach to yet")
+
+        realMap = map
+        setContent {
+            CustomMapContent(attachment: spy)
+        }
+
+        // Identity alone would keep the failed mount, and the attachment would never get its map.
+        XCTAssertEqual(spy.events, [.attached])
+        XCTAssertIdentical(spy.attachedMap, realMap)
+    }
+
+    func testNestedAttachmentSurvivesSkippedUpdatesAndDetachesWithItsSubtree() {
+        let spy = AttachmentSpy()
+
+        setContent {
+            AttachmentWrapper(attachment: spy)
+        }
+        // Unchanged parameters make the reconciler skip the wrapper's body: the attachment stays mounted.
+        setContent {
+            AttachmentWrapper(attachment: spy)
+        }
+
+        XCTAssertEqual(spy.events, [.attached])
+
+        setContent {}
+
+        XCTAssertEqual(spy.events, [.attached, .detached])
+    }
+
+    func testNestedAttachmentDetachesOnMapTeardown() {
+        let spy = AttachmentSpy()
+
+        setContent {
+            AttachmentWrapper(attachment: spy)
+        }
+
+        me = nil
+
+        XCTAssertEqual(spy.events, [.attached, .detached], "the teardown walk must reach nested attachments")
+    }
+
+    func testAttachmentDetachesWhenTheMapGoesAway() {
+        let spy = AttachmentSpy()
+
+        setContent {
+            CustomMapContent(attachment: spy)
+        }
+
+        // Nothing unmounts the content tree on teardown, so the reconciler has to detach on its own.
+        me = nil
+
+        XCTAssertEqual(spy.events, [.attached, .detached])
+    }
+
+    func testReplacingAttachmentDetachesThePreviousOne() {
+        let first = AttachmentSpy()
+        let second = AttachmentSpy()
+
+        setContent {
+            CustomMapContent(attachment: first)
+        }
+        setContent {
+            CustomMapContent(attachment: second)
+        }
+
+        XCTAssertEqual(first.events, [.attached, .detached])
+        XCTAssertEqual(second.events, [.attached])
+    }
+
+    func testAttachmentWaitsForStyleLoad() {
+        let spy = AttachmentSpy()
+        styleIsLoaded = false
+
+        setContent {
+            CustomMapContent(attachment: spy)
+        }
+
+        XCTAssertEqual(spy.events, [], "the priming walk must not attach")
+
+        styleIsLoaded = true
+
+        XCTAssertEqual(spy.events, [.attached])
+    }
+
+    func testSameAttachmentTwiceInOneTreeAttachesOnce() {
+        let spy = AttachmentSpy()
+
+        setContent {
+            CustomMapContent(attachment: spy)
+            CustomMapContent(attachment: spy)
+        }
+
+        XCTAssertEqual(spy.events, [.attached], "the second mount must be refused")
+
+        setContent {}
+
+        XCTAssertEqual(spy.events, [.attached, .detached], "a refused mount has nothing to detach")
+    }
+
+    func testSameAttachmentInTwoMapsAttachesToTheFirstOnly() {
+        let spy = AttachmentSpy()
+        let other = makeOtherReconciler()
+
+        setContent {
+            CustomMapContent(attachment: spy)
+        }
+        other.content = CustomMapContent(attachment: spy)
+
+        XCTAssertEqual(spy.events, [.attached])
+        XCTAssertIdentical(spy.attachedMap, realMap)
+    }
+
+    func testRefusedAttachmentAttachesOnceTheFirstMountLetsGo() {
+        let spy = AttachmentSpy()
+        let other = makeOtherReconciler()
+
+        setContent {
+            CustomMapContent(attachment: spy)
+        }
+        other.content = CustomMapContent(attachment: spy)
+        setContent {}
+
+        XCTAssertEqual(spy.events, [.attached, .detached])
+
+        // The refused mount is retried on the other map's next content walk.
+        other.content = CustomMapContent(attachment: spy)
+
+        XCTAssertEqual(spy.events, [.attached, .detached, .attached])
+        XCTAssertIdentical(spy.attachedMap, realMap)
+    }
+
+    /// A second reconciler standing in for a second `Map`, sharing the same map instance for simplicity.
+    private func makeOtherReconciler() -> MapContentReconciler {
+        let other = MapContentReconciler(styleManager: MockStyleManager(), sourceManager: MockStyleSourceManager(), styleIsLoaded: $styleIsLoaded)
+        other.setMapContentDependencies(MapContentDependencies(
+            layerAnnotations: Ref.weakRef(self, property: \.annotationsOrchestrator),
+            viewAnnotations: Ref.weakRef(self, property: \.viewAnnotationsManager),
+            location: Ref.weakRef(self, property: \.locationManager),
+            mapboxMap: Ref { [weak self] in self?.realMap },
+            addAnnotationViewController: { _ in },
+            removeAnnotationViewController: { _ in }
+        ))
+        return other
+    }
+}
+
+private final class AttachmentSpy: MapContentAttachment {
+    enum Event: Equatable {
+        case attached
+        case detached
+    }
+
+    private(set) var events: [Event] = []
+    private(set) weak var attachedMap: MapboxMap?
+
+    func attached(to map: MapboxMap) {
+        events.append(.attached)
+        attachedMap = map
+    }
+
+    func detached() {
+        events.append(.detached)
+    }
+}
+
+/// Stands in for the content type a consumer wraps around its own controller.
+private struct AttachmentWrapper: MapContent {
+    let attachment: any MapContentAttachment
+
+    var body: some MapContent {
+        CustomMapContent(attachment: attachment)
     }
 }
 

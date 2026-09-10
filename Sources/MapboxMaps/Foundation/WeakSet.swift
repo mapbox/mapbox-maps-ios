@@ -10,6 +10,10 @@ internal class WeakSet<T> {
         hashTable.add((object as AnyObject))
     }
 
+    internal func contains(_ object: T) -> Bool {
+        hashTable.contains((object as AnyObject))
+    }
+
     internal func remove(_ object: T) {
         hashTable.remove((object as AnyObject))
     }

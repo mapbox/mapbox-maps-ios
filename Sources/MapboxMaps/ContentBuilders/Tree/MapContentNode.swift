@@ -138,6 +138,17 @@ extension MapContentNode {
         }
     }
 
+    /// Unmounts every attachment in the subtree, and only those.
+    ///
+    /// `unmount` otherwise runs only as part of a content walk, which never happens when the map goes
+    /// away. The rest of the tree is deliberately left alone: the style dies together with the map.
+    func detachAttachments() {
+        if let attachment = content?.asMounted as? MountedAttachment {
+            wrapStyleDSLError { try attachment.unmount(with: context) }
+        }
+        for child in children { child.detachAttachments() }
+    }
+
     private func remove() {
         if let mounted = content?.asMounted {
             wrapStyleDSLError { try mounted.unmount(with: context) }

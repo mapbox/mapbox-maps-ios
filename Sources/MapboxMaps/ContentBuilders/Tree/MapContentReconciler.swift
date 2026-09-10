@@ -39,6 +39,10 @@ final class MapContentReconciler {
         loadingToken = styleIsLoaded.assign(to: \.isStyleLoaded, ofWeak: self)
     }
 
+    deinit {
+        root.detachAttachments()
+    }
+
     func setMapContentDependencies(_ dependencies: MapContentDependencies) {
         context.content = dependencies
     }

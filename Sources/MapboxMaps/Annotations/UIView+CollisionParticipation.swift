@@ -34,6 +34,17 @@ extension UIView {
         return boxes.isEmpty ? nil : boxes
     }
 
+    /// Whether the hierarchy has any collision box participants, without doing `collisionBoxes()`' rect math.
+    func hasCollisionBoxParticipants() -> Bool {
+        // Override is read on the root only, mirroring `collisionBoxes()`.
+        if overrideCollisionBoxes != nil { return true }
+        return hasMarkedSubview()
+    }
+
+    private func hasMarkedSubview() -> Bool {
+        mbxViewAnnotationCollisionBox || subviews.contains { $0.hasMarkedSubview() }
+    }
+
     private func collectCollisionBoxes(relativeTo root: UIView, into boxes: inout [CGRect]) {
         if mbxViewAnnotationCollisionBox {
             boxes.append(convert(bounds, to: root))

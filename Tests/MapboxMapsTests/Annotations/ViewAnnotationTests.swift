@@ -19,7 +19,8 @@ final class ViewAnnotationTests: XCTestCase {
             displayLink: displayLink,
             onRemove: { [weak self] in
                 self?.removeCount += 1
-            })
+            }
+        )
 
         deps.superview.bounds = CGRect(origin: .init(x: 0, y: 0), size: availableSize)
     }
@@ -94,7 +95,8 @@ final class ViewAnnotationTests: XCTestCase {
         var expectedOptions = ViewAnnotationOptions(
             annotatedFeature: .layerFeature(layerId: "foo", featureId: "bar"),
             visible: false,
-            priority: -1)
+            priority: -1
+        )
         expectedOptions.allowZElevate = false
         XCTAssertEqual(updParameters.options, expectedOptions)
 
@@ -146,9 +148,7 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 1)
         let updParameters = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters
         XCTAssertEqual(updParameters.id, va.id)
-        let expectedOptions = ViewAnnotationOptions(
-            width: 200,
-            height: 300)
+        let expectedOptions = ViewAnnotationOptions(width: 200, height: 300)
         XCTAssertEqual(updParameters.options, expectedOptions)
     }
 
@@ -178,7 +178,8 @@ final class ViewAnnotationTests: XCTestCase {
             identifier: va.id,
             frame: CGRect(x: 1, y: 2, width: 3, height: 4),
             anchorCoordinate: .init(latitude: 5, longitude: 6),
-            anchorConfig: .init(anchor: .bottom, offsetX: 7, offsetY: 8))
+            anchorConfig: .init(anchor: .bottom, offsetX: 7, offsetY: 8)
+        )
         va.place(with: descriotor1)
 
         XCTAssertEqual(view.frame, descriotor1.frame)
@@ -203,7 +204,8 @@ final class ViewAnnotationTests: XCTestCase {
             identifier: va.id,
             frame: CGRect(x: 10, y: 20, width: 30, height: 40),
             anchorCoordinate: .init(latitude: 50, longitude: 60),
-            anchorConfig: .init(anchor: .top, offsetX: 70, offsetY: 80))
+            anchorConfig: .init(anchor: .top, offsetX: 70, offsetY: 80)
+        )
         va.place(with: descriotor2)
 
         XCTAssertEqual(view.frame, descriotor2.frame)
@@ -349,6 +351,28 @@ final class ViewAnnotationTests: XCTestCase {
 
         let updOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
         XCTAssertEqual(updOptions.collisionBoxes, [newFrame])
+    }
+
+    func testCollisionBoxesClearedWhenLastParticipantRemoved() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let box = UIView()
+        box.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        box.mbxViewAnnotationCollisionBox = true
+        view.addSubview(box)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.options.collisionBoxes, [box.frame])
+
+        box.removeFromSuperview()
+        va.setNeedsUpdateSize()
+        $displayLink.send()
+
+        // An empty array, not nil, is what reverts core to full annotation bounds.
+        let updateInvocation = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last)
+        XCTAssertEqual(updateInvocation.parameters.options.collisionBoxes, [])
     }
 
     // MARK: - enableSymbolLayerCollision
@@ -630,6 +654,68 @@ final class ViewAnnotationTests: XCTestCase {
         wait(for: [onFalse], timeout: 1)
         XCTAssertEqual(draggingChanges, [true, false])
     }
+
+    /// UIKit counterpart of `testCollisionBoxesReportsCorrectFrameInSwiftUI`
+    func testCollisionBoxesReportsCorrectFrameInUIKit() throws {
+        let addedSize = CGSize(width: 100, height: 100)
+        let view = ManualLayoutAnnotationView()
+        view.actualSize = addedSize
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        // Boxes are correct at add time, before the annotation is ever placed.
+        let addedOptions = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(addedOptions.collisionBoxes, [ManualLayoutAnnotationView.centeredBox(in: addedSize)])
+    }
+
+    func testCollisionBoxesMeasuredAtNewSizeOnSetNeedsUpdateSize() throws {
+        let view = ManualLayoutAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        // Never placed (born hidden). Core places at exactly the pushed size, so the boxes must be
+        // laid out at that size in the same update that carries it.
+        let newSize = CGSize(width: 60, height: 60)
+        view.actualSize = newSize
+        va.setNeedsUpdateSize()
+        $displayLink.send()
+
+        let updatedOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(updatedOptions.width, newSize.width)
+        XCTAssertEqual(updatedOptions.collisionBoxes, [ManualLayoutAnnotationView.centeredBox(in: newSize)])
+    }
+
+    func testPlacementAtPushedSizeWritesNothingMore() throws {
+        let view = ManualLayoutAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        let newSize = CGSize(width: 60, height: 60)
+        view.actualSize = newSize
+        va.setNeedsUpdateSize()
+        $displayLink.send()
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 1)
+
+        // Core places at exactly the pushed size; the view is already laid out at it,
+        // so placement must not produce another update.
+        va.place(
+            with: ViewAnnotationPositionDescriptor(
+                identifier: va.id,
+                frame: CGRect(origin: CGPoint(x: 5, y: 5), size: newSize),
+                anchorCoordinate: .init(latitude: 0, longitude: 0),
+                anchorConfig: .init(anchor: .center)
+            )
+        )
+        $displayLink.send()
+
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 1)
+        XCTAssertEqual(view.box.frame, ManualLayoutAnnotationView.centeredBox(in: newSize))
+    }
 }
 
 class DummyAnnotationView: UIView {
@@ -639,5 +725,38 @@ class DummyAnnotationView: UIView {
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         providedAvailableSize = size
         return actualSize
+    }
+}
+
+/// A view whose marked subview is positioned only inside `layoutSubviews()`, mirroring how real
+/// manual-layout UIKit annotation content is written. The box is centered, so its frame depends on size.
+private final class ManualLayoutAnnotationView: UIView {
+    static let boxSize = CGSize(width: 30, height: 30)
+    let box = UIView()
+    var actualSize: CGSize = .zero
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        addSubview(box)
+        box.mbxViewAnnotationCollisionBox = true
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    override func sizeThatFits(_ size: CGSize) -> CGSize { actualSize }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        box.frame = Self.centeredBox(in: bounds.size)
+    }
+
+    /// The box frame this view lays out at a given size, mirroring `layoutSubviews()`.
+    static func centeredBox(in size: CGSize) -> CGRect {
+        .init(
+            x: (size.width - boxSize.width) / 2,
+            y: (size.height - boxSize.height) / 2,
+            width: boxSize.width,
+            height: boxSize.height
+        )
     }
 }

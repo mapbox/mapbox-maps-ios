@@ -96,7 +96,7 @@ final class MapContentReconcilerTests: XCTestCase {
         XCTAssertEqual(layer2Properties["id"] as? String, "testLine")
         XCTAssertEqual(layer2Properties["source"] as? String, "testLineSource")
         guard let layer2Print = layer2Properties["paint"] as? [String: Any],
-            let layer2Color = layer2Print["line-color"] as? String else {
+              let layer2Color = layer2Print["line-color"] as? String else {
             XCTFail("Failed to get layer color")
             return
         }
@@ -725,6 +725,60 @@ final class MapContentReconcilerTests: XCTestCase {
         }
 
         XCTAssertEqual(contentEvaluations, 1, "priming walk must evaluate the view annotation content closure")
+    }
+
+    /// SwiftUI counterpart of `testCollisionBoxesReportsCorrectFrameInUIKit`
+    func testCollisionBoxesReportsCorrectFrameInSwiftUI() throws {
+        @TestSignal var testDisplayLink: Signal<Void>
+        let localViewAnnotationsManager = ViewAnnotationManager(containerView: UIView(), mapboxMap: map, displayLink: testDisplayLink)
+        me.setMapContentDependencies(MapContentDependencies(
+            layerAnnotations: Ref.weakRef(self, property: \.annotationsOrchestrator),
+            viewAnnotations: Ref<ViewAnnotationManager?> { localViewAnnotationsManager },
+            location: Ref.weakRef(self, property: \.locationManager),
+            mapboxMap: Ref { [weak self] in self?.map },
+            addAnnotationViewController: { _ in },
+            removeAnnotationViewController: { _ in }
+        ))
+
+        setContent {
+            MapViewAnnotation(coordinate: .init(latitude: 0, longitude: 0)) {
+                VStack(spacing: 0) {
+                    Color.red.frame(width: 30, height: 30)
+                        .mbxViewAnnotationCollisionBox()
+                    Color.blue.frame(width: 50, height: 20)
+                }
+                .fixedSize()
+            }
+        }
+
+        let annotation = try XCTUnwrap(localViewAnnotationsManager.allAnnotations.first)
+
+        // First snapshot, taken synchronously by ViewAnnotation.bind(): SwiftUI hasn't rendered yet.
+        let addedOptions = try XCTUnwrap(map.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertNil(addedOptions.collisionBoxes)
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+        let rootViewController = UIViewController()
+        window.rootViewController = rootViewController
+        rootViewController.view.addSubview(annotation.view)
+        window.makeKeyAndVisible()
+        annotation.view.frame = window.bounds
+        annotation.view.layoutIfNeeded()
+
+        // SwiftUI reports boxes asynchronously; wait for the value, not for a fixed delay.
+        let boxesReported = expectation(description: "SwiftUI reported collision boxes")
+        let poll = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
+            guard annotation.view.overrideCollisionBoxes != nil else { return }
+            timer.invalidate()
+            boxesReported.fulfill()
+        }
+        wait(for: [boxesReported], timeout: 5)
+        poll.invalidate()
+
+        $testDisplayLink.send()
+
+        let updatedOptions = try XCTUnwrap(map.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(updatedOptions.collisionBoxes?.first?.size, CGSize(width: 30, height: 30))
     }
 }
 

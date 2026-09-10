@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Fixed UIKit `ViewAnnotation`s with subviews marked by the experimental `UIView.mbxViewAnnotationCollisionBox` never hiding on overlap: their collision boxes were reported with zero size. SwiftUI was not affected.
+
 ## 11.31.0-rc.1 - 07 September, 2026
 
 * Introduce experimental support for draggable `ViewAnnotation`s. In UIKit, set `ViewAnnotation.isDraggable` and observe `onDraggingChanged`/`onDragCoordinateChanged`. In SwiftUI, use the new `MapViewAnnotation(coordinate:content:onDraggingChanged:)` initializer, keeping your own `Binding` as the source of truth for the coordinate.

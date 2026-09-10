@@ -480,12 +480,24 @@ public final class ViewAnnotation {
         setProperty(\.width, value: size.width, oldValue: options.width)
         setProperty(\.height, value: size.height, oldValue: options.height)
 
-        // Collect sub-element collision boxes after layout (frames are valid post-systemLayoutSizeFitting)
-        updateCollisionBoxes()
+        let hasParticipants = view.hasCollisionBoxParticipants()
+        if hasParticipants, view.overrideCollisionBoxes == nil {
+            // Marked subview frames are only valid after a layout pass, at the size core will place.
+            view.bounds.size = size
+            view.layoutIfNeeded()
+        }
+        if hasParticipants || options.collisionBoxes != nil {
+            // Second condition clears stale boxes after the last participant is gone.
+            updateCollisionBoxes()
+        }
     }
 
     private func updateCollisionBoxes() {
-        let boxes = view.collisionBoxes()
+        var boxes = view.collisionBoxes()
+        // Core treats nil as "no change"; an explicit empty array reverts to full bounds.
+        if boxes == nil, options.collisionBoxes != nil {
+            boxes = []
+        }
         setProperty(\.collisionBoxes, value: boxes, oldValue: options.collisionBoxes)
     }
 

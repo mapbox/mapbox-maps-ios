@@ -84,7 +84,7 @@ public class Snapshotter: StyleManager {
                               height: CGFloat(mbxSize.height))
             return size
         } set(newSize) {
-            let mbxSize = MapboxCoreMaps.Size(width: Float(newSize.width), height: Float(newSize.height))
+            let mbxSize = Size(width: Float(newSize.width), height: Float(newSize.height))
             mapSnapshotter.setSizeFor(mbxSize)
         }
     }

@@ -8,7 +8,7 @@ Maps rendering SDK also known as GL-Native. These are for internal use only.
 
 - ``MapRecorder-240jd``
 - ``FeatureExtensionValue``
-- ``Size``
+- ``MBXSize``
 - ``StylePackError-class``
 - ``RequestErrorType``
 - ``EdgeInsets``

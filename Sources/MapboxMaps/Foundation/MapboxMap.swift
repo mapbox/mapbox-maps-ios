@@ -788,8 +788,6 @@ public final class MapboxMap: StyleManager {
 
     /// Returns the coordinate bounds corresponding to a given `CameraOptions`
     ///
-    /// This API isn't supported by Globe projection.
-    ///
     /// - Parameter camera: The camera for which the coordinate bounds will be returned.
     /// - Returns: `CoordinateBounds` for the given `CameraOptions`
     public func coordinateBounds(for camera: CameraOptions) -> CoordinateBounds {
@@ -801,8 +799,6 @@ public final class MapboxMap: StyleManager {
     ///
     /// This function is particularly useful, if the camera shows the antimeridian.
     ///
-    /// This API isn't supported by Globe projection.
-    ///
     /// - Parameter camera: The camera for which the coordinate bounds will be returned.
     /// - Returns: `CoordinateBounds` for the given ``CameraOptions-swift.struct``.
     public func coordinateBoundsUnwrapped(for camera: CameraOptions) -> CoordinateBounds {
@@ -810,8 +806,6 @@ public final class MapboxMap: StyleManager {
     }
 
     /// Returns the coordinate bounds and zoom for a given `CameraOptions`.
-    ///
-    /// This API isn't supported by Globe projection.
     ///
     /// - Parameter camera: The camera for which the `CoordinateBoundsZoom` will be returned.
     /// - Returns: `CoordinateBoundsZoom` for the given `CameraOptions`
@@ -822,8 +816,6 @@ public final class MapboxMap: StyleManager {
     /// Returns the unwrapped coordinate bounds and zoom for a given `CameraOptions`.
     ///
     /// This function is particularly useful, if the camera shows the antimeridian.
-    ///
-    /// This API isn't supported by Globe projection.
     ///
     /// - Parameter camera: The camera for which the `CoordinateBoundsZoom` will
     ///     be returned.

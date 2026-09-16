@@ -27,6 +27,9 @@ public enum TileRegionError: LocalizedError, CoreErrorRepresentable, Equatable, 
     /// The region contains more tiles than allowed
     case tileCountExceeded(String)
 
+    /// Some of the tile region's resources failed to load; the tile region is usable but incomplete.
+    case partialLoad(String)
+
     internal init(coreError: MapboxCommon.TileRegionError) {
         let message = coreError.message
         switch coreError.type {
@@ -42,6 +45,8 @@ public enum TileRegionError: LocalizedError, CoreErrorRepresentable, Equatable, 
             self = .other(message)
         case .tileCountExceeded:
             self = .tileCountExceeded(message)
+        case .partialLoad:
+            self = .partialLoad(message)
         @unknown default:
             self = .other(message)
         }
@@ -54,7 +59,8 @@ public enum TileRegionError: LocalizedError, CoreErrorRepresentable, Equatable, 
              let .tilesetDescriptor(message),
              let .diskFull(message),
              let .other(message),
-             let .tileCountExceeded(message):
+             let .tileCountExceeded(message),
+             let .partialLoad(message):
             return message
         }
     }

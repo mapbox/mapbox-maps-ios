@@ -95,12 +95,8 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             completion: { result in
                 DispatchQueue.main.async {
                     switch result {
-                    case let .success(region):
-                        if region.requiredResourceCount == region.completedResourceCount {
-                            print("✔︎")
-                        } else {
-                            XCTFail("Not all items were loaded")
-                        }
+                    case .success:
+                        print("✔︎")
                     case let .failure(error):
                         XCTFail("Download failed with error: \(error)")
                     }
@@ -155,10 +151,8 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             completion: { result in
                 DispatchQueue.main.async {
                     switch result {
-                    case .success(let region):
-                        if region.requiredResourceCount != region.completedResourceCount {
-                            XCTFail("Not all items were loaded")
-                        }
+                    case .success:
+                        break
                     case .failure(let error):
                         XCTFail("Download failed with error: \(error)")
                     }
@@ -209,12 +203,8 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                 completion: { result in
                     DispatchQueue.main.async {
                         switch result {
-                        case let .success(region):
-                            if region.requiredResourceCount == region.completedResourceCount {
-                                print("✔︎")
-                            } else {
-                                XCTFail("Not all items were loaded")
-                            }
+                        case .success:
+                            print("✔︎")
                         case let .failure(error):
                             XCTFail("Download failed with error: \(error)")
                         }

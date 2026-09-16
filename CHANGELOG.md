@@ -20,6 +20,11 @@ Mapbox welcomes participation and contributions from everyone.
 ### Bug fixes 🐞
 * Ignored SDF images from text-field don't affect collision detection anymore
 
+## 11.30.1 - 11 September, 2026
+
+### Bug fixes 🐞
+* Fix brightness-dependent paint properties not updating after a light or light preset change, such as switching lightPreset in the Standard style.
+
 ## 11.30.0 - 03 September, 2026
 
 ## 11.30.0-rc.1 - 24 August, 2026

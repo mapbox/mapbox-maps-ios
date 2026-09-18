@@ -47,6 +47,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 * Ignored SDF images from text-field don't affect collision detection anymore
+## 11.30.2 - 18 September, 2026
 
 ## 11.30.1 - 11 September, 2026
 

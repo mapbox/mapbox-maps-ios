@@ -8,7 +8,24 @@ Mapbox welcomes participation and contributions from everyone.
 * Add `showHdRoads` and `colorHdRoads` configuration options to the Standard style.
 
 ### Bug fixes 🐞
+## 11.32.0-rc.1 - 21 September, 2026
+
 * Fixed UIKit `ViewAnnotation`s with subviews marked by the experimental `UIView.mbxViewAnnotationCollisionBox` never hiding on overlap: their collision boxes were reported with zero size. SwiftUI was not affected.
+
+### Breaking changes ⚠️
+* `TileStore.loadTileRegion` now completes with a `TileRegionError.partialLoad` failure instead of success when some of the region's resources failed to load.
+* `TileStore.loadTileRegion` now completes with a `TileRegionError.partialLoad` failure instead of success when some of the region's resources failed to load.
+
+### Features ✨ and improvements 🏁
+* Fix inaccurate latitude/longitude bounds calculation for the camera when using globe projection.
+
+### Bug fixes 🐞
+* Fix incorrect usage of the active-anchor expression being silently allowed in filters, paint properties, and non-symbol layers.
+* Fix symbol occlusion opacity transitions not honoring the configured placement transition duration, reducing flickering from frequent visibility changes.
+
+### 💫️ Other
+* [tile_store] Trigger region loading progress callbacks when the load process gets rate limited
+
 ## 11.31.0 - 17 September, 2026
 
 ### Bug fixes 🐞

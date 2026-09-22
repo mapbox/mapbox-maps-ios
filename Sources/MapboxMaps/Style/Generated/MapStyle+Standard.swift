@@ -12,7 +12,7 @@ extension MapStyle {
     ///   - showPlaceLabels: Show or hide place labels. Default value: `true`.
     ///   - showRoadLabels: Show or hide road labels including road shields. Default value: `true`.
     ///   - showPedestrianRoads: Show or hide pedestrian roads, paths, and trails. Default value: `true`.
-    ///   - show3dObjects: Show or hide all 3D objects, including buildings, landmarks, and trees. Default value: `true`.
+    ///   - show3dObjects: Show or hide all 3D objects, including buildings, landmarks, indoor areas, and trees. Default value: `true`.
     ///   - backgroundPointOfInterestLabels: Set background shape for POI labels. Default value: `circle`.
     ///   - colorAdminBoundaries: Set a custom color for administrative boundaries. Default value: `hsl(345, 100%, 70%)`.
     ///   - colorBuildingHighlight: Set a custom color for building fill extrusion when setting highlight state. Default value: `hsl(34, 30%, 93%)`.
@@ -21,6 +21,7 @@ extension MapStyle {
     ///   - colorCommercial: Set a custom color for commercial areas. Default value: `hsla(24, 100%, 94%, 1)`.
     ///   - colorEducation: Set a custom color for education areas. Default value: `hsl(40, 50%, 88%)`.
     ///   - colorGreenspace: Set a custom color for greenspaces such as forests, parks, and woods. Default value: `hsl(115, 60%, 84%)`.
+    ///   - colorHdRoads: Set a custom color for detailed lane surfaces. Default value: `hsl(214, 20%, 75%)`.
     ///   - colorIndoorLabelHighlight: Set a custom color for indoor labels when setting highlight state. Default value: `hsl(4, 43%, 55%)`.
     ///   - colorIndoorLabelSelect: Set a custom color for indoor labels when setting select state. Default value: `hsl(4, 53%, 42%)`.
     ///   - colorIndustrial: Set a custom color for industrial areas and airports. Default value: `hsl(230, 15%, 92%)`.
@@ -44,6 +45,7 @@ extension MapStyle {
     ///   - show3dLandmarks: Show or hide 3D landmark buildings. Default value: `true`.
     ///   - show3dTrees: Show or hide 3D trees. Default value: `true`.
     ///   - showAdminBoundaries: Show or hide administrative boundaries. Default value: `true`.
+    ///   - showHdRoads: Show or hide detailed lanes.
     ///   - showIndoor: Show or hide indoor areas in major airports.
     ///   - showIndoorLabels: Show or hide indoor labels. Default value: `true`.
     ///   - showLandmarkIconLabels: Show or hide Landmark icon labels. Default value: `true`.
@@ -67,6 +69,7 @@ extension MapStyle {
         colorCommercial: StyleColor? = nil,
         colorEducation: StyleColor? = nil,
         colorGreenspace: StyleColor? = nil,
+        colorHdRoads: StyleColor? = nil,
         colorIndoorLabelHighlight: StyleColor? = nil,
         colorIndoorLabelSelect: StyleColor? = nil,
         colorIndustrial: StyleColor? = nil,
@@ -90,6 +93,7 @@ extension MapStyle {
         show3dLandmarks: Bool? = nil,
         show3dTrees: Bool? = nil,
         showAdminBoundaries: Bool? = nil,
+        showHdRoads: Bool? = nil,
         showIndoor: Bool? = nil,
         showIndoorLabels: Bool? = nil,
         showLandmarkIconLabels: Bool? = nil,
@@ -114,6 +118,7 @@ extension MapStyle {
         config.encode(key: "colorCommercial", value: colorCommercial)
         config.encode(key: "colorEducation", value: colorEducation)
         config.encode(key: "colorGreenspace", value: colorGreenspace)
+        config.encode(key: "colorHdRoads", value: colorHdRoads)
         config.encode(key: "colorIndoorLabelHighlight", value: colorIndoorLabelHighlight)
         config.encode(key: "colorIndoorLabelSelect", value: colorIndoorLabelSelect)
         config.encode(key: "colorIndustrial", value: colorIndustrial)
@@ -137,6 +142,7 @@ extension MapStyle {
         config.encode(key: "show3dLandmarks", value: show3dLandmarks)
         config.encode(key: "show3dTrees", value: show3dTrees)
         config.encode(key: "showAdminBoundaries", value: showAdminBoundaries)
+        config.encode(key: "showHdRoads", value: showHdRoads)
         config.encode(key: "showIndoor", value: showIndoor)
         config.encode(key: "showIndoorLabels", value: showIndoorLabels)
         config.encode(key: "showLandmarkIconLabels", value: showLandmarkIconLabels)

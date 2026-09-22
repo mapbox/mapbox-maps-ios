@@ -4,6 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+* Add `showHdRoads` and `colorHdRoads` configuration options to the Standard style.
+
+### Bug fixes 🐞
 * Fixed UIKit `ViewAnnotation`s with subviews marked by the experimental `UIView.mbxViewAnnotationCollisionBox` never hiding on overlap: their collision boxes were reported with zero size. SwiftUI was not affected.
 ## 11.31.0 - 17 September, 2026
 

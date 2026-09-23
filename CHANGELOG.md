@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.30.3 - 23 September, 2026
+
 ## 11.30.2 - 18 September, 2026
 
 ## 11.30.1 - 11 September, 2026

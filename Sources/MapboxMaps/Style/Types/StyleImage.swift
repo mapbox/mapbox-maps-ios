@@ -70,29 +70,44 @@ struct ImageProperties {
     }
 
     init(uiImage: UIImage, contentInsets: UIEdgeInsets, id: String, sdf: Bool) {
+        self.init(
+            size: uiImage.size,
+            scale: uiImage.scale,
+            capInsets: uiImage.capInsets,
+            contentInsets: contentInsets,
+            id: id,
+            sdf: sdf)
+    }
+
+    init(
+        size: CGSize,
+        scale: CGFloat,
+        capInsets: UIEdgeInsets,
+        contentInsets: UIEdgeInsets,
+        id: String,
+        sdf: Bool
+    ) {
         self.id = id
-        self.scale = Float(uiImage.scale)
+        self.scale = Float(scale)
 
         // Stretch and content-box values in pixels must lie within the
         // declared image width/height. `CoreMapsImage.init?(uiImage:)` declares
         // those using `UInt32(size * scale)`, which truncates fractional
-        // results. For UIImages whose `size * scale` is non-integer — notably
-        // SF Symbols at non-integer point sizes — computing stretches as
-        // `Float(size) * scale` left them 0.x pixels past the declared edge,
-        // which the native side rejects with "expected stretchX area lies
-        // within an image". Floor to the same integer bounds the image is
-        // declared at.
-        let widthPx = Float(Int(uiImage.size.width * uiImage.scale))
-        let heightPx = Float(Int(uiImage.size.height * uiImage.scale))
-        self.stretchXFirst = Float(Int(uiImage.capInsets.left * uiImage.scale))
-        self.stretchXSecond = widthPx - Float(Int(uiImage.capInsets.right * uiImage.scale))
-        self.stretchYFirst = Float(Int(uiImage.capInsets.top * uiImage.scale))
-        self.stretchYSecond = heightPx - Float(Int(uiImage.capInsets.bottom * uiImage.scale))
+        // results. Computing stretches as `Float(size) * scale` could leave
+        // them 0.x pixels past the declared edge, which the native side rejects
+        // with "expected stretchX area lies within an image". Floor to the
+        // same integer bounds the image is declared at.
+        let widthPx = Float(Int(size.width * scale))
+        let heightPx = Float(Int(size.height * scale))
+        self.stretchXFirst = Float(Int(capInsets.left * scale))
+        self.stretchXSecond = widthPx - Float(Int(capInsets.right * scale))
+        self.stretchYFirst = Float(Int(capInsets.top * scale))
+        self.stretchYSecond = heightPx - Float(Int(capInsets.bottom * scale))
 
-        let contentBoxLeft = Float(Int(contentInsets.left * uiImage.scale))
-        let contentBoxRight = widthPx - Float(Int(contentInsets.right * uiImage.scale))
-        let contentBoxTop = Float(Int(contentInsets.top * uiImage.scale))
-        let contentBoxBottom = heightPx - Float(Int(contentInsets.bottom * uiImage.scale))
+        let contentBoxLeft = Float(Int(contentInsets.left * scale))
+        let contentBoxRight = widthPx - Float(Int(contentInsets.right * scale))
+        let contentBoxTop = Float(Int(contentInsets.top * scale))
+        let contentBoxBottom = heightPx - Float(Int(contentInsets.bottom * scale))
         self.contentBox = ImageContent(left: contentBoxLeft,
                                        top: contentBoxTop,
                                        right: contentBoxRight,

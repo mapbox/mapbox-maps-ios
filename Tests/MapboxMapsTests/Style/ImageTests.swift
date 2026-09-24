@@ -170,27 +170,19 @@ final class ImageTests: XCTestCase {
         XCTAssertEqual(Int(mbmImage.width * mbmImage.height) * 4, mbmImage.data.data.count)
     }
 
-    // Second half of the SF-Symbol regression: stretch and content-box
-    // bounds must lie within the declared image dimensions. For a UIImage
-    // whose `size * scale` is not integer (common for SF Symbols at
-    // non-integer point sizes), stretchXSecond used to overshoot the
-    // truncated UInt32 image width by sub-pixel amounts, producing
-    // `StyleError("expected stretchX area lies within an image")`.
-    func testImagePropertiesStretchWithinDeclaredBoundsForSymbolImage() throws {
-        let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold)
-        let symbol = try XCTUnwrap(UIImage(systemName: "mappin.circle.fill", withConfiguration: config))
-            .withTintColor(.systemRed, renderingMode: .alwaysOriginal)
+    func testImagePropertiesUseTruncatedPixelBounds() {
+        let size = CGSize(width: 30.17, height: 30.17)
+        let scale: CGFloat = 3
+        let props = ImageProperties(
+            size: size,
+            scale: scale,
+            capInsets: .zero,
+            contentInsets: .zero,
+            id: "pin",
+            sdf: false)
 
-        // Preconditions: size*scale is non-integer — without this, the
-        // original float-scaled stretch logic would work.
-        let fractionalWidth = symbol.size.width * symbol.scale
-        XCTAssertNotEqual(fractionalWidth, fractionalWidth.rounded(.down),
-                          "Preconditions: SF Symbol size*scale should be non-integer")
-
-        let props = ImageProperties(uiImage: symbol, contentInsets: .zero, id: "pin", sdf: false)
-
-        let declaredW = Float(UInt32(symbol.size.width * symbol.scale))
-        let declaredH = Float(UInt32(symbol.size.height * symbol.scale))
+        let declaredW = Float(UInt32(size.width * scale))
+        let declaredH = Float(UInt32(size.height * scale))
         XCTAssertGreaterThanOrEqual(props.stretchXFirst, 0)
         XCTAssertLessThanOrEqual(props.stretchXSecond, declaredW)
         XCTAssertGreaterThanOrEqual(props.stretchYFirst, 0)

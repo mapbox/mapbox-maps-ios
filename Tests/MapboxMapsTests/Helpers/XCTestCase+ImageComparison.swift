@@ -51,9 +51,7 @@ extension UIImage {
         let imageRequestHandler = VNImageRequestHandler(cgImage: try XCTUnwrap(cgImage),
                                                                 options: [:])
         let imageRequest = VNGenerateImageFeaturePrintRequest()
-        // Run requests on the [CI] iOS simulators with no access to the GPU
         imageRequest.preferBackgroundProcessing = false
-        imageRequest.usesCPUOnly = true
 
         try imageRequestHandler.perform([imageRequest])
         return try XCTUnwrap(imageRequest.results?.first as? VNFeaturePrintObservation)

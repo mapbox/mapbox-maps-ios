@@ -111,7 +111,7 @@ ios_sdk_update_versions() {
 
     info "Clone repository"
     [[ -d $IOS_SDK_REPO_PATH ]] && rm -rf "$IOS_SDK_REPO_PATH"
-    git clone "https://x-access-token:$(mbx-ci github writer private token)@github.com/mapbox/ios-sdk.git" "$IOS_SDK_REPO_PATH" --branch publisher-production --depth=1 --quiet
+    git clone "https://x-access-token:$(mbx-ci github writer private token)@github.com/mapbox/ios-sdk.git" "$IOS_SDK_REPO_PATH" --branch production --depth=1 --quiet
 
     pushd "$IOS_SDK_REPO_PATH" || exit 1
 
@@ -151,7 +151,7 @@ ios_sdk_open_pr() {
     PR_URL=$(GITHUB_TOKEN=$GITHUB_TOKEN_WRITER \
         gh pr create \
             --repo mapbox/ios-sdk \
-            --base publisher-production \
+            --base production \
             --head "$IOS_SDK_BRANCH_NAME" \
             --title "[maps] Update for v$VERSION" \
             --label "Maps SDK" \

@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.31.1 - 25 September, 2026
+
+### Bug fixes 🐞
+* Fix the location indicator (puck) being incorrectly occluded by terrain when transitioning from orthographic to perspective view.
+* Fix icons and other layers using measure-light brightness getting stuck on a stale appearance when the light preset changes.
+
 ## 11.31.0 - 17 September, 2026
 
 ### Bug fixes 🐞

@@ -8,6 +8,8 @@ Mapbox welcomes participation and contributions from everyone.
 * Add `showHdRoads` and `colorHdRoads` configuration options to the Standard style.
 
 ### Bug fixes 🐞
+* Fix a main-thread stall during `MapView` initialization caused by eagerly creating the scale bar's `DistanceFormatter` even when the scale bar is hidden ([#2440](https://github.com/mapbox/mapbox-maps-ios/issues/2440)).
+
 ## 11.32.0-rc.1 - 21 September, 2026
 
 * Fixed UIKit `ViewAnnotation`s with subviews marked by the experimental `UIView.mbxViewAnnotationCollisionBox` never hiding on overlap: their collision boxes were reported with zero size. SwiftUI was not affected.

@@ -68,7 +68,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         return view
     }()
 
-    private let formatter = DistanceFormatter()
+    private lazy var formatter = DistanceFormatter()
 
     internal var row: Row = (0, 0) {
         didSet {

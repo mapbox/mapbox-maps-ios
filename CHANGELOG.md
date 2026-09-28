@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 10.20.0
+
+* Update MapboxCoreMaps to 10.20.2 and MapboxCommon to 23.13.1
+
 ## 10.19.6
 
 * Update MapboxCommon to 23.12.1

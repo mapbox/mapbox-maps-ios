@@ -1647,7 +1647,7 @@ express Statement of Purpose.
 
 ---
 
-### vtcomposite,v2.1.0,CC0,Mapbox,https://github.com/mapbox/vtcomposite
+### vtcomposite,v2.5.0,CC0,Mapbox,https://github.com/mapbox/vtcomposite
 
 ```
 CC0 1.0 Universal

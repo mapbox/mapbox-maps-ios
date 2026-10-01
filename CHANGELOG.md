@@ -9,6 +9,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 * Fix a main-thread stall during `MapView` initialization caused by eagerly creating the scale bar's `DistanceFormatter` even when the scale bar is hidden ([#2440](https://github.com/mapbox/mapbox-maps-ios/issues/2440)).
+## 11.32.0 - 01 October, 2026
+
+### Bug fixes 🐞
+* Fix newly revealed raster tiles under terrain flashing an empty background before data loads.
+* Fix the location indicator (puck) being incorrectly occluded by terrain when transitioning from orthographic to perspective view.
+* Fix icons and other layers using measure-light brightness getting stuck on a stale appearance when the light preset changes.
 
 ## 11.32.0-rc.1 - 21 September, 2026
 

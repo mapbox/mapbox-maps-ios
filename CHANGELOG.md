@@ -4,6 +4,13 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.32.0 - 01 October, 2026
+
+### Bug fixes 🐞
+* Fix newly revealed raster tiles under terrain flashing an empty background before data loads.
+* Fix the location indicator (puck) being incorrectly occluded by terrain when transitioning from orthographic to perspective view.
+* Fix icons and other layers using measure-light brightness getting stuck on a stale appearance when the light preset changes.
+
 ## 11.32.0-rc.1 - 21 September, 2026
 
 * Fixed UIKit `ViewAnnotation`s with subviews marked by the experimental `UIView.mbxViewAnnotationCollisionBox` never hiding on overlap: their collision boxes were reported with zero size. SwiftUI was not affected.

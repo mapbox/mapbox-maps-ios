@@ -82,6 +82,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 * Fixed a bug where the first `MapContent` mounted on a `Map` before the style finished loading did not react to `@State`/`@Binding` changes read inside it (e.g. an annotation's color or position never updating on the first interaction).
+
+## 11.29.4 - 01 October, 2026
 ## 11.29.3 - 10 September, 2026
 
 ## 11.29.2 - 04 September, 2026

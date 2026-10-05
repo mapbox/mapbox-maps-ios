@@ -4,11 +4,19 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.33.0-rc.1 - 05 October, 2026
+
 ### Features ✨ and improvements 🏁
 * Add `showHdRoads` and `colorHdRoads` configuration options to the Standard style.
 
 ### Bug fixes 🐞
 * Fix a main-thread stall during `MapView` initialization caused by eagerly creating the scale bar's `DistanceFormatter` even when the scale bar is hidden ([#2440](https://github.com/mapbox/mapbox-maps-ios/issues/2440)).
+* Fix view annotations stuck to stale cached layer's geometry
+* Fix double darkening artifacts when rendering transparent fill-extrusion and building layers together.
+
+### 💫️ Other
+* Breaking change: The base size of icons in the `text-field` property is now calculated at the tile zoom level with the largest text size. As a result, the icons can be smaller when the text size depends on the zoom level.
+
 ## 11.32.0 - 01 October, 2026
 
 ### Bug fixes 🐞

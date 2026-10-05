@@ -205,7 +205,7 @@ platform :ios do
       demo_account_required: false,
       skip_waiting_for_build_processing: false,
       distribute_external: true,
-      groups: ["Mobot", "Mapbox Testers"],
+      groups: ["Mapbox Testers"],
       changelog: examples_changelog
     )
   end

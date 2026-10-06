@@ -1807,8 +1807,6 @@ extension MapboxMap {
 
     /// Reset all the feature states within a style source.
     /// Remove all feature state entries from the specified style source or source layer.
-    /// Note that updates to feature state are asynchronous, so changes made by this method might not be
-    /// immediately visible using `getStateFeature`.
     ///
     /// - Parameters:
     ///   - sourceId: The style source identifier
@@ -1826,9 +1824,6 @@ extension MapboxMap {
     }
 
     /// Reset all the feature states within a featureset.
-    ///
-    /// Note that updates to feature state are asynchronous, so changes made by this method might not be
-    /// immediately visible using ``MapboxMap/getFeatureState(_:callback:)``.
     ///
     /// - Parameters:
     ///   - featureset: A featureset descriptor
@@ -1855,8 +1850,8 @@ extension MapboxMap {
     /// The final feature state is determined by applying states in order from lower to higher priority. As a result, multiple expressions that set states with different keys can affect the same features simultaneously.
     /// If an expression is added for a feature set, properties from that feature set are used, not the properties from original sources.
     ///
-    /// Note that updates to feature state expressions are asynchronous, so changes made by this method might not be
-    /// immediately visible and will have some delay. The displayed data will not be affected immediately.
+    /// Note that feature state expressions are evaluated asynchronously, so visual changes may appear
+    /// a few frames later, even after the callback is called.
     ///
     /// - Parameters:
     ///   - expressionId: Unique identifier for the state expression.
@@ -1891,8 +1886,8 @@ extension MapboxMap {
     ///
     /// Remove a specific expression from the feature state expressions based on the expression ID.
     ///
-    /// Note that updates to feature state expressions are asynchronous, so changes made by this method might not be
-    /// immediately visible and will have some delay.
+    /// Note that feature state expressions are evaluated asynchronously, so visual changes may appear
+    /// a few frames later, even after the callback is called.
     ///
     /// - Parameters:
     ///   - featureStateExpressionId: The unique identifier of the expression to remove.
@@ -1907,8 +1902,8 @@ extension MapboxMap {
 
     /// Reset all feature state expressions.
     ///
-    /// Note that updates to feature state expressions are asynchronous, so changes made by this method might not be
-    /// immediately visible and will have some delay.
+    /// Note that feature state expressions are evaluated asynchronously, so visual changes may appear
+    /// a few frames later, even after the callback is called.
     @_spi(Experimental)
     @MainActor
     public func resetFeatureStateExpressions() async throws {

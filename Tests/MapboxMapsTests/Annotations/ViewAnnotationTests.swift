@@ -716,6 +716,315 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 1)
         XCTAssertEqual(view.box.frame, ManualLayoutAnnotationView.centeredBox(in: newSize))
     }
+
+    // MARK: - Collision box observing
+
+    /// Binds and places the annotation at its measured size, so it's visible and live box sync is active.
+    private func bindAndPlace(_ va: ViewAnnotation, size: CGSize) {
+        va.bind(deps)
+        va.place(with: ViewAnnotationPositionDescriptor(
+            identifier: va.id,
+            frame: CGRect(origin: .zero, size: size),
+            anchorCoordinate: .init(latitude: 0, longitude: 0),
+            anchorConfig: .init(anchor: .center)))
+    }
+
+    func testCollisionBoxesFollowFlagMarkedAfterAdd() throws {
+        let size = CGSize(width: 100, height: 100)
+        let view = DummyAnnotationView()
+        view.actualSize = size
+        let inner = UIView()
+        inner.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        view.addSubview(inner)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.enableSymbolLayerCollision = true
+        bindAndPlace(va, size: size)
+        XCTAssertNil(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.options.collisionBoxes)
+
+        // No setNeedsUpdateSize: the flag change alone must reach core on the next tick.
+        inner.mbxViewAnnotationCollisionBox = true
+        $displayLink.send()
+
+        let updOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(updOptions.collisionBoxes, [inner.frame])
+
+        inner.mbxViewAnnotationCollisionBox = false
+        $displayLink.send()
+
+        let clearedOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(clearedOptions.collisionBoxes, [])
+    }
+
+    func testCollisionBoxesFollowSubviewHiding() throws {
+        let size = CGSize(width: 100, height: 100)
+        let view = DummyAnnotationView()
+        view.actualSize = size
+        let box = UIView()
+        box.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        box.mbxViewAnnotationCollisionBox = true
+        view.addSubview(box)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.enableSymbolLayerCollision = true
+        bindAndPlace(va, size: size)
+        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.options.collisionBoxes, [box.frame])
+
+        box.isHidden = true
+        $displayLink.send()
+
+        let hiddenOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(hiddenOptions.collisionBoxes, [])
+
+        box.isHidden = false
+        $displayLink.send()
+
+        let shownOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(shownOptions.collisionBoxes, [box.frame])
+    }
+
+    func testCollisionBoxesFollowFrameChange() throws {
+        let size = CGSize(width: 100, height: 100)
+        let view = DummyAnnotationView()
+        view.actualSize = size
+        let box = UIView()
+        box.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        box.mbxViewAnnotationCollisionBox = true
+        view.addSubview(box)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.enableSymbolLayerCollision = true
+        bindAndPlace(va, size: size)
+
+        let movedFrame = CGRect(x: 10, y: 40, width: 30, height: 30)
+        box.frame = movedFrame
+        $displayLink.send()
+
+        let updOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(updOptions.collisionBoxes, [movedFrame])
+    }
+
+    func testCollisionBoxesOverrideReachCoreWithoutSizeChange() throws {
+        // SwiftUI path: preference keys write overrideCollisionBoxes; delivery must not require a size change.
+        let size = CGSize(width: 100, height: 100)
+        let view = DummyAnnotationView()
+        view.actualSize = size
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.enableSymbolLayerCollision = true
+        bindAndPlace(va, size: size)
+
+        let overrideBoxes = [CGRect(x: 5, y: 5, width: 20, height: 20)]
+        view.overrideCollisionBoxes = overrideBoxes
+        $displayLink.send()
+
+        let updOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(updOptions.collisionBoxes, overrideBoxes)
+    }
+
+    func testCollisionBoxesExcludeMarkedSubviewInsideHiddenContainer() throws {
+        // A marked box inside a hidden container must not collide: ancestor visibility is respected.
+        let size = CGSize(width: 100, height: 100)
+        let view = DummyAnnotationView()
+        view.actualSize = size
+        let container = UIView()
+        container.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        container.isHidden = true
+        view.addSubview(container)
+        let box = UIView()
+        box.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        box.mbxViewAnnotationCollisionBox = true
+        container.addSubview(box)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        let options = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertNil(options.collisionBoxes)
+    }
+
+    func testCollisionBoxesSyncWithoutSymbolLayerCollision() throws {
+        let size = CGSize(width: 100, height: 100)
+        let view = DummyAnnotationView()
+        view.actualSize = size
+        let inner = UIView()
+        inner.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        view.addSubview(inner)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        bindAndPlace(va, size: size)
+
+        inner.mbxViewAnnotationCollisionBox = true
+        $displayLink.send()
+
+        // Boxes sync even without enableSymbolLayerCollision: core uses them
+        // for puck/annotation overlap and avoid checks too.
+        let updOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(updOptions.collisionBoxes, [inner.frame])
+    }
+
+    func testCollisionBoxesIncludeTransparentSubview() throws {
+        // alpha 0 keeps the layout, so the box still collides (unlike isHidden).
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let box = UIView()
+        box.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        box.alpha = 0
+        box.mbxViewAnnotationCollisionBox = true
+        view.addSubview(box)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        let options = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(options.collisionBoxes, [box.frame])
+    }
+
+    func testCollisionBoxesExcludeZeroSizeSubview() throws {
+        // A marked view that is not laid out yet must not report an empty box.
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let box = UIView()
+        box.mbxViewAnnotationCollisionBox = true
+        view.addSubview(box)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.bind(deps)
+
+        let options = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertNil(options.collisionBoxes)
+    }
+
+    func testHiddenAnnotationKeepsReportingMarkedSubviewFrames() throws {
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let inner = UIView()
+        inner.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        view.addSubview(inner)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.enableSymbolLayerCollision = true
+        va.bind(deps) // not placed: annotation is still hidden
+
+        // Marking reaches core even while hidden, otherwise stale full bounds could keep it hidden.
+        inner.mbxViewAnnotationCollisionBox = true
+        $displayLink.send()
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 1)
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.last?.parameters.options.collisionBoxes, [inner.frame])
+
+        // Frames of a hidden annotation are observed too. Core hides an annotation based on the
+        // boxes we sent, so it has to hear the corrected box or the annotation stays hidden.
+        inner.frame = CGRect(x: 10, y: 40, width: 30, height: 30)
+        $displayLink.send()
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 2)
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.last?.parameters.options.collisionBoxes, [inner.frame])
+
+        // The same frame is not written again.
+        $displayLink.send()
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 2)
+    }
+
+    func testCollisionBoxesClearedWhenMarkedSubviewRemovedFromSuperview() throws {
+        let size = CGSize(width: 100, height: 100)
+        let view = DummyAnnotationView()
+        view.actualSize = size
+        let box = UIView()
+        box.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        box.mbxViewAnnotationCollisionBox = true
+        view.addSubview(box)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.enableSymbolLayerCollision = true
+        bindAndPlace(va, size: size)
+        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.options.collisionBoxes, [box.frame])
+
+        // No setNeedsUpdateSize: the removal alone clears the boxes on the next tick.
+        box.removeFromSuperview()
+        $displayLink.send()
+
+        let updOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(updOptions.collisionBoxes, [])
+    }
+
+    func testPremarkedSubviewAddedLaterNeedsSizeUpdate() throws {
+        // The flag was set before the view joined the hierarchy, so no setter fires on insertion.
+        // Inserting a subview is a layout change, so the documented contract applies: setNeedsUpdateSize().
+        let size = CGSize(width: 100, height: 100)
+        let view = DummyAnnotationView()
+        view.actualSize = size
+        let box = UIView()
+        box.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        box.mbxViewAnnotationCollisionBox = true
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.enableSymbolLayerCollision = true
+        bindAndPlace(va, size: size)
+        XCTAssertNil(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.options.collisionBoxes)
+
+        view.addSubview(box)
+        $displayLink.send()
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 0)
+
+        va.setNeedsUpdateSize()
+        $displayLink.send()
+
+        let updOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(updOptions.collisionBoxes, [box.frame])
+    }
+
+    func testHiddenAnnotationWithHiddenBoxDoesNotWriteOnUnrelatedFlagChanges() throws {
+        // A marked-but-hidden box collects nothing; the annotation must not flip participation
+        // on and off and must stay quiet while another annotation's flag changes.
+        let view = DummyAnnotationView()
+        view.actualSize = CGSize(width: 100, height: 100)
+        let box = UIView()
+        box.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        box.isHidden = true
+        box.mbxViewAnnotationCollisionBox = true
+        view.addSubview(box)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.enableSymbolLayerCollision = true
+        va.bind(deps) // hidden
+        XCTAssertNil(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.options.collisionBoxes)
+
+        let unrelated = UIView()
+        for _ in 0..<3 {
+            unrelated.mbxViewAnnotationCollisionBox.toggle()
+            $displayLink.send()
+        }
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 0)
+
+        // Showing the box is picked up once the annotation is placed.
+        box.isHidden = false
+        va.place(with: ViewAnnotationPositionDescriptor(
+            identifier: va.id,
+            frame: CGRect(origin: .zero, size: view.actualSize),
+            anchorCoordinate: .init(latitude: 0, longitude: 0),
+            anchorConfig: .init(anchor: .center)))
+        $displayLink.send()
+        let updOptions = try XCTUnwrap(mapboxMap.updateViewAnnotationStub.invocations.last).parameters.options
+        XCTAssertEqual(updOptions.collisionBoxes, [box.frame])
+    }
+
+    func testNoRedundantCollisionBoxUpdates() throws {
+        let size = CGSize(width: 100, height: 100)
+        let view = DummyAnnotationView()
+        view.actualSize = size
+        let box = UIView()
+        box.frame = CGRect(x: 10, y: 10, width: 30, height: 30)
+        box.mbxViewAnnotationCollisionBox = true
+        view.addSubview(box)
+
+        let va = ViewAnnotation(coordinate: .init(latitude: 0, longitude: 0), view: view)
+        va.enableSymbolLayerCollision = true
+        bindAndPlace(va, size: size)
+
+        $displayLink.send()
+        $displayLink.send()
+
+        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 0)
+    }
 }
 
 class DummyAnnotationView: UIView {

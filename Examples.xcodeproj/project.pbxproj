@@ -12,6 +12,7 @@
 		03EDEA6452582E7E6805C824 /* CalloutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD8F852552CA316EFFCDD64 /* CalloutView.swift */; };
 		03EEF25ABD58ADD9631AB509 /* MapEventsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370DFCA52EB6C7F119BF81DA /* MapEventsExample.swift */; platformFilters = (ios, ); };
 		0414AD72988F405F5BA1D843 /* GlobeFlyToExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384FD8FC97B9F5011AF4BD61 /* GlobeFlyToExample.swift */; platformFilters = (ios, ); };
+		058489CC0A71C8CC82779A6C /* ViewAnnotationCollisionObservingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF42B23A28A1655BBAB5BCB /* ViewAnnotationCollisionObservingExample.swift */; platformFilters = (ios, ); };
 		058E292262A26CD2EEBCEE04 /* NavigationItemBridgeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0909E564DB89FDD17DAFEB83 /* NavigationItemBridgeController.swift */; platformFilters = (ios, ); };
 		05DF15DADC248A2CAA5EEDC4 /* AddMarkersSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33F64CDBA98B91EE819B2C4 /* AddMarkersSymbolExample.swift */; platformFilters = (ios, ); };
 		05EF63E72681858549C8D580 /* OpenHours+Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F277AD62400BB06EF2A9A6 /* OpenHours+Formatting.swift */; platformFilters = (ios, ); };
@@ -105,6 +106,7 @@
 		754B87ED0F8761A02C8C09C2 /* StyleOverridesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF257763AFD6E4964B28C9EB /* StyleOverridesModel.swift */; platformFilters = (ios, ); };
 		759D42AA5FE93B6FA9DFADF5 /* LocationOverrideExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B39AE24486FED5ED30392D /* LocationOverrideExample.swift */; };
 		7686448F8648BECC75A912B6 /* DashboardCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913B4773A82AD6357D6AAEA1 /* DashboardCarPlaySceneDelegate.swift */; platformFilters = (ios, ); };
+		78C545F653CFEB7C02D0288A /* ViewAnnotationsCollisionObservingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A68A61D1D7CC783517B37B /* ViewAnnotationsCollisionObservingExample.swift */; };
 		79843B780E7C5DC68433B745 /* SnapshotMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5A8729C9AEA4711B56B5F0 /* SnapshotMapExample.swift */; };
 		79B889CF23A3C0A5EA7F6ADD /* ApplicationCarPlaySceneDelegage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3F37CAE7A0B66BE429525C /* ApplicationCarPlaySceneDelegage.swift */; platformFilters = (ios, ); };
 		7B9835E597E0B2655E181A48 /* ExampleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A6063E57EC170F558A3F74 /* ExampleTableViewController.swift */; platformFilters = (ios, ); };
@@ -363,6 +365,7 @@
 		B31A932A62B6142FE20C39DF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B33F64CDBA98B91EE819B2C4 /* AddMarkersSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMarkersSymbolExample.swift; sourceTree = "<group>"; };
 		B3B96E9530F4E42FE9BFF8FA /* DraggableViewAnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableViewAnnotationsExample.swift; sourceTree = "<group>"; };
+		B6A68A61D1D7CC783517B37B /* ViewAnnotationsCollisionObservingExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationsCollisionObservingExample.swift; sourceTree = "<group>"; };
 		B7A7586D05B960928AB17A0D /* MultipleGeometriesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleGeometriesExample.swift; sourceTree = "<group>"; };
 		B9D37322942E4A20DF63DA4F /* LineCutoutExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineCutoutExample.swift; sourceTree = "<group>"; };
 		BAE5B425CF6F5DEB88A73D45 /* style.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = style.json; sourceTree = "<group>"; };
@@ -392,6 +395,7 @@
 		D8730F8FB259A4F889609108 /* radar2.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = radar2.gif; sourceTree = "<group>"; };
 		D8E8AACDCCB5D071A6BDD1CA /* ExamplesSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamplesSettingsView.swift; sourceTree = "<group>"; };
 		DAC8E7B565C817D872CFBCAD /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
+		DAF42B23A28A1655BBAB5BCB /* ViewAnnotationCollisionObservingExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationCollisionObservingExample.swift; sourceTree = "<group>"; };
 		DC2D7968D1451C5EF901A378 /* SwiftUIRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIRoot.swift; sourceTree = "<group>"; };
 		DC98E9169E8E7DFE8DC1CB27 /* BasicLocationPulsingExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicLocationPulsingExample.swift; sourceTree = "<group>"; };
 		DD3A816C6E4D7A0A532EEE84 /* GeofencingUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofencingUserLocation.swift; sourceTree = "<group>"; };
@@ -467,6 +471,7 @@
 				A34BE6CA60D208A76C03224F /* StudioStyleExample.swift */,
 				DC2D7968D1451C5EF901A378 /* SwiftUIRoot.swift */,
 				29B72E565A8903AD3EB5EAD3 /* ViewAnnotationsCollisionExample.swift */,
+				B6A68A61D1D7CC783517B37B /* ViewAnnotationsCollisionObservingExample.swift */,
 				79F532E15F4789D1A1489CEE /* ViewportInFixedFrameExample.swift */,
 				DE863B179BF4F740C36D185E /* ViewportPlayground.swift */,
 			);
@@ -806,6 +811,7 @@
 				E612275E3042D0D0AF8B583E /* MapRecorderExample.swift */,
 				12A0818B5BC601707E3235A9 /* ResizableImageExample.swift */,
 				6E54D3F5943238258AA0A9BE /* ResizeMapViewExample.swift */,
+				DAF42B23A28A1655BBAB5BCB /* ViewAnnotationCollisionObservingExample.swift */,
 			);
 			path = Lab;
 			sourceTree = "<group>";
@@ -1173,9 +1179,11 @@
 				1687412AC1637D7EA697C7A4 /* View+OnShake.swift in Sources */,
 				CF5C5513D659D4981706DDEC /* ViewAnnotationAnimationExample.swift in Sources */,
 				BD99E89F050E7D93846147FF /* ViewAnnotationBasicExample.swift in Sources */,
+				058489CC0A71C8CC82779A6C /* ViewAnnotationCollisionObservingExample.swift in Sources */,
 				4EF3E4C342C3F8ED5BF6C332 /* ViewAnnotationMarkerExample.swift in Sources */,
 				56446E388868862E2BB80F4D /* ViewAnnotationWithPointAnnotationExample.swift in Sources */,
 				67CB042F63A87098CDE8763C /* ViewAnnotationsCollisionExample.swift in Sources */,
+				78C545F653CFEB7C02D0288A /* ViewAnnotationsCollisionObservingExample.swift in Sources */,
 				E2617ACF1E2367C012A87CD1 /* ViewAnnotationsExample.swift in Sources */,
 				8418F1775D49F5A66489B988 /* ViewExtensions.swift in Sources */,
 				14799547EFD5C4757FBAD6E4 /* ViewportExample.swift in Sources */,

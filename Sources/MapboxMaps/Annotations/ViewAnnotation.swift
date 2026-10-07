@@ -324,6 +324,9 @@ public final class ViewAnnotation {
         var needsUpdateSize = false
         /// Options that need to be set to core on next sync.
         var pendingOptions: ViewAnnotationOptions?
+        var hasCollisionBoxParticipants = false
+        /// `CollisionParticipation.generation` seen by the last participation check.
+        var participantsGeneration: UInt = 0
     }
     private var state: State?
 
@@ -461,6 +464,9 @@ public final class ViewAnnotation {
         if state?.needsUpdateSize ?? false {
             // Update size options if size changed.
             updateSizeOptions()
+        } else {
+            // No size update pending: pick up collision box changes live (updateSizeOptions collects them itself).
+            syncLiveCollisionBoxes()
         }
 
         if let pendingOptions = state?.pendingOptions {
@@ -481,6 +487,8 @@ public final class ViewAnnotation {
         setProperty(\.height, value: size.height, oldValue: options.height)
 
         let hasParticipants = view.hasCollisionBoxParticipants()
+        state?.hasCollisionBoxParticipants = hasParticipants
+        state?.participantsGeneration = CollisionParticipation.generation
         if hasParticipants, view.overrideCollisionBoxes == nil {
             // Marked subview frames are only valid after a layout pass, at the size core will place.
             view.bounds.size = size
@@ -492,13 +500,41 @@ public final class ViewAnnotation {
         }
     }
 
-    private func updateCollisionBoxes() {
+    /// Per display-link tick: picks up flag, visibility and frame changes of marked subviews without a
+    /// size update. Reads committed frames, never forces layout; equal boxes are not written to core.
+    /// Runs regardless of `enableSymbolLayerCollision`: core uses boxes for puck overlap and avoid regions too.
+    private func syncLiveCollisionBoxes() {
+        let generation = CollisionParticipation.generation
+        if generation != state?.participantsGeneration {
+            // A flag flipped somewhere: re-check this hierarchy once, even when hidden, so no stale boxes stay in core.
+            state?.participantsGeneration = generation
+            let hasParticipants = view.hasCollisionBoxParticipants()
+            state?.hasCollisionBoxParticipants = hasParticipants
+            if hasParticipants || options.collisionBoxes != nil {
+                updateCollisionBoxes() // second condition clears boxes after the last participant is gone
+            }
+            return
+        }
+        // Participants re-read their frames each tick, including while the annotation is hidden.
+        // Core hides an annotation based on the boxes we sent it, so an annotation that stops
+        // reporting can never correct them: it would stay hidden until the camera moves.
+        if state?.hasCollisionBoxParticipants == true, !updateCollisionBoxes() {
+            // Nothing collected: stop walking if the marked view is gone, keep watching if it is only hidden.
+            state?.hasCollisionBoxParticipants = view.hasCollisionBoxParticipants()
+        }
+    }
+
+    /// Pushes the current boxes to core. Returns `false` when no box was collected.
+    @discardableResult
+    private func updateCollisionBoxes() -> Bool {
         var boxes = view.collisionBoxes()
+        let found = boxes != nil
         // Core treats nil as "no change"; an explicit empty array reverts to full bounds.
         if boxes == nil, options.collisionBoxes != nil {
             boxes = []
         }
         setProperty(\.collisionBoxes, value: boxes, oldValue: options.collisionBoxes)
+        return found
     }
 
     @objc func handleDragGesture(_ recognizer: UILongPressGestureRecognizer) {

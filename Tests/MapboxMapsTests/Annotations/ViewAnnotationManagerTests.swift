@@ -323,6 +323,25 @@ final class ViewAnnotationManagerTests: XCTestCase {
     }
 
     @available(*, deprecated)
+    func testViewShownByTheAppWhileHiddenByPlacementIsHiddenAgain() throws {
+        let annotationView = addTestAnnotationView()
+        let id = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id)
+        mapboxMap.simulateAnnotationPositionsUpdate([])
+        XCTAssertTrue(annotationView.isHidden)
+
+        // The app shows the view itself while the map is not placing it.
+        annotationView.isHidden = false
+        mapboxMap.simulateAnnotationPositionsUpdate([])
+
+        // The SDK owns the visibility of an annotation the map does not place, same as Android.
+        XCTAssertTrue(annotationView.isHidden)
+
+        // Once the map places it again the view is shown.
+        triggerPositionUpdate(forId: id)
+        XCTAssertFalse(annotationView.isHidden)
+    }
+
+    @available(*, deprecated)
     func testViewAnnotationUpdateObserverNotifiedAboutUpdatedFrames() throws {
         let annotationView = addTestAnnotationView()
         let id = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id)

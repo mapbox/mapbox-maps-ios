@@ -160,6 +160,9 @@ struct Examples {
         Example(title: "Display an indoor map",
                 description: "Create and display a map that uses the indoor data and renders it.",
                 type: IndoorExample.self)
+        Example(title: "View Annotation Collision Observing",
+                description: "Collision boxes follow dynamic changes live",
+                type: ViewAnnotationCollisionObservingExample.self)
     }
 
     // Examples that focus on displaying the user's location.

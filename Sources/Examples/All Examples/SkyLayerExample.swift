@@ -3,7 +3,7 @@ import MapboxMaps
 
 final class SkyLayerExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
-    private var skyLayer: SkyLayer!
+    private let skyLayerId = "sky-layer"
     private var segmentedControl = UISegmentedControl()
     private var cancelables = Set<AnyCancelable>()
 
@@ -13,11 +13,7 @@ final class SkyLayerExample: UIViewController, ExampleProtocol {
         // Set the initial camera and style URI by creating a `MapInitOptions` object.
         let center = CLLocationCoordinate2D(latitude: 35.67283, longitude: 127.60597)
         let cameraOptions = CameraOptions(center: center, zoom: 12.5, pitch: 83)
-        var styleURI: StyleURI?
-        if let url = URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y") {
-            styleURI = StyleURI(url: url)
-        }
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: styleURI ?? .satelliteStreets)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .satelliteStreets)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -28,7 +24,8 @@ final class SkyLayerExample: UIViewController, ExampleProtocol {
         addSegmentedControl()
 
         // Add a custom `SkyLayer` once the map's style is finished loading.
-        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
+            guard let self else { return }
             self.addSkyLayer()
 
             // Add a terrain layer.
@@ -39,10 +36,10 @@ final class SkyLayerExample: UIViewController, ExampleProtocol {
     }
 
     func addSkyLayer() {
-        // Initialize a sky layer with a sky type of `gradient`, which applies a gradient effect to the sky.
+        // Initialize a sky layer with the sky type selected in the segmented control.
         // Read more about sky layer types on the Mapbox blog: https://www.mapbox.com/blog/sky-api-atmospheric-scattering-algorithm-for-3d-maps
-        skyLayer = SkyLayer(id: "sky-layer")
-        skyLayer.skyType = .constant(.gradient)
+        var skyLayer = SkyLayer(id: skyLayerId)
+        skyLayer.skyType = .constant(selectedSkyType)
 
         // Define the position of the sun.
         // The azimuthal angle indicates the sun's position relative to 0 degrees north. When the map's bearing
@@ -71,21 +68,20 @@ final class SkyLayerExample: UIViewController, ExampleProtocol {
 
     // Update the sky type when the `UISegmentedControl` value is changed.
     @objc func updateSkyLayer() {
-        var skyType: Value<SkyType>
-        if segmentedControl.selectedSegmentIndex == 0 {
-            skyType = .constant(.gradient)
-        } else {
-            skyType = .constant(.atmosphere)
-        }
+        let skyType = selectedSkyType
 
         // Update the sky layer based on the updated segmented control value.
         do {
-            try mapView.mapboxMap.updateLayer(withId: skyLayer.id, type: SkyLayer.self) { layer in
-                layer.skyType = skyType
+            try mapView.mapboxMap.updateLayer(withId: skyLayerId, type: SkyLayer.self) { layer in
+                layer.skyType = .constant(skyType)
             }
         } catch {
-            print("Failed to update the sky type for layer with id \(skyLayer.id).")
+            print("Failed to update the sky type for layer with id \(skyLayerId).")
         }
+    }
+
+    private var selectedSkyType: SkyType {
+        segmentedControl.selectedSegmentIndex == 0 ? .gradient : .atmosphere
     }
 
     func addTerrainLayer() {

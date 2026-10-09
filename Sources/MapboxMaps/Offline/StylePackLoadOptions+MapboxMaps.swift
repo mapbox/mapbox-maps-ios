@@ -11,7 +11,9 @@ extension StylePackLoadOptions {
     ///         the style package. You can use this field to store custom metadata
     ///         associated with a style package.
     ///   - acceptExpired: Accepts expired data when loading style resources. Default
-    ///         is `false`.
+    ///         is `false`. When refreshing an existing style pack, keep this `false`
+    ///         so expired resources are updated. If `true`, outdated resources
+    ///         are not refreshed.
     ///   - extraOptions: Extra style package load options. Must be a valid JSON object.
     ///
     /// If `metadata`  is not a valid JSON object, then this initializer returns.

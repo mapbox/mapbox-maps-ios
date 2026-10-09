@@ -11,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Features ✨ and improvements 🏁
 * Add `showHdRoads` and `colorHdRoads` configuration options to the Standard style.
+* Clarify that `OfflineManager.loadStylePack` refreshes an existing style pack when called with explicit `StylePackLoadOptions`, not only empty options. Set `acceptExpired` to `false` to update outdated resources.
 
 ### Bug fixes 🐞
 * Fix a main-thread stall during `MapView` initialization caused by eagerly creating the scale bar's `DistanceFormatter` even when the scale bar is hidden ([#2440](https://github.com/mapbox/mapbox-maps-ios/issues/2440)).

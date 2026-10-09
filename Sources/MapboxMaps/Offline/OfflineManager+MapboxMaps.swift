@@ -15,13 +15,20 @@ extension OfflineManager {
     ///         `StylePackError`.
     /// - Returns: Returns a Cancelable object to cancel the load request
     ///
-    /// If a style package with the given id already exists, it is updated with
-    /// the values provided to the given load options. The missing resources get
-    /// loaded and the expired resources get updated.
+    /// If a style package with the given id already exists, calling this method
+    /// again with the same `styleURI` refreshes it. You can pass explicit
+    /// `StylePackLoadOptions`, including the same options used for the original
+    /// download. The style pack is updated with any option values you provide:
+    /// missing resources are loaded and expired resources are updated.
     ///
-    /// If there no values provided to the given load options, the existing
-    /// style package gets refreshed: the missing resources get loaded and the
-    /// expired resources get updated.
+    /// You can refresh with either your original `StylePackLoadOptions` or an
+    /// empty instance (for example `StylePackLoadOptions(glyphsRasterizationMode: nil)`).
+    /// Both load missing resources and update expired ones. The `loadOptions`
+    /// argument is still required.
+    ///
+    /// Set `StylePackLoadOptions.acceptExpired` to `false` (the default) so
+    /// outdated resources are refreshed. If `acceptExpired` is `true`, existing
+    /// outdated resources are not refreshed.
     ///
     /// A failed load request can be reattempted with another `loadStylePack()` call.
     ///

@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.30.5 - 09 October, 2026
+
+### Bug fixes 🐞
+* Fixed wrong symbol position for placement and queryRenderedFeatures after symbol-z-offset property update
+
 ## 11.30.4 - 01 October, 2026
 
 ## 11.30.3 - 23 September, 2026

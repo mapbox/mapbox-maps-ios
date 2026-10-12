@@ -21,6 +21,8 @@ Mapbox welcomes participation and contributions from everyone.
 ### 💫️ Other
 * Breaking change: The base size of icons in the `text-field` property is now calculated at the tile zoom level with the largest text size. As a result, the icons can be smaller when the text size depends on the zoom level.
 
+## 11.32.1 - 12 October, 2026
+
 ## 11.32.0 - 01 October, 2026
 
 ### Bug fixes 🐞

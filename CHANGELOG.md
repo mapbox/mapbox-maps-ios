@@ -7,6 +7,9 @@ Mapbox welcomes participation and contributions from everyone.
 ### Features ✨ and improvements 🏁
 * Collision boxes of a `ViewAnnotation` now follow the view at runtime: marking a subview with the experimental `UIView.mbxViewAnnotationCollisionBox` (`View.mbxViewAnnotationCollisionBox()` in SwiftUI) after the annotation is added, moving it, hiding it or removing the last marked one reaches the map. Marked views inside a hidden subtree no longer collide.
 
+### Bug fixes 🐞
+* Fix view annotations staying at wrong positions after rotating an iPad in windowed mode, until the next rotation or window resize.
+
 ## 11.33.0-rc.1 - 05 October, 2026
 
 ### Features ✨ and improvements 🏁

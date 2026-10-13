@@ -9,7 +9,7 @@ protocol SizeTrackingLayerDelegate: AnyObject, CALayerDelegate {
 
     /// Layer has completed resize animation or no-animation operation
     ///
-    /// Animation completeness is detected by `CATransaction/setCompletionBlock` in the `bounds/didSet` trigger
+    /// Animation completeness is detected by a nested `CATransaction` completion block around each bounds animation in `add(_:forKey:)`
     /// - Parameters:
     ///   - completeResizingFrom: original size
     ///   - to: new size
@@ -19,13 +19,26 @@ protocol SizeTrackingLayerDelegate: AnyObject, CALayerDelegate {
 class SizeTrackingLayer: CALayer {
     private var sizeTrackingDelegate: SizeTrackingLayerDelegate? { delegate as? SizeTrackingLayerDelegate }
 
-    private var sizeAnimationIsActive = false
+    /// Bounds animations added to the layer whose completion hasn't fired yet.
+    private var pendingBoundsAnimations = 0
+    private var sizeAnimationIsActive: Bool { pendingBoundsAnimations > 0 }
+    private var animatedResizeStartSize: CGSize?
 
     override func add(_ anim: CAAnimation, forKey key: String?) {
-        if anim.isAnimatingBounds {
-            sizeAnimationIsActive = true
+        // An infinite animation never completes, so resizes don't wait for it.
+        guard anim.isAnimatingBounds, anim.isFinite else {
+            super.add(anim, forKey: key)
+            return
+        }
+
+        pendingBoundsAnimations += 1
+        // A nested transaction scopes the completion to this animation, so unrelated animations in the outer one can't hold it.
+        CATransaction.begin()
+        CATransaction.setCompletionBlock { [weak self] in
+            self?.boundsAnimationDidComplete()
         }
         super.add(anim, forKey: key)
+        CATransaction.commit()
     }
 
     override var bounds: CGRect {
@@ -43,40 +56,36 @@ class SizeTrackingLayer: CALayer {
                 return
             }
 
-            CATransaction.setCompletionBlock { [bounds, weak self] in
-                guard let self else { return }
-
-                // In case there were more than one resizing in the same animation period, the last resizing should win
-                // CATransaction completionBlock's get called in the reverse mode.
-                guard self.bounds.size == bounds.size else {
-                    Log.debug("""
-                        Skipping bounds resize completion of \(self) due to mismatched bounds.
-                            Layer: \(self)
-                            Old size: \(oldValue.size)
-                            Expected size: \(bounds.size)
-                            Actual size: \(self.bounds.size)
-                        """, category: .sizeTrackingLayer)
-                    return
-                }
-
-                Log.debug("""
-                    \(SizeTrackingLayer.self) animation completed
-                        layer: \(self)
-                        Old size: \(oldValue.size)
-                        New size: \(bounds.size)
-                    """, category: .sizeTrackingLayer)
-
-                self.sizeTrackingDelegate?.sizeTrackingLayer(layer: self, completeResizingFrom: oldValue.size, to: bounds.size)
-
-                self.sizeAnimationIsActive = false
+            if animatedResizeStartSize == nil {
+                animatedResizeStartSize = oldValue.size
             }
-
             sizeTrackingDelegate?.sizeTrackingLayer(layer: self, willAnimateResizingFrom: oldValue.size, to: bounds.size)
         }
+    }
+
+    private func boundsAnimationDidComplete() {
+        pendingBoundsAnimations -= 1
+        // With several resizes in one animation period, only the last completion applies the final size.
+        guard pendingBoundsAnimations == 0, let startSize = animatedResizeStartSize else { return }
+        animatedResizeStartSize = nil
+
+        Log.debug("""
+            \(SizeTrackingLayer.self) animation completed
+                layer: \(self)
+                Old size: \(startSize)
+                New size: \(bounds.size)
+            """, category: .sizeTrackingLayer)
+
+        sizeTrackingDelegate?.sizeTrackingLayer(layer: self, completeResizingFrom: startSize, to: bounds.size)
     }
 }
 
 extension CAAnimation {
+    /// Whether the animation ends, so its completion fires.
+    var isFinite: Bool {
+        duration.isFinite && repeatCount.isFinite && repeatDuration.isFinite
+    }
+
     /// Detect animation keypath that might affect bounds size
     ///
     /// Keypath argument supports KVC meaning that `bounds.size.height` is the valid value.

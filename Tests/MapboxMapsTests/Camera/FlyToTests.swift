@@ -167,4 +167,34 @@ internal class FlyToTests: XCTestCase {
         // then
         XCTAssertNoThrow(flyTo.coordinate(at: 0))
     }
+
+    // A long flight at high zoom must arrive at the end point smoothly. The path formula
+    // used to land meters short of the target and then snap to it on the last frame.
+    func testFlyToLongFlightArrivesWithoutJump() {
+        let from = CLLocationCoordinate2D(latitude: 53.901516, longitude: 27.558721) // Minsk
+        let to = CLLocationCoordinate2D(latitude: 31.225972, longitude: 121.450615) // Shanghai
+
+        let source = CameraState(center: from, padding: .zero, zoom: 20, bearing: 0, pitch: 30)
+        let dest = CameraOptions(center: to, zoom: 20, pitch: 30)
+        let flyTo = FlyToInterpolator(
+            from: source,
+            to: dest,
+            cameraBounds: .default,
+            size: CGSize(width: 1024, height: 768)
+        )
+
+        // One frame before the end of a 10 second flight at 60 fps.
+        let beforeLast = flyTo.coordinate(at: 1.0 - 17.0 / 10000.0)
+        let last = flyTo.coordinate(at: 1.0)
+
+        XCTAssertEqual(last.latitude, to.latitude, accuracy: 1e-9)
+        XCTAssertEqual(last.longitude, to.longitude, accuracy: 1e-9)
+        XCTAssertEqual(flyTo.zoom(at: 1.0), 20, accuracy: 1e-9)
+
+        // The last step is a few centimeters at most. Degrees to meters at this latitude.
+        let metersPerDegree = 111320.0
+        let dy = (last.latitude - beforeLast.latitude) * metersPerDegree
+        let dx = (last.longitude - beforeLast.longitude) * metersPerDegree * cos(to.latitude * .pi / 180)
+        XCTAssertLessThan(hypot(dx, dy), 0.05)
+    }
 }

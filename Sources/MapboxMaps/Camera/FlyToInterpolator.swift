@@ -146,7 +146,7 @@ internal struct FlyToInterpolator {
             // // bᵢ
             // val b = (w1 * w1 - w0 * w0 + (if (i == 0) 1 else -1) * rho2 * rho2 * u1 * u1) /
             //     (2 * (if (i == 0) w0 else w1) * rho2 * u1)
-            // return ln(sqrt(b * b + 1) - b)
+            // return -asinh(b)
 
             // bᵢ
             // Split into sub-expressions to "type-check in reasonable time" error
@@ -158,7 +158,10 @@ internal struct FlyToInterpolator {
             let denom     = 2.0 * denomMult * rho2 * u1
 
             let b = (w2 + numMult * rho4) / denom
-            return log(sqrt(b * b + 1) - b) // log is natural log
+            // log(sqrt(b² + 1) - b) == -asinh(b). The subtraction loses most digits when b is large
+            // (a long flight at high zoom). The path then ends short of the target by meters, and
+            // the last frame snaps to it.
+            return -asinh(b)
         }
 
         // r₀: Zoom-out factor during ascent.

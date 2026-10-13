@@ -41,6 +41,13 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
     private var isPanning = false
     private var numberOfTouches = 0
 
+    /// The date when a multi-touch pan most recently lost a touch, if it has.
+    private var touchLiftedDate: Date?
+
+    /// A pan that ends this soon after a multi-touch pan loses a touch is the end of a pinch with
+    /// the fingers lifted a moment apart, not a throw, so it doesn't decelerate.
+    internal static let decelerationSuppressionIntervalAfterTouchLift: TimeInterval = 0.3
+
     internal init(gestureRecognizer: UIPanGestureRecognizer,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
@@ -95,6 +102,9 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
             // update reference(previous) touch location when number of touches changes,
             // so the map doesn't jump suddenly
             if numberOfTouches != gestureRecognizer.numberOfTouches {
+                if numberOfTouches > 1 && gestureRecognizer.numberOfTouches < numberOfTouches {
+                    touchLiftedDate = dateProvider.now
+                }
                 previousTouchLocation = touchLocation
                 numberOfTouches = gestureRecognizer.numberOfTouches
                 return
@@ -114,7 +124,8 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
             // it without further dragging. This specific time interval
             // is just the result of manual tuning.
             let decelerationTimeout: TimeInterval = 1.0 / 30.0
-            guard !mapboxMap.pointIsAboveHorizon(touchLocation),
+            guard !endsRightAfterTouchLift,
+                  !mapboxMap.pointIsAboveHorizon(touchLocation),
                   let lastChangedDate = lastChangedDate,
                   dateProvider.now.timeIntervalSince(lastChangedDate) < decelerationTimeout else {
                       endInteraction(willAnimate: false)
@@ -143,6 +154,13 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
         }
     }
 
+    /// When the fingers of a pinch lift a moment apart, the pan continues with the last finger;
+    /// decelerating it would fling the map toward that finger.
+    private var endsRightAfterTouchLift: Bool {
+        guard let touchLiftedDate else { return false }
+        return dateProvider.now.timeIntervalSince(touchLiftedDate) < Self.decelerationSuppressionIntervalAfterTouchLift
+    }
+
     private func beginInteraction(withTouchLocation touchLocation: CGPoint) {
         isPanning = true
         previousTouchLocation = touchLocation
@@ -153,6 +171,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
         isPanning = false
         previousTouchLocation = nil
         lastChangedDate = nil
+        touchLiftedDate = nil
         delegate?.gestureEnded(for: .pan, willAnimate: willAnimate)
     }
 

@@ -380,6 +380,53 @@ final class PanGestureHandlerTests: XCTestCase {
         XCTAssertEqual(params.to, panPoint2)
     }
 
+    /// Starts a two-finger pan (as during a pinch), moves it, then lifts one finger.
+    private func panWithTwoFingersThenLiftOne() {
+        mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = false
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 2
+        gestureRecognizer.locationOfTouchStub.defaultReturnValue = CGPoint(x: 0, y: 0)
+        gestureRecognizer.getStateStub.defaultReturnValue = .began
+        gestureRecognizer.sendActions()
+
+        gestureRecognizer.locationOfTouchStub.defaultReturnValue = CGPoint(x: 10, y: 10)
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        // one finger lifts
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 1
+        gestureRecognizer.locationOfTouchStub.defaultReturnValue = CGPoint(x: 20, y: 20)
+        gestureRecognizer.sendActions()
+    }
+
+    func testPanEndingRightAfterAFingerLiftsFromMultiTouchDoesNotDecelerate() {
+        // given: a pinch whose fingers lift a moment apart
+        panWithTwoFingersThenLiftOne()
+        dateProvider.nowStub.defaultReturnValue += 1.0 / 60.0
+
+        // when: the last finger lifts while still moving
+        gestureRecognizer.getStateStub.defaultReturnValue = .ended
+        gestureRecognizer.sendActions()
+
+        // then: no fling toward the last finger
+        XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 0)
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.map(\.parameters), [.init(gestureType: .pan, willAnimate: false)])
+    }
+
+    func testPanContinuedWithOneFingerAfterMultiTouchStillDecelerates() {
+        // given: a pinch, then the remaining finger keeps panning
+        panWithTwoFingersThenLiftOne()
+        dateProvider.nowStub.defaultReturnValue += 1
+        gestureRecognizer.locationOfTouchStub.defaultReturnValue = CGPoint(x: 30, y: 30)
+        gestureRecognizer.sendActions()
+
+        // when: that finger is released while moving
+        gestureRecognizer.getStateStub.defaultReturnValue = .ended
+        gestureRecognizer.sendActions()
+
+        // then: it flings as a one-finger pan does
+        XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 1)
+    }
+
     func testMultiTouchPanUsesCentroidOfTouches() throws {
         // given
         let numberOfTouches = 678

@@ -294,8 +294,9 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                 mapWasLoaded.fulfill()
             }.store(in: &cancelables)
 
+            // Loading the map from the offline packs routinely takes 4.5-5s on CI.
             let expectations = [mapIsUsingDatabase, mapWasLoaded]
-            wait(for: expectations, timeout: 5.0, enforceOrder: true)
+            wait(for: expectations, timeout: 10.0, enforceOrder: true)
 
             cancelable.cancel()
 

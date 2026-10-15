@@ -100,6 +100,14 @@ try mapView.mapboxMap.setProjection(.albers(
 ### 💫️ Other
 * Breaking change: The base size of icons in the `text-field` property is now calculated at the tile zoom level with the largest text size. As a result, the icons can be smaller when the text size depends on the zoom level.
 
+## 11.32.2 - 15 October, 2026
+
+### Bug fixes 🐞
+* Fix a crash that could occur when multiple maps render simultaneously while displaying view annotations.
+* Fix view annotations flickering or jumping position when camera padding leaves insufficient room to fit them.
+* Fix stale layer geometry cache on readding view annotations
+* Fix view annotations stuck to stale cached layer's geometry
+
 ## 11.32.1 - 12 October, 2026
 
 ## 11.32.0 - 01 October, 2026

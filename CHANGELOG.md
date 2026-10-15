@@ -9,6 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 * Fix view annotations staying at wrong positions after rotating an iPad in windowed mode, until the next rotation or window resize.
+* Fix the map flinging toward the remaining finger when the fingers of a pinch are lifted a moment apart. A pan no longer decelerates if it ends within 0.3 s of a multi-touch pan losing a touch; continuing to pan with the remaining finger, and one-finger flings, are unchanged.
 
 ## 11.33.0-rc.1 - 05 October, 2026
 

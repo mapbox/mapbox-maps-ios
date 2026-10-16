@@ -2,17 +2,30 @@ import XCTest
 @testable @_spi(Experimental) import MapboxMaps
 
 internal class MapRecorderIntegrationTests: MapViewIntegrationTestCase {
+    private var playbackTimer: Timer?
+
+    override func tearDownWithError() throws {
+        // super removes the map view, which runs a pending fly completion that schedules the timer.
+        defer {
+            playbackTimer?.invalidate()
+            playbackTimer = nil
+        }
+        try super.tearDownWithError()
+    }
 
     func testReplayMapRecording() {
-        mapView.mapboxMap.styleURI = .standard
+        let styleLoaded = XCTestExpectation(description: "Style loaded")
         let mapRecordingExpectation = XCTestExpectation(description: "Wait for map recording replay to finish.")
 
-        didFinishLoadingStyle = { mapView in
+        didFinishLoadingStyle = { [weak self] mapView in
+            styleLoaded.fulfill()
             do {
                 let recorder = try mapView.mapboxMap.makeRecorder()
                 recorder.start()
 
-                mapView.camera.fly(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 1, longitude: 1)), duration: 3) { _ in
+                mapView.camera.fly(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 1, longitude: 1)), duration: 3) { position in
+                    // A fly cancelled by teardown must not start a replay on the dying map.
+                    guard position == .end else { return }
                     let mapRecordingSequence = recorder.stop()
 
                     XCTAssertNotNil(mapRecordingSequence)
@@ -24,7 +37,7 @@ internal class MapRecorderIntegrationTests: MapViewIntegrationTestCase {
                         mapRecordingExpectation.fulfill()
                     }
 
-                    Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
+                    self?.playbackTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
                         // Confirm map replay is playing
                         XCTAssertEqual(recorder.playbackState(), "playing")
                     }
@@ -34,6 +47,10 @@ internal class MapRecorderIntegrationTests: MapViewIntegrationTestCase {
             }
         }
 
+        mapView.mapboxMap.styleURI = .standard
+        // The Standard load time varies with the previous map's teardown, so it gets its own
+        // budget and the 10s covers only the 3s fly and the replay.
+        wait(for: [styleLoaded], timeout: 20)
         wait(for: [mapRecordingExpectation], timeout: 10.0)
     }
 
@@ -41,12 +58,14 @@ internal class MapRecorderIntegrationTests: MapViewIntegrationTestCase {
         mapView.mapboxMap.styleURI = .standard
         let mapRecordingExpectation = XCTestExpectation(description: "Wait for map recording replay to stop after pausing.")
 
-        didFinishLoadingStyle = { mapView in
+        didFinishLoadingStyle = { [weak self] mapView in
             do {
                 let recorder = try mapView.mapboxMap.makeRecorder()
                 recorder.start()
 
-                mapView.camera.fly(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 1, longitude: 1)), duration: 3) { _ in
+                mapView.camera.fly(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 1, longitude: 1)), duration: 3) { position in
+                    // A fly cancelled by teardown must not start a replay on the dying map.
+                    guard position == .end else { return }
                     let mapRecordingSequence = recorder.stop()
 
                     recorder.replay(recordedSequence: mapRecordingSequence) {
@@ -58,7 +77,7 @@ internal class MapRecorderIntegrationTests: MapViewIntegrationTestCase {
                     // Pause map recording replay
                     recorder.togglePauseReplay()
 
-                    Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
+                    self?.playbackTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
                         XCTAssertEqual(recorder.playbackState(), "paused")
                         // Restart map recording replay
                         recorder.togglePauseReplay()

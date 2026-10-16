@@ -9,6 +9,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 * Fix view annotations staying at wrong positions after rotating an iPad in windowed mode, until the next rotation or window resize.
+## 11.33.0 - 16 October, 2026
+
+### Bug fixes 🐞
+* Fix a crash that could occur when multiple maps render simultaneously while displaying view annotations.
+* Fix view annotations flickering or jumping position when camera padding leaves insufficient room to fit them.
 
 ## 11.33.0-rc.1 - 05 October, 2026
 

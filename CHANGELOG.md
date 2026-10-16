@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.33.0 - 16 October, 2026
+
+### Bug fixes 🐞
+* Fix a crash that could occur when multiple maps render simultaneously while displaying view annotations.
+* Fix view annotations flickering or jumping position when camera padding leaves insufficient room to fit them.
+
 ## 11.33.0-rc.1 - 05 October, 2026
 
 ### Features ✨ and improvements 🏁

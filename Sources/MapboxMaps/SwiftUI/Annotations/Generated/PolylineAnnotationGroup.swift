@@ -77,7 +77,6 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
         assign(manager, \.lineCap, value: lineCap)
         assign(manager, \.lineCrossSlope, value: lineCrossSlope)
         assign(manager, \.lineElevationGroundScale, value: lineElevationGroundScale)
-        assign(manager, \.lineElevationGroundScaleTransition, value: lineElevationGroundScaleTransition)
         assign(manager, \.lineElevationReference, value: lineElevationReference)
         assign(manager, \.lineJoin, value: lineJoin)
         assign(manager, \.lineMiterLimit, value: lineMiterLimit)
@@ -146,12 +145,6 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     @_spi(Experimental)
     public func lineCrossSlope(_ newValue: Double) -> Self {
         with(self, setter(\.lineCrossSlope, newValue))
-    }
-
-    private var lineElevationGroundScaleTransition: StyleTransition?
-    /// Transition property for `lineElevationGroundScale`
-    public func lineElevationGroundScaleTransition(_ transition: StyleTransition) -> Self {
-        with(self, setter(\.lineElevationGroundScaleTransition, transition))
     }
 
     private var lineElevationGroundScale: Double?
@@ -525,6 +518,10 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     public func slot(_ newValue: Slot?) -> Self {
         with(self, setter(\.slot, newValue?.rawValue))
     }
+
+    /// Transition property for `lineElevationGroundScale`
+    @available(*, deprecated, message: "Has no effect, line-elevation-ground-scale is a layout property and doesn't support transitions.")
+    public func lineElevationGroundScaleTransition(_ transition: StyleTransition) -> Self { return self }
 
     private var layerId: String?
 

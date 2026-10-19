@@ -640,7 +640,7 @@ IN THE SOFTWARE.
 
 ---
 
-### earcut.hpp,447fa4991e,ISC,Mapbox,https://github.com/mapbox/earcut.hpp
+### earcut.hpp,177bd66b53,ISC,Mapbox,https://github.com/mapbox/earcut.hpp
 
 ```
 ISC License

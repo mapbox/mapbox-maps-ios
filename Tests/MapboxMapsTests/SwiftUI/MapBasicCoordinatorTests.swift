@@ -193,6 +193,27 @@ final class MapBasicCoordinatorTests: XCTestCase {
         XCTAssertEqual(mapLoaded, observedMapLoaded)
     }
 
+    func testUpdateKeepsMapEventObservedAcrossUpdates() {
+        var observedChanges = [Bool]()
+        mapView.mapboxMap.events.onStyleLoaded.onObserved = { observedChanges.append($0) }
+        var calls = [String]()
+        func deps(_ tag: String) -> MapDependencies {
+            MapDependencies(eventsSubscriptions: [
+                AnyEventSubscription(keyPath: \.onStyleLoaded) { _ in calls.append(tag) }
+            ])
+        }
+
+        update(with: deps("first"))
+        update(with: deps("second"))
+        XCTAssertEqual(observedChanges, [true])
+
+        mapView.mapboxMap.events.onStyleLoaded.send(StyleLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date())))
+        XCTAssertEqual(calls, ["second"])
+
+        update(with: MapDependencies())
+        XCTAssertEqual(observedChanges, [true, false])
+    }
+
     func testResetToIdleViewport() {
         let state1 = MockViewportState()
         mapView.viewportManager.simulateViewportStatusDidChange(from: .state(state1), to: .idle, reason: .userInteraction)

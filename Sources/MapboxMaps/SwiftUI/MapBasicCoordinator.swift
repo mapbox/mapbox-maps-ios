@@ -102,33 +102,37 @@ final class MapBasicCoordinator {
         mapView.gestureManager.gestureHandlers = deps.gestureHandlers
         mapView.attributionMenu.filter = deps.attributionMenuFilter
 
-        shortLivedSubscriptions.removeAll()
+        // Replace old subscriptions only after new ones are made, so native event
+        // subscriptions stay alive and in-flight events aren't dropped.
+        var newSubscriptions = Set<AnyCancellable>()
 
         for subscription in deps.eventsSubscriptions {
-            subscription.observe(mapboxMap).store(in: &shortLivedSubscriptions)
+            subscription.observe(mapboxMap).store(in: &newSubscriptions)
         }
 
         for (layerId, action) in deps.onLayerTap {
             mapView.gestureManager.onLayerTap(layerId, handler: action)
-                .store(in: &shortLivedSubscriptions)
+                .store(in: &newSubscriptions)
         }
 
         for (layerId, action) in deps.onLayerLongPress {
             mapView.gestureManager.onLayerLongPress(layerId, handler: action)
-                .store(in: &shortLivedSubscriptions)
+                .store(in: &newSubscriptions)
         }
 
         if let onMapTap = deps.onMapTap {
             mapView.gestureManager.onMapTap
                 .observe(onMapTap)
-                .store(in: &shortLivedSubscriptions)
+                .store(in: &newSubscriptions)
         }
 
         if let onMapLongPress = deps.onMapLongPress {
             mapView.gestureManager.onMapLongPress
                 .observe(onMapLongPress)
-                .store(in: &shortLivedSubscriptions)
+                .store(in: &newSubscriptions)
         }
+
+        shortLivedSubscriptions = newSubscriptions
 
         performanceStatisticsState.update(with: deps.performanceStatisticsParameters)
     }

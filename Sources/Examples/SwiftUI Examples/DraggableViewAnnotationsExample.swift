@@ -102,18 +102,6 @@ struct DraggableViewAnnotationsExample: View {
     }
 }
 
-private extension Viewport {
-    static func camera(_ options: CameraOptions) -> Viewport {
-        .camera(
-            center: options.center,
-            anchor: options.anchor,
-            zoom: options.zoom,
-            bearing: options.bearing,
-            pitch: options.pitch
-        )
-    }
-}
-
 // MARK: - Helper Views
 
 private struct CustomPinView: View {

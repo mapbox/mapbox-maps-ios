@@ -5,6 +5,7 @@ struct UseCases {
     static let all: [Examples.Category] = [
         Examples.Category("Interactive Mapping") {
             Example("Pin Powered Map", note: "Interactive icons that drive engagement and revenue.", destination: ContentView())
+            Example("Interactive Draggable Pin", note: "Move a pin to measure distance, with lift, tilt and landing animations.", destination: InteractiveDraggablePinContentView())
         },
         Examples.Category("Data Visualization") {
             Example("Weather Radar", note: "Interactive weather visualization with timeline controls.", destination: RadarContentView())

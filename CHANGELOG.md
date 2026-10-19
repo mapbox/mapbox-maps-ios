@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.32.3 - 19 October, 2026
+
+### Bug fixes 🐞
+* Fix a crash that could occur when a raster-array source reports a missing icon after its last requestor is removed.
+
 ## 11.32.2 - 15 October, 2026
 
 ### Bug fixes 🐞

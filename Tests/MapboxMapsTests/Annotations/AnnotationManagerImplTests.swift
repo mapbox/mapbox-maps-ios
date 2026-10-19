@@ -529,6 +529,7 @@ final class AnnotationManagerImplTests: XCTestCase {
         XCTAssertEqual(circleLayer.circleRadius, testCircleRadius)
         XCTAssertEqual(clusterOptions.circleColor, testCircleColor)
         XCTAssertEqual(circleLayer.circleColor, testCircleColor)
+        XCTAssertEqual(circleLayer.circleEmissiveStrength, .constant(1))
         XCTAssertEqual(circleLayer.filter, Exp(.has) { "point_count" })
         XCTAssertEqual(circleLayer.id, "mapbox-iOS-cluster-circle-layer-manager-" + id)
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)

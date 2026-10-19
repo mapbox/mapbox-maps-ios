@@ -184,6 +184,7 @@ final class AnnotationManagerImpl<AnnotationType: Annotation & AnnotationInterna
         var circleLayer = CircleLayer(id: layedID, source: id)
         circleLayer.circleColor = clusterOptions.circleColor
         circleLayer.circleRadius = clusterOptions.circleRadius
+        circleLayer.circleEmissiveStrength = .constant(1)
         circleLayer.filter = Exp(.has) { "point_count" }
         return circleLayer
     }

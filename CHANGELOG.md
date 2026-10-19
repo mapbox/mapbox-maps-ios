@@ -10,6 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 ### Bug fixes 🐞
 * Fix SwiftUI `Map` sometimes not calling `onStyleLoaded`, `onMapLoaded` and other event handlers when the view updates while the map is loading. ([#2406](https://github.com/mapbox/mapbox-maps-ios/issues/2406))
 * Fix view annotations staying at wrong positions after rotating an iPad in windowed mode, until the next rotation or window resize.
+* Fix annotation cluster circles rendering black with the Standard style `night` light preset. Cluster circle layers now set `circle-emissive-strength` to `1`, so `ClusterOptions.circleColor` is no longer darkened by the basemap lighting.
 
 ## 11.33.0 - 16 October, 2026
 

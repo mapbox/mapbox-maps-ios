@@ -4,11 +4,26 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.34.0-rc.1 - 19 October, 2026
+
 ### Features ✨ and improvements 🏁
 * Collision boxes of a `ViewAnnotation` now follow the view at runtime: marking a subview with the experimental `UIView.mbxViewAnnotationCollisionBox` (`View.mbxViewAnnotationCollisionBox()` in SwiftUI) after the annotation is added, moving it, hiding it or removing the last marked one reaches the map. Marked views inside a hidden subtree no longer collide.
+* Add `evictAllConnections()` to the HTTP service to forcefully flush idle network connections.
+* Add a method to force-flush idle HTTP connections, allowing subsequent requests to establish fresh sockets.
 
 ### Bug fixes 🐞
 * Fix view annotations staying at wrong positions after rotating an iPad in windowed mode, until the next rotation or window resize.
+* Fix a crash that could occur when a raster-array source reports a missing icon after its last requestor is removed.
+* Fix some cases where paint properties were not updated correctly, including during SD/HD transitions, use-theme changes, and symbol/line feature state updates.
+* Fix a sudden camera jump at the end of long flyTo camera animations.
+* Fix shadow rendering not updating on fill extrusion layers when GeoJSON data changes.
+* Fix stale layer geometry cache on readding view annotations
+* Align with gl-js on keeping tile-order for rendered features with equal layer sort-keys
+* Fixed wrong symbol position for placement and queryRenderedFeatures after symbol-z-offset property update
+
+### 💫️ Other
+* Update feature state API documentation comments for accuracy.
+
 ## 11.33.0 - 16 October, 2026
 
 ### Bug fixes 🐞

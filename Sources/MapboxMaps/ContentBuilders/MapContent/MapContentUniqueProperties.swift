@@ -141,8 +141,8 @@ private extension MapContentUniqueProperties.Lights {
             os_log(.debug, log: .contentDSL, "re-set initial flat lights")
             try style.setLights(initialFlat)
         } else {
-            os_log(.debug, log: .contentDSL, "remove lights")
-            try handleExpected { style.setStyleLightsForLights(NSNull()) }
+            os_log(.debug, log: .contentDSL, "reset lights")
+            try style.resetLights()
         }
     }
 }

@@ -1270,6 +1270,11 @@ public class StyleManager {
         try styleManager.setLights(ambient: ambientLight, directional: directionalLight)
     }
 
+    /// Resets ambient and directional lights to the style's own (none if it has none); a flat light is kept.
+    func resetLights() throws {
+        try styleManager.resetLights()
+    }
+
     /// Sets the value of a style light property in lights list.
     ///
     /// - Parameter lightId: The unique identifier of the style light in lights list.
@@ -1929,6 +1934,16 @@ extension StyleManager {
         if expected.isError() {
             throw StyleError(message: expected.error as String)
         }
+    }
+
+    /// Gets the value of a style snow property.
+    func snowProperty(_ property: String) -> StylePropertyValue {
+        StylePropertyValue.Marshaller.toSwift(styleManager.getStyleSnowProperty(forProperty: property))
+    }
+
+    /// Gets the value of a style rain property.
+    func rainProperty(_ property: String) -> StylePropertyValue {
+        StylePropertyValue.Marshaller.toSwift(styleManager.getStyleRainProperty(forProperty: property))
     }
 
     /// Set color theme for style.

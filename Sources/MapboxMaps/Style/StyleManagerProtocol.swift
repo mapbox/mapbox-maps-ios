@@ -230,6 +230,15 @@ internal protocol StyleManagerProtocol {
     func setImportColorThemeForImportId(_ importId: String, colorTheme: CoreColorTheme?) -> Expected<NSNull, NSString>
 }
 
+extension StyleManagerProtocol {
+    /// Resets ambient and directional lights to the style's own (none if it has none); a flat light is kept.
+    func resetLights() throws {
+        try handleExpected {
+            setStyleLightsForLights(NSNull())
+        }
+    }
+}
+
 // MARK: Conformance
 
 extension CoreStyleManager: StyleManagerProtocol {

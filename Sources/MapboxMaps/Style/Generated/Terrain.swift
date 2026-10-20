@@ -18,7 +18,7 @@ public struct Terrain: Codable, Equatable, StyleEncodable {
     /// Default value: 1. Value range: [0, 1000]
     public var exaggeration: Value<Double>?
 
-    /// Transition options for exaggeration
+    /// Transition options for ``exaggeration``
     public var exaggerationTransition: StyleTransition?
 
     enum CodingKeys: String, CodingKey {

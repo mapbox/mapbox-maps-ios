@@ -1,4 +1,5 @@
-// This file is generated.
+// This file is generated. Do not edit.
+
 import UIKit
 
 /// An indirect light affecting all objects in the map adding a constant amount of light on them. It has no explicit direction and cannot cast shadows.
@@ -16,18 +17,21 @@ public struct AmbientLight: Codable, StyleEncodable, Equatable {
     /// Default value: "#ffffff".
     public var color: Value<StyleColor>?
 
-    /// Transition property for `color`
+    /// Transition options for ``color``
     public var colorTransition: StyleTransition?
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    @_spi(Experimental) public var colorUseTheme: Value<ColorUseTheme>?
+    /// - Note: Expressions set to this property currently don't work.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var colorUseTheme: Value<ColorUseTheme>?
 
     /// A multiplier for the color of the ambient light.
     /// Default value: 0.5. Value range: [0, 1]
     public var intensity: Value<Double>?
 
-    /// Transition property for `intensity`
+    /// Transition options for ``intensity``
     public var intensityTransition: StyleTransition?
 
     /// Creates a new Ambient light.
@@ -70,10 +74,10 @@ public struct AmbientLight: Codable, StyleEncodable, Equatable {
     enum PropertiesCodingKeys: String, CodingKey {
         case color = "color"
         case colorTransition = "color-transition"
-         case colorUseTheme = "color-use-theme"
-         case intensity = "intensity"
+        case colorUseTheme = "color-use-theme"
+        case intensity = "intensity"
         case intensityTransition = "intensity-transition"
-      }
+    }
 }
 
 extension AmbientLight {
@@ -132,6 +136,7 @@ extension AmbientLight {
     public func intensity(_ expression: Exp) -> Self {
         with(self, setter(\.intensity, .expression(expression)))
     }
+
 }
 
 extension AmbientLight: MapStyleContent, PrimitiveMapContent {
@@ -139,4 +144,5 @@ extension AmbientLight: MapStyleContent, PrimitiveMapContent {
         node.mount(MountedUniqueProperty(keyPath: \.lights.ambient, value: self))
     }
 }
+
 // End of generated file.

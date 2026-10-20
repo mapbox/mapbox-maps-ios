@@ -4,28 +4,70 @@ import XCTest
 
 final class AmbientLightTests: XCTestCase {
 
-    func testLightEncodingAndDecoding() throws {
-        let lightID = UUID().uuidString
-        var light = AmbientLight(id: lightID)
-        light.color = Value<StyleColor>.testConstantValue()
-        light.colorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-         light.colorUseTheme = .testConstantValue()
-         light.intensity = Value<Double>.testConstantValue()
-        light.intensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-  
-        let data = try JSONEncoder().encode(light)
-        XCTAssertFalse(data.isEmpty)
+    func testAmbientLightProperties() {
+        var instance = AmbientLight()
+        instance.color = .testConstantValue()
+        instance.colorTransition = .testConstantValue()
+        instance.colorUseTheme = .testConstantValue()
+        instance.intensity = .testConstantValue()
+        instance.intensityTransition = .testConstantValue()
 
-        let decodedLight = try JSONDecoder().decode(AmbientLight.self, from: data)
+        XCTAssertEqual(instance.color, .testConstantValue())
+        XCTAssertEqual(instance.colorTransition, .testConstantValue())
+        XCTAssertEqual(instance.colorUseTheme, .testConstantValue())
+        XCTAssertEqual(instance.intensity, .testConstantValue())
+        XCTAssertEqual(instance.intensityTransition, .testConstantValue())
+    }
 
-        XCTAssertEqual(decodedLight.id, lightID)
-        XCTAssertEqual(decodedLight.color, Value<StyleColor>.testConstantValue())
-        XCTAssertEqual(decodedLight.colorTransition?.duration, 10)
-        XCTAssertEqual(decodedLight.colorTransition?.delay, 10)
-        XCTAssertEqual(decodedLight.colorUseTheme, .testConstantValue())
-        XCTAssertEqual(decodedLight.intensity, Value<Double>.testConstantValue())
-        XCTAssertEqual(decodedLight.intensityTransition?.duration, 10)
-        XCTAssertEqual(decodedLight.intensityTransition?.delay, 10)
+    func testAmbientLightSetters() {
+        let instance = AmbientLight()
+            .color(StyleColor.testConstantValue())
+            .colorTransition(.testConstantValue())
+            .colorUseTheme(.none)
+            .intensity(Double.testConstantValue())
+            .intensityTransition(.testConstantValue())
+
+        XCTAssertEqual(instance.color, Value.constant(StyleColor.testConstantValue()))
+        XCTAssertEqual(instance.colorTransition, .testConstantValue())
+        XCTAssertEqual(instance.colorUseTheme, .testConstantValue())
+        XCTAssertEqual(instance.intensity, Value.constant(Double.testConstantValue()))
+        XCTAssertEqual(instance.intensityTransition, .testConstantValue())
+    }
+
+    func testAmbientLightPropertySerialization() throws {
+        var instance = AmbientLight()
+        instance.color = .testConstantValue()
+        instance.colorTransition = .testConstantValue()
+        instance.colorUseTheme = .testConstantValue()
+        instance.intensity = .testConstantValue()
+        instance.intensityTransition = .testConstantValue()
+
+        let data = try JSONEncoder().encode(instance)
+        let decodedInstance = try JSONDecoder().decode(AmbientLight.self, from: data)
+
+        XCTAssertEqual(decodedInstance.color, .testConstantValue())
+        XCTAssertEqual(decodedInstance.colorTransition, .testConstantValue())
+        XCTAssertEqual(decodedInstance.colorUseTheme, .testConstantValue())
+        XCTAssertEqual(decodedInstance.intensity, .testConstantValue())
+        XCTAssertEqual(decodedInstance.intensityTransition, .testConstantValue())
+    }
+
+    func testAmbientLightSettersSerialization() throws {
+        let instance = AmbientLight()
+            .color(StyleColor.testConstantValue())
+            .colorTransition(.testConstantValue())
+            .colorUseTheme(.none)
+            .intensity(Double.testConstantValue())
+            .intensityTransition(.testConstantValue())
+
+        let data = try JSONEncoder().encode(instance)
+        let decodedInstance = try JSONDecoder().decode(AmbientLight.self, from: data)
+
+        XCTAssertEqual(decodedInstance.color, Value.constant(StyleColor.testConstantValue()))
+        XCTAssertEqual(decodedInstance.colorTransition, .testConstantValue())
+        XCTAssertEqual(decodedInstance.colorUseTheme, .testConstantValue())
+        XCTAssertEqual(decodedInstance.intensity, Value.constant(Double.testConstantValue()))
+        XCTAssertEqual(decodedInstance.intensityTransition, .testConstantValue())
     }
 }
 

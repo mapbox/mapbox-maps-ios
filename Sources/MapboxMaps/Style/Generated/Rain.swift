@@ -1,6 +1,5 @@
 // This file is generated. Do not edit.
 
-import Foundation
 import UIKit
 
 /// Rain particles over the map
@@ -19,7 +18,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var centerThinning: Value<Double>?
 
-    /// Transition options for center-thinning
+    /// Transition options for ``centerThinning``
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var centerThinningTransition: StyleTransition?
@@ -30,7 +29,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var color: Value<StyleColor>?
 
-    /// Transition options for color
+    /// Transition options for ``color``
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var colorTransition: StyleTransition?
@@ -48,7 +47,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var density: Value<Double>?
 
-    /// Transition options for density
+    /// Transition options for ``density``
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var densityTransition: StyleTransition?
@@ -59,7 +58,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var direction: Value<[Double]>?
 
-    /// Transition options for direction
+    /// Transition options for ``direction``
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var directionTransition: StyleTransition?
@@ -70,7 +69,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var distortionStrength: Value<Double>?
 
-    /// Transition options for distortion-strength
+    /// Transition options for ``distortionStrength``
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var distortionStrengthTransition: StyleTransition?
@@ -81,7 +80,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var dropletSize: Value<[Double]>?
 
-    /// Transition options for droplet-size
+    /// Transition options for ``dropletSize``
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var dropletSizeTransition: StyleTransition?
@@ -92,7 +91,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var intensity: Value<Double>?
 
-    /// Transition options for intensity
+    /// Transition options for ``intensity``
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var intensityTransition: StyleTransition?
@@ -103,7 +102,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var opacity: Value<Double>?
 
-    /// Transition options for opacity
+    /// Transition options for ``opacity``
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var opacityTransition: StyleTransition?
@@ -114,7 +113,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var vignette: Value<Double>?
 
-    /// Transition options for vignette
+    /// Transition options for ``vignette``
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteTransition: StyleTransition?
@@ -125,7 +124,7 @@ public struct Rain: Codable, Equatable, StyleEncodable {
     @_spi(Experimental)
     public var vignetteColor: Value<StyleColor>?
 
-    /// Transition options for vignette-color
+    /// Transition options for ``vignetteColor``
     @_documentation(visibility: public)
     @_spi(Experimental)
     public var vignetteColorTransition: StyleTransition?

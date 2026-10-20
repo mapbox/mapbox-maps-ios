@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import XCTest
 @_spi(Experimental) @testable import MapboxMaps
 
 internal extension Double {
@@ -152,6 +153,100 @@ internal extension Array where Element == RasterArraySource.RasterDataLayer {
     static func testSourceValue() -> [RasterArraySource.RasterDataLayer] {
         return [.init(layerId: "test-layer-id", bands: ["band_0", "band_1"])]
     }
+}
+
+/// Value core stored for one style property. Compared after set, because the style converters
+/// ignore unknown keys and the set call still succeeds.
+enum CoreStyleProperty {
+    case color(StyleColor)
+    case number(Double)
+    case boolean(Bool)
+    case string(String)
+    case array([Double])
+    case transition(StyleTransition)
+}
+
+func assertCoreStoredStyleProperty(
+    _ property: String,
+    stored: StylePropertyValue,
+    equals expected: CoreStyleProperty,
+    file: StaticString = #file,
+    line: UInt = #line
+) {
+    XCTAssertNotEqual(
+        stored.kind,
+        .undefined,
+        "Core ignored style property \"\(property)\". Unknown keys are dropped without an error, so the stored value is \(stored.value).",
+        file: file,
+        line: line
+    )
+    guard stored.kind != .undefined else {
+        return
+    }
+
+    switch expected {
+    case .color(let expectedColor):
+        XCTAssertEqual(
+            jsonDecoded(StyleColor.self, from: stored.value),
+            expectedColor,
+            "style property \(property) came back as \(stored.value)",
+            file: file,
+            line: line
+        )
+    case .number(let expectedNumber):
+        XCTAssertEqual(
+            stored.value as? Double ?? .nan,
+            expectedNumber,
+            accuracy: 0.001,
+            "style property \(property) came back as \(stored.value)",
+            file: file,
+            line: line
+        )
+    case .boolean(let expectedBool):
+        XCTAssertEqual(
+            stored.value as? Bool,
+            expectedBool,
+            "style property \(property) came back as \(stored.value)",
+            file: file,
+            line: line
+        )
+    case .string(let expectedString):
+        XCTAssertEqual(
+            stored.value as? String,
+            expectedString,
+            "style property \(property) came back as \(stored.value)",
+            file: file,
+            line: line
+        )
+    case .array(let expectedValues):
+        let values = stored.value as? [Double]
+        XCTAssertEqual(
+            values?.count,
+            expectedValues.count,
+            "style property \(property) came back as \(stored.value)",
+            file: file,
+            line: line
+        )
+        for (actual, expectedValue) in zip(values ?? [], expectedValues) {
+            XCTAssertEqual(actual, expectedValue, accuracy: 0.001, "style property \(property)", file: file, line: line)
+        }
+    case .transition(let expectedTransition):
+        XCTAssertEqual(
+            jsonDecoded(StyleTransition.self, from: stored.value),
+            expectedTransition,
+            "style property \(property) came back as \(stored.value)",
+            file: file,
+            line: line
+        )
+    }
+}
+
+private func jsonDecoded<T: Decodable>(_ type: T.Type, from value: Any) -> T? {
+    guard JSONSerialization.isValidJSONObject(value),
+          let data = try? JSONSerialization.data(withJSONObject: value) else {
+        return nil
+    }
+    return try? JSONDecoder().decode(type, from: data)
 }
 
 internal extension String {

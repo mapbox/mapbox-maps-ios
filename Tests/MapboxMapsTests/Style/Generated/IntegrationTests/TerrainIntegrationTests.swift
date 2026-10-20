@@ -11,9 +11,6 @@ final class TerrainIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRemovedObjectExpectation = XCTestExpectation(description: "Successfully removed Terrain")
         successfullyRemovedObjectExpectation.expectedFulfillmentCount = 1
 
-        let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved TerrainLayer from Map")
-        successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
-
         mapView.mapboxMap.styleJSON = .testStyleJSON()
 
         didFinishLoadingStyle = { mapView in
@@ -26,8 +23,10 @@ final class TerrainIntegrationTests: MapViewIntegrationTestCase {
             do {
                 try mapView.mapboxMap.setTerrain(instance)
                 successfullyAddedObjectExpectation.fulfill()
+                assertCoreStoredStyleProperty("exaggeration", stored: mapView.mapboxMap.terrainProperty("exaggeration"), equals: .number(Double.testConstantValue()))
+                assertCoreStoredStyleProperty("exaggeration-transition", stored: mapView.mapboxMap.terrainProperty("exaggeration-transition"), equals: .transition(.testConstantValue()))
             } catch {
-                XCTFail("Failed to add TerrainLayer because of error: \(error)")
+                XCTFail("Failed to add Terrain because of error: \(error)")
             }
 
             // Remove the Terrain
@@ -35,7 +34,7 @@ final class TerrainIntegrationTests: MapViewIntegrationTestCase {
                 try mapView.mapboxMap.removeTerrain()
                 successfullyRemovedObjectExpectation.fulfill()
             } catch {
-                XCTFail("Failed to remove TerrainLayer because of error: \(error)")
+                XCTFail("Failed to remove Terrain because of error: \(error)")
             }
         }
 

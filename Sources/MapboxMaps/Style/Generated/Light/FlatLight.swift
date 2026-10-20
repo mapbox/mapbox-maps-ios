@@ -1,4 +1,5 @@
-// This file is generated.
+// This file is generated. Do not edit.
+
 import UIKit
 
 /// A global directional light source which is only applied on 3D and hillshade layers. Using this type disables other light sources.
@@ -20,25 +21,28 @@ public struct FlatLight: Codable, StyleEncodable, Equatable {
     /// Default value: "#ffffff".
     public var color: Value<StyleColor>?
 
-    /// Transition property for `color`
+    /// Transition options for ``color``
     public var colorTransition: StyleTransition?
 
     /// This property defines whether to use colorTheme defined color or not.
     /// By default it will use color defined by the root theme in the style.
-    @_spi(Experimental) public var colorUseTheme: Value<ColorUseTheme>?
+    /// - Note: Expressions set to this property currently don't work.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var colorUseTheme: Value<ColorUseTheme>?
 
     /// Intensity of lighting (on a scale from 0 to 1). Higher numbers will present as more extreme contrast.
     /// Default value: 0.5. Value range: [0, 1]
     public var intensity: Value<Double>?
 
-    /// Transition property for `intensity`
+    /// Transition options for ``intensity``
     public var intensityTransition: StyleTransition?
 
     /// Position of the light source relative to lit (extruded) geometries, in [r radial coordinate, a azimuthal angle, p polar angle] where r indicates the distance from the center of the base of an object to its light, a indicates the position of the light relative to 0 degree (0 degree when `light.anchor` is set to `viewport` corresponds to the top of the viewport, or 0 degree when `light.anchor` is set to `map` corresponds to due north, and degrees proceed clockwise), and p indicates the height of the light (from 0 degree, directly above, to 180 degree, directly below).
     /// Default value: [1.15,210,30].
     public var position: Value<[Double]>?
 
-    /// Transition property for `position`
+    /// Transition options for ``position``
     public var positionTransition: StyleTransition?
 
     /// Creates a new Flat light.
@@ -86,14 +90,14 @@ public struct FlatLight: Codable, StyleEncodable, Equatable {
 
     enum PropertiesCodingKeys: String, CodingKey {
         case anchor = "anchor"
-          case color = "color"
+        case color = "color"
         case colorTransition = "color-transition"
-         case colorUseTheme = "color-use-theme"
-         case intensity = "intensity"
+        case colorUseTheme = "color-use-theme"
+        case intensity = "intensity"
         case intensityTransition = "intensity-transition"
-          case position = "position"
+        case position = "position"
         case positionTransition = "position-transition"
-      }
+    }
 }
 
 extension FlatLight {
@@ -181,6 +185,7 @@ extension FlatLight {
     public func position(_ expression: Exp) -> Self {
         with(self, setter(\.position, .expression(expression)))
     }
+
 }
 
 extension FlatLight: MapStyleContent, PrimitiveMapContent {
@@ -188,4 +193,5 @@ extension FlatLight: MapStyleContent, PrimitiveMapContent {
         node.mount(MountedUniqueProperty(keyPath: \.lights.flat, value: self))
     }
 }
+
 // End of generated file.

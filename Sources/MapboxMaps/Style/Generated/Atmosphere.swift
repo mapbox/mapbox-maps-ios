@@ -1,6 +1,5 @@
 // This file is generated. Do not edit.
 
-import Foundation
 import UIKit
 
 /// A global effect that fades layers and markers based on their distance to the camera. The fog can be used to approximate the effect of atmosphere on distant objects and enhance the depth perception of the map when used with terrain or 3D features. Note: fog is renamed to atmosphere in the Android and iOS SDKs and planned to be changed in GL-JS v.3.0.0.
@@ -15,7 +14,7 @@ public struct Atmosphere: Codable, Equatable, StyleEncodable {
     /// Default value: "#ffffff".
     public var color: Value<StyleColor>?
 
-    /// Transition options for color
+    /// Transition options for ``color``
     public var colorTransition: StyleTransition?
 
     /// This property defines whether to use colorTheme defined color or not.
@@ -29,7 +28,7 @@ public struct Atmosphere: Codable, Equatable, StyleEncodable {
     /// Default value: "#245cdf".
     public var highColor: Value<StyleColor>?
 
-    /// Transition options for high-color
+    /// Transition options for ``highColor``
     public var highColorTransition: StyleTransition?
 
     /// This property defines whether to use colorTheme defined color or not.
@@ -43,21 +42,21 @@ public struct Atmosphere: Codable, Equatable, StyleEncodable {
     /// Default value: "["interpolate",["linear"],["zoom"],4,0.2,7,0.1]". Value range: [0, 1]
     public var horizonBlend: Value<Double>?
 
-    /// Transition options for horizon-blend
+    /// Transition options for ``horizonBlend``
     public var horizonBlendTransition: StyleTransition?
 
     /// The start and end distance range in which fog fades from fully transparent to fully opaque. The distance to the point at the center of the map is defined as zero, so that negative range values are closer to the camera, and positive values are farther away.
     /// Default value: [0.5,10]. Value range: [-20, 20]
     public var range: Value<[Double]>?
 
-    /// Transition options for range
+    /// Transition options for ``range``
     public var rangeTransition: StyleTransition?
 
     /// The color of the region above the horizon and after the end of the `horizon-blend` contribution. The opacity can be set to `0` to have a transparent background.
     /// Default value: "["interpolate",["linear"],["zoom"],4,"#010b19",7,"#367ab9"]".
     public var spaceColor: Value<StyleColor>?
 
-    /// Transition options for space-color
+    /// Transition options for ``spaceColor``
     public var spaceColorTransition: StyleTransition?
 
     /// This property defines whether to use colorTheme defined color or not.
@@ -71,14 +70,14 @@ public struct Atmosphere: Codable, Equatable, StyleEncodable {
     /// Default value: "["interpolate",["linear"],["zoom"],5,0.35,6,0]". Value range: [0, 1]
     public var starIntensity: Value<Double>?
 
-    /// Transition options for star-intensity
+    /// Transition options for ``starIntensity``
     public var starIntensityTransition: StyleTransition?
 
     /// An array of two number values, specifying the vertical range over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
     /// Default value: [0,0]. Minimum value: 0. The unit of verticalRange is in meters.
     public var verticalRange: Value<[Double]>?
 
-    /// Transition options for vertical-range
+    /// Transition options for ``verticalRange``
     public var verticalRangeTransition: StyleTransition?
 
     enum CodingKeys: String, CodingKey {

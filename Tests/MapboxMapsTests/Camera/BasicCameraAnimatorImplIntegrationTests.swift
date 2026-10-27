@@ -11,7 +11,7 @@ final class BasicCameraAnimatorImplIntegrationTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        window = UIWindow()
+        window = UIWindow.makeForTests()
         cameraView = CameraView()
         window.addSubview(cameraView)
         window.makeKeyAndVisible()

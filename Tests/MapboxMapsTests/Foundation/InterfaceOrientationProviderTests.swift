@@ -38,7 +38,7 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
         device.$orientation.getStub.defaultReturnValue = deviceOrientation
 
         let view = UIView()
-        let window = UIWindow()
+        let window = UIWindow.makeForTests()
         let viewController = UIViewController()
         viewController.view.addSubview(view)
         userInterfaceOrientationView = view

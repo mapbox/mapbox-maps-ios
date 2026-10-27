@@ -41,7 +41,7 @@ final class MapViewTests: XCTestCase {
         dependencyProvider.makeCameraAnimatorsRunnerStub.defaultReturnValue = cameraAnimatorsRunner
         attributionURLOpener = MockAttributionURLOpener()
         mapView = buildMapView()
-        window = UIWindow()
+        window = UIWindow.makeForTests()
         window.addSubview(mapView)
 
         metalView = try XCTUnwrap(dependencyProvider.makeMetalViewStub.invocations.first?.returnValue)
@@ -278,7 +278,7 @@ final class MapViewTests: XCTestCase {
     func testDisplayLinkNotPausedWhenDidMoveToWindowIfAppStateProviderIsNil() {
         // given
         mapView = buildMapView(useApplicationState: false)
-        window = UIWindow()
+        window = UIWindow.makeForTests()
         window.addSubview(mapView)
 
         // when
@@ -381,7 +381,7 @@ final class MapViewTestsWithScene: XCTestCase {
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
             urlOpener: attributionURLOpener)
-        window = UIWindow()
+        window = UIWindow.makeForTests()
         window.addSubview(mapView)
 
         metalView = try XCTUnwrap(dependencyProvider.makeMetalViewStub.invocations.first?.returnValue)

@@ -768,7 +768,7 @@ final class MapContentReconcilerTests: XCTestCase {
         let addedOptions = try XCTUnwrap(map.addViewAnnotationStub.invocations.last).parameters.options
         XCTAssertNil(addedOptions.collisionBoxes)
 
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+        let window = UIWindow.makeForTests(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
         let rootViewController = UIViewController()
         window.rootViewController = rootViewController
         rootViewController.view.addSubview(annotation.view)

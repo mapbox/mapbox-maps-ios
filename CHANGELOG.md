@@ -80,6 +80,8 @@ try mapView.mapboxMap.setProjection(.albers(
 * Fix view annotations staying at wrong positions after rotating an iPad in windowed mode, until the next rotation or window resize.
 * Fix annotation cluster circles rendering black with the Standard style `night` light preset. Cluster circle layers now set `circle-emissive-strength` to `1`, so `ClusterOptions.circleColor` is no longer darkened by the basemap lighting.
 
+## 11.33.1 - 27 October, 2026
+
 ## 11.33.0 - 16 October, 2026
 
 ### Bug fixes 🐞

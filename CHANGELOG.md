@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.34.1 - 29 October, 2026
+
+### Bug fixes 🐞
+* Fix a crash in the offline manager when loading a style pack.
+
 ## 11.34.0-rc.1 - 19 October, 2026
 
 ### Features ✨ and improvements 🏁

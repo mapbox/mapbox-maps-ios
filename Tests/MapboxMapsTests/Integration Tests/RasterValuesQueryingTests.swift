@@ -53,50 +53,53 @@ final class RasterValuesQueryingTests: MapViewIntegrationTestCase {
         }
         """))
 
-        didLoadMap = { mapView in
+        // The raster-array tiles come from the network: wait for the load separately from the queries.
+        let mapLoadedExpectation = expectation(description: "Map loaded")
+        didLoadMap = { _ in mapLoadedExpectation.fulfill() }
+        wait(for: [mapLoadedExpectation], timeout: mapLoadTimeout)
+        didLoadMap = nil
 
-            XCTAssertTrue(mapView.mapboxMap.layerExists(withId: "precipitations"))
-            XCTAssertTrue(mapView.mapboxMap.sourceExists(withId: "precipitations"))
+        XCTAssertTrue(mapView.mapboxMap.layerExists(withId: "precipitations"))
+        XCTAssertTrue(mapView.mapboxMap.sourceExists(withId: "precipitations"))
 
-            // Test 1: Filter for specific layer "precipitations"
-            let options1 = RenderedRasterQueryOptions(layers: ["precipitations"])
-            mapView.mapboxMap.queryRenderedRasterValues(
-                for: mapView.center,
-                options: options1
-            ) { result in
-                switch result {
-                case .success(let queried):
-                    XCTAssertNoThrow {
-                        let values = try XCTUnwrap(queried.layers["precipitations"])
-                        XCTAssertEqual(values.count, 1)
-                        XCTAssertEqual(values[0].doubleValue, 1.401490136981, accuracy: 0.001)
-                    }
-                    queryExpectation1.fulfill()
-                case .failure(let error):
-                    XCTFail("Precipitation raster query should succeed: \(error)")
+        // Test 1: Filter for specific layer "precipitations"
+        let options1 = RenderedRasterQueryOptions(layers: ["precipitations"])
+        mapView.mapboxMap.queryRenderedRasterValues(
+            for: mapView.center,
+            options: options1
+        ) { result in
+            switch result {
+            case .success(let queried):
+                XCTAssertNoThrow {
+                    let values = try XCTUnwrap(queried.layers["precipitations"])
+                    XCTAssertEqual(values.count, 1)
+                    XCTAssertEqual(values[0].doubleValue, 1.401490136981, accuracy: 0.001)
                 }
-            }
-
-            // Test 2: Empty filter array (treat as no filter)
-            let options2 = RenderedRasterQueryOptions(layers: [])
-            mapView.mapboxMap.queryRenderedRasterValues(
-                for: mapView.center,
-                options: options2
-            ) { result in
-                switch result {
-                case .success(let queried):
-                    XCTAssertNoThrow {
-                        let values = try XCTUnwrap(queried.layers["precipitations"])
-                        XCTAssertEqual(values.count, 1)
-                        XCTAssertEqual(values[0].doubleValue, 1.401490136981, accuracy: 0.001)
-                    }
-                    queryExpectation2.fulfill()
-                case .failure(let error):
-                    XCTFail("Precipitation raster query should succeed: \(error)")
-                }
+                queryExpectation1.fulfill()
+            case .failure(let error):
+                XCTFail("Precipitation raster query should succeed: \(error)")
             }
         }
 
-        wait(for: [queryExpectation1, queryExpectation2], timeout: 10.0)
+        // Test 2: Empty filter array (treat as no filter)
+        let options2 = RenderedRasterQueryOptions(layers: [])
+        mapView.mapboxMap.queryRenderedRasterValues(
+            for: mapView.center,
+            options: options2
+        ) { result in
+            switch result {
+            case .success(let queried):
+                XCTAssertNoThrow {
+                    let values = try XCTUnwrap(queried.layers["precipitations"])
+                    XCTAssertEqual(values.count, 1)
+                    XCTAssertEqual(values[0].doubleValue, 1.401490136981, accuracy: 0.001)
+                }
+                queryExpectation2.fulfill()
+            case .failure(let error):
+                XCTFail("Precipitation raster query should succeed: \(error)")
+            }
+        }
+
+        wait(for: [queryExpectation1, queryExpectation2], timeout: 5.0)
     }
 }

@@ -10,6 +10,13 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal var didBecomeIdle: ((MapView) -> Void)?
     internal var didLoadMap: ((MapView) -> Void)?
 
+    /// Budget for a network-bound style and tile load; waits for the logic under test stay short.
+    internal let mapLoadTimeout: TimeInterval = 30.0
+
+    /// Map events since the map view was created, appended to every failure message.
+    private var eventTimeline: [String] = []
+    private var timelineStart = Date()
+
     internal override func setUpWithError() throws {
         try guardForMetalDevice()
 
@@ -25,6 +32,8 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
 
         MapboxMapsOptions.dataPath = dataPathURL
         let mapInitOptions = MapInitOptions(styleURI: nil)
+        eventTimeline = []
+        timelineStart = Date()
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 
         view.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
@@ -41,6 +50,8 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
             guard let self = self, let mapView = self.mapView else { return }
             self.didLoadMap?(mapView)
         }.store(in: &cancelables)
+
+        observeTimeline(of: view)
 
         rootView.addSubview(view)
 
@@ -64,7 +75,10 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         mapView = nil
 
         let expectation = self.expectation(description: "Clear map data")
-        MapboxMapsOptions.clearData { _ in
+        let clearStart = Date()
+        MapboxMapsOptions.clearData { [weak self] error in
+            self?.log("clearData finished in \(Self.format(Date().timeIntervalSince(clearStart)))" +
+                      (error.map { ", error: \($0)" } ?? ""))
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 10.0)
@@ -74,5 +88,47 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         didLoadMap = nil
 
         try super.tearDownWithError()
+    }
+
+    // MARK: - Event timeline
+
+    private func observeTimeline(of view: MapView) {
+        let map: MapboxMap = view.mapboxMap
+        map.onStyleDataLoaded.observe { [weak self] event in
+            self?.log("styleDataLoaded(\(event.type))")
+        }.store(in: &cancelables)
+        map.onStyleLoaded.observe { [weak self] _ in
+            self?.log("styleLoaded")
+        }.store(in: &cancelables)
+        map.onMapLoaded.observe { [weak self] _ in
+            self?.log("mapLoaded")
+        }.store(in: &cancelables)
+        map.onMapIdle.observeNext { [weak self] _ in
+            self?.log("first mapIdle")
+        }.store(in: &cancelables)
+        map.onMapLoadingError.observe { [weak self] error in
+            self?.log("mapLoadingError(\(error.type)): \(error.message)")
+        }.store(in: &cancelables)
+        map.onResourceRequest.observe { [weak self] request in
+            guard let error = request.response?.error else { return }
+            self?.log("resourceRequestError(\(error.reason)): \(error.message) <\(request.request.url)>")
+        }.store(in: &cancelables)
+    }
+
+    private func log(_ message: String) {
+        eventTimeline.append("+\(Self.format(Date().timeIntervalSince(timelineStart))) \(message)")
+    }
+
+    private static func format(_ interval: TimeInterval) -> String {
+        String(format: "%.2fs", interval)
+    }
+
+    internal override func record(_ issue: XCTIssue) {
+        guard !eventTimeline.isEmpty else {
+            return super.record(issue)
+        }
+        var issue = issue
+        issue.compactDescription += " [map events: \(eventTimeline.joined(separator: "; "))]"
+        super.record(issue)
     }
 }

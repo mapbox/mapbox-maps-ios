@@ -2,15 +2,17 @@ import Foundation
 @testable import MapboxMaps
 
 final class MockNotificationCenter: NotificationCenterProtocol {
+    /// Observers are held weakly, as `NotificationCenter` does; a strong one keeps the observing
+    /// `MapView` alive past its test.
     struct AddObserverParams {
-        let observer: Any
+        private(set) weak var observer: AnyObject?
         let selector: Selector
         let name: NSNotification.Name?
         let object: Any?
     }
     let addObserverStub = Stub<AddObserverParams, Void>()
     func addObserver(_ observer: Any, selector aSelector: Selector, name aName: NSNotification.Name?, object anObject: Any?) {
-        addObserverStub.call(with: AddObserverParams(observer: observer, selector: aSelector, name: aName, object: anObject))
+        addObserverStub.call(with: AddObserverParams(observer: observer as AnyObject, selector: aSelector, name: aName, object: anObject))
     }
 
     func post(name aName: NSNotification.Name, object anObject: Any?) {
@@ -22,15 +24,15 @@ final class MockNotificationCenter: NotificationCenterProtocol {
     }
 
     struct RemoveObserverParams {
-        let observer: Any
+        private(set) weak var observer: AnyObject?
         let name: NSNotification.Name?
         let object: Any?
     }
     let removeObserverStub = Stub<RemoveObserverParams, Void>()
     func removeObserver(_ observer: Any) {
-        removeObserverStub.call(with: RemoveObserverParams(observer: observer, name: nil, object: nil))
+        removeObserverStub.call(with: RemoveObserverParams(observer: observer as AnyObject, name: nil, object: nil))
     }
     func removeObserver(_ observer: Any, name aName: NSNotification.Name?, object anObject: Any?) {
-        removeObserverStub.call(with: RemoveObserverParams(observer: observer, name: aName, object: anObject))
+        removeObserverStub.call(with: RemoveObserverParams(observer: observer as AnyObject, name: aName, object: anObject))
     }
 }

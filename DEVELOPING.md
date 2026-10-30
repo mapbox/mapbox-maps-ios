@@ -29,8 +29,7 @@ This project:
    `swiftlint` in the root of the repository.
 
 4. uses [Swift Package Manager](https://github.com/apple/swift-package-manager)
-   to manage dependencies for development. CocoaPods is supported for *consuming*
-   the SDK.
+   to manage dependencies for development.
 
 5. uses [Carthage](https://github.com/Carthage/Carthage) to manage binary dependencies that are automatically downloaded when running xcodegen.
 
@@ -69,7 +68,6 @@ In order to use the debug app, run the `DebugApp` scheme.
 * Open `Apps/Apps.xcworkspace` in Xcode and resolve dependencies. This updates
   a different `Package.resolved` file in the `Apps.workspace` bundle. Close that
   Xcode workspace.
-* Update the dependency versions in `MapboxMaps.podspec`
 * Update the dependency versions in `scripts/release/packager/versions.json`
 
 ## Running Unit Tests On Devices locally

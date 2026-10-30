@@ -8,7 +8,6 @@ Starting from version `11.2.0-beta.1` of Mapbox Maps, you can use the Mapbox Map
 
 ![Standard Style on visionOS](https://static-assets.mapbox.com/maps/ios/documentation/maps_vision_os_locations.png)
 
-- Note: Currently, visionOS is not supported in CocoaPods. Please use SPM or the binary [distribution](https://docs.mapbox.com/ios/maps/guides/install/) of MapboxMaps.
 
 ### Make use of Mapbox Maps on visionOS
 

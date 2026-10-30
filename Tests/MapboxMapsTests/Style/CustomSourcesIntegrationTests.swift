@@ -1,6 +1,7 @@
 import XCTest
 @_spi(Experimental) @testable import MapboxMaps
 
+/// Loads the local test style: the tests only need a loaded style to add a source to.
 final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
 
     func testCustomRasterSourceAdditionAndRemoval() {
@@ -10,7 +11,7 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved CustomRasterSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.styleURI = .standard
+        mapView.mapboxMap.styleJSON = .testStyleJSON()
 
         let rasterOptions = CustomRasterSourceOptions(
             clientCallback: CustomRasterSourceClient.fromCustomRasterSourceTileStatusChangedCallback { _, _ in }
@@ -52,7 +53,7 @@ final class CustomSourcesIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved CustomGeometrySource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.styleURI = .standard
+        mapView.mapboxMap.styleJSON = .testStyleJSON()
         let maxOverscaleFactorForParentTiles = UInt8(83)
 
         didFinishLoadingStyle = { mapView in

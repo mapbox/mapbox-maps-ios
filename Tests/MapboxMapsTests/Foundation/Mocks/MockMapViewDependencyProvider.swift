@@ -20,7 +20,8 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
 
     // MARK: - DispayLink
     struct MakeDisplayLinkParams {
-        var window: UIWindow
+        // Weak: the window owns the map view, which owns this provider.
+        private(set) weak var window: UIWindow?
         var target: Any
         var selector: Selector
     }

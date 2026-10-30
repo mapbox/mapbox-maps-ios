@@ -1,10 +1,11 @@
 import XCTest
 @testable import MapboxMaps
 
+/// Loads the local test style: the tests only need a loaded style to add a source to.
 internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testSetFeatureState() {
-        mapView.mapboxMap.styleURI = .streets
+        mapView.mapboxMap.styleJSON = .testStyleJSON()
         let featureStateExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and returned.")
         featureStateExpectation.assertForOverFulfill = true
 
@@ -42,7 +43,7 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testRemoveFeatureState() {
-        mapView.mapboxMap.styleURI = .streets
+        mapView.mapboxMap.styleJSON = .testStyleJSON()
         let featureStateRemovedExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and removed.")
         let featureStateKeptExpectation = XCTestExpectation(description: "Wait for feature state map to be kept.")
 
@@ -104,7 +105,7 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testResetFeatureStates() {
-        mapView.mapboxMap.styleURI = .streets
+        mapView.mapboxMap.styleJSON = .testStyleJSON()
         let featureStateRemovedExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and removed.")
         featureStateRemovedExpectation.expectedFulfillmentCount = 2
 

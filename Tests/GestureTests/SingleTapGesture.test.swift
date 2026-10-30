@@ -4,6 +4,9 @@ import Hammer
 
 final class SingleTapGestureTestCase: GestureTestCase {
 
+    /// Time for the Standard style to load and the map to go idle before the tap.
+    private let mapSetupTimeout: TimeInterval = 30
+
     func testIdleEventNotEmittedAfterSingleTap() async throws {
         mapView.mapboxMap.loadStyle(.standard)
 
@@ -22,7 +25,7 @@ final class SingleTapGestureTestCase: GestureTestCase {
             wait(for: [expectation], timeout: 5)
         }
 
-        await fulfillment(of: [setupExpectation], timeout: 10)
+        await fulfillment(of: [setupExpectation], timeout: mapSetupTimeout)
     }
 
     /// Regression test for the SwiftUI `Map.onMapTapGesture` firing when a user taps
@@ -77,7 +80,7 @@ final class SingleTapGestureTestCase: GestureTestCase {
             setupExpectation.fulfill()
         }
 
-        await fulfillment(of: [setupExpectation], timeout: 30)
+        await fulfillment(of: [setupExpectation], timeout: mapSetupTimeout)
     }
 
     /// Sanity check: tapping the bare map (no annotation in the way) still fires `onMapTap`.
@@ -102,6 +105,6 @@ final class SingleTapGestureTestCase: GestureTestCase {
             setupExpectation.fulfill()
         }
 
-        await fulfillment(of: [setupExpectation], timeout: 30)
+        await fulfillment(of: [setupExpectation], timeout: mapSetupTimeout)
     }
 }

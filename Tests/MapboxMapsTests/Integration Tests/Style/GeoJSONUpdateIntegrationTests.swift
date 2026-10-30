@@ -7,19 +7,18 @@ class GeoJSONUpdateIntegrationTests: MapViewIntegrationTestCase {
     static let initialDataId = "add_geojson_source"
 
     var initialFeatures: [Feature]!
-    var parameter: TestParameters! {
-        didSet {
-            guard let parameter else { return }
-            operationalFeatures = .testConstantValue(size: parameter.operationalFeatureSize, isInitial: parameter.command != .add)
-        }
-    }
+    // Looked up by test name: XCTest re-creates a retried test case by selector, losing stored state.
+    var parameter: TestParameters!
     var sourceLoadedToken: Cancelable?
     private var operationalFeatures: [Feature]!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
 
+        parameter = try XCTUnwrap(Self.parameters.first { name.hasSuffix(" \($0.testName)]") },
+                                  "Unrecognised parameterised test name: \(name)")
         initialFeatures = .testConstantValue(size: parameter.initialFeatureSize)
+        operationalFeatures = .testConstantValue(size: parameter.operationalFeatureSize, isInitial: parameter.command != .add)
 
         mapView.mapboxMap.styleURI = .streets
 
@@ -126,9 +125,7 @@ class GeoJSONUpdateIntegrationTests: MapViewIntegrationTestCase {
             let testSelector = Selector(parameter.testName)
             class_addMethod(self, testSelector, existingImpl, "v@:f")
 
-            let test = GeoJSONUpdateIntegrationTests(selector: testSelector)
-            test.parameter = parameter
-            newTestSuite.addTest(test)
+            newTestSuite.addTest(GeoJSONUpdateIntegrationTests(selector: testSelector))
         }
 
         return newTestSuite

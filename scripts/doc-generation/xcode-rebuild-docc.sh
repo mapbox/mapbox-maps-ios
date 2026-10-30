@@ -51,7 +51,16 @@ generateSymbolGraphs() {
 
         FRAMEWORK_PATH="$BUILT_PRODUCTS_DIR/$moduleName.framework"
 
+        # Parse the headers with Clang modules enabled, as Xcode's own docbuild does. Swift-generated
+        # `<Module>-Swift.h` headers import system frameworks via `@import` guarded by
+        # `__has_feature(objc_modules)`, so without modules any @objc Swift declaration that references a
+        # non-Foundation framework type (protocol conformance, superclass, enum) fails to parse.
+        # `-fmodule-name` keeps the framework's own `#import <Module/...>` lines textual so its symbols
+        # are extracted instead of being treated as an external module import.
         time xcrun --sdk "$SDK_NAME" clang -extract-api -x objective-c-header -o "$CLANG_OUTPUT_DIR/$moduleName.symbols.json" \
+            -fmodules \
+            -fmodules-cache-path="${MODULE_CACHE_DIR:-$TARGET_TEMP_DIR/ModuleCache}" \
+            -fmodule-name="$moduleName" \
             -I"${FRAMEWORK_PATH}/Headers" \
             "${FRAMEWORK_PATH}/Headers/"* \
             -F "${BUILT_PRODUCTS_DIR}" \

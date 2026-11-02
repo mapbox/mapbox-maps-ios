@@ -4,8 +4,34 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.35.0-rc.1 - 02 November, 2026
+
 ### Breaking changes ⚠️
 * CocoaPods distribution is no longer supported. New versions are available through Swift Package Manager or the direct download; previously released versions remain available on CocoaPods.
+
+### Features ✨ and improvements 🏁
+* Add support for WebP textures when loading 3D models.
+* Add `evictAllConnections()` to the HTTP service to forcefully flush idle network connections.
+* Add a method to force-flush idle HTTP connections, allowing subsequent requests to establish fresh sockets.
+
+### Bug fixes 🐞
+* Fix thin lines fading and flickering at high pitch.
+* Fix geofencing dwell events being scheduled twice, causing duplicate dwell notifications.
+* Fix a bug where point annotations jitter when zooming out
+* Fix a crash with coordinates outside valid range when a vector tile feature extends far outside its tile boundary.
+* Fix a thin unlit line in the fill-extrusion flood light at very sharp polygon corners.
+* Fix spurious "Slot missing" warnings and incorrect layer merging when moving a slot with child slots.
+* Fix a crash that could occur when a raster-array source reports a missing icon after its last requestor is removed.
+* Fix some cases where paint properties were not updated correctly, including during SD/HD transitions, use-theme changes, and symbol/line feature state updates.
+* Fix a sudden camera jump at the end of long flyTo camera animations.
+* Fix shadow rendering not updating on fill extrusion layers when GeoJSON data changes.
+* Fix stale layer geometry cache on readding view annotations
+* Align with gl-js on keeping tile-order for rendered features with equal layer sort-keys
+* Fixed wrong symbol position for placement and queryRenderedFeatures after symbol-z-offset property update
+
+### 💫️ Other
+* Count crashes, hangs and CPU exceptions in Mapbox code with MetricKit, and send the counts with telemetry (best effort, the telemetry opt-out applies). The privacy manifest now declares `NSPrivacyCollectedDataTypeCrashData`, so the App Store privacy report of apps that use Mapbox SDKs changes.
+* Update feature state API documentation comments for accuracy.
 
 ## 11.34.1 - 29 October, 2026
 

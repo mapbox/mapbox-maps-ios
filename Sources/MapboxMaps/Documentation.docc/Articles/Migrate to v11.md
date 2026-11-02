@@ -352,7 +352,7 @@ let headingProvider = CustomHeadingProvider()
 mapView.location.override(locationProvider: locationProvider, headingProvider: headingProvider)
 ```
 
-The ``LocationManager`` was simplified too. Now it only manages the the location puck, not the `LocationProvider`. For example, its ``LocationManager/options`` only determine the puck appearance. If you need to fine-tune the location provider itself, do it directly via the default ``AppleLocationProvider`` or your own custom provider implementation.
+The ``LocationManager`` was simplified too. Now it only manages the location puck, not the `LocationProvider`. For example, its ``LocationManager/options`` only determine the puck appearance. If you need to fine-tune the location provider itself, do it directly via the default ``AppleLocationProvider`` or your own custom provider implementation.
 
 **v10**
 
@@ -555,7 +555,7 @@ try mapView.mapboxMap.removeGeoJSONSourceFeatures(forSourceId: sourceId, feature
 `MapboxMap.dragStart()` and `MapboxMap.dragEnd()` are not in use anymore and got removed, instead use `MapboxMap.beginGesture()` and `MapboxMap.endGesture()` respectively.
 
 
-While maintaing the existing gesture approach we made minor improvements. In v11 we now:
+While maintaining the existing gesture approach we made minor improvements. In v11 we now:
 
 - allow animation during any ongoing gestures
 - enable zoom during a drag gesture
@@ -843,7 +843,7 @@ The `OverviewViewportStateOptions.padding` parameter is renamed to ``OverviewVie
 
 #### 3.11 Bearing updates are disabled by default.
 
-The default value for ``LocationOptions/puckBearingEnabled`` option has changed from `true` to `false`. That practially means that
+The default value for ``LocationOptions/puckBearingEnabled`` option has changed from `true` to `false`. That practically means that
 MapView wouldn't redraw on each device compass update and should significantly reduce CPU usage for applications that
 only display user location without bearing/heading indication.
 If your application still need to rotate puck image according to device heading or location course, enable the option as:

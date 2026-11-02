@@ -120,7 +120,7 @@ You can also use conditionals to add and remove map style primitives. In the exa
 
 ### Building Custom Style Components
 
-You can create your own style components in addition to build-in styling primitives. Defining your own components gives you greater control over when the content is updated, and allows for cleaner organization of your code.
+You can create your own style components in addition to built-in styling primitives. Defining your own components gives you greater control over when the content is updated, and allows for cleaner organization of your code.
 
 > Tip: If you are familiar with SwiftUI principles, the custom style components follow the same pattern.
 
@@ -205,7 +205,7 @@ In the declarative API there's no ``LayerPosition`` to override the positioning.
 For example, the Standard Style is shipped with pre-defined slots, such as ``Slot/middle``:
 ```swift
 Map {
-    /// The green polygon is displayd in the middle of Standard Style layers.
+    /// The green polygon is displayed in the middle of Standard Style layers.
     FillLayer(id: "green", source: "green-source")
         .fillColor(.green)
         .slot(.middle)

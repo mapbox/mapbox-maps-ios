@@ -6,4 +6,14 @@ final class MockTileStore: TileStoreProtocol {
     func __removeObserver(for observer: MapboxCommon_Private.TileStoreObserver) {
         __removeObserverStub.call(with: observer)
     }
+
+    struct SubscribeForEventParams {
+        var eventName: String
+        var callback: (TileStoreGenericEvent) -> Void
+    }
+    let __subscribeForEventStub = Stub<SubscribeForEventParams, Cancelable>(defaultReturnValue: MockCancelable())
+    func __subscribeForEvent(forEventName eventName: String,
+                             callback: @escaping (TileStoreGenericEvent) -> Void) -> Cancelable {
+        __subscribeForEventStub.call(with: SubscribeForEventParams(eventName: eventName, callback: callback))
+    }
 }

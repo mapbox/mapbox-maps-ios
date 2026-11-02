@@ -54,6 +54,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Features ✨ and improvements 🏁
 * Collision boxes of a `ViewAnnotation` now follow the view at runtime: marking a subview with the experimental `UIView.mbxViewAnnotationCollisionBox` (`View.mbxViewAnnotationCollisionBox()` in SwiftUI) after the annotation is added, moving it, hiding it or removing the last marked one reaches the map. Marked views inside a hidden subtree no longer collide.
+* Add experimental `TileStore.onEvent(_:)` to observe generic tile store events, such as `TileStoreEventName.metadataMigrationFailed`.
 
 ### Bug fixes 🐞
 * Fix SwiftUI `Map` sometimes not calling `onStyleLoaded`, `onMapLoaded` and other event handlers when the view updates while the map is loading. ([#2406](https://github.com/mapbox/mapbox-maps-ios/issues/2406))

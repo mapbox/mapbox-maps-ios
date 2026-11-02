@@ -3,6 +3,8 @@ internal import MapboxCommon_Private
 
 internal protocol TileStoreProtocol: AnyObject {
     func __removeObserver(for observer: MapboxCommon_Private.TileStoreObserver)
+    func __subscribeForEvent(forEventName eventName: String,
+                             callback: @escaping (TileStoreGenericEvent) -> Void) -> Cancelable
 }
 
 extension TileStore: TileStoreProtocol {
@@ -251,6 +253,22 @@ extension TileStore: TileStoreProtocol {
         return TileStoreObserverCancelable(observer: wrapper, tileStore: self)
     }
 
+    /// Returns a ``Signal`` that allows to observe a generic tile store event.
+    ///
+    /// Each observer gets its own subscription, so sticky events such as
+    /// ``TileStoreEventName/metadataMigrationFailed`` are delivered to every new observer.
+    ///
+    /// - Parameter eventName: The name of the event to observe.
+    ///
+    /// - Note:
+    ///     The observers will be called on a TileStore-controlled worker thread;
+    ///     it is the responsibility of the user to dispatch to a user-controlled
+    ///     thread and avoid blocking the worker thread.
+    @_spi(Experimental)
+    public func onEvent(_ eventName: TileStoreEventName) -> Signal<TileStoreGenericEvent> {
+        tileStoreEventSignal(self, eventName)
+    }
+
     /// An overloaded version of `removeTileRegion(forId:)` with a callback for feedback.
     /// On successful tile region removal, the given callback is invoked with the removed tile region.
     /// Otherwise, the given callback is invoked with an error.
@@ -285,6 +303,13 @@ extension TileStore: TileStoreProtocol {
         )
     }
 
+}
+
+internal func tileStoreEventSignal(_ tileStore: TileStoreProtocol,
+                                   _ eventName: TileStoreEventName) -> Signal<TileStoreGenericEvent> {
+    Signal { handler in
+        tileStore.__subscribeForEvent(forEventName: eventName.rawValue, callback: handler).erased
+    }
 }
 
 private func tileStoreClosureAdapter<T, ObjCType>(

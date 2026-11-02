@@ -10,7 +10,7 @@ The map can display different types of content - View Annotations, Layer Annotat
 
 View annotations are the simplest case of handling map content gestures. The view annotations are native views displayed on top of the Map, which means they will handle gestures before the Map, Layers, or Layer Annotations.
 
-In order to handle gestures on view annotations, use any `UIGestureHandler` in UIKit, or [Gestures](https://developer.apple.com/documentation/swiftui/gestures) in SwiftUI.
+In order to handle gestures on view annotations, use any `UIGestureRecognizer` in UIKit, or [Gestures](https://developer.apple.com/documentation/swiftui/gestures) in SwiftUI.
 
 ```swift
 var body: some View {
@@ -20,7 +20,7 @@ var body: some View {
                 .padding()
                 .background(Circle().fill(.green))
                 .onTapGesture {
-                    print("burger is tapped") // <- View annotation handle the gesture before the Map view.
+                    print("burger is tapped") // <- View annotation handles the gesture before the Map view.
                 }
         }
     }
@@ -71,7 +71,7 @@ var body: some View {
 
 ![Gesture handling order](https://static-assets.mapbox.com/maps/ios/documentation/swiftui_gesture_handling_order_4.png)
 
-The example above shows the green ``PolygonAnnotation`` and the blue ``CircleAnnotation`` above it. both of them handle the tap gesture, and polygon annotation additionally handles the long-press gesture. The red circle annotation doesn't handle any gestures.
+The example above shows the green ``PolygonAnnotation`` and the blue ``CircleAnnotation`` above it. Both of them handle the tap gesture, and polygon annotation additionally handles the long-press gesture. The red circle annotation doesn't handle any gestures.
 
 Let's see now what happens when the user taps the map at the positions shown above.
 
@@ -128,7 +128,7 @@ let clusterOptions = ClusterOptions(circleRadius: .constant(10), circleColor: .c
 
 var body: some View {
     Map {
-        PointAnnotationGroup(places) { places in
+        PointAnnotationGroup(places) { place in
             PointAnnotation(coordinate: place.coordinate)
                 .image(named: "intermediate-pin")
                 .onTapGesture { places.removeAll(where: { $0.id == place.id }) }
@@ -182,12 +182,13 @@ mapView.gestures.onMapTap.observe { context in
     print("Tapped at \(context.coordinate)")
 }.store(in: &cancelables)
 
-mapView.gestures.onLayerTapGesture("house-prices") { queriedFeature, context in
+mapView.gestures.onLayerTap("house-prices") { queriedFeature, context in
     displayDetails(queriedFeature, coordinate: context.coordinate)
+    return true
 }.store(in: &cancelables)
 ```
 
-Please consult the tale below to find the corresponding method.
+Please consult the table below to find the corresponding method.
 
 ``Map-swift.struct`` (SwiftUI) | ``GestureManager`` (UIKit)
 --- | ---

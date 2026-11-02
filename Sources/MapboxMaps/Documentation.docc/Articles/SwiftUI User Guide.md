@@ -4,7 +4,7 @@ Use Mapbox Maps in SwiftUI applications.
 
 ## Overview
 
-The Mapbox Maps SDK has a complete support of SwiftUI. This guide demonstrates how to easily integrate Mapbox Maps into your SwiftUI application.
+The Mapbox Maps SDK has complete support for SwiftUI. This guide demonstrates how to easily integrate Mapbox Maps into your SwiftUI application.
 
 You can find working [SwiftUI examples](https://github.com/mapbox/mapbox-maps-ios/tree/main/Sources/Examples/SwiftUI%20Examples) in the [Examples](https://github.com/mapbox/mapbox-maps-ios/tree/main/Sources/Examples) application.
 
@@ -20,7 +20,6 @@ Viewport & Camera | ✅
 View Annotations | ✅
 Layer Annotations | ✅ | `isDraggable`, `isSelected` are not supported
 Annotations Clustering | ✅ |
-View Annotations | ✅ |
 Puck 2D/3D | ✅
 Map Events | ✅
 Gesture Configuration | ✅
@@ -30,7 +29,7 @@ Custom Camera Animations | 🚧
 
 ### Getting started
 
-To start using Mapbox Map in SwiftUI you need to import `SwiftUI` and  `MapboxMaps`.
+To start using Mapbox Map in SwiftUI you need to import `SwiftUI` and `MapboxMaps`.
 
 ```swift
 import SwiftUI
@@ -51,7 +50,7 @@ struct ContentView: View {
 }
 ```
 
-Please note, that you have to set the Mapbox Access Token at any time before using the ``Map-swift.struct``. You can do it either by setting `MapboxOptions.accessToken` or any option listed in <doc:Migrate-to-v11##26-Access-Token-and-Map-Options-management>.
+Please note, that you have to set the Mapbox Access Token at any time before using the ``Map-swift.struct``. You can do it either by setting `MapboxOptions.accessToken` or any option listed in <doc:Migrate-to-v11#26-Access-Token-and-Map-Options-management>.
 
 ## Tutorials
 
@@ -64,7 +63,7 @@ Map()
   .mapStyle(.streets) // Sets Mapbox Streets Style.
 ```
 
-With the Standard style you can set the lightPresets of the style according to your application's `colorScheme`. Light presents are 4 time-of-day states (`dawn`, `day`, `dusk`, `night`) that set the lighting and shadows of the map to represent changes in daylight.
+With the Standard style you can set the lightPresets of the style according to your application's `colorScheme`. Light presets are 4 time-of-day states (`dawn`, `day`, `dusk`, `night`) that set the lighting and shadows of the map to represent changes in daylight.
 
 ```swift
 struct ContentView: View {
@@ -127,7 +126,7 @@ For example, with ``Viewport/camera(center:anchor:zoom:bearing:pitch:)`` you can
 ```swift
 let london = CLLocationCoordinate2D(latitude: 51.5073219, longitude: -0.1276474)
 // Sets camera centered to London
-Map(initialViewport: .camera(center: london, zoom: 12, bearing: 0, pitch: 0)
+Map(initialViewport: .camera(center: london, zoom: 12, bearing: 0, pitch: 0))
 ```
 
 The `initialViewport` in the example above means that viewport will be set only on map initialization. If the user drags the map, it won't be possible to set the viewport again. In contrast, the example below uses `@State` variable via two-way data binding. With this approach, the viewport can be set and re-set whenever necessary. The approach you should use depends on your particular use case.
@@ -157,7 +156,7 @@ struct ContentView: View {
 
 When the user drags the map, the viewport always resets to ``Viewport/idle`` state. You can't read the actual current camera state from that viewport, but you can observe it via ``Map-swift.struct/onCameraChanged(action:)``.
 
-- Important: It's not recommended to store the camera values received from ``Map-swift.struct/onCameraChanged(action:)`` in `@State` property. They come with high frequency, which may lead to unwanted `body` re-execution and high CPU consumption. It's better to store them in model, or throttle before setting them to @State.
+- Important: It's not recommended to store the camera values received from ``Map-swift.struct/onCameraChanged(action:)`` in `@State` property. They come with high frequency, which may lead to unwanted `body` re-execution and high CPU consumption. It's better to store them in a model, or throttle before setting them to @State.
 
 
 ### Viewport animations
@@ -191,28 +190,28 @@ struct ContentView: View {
 
 Please consult the ``ViewportAnimation`` documentation to learn more about supported animations.
 
-- Important: It's recommended to use ``ViewportAnimation/default(maxDuration:)`` animation when transition to ``Viewport/followPuck(zoom:bearing:pitch:)`` state. With other animation types, there might be a jump when animation finishes. It may happen because they're designed to finish at the static target.
+- Important: It's recommended to use ``ViewportAnimation/default(maxDuration:)`` animation when transitioning to ``Viewport/followPuck(zoom:bearing:pitch:)`` state. With other animation types, there might be a jump when animation finishes. It may happen because they're designed to finish at the static target.
 
 
 ### Annotations
 
-There are two kinds of annotations in Maps SDK - View Annotations (``MapViewAnnotation``) and Layer Annotations (a.k.a ``PointAnnotation``, ``CircleAnnotation``, etc).
+There are two kinds of annotations in Maps SDK - View Annotations (``MapViewAnnotation``) and Layer Annotations (a.k.a. ``PointAnnotation``, ``CircleAnnotation``, etc.).
 
 #### View Annotations
 
-View annotation allow you to display any SwiftUI view on top of the map. They give you endless possibility for customization, but may be less performant. Also, they are always displayed above all map content, you cannot place them in between map layers.
+View annotations allow you to display any SwiftUI view on top of the map. They give you endless possibilities for customization, but may be less performant. Also, they are always displayed above all map content, you cannot place them in between map layers.
 
 The example below displays multiple view annotations.
 
 ```swift
 struct ContentView: View {
     struct Item: Identifiable {...}
-    @state var items = [Item]()
+    @State var items = [Item]()
 
     var body: some View {
         Map {
             // Displays a single view annotation at specified coordinate.
-            MapViewAnnotation(coordinate: CLLocationCoordinate(...))
+            MapViewAnnotation(coordinate: CLLocationCoordinate2D(...)) {
                 Text("🚀")
                     .frame(width: 20, height: 20)
                     .background(Circle().fill(.red))
@@ -241,7 +240,7 @@ struct ContentView: View {
 All View annotations may be configured via modifier functions (see ``MapViewAnnotation`` for the full list):
 
 ```swift
-MapViewAnnotation(coordinate: CLLocationCoordinate(...))
+MapViewAnnotation(coordinate: CLLocationCoordinate2D(...)) {
     Text("🚀")
         .frame(width: 20, height: 20)
         .background(Circle().fill(.red))
@@ -263,7 +262,7 @@ The example below displays different types of layer annotations.
 ```swift
 struct ContentView: View {
     struct Item {...}
-    @state var items = [Item]()
+    @State var items = [Item]()
 
     var body: some View {
         Map {
@@ -289,9 +288,10 @@ struct ContentView: View {
             .clusterOptions(ClusterOptions(...))
         }
     }
+}
 ```
 
-In example above you can see that `PointAnnotation` (and other types of layer annotations) can be placed alone, or by using an annotation group, such as ``PointAnnotationGroup``.
+In the example above you can see that `PointAnnotation` (and other types of layer annotations) can be placed alone, or by using an annotation group, such as ``PointAnnotationGroup``.
 
 The first method is a handy way to place only one annotation of its kind. The second is better for multiple annotations and gives more configuration options such as clustering, layer position, and more. Annotation groups also behave like ``ForEvery`` for layer annotations.
 

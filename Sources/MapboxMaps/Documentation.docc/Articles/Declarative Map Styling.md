@@ -66,7 +66,7 @@ Atmosphere()
 
 ### Using Style Primitives Conditionally
 
-You can also use conditionals to add and remove map style primitives. In the example below, `useTerrain` is a variable controlled by your code, perhaps toggled when a user selects a button or changes a setting. When true, the Style Projection is set to Globe, terrain data is added to a RasterDem source and visualized with a Terrain map content. When toggled false, the terrain source and content are removed and the project is set to Mercator. Other content on the map is not affected by this change so updates are lightweight.
+You can also use conditionals to add and remove map style primitives. In the example below, `useTerrain` is a variable controlled by your code, perhaps toggled when a user selects a button or changes a setting. When true, the Style Projection is set to Globe, terrain data is added to a RasterDem source and visualized with a Terrain map content. When toggled false, the terrain source and content are removed and the projection is set to Mercator. Other content on the map is not affected by this change so updates are lightweight.
 
 @TabNavigator {
     @Tab("Swift UI") {
@@ -120,7 +120,7 @@ You can also use conditionals to add and remove map style primitives. In the exa
 
 ### Building Custom Style Components
 
-You can create your own style components in addition to build-in styling primitives. Defining your own components gives you greater control over when the content is updated, and allows for cleaner organization of your code.
+You can create your own style components in addition to built-in styling primitives. Defining your own components gives you greater control over when the content is updated, and allows for cleaner organization of your code.
 
 > Tip: If you are familiar with SwiftUI principles, the custom style components follow the same pattern.
 
@@ -141,9 +141,9 @@ struct CarModel: MapStyleContent {
         ModelLayer(id: "models", source: "models-geojson")
             .modelId(Exp(.get) { "model" })
             .modelType(.common3d)
-            .modelScale([40, 40, 40])
-            .modelTranslation([0, 0, 0])
-            .modelRotation([0, 0, 90])
+            .modelScale(x: 40, y: 40, z: 40)
+            .modelTranslation(x: 0, y: 0, z: 0)
+            .modelRotation(x: 0, y: 0, z: 90)
             .modelOpacity(0.7)
     }
 }
@@ -154,9 +154,9 @@ Map {
 }
 ```
 
-The code above creates a `CarModel` component which in turn contains all primitives to display a sport care Model on your map: the ``GeoJSONSource`` for the data, the ``Model`` to display, and the ``ModelLayer`` used to position the model. Add your `CarModelPrimitive` to your style body just like Mapbox style primitives.
+The code above creates a `CarModel` component which in turn contains all primitives to display a sports car model on your map: the ``GeoJSONSource`` for the data, the ``Model`` to display, and the ``ModelLayer`` used to position the model. Add your `CarModel` to your style body just like Mapbox style primitives.
 
-> Warning: We don' recommend to use `@State` or `@Binding` in your custom component. Instead, use `@State` in the SwiftUI views and pass data to custom components as properties.
+> Warning: We don't recommend using `@State` or `@Binding` in your custom component. Instead, use `@State` in the SwiftUI views and pass data to custom components as properties.
 
 ## Content positioning
 
@@ -198,25 +198,25 @@ Green Polygon
 Purple circle <-- top
 ```
 
-The purple circle displayed on top of all content because View Annotations are always rendered on top of the ``Map`` view.  The yellow polygon is always displayed below the green one, even if the `showYellowPolygon` property was toggled.
+The purple circle is displayed on top of all content because View Annotations are always rendered on top of the ``Map`` view. The yellow polygon is always displayed below the green one, even if the `showYellowPolygon` property was toggled.
 
 In the declarative API there's no ``LayerPosition`` to override the positioning. Instead, use new ``SlotLayer`` and ``Slot`` constants to have a finer control.
 
 For example, the Standard Style is shipped with pre-defined slots, such as ``Slot/middle``:
 ```swift
 Map {
-    /// The green polygon is displayd in the middle of Standard Style layers.
+    /// The green polygon is displayed in the middle of Standard Style layers.
     FillLayer(id: "green", source: "green-source")
         .fillColor(.green)
         .slot(.middle)
 
-    /// By default, this layer id displayed on top of other layers.
+    /// By default, this layer is displayed on top of other layers.
     FillLayer(id: "purple", source: "purple-source")
         .fillColor(.purple)
 }
 ```
 
-Using the custom slots let you alter the ordering:
+Using custom slots lets you alter the ordering:
 
 ```swift
 Map {
@@ -250,7 +250,7 @@ Map {
 
     FillLayer(id: "square", source: "square-data")
         .fillColor(.systemPink)
-        .slot(Slot(rawValue: "below-roads")
+        .slot(Slot(rawValue: "below-roads"))
 }
 .mapStyle(.streets)
 ```
@@ -261,9 +261,9 @@ In the example above the ``FillLayer`` will be placed below the `roads` layer fr
 
 To achieve the best performance, it is recommended to use custom components of ``MapStyleContent`` or ``MapContent`` to isolate components updates.
 
-This is because whenever you update the ``MapStyleContent`` (via ``StyleManager/setMapStyleContent(content:)``) or ``MapContent`` (via SwiftUI `@State` change) internally the full content tree must be compared with its previous version to perform the most efficient update. Having a larger tree of components instead a flat list makes internal caching to be more efficient.
+This is because whenever you update the ``MapStyleContent`` (via ``StyleManager/setMapStyleContent(content:)``) or ``MapContent`` (via SwiftUI `@State` change) internally the full content tree must be compared with its previous version to perform the most efficient update. Having a larger tree of components instead of a flat list makes internal caching more efficient.
 
-This is very important if you use a large json arrays inside of styling primitives. Lets consider the following example:
+This is very important if you use large JSON arrays inside of styling primitives. Let's consider the following example:
 
 
 ```swift
@@ -276,7 +276,7 @@ struct MyView: View {
             if let features {
                 LineLayer(id: "route", source: "route-source")
                 GeoJSONSource(id: "route-source")
-                    /// WARNING: This code may be not optimal for large feature collection.
+                    /// WARNING: This code may not be optimal for large feature collections.
                     .data(.featureCollection(features))
             }
         }
@@ -285,7 +285,7 @@ struct MyView: View {
         }
         Button("Trigger update \(counter)") {
             /// Counter updates here will trigger the `body` re-evaluation. This in turn
-            /// triggers the Map update that need to check if the `features` are changed.
+            /// triggers the Map update that needs to check if the `features` are changed.
             /// This may be a costly operation.
             counter += 1
         }
@@ -345,4 +345,4 @@ struct MyView: View {
 }
 ```
 
-For reference, see the [DynamicStylingExample](https://github.com/mapbox/mapbox-maps-ios/blob/main/Sources/Examples/Swift%20UI%20Examples/DynamicStyleExample.swift) in the Examples application.
+For reference, see the [DynamicStylingExample](https://github.com/mapbox/mapbox-maps-ios/blob/main/Sources/Examples/SwiftUI%20Examples/DynamicStylingExample.swift) in the Examples application.

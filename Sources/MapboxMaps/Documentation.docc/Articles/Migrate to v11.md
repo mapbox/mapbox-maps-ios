@@ -25,7 +25,7 @@ let mapView = MapView()
 mapView.mapboxMap.styleURI = .standard
 ```
 
-The Mapbox Standard style features 4 light presets: `day`, `dusk`, `dawn`, and `night`. The style light preset can be changed from the default, `day`, to another preset with a single line of code. Here you identify which imported style (`basemap`) you want to change the `lightPresent` config on, as well as the value (`dusk`) you want to change it to.
+The Mapbox Standard style features 4 light presets: `day`, `dusk`, `dawn`, and `night`. The style light preset can be changed from the default, `day`, to another preset with a single line of code. Here you identify which imported style (`basemap`) you want to change the `lightPreset` config on, as well as the value (`dusk`) you want to change it to.
 
 
 ```swift
@@ -70,7 +70,7 @@ mapView.mapboxMap.addLayer(layer)
 
 Similar to the classic Mapbox styles, you can still use the layer position in ``StyleManager/addLayer(_:layerPosition:)`` method when importing the Standard Style. However, this method is only applicable to custom layers you have added yourself. If you add two layers to the same slot with a specified layer position the latter will define the order of the layers in that slot.
 
-Standard is aware of the map lighting configuration using the `measure-light` expression, which returns you an aggregated value of your light settings. This returns a value which ranges from 0 (darkest) to 1 (brightest). In darker lights, you make the individual layers light up by using the new `*-emissive-stength` expressions, which allow you to add emissive light to different layer types and for example keep texts legible in all light settings. If your custom layers seem too dark, try adjusting the emissive strength of these layers.
+Standard is aware of the map lighting configuration using the `measure-light` expression, which returns you an aggregated value of your light settings. This returns a value which ranges from 0 (darkest) to 1 (brightest). In darker lights, you make the individual layers light up by using the new `*-emissive-strength` expressions, which allow you to add emissive light to different layer types and for example keep texts legible in all light settings. If your custom layers seem too dark, try adjusting the emissive strength of these layers.
 
 ### Customizing Standard
 
@@ -178,7 +178,7 @@ mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
 }.store(in: &cancelables)
 ```
 
-The new event endpoints such as ``MapboxMap/onCameraChanged`` are exposed as ``Signal``s that allow you to observe any events over time. While you are interested in receiving updates corresponding to these events you simply store the cancelation tokens returned from ``Signal/observe(_:)`` or ``Signal/observeNext(_:)`` methods. When the token is deallocated, the subscription will be automatically canceled and you will stop receiving updates.
+The new event endpoints such as ``MapboxMap/onCameraChanged`` are exposed as ``Signal``s that allow you to observe any events over time. While you are interested in receiving updates corresponding to these events you simply store the cancellation tokens returned from ``Signal/observe(_:)`` or ``Signal/observeNext(_:)`` methods. When the token is deallocated, the subscription will be automatically canceled and you will stop receiving updates.
 
 Additionally, ``Signal`` implements `Combine.Publisher`, so Combine usage in iOS 13+ targets is recommended:
 
@@ -352,7 +352,7 @@ let headingProvider = CustomHeadingProvider()
 mapView.location.override(locationProvider: locationProvider, headingProvider: headingProvider)
 ```
 
-The ``LocationManager`` was simplified too. Now it only manages the the location puck, not the `LocationProvider`. For example, its ``LocationManager/options`` only determine the puck appearance. If you need to fine-tune the location provider itself, do it directly via the default ``AppleLocationProvider`` or your own custom provider implementation.
+The ``LocationManager`` was simplified too. Now it only manages the location puck, not the `LocationProvider`. For example, its ``LocationManager/options`` only determine the puck appearance. If you need to fine-tune the location provider itself, do it directly via the default ``AppleLocationProvider`` or your own custom provider implementation.
 
 **v10**
 
@@ -367,7 +367,7 @@ locationProvider.options.distanceFilter = 100
 mapView.location.override(provider: locationProvider)
 ```
 
-The ``LocationManager`` now provides ``Signal`` endpoints such as ``LocationManager/onPuckRender``, ``LocationManager/onLocationChange``, ``LocationManager/onHeadingChange``. You can use them to observe puck in the same way, as Map Events (see section 2.2).
+The ``LocationManager`` now provides ``Signal`` endpoints such as ``LocationManager/onPuckRender``, ``LocationManager/onLocationChange``, ``LocationManager/onHeadingChange``. You can use them to observe puck in the same way as Map Events (see section 2.3).
 
 **v10**
 ```swift
@@ -394,7 +394,7 @@ class Example {
 
     func setup() {
         mapView.location.override(
-            locationProvider: $location.eraseToSignal(),
+            locationProvider: $locations.eraseToSignal(),
             headingProvider: $heading.eraseToSignal())
     }
 
@@ -402,6 +402,7 @@ class Example {
         locations = /* new locations update */
         heading = /* new heading */
     }
+}
 ```
 
 Please check out a more detailed example [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Sources/Examples/All%20Examples/Lab/CombineLocationExample.swift).
@@ -448,7 +449,7 @@ Tracing component | Description
 `core` | Rendering engine (responsible for almost every rendering aspect in the ``MapView`` and ``Snapshotter``).
 `platform` | Maps SDK functionality like gestures, animations, view annotations, and so on.
 
-> Important: SDK generates a lot of event for each frame, so Instruments might skip some of them in `Immediate` record mode. Enable `Last N seconds` mode to preserve full signpost data ([see more](https://help.apple.com/instruments/mac/11.0/index.html?localePath=en.lproj#/dev191fbf48)).
+> Important: SDK generates a lot of events for each frame, so Instruments might skip some of them in `Immediate` record mode. Enable `Last N seconds` mode to preserve full signpost data ([see more](https://help.apple.com/instruments/mac/11.0/index.html?localePath=en.lproj#/dev191fbf48)).
 
 To limit signposts generation for a single component, please use the following API:
 
@@ -555,7 +556,7 @@ try mapView.mapboxMap.removeGeoJSONSourceFeatures(forSourceId: sourceId, feature
 `MapboxMap.dragStart()` and `MapboxMap.dragEnd()` are not in use anymore and got removed, instead use `MapboxMap.beginGesture()` and `MapboxMap.endGesture()` respectively.
 
 
-While maintaing the existing gesture approach we made minor improvements. In v11 we now:
+While maintaining the existing gesture approach we made minor improvements. In v11 we now:
 
 - allow animation during any ongoing gestures
 - enable zoom during a drag gesture
@@ -574,7 +575,7 @@ Experimental API `MapboxMap/setMemoryBudget(_:)` was renamed to ``MapboxMap/setT
 #### 2.12.8 Puck3D's scaling behavior
 
 To further improve the performance of 3D model layer, we have replaced Puck 3D's default `model-scale` expression with a new API ``Puck3DConfiguration/modelScaleMode``. By default this property is ``ModelScaleMode/viewport``, which will keep the 3D model size constant across different zoom levels.
-While this means that Puck 3D's size should render similarly to v10, it does introduces a behavior breaking change - that ``Puck3DConfiguration/modelScale`` needs to be adjusted to correctly render the puck (in testing we found the adjustment to be around 100x of v10 `model-scale` value, but that could vary depending on other properties etc.).
+While this means that Puck 3D's size should render similarly to v10, it does introduce a behavior breaking change - that ``Puck3DConfiguration/modelScale`` needs to be adjusted to correctly render the puck (in testing we found the adjustment to be around 100x of v10 `model-scale` value, but that could vary depending on other properties etc.).
 
 ## 3. Replace Deprecated APIs and Address Breaking Changes
 
@@ -677,9 +678,9 @@ mapboxMap.isStyleLoaded = true
 let defaultCamera = mapboxMap.styleDefaultCamera
 ```
 
-### 3.7 Maps SDK no longer reexport MetalKit and UIKit
+### 3.7 Maps SDK no longer re-exports MetalKit and UIKit
 
-Mapbox Maps SDK no longer reexports MetalKit and UIKit frameworks, so you will need to import them as needed for your code. In v10 version you could omit `import UIKit` if you already had an `import MapboxMaps` statement, but that is no longer possible.
+Mapbox Maps SDK no longer re-exports MetalKit and UIKit frameworks, so you will need to import them as needed for your code. In v10 version you could omit `import UIKit` if you already had an `import MapboxMaps` statement, but that is no longer possible.
 
 **v10:**
 
@@ -704,7 +705,7 @@ class ViewController: UIViewController { }
 
 `HTTPServiceFactory.reset`, `HttpServiceFactory.setUserDefinedForCustom` and `HttpServiceInterface` have been removed from public visibility. ***It is thus no longer possible to override the HTTP stack.***
 
-If you need to set a HTTP interceptor you can do it via the `HttpServiceFactory.setHttpServiceInterceptorInterface` function. The `HttpServiceInterceptorInterface` has been changed: the `onDownload` function no longer exists and the signature of `onRequest` and `onResponse` have been changed to return a value through a continuation.
+If you need to set an HTTP interceptor you can do it via the `HttpServiceFactory.setHttpServiceInterceptorInterface` function. The `HttpServiceInterceptorInterface` has been changed: the `onDownload` function no longer exists and the signature of `onRequest` and `onResponse` have been changed to return a value through a continuation.
 
 **v10**
 
@@ -762,7 +763,7 @@ let httpRequest = HttpRequest(method: HttpMethod.get, url: "", headers: [:], tim
 
 #### 3.9.1 ``OfflineManager`` API changes
 
-- Due to changes documented in Access Token and Map Options management, you no longer need to provide a resource options when initializing an instance of ``OfflineManager``.
+- Due to changes documented in Access Token and Map Options management, you no longer need to provide resource options when initializing an instance of ``OfflineManager``.
 - `TilesetDescriptorOptionsForTilesets` and `OfflineManager/createTilesetDescriptorForTilesetDescriptorOptions(_:)` has been removed. Instead you can provide an optional list of `tilesets` when initializing an instance of ``TilesetDescriptorOptions`` and use it to create a `TilesetDescriptor` using `OfflineManager/createTilesetDescriptor(_:)`.
 - You can now observe when a style pack is removed with a completion handler.
 
@@ -795,7 +796,7 @@ offlineManager.removeStylePack(for: .streets) { result in
 
 #### 3.9.2 Legacy ``OfflineRegionManager`` changes
 
-- Due to changes documented in Access Token and Map Options management, you no longer need to provide a resource options when initializing an instance of ``OfflineRegionManager``.
+- Due to changes documented in Access Token and Map Options management, you no longer need to provide resource options when initializing an instance of ``OfflineRegionManager``.
 - `ResponseError` has been renamed to ``OfflineRegionError``, with new flag named `isFatal` indicating that the error is fatal i.e. the region cannot proceed downloading of any resources and it will be put to inactive state.
 - ``OfflineRegionObserver`` no longer requires function `responseError(forError:)`, instead you can implement function `errorOccurred(forError:)` to be notified of errors encountered while downloading regional resources.
 - `ResponseErrorReason` is renamed to `OfflineRegionErrorType`.
@@ -829,7 +830,7 @@ offlineRegionManager.setOfflineRegionObserverFor(observer)
 class OfflineRegionObserver: MapboxCoreMaps.OfflineRegionObserver {
 
     func errorOccurred(forError error: OfflineRegionError) {
-        if case error.type == .tileCountLimitExceeded {
+        if error.type == .tileCountLimitExceeded {
             // handle tile count limit exceed
         }
         ...
@@ -843,10 +844,10 @@ The `OverviewViewportStateOptions.padding` parameter is renamed to ``OverviewVie
 
 #### 3.11 Bearing updates are disabled by default.
 
-The default value for ``LocationOptions/puckBearingEnabled`` option has changed from `true` to `false`. That practially means that
+The default value for ``LocationOptions/puckBearingEnabled`` option has changed from `true` to `false`. That practically means that
 MapView wouldn't redraw on each device compass update and should significantly reduce CPU usage for applications that
 only display user location without bearing/heading indication.
-If your application still need to rotate puck image according to device heading or location course, enable the option as:
+If your application still needs to rotate puck image according to device heading or location course, enable the option as:
 
 ```swift
     mapView.location.options.puckBearingEnabled = true
@@ -878,13 +879,13 @@ If your application still need to rotate puck image according to device heading 
 - The following `GeoJsonSource` cluster APIs now return `Cancelable`: `getGeoJsonClusterLeaves`, `getGeoJsonClusterChildren`, `getGeoJsonClusterExpansionZoom`.
 - The `MapOptions/optimizeForTerrain` option was removed, whenever terrain is present layer order is now automatically adjusted for better performance. Previously, optimization was the default.
 
-## 7. Test Your App
+## 6. Test Your App
 
 Test your app thoroughly after making the changes to ensure everything is working as expected.
 
-## 8. Conclusion
+## 7. Conclusion
 
-Following the above steps will help you migrate your app to the latest version of the Mapbox Maps SDK for Android. If you encounter any issues during the migration process, refer to the [Mapbox Maps SDK for iOS documentation](https://docs.mapbox.com/ios/maps/overview/) or reach out to the Mapbox support team for assistance.
+Following the above steps will help you migrate your app to the latest version of the Mapbox Maps SDK for iOS. If you encounter any issues during the migration process, refer to the [Mapbox Maps SDK for iOS documentation](https://docs.mapbox.com/ios/maps/overview/) or reach out to the Mapbox support team for assistance.
 
 ## Known Issues
 

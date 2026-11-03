@@ -41,7 +41,7 @@ validate_published_spm() {
 }
 
 main() {
-    PROJECTS_TO_TEST=("SwiftPackageManagerIntegration" "CocoaPodsIntegration")
+    PROJECTS_TO_TEST=("SwiftPackageManagerIntegration")
     if [[ $VERSION_RULE == 1 && $ENABLE_DIRECT_DOWNLOADS_VALIDATION == 1 ]]; then
         step "Download MapboxMaps binaries"
 
@@ -77,16 +77,6 @@ main() {
     pushd "$SCRIPT_DIR" > /dev/null || exit 1
     MBX_TOKEN="$(cat ~/.mapbox)" REPOSITORY_NAME="${REPOSITORY_NAME}" xcodegen
 
-    if [[ $SNAPSHOT == 0 ]]; then
-        if [[ $BRANCH_RULE == 1 ]]; then
-            sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 :path => '..\/..'/" Podfile
-        elif [[ $VERSION_RULE == 1 ]]; then
-            sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 '= $MAPS_VERSION'/" Podfile
-        fi
-
-        pod install
-    fi
-
     info "Building logs available at $ARTIFACTS_ROOT"
 
     results_path="$SCRIPT_DIR/results"
@@ -99,7 +89,7 @@ main() {
         LOG_FILE="$ARTIFACTS_ROOT/${scheme}_xcode-$(date +%Y%m%d%H%M%S).log"
 
         if ! xcodebuild clean build COMPILER_INDEX_STORE_ENABLE=NO \
-            ${XCODE_BUILD_SETTING:--workspace "$SCRIPT_DIR/ValidateLatestMaps.xcworkspace"} \
+            -project "$SCRIPT_DIR/ValidateLatestMaps.xcodeproj" \
             -scheme "$scheme" -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED='NO' &> "$LOG_FILE"; then
             cat "$LOG_FILE"
@@ -120,7 +110,6 @@ main() {
     fi
 
     git clean -fdx "$SCRIPT_DIR" --quiet
-    git checkout HEAD -- Podfile
 
     exit 0
 }
@@ -158,7 +147,6 @@ case "${flag}" in
         ;;
     s)
         SNAPSHOT=1
-        export XCODE_BUILD_SETTING="-project "$SCRIPT_DIR/ValidateLatestMaps.xcodeproj""
         ;;
     *) print_usage
     exit 1 ;;

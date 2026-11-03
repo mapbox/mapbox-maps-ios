@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Breaking changes ⚠️
+* CocoaPods distribution is no longer supported. New versions are available through Swift Package Manager or the direct download; previously released versions remain available on CocoaPods.
+
 ## 11.31.1 - 25 September, 2026
 
 ### Bug fixes 🐞

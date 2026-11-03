@@ -4,8 +4,13 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.34.2 - 03 November, 2026
+
 ### Breaking changes ⚠️
 * CocoaPods distribution is no longer supported. New versions are available through Swift Package Manager or the direct download; previously released versions remain available on CocoaPods.
+
+### Bug fixes 🐞
+* Fix a bug where point annotations jitter when zooming out
 
 ## 11.34.1 - 29 October, 2026
 

@@ -14,11 +14,3 @@ targets:
       - UITest
     dependencies:
       - target: SwiftPackageManagerIntegration
-  CocoaPodsIntegration:
-    templates:
-      - Application
-  CocoaPodsIntegrationUITest:
-    templates:
-      - UITest
-    dependencies:
-      - target: CocoaPodsIntegration

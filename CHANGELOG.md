@@ -64,6 +64,14 @@ try mapView.mapboxMap.setProjection(.albers(
 * Count crashes, hangs and CPU exceptions in Mapbox code with MetricKit, and send the counts with telemetry (best effort, the telemetry opt-out applies). The privacy manifest now declares `NSPrivacyCollectedDataTypeCrashData`, so the App Store privacy report of apps that use Mapbox SDKs changes.
 * Update feature state API documentation comments for accuracy.
 
+## 11.34.2 - 03 November, 2026
+
+### Breaking changes ⚠️
+* CocoaPods distribution is no longer supported. New versions are available through Swift Package Manager or the direct download; previously released versions remain available on CocoaPods.
+
+### Bug fixes 🐞
+* Fix a bug where point annotations jitter when zooming out
+
 ## 11.34.1 - 29 October, 2026
 
 ### Bug fixes 🐞

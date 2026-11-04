@@ -267,7 +267,7 @@ private func requestNotificationPermission() {
 
 private func requestLocationAuthorization() {
     #if !os(visionOS)
-    CLLocationManager().requestAlwaysAuthorization()
+    AlwaysLocationSession.shared.requestAlwaysAuthorization()
     print("Location request finished.")
     #endif
 }

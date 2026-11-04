@@ -91,7 +91,7 @@ private struct PermissionView: View {
             }
             #if !os(visionOS)
             OvalButton(title: "Enable Location") {
-                CLLocationManager().requestAlwaysAuthorization()
+                AlwaysLocationSession.shared.requestAlwaysAuthorization()
             }
             #endif
         }

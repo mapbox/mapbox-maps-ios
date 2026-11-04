@@ -16,6 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         LogConfiguration.setLoggingLevelForUpTo(0)
+        #if !os(visionOS)
+        AlwaysLocationSession.shared.resumeIfAuthorizedAlways()
+        #endif
         geofencing.addObserver(observer: self, callback: { result in
             switch result {
             case .success:

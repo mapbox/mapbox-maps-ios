@@ -193,6 +193,7 @@
 		EE4064D753E360A6A6AC5BAC /* CustomLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06955521CCC52B47AAB475F4 /* CustomLayerExample.swift */; platformFilters = (ios, ); };
 		EF8F5D4512E3E6BCE0C81974 /* SwiftUIRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2D7968D1451C5EF901A378 /* SwiftUIRoot.swift */; };
 		F0502A1ACF0AED218F8184AB /* CarPlayMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6CEA9899CC0EC4F4381E19 /* CarPlayMapViewController.swift */; platformFilters = (ios, ); };
+		F0DA4F023837FD5BAC2C85B7 /* AlwaysLocationSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3B5D520E8FB06FECDCE149 /* AlwaysLocationSession.swift */; platformFilters = (ios, ); };
 		F2B385831A78B3EE16BFEA69 /* SnapshotterCoreGraphicsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77368780E4DBCCFB2CBD400 /* SnapshotterCoreGraphicsExample.swift */; platformFilters = (ios, ); };
 		F476D12AC7B4347AA55BEC4C /* AnimateImageLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A471857797898860C3A8F685 /* AnimateImageLayerExample.swift */; platformFilters = (ios, ); };
 		F48BF087BB56B0A44D8B16F3 /* PointAnnotationClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8359ECB5024BEF3722C3CA1 /* PointAnnotationClusteringExample.swift */; platformFilters = (ios, ); };
@@ -340,6 +341,7 @@
 		8B30F4697545D9F02DD4425D /* Examples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Examples.swift; sourceTree = "<group>"; };
 		8BB15B17EDE597D37CFF3FCA /* Array+Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Split.swift"; sourceTree = "<group>"; };
 		8BD8BADE1108B0D380D9BEF8 /* radar1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = radar1.gif; sourceTree = "<group>"; };
+		8C3B5D520E8FB06FECDCE149 /* AlwaysLocationSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlwaysLocationSession.swift; sourceTree = "<group>"; };
 		8DBF737C9C7FBF46BB5F7B78 /* CombineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineExample.swift; sourceTree = "<group>"; };
 		8FD38B8D20C0695A03AE4E68 /* SymbolClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolClusteringExample.swift; sourceTree = "<group>"; };
 		913B4773A82AD6357D6AAEA1 /* DashboardCarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCarPlaySceneDelegate.swift; sourceTree = "<group>"; };
@@ -511,6 +513,7 @@
 			isa = PBXGroup;
 			children = (
 				524D79FF01638A0E8A3C1248 /* .swiftlint.yml */,
+				8C3B5D520E8FB06FECDCE149 /* AlwaysLocationSession.swift */,
 				274D496EC7E47F63FD0D1337 /* AppDelegate.swift */,
 				B31A932A62B6142FE20C39DF /* Assets.xcassets */,
 				E09DABCB8139643F1BD3B972 /* Examples_CarPlay.entitlements */,
@@ -1048,6 +1051,7 @@
 				05DF15DADC248A2CAA5EEDC4 /* AddMarkersSymbolExample.swift in Sources */,
 				2C03342240D5487880316518 /* AddOneMarkerSymbolExample.swift in Sources */,
 				10C2E5ADC16B91D43288E820 /* AdvancedViewportGesturesExample.swift in Sources */,
+				F0DA4F023837FD5BAC2C85B7 /* AlwaysLocationSession.swift in Sources */,
 				BDABAAC8727AF67A0DEE2020 /* AnimateGeoJSONLineExample.swift in Sources */,
 				F476D12AC7B4347AA55BEC4C /* AnimateImageLayerExample.swift in Sources */,
 				556C8423BA408C7FF54BB5DA /* AnimateLayerExample.swift in Sources */,

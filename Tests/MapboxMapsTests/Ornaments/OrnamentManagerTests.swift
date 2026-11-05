@@ -1,5 +1,5 @@
 import XCTest
-@testable @_spi(Experimental) import MapboxMaps
+@testable @_spi(Experimental) @_spi(Internal) import MapboxMaps
 @_spi(Experimental) import MapboxCoreMaps
 
 final class OrnamentManagerTests: XCTestCase {
@@ -417,5 +417,26 @@ final class OrnamentManagerTests: XCTestCase {
         mockModel.selectedFloorId = "a2"
         mockModel.onFloorSelected?()
         XCTAssertEqual(collectionView.contentOffset.y, 44, "Middle floor should position via the raw (index-1)*itemSize formula")
+    }
+
+    func testCameraDebugAccessoryEntriesSetWhileHiddenAreShownWhenEnabled() throws {
+        ornamentsManager.cameraDebugAccessoryEntries = [CameraDebugEntry(key: "effective", value: "HD")]
+        XCTAssertTrue(view.subviews.compactMap { $0 as? CameraDebugView }.isEmpty)
+
+        ornamentsManager.showCameraDebug = true
+
+        let debugView = try XCTUnwrap(view.subviews.compactMap { $0 as? CameraDebugView }.first)
+        XCTAssertEqual(debugView.accessoryEntries, [CameraDebugEntry(key: "effective", value: "HD")])
+    }
+
+    func testCameraDebugViewStaysWithinMapWidth() throws {
+        ornamentsManager.showCameraDebug = true
+        ornamentsManager.cameraDebugAccessoryEntries = [
+            CameraDebugEntry(key: "effective", value: String(repeating: "long value ", count: 20)),
+        ]
+        view.layoutIfNeeded()
+
+        let debugView = try XCTUnwrap(view.subviews.compactMap { $0 as? CameraDebugView }.first)
+        XCTAssertLessThanOrEqual(debugView.frame.maxX, view.bounds.width - 8)
     }
 }

@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Internal) @testable import MapboxMaps
 
 final class CameraDebugViewTests: XCTestCase {
     var cameraDebugView: CameraDebugView!
@@ -44,6 +44,43 @@ final class CameraDebugViewTests: XCTestCase {
         XCTAssertEqual(cameraStateLabel?.text?.contains("zoom: 14"), true)
         XCTAssertEqual(cameraStateLabel?.text?.contains("bearing: 39"), true)
         XCTAssertEqual(cameraStateLabel?.text?.contains("pitch: 23"), true)
+    }
+
+    func testAccessoryEntriesAreAppendedUnderCameraState() {
+        cameraDebugView.cameraState = cameraState
+        cameraDebugView.accessoryEntries = [
+            CameraDebugEntry(key: "effective", value: "HD"),
+            CameraDebugEntry(key: "viewport", value: "hdLite"),
+        ]
+
+        let cameraStateLabel = cameraDebugView.subviews.compactMap { $0 as? UILabel }.first
+        XCTAssertEqual(cameraStateLabel?.text?.contains("pitch: 23.00\neffective: HD\nviewport: hdLite"), true)
+    }
+
+    func testAccessoryEntryKeyIsBold() throws {
+        cameraDebugView.cameraState = cameraState
+        cameraDebugView.accessoryEntries = [CameraDebugEntry(key: "effective", value: "HD")]
+
+        let cameraStateLabel = cameraDebugView.subviews.compactMap { $0 as? UILabel }.first
+        let attributedText = try XCTUnwrap(cameraStateLabel?.attributedText)
+        let text = attributedText.string as NSString
+
+        func isBold(at location: Int) -> Bool {
+            let font = attributedText.attribute(.font, at: location, effectiveRange: nil) as? UIFont
+            return font?.fontDescriptor.symbolicTraits.contains(.traitBold) == true
+        }
+        XCTAssertTrue(isBold(at: text.range(of: "effective:").location))
+        XCTAssertFalse(isBold(at: text.range(of: "HD").location))
+    }
+
+    func testClearingAccessoryEntriesRemovesThem() {
+        cameraDebugView.cameraState = cameraState
+        cameraDebugView.accessoryEntries = [CameraDebugEntry(key: "effective", value: "HD")]
+        cameraDebugView.accessoryEntries = []
+
+        let cameraStateLabel = cameraDebugView.subviews.compactMap { $0 as? UILabel }.first
+        XCTAssertEqual(cameraStateLabel?.text?.contains("effective:"), false)
+        XCTAssertEqual(cameraStateLabel?.text?.hasSuffix("pitch: 23.00"), true)
     }
 
 }

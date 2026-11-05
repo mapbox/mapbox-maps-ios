@@ -89,6 +89,7 @@ public final class OrnamentsManager {
                 let debugView = CameraDebugView()
                 debugView.translatesAutoresizingMaskIntoConstraints = false
                 debugView.cameraState = cachedCamera
+                debugView.accessoryEntries = cameraDebugAccessoryEntries
                 view?.addSubview(debugView)
                 cameraDebugView = debugView
                 updateOrnaments()
@@ -96,6 +97,13 @@ public final class OrnamentsManager {
                 cameraDebugView?.removeFromSuperview()
                 cameraDebugView = nil
             }
+        }
+    }
+
+    /// Entries appended to the camera debug overlay. Kept when the overlay is hidden and applied again when it is shown.
+    internal var cameraDebugAccessoryEntries: [CameraDebugEntry] = [] {
+        didSet {
+            cameraDebugView?.accessoryEntries = cameraDebugAccessoryEntries
         }
     }
 
@@ -236,10 +244,7 @@ public final class OrnamentsManager {
         constraints.append(contentsOf: indoorSelectorViewConstraints)
 
         if let cameraDebugView {
-            let cameraDebugViewConstraints = constraints(with: cameraDebugView,
-                                                         position: .topLeft,
-                                                         margins: CGPoint(x: 8, y: 48))
-            constraints.append(contentsOf: cameraDebugViewConstraints)
+            constraints.append(contentsOf: cameraDebugViewConstraints(for: cameraDebugView))
         }
 
         // Update the image of compass
@@ -266,6 +271,21 @@ public final class OrnamentsManager {
         case .adaptive:
             indoorSelectorView.isHidden = false // Handled by the IndoorSelectorView itself based on floor data and uses opacity
         }
+    }
+
+    private func cameraDebugViewConstraints(for cameraDebugView: CameraDebugView) -> [NSLayoutConstraint] {
+        let margins = CGPoint(x: 8, y: 48)
+        var cameraDebugViewConstraints = constraints(with: cameraDebugView,
+                                                     position: .topLeft,
+                                                     margins: margins)
+        if let layoutGuide = cameraDebugView.superview?.safeAreaLayoutGuide {
+            // Lets long entries wrap instead of stretching the overlay past the right edge.
+            cameraDebugViewConstraints.append(cameraDebugView.rightAnchor.constraint(
+                lessThanOrEqualTo: layoutGuide.rightAnchor,
+                constant: -margins.x
+            ))
+        }
+        return cameraDebugViewConstraints
     }
 
     private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {

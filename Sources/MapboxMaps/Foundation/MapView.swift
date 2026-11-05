@@ -312,6 +312,17 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         }
     }
 
+    /// Extra key-value entries shown under the camera state when ``MapViewDebugOptions/camera`` is enabled.
+    ///
+    /// Entries use the same bold-key style as the camera state. The map does not interpret them.
+    /// They are shown and hidden together with the camera debug overlay.
+    @_spi(Internal)
+    @_documentation(visibility: internal)
+    public var cameraDebugAccessoryEntries: [CameraDebugEntry] {
+        get { ornaments.cameraDebugAccessoryEntries }
+        set { ornaments.cameraDebugAccessoryEntries = newValue }
+    }
+
     internal let attributionUrlOpener: AttributionURLOpener
 
     internal let eventsManager: EventsManagerProtocol

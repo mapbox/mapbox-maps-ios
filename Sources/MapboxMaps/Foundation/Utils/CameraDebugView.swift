@@ -1,11 +1,31 @@
 import UIKit
 
+/// A single line of the camera debug overlay, drawn as a bold key followed by a regular value.
+@_spi(Internal)
+@_documentation(visibility: internal)
+public struct CameraDebugEntry: Equatable, Sendable {
+    public var key: String
+    public var value: String
+
+    public init(key: String, value: String) {
+        self.key = key
+        self.value = value
+    }
+}
+
 final class CameraDebugView: UIView {
     var cameraState: CameraState? {
         didSet {
-            if let cameraState, cameraState != oldValue {
-                self.cameraStateLabel.attributedText = .formatted(cameraState: cameraState)
-            }
+            guard cameraState != oldValue else { return }
+            updateLabel()
+        }
+    }
+
+    /// Extra entries drawn under the camera state. The view does not interpret them.
+    var accessoryEntries: [CameraDebugEntry] = [] {
+        didSet {
+            guard accessoryEntries != oldValue else { return }
+            updateLabel()
         }
     }
 
@@ -29,8 +49,29 @@ final class CameraDebugView: UIView {
         addConstrained(child: cameraStateLabel, padding: 4.0)
     }
 
+    private func updateLabel() {
+        let entries = (cameraState.map([CameraDebugEntry].init(cameraState:)) ?? []) + accessoryEntries
+        cameraStateLabel.attributedText = .formatted(entries: entries)
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+private extension Array where Element == CameraDebugEntry {
+    init(cameraState: CameraState) {
+        self = [
+            CameraDebugEntry(key: "lat", value: String(format: "%.4f", cameraState.center.latitude)),
+            CameraDebugEntry(key: "lon", value: String(format: "%.4f", cameraState.center.longitude)),
+            CameraDebugEntry(key: "zoom", value: String(format: "%.2f", cameraState.zoom)),
+        ]
+        if cameraState.bearing != 0 {
+            append(CameraDebugEntry(key: "bearing", value: String(format: "%.2f", cameraState.bearing)))
+        }
+        if cameraState.pitch != 0 {
+            append(CameraDebugEntry(key: "pitch", value: String(format: "%.2f", cameraState.pitch)))
+        }
     }
 }
 
@@ -41,21 +82,14 @@ private extension NSAttributedString {
         ])
     }
 
-    static func formatted(cameraState: CameraState) -> NSAttributedString {
+    static func formatted(entries: [CameraDebugEntry]) -> NSAttributedString {
         let str = NSMutableAttributedString()
-        str.append(.logString("lat:", bold: true))
-        str.append(.logString(" \(String(format: "%.4f", cameraState.center.latitude))\n"))
-        str.append(.logString("lon:", bold: true))
-        str.append(.logString(" \(String(format: "%.4f", cameraState.center.longitude))\n"))
-        str.append(.logString("zoom:", bold: true))
-        str.append(.logString(" \(String(format: "%.2f", cameraState.zoom))"))
-        if cameraState.bearing != 0 {
-            str.append(.logString("\nbearing:", bold: true))
-            str.append(.logString(" \(String(format: "%.2f", cameraState.bearing))"))
-        }
-        if cameraState.pitch != 0 {
-            str.append(.logString("\npitch:", bold: true))
-            str.append(.logString(" \(String(format: "%.2f", cameraState.pitch))"))
+        for (index, entry) in entries.enumerated() {
+            if index > 0 {
+                str.append(.logString("\n"))
+            }
+            str.append(.logString("\(entry.key):", bold: true))
+            str.append(.logString(" \(entry.value)"))
         }
         return str
     }

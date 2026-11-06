@@ -15,6 +15,7 @@ final class MapContentReconcilerTests: XCTestCase {
     var map: MockMapboxMap!
     var realMap: MapboxMap!
     var mapClient: MockMapClient!
+    var displayLink: SignalSubject<CFTimeInterval>!
 
     @TestPublished var styleIsLoaded = true
 
@@ -41,6 +42,7 @@ final class MapContentReconcilerTests: XCTestCase {
             nowTimestamp: .now
         )
         styleIsLoaded = true
+        displayLink = SignalSubject()
 
         me = MapContentReconciler(styleManager: styleManager, sourceManager: sourceManager, styleIsLoaded: $styleIsLoaded)
         me.setMapContentDependencies(MapContentDependencies(
@@ -48,6 +50,8 @@ final class MapContentReconcilerTests: XCTestCase {
             viewAnnotations: Ref.weakRef(self, property: \.viewAnnotationsManager),
             location: Ref.weakRef(self, property: \.locationManager),
             mapboxMap: Ref { [weak self] in self?.realMap },
+            displayLink: displayLink.signal,
+            targetFramesPerSecond: Signal(just: 60),
             addAnnotationViewController: { _ in },
             removeAnnotationViewController: { _ in }
         ))
@@ -747,6 +751,8 @@ final class MapContentReconcilerTests: XCTestCase {
             viewAnnotations: Ref<ViewAnnotationManager?> { localViewAnnotationsManager },
             location: Ref.weakRef(self, property: \.locationManager),
             mapboxMap: Ref { [weak self] in self?.map },
+            displayLink: displayLink.signal,
+            targetFramesPerSecond: Signal(just: 60),
             addAnnotationViewController: { _ in },
             removeAnnotationViewController: { _ in }
         ))
@@ -807,6 +813,29 @@ final class MapContentReconcilerTests: XCTestCase {
         setContent {}
 
         XCTAssertEqual(spy.events, [.attached, .detached])
+    }
+
+    func testAttachmentReceivesTheMapViewContext() {
+        let spy = AttachmentSpy()
+
+        setContent {
+            CustomMapContent(attachment: spy)
+        }
+
+        XCTAssertIdentical(spy.attachedMap, realMap)
+        XCTAssertIdentical(spy.attachedViewAnnotations, viewAnnotationsManager)
+
+        var frames: [CFTimeInterval] = []
+        let token = spy.attachedDisplayLink?.observe { frames.append($0) }
+        displayLink.send(0.5)
+
+        XCTAssertEqual(frames, [0.5], "the attachment ticks with the map view's display link")
+        token?.cancel()
+
+        var fps: [Int] = []
+        let fpsToken = spy.attachedTargetFramesPerSecond?.observe { fps.append($0) }
+        XCTAssertEqual(fps, [60], "the attachment gets the current frame rate on observing")
+        fpsToken?.cancel()
     }
 
     func testAttachmentSurvivesContentUpdates() {
@@ -971,6 +1000,8 @@ final class MapContentReconcilerTests: XCTestCase {
             viewAnnotations: Ref.weakRef(self, property: \.viewAnnotationsManager),
             location: Ref.weakRef(self, property: \.locationManager),
             mapboxMap: Ref { [weak self] in self?.realMap },
+            displayLink: displayLink.signal,
+            targetFramesPerSecond: Signal(just: 60),
             addAnnotationViewController: { _ in },
             removeAnnotationViewController: { _ in }
         ))
@@ -986,10 +1017,16 @@ private final class AttachmentSpy: MapContentAttachment {
 
     private(set) var events: [Event] = []
     private(set) weak var attachedMap: MapboxMap?
+    private(set) weak var attachedViewAnnotations: ViewAnnotationManager?
+    private(set) var attachedDisplayLink: Signal<CFTimeInterval>?
+    private(set) var attachedTargetFramesPerSecond: Signal<Int>?
 
-    func attached(to map: MapboxMap) {
+    func attached(to context: MapContentAttachmentContext) {
         events.append(.attached)
-        attachedMap = map
+        attachedMap = context.map
+        attachedViewAnnotations = context.viewAnnotations
+        attachedDisplayLink = context.displayLink
+        attachedTargetFramesPerSecond = context.targetFramesPerSecond
     }
 
     func detached() {

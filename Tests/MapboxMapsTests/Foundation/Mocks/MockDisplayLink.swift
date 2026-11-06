@@ -9,6 +9,9 @@ final class MockDisplayLink: CADisplayLink {
     var _duration: CFTimeInterval = 0
     override var duration: CFTimeInterval { _duration }
 
+    var _targetTimestamp: CFTimeInterval = 0
+    override var targetTimestamp: CFTimeInterval { _targetTimestamp }
+
     @Stubbed var isPausedStub: Bool = false
     override var isPaused: Bool {
         get {

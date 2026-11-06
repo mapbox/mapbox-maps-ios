@@ -225,7 +225,14 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
 
     private let dependencyProvider: MapViewDependencyProviderProtocol
 
-    private let displayLinkSignalSubject = SignalSubject<Void>()
+    private let displayLinkSignalSubject = SignalSubject<CFTimeInterval>()
+    private let targetFramesPerSecondSubject = CurrentValueSignalSubject(0)
+    private var displayLinkTick: Signal<Void> { displayLinkSignalSubject.signal.map { _ in } }
+    /// The frame's `targetTimestamp`, sent before camera animators run and the map draws.
+    var displayLinkSignal: Signal<CFTimeInterval> { displayLinkSignalSubject.signal }
+    /// The screen's maximum frame rate, lowered to the view's preferred rate when set; 0 without a window.
+    /// Current value on observe, then changes.
+    var targetFramesPerSecond: Signal<Int> { targetFramesPerSecondSubject.signal.skipRepeats() }
     private let safeAreaSignalSubject = CurrentValueSignalSubject(UIEdgeInsets())
 
     private let notificationCenter: NotificationCenterProtocol
@@ -486,7 +493,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         camera = CameraAnimationsManager(impl: internalCamera)
 
         annotations = AnnotationOrchestrator(
-            deps: .from(mapboxMap: mapboxMap, displayLink: displayLinkSignalSubject.signal))
+            deps: .from(mapboxMap: mapboxMap, displayLink: displayLinkTick))
 
         // Initialize/Configure gesture manager
         gestures = dependencyProvider.makeGestureManager(
@@ -522,7 +529,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
             interfaceOrientationView: .weakRef(self),
             styleManager: mapboxMap,
             mapboxMap: mapboxMap,
-            displayLink: displayLinkSignalSubject.signal,
+            displayLink: displayLinkTick,
             dataModel: initOptions.locationDataModel ?? .createDefault(),
             nowTimestamp: .now
         )
@@ -531,7 +538,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         viewAnnotations = ViewAnnotationManager(
             containerView: viewAnnotationContainerView,
             mapboxMap: mapboxMap,
-            displayLink: displayLinkSignalSubject.signal)
+            displayLink: displayLinkTick)
         mapPresentation.displaysAnnotations = viewAnnotations.displaysAnnotations.signal
 
         let safeAreaSignal = safeAreaSignalSubject.signal.skipRepeats()
@@ -734,7 +741,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
         }
 
         OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink, "DisplayLink participants") {
-            displayLinkSignalSubject.send()
+            displayLinkSignalSubject.send(displayLink.targetTimestamp)
         }
 
         OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink, "Camera animator runner") {
@@ -768,6 +775,27 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
                 displayLink.preferredFrameRateRange = _preferredFrameRateRange
             }
         }
+
+        updateTargetFramesPerSecond()
+    }
+
+    /// The frame rate the app asked for, 0 when it left the default.
+    private var requestedFramesPerSecond: Int {
+        if #available(iOS 15.0, *), let range = _preferredFrameRateRange, range.maximum > 0 {
+            return Int(range.maximum)
+        }
+        return _preferredFramesPerSecond ?? 0
+    }
+
+    private func updateTargetFramesPerSecond() {
+#if !os(visionOS)
+        guard let screenMaximum = window?.screen.maximumFramesPerSecond else {
+            targetFramesPerSecondSubject.value = 0
+            return
+        }
+        let requested = requestedFramesPerSecond
+        targetFramesPerSecondSubject.value = requested > 0 ? min(requested, screenMaximum) : screenMaximum
+#endif
     }
 
     private(set) var didMoveToCarPlayWindow = false
@@ -777,6 +805,7 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
 
         displayLink?.invalidate()
         displayLink = nil
+        updateTargetFramesPerSecond()
 
         guard let window = window else {
             cameraAnimatorsRunner.isEnabled = false
@@ -881,8 +910,4 @@ extension MapView: DelegatingMapClientDelegate {
 
         return metalView
     }
-}
-
-extension MapView {
-    var __displayLinkSignalForTests: Signal<Void> { displayLinkSignalSubject.signal }
 }

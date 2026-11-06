@@ -1,5 +1,5 @@
 import XCTest
-@testable @_spi(Metrics) @_spi(Restricted) import MapboxMaps
+@testable @_spi(Metrics) @_spi(Restricted) @_spi(Internal) import MapboxMaps
 
 /// Test suite for `MapView` functionality and lifecycle management.
 ///
@@ -249,7 +249,7 @@ final class MapViewTests: XCTestCase {
 
     func testDisplayLinkInvokesParticipants() throws {
         var count = 0
-        let token = mapView.__displayLinkSignalForTests.observe { _ in
+        let token = mapView.displayLinkSignal.observe { _ in
             count += 1
         }
 
@@ -265,6 +265,59 @@ final class MapViewTests: XCTestCase {
 
         XCTAssertEqual(count, 1)
     }
+
+    func testAttachmentContextComesFromTheMapView() throws {
+        let context = MapContentAttachmentContext(mapView: mapView)
+        var frames: [CFTimeInterval] = []
+        let token = context.displayLink.observe { frames.append($0) }
+        displayLink._targetTimestamp = 0.5
+
+        try invokeDisplayLinkCallback()
+
+        XCTAssertIdentical(context.map, mapView.mapboxMap)
+        XCTAssertIdentical(context.viewAnnotations, mapView.viewAnnotations)
+        XCTAssertEqual(frames, [0.5], "the context ticks with the frame's target timestamp")
+        token.cancel()
+    }
+
+#if !(swift(>=5.9) && os(visionOS))
+    func testAttachmentContextTargetFramesPerSecondFollowsTheMapView() {
+        let context = MapContentAttachmentContext(mapView: mapView)
+        var fps: [Int] = []
+        let token = context.targetFramesPerSecond.observe { fps.append($0) }
+        let screenMaximum = window.screen.maximumFramesPerSecond
+
+        XCTAssertEqual(fps, [screenMaximum], "the current value arrives on observing")
+
+        window.addSubview(mapView)
+        XCTAssertEqual(fps.count, 1, "the same screen is not resent")
+
+        mapView.removeFromSuperview()
+        XCTAssertEqual(fps, [screenMaximum, 0], "no window, no frames")
+        token.cancel()
+    }
+
+    func testAttachmentContextTargetFramesPerSecondIsCappedByThePreferredRate() {
+        let context = MapContentAttachmentContext(mapView: mapView)
+        var fps: [Int] = []
+        let token = context.targetFramesPerSecond.observe { fps.append($0) }
+        let screenMaximum = window.screen.maximumFramesPerSecond
+
+        if #available(iOS 15.0, *) {
+            mapView.preferredFrameRateRange = CAFrameRateRange(minimum: 15, maximum: 30, preferred: 30)
+            mapView.preferredFrameRateRange = .default
+        } else {
+            mapView.preferredFramesPerSecond = 30
+            mapView.preferredFramesPerSecond = 0
+        }
+        mapView.preferredFramesPerSecond = 45
+        mapView.preferredFramesPerSecond = -1
+        mapView.preferredFramesPerSecond = screenMaximum * 2
+
+        XCTAssertEqual(fps, [screenMaximum, 30, screenMaximum, 45, screenMaximum])
+        token.cancel()
+    }
+#endif
 
     func testDisplayLinkInvokesCameraAnimatorsRunner() throws {
         XCTAssertEqual(dependencyProvider.makeCameraAnimatorsRunnerStub.invocations.count, 1)

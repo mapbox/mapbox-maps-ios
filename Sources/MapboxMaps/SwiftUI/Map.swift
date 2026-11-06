@@ -137,6 +137,8 @@ public struct Map: UIViewControllerRepresentable {
             viewAnnotations: Ref.weakRef(mapView, property: \.viewAnnotations),
             location: Ref.weakRef(mapView, property: \.location),
             mapboxMap: Ref { [weak mapView] in mapView?.mapboxMap },
+            displayLink: mapView.displayLinkSignal,
+            targetFramesPerSecond: mapView.targetFramesPerSecond,
             addAnnotationViewController: { [weak viewController] childVC in
                 guard let viewController else { return }
                 viewController.addChild(childVC)

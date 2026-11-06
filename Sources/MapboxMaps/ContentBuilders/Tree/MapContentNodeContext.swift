@@ -10,6 +10,8 @@ struct MapContentDependencies {
     let viewAnnotations: Ref<ViewAnnotationManager?>
     let location: Ref<LocationManager?>
     let mapboxMap: Ref<MapboxMapProtocol?>
+    let displayLink: Signal<CFTimeInterval>
+    let targetFramesPerSecond: Signal<Int>
 
     let addAnnotationViewController: (UIViewController) -> Void
     let removeAnnotationViewController: (UIViewController) -> Void

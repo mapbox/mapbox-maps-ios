@@ -10,8 +10,10 @@ final class MountedAttachment: MapContentMountedComponent {
     }
 
     func mount(with context: MapContentNodeContext) throws {
-        guard let map = context.content?.mapboxMap.value else {
-            // No map yet: the next walk retries, `tryUpdate` won't keep an unattached component.
+        guard let content = context.content,
+              let map = content.mapboxMap.value,
+              let viewAnnotations = content.viewAnnotations.value else {
+            // No map view yet: the next walk retries, `tryUpdate` won't keep an unattached component.
             return
         }
         guard let map = map as? MapboxMap else {
@@ -24,7 +26,12 @@ final class MountedAttachment: MapContentMountedComponent {
             return
         }
         Self.mounted.add(attachment)
-        attachment.attached(to: map)
+        attachment.attached(to: .init(
+            map: map,
+            viewAnnotations: viewAnnotations,
+            displayLink: content.displayLink,
+            targetFramesPerSecond: content.targetFramesPerSecond
+        ))
         isAttached = true
     }
 

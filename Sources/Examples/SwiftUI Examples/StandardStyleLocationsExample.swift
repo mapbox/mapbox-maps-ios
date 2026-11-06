@@ -5,7 +5,7 @@ struct StandardStyleLocationsExample: View {
     /// This model is created in root application views for each platform:
     ///
     /// - `VisionOSMain` for visionOS
-    /// - ``SwiftUIWrapper`` view for iOS
+    /// - ``ExamplesRootView`` for iOS
     @EnvironmentObject var model: StandardStyleLocationsModel
     @State private var settingsHeight: CGFloat = 0
 
@@ -251,5 +251,6 @@ extension Pair: Equatable where First: Equatable, Second: Equatable {}
 struct StandardStyleLocationsExample_Previews: PreviewProvider {
     static var previews: some View {
             StandardStyleLocationsExample()
+                .environmentObject(StandardStyleLocationsModel())
     }
 }

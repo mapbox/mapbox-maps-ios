@@ -125,15 +125,6 @@ private struct ToolbarContentWhenPresented<T: ToolbarContent>: ViewModifier {
     }
 }
 
-struct SwiftUIWrapper: View {
-    // A model for StandardStyleLocationsExample.
-    @StateObject var locationsModel = StandardStyleLocationsModel()
-    var body: some View {
-        SwiftUIRoot()
-            .environmentObject(locationsModel)
-    }
-}
-
 struct ExampleView<Content>: View where Content: View {
     @State private var isNavigationBarHidden = false
     let content: Content

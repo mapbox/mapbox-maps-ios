@@ -15,6 +15,7 @@ struct SearchView: View {
                         Section {
                             ForEach(category.examples, id: \.title) { example in
                                 ExampleLink(example.title, note: example.description, destination: AnyView(example.destination()))
+                                    .accessibilityIdentifier("\(category.title)/\(example.title)") // titles repeat across catalogs
                             }
                         } header: { Text(category.title) }
                     }

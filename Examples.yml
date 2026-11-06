@@ -11,10 +11,9 @@ targets:
         MAPBOXMAPS_PATH: ./
     scheme:
       testPlans:
-        - path: Tests/TestPlans/Examples.xctestplan
+        - path: Tests/TestPlans/LoadTests.xctestplan
           defaultPlan: true
-        - path: Tests/TestPlans/Examples no unit tests.xctestplan
-          defaultPlan: true
+        - path: Tests/TestPlans/SearchUITests.xctestplan
 
 targetTemplates:
   map-library:REPLACE:

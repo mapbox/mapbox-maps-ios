@@ -71,6 +71,8 @@ final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
 
             case let .success(region):
                 self?.startDownload(for: region)
+                // The line below is used for internal testing purposes only.
+                self?.finish()
             }
         }
     }
@@ -99,9 +101,6 @@ final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
                 } else {
                     print("Some resources failed to download. Resources that did download will be available offline.")
                 }
-
-                // The line below is used for internal testing purposes only.
-                self.finish()
             }
         }
 

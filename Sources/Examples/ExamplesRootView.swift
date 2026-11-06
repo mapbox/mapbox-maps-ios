@@ -3,6 +3,8 @@ import UIKit
 
 struct ExamplesRootView: View {
     @StateObject private var overridesModel = StyleOverridesModel()
+    // Shared by StandardStyleLocationsExample, reachable from both SwiftUI and Search tabs.
+    @StateObject private var locationsModel = StandardStyleLocationsModel()
     @State private var searchText: String = ""
 
     // MARK: - Tab Content
@@ -12,7 +14,7 @@ struct ExamplesRootView: View {
     }
 
     private var swiftUITab: some View {
-        SwiftUIWrapper()
+        SwiftUIRoot()
     }
 
     private var useCasesTab: some View {
@@ -37,7 +39,7 @@ struct ExamplesRootView: View {
             }
         }
         .safeTabBarMinimizeBehaviorOnScrollDown()
-        .environmentObject(overridesModel)
+        .examplesEnvironment(overrides: overridesModel, locations: locationsModel)
     }
 
     // MARK: - Modern Tab View (iOS 18+)
@@ -100,6 +102,12 @@ struct ExamplesRootView: View {
 }
 
 extension View {
+    /// Shared by the app root and the Examples tests.
+    func examplesEnvironment(overrides: StyleOverridesModel, locations: StandardStyleLocationsModel) -> some View {
+        environmentObject(overrides)
+            .environmentObject(locations)
+    }
+
     func safeTabBarMinimizeBehaviorOnScrollDown() -> some View {
 #if compiler(>=6.2)
         if #available(iOS 26.0, *) {

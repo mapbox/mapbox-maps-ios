@@ -25,7 +25,8 @@ struct GeofencingUserLocation: View {
     }
 
     func startGeofencing(_ locationManager: LocationManager?) {
-        geofencing.start {
+        // Geofencing callbacks are released off the main thread, so they must not own the location manager.
+        geofencing.start { [weak locationManager] in
             initialLocationProvider.start(locationManager: locationManager) { initialLocation in
                 let _region = CircularRegion(center: Point(initialLocation), radius: .random(in: 200...300))
                 var feature = Feature(geometry: _region.center)
@@ -126,7 +127,7 @@ private final class Geofencing: ObservableObject {
             geofencing.clearFeatures { result in
                 print("Clear features: \(result)")
                 geofencing.addObserver(observer: self) { result in print("Add observer: \(result)") }
-                completion()
+                DispatchQueue.main.async(execute: completion) // callbacks arrive on the geofencing thread
             }
         }
     }
@@ -135,7 +136,7 @@ private final class Geofencing: ObservableObject {
         let geofencing = GeofencingFactory.getOrCreate()
         geofencing.addFeature(feature: feature) { result in
             print("Add feature result: \(result)")
-            if case .success = result { onSuccess() }
+            if case .success = result { DispatchQueue.main.async(execute: onSuccess) }
         }
     }
 

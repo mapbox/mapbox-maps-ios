@@ -35,8 +35,6 @@ targets:
       groups:
         - turf_library_evolution_settings
     scheme:
-      testTargets:
-        - MapboxMapsTests
       gatherCoverageData: true
       coverageTargets:
         - MapboxMaps

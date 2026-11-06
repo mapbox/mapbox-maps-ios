@@ -9,14 +9,11 @@ final class CustomLayerExample: UIViewController, ExampleProtocol {
     // The CustomLayerExampleCustomLayerHost() should be created and stored outside of MapStyleContent so that it is not recreated with every style update.
     let renderer = CustomLayerExampleCustomLayerHost()
 
-    private var displayLink: CADisplayLink! {
+    // CADisplayLink retains its target, so it is dropped in viewWillDisappear, not deinit.
+    private var displayLink: CADisplayLink? {
         didSet {
             oldValue?.invalidate()
         }
-    }
-
-    deinit {
-        displayLink?.invalidate()
     }
 
     override func viewDidLoad() {
@@ -30,21 +27,28 @@ final class CustomLayerExample: UIViewController, ExampleProtocol {
             CustomLayer(id: "custom-layer-example", renderer: renderer)
         }
 
-        mapView.mapboxMap.onRenderFrameStarted.observeNext { [weak self] _ in
-            guard let self else { return }
-
-            self.displayLink = CADisplayLink(target: self, selector: #selector(self.triggerMapRepaint))
-            self.displayLink.add(to: .main, forMode: .common)
-        }.store(in: &cancelables)
-
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        // Start repainting once the map renders its first frame.
+        mapView.mapboxMap.onRenderFrameStarted.observeNext { [weak self] _ in
+            guard let self else { return }
+
+            displayLink = CADisplayLink(target: self, selector: #selector(triggerMapRepaint))
+            displayLink?.add(to: .main, forMode: .common)
+        }.store(in: &cancelables)
+        mapView.mapboxMap.triggerRepaint() // the map may already be idle
          // The below line is used for internal testing purposes only.
         finish()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        cancelables.removeAll()
+        displayLink = nil
     }
 
     @objc private func triggerMapRepaint() {

@@ -48,7 +48,7 @@ final class TrackingModeExample: UIViewController, ExampleProtocol {
     }
 
     private func setupSettingsButton() {
-        let buttonView = SettingsButtonView(onTap: openSettings)
+        let buttonView = SettingsButtonView(onTap: { [weak self] in self?.openSettings() })
         let hostingController = UIHostingController(rootView: buttonView)
         hostingController.view.backgroundColor = .clear
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false

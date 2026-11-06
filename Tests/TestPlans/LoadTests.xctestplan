@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "id": "117C2FB7-9887-4CA7-9957-C6ECB5B95193",
+      "name": "Configuration 1",
+      "options": {}
+    }
+  ],
+  "defaultOptions": {
+    "language": "en"
+  },
+  "testTargets": [
+    {
+      "target": {
+        "containerPath": "container:Examples.xcodeproj",
+        "identifier": "542BE47134765F0824559C2F",
+        "name": "ExamplesTests"
+      }
+    }
+  ],
+  "version": 1
+}

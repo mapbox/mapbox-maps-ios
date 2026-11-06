@@ -1,7 +1,6 @@
 ---
 manifests:
   - type: Package.swift
-  - type: Podspec
   - type: packager
   - type: Cross-check Common SDK version with GL Native
     omit_for:

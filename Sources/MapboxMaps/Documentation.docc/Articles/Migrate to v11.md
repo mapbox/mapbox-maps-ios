@@ -10,7 +10,7 @@ The Mapbox Maps SDK v11 introduces improvements to how Mapbox works on iOS platf
 
 ## 1. Update Dependencies
 
-Update your app's dependencies to use versions 11+ of the Mapbox Maps SDK for iOS. We distribute the SDK through Swift Package Manager (SPM), CocoaPods, and Direct Download. Full instructions are found [here](https://docs.mapbox.com/ios/maps/guides/install/).
+Update your app's dependencies to use versions 11+ of the Mapbox Maps SDK for iOS. We distribute the SDK through Swift Package Manager (SPM) and Direct Download. Full instructions are found [here](https://docs.mapbox.com/ios/maps/guides/install/).
 
 ## 2. Explore New Features
 

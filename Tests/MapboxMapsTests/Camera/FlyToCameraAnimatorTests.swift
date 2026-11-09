@@ -27,7 +27,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
     verticalFov: 35)
 
     let duration: TimeInterval = 10
-    let curve = TimingCurve.easeInOut
+    var curve = TimingCurve.easeInOut
     var owner: AnimationOwner!
     var mapboxMap: MockMapboxMap!
     var mainQueue: MockMainQueue!
@@ -203,6 +203,84 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         flyToCameraAnimator.update()
 
         XCTAssertFalse(mapboxMap.setCameraStub.invocations.isEmpty)
+    }
+
+    func testUpdateInterpolatesPositionPointAndKeepsItAfterStop() throws {
+        makeAnimator(sourcePoint: CameraPositionPoint(x: -1, y: 0), destPoint: CameraPositionPoint(x: 1, y: 0.5))
+        flyToCameraAnimator.startAnimation()
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 5)
+
+        flyToCameraAnimator.update()
+        flyToCameraAnimator.stopAnimation()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
+        let point = try XCTUnwrap(mapboxMap.setCameraStub.invocations.last?.parameters.positionPoint)
+        XCTAssertGreaterThan(point.x, -1)
+        XCTAssertLessThan(point.x, 1)
+        XCTAssertGreaterThan(point.y, 0)
+        XCTAssertLessThan(point.y, 0.5)
+    }
+
+    func testUpdateClampsOvershootingPositionPoint() throws {
+        // control points beyond 1 make the eased fraction exceed 1 before the animation ends
+        curve = TimingCurve(p1: CGPoint(x: 0.2, y: 2), p2: CGPoint(x: 0.8, y: 2))
+        makeAnimator(sourcePoint: CameraPositionPoint(x: 0.5, y: -0.5), destPoint: CameraPositionPoint(x: 1, y: -1))
+        flyToCameraAnimator.startAnimation()
+
+        for seconds in stride(from: 1.0, to: 10.0, by: 1.0) {
+            dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: seconds)
+            flyToCameraAnimator.update()
+        }
+
+        let points = try mapboxMap.setCameraStub.invocations.map { try XCTUnwrap($0.parameters.positionPoint) }
+        XCTAssertFalse(points.isEmpty)
+        XCTAssertTrue(points.allSatisfy { (-1...1).contains($0.x) && (-1...1).contains($0.y) })
+        XCTAssertTrue(points.contains { $0.x == 1 && $0.y == -1 })
+    }
+
+    func testUpdateDoesNotSetPositionPointWithoutDestination() {
+        flyToCameraAnimator.startAnimation()
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 5)
+
+        flyToCameraAnimator.update()
+
+        XCTAssertNil(mapboxMap.setCameraStub.invocations.last?.parameters.positionPoint)
+    }
+
+    func testFinalCameraCarriesPositionPoint() {
+        makeAnimator(sourcePoint: CameraPositionPoint(x: -1, y: 0), destPoint: CameraPositionPoint(x: 0.5, y: 0.5))
+        flyToCameraAnimator.startAnimation()
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 20)
+
+        flyToCameraAnimator.update()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.positionPoint, CameraPositionPoint(x: 0.5, y: 0.5))
+    }
+
+    func testFinalCameraClampsOutOfRangePositionPoint() {
+        makeAnimator(sourcePoint: CameraPositionPoint(x: 0, y: 0), destPoint: CameraPositionPoint(x: 2, y: -3))
+        flyToCameraAnimator.startAnimation()
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 20)
+
+        flyToCameraAnimator.update()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.positionPoint, CameraPositionPoint(x: 1, y: -1))
+    }
+
+    private func makeAnimator(sourcePoint: CameraPositionPoint, destPoint: CameraPositionPoint) {
+        var state = initialCameraState
+        state.positionPoint = sourcePoint
+        mapboxMap.cameraState = state
+        var finalOptions = finalCameraOptions
+        finalOptions.positionPoint = destPoint
+        flyToCameraAnimator = FlyToCameraAnimator(
+            toCamera: finalOptions,
+            duration: duration,
+            curve: curve,
+            owner: owner,
+            mapboxMap: mapboxMap,
+            mainQueue: mainQueue,
+            dateProvider: dateProvider)
     }
 
     func testOnStarted() {

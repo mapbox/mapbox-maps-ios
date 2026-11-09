@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 import XCTest
 
 final class CameraOptionsInterpolatorTests: XCTestCase {
@@ -172,5 +172,59 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         XCTAssertEqual(interpolatorInvocation2.parameters.fraction, fraction)
         XCTAssertEqual(result.verticalFov, CGFloat(interpolatorInvocation2.returnValue))
 
+    }
+
+    func testPositionPoint() {
+        var from = CameraOptions()
+        from.positionPoint = CameraPositionPoint(x: 0, y: 0)
+        var to = CameraOptions()
+        to.positionPoint = CameraPositionPoint(x: -0.5, y: 0.8)
+        doubleInterpolator.interpolateStub.returnValueQueue = [-0.3, 0.48]
+
+        let result = cameraOptionsInterpolator.interpolate(
+            from: from,
+            to: to,
+            fraction: fraction)
+
+        let invocations = doubleInterpolator.interpolateStub.invocations
+        guard invocations.count == 2 else {
+            XCTFail("Expected 2 double interpolations, got \(invocations.count)")
+            return
+        }
+        XCTAssertEqual(invocations[0].parameters.from, 0)
+        XCTAssertEqual(invocations[0].parameters.to, -0.5)
+        XCTAssertEqual(invocations[0].parameters.fraction, fraction)
+        XCTAssertEqual(invocations[1].parameters.from, 0)
+        XCTAssertEqual(invocations[1].parameters.to, 0.8)
+        XCTAssertEqual(invocations[1].parameters.fraction, fraction)
+        XCTAssertEqual(result.positionPoint, CameraPositionPoint(x: -0.3, y: 0.48))
+    }
+
+    func testPositionPointClampsOvershoot() {
+        var from = CameraOptions()
+        from.positionPoint = CameraPositionPoint(x: 0, y: 0)
+        var to = CameraOptions()
+        to.positionPoint = CameraPositionPoint(x: 1, y: -1)
+        doubleInterpolator.interpolateStub.returnValueQueue = [1.1, -1.1]
+
+        let result = cameraOptionsInterpolator.interpolate(
+            from: from,
+            to: to,
+            fraction: 1.1)
+
+        XCTAssertEqual(result.positionPoint, CameraPositionPoint(x: 1, y: -1))
+    }
+
+    func testPositionPointFromNilIsNotAnimated() {
+        var to = CameraOptions()
+        to.positionPoint = CameraPositionPoint(x: 0, y: 0.5)
+
+        let result = cameraOptionsInterpolator.interpolate(
+            from: CameraOptions(),
+            to: to,
+            fraction: fraction)
+
+        XCTAssertTrue(doubleInterpolator.interpolateStub.invocations.isEmpty)
+        XCTAssertNil(result.positionPoint)
     }
 }

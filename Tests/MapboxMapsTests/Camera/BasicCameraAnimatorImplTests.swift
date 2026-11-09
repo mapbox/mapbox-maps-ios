@@ -477,6 +477,65 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
     }
 
+    func testAnimatorCompletionAppliesInterpolatedPositionPoint() throws {
+        animationImpl = { (transition) in
+            transition.positionPoint.toValue = CGPoint(x: 0.25, y: -0.5)
+        }
+        animator.startAnimation()
+        cameraView.layer.shadowOffset = CGSize(width: 0.1, height: -0.2)
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
+
+        completion(.start)
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.positionPoint, CameraPositionPoint(x: 0.1, y: -0.2))
+    }
+
+    func testAnimatorCompletionClampsOvershotPositionPoint() throws {
+        animationImpl = { (transition) in
+            transition.positionPoint.toValue = CGPoint(x: 1, y: -1)
+        }
+        animator.startAnimation()
+        cameraView.layer.shadowOffset = CGSize(width: 1.2, height: -1.4)
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
+
+        completion(.end)
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.positionPoint, CameraPositionPoint(x: 1, y: -1))
+    }
+
+    func testAnimatorCompletionDoesNotSetPositionPointWithoutToValue() throws {
+        animationImpl = { (transition) in
+            transition.zoom.toValue = cameraOptionsTestValue.zoom!
+        }
+        animator.startAnimation()
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
+
+        completion(.end)
+
+        XCTAssertNil(mapboxMap.setCameraStub.invocations.last?.parameters.positionPoint)
+    }
+
+    func testAnimationSyncsPositionPointToCameraView() throws {
+        mapboxMap.cameraState = CameraState(
+            center: .init(latitude: 0, longitude: 0),
+            padding: .zero,
+            zoom: 0,
+            bearing: 0,
+            pitch: 0,
+            verticalFov: 10,
+            positionPoint: CameraPositionPoint(x: -0.5, y: 0.5))
+        animationImpl = { (transition) in
+            transition.positionPoint.toValue = CGPoint(x: 0.25, y: -0.5)
+        }
+
+        // The mock forwards to UIViewPropertyAnimator, which runs the animations block on start.
+        animator.startAnimation()
+
+        let positionPoints = cameraView.syncLayerStub.invocations.map(\.parameters.positionPoint)
+        XCTAssertEqual(positionPoints.first, CameraPositionPoint(x: -0.5, y: 0.5))
+        XCTAssertEqual(positionPoints.last, CameraPositionPoint(x: 0.25, y: -0.5))
+    }
+
     func testAnimatorCompletionDoesNotUpdateCameraIfAnimationCompletedAtCurrent() throws {
         animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!

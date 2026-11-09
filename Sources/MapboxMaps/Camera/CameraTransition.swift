@@ -33,6 +33,13 @@ public struct CameraTransition: Equatable, Sendable {
     @_spi(Experimental)
     public var verticalFov: Change<CGFloat>
 
+    /// Represents a change to the position point of the map, with `x` and `y` of the point in the `-1...1` range.
+    ///
+    /// - SeeAlso: ``CameraPositionPoint``
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var positionPoint: Change<CGPoint>
+
     /// Generic struct used to represent a change in a value from a starting point (i.e. `fromValue`) to an end point (i.e. `toValue`).
     public struct Change<T>: Equatable where T: Equatable {
         public var fromValue: T
@@ -52,27 +59,33 @@ public struct CameraTransition: Equatable, Sendable {
         bearing = Change(fromValue: cameraState.bearing)
         anchor  = Change(fromValue: initialAnchor)
         verticalFov = Change(fromValue: cameraState.verticalFov)
+        positionPoint = Change(fromValue: CGPoint(x: cameraState.positionPoint.x, y: cameraState.positionPoint.y))
     }
 
     internal var toCameraOptions: CameraOptions {
-        return CameraOptions(center: center.toValue,
-                             padding: padding.toValue,
-                             anchor: anchor.toValue,
-                             zoom: zoom.toValue,
-                             bearing: shouldOptimizeBearingPath ? optimizedBearingToValue : bearing.toValue,
-                             pitch: pitch.toValue,
-                             verticalFov: verticalFov.toValue)
+        var options = CameraOptions(
+            center: center.toValue,
+            padding: padding.toValue,
+            anchor: anchor.toValue,
+            zoom: zoom.toValue,
+            bearing: shouldOptimizeBearingPath ? optimizedBearingToValue : bearing.toValue,
+            pitch: pitch.toValue,
+            verticalFov: verticalFov.toValue)
+        options.positionPoint = positionPoint.toValue.map(CameraPositionPoint.init(_:))
+        return options
     }
 
     internal var fromCameraOptions: CameraOptions {
-        return CameraOptions(center: center.fromValue,
-                             padding: padding.fromValue,
-                             anchor: anchor.fromValue,
-                             zoom: zoom.fromValue,
-                             bearing: bearing.fromValue,
-                             pitch: pitch.fromValue,
-                             verticalFov: verticalFov.fromValue)
-
+        var options = CameraOptions(
+            center: center.fromValue,
+            padding: padding.fromValue,
+            anchor: anchor.fromValue,
+            zoom: zoom.fromValue,
+            bearing: bearing.fromValue,
+            pitch: pitch.fromValue,
+            verticalFov: verticalFov.fromValue)
+        options.positionPoint = CameraPositionPoint(positionPoint.fromValue)
+        return options
     }
 
     internal var optimizedBearingToValue: CLLocationDirection? {
@@ -102,3 +115,16 @@ public struct CameraTransition: Equatable, Sendable {
 }
 
 extension CameraTransition.Change: Sendable where T: Sendable {}
+
+private extension CameraPositionPoint {
+    init(_ point: CGPoint) {
+        self.init(x: Double(point.x), y: Double(point.y))
+    }
+}
+
+extension CameraPositionPoint {
+    /// The core rejects a camera whose position point lies outside `-1...1`.
+    var clampedToUnitSquare: CameraPositionPoint {
+        CameraPositionPoint(x: x.clamped(to: -1...1), y: y.clamped(to: -1...1))
+    }
+}

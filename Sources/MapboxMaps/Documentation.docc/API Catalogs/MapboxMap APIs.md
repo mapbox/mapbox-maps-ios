@@ -7,6 +7,7 @@
 - ``MapboxMap``
 - ``CameraState-swift.struct``
 - ``CameraOptions-swift.struct``
+- ``CameraPositionPoint``
 - ``CameraBounds-swift.struct``
 - ``CameraBoundsOptions-swift.struct``
 - ``MapError``

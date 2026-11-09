@@ -1,9 +1,10 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class CameraViewTests: XCTestCase {
 
-    let cameraOptions = CameraOptions(
+    let cameraOptions: CameraOptions = {
+        var options = CameraOptions(
         center: CLLocationCoordinate2D(
             latitude: 10,
             longitude: 10),
@@ -19,6 +20,9 @@ final class CameraViewTests: XCTestCase {
         bearing: 10,
         pitch: 10,
         verticalFov: 10)
+        options.positionPoint = CameraPositionPoint(x: 0.25, y: -0.5)
+        return options
+    }()
 
     var cameraView: CameraView!
 
@@ -44,6 +48,18 @@ final class CameraViewTests: XCTestCase {
                                                           y: center.latitude))
         XCTAssertEqual(cameraView.layer.borderWidth, cameraOptions.pitch!)
         XCTAssertEqual(cameraView.layer.anchorPoint, cameraOptions.anchor!)
+        XCTAssertEqual(cameraView.layer.zPosition, cameraOptions.verticalFov!)
+        XCTAssertEqual(cameraView.layer.shadowOffset, CGSize(width: 0.25, height: -0.5))
+    }
+
+    func testSyncLayerKeepsPositionPointWhenNil() {
+        cameraView.syncLayer(to: CameraOptions(zoom: 3))
+
+        XCTAssertEqual(cameraView.cameraOptions.positionPoint, CameraPositionPoint(x: 0.25, y: -0.5))
+    }
+
+    func testPositionPointIsCenteredBeforeTheFirstSync() {
+        XCTAssertEqual(CameraView().cameraOptions.positionPoint, CameraPositionPoint(x: 0, y: 0))
     }
 
     func testLocalCamera() {

@@ -1,4 +1,5 @@
 import UIKit
+@_spi(Experimental) import MapboxCoreMaps
 internal import MapboxCommon_Private
 
 internal protocol CameraAnimationsManagerProtocol: AnyObject {
@@ -131,6 +132,7 @@ internal final class CameraAnimationsManagerImpl: CameraAnimationsManagerProtoco
                 transition.bearing.toValue = to.bearing
                 transition.pitch.toValue = to.pitch
                 transition.verticalFov.toValue = to.verticalFov
+                transition.positionPoint.toValue = to.positionPoint.map { CGPoint(x: $0.x, y: $0.y) }
             })
         let animator = BasicCameraAnimator(impl: animatorImpl)
         if let completion = completion {

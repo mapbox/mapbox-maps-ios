@@ -36,6 +36,9 @@ internal struct FlyToInterpolator {
     private let sourceVerticalFov: CGFloat
     private let destVerticalFov: CGFloat
 
+    private let sourcePositionPoint: CGPoint
+    private let destPositionPoint: CGPoint
+
     // Default values
     fileprivate let defaultVelocity = 1.2
 
@@ -73,6 +76,7 @@ internal struct FlyToInterpolator {
         sourcePadding = sourcePaddingParam
         sourcePitch = sourcePitchParam
         sourceVerticalFov = sourceVerticalFovParam
+        sourcePositionPoint = CGPoint(x: source.positionPoint.x, y: source.positionPoint.y)
 
         // Dest conditions
         destPadding = dest.padding ?? sourcePaddingParam
@@ -84,6 +88,7 @@ internal struct FlyToInterpolator {
         destPitch = (dest.pitch ?? sourcePitchParam).clamped(to: CGFloat(cameraBounds.minPitch)...CGFloat(cameraBounds.maxPitch))
         destBearing = dest.bearing ?? sourceBearingParam
         destVerticalFov = dest.verticalFov ?? sourceVerticalFovParam
+        destPositionPoint = dest.positionPoint.map { CGPoint(x: $0.x, y: $0.y) } ?? sourcePositionPoint
 
         // Unwrap
         let sourceCoordUnwrapped = sourceCoord.unwrapForShortestPath(destCoord)
@@ -279,6 +284,18 @@ internal struct FlyToInterpolator {
     /// - Returns: vertical fov
     internal func verticalFov(at fraction: Double) -> Double {
         return (1.0 - fraction) * Double(sourceVerticalFov) + fraction * Double(destVerticalFov)
+    }
+
+    /// Calculates the position point given a fraction in [0,1].
+    /// This is a linear interpolation.
+    ///
+    /// - Parameter fraction: Parameter between 0 and 1. 0 represents the start position, 1 the end position.
+    /// - Returns: position point
+    internal func positionPoint(at fraction: Double) -> CameraPositionPoint {
+        let t = CGFloat(fraction)
+        return CameraPositionPoint(
+            x: Double((1.0 - t) * sourcePositionPoint.x + t * destPositionPoint.x),
+            y: Double((1.0 - t) * sourcePositionPoint.y + t * destPositionPoint.y))
     }
 
     // MARK: - Animation properties

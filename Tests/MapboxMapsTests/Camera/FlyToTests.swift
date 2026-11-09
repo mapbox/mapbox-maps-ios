@@ -147,6 +147,42 @@ internal class FlyToTests: XCTestCase {
         }
     }
 
+    func testPositionPointInterpolation() {
+        let source = CameraState(
+            center: .init(latitude: 10, longitude: 10),
+            padding: .zero,
+            zoom: 10,
+            bearing: 0,
+            pitch: 0,
+            verticalFov: 10,
+            positionPoint: CameraPositionPoint(x: -1, y: 0.5))
+        var dest = CameraOptions(center: .init(latitude: 20, longitude: 20))
+        dest.positionPoint = CameraPositionPoint(x: 1, y: -0.5)
+
+        let flyTo = FlyToInterpolator(from: source, to: dest, cameraBounds: .default, size: CGSize(width: 500, height: 500))
+
+        XCTAssertEqual(flyTo.positionPoint(at: 0), CameraPositionPoint(x: -1, y: 0.5))
+        XCTAssertEqual(flyTo.positionPoint(at: 0.25).x, -0.5, accuracy: 1e-9)
+        XCTAssertEqual(flyTo.positionPoint(at: 0.25).y, 0.25, accuracy: 1e-9)
+        XCTAssertEqual(flyTo.positionPoint(at: 1), CameraPositionPoint(x: 1, y: -0.5))
+    }
+
+    func testPositionPointStaysAtSourceWithoutDestination() {
+        let source = CameraState(
+            center: .init(latitude: 10, longitude: 10),
+            padding: .zero,
+            zoom: 10,
+            bearing: 0,
+            pitch: 0,
+            verticalFov: 10,
+            positionPoint: CameraPositionPoint(x: 0.5, y: 0.5))
+        let dest = CameraOptions(center: .init(latitude: 20, longitude: 20))
+
+        let flyTo = FlyToInterpolator(from: source, to: dest, cameraBounds: .default, size: CGSize(width: 500, height: 500))
+
+        XCTAssertEqual(flyTo.positionPoint(at: 0.6), CameraPositionPoint(x: 0.5, y: 0.5))
+    }
+
     func testFlyToUnprojectLatitudeNaNUseCase() {
         // given
         let source = CameraState(

@@ -103,6 +103,7 @@ final class CameraAnimationsManagerImplTests: XCTestCase {
     func testEaseToWithNonNilAnchor() throws {
         var camera = CameraOptions.testConstantValue()
         camera.anchor = .init(x: 39, y: 28)
+        camera.positionPoint = CameraPositionPoint(x: -0.25, y: 0.75)
         let duration = 5.0
         let curve = UIView.AnimationCurve.linear
         let completion = Stub<UIViewAnimatingPosition, Void>()
@@ -147,6 +148,8 @@ final class CameraAnimationsManagerImplTests: XCTestCase {
         XCTAssertEqual(transition.pitch.toValue, camera.pitch)
         XCTAssertEqual(transition.verticalFov.fromValue, cameraState.verticalFov)
         XCTAssertEqual(transition.verticalFov.toValue, camera.verticalFov)
+        XCTAssertEqual(transition.positionPoint.fromValue, CGPoint(x: cameraState.positionPoint.x, y: cameraState.positionPoint.y))
+        XCTAssertEqual(transition.positionPoint.toValue, CGPoint(x: -0.25, y: 0.75))
         XCTAssertTrue(transition.shouldOptimizeBearingPath)
 
         // adds the completion block to the animator (exercise it to verify)

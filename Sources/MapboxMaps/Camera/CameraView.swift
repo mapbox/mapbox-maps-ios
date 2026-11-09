@@ -1,4 +1,5 @@
 import UIKit
+@_spi(Experimental) import MapboxCoreMaps
 
 /// A view that represents a camera view port.
 internal class CameraView: UIView {
@@ -18,6 +19,8 @@ internal class CameraView: UIView {
         super.init(frame: .zero)
         self.isHidden = true
         self.isUserInteractionEnabled = false
+        // The shadow offset holds the position point, and its default (0, -3) is outside the unit square.
+        layer.shadowOffset = .zero
     }
 
     internal required init?(coder: NSCoder) {
@@ -32,7 +35,7 @@ internal class CameraView: UIView {
                                    bottom: layer.contentsRect.origin.y,
                                    right: layer.bounds.origin.y)
 
-        return CameraOptions(
+        var options = CameraOptions(
             center: center,
             padding: padding,
             anchor: layer.anchorPoint,
@@ -40,6 +43,8 @@ internal class CameraView: UIView {
             bearing: CLLocationDirection(layer.cornerRadius),
             pitch: layer.borderWidth,
             verticalFov: layer.zPosition)
+        options.positionPoint = CameraPositionPoint(x: Double(layer.shadowOffset.width), y: Double(layer.shadowOffset.height))
+        return options
     }
 
     internal func syncLayer(to cameraOptions: CameraOptions) {
@@ -70,6 +75,11 @@ internal class CameraView: UIView {
 
         if let verticalFov = cameraOptions.verticalFov {
             layer.zPosition = verticalFov
+        }
+
+        // No dedicated animatable layer property is left, so the point is stored in the shadow offset.
+        if let positionPoint = cameraOptions.positionPoint {
+            layer.shadowOffset = CGSize(width: positionPoint.x, height: positionPoint.y)
         }
     }
 }

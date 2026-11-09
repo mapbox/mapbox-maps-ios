@@ -1,4 +1,5 @@
 import Foundation
+@_spi(Experimental) import MapboxCoreMaps
 
 internal final class HighZoomToLowZoomAnimationSpecProvider: DefaultViewportTransitionAnimationSpecProviderProtocol {
 
@@ -48,6 +49,15 @@ internal final class HighZoomToLowZoomAnimationSpecProvider: DefaultViewportTran
                 cameraOptionsComponent: CameraOptionsComponent(
                     keyPath: \.padding,
                     value: padding)))
+        }
+
+        if let positionPoint = cameraOptions.positionPoint {
+            animationSpecs.append(DefaultViewportTransitionAnimationSpec(
+                duration: 1.2,
+                delay: 0,
+                cameraOptionsComponent: CameraOptionsComponent(
+                    keyPath: \.positionPoint,
+                    value: positionPoint)))
         }
 
         return animationSpecs

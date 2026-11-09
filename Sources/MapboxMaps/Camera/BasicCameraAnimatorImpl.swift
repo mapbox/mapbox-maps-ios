@@ -1,4 +1,5 @@
 import UIKit
+@_spi(Experimental) import MapboxCoreMaps
 
 internal protocol BasicCameraAnimatorProtocol: AnyObject {
     var owner: AnimationOwner { get }
@@ -283,6 +284,11 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
             cameraOptions.verticalFov = cameraViewCameraOptions.verticalFov
         }
 
+        if transition.positionPoint.toValue != nil {
+            // Timing curves can overshoot, and the core rejects points outside the unit square.
+            cameraOptions.positionPoint = cameraViewCameraOptions.positionPoint.map(\.clampedToUnitSquare)
+        }
+
         return cameraOptions
     }
 
@@ -303,8 +309,8 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
             // if the animation was stopped/canceled before finishing,
             // do not update the camera again.
             if animatingPosition != .current {
-                let finalCamera = self.cameraOptions(with: transition, cameraViewCameraOptions: self.cameraView.cameraOptions)
-                self.mapboxMap.setCamera(to: finalCamera)
+                self.mapboxMap.setCamera(
+                    to: self.cameraOptions(with: transition, cameraViewCameraOptions: self.cameraView.cameraOptions))
             }
             for completion in self.completions {
                 completion(animatingPosition)

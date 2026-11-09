@@ -1,11 +1,35 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 class CameraTransitionTests: XCTestCase {
 
     var cameraTransition = CameraTransition(
         cameraState: cameraStateTestValue,
         initialAnchor: .zero)
+
+    func testPositionPointFromValueComesFromCameraState() {
+        let transition = CameraTransition(
+            cameraState: CameraState(
+                center: .init(latitude: 0, longitude: 0),
+                padding: .zero,
+                zoom: 0,
+                bearing: 0,
+                pitch: 0,
+                verticalFov: 10,
+                positionPoint: CameraPositionPoint(x: -0.5, y: 0.25)),
+            initialAnchor: .zero)
+
+        XCTAssertEqual(transition.positionPoint.fromValue, CGPoint(x: -0.5, y: 0.25))
+        XCTAssertNil(transition.positionPoint.toValue)
+        XCTAssertEqual(transition.fromCameraOptions.positionPoint, CameraPositionPoint(x: -0.5, y: 0.25))
+        XCTAssertNil(transition.toCameraOptions.positionPoint)
+    }
+
+    func testPositionPointToCameraOptions() {
+        cameraTransition.positionPoint.toValue = CGPoint(x: 0.75, y: -1)
+
+        XCTAssertEqual(cameraTransition.toCameraOptions.positionPoint, CameraPositionPoint(x: 0.75, y: -1))
+    }
 
     func testOptimizeBearingClockwise() {
         let startBearing = 0.0

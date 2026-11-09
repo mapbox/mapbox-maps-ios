@@ -30,6 +30,7 @@ final class BasicCameraAnimatorImplIntegrationTests: XCTestCase {
                 transition.pitch.toValue = cameraOptionsTestValue.pitch!
                 transition.padding.toValue = cameraOptionsTestValue.padding!
                 transition.verticalFov.toValue = cameraOptionsTestValue.verticalFov!
+                transition.positionPoint.toValue = CGPoint(x: 0.5, y: -0.5)
             }
     }
 

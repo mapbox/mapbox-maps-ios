@@ -1,4 +1,5 @@
 import UIKit
+@_spi(Experimental) import MapboxCoreMaps
 
 /// An animator that evokes powered flight and an optional transition duration and timing function.
 /// It seamlessly incorporates zooming and panning to help the user find their bearings even after
@@ -92,6 +93,9 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
         mainQueue: MainQueueProtocol,
         dateProvider: DateProvider
     ) {
+        // The core rejects points outside the unit square, which would drop the whole final frame.
+        var toCamera = toCamera
+        toCamera.positionPoint = toCamera.positionPoint.map(\.clampedToUnitSquare)
         let flyToInterpolator = FlyToInterpolator(
             from: mapboxMap.cameraState,
             to: toCamera,
@@ -178,12 +182,17 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
             invokeCompletionBlocks(with: .end)
             return
         }
-        mapboxMap.setCamera(to: CameraOptions(
+        var cameraOptions = CameraOptions(
             center: interpolator.coordinate(at: fractionComplete),
             padding: interpolator.padding(at: fractionComplete),
             zoom: CGFloat(interpolator.zoom(at: fractionComplete)),
             bearing: interpolator.bearing(at: fractionComplete),
             pitch: CGFloat(interpolator.pitch(at: fractionComplete)),
-            verticalFov: CGFloat(interpolator.verticalFov(at: fractionComplete))))
+            verticalFov: CGFloat(interpolator.verticalFov(at: fractionComplete)))
+        if finalCameraOptions.positionPoint != nil {
+            // Timing curves can overshoot.
+            cameraOptions.positionPoint = interpolator.positionPoint(at: fractionComplete).clampedToUnitSquare
+        }
+        mapboxMap.setCamera(to: cameraOptions)
     }
 }

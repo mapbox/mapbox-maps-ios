@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 import XCTest
 
 final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
@@ -286,6 +286,23 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
         let spec = try XCTUnwrap(specs.last)
         XCTAssertEqual(spec.duration, 1.2)
         XCTAssertEqual(spec.delay, 1.9, accuracy: 1e-6)
+    }
+
+    func testMakeAnimationSpecsPositionPointFollowsThePadding() throws {
+        mapboxMap.cameraState.zoom = 0
+        var cameraOptions = CameraOptions(padding: .testConstantValue(), zoom: 6.6)
+        cameraOptions.positionPoint = CameraPositionPoint(x: 0, y: 0.5)
+
+        let specs = provider.makeAnimationSpecs(cameraOptions: cameraOptions)
+
+        XCTAssertEqual(specs.count, 3)
+        let padding = specs[1]
+        let positionPoint = specs[2]
+        XCTAssertEqual(positionPoint.duration, padding.duration)
+        XCTAssertEqual(positionPoint.delay, padding.delay, accuracy: 1e-6)
+        var expected = CameraOptions()
+        expected.positionPoint = cameraOptions.positionPoint
+        XCTAssertEqual(positionPoint.cameraOptionsComponent.cameraOptions, expected)
     }
 
     func testMakeAnimationSpecsPaddingWithShortButDelayedZoomAnimation() throws {

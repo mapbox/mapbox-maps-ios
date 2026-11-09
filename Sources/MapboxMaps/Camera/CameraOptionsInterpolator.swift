@@ -1,5 +1,6 @@
 import CoreLocation
 import UIKit
+@_spi(Experimental) import MapboxCoreMaps
 
 internal protocol CameraOptionsInterpolatorProtocol: AnyObject {
     func interpolate(from: CameraOptions,
@@ -63,7 +64,7 @@ internal final class CameraOptionsInterpolator: CameraOptionsInterpolatorProtoco
             fraction: fraction,
             interpolate: doubleInterpolator.interpolate(from:to:fraction:))
 
-        return CameraOptions(
+        var result = CameraOptions(
             center: center,
             padding: padding,
             anchor: nil,
@@ -71,5 +72,21 @@ internal final class CameraOptionsInterpolator: CameraOptionsInterpolatorProtoco
             bearing: bearing,
             pitch: pitch.map(CGFloat.init(_:)),
             verticalFov: verticalFov.map(CGFloat.init(_:)))
+        result.positionPoint = optionalInterpolator.interpolate(
+            from: from.positionPoint,
+            to: to.positionPoint,
+            fraction: fraction,
+            interpolate: interpolatePositionPoint(from:to:fraction:))
+        return result
+    }
+
+    private func interpolatePositionPoint(from: CameraPositionPoint,
+                                          to: CameraPositionPoint,
+                                          fraction: Double) -> CameraPositionPoint {
+        // Timing curves can overshoot past the endpoints.
+        CameraPositionPoint(
+            x: doubleInterpolator.interpolate(from: from.x, to: to.x, fraction: fraction),
+            y: doubleInterpolator.interpolate(from: from.y, to: to.y, fraction: fraction)
+        ).clampedToUnitSquare
     }
 }

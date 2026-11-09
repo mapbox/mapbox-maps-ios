@@ -1,5 +1,5 @@
 import XCTest
-@testable @_spi(Marshalling) import MapboxMaps
+@testable @_spi(Experimental) @_spi(Marshalling) import MapboxMaps
 
 final class CameraOptionsTests: XCTestCase {
     var center: CLLocationCoordinate2D!
@@ -80,7 +80,8 @@ final class CameraOptionsTests: XCTestCase {
             zoom: zoom.NSNumber,
             bearing: bearing.NSNumber,
             pitch: pitch.NSNumber,
-            verticalFov: verticalFov.NSNumber)
+            verticalFov: verticalFov.NSNumber,
+            positionPoint: CoreCameraPositionPoint(x: 0.25, y: -0.5))
 
         let cameraOptions = CameraOptions.Marshaller.toSwift(objcCameraOptions)
 
@@ -92,6 +93,30 @@ final class CameraOptionsTests: XCTestCase {
         XCTAssertEqual(cameraOptions.bearing, bearing)
         XCTAssertEqual(cameraOptions.pitch, pitch)
         XCTAssertEqual(cameraOptions.verticalFov, verticalFov)
+        XCTAssertEqual(cameraOptions.positionPoint, CameraPositionPoint(x: 0.25, y: -0.5))
+    }
+
+    func testPositionPointRoundTrip() {
+        var cameraOptions = CameraOptions(center: center, zoom: zoom)
+        cameraOptions.positionPoint = CameraPositionPoint(x: -0.75, y: 0.5)
+
+        let objcCameraOptions: CoreCameraOptions = CameraOptions.Marshaller.toObjc(cameraOptions)
+        XCTAssertEqual(objcCameraOptions.positionPoint?.x, -0.75)
+        XCTAssertEqual(objcCameraOptions.positionPoint?.y, 0.5)
+        XCTAssertEqual(CameraOptions.Marshaller.toSwift(objcCameraOptions), cameraOptions)
+    }
+
+    func testInitWithCameraStateCopiesPositionPoint() {
+        let cameraState = CameraState(
+            center: center,
+            padding: padding,
+            zoom: zoom,
+            bearing: bearing,
+            pitch: pitch,
+            verticalFov: verticalFov,
+            positionPoint: CameraPositionPoint(x: 0.5, y: 1))
+
+        XCTAssertEqual(CameraOptions(cameraState: cameraState).positionPoint, CameraPositionPoint(x: 0.5, y: 1))
     }
 
     func testInitWithObjCValueWithNils() {
@@ -102,7 +127,8 @@ final class CameraOptionsTests: XCTestCase {
             zoom: nil,
             bearing: nil,
             pitch: nil,
-            verticalFov: nil)
+            verticalFov: nil,
+            positionPoint: nil)
 
         let cameraOptions = CameraOptions.Marshaller.toSwift(objcCameraOptions)
 
@@ -113,6 +139,7 @@ final class CameraOptionsTests: XCTestCase {
         XCTAssertNil(cameraOptions.bearing)
         XCTAssertNil(cameraOptions.pitch)
         XCTAssertNil(cameraOptions.verticalFov)
+        XCTAssertNil(cameraOptions.positionPoint)
     }
 
     func testEquatable() {

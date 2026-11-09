@@ -4,6 +4,7 @@ internal import MapboxCommon_Private
 
 typealias CoreCameraOptions = MapboxCoreMaps_Private.__CameraOptions
 typealias CoreCameraState = MapboxCoreMaps_Private.__CameraState
+typealias CoreCameraPositionPoint = MapboxCoreMaps_Private.__CameraPositionPoint
 typealias CoreCameraBounds = MapboxCoreMaps_Private.CameraBounds
 typealias CoreCameraBoundsOptions = MapboxCoreMaps_Private.CameraBoundsOptions
 typealias CoreMapSnapshotOptions = MapboxCoreMaps_Private.MapSnapshotOptions

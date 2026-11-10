@@ -259,13 +259,13 @@ public struct SymbolZOrder: RawRepresentable, Codable, Hashable, Sendable {
         self.rawValue = rawValue
     }
 
-    /// Sorts symbols by `symbol-sort-key` if set. Otherwise, sorts symbols by their y-position relative to the viewport if any of the following is set to `true`: `icon-allow-overlap`, `text-allow-overlap`, `icon-ignore-placement`, `text-ignore-placement`.
+    /// Behaves as ``SymbolZOrder/source``, if `symbol-sort-key` is set. Otherwise behaves as ``SymbolZOrder/viewportY``. I.e.: Sorts symbols by `symbol-sort-key` if `symbol-sort-key` is set. Otherwise, sorts symbols by their y-position relative to the viewport if any of the following is set to `true`: `icon-allow-overlap`, `text-allow-overlap`, `icon-ignore-placement`, `text-ignore-placement`. Or else, no sorting is applied; symbols are rendered in the same order as the source data.
     public static let auto = SymbolZOrder(rawValue: "auto")
 
-    /// Sorts symbols by their y-position relative to the viewport if any of the following is set to `true`: `icon-allow-overlap`, `text-allow-overlap`, `icon-ignore-placement`, `text-ignore-placement`.
+    /// Sorts symbols by their y-position relative to the viewport if any of the following is set to `true`: `icon-allow-overlap`, `text-allow-overlap`, `icon-ignore-placement`, `text-ignore-placement`. Otherwise, no sorting is applied; symbols are rendered in the same order as the source data.
     public static let viewportY = SymbolZOrder(rawValue: "viewport-y")
 
-    /// Sorts symbols by `symbol-sort-key` if set. Otherwise, no sorting is applied; symbols are rendered in the same order as the source data.
+    /// Sorts symbols by `symbol-sort-key` if `symbol-sort-key` is set. Otherwise, no sorting is applied; symbols are rendered in the same order as the source data.
     public static let source = SymbolZOrder(rawValue: "source")
 }
 

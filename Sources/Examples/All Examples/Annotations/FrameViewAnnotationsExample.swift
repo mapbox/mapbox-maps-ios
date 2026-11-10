@@ -25,8 +25,6 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .white
-
         mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(cameraOptions: initialCamera))
         // Camera
         try! mapView.mapboxMap.setProjection(StyleProjection(name: .mercator))
@@ -38,12 +36,13 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
         mapView.translatesAutoresizingMaskIntoConstraints = false
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            mapView.topAnchor.constraint(equalTo: view.topAnchor),
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            buttonsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonsView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             buttonsView.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor),
+            buttonsView.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor),
             buttonsView.bottomAnchor.constraint(equalTo: mapView.ornaments.logoView.topAnchor, constant: -10),
         ])
 
@@ -107,9 +106,11 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
         viewportButton.isHidden = true
         resetButton.isHidden = false
 
+        // The map extends under the navigation bar, so keep annotations inside the safe area.
+        let insets = mapView.safeAreaInsets
         let camera = self.mapView.viewAnnotations.camera(
             forAnnotations: annotations,
-            padding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
+            padding: UIEdgeInsets(top: insets.top + 10, left: insets.left + 10, bottom: insets.bottom + 10, right: insets.right + 10),
             bearing: nil,
             pitch: nil
         )!

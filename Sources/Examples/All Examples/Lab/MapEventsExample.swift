@@ -76,23 +76,24 @@ final class MapEventsExample: UIViewController, ExampleProtocol {
         super.viewDidLayoutSubviews()
         let bounds = view.bounds.inset(by: UIEdgeInsets(
             top: view.safeAreaInsets.top, left: 0, bottom: 0, right: 0))
+        let safeFrame = view.safeAreaLayoutGuide.layoutFrame
         let halfHeight = bounds.height / 2 + 100
 
-        mapView.frame = CGRect(x: 0, y: bounds.minY, width: bounds.width, height: halfHeight)
+        mapView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.minY + halfHeight)
 
         tableView.frame = CGRect(x: 0, y: bounds.minY + halfHeight, width: bounds.width, height: bounds.height - halfHeight)
 
         let buttonSize = clearButton.sizeThatFits(bounds.size)
         clearButton.frame = CGRect(
             origin: CGPoint(
-                x: bounds.width - buttonSize.width - 10,
+                x: safeFrame.maxX - buttonSize.width - 10,
                 y: bounds.minY + halfHeight + 10),
             size: buttonSize)
 
         let labelSize = cameraLabel.sizeThatFits(bounds.size)
         cameraLabel.frame = CGRect(
             origin: CGPoint(
-                x: (bounds.width - labelSize.width) / 2,
+                x: safeFrame.midX - labelSize.width / 2,
                 y: bounds.minY + halfHeight - labelSize.height - 10),
             size: labelSize)
     }

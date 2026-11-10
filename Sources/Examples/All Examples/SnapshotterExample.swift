@@ -37,7 +37,7 @@ final class SnapshotterExample: UIViewController, ExampleProtocol {
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
@@ -49,8 +49,8 @@ final class SnapshotterExample: UIViewController, ExampleProtocol {
         super.viewDidLayoutSubviews()
 
         let size = CGSize(
-            width: view.safeAreaLayoutGuide.layoutFrame.width,
-            height: (view.safeAreaLayoutGuide.layoutFrame.height - stackView.spacing) / 2)
+            width: view.bounds.width,
+            height: (view.bounds.height - stackView.spacing) / 2)
 
         if let snapshotter {
             snapshotter.snapshotSize = size

@@ -57,22 +57,21 @@ final class DebugMapExample: UIViewController, ExampleProtocol {
         mapView.preferredFrameRateRange = CAFrameRateRange(minimum: 1, maximum: maxFPS, preferred: maxFPS)
         mapView.ornaments.options.scaleBar.units = .nautical
         view.addSubview(mapView)
-        view.backgroundColor = .skyBlue
         mapView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            mapView.topAnchor.constraint(equalTo: view.topAnchor),
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
         let debugOptionsBarItem = UIBarButtonItem(
-            title: "Debug",
+            image: UIImage(systemName: "ladybug"),
             style: .plain,
             target: self,
             action: #selector(openDebugOptionsMenu(_:)))
         let infoBarItem = UIBarButtonItem(
-            title: "Info",
+            image: UIImage(systemName: "info.circle"),
             style: .plain,
             target: self,
             action: #selector(showInfo))

@@ -181,8 +181,8 @@ private final class BottomSheet: UIView {
 
         for (index, segmentedControl) in controls.enumerated() {
             NSLayoutConstraint.activate([
-                segmentedControl.leadingAnchor.constraint(equalTo: leadingAnchor, constant: spacing),
-                segmentedControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -spacing),
+                segmentedControl.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: spacing),
+                segmentedControl.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -spacing),
                 segmentedControl.bottomAnchor.constraint(equalTo: lastBottomAnchor, constant: -spacing - 8),
 
                 titleLabels[index].leftAnchor.constraint(equalTo: segmentedControl.leftAnchor),

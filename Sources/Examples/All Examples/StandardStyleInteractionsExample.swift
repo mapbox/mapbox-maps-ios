@@ -114,8 +114,8 @@ final class StandardStyleInteractionsExample: UIViewController, ExampleProtocol 
         debugPanel.addSubview(themeControl)
 
         NSLayoutConstraint.activate([
-            debugPanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            debugPanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            debugPanel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            debugPanel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             debugPanel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
 
             buildingSelectLabel.topAnchor.constraint(equalTo: debugPanel.topAnchor, constant: 10),

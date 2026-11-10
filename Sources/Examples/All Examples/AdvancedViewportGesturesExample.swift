@@ -28,6 +28,7 @@ final class AdvancedViewportGesturesExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
         let cupertino = CLLocationCoordinate2D(latitude: 37.3230, longitude: -122.0322)

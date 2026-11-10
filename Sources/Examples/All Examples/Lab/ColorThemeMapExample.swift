@@ -14,10 +14,9 @@ final class ColorThemeMapExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
 
         view.addSubview(mapView)
-        view.backgroundColor = .skyBlue
         mapView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            mapView.topAnchor.constraint(equalTo: view.topAnchor),
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),

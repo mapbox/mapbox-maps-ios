@@ -20,9 +20,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t7M-79-XaT">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="493"/>
                                 <subviews>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="uz5-CQ-u1Q">
-                                        <rect key="frame" x="97" y="393" width="221" height="32"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="uz5-CQ-u1Q">
+                                        <rect key="frame" x="97" y="441" width="221" height="32"/>
                                         <segments>
                                             <segment title="Standard Style"/>
                                             <segment title="Satellite Style"/>
@@ -30,6 +29,10 @@
                                     </segmentedControl>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemGray5Color"/>
+                                <constraints>
+                                    <constraint firstItem="uz5-CQ-u1Q" firstAttribute="centerX" secondItem="t7M-79-XaT" secondAttribute="centerX" id="kS1-uz-cX0"/>
+                                    <constraint firstAttribute="bottom" secondItem="uz5-CQ-u1Q" secondAttribute="bottom" constant="20" id="kS2-uz-bT0"/>
+                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="9fO-jU-7Bj" userLabel="Progress Container">
                                 <rect key="frame" x="10" y="237" width="394" height="99"/>

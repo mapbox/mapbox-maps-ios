@@ -12,6 +12,7 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 40.713589095634475,
                                                                          longitude: -74.00370030835559),
                                           zoom: 16.868,

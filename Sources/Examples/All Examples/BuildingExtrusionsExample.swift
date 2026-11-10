@@ -108,7 +108,7 @@ final class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
 
         NSLayoutConstraint.activate([
             mapView.ornaments.attributionButton.topAnchor.constraint(equalToSystemSpacingBelow: accessoryButtonsStackView.bottomAnchor, multiplier: 1),
-            view.trailingAnchor
+            view.safeAreaLayoutGuide.trailingAnchor
                 .constraint(equalToSystemSpacingAfter: accessoryButtonsStackView.trailingAnchor, multiplier: 1)
         ])
     }

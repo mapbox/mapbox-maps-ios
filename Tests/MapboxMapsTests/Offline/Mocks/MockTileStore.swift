@@ -9,11 +9,11 @@ final class MockTileStore: TileStoreProtocol {
 
     struct SubscribeForEventParams {
         var eventName: String
-        var callback: (TileStoreGenericEvent) -> Void
+        var callback: (__TileStoreGenericEvent) -> Void
     }
     let __subscribeForEventStub = Stub<SubscribeForEventParams, Cancelable>(defaultReturnValue: MockCancelable())
     func __subscribeForEvent(forEventName eventName: String,
-                             callback: @escaping (TileStoreGenericEvent) -> Void) -> Cancelable {
+                             callback: @escaping (__TileStoreGenericEvent) -> Void) -> Cancelable {
         __subscribeForEventStub.call(with: SubscribeForEventParams(eventName: eventName, callback: callback))
     }
 }

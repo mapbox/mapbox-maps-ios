@@ -1,5 +1,6 @@
 import XCTest
-import MapboxCommon
+@_spi(Experimental) import MapboxCommon
+internal import MapboxCommon_Private
 @_spi(Experimental) @testable import MapboxMaps
 
 final class TileStoreEventSignalTests: XCTestCase {
@@ -35,12 +36,15 @@ final class TileStoreEventSignalTests: XCTestCase {
         var received = [TileStoreGenericEvent]()
         let token = signal.observe { received.append($0) }
 
-        let event = TileStoreGenericEvent(name: "metadata-migration-failed", text: "failure reason", data: "/path/metadata.db")
+        let event = __TileStoreGenericEvent(name: "metadata-migration-failed", text: "failure reason", data: "/path/metadata.db")
         let callback = try XCTUnwrap(tileStore.__subscribeForEventStub.invocations.first?.parameters.callback)
         callback(event)
 
         XCTAssertEqual(received.count, 1)
-        XCTAssertTrue(received.first === event)
+        let receivedEvent = try XCTUnwrap(received.first)
+        XCTAssertEqual(receivedEvent.name, "metadata-migration-failed")
+        XCTAssertEqual(receivedEvent.text, "failure reason")
+        XCTAssertEqual(receivedEvent.data as? String, "/path/metadata.db")
         token.cancel()
     }
 

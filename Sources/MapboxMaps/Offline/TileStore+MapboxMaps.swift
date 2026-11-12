@@ -1,10 +1,11 @@
 import Foundation
+@_spi(Experimental) @_spi(Marshalling) import MapboxCommon
 internal import MapboxCommon_Private
 
 internal protocol TileStoreProtocol: AnyObject {
     func __removeObserver(for observer: MapboxCommon_Private.TileStoreObserver)
     func __subscribeForEvent(forEventName eventName: String,
-                             callback: @escaping (TileStoreGenericEvent) -> Void) -> Cancelable
+                             callback: @escaping (__TileStoreGenericEvent) -> Void) -> Cancelable
 }
 
 extension TileStore: TileStoreProtocol {
@@ -308,7 +309,9 @@ extension TileStore: TileStoreProtocol {
 internal func tileStoreEventSignal(_ tileStore: TileStoreProtocol,
                                    _ eventName: TileStoreEventName) -> Signal<TileStoreGenericEvent> {
     Signal { handler in
-        tileStore.__subscribeForEvent(forEventName: eventName.rawValue, callback: handler).erased
+        tileStore.__subscribeForEvent(forEventName: eventName.rawValue) { event in
+            handler(TileStoreGenericEvent.Marshaller.toSwift(event))
+        }.erased
     }
 }
 

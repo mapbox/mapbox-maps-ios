@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "Вы можаце дапамагчы палепшыць карты OpenStreetMap і Mapbox падаючы абязлічаныя даныя аб выкарыстанні.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "Спыніць удзел";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "Удзельнічаць";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "Вы дапамагаеце паляпшаць карты OpenStreetMap і Mapbox, падаючы абязлічаныя даныя аб выкарыстанні";
+"TELEMETRY_ENABLED_MSG" = "Мы выкарыстоўваем ананімныя дадзеныя, каб палепшыць OpenStreetMap і Mapbox.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "Спыніць удзел";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "Працягнуць удзел";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "Дадатковая інфармацыя";
+/* Link to more information */
+"LEARN_MORE" = "Даведацца больш";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Mapbox Тэлеметрыя";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Зрабіць карты Mapbox лепей";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Палітыка прыватнасці Mapbox";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "Закрыць";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Hа платформе Mapbox Maps";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "Скасаваць";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "Дазволіць гэтай праграме выкарыстоўваць Geofencing";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "Гэта праграма выкарыстоўвае Mapbox Geofencing для выяўлення прысутнасці вашай прылады ў раёнах, вызначаных распрацоўшчыкам праграмы. Толькі распрацоўшчык праграмы можа бачыць, дзе знаходзяцца гэтыя вобласці. У вас ёсць магчымасць адключыць Mapbox Geofencing, што можа паўплываць на функцыянальнасць праграмы.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "Захаваць Geofencing уключаным";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "Адключыць Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "Уключыць Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "Захаваць Geofencing адключаным";

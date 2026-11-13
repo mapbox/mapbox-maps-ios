@@ -4,6 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+* Introduce experimental consolidated attribution ornament, opt-in via `OrnamentOptions.consolidatedAttribution`, which replaces the logo and attribution button with a single expandable pill. The control renders light or dark according to the map view's `userInterfaceStyle`, and `ConsolidatedAttributionOptions.material` selects between a solid and a translucent background.
+* The attribution button now opens a sheet with the data credits and the telemetry and geofencing switches, instead of an alert.
+
 ## 11.35.0 - 13 November, 2026
 
 ### Bug fixes 🐞

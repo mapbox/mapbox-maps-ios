@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "Możesz pomóc w ulepszaniu map OpenStreetMap i Mapbox, przekazując anonimowe dane o użytkowaniu.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "Nie bierz udziału";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "Brać udział";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "Pomagasz ulepszyć mapy OpenStreetMap i Mapbox, przekazując anonimowe dane o użytkowaniu.";
+"TELEMETRY_ENABLED_MSG" = "Wykorzystujemy anonimowe dane w celu ulepszania OpenStreetMap i Mapbox.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "Przestań brać udział";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "Kontynuuj uczestnictwo";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "Powiedz mi więcej";
+/* Link to more information */
+"LEARN_MORE" = "Więcej informacji";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Telemetria Mapboxa";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Ulepszaj mapy Mapbox";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Polityka prywatności Mapboxa";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "Zamknij";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Obsługiwane przez mapy Mapbox";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "Anulować";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "Zezwól tej aplikacji na korzystanie z funkcji Geofencing";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "Ta aplikacja używa Mapbox Geofencing do wykrywania obecności Twojego urządzenia w obszarach zdefiniowanych przez programistę aplikacji. Tylko programista aplikacji może zobaczyć, gdzie znajdują się te obszary. Masz możliwość wyłączenia Mapbox Geofencing, co może mieć wpływ na funkcjonalność aplikacji.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "Pozostaw włączoną funkcję Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "Wyłącz geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "Włącz geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "Pozostaw geofencing wyłączony";

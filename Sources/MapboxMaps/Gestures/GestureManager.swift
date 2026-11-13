@@ -110,6 +110,11 @@ public final class GestureManager: GestureHandlerDelegate {
         return anyTouchGestureHandler.gestureRecognizer
     }
 
+    /// Fires on the first touch of any gesture, alongside the other recognizers.
+    internal var anyFirstTouchGestureRecognizer: UIGestureRecognizer {
+        return interruptDecelerationGestureHandler.gestureRecognizer
+    }
+
     /// A stream of single tap events on the map.
     ///
     /// This event is called when the user taps the map and no interactions, annotations or layers handled the gesture.

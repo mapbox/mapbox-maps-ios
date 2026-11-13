@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "U kunt helpen OpenStreetMap- en Mapbox-kaarten beter te maken door anonieme gebruiksgegevens bij te dragen.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "Doe niet mee";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "Deelnemen";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "U helpt OpenStreetMap- en Mapbox-kaarten beter te maken door anonieme gebruiksgegevens bij te dragen.";
+"TELEMETRY_ENABLED_MSG" = "We gebruiken geanonimiseerde gegevens om OpenStreetMap en Mapbox te verbeteren.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "Stop met deelnemen";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "Blijf meedoen";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "Vertel me meer";
+/* Link to more information */
+"LEARN_MORE" = "Meer informatie";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Mapbox-telemetrie";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Maak Mapbox-kaarten beter";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Mapbox-privacybeleid";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "Sluit";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Mogelijk gemaakt door Mapbox Maps";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "Annuleren";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "Sta deze app toe om Geofencing te gebruiken";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "Deze app gebruikt Mapbox Geofencing om de aanwezigheid van uw apparaat te detecteren in gebieden die de app-ontwikkelaar heeft gedefinieerd. Alleen de app-ontwikkelaar kan zien waar die gebieden zijn. U hebt de optie om Mapbox Geofencing uit te schakelen, wat de functionaliteit van de app kan beïnvloeden.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "Houd Geofencing ingeschakeld";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "Geofencing uitschakelen";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "Geofencing inschakelen";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "Geofencing uitgeschakeld houden";

@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "Вы можете помочь улучшить карты OpenStreetMap и Mapbox, предоставив анонимные данные об использовании.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "Не участвовать";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "Участвовать";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "Вы помогаете улучшить карты OpenStreetMap и Mapbox, предоставляя анонимные данные об использовании.";
+"TELEMETRY_ENABLED_MSG" = "Мы используем анонимизированные данные для улучшения OpenStreetMap и Mapbox.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "Прекратить участие";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "Продолжить участие";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "Дополнительная информация";
+/* Link to more information */
+"LEARN_MORE" = "Подробнее";
 
 /* Action in attribution sheet */
-"TELEMETRY_NAME" = "Mapbox Tелеметрия";
-
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Сделать карты Mapbox лучше";
+"TELEMETRY_NAME" = "Mapbox Телеметрия";
 
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Политика конфиденциальности Mapbox";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "Закрыть";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Предоставлено Mapbox Maps";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "Отмена";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "Разрешить этому приложению использовать геозонирование";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "Это приложение использует Mapbox Geofencing для обнаружения присутствия вашего устройства в областях, определенных разработчиком приложения. Только разработчик приложения может видеть, где находятся эти области. У вас есть возможность отключить Mapbox Geofencing, что может повлиять на функциональность приложения.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "Оставьте функцию Geofencing включенной";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "Отключить геозонирование";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "Включить геозонирование";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "Оставьте геозонирование отключенным";

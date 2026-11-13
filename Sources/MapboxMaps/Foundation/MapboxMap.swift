@@ -1582,8 +1582,8 @@ extension MapboxMap {
 // MARK: - Attribution
 
 extension MapboxMap: AttributionDataSource {
-    func loadAttributions(completion: @escaping ([Attribution]) -> Void) {
-        completion(Attribution.parse(__map.getAttributions()))
+    func getAttributions() -> [Attribution] {
+        Attribution.parse(__map.getAttributions())
     }
 }
 

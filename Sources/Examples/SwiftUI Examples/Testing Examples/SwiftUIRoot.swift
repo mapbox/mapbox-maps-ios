@@ -39,6 +39,7 @@ struct SwiftUIExamples {
             Example("Color Themes", note: "Showcase the Color Theme API", destination: ColorThemeExample())
         },
         Examples.Category("Experimental APIs") {
+            Example("Consolidated Attribution", note: "Opt-in consolidated logo/attribution pill control with configurable position and collapsed style.", destination: ConsolidatedAttributionSwiftUIExample())
             Example("Accessibility Scale", note: "Automatic map symbol scaling based on system text size preferences.", destination: AccessibilityScaleExample())
             Example("Line elevation", note: "Showcase of the Line Elevation API.", destination: ElevatedLineMapView())
             Example("Line Cutout", note: "Make route lines visible through 3D buildings using the line cutout API.", destination: LineCutoutExample())

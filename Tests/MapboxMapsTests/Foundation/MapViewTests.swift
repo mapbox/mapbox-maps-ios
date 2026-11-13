@@ -359,11 +359,8 @@ final class MapViewTests: XCTestCase {
         let attribution = Attribution(title: .testConstantASCII(withLength: 10), url: url)
 
         let menu = attributionMenu.menu(from: [attribution])
-        guard let item = menu.elements.first, case let AttributionMenuElement.item(menuItem) = item else {
-            XCTFail("Failed to unwrap AttributionMenuElement.item")
-            return
-        }
-        menuItem.action?()
+        let menuItem = try XCTUnwrap(menu.allItems.first { $0.id == .copyright })
+        menu.open(try XCTUnwrap(menuItem.url))
 
         XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.count, 1)
         XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.first?.parameters, url)

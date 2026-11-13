@@ -13,38 +13,31 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "You can help make OpenStreetMap and Mapbox maps better by contributing anonymous usage data.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "Don’t Participate";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "Participate";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "You are helping to make OpenStreetMap and Mapbox maps better by contributing anonymous usage data.";
+"TELEMETRY_ENABLED_MSG" = "We use anonymized data to make OpenStreetMap and Mapbox better.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "Stop Participating";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "Keep Participating";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "Tell Me More";
+/* Link to more information */
+"LEARN_MORE" = "Learn more";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Mapbox Telemetry";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Make Mapbox Maps Better";
+// MARK: - Consolidated attribution control
+
+/* Accessibility label for the Mapbox icon in the consolidated attribution control */
+"CONSOLIDATED_ATTR_ICON_A11Y_LABEL" = "Mapbox";
+
+/* Accessibility hint for the Mapbox icon in the consolidated attribution control */
+"CONSOLIDATED_ATTR_ICON_A11Y_HINT" = "Shows map credits and settings";
 
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Mapbox Privacy Policy";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "Close";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Powered by Mapbox Maps";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "Cancel";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +47,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "Allow This App to Use Geofencing";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "This app uses Mapbox Geofencing to detect your device’s presence in areas the app developer has defined. Only the app developer can see where those areas are. You have the option to disable Mapbox Geofencing, which may affect app functionality.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "Keep Geofencing enabled";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "Disable Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "Enable Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "Keep Geofencing Disabled";

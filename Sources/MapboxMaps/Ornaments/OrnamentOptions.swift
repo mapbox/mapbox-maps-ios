@@ -1,5 +1,146 @@
 import UIKit
 
+/// Background material of the consolidated logo/attribution control.
+@_documentation(visibility: public)
+@_spi(Experimental)
+public struct ConsolidatedAttributionMaterial: RawRepresentable, Hashable, Sendable {
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public let rawValue: String
+
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Near-opaque flat fill. Default.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public static let solid = Self(rawValue: "solid")
+
+    /// Translucent flat fill, letting the map show through the pill.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public static let translucent = Self(rawValue: "translucent")
+}
+
+/// Appearance of the consolidated attribution control in its collapsed state.
+@_documentation(visibility: public)
+@_spi(Experimental)
+public struct ConsolidatedAttributionCollapsedStyle: RawRepresentable, Hashable, Sendable {
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public let rawValue: String
+
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+    /// Only the Mapbox icon is visible when collapsed.
+    /// :nodoc:
+    /// Restricted API. Please contact Mapbox to discuss your use case if you intend to use this property.
+    @_spi(Restricted)
+    public static let iconOnly = Self(rawValue: "iconOnly")
+
+    /// The Mapbox icon and wordmark remain visible when collapsed. Default.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public static let iconAndWordmark = Self(rawValue: "iconAndWordmark")
+}
+
+/// How often the consolidated attribution control plays its intro expansion.
+@_documentation(visibility: public)
+@_spi(Experimental)
+public struct ConsolidatedAttributionIntroExpansion: RawRepresentable, Hashable, Sendable {
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public let rawValue: String
+
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// Expands once and stays collapsed on later launches.
+    /// Use on devices with a single user. Default.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public static let once = Self(rawValue: "once")
+
+    /// Expands once on every app launch. Use on shared devices, such as kiosks or
+    /// shared tablets, so every user sees the full attribution.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public static let everyLaunch = Self(rawValue: "everyLaunch")
+}
+
+/// Options for the consolidated logo/attribution control, a single pill that replaces
+/// the separate logo and attribution button.
+///
+/// > Important: Set `introExpansion` to ``ConsolidatedAttributionIntroExpansion/everyLaunch``
+/// > on shared devices (kiosks, shared tablets) so every user sees the full attribution.
+@_documentation(visibility: public)
+@_spi(Experimental)
+public struct ConsolidatedAttributionOptions: Equatable, Sendable {
+
+    /// The corner of the map at which the control is anchored. Defaults to `.bottomLeft`.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var position: OrnamentPosition
+
+    /// Margin between the control and the safe-area edge. Defaults to `(8, 8)`.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var margins: CGPoint
+
+    /// How often the intro expansion plays. Defaults to `.once`.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var introExpansion: ConsolidatedAttributionIntroExpansion
+
+    /// How much of the control remains visible when collapsed. Defaults to `.iconAndWordmark`.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var collapsedStyle: ConsolidatedAttributionCollapsedStyle
+
+    /// Material filling the pill background. Defaults to `.solid`.
+    ///
+    /// Light and dark follow the ``MapView``'s `userInterfaceStyle`. Set
+    /// `overrideUserInterfaceStyle` on the map view to force one.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var material: ConsolidatedAttributionMaterial
+
+    /// Tints the pill background toward this color's hue. Defaults to `nil`.
+    ///
+    /// Only the hue is used, so contrast doesn't change. The dark appearance, the logo,
+    /// the text, and the chevron are never tinted.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var tintColor: UIColor?
+
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public init(
+        position: OrnamentPosition = .bottomLeft,
+        margins: CGPoint = CGPoint(x: 8, y: 8),
+        introExpansion: ConsolidatedAttributionIntroExpansion = .once,
+        collapsedStyle: ConsolidatedAttributionCollapsedStyle = .iconAndWordmark,
+        material: ConsolidatedAttributionMaterial = .solid,
+        tintColor: UIColor? = nil
+    ) {
+        self.position = position
+        self.margins = margins
+        self.introExpansion = introExpansion
+        self.collapsedStyle = collapsedStyle
+        self.material = material
+        self.tintColor = tintColor
+    }
+}
+
 /// Used to configure Ornament-specific capabilities of the map
 ///
 /// All margin values are relative to the ``MapView``'s safe area. To allow the safe area
@@ -39,6 +180,14 @@ public struct OrnamentOptions: Equatable, Sendable {
     @_documentation(visibility: public)
     public var indoorSelector: IndoorSelectorViewOptions
 
+    // MARK: - Consolidated Attribution
+
+    /// When non-nil, replaces the separate logo and attribution button with a single pill.
+    /// Defaults to `nil`.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var consolidatedAttribution: ConsolidatedAttributionOptions?
+
     /// Initializes an `OrnamentOptions`.
     /// - Parameters:
     ///   - scaleBar: The ornament options for the map's scale bar.
@@ -56,6 +205,32 @@ public struct OrnamentOptions: Equatable, Sendable {
         self.logo = logo
         self.attributionButton = attributionButton
         self.indoorSelector = IndoorSelectorViewOptions()
+        self.consolidatedAttribution = nil
+    }
+
+    /// Initializes an `OrnamentOptions` with the consolidated logo/attribution control.
+    /// - Parameters:
+    ///   - scaleBar: The ornament options for the map's scale bar.
+    ///   - compass: The ornament options for the map's compass view.
+    ///   - logo: The ornament options for the map's logo view.
+    ///   - attributionButton: The ornament options for the map's attribution button.
+    ///   - consolidatedAttribution: When non-nil, activates the consolidated logo/attribution control.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public init(
+        scaleBar: ScaleBarViewOptions = .init(),
+        compass: CompassViewOptions = .init(),
+        logo: LogoViewOptions = .init(),
+        attributionButton: AttributionButtonOptions = .init(),
+        // No default, so `OrnamentOptions()` stays unambiguous.
+        consolidatedAttribution: ConsolidatedAttributionOptions?
+    ) {
+        self.scaleBar = scaleBar
+        self.compass = compass
+        self.logo = logo
+        self.attributionButton = attributionButton
+        self.indoorSelector = IndoorSelectorViewOptions()
+        self.consolidatedAttribution = consolidatedAttribution
     }
 }
 

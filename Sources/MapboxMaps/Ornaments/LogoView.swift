@@ -44,9 +44,12 @@ internal class LogoView: UIView {
 
     private var resizing: ResizingBehavior
 
+    /// Set while the consolidated attribution control shows the logo instead.
+    internal var suppressHiddenWarning: Bool = false
+
     public override var isHidden: Bool {
         didSet {
-            if isHidden {
+            if isHidden && !suppressHiddenWarning {
                 Log.warning("The Mapbox logo wordmark must remain enabled in accordance with our Terms of Service. See https://www.mapbox.com/legal/tos for more details.", category: "Ornaments")
             }
         }
@@ -80,7 +83,6 @@ internal class LogoView: UIView {
     private let fillColor2 = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 0.350)
 
     // Drawing methods generated from PaintCode
-    // swiftlint:disable:next function_body_length
     internal func drawMapboxLogoOrnamentViewFullCanvas(frame targetFrame: CGRect,
                                                        resizing: ResizingBehavior = .aspectFit) {
         // General declarations
@@ -94,78 +96,100 @@ internal class LogoView: UIView {
         context.scaleBy(x: resizedFrame.width / rect.width, y: resizedFrame.height / rect.height)
 
         if case .regular = logoSize {
-            drawMapboxWordmark()
+            LogoView.drawWordmarkInCurrentContext(primaryColor: fillColor, accentColor: fillColor2)
         }
 
-        let bezier12Path = UIBezierPath()
-        bezier12Path.move(to: CGPoint(x: 10.5, y: 1.24))
-        bezier12Path.addCurve(to: CGPoint(x: 1.25, y: 10.49),
-                              controlPoint1: CGPoint(x: 5.39, y: 1.24),
-                              controlPoint2: CGPoint(x: 1.25, y: 5.39))
-        bezier12Path.addCurve(to: CGPoint(x: 10.5, y: 19.74),
-                              controlPoint1: CGPoint(x: 1.25, y: 15.59),
-                              controlPoint2: CGPoint(x: 5.4, y: 19.74))
-        bezier12Path.addCurve(to: CGPoint(x: 19.75, y: 10.49),
-                              controlPoint1: CGPoint(x: 15.6, y: 19.74),
-                              controlPoint2: CGPoint(x: 19.75, y: 15.59))
-        bezier12Path.addCurve(to: CGPoint(x: 10.5, y: 1.24),
-                              controlPoint1: CGPoint(x: 19.75, y: 5.38),
-                              controlPoint2: CGPoint(x: 15.61, y: 1.24))
-        bezier12Path.close()
-        bezier12Path.move(to: CGPoint(x: 14.89, y: 12.77))
-        bezier12Path.addCurve(to: CGPoint(x: 8.19, y: 15.08),
-                              controlPoint1: CGPoint(x: 12.96, y: 14.7),
-                              controlPoint2: CGPoint(x: 10.11, y: 15.08))
-        bezier12Path.addCurve(to: CGPoint(x: 6.09, y: 14.92),
-                              controlPoint1: CGPoint(x: 7.49, y: 15.08),
-                              controlPoint2: CGPoint(x: 6.78, y: 15.03))
-        bezier12Path.addCurve(to: CGPoint(x: 8.23, y: 6.11),
-                              controlPoint1: CGPoint(x: 6.09, y: 14.92),
-                              controlPoint2: CGPoint(x: 5.07, y: 9.28))
-        bezier12Path.addCurve(to: CGPoint(x: 11.36, y: 4.83),
-                              controlPoint1: CGPoint(x: 9.06, y: 5.28),
-                              controlPoint2: CGPoint(x: 10.18, y: 4.83))
-        bezier12Path.addCurve(to: CGPoint(x: 14.75, y: 6.25),
-                              controlPoint1: CGPoint(x: 12.63, y: 4.83),
-                              controlPoint2: CGPoint(x: 13.85, y: 5.34))
-        bezier12Path.addCurve(to: CGPoint(x: 14.89, y: 12.77),
-                              controlPoint1: CGPoint(x: 16.59, y: 8.09),
-                              controlPoint2: CGPoint(x: 16.64, y: 11))
-        bezier12Path.close()
-        fillColor.setFill()
-        bezier12Path.fill()
+        LogoView.drawIconInCurrentContext(primaryColor: fillColor, accentColor: fillColor2, showBackground: true)
 
-        // Bezier #13
-        let bezier13Path = UIBezierPath()
-        bezier13Path.move(to: CGPoint(x: 10.5, y: -0.01))
-        bezier13Path.addCurve(to: CGPoint(x: 0, y: 10.49),
-                              controlPoint1: CGPoint(x: 4.7, y: -0.01),
-                              controlPoint2: CGPoint(x: 0, y: 4.7))
-        bezier13Path.addCurve(to: CGPoint(x: 10.5, y: 20.99),
-                              controlPoint1: CGPoint(x: 0, y: 16.28),
-                              controlPoint2: CGPoint(x: 4.7, y: 20.99))
-        bezier13Path.addCurve(to: CGPoint(x: 21, y: 10.49),
-                              controlPoint1: CGPoint(x: 16.3, y: 20.99),
-                              controlPoint2: CGPoint(x: 21, y: 16.29))
-        bezier13Path.addCurve(to: CGPoint(x: 10.5, y: -0.01),
-                              controlPoint1: CGPoint(x: 20.99, y: 4.7),
-                              controlPoint2: CGPoint(x: 16.3, y: -0.01))
-        bezier13Path.close()
-        bezier13Path.move(to: CGPoint(x: 10.5, y: 19.74))
-        bezier13Path.addCurve(to: CGPoint(x: 1.25, y: 10.49),
-                              controlPoint1: CGPoint(x: 5.39, y: 19.74),
-                              controlPoint2: CGPoint(x: 1.25, y: 15.59))
-        bezier13Path.addCurve(to: CGPoint(x: 10.5, y: 1.23),
-                              controlPoint1: CGPoint(x: 1.25, y: 5.39),
-                              controlPoint2: CGPoint(x: 5.39, y: 1.23))
-        bezier13Path.addCurve(to: CGPoint(x: 19.75, y: 10.48),
-                              controlPoint1: CGPoint(x: 15.61, y: 1.23),
-                              controlPoint2: CGPoint(x: 19.75, y: 5.38))
-        bezier13Path.addCurve(to: CGPoint(x: 10.5, y: 19.74),
-                              controlPoint1: CGPoint(x: 19.75, y: 15.61), controlPoint2: CGPoint(x: 15.61, y: 19.74))
-        bezier13Path.close()
-        fillColor2.setFill()
-        bezier13Path.fill()
+        context.restoreGState()
+    }
+    // swiftlint:disable function_body_length
+
+    /// Draws the icon in a 21×21 context.
+    ///
+    /// - Parameters:
+    ///   - primaryColor: Background disc and star.
+    ///   - accentColor: Outer ring and pin.
+    internal static func drawIconInCurrentContext(
+        primaryColor: UIColor,
+        accentColor: UIColor,
+        showBackground: Bool
+    ) {
+        let context = UIGraphicsGetCurrentContext()!
+
+        if showBackground {
+            // Bezier #12
+            let bezier12Path = UIBezierPath()
+            bezier12Path.move(to: CGPoint(x: 10.5, y: 1.24))
+            bezier12Path.addCurve(to: CGPoint(x: 1.25, y: 10.49),
+                                  controlPoint1: CGPoint(x: 5.39, y: 1.24),
+                                  controlPoint2: CGPoint(x: 1.25, y: 5.39))
+            bezier12Path.addCurve(to: CGPoint(x: 10.5, y: 19.74),
+                                  controlPoint1: CGPoint(x: 1.25, y: 15.59),
+                                  controlPoint2: CGPoint(x: 5.4, y: 19.74))
+            bezier12Path.addCurve(to: CGPoint(x: 19.75, y: 10.49),
+                                  controlPoint1: CGPoint(x: 15.6, y: 19.74),
+                                  controlPoint2: CGPoint(x: 19.75, y: 15.59))
+            bezier12Path.addCurve(to: CGPoint(x: 10.5, y: 1.24),
+                                  controlPoint1: CGPoint(x: 19.75, y: 5.38),
+                                  controlPoint2: CGPoint(x: 15.61, y: 1.24))
+            bezier12Path.close()
+            bezier12Path.move(to: CGPoint(x: 14.89, y: 12.77))
+            bezier12Path.addCurve(to: CGPoint(x: 8.19, y: 15.08),
+                                  controlPoint1: CGPoint(x: 12.96, y: 14.7),
+                                  controlPoint2: CGPoint(x: 10.11, y: 15.08))
+            bezier12Path.addCurve(to: CGPoint(x: 6.09, y: 14.92),
+                                  controlPoint1: CGPoint(x: 7.49, y: 15.08),
+                                  controlPoint2: CGPoint(x: 6.78, y: 15.03))
+            bezier12Path.addCurve(to: CGPoint(x: 8.23, y: 6.11),
+                                  controlPoint1: CGPoint(x: 6.09, y: 14.92),
+                                  controlPoint2: CGPoint(x: 5.07, y: 9.28))
+            bezier12Path.addCurve(to: CGPoint(x: 11.36, y: 4.83),
+                                  controlPoint1: CGPoint(x: 9.06, y: 5.28),
+                                  controlPoint2: CGPoint(x: 10.18, y: 4.83))
+            bezier12Path.addCurve(to: CGPoint(x: 14.75, y: 6.25),
+                                  controlPoint1: CGPoint(x: 12.63, y: 4.83),
+                                  controlPoint2: CGPoint(x: 13.85, y: 5.34))
+            bezier12Path.addCurve(to: CGPoint(x: 14.89, y: 12.77),
+                                  controlPoint1: CGPoint(x: 16.59, y: 8.09),
+                                  controlPoint2: CGPoint(x: 16.64, y: 11))
+            bezier12Path.close()
+            primaryColor.setFill()
+            bezier12Path.fill()
+
+            // Bezier #13
+            let bezier13Path = UIBezierPath()
+            bezier13Path.move(to: CGPoint(x: 10.5, y: -0.01))
+            bezier13Path.addCurve(to: CGPoint(x: 0, y: 10.49),
+                                  controlPoint1: CGPoint(x: 4.7, y: -0.01),
+                                  controlPoint2: CGPoint(x: 0, y: 4.7))
+            bezier13Path.addCurve(to: CGPoint(x: 10.5, y: 20.99),
+                                  controlPoint1: CGPoint(x: 0, y: 16.28),
+                                  controlPoint2: CGPoint(x: 4.7, y: 20.99))
+            bezier13Path.addCurve(to: CGPoint(x: 21, y: 10.49),
+                                  controlPoint1: CGPoint(x: 16.3, y: 20.99),
+                                  controlPoint2: CGPoint(x: 21, y: 16.29))
+            bezier13Path.addCurve(to: CGPoint(x: 10.5, y: -0.01),
+                                  controlPoint1: CGPoint(x: 20.99, y: 4.7),
+                                  controlPoint2: CGPoint(x: 16.3, y: -0.01))
+            bezier13Path.close()
+            bezier13Path.move(to: CGPoint(x: 10.5, y: 19.74))
+            bezier13Path.addCurve(to: CGPoint(x: 1.25, y: 10.49),
+                                  controlPoint1: CGPoint(x: 5.39, y: 19.74),
+                                  controlPoint2: CGPoint(x: 1.25, y: 15.59))
+            bezier13Path.addCurve(to: CGPoint(x: 10.5, y: 1.23),
+                                  controlPoint1: CGPoint(x: 1.25, y: 5.39),
+                                  controlPoint2: CGPoint(x: 5.39, y: 1.23))
+            bezier13Path.addCurve(to: CGPoint(x: 19.75, y: 10.48),
+                                  controlPoint1: CGPoint(x: 15.61, y: 1.23),
+                                  controlPoint2: CGPoint(x: 19.75, y: 5.38))
+            bezier13Path.addCurve(to: CGPoint(x: 10.5, y: 19.74),
+                                  controlPoint1: CGPoint(x: 19.75, y: 15.61),
+                                  controlPoint2: CGPoint(x: 15.61, y: 19.74))
+            bezier13Path.close()
+            accentColor.setFill()
+            bezier13Path.fill()
+        }
 
         // Bezier #14
         let bezier14Path = UIBezierPath()
@@ -193,14 +217,13 @@ internal class LogoView: UIView {
         bezier14Path.addLine(to: CGPoint(x: 14.33, y: 9.43))
         bezier14Path.addLine(to: CGPoint(x: 12.47, y: 10.34))
         bezier14Path.close()
-        fillColor2.setFill()
+        accentColor.setFill()
         bezier14Path.fill()
 
         // Bezier #15
         context.saveGState()
         context.translateBy(x: 11.55, y: 9.45)
-        context.rotate(by: -0.05 * CGFloat.pi/180)
-
+        context.rotate(by: -0.05 * CGFloat.pi / 180)
         let starPath = UIBezierPath()
         starPath.move(to: CGPoint(x: 0, y: -2.75))
         starPath.addLine(to: CGPoint(x: 0.92, y: -0.92))
@@ -211,17 +234,17 @@ internal class LogoView: UIView {
         starPath.addLine(to: CGPoint(x: -2.75, y: 0))
         starPath.addLine(to: CGPoint(x: -0.92, y: -0.92))
         starPath.close()
-        fillColor.setFill()
+        primaryColor.setFill()
         starPath.fill()
-
         context.restoreGState()
-
-        context.restoreGState()
-
     }
 
-    // swiftlint:disable:next function_body_length
-    private func drawMapboxWordmark() {
+    /// Draws the wordmark in an 85×21 context, at x 22–85.
+    ///
+    /// - Parameters:
+    ///   - primaryColor: Letters.
+    ///   - accentColor: Letter details, such as counters.
+    internal static func drawWordmarkInCurrentContext(primaryColor: UIColor, accentColor: UIColor) {
         // Bezier #1
         let bezierPath = UIBezierPath()
         bezierPath.move(to: CGPoint(x: 83.25, y: 14.26))
@@ -274,7 +297,7 @@ internal class LogoView: UIView {
                             controlPoint1: CGPoint(x: 83.24, y: 14.18),
                             controlPoint2: CGPoint(x: 83.25, y: 14.22))
         bezierPath.close()
-        fillColor.setFill()
+        primaryColor.setFill()
         bezierPath.fill()
 
         // Bezier #2
@@ -329,7 +352,7 @@ internal class LogoView: UIView {
                              controlPoint1: CGPoint(x: 64.5, y: 11.88),
                              controlPoint2: CGPoint(x: 63.41, y: 13))
         bezier2Path.close()
-        fillColor.setFill()
+        primaryColor.setFill()
         bezier2Path.fill()
 
         // Bezier #3
@@ -366,7 +389,7 @@ internal class LogoView: UIView {
                              controlPoint2: CGPoint(x: 72.99, y: 13))
         bezier3Path.addLine(to: CGPoint(x: 71.65, y: 13.01))
         bezier3Path.close()
-        fillColor.setFill()
+        primaryColor.setFill()
         bezier3Path.fill()
 
         // Bezier #4
@@ -398,7 +421,7 @@ internal class LogoView: UIView {
         bezier4Path.addCurve(to: CGPoint(x: 62.08, y: 11.76),
                              controlPoint1: CGPoint(x: 63.24, y: 11.2), controlPoint2: CGPoint(x: 62.73, y: 11.76))
         bezier4Path.close()
-        fillColor2.setFill()
+        accentColor.setFill()
         bezier4Path.fill()
 
         // Bezier #5
@@ -431,7 +454,7 @@ internal class LogoView: UIView {
                              controlPoint1: CGPoint(x: 72.82, y: 11.21),
                              controlPoint2: CGPoint(x: 72.29, y: 11.76))
         bezier5Path.close()
-        fillColor2.setFill()
+        accentColor.setFill()
         bezier5Path.fill()
 
         // Bezier #6
@@ -485,7 +508,7 @@ internal class LogoView: UIView {
                              controlPoint2: CGPoint(x: 44.08, y: 9.08))
         bezier6Path.addLine(to: CGPoint(x: 44.12, y: 10.53))
         bezier6Path.close()
-        fillColor.setFill()
+        primaryColor.setFill()
         bezier6Path.fill()
 
         // Bezier #7
@@ -520,7 +543,7 @@ internal class LogoView: UIView {
                              controlPoint1: CGPoint(x: 41.08, y: 11.75),
                              controlPoint2: CGPoint(x: 40.55, y: 11.19))
         bezier7Path.close()
-        fillColor2.setFill()
+        accentColor.setFill()
         bezier7Path.fill()
 
         // Bezier #8
@@ -571,7 +594,7 @@ internal class LogoView: UIView {
                              controlPoint1: CGPoint(x: 54.47, y: 11.87), controlPoint2: CGPoint(x: 53.4, y: 13))
         bezier8Path.addLine(to: CGPoint(x: 52.08, y: 13.01))
         bezier8Path.close()
-        fillColor.setFill()
+        primaryColor.setFill()
         bezier8Path.fill()
 
         // Bezier #9
@@ -606,7 +629,7 @@ internal class LogoView: UIView {
                              controlPoint1: CGPoint(x: 53.25, y: 11.18),
                              controlPoint2: CGPoint(x: 52.72, y: 11.76))
         bezier9Path.close()
-        fillColor2.setFill()
+        accentColor.setFill()
         bezier9Path.fill()
 
         // Bezier #10
@@ -673,7 +696,7 @@ internal class LogoView: UIView {
                               controlPoint2: CGPoint(x: 36.08, y: 7.54))
         bezier10Path.addLine(to: CGPoint(x: 36.08, y: 14.24))
         bezier10Path.close()
-        fillColor.setFill()
+        primaryColor.setFill()
         bezier10Path.fill()
 
         // Bezier #11
@@ -1127,9 +1150,10 @@ internal class LogoView: UIView {
         bezier11Path.addLine(to: CGPoint(x: 83.04, y: 14.47))
         bezier11Path.addLine(to: CGPoint(x: 83.04, y: 14.47))
         bezier11Path.close()
-        fillColor2.setFill()
+        accentColor.setFill()
         bezier11Path.fill()
     }
+    // swiftlint:enable function_body_length
 
     internal enum ResizingBehavior: Int {
         case aspectFit  // The content is proportionally resized to fit into the target rectangle.

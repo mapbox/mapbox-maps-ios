@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "Vous pouvez contribuer à améliorer les cartes OpenStreetMap et Mapbox en fournissant des données d'utilisation anonymes.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "Ne participez pas";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "Participer";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "Vous contribuez à améliorer les cartes OpenStreetMap et Mapbox en fournissant des données d'utilisation anonymes.";
+"TELEMETRY_ENABLED_MSG" = "Nous utilisons des données anonymisées pour améliorer OpenStreetMap et Mapbox.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" =  "Arrêter de participer";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "Continuez à participer";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "Dis m'en plus";
+/* Link to more information */
+"LEARN_MORE" = "En savoir plus";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Télémétrie Mapbox";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Améliorer les cartes Mapbox";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Politique de confidentialité de Mapbox";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "Fermer";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Développé par Mapbox Maps";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "Annuler";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "Autoriser cette application à utiliser le géorepérage";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "Cette application utilise Mapbox Geofencing pour détecter la présence de votre appareil dans les zones définies par le développeur de l'application. Seul le développeur de l'application peut voir où se trouvent ces zones. Vous avez la possibilité de désactiver Mapbox Geofencing, ce qui peut affecter les fonctionnalités de l'application.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "Gardez le géorepérage activé";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "Désactiver le géorepérage";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "Activer le géorepérage";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "Gardez le géorepérage désactivé";

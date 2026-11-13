@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "您可以透過貢獻匿名使用資料來幫助改進 OpenStreetMap 和 Mapbox 地圖。";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "不參加";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "參加";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "您的匿名數據幫助 OpenStreetMap 和 Mapbox 的地圖變得更好。";
+"TELEMETRY_ENABLED_MSG" = "我們使用匿名資料來改進 OpenStreetMap 和 Mapbox。";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "不再參與";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "繼續參與";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "告訴我更多";
+/* Link to more information */
+"LEARN_MORE" = "進一步瞭解";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Mapbox 遙測";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "讓 Mapbox 地圖變得更好";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Mapbox 隱私權政策";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "關閉";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "由 Mapbox 地圖提供支持";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "取消";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "允許此應用程式使用地理圍欄";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "此應用程式使用 Mapbox 地理圍欄來偵測您的裝置是否存在於應用程式開發人員定義的區域中。只有應用程式開發人員才能看到這些區域的位置。您可以選擇停用 Mapbox 地理圍欄，這可能會影響應用程式功能。";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "保持地理圍籬啟用";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "禁用地理圍欄";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "啟用地理圍欄";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "保持地理圍欄禁用";

@@ -516,13 +516,21 @@ open class MapView: UIView, SizeTrackingLayerDelegate {
             options: OrnamentOptions(),
             view: self,
             onCameraChanged: mapboxMap.onCameraChanged,
+            onStyleAttributionsChanged: mapboxMap.onStyleAttributionsChanged,
+            attributionDataSource: mapboxMap,
             cameraAnimationsManager: internalCamera,
             infoButtonOrnamentDelegate: attributionDialogManager,
             logoView: LogoView(logoSize: .regular()),
             scaleBarView: MapboxScaleBarOrnamentView(),
             compassView: MapboxCompassOrnamentView(),
             attributionButton: InfoButtonOrnament(),
-            indoorSelectorView: IndoorSelectorView(model: IndoorSelectorModel(indoorManager: mapboxMap.indoor)))
+            indoorSelectorView: IndoorSelectorView(model: IndoorSelectorModel(indoorManager: mapboxMap.indoor)),
+            onMapInteraction: Signal(gesture: gestures.anyFirstTouchGestureRecognizer).map { _ in },
+            consolidatedAttributionIntroStore: .shared,
+            onConsolidatedAttributionTap: { [weak attributionDialogManager = self.attributionDialogManager] in
+                attributionDialogManager?.showAttribution()
+            },
+            attributionMenu: attributionMenu)
 
         // Initialize/Configure location source and location manager
         location = LocationManager(

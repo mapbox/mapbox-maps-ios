@@ -1,91 +1,129 @@
 import Foundation
-import UIKit
 
-/// A menu item entry in the attribution list.
+/// An entry in the attribution menu.
 @_spi(Restricted)
-public struct AttributionMenuItem {
+public struct AttributionMenuItem: Hashable {
 
-    /// Denotes a category(section) that item belongs to.
-    public struct Category: RawRepresentable {
+    /// Role of an item in the menu. Not unique: all copyright rows share ``ID/copyright``.
+    public struct ID: RawRepresentable, Hashable {
         public let rawValue: String
 
         public init(rawValue: String) {
             self.rawValue = rawValue
         }
 
-        /// Main(root) category
-        public static let main = Category(rawValue: "com.mapbox.maps.attribution.main")
-
-        /// Category for opting in/out of telemetry
-        public static let telemetry = Category(rawValue: "com.mapbox.maps.attribution.telemetry")
-
-        /// Category for opting in/out of geofencing
-        public static let geofencing = Category(rawValue: "com.mapbox.maps.attribution.geofencing")
-    }
-
-    /// Denotes an identifier of an item
-    public struct ID: RawRepresentable {
-        public let rawValue: String
-
-        public init(rawValue: String) {
-            self.rawValue = rawValue
-        }
-
-        /// Item attributing a copyright
         public static let copyright = ID(rawValue: "com.mapbox.maps.attribution.copyright")
-
-        /// Represents an item opening a contribution form
         public static let contribute = ID(rawValue: "com.mapbox.maps.attribution.contribute")
-
-        /// Opens privacy policy page
         public static let privacyPolicy = ID(rawValue: "com.mapbox.maps.attribution.privacyPolicy")
-
-        /// Opens page with the info about Mapbox telemetry
+        public static let geofencing = ID(rawValue: "com.mapbox.maps.attribution.geofencing")
+        public static let telemetry = ID(rawValue: "com.mapbox.maps.attribution.telemetry")
+        @available(*, deprecated, message: "No longer in use")
         public static let telemetryInfo = ID(rawValue: "com.mapbox.maps.attribution.telemetryInfo")
-
-        /// Item that enables a certain option, typically associated with a category
-        /// e.g. `category: .telemetry, id: .enable`
+        @available(*, deprecated, message: "No longer in use")
         public static let enable = ID(rawValue: "com.mapbox.maps.attribution.enable")
-
-        /// Item that disables a certain option, typically associated with a category
-        /// e.g. `category: .telemetry, id: .disable`
+        @available(*, deprecated, message: "No longer in use")
         public static let disable = ID(rawValue: "com.mapbox.maps.attribution.disable")
-
-        /// Item that dismisses the attribution menu
+        @available(*, deprecated, message: "No longer in use")
         public static let cancel = ID(rawValue: "com.mapbox.maps.attribution.cancel")
     }
 
-    /// Title of the attribution menu item
-    public let title: String
+    /// A trailing link within an item's ``message``, e.g. "Learn more".
+    struct Link: Hashable {
+        var title: String
+        var url: URL
+    }
 
-    /// Identifier of the item
+    enum Kind {
+        /// A `nil` url renders as plain text.
+        case link(URL?)
+        case toggle(MutableRef<Bool>)
+    }
+
+    /// Role of the item within the menu.
     public let id: ID
 
-    /// Category of the item
-    public let category: Category
+    /// Title of the item.
+    public let title: String
 
-    let action: (() -> Void)?
-    let style: Style
+    /// Text below the title. For a toggle, matches its state when the menu was built.
+    public let message: String?
 
-    init(title: String, style: Style = .default, id: ID, category: Category, action: (() -> Void)? = nil) {
-        self.title = title
+    let link: Link?
+    let kind: Kind
+
+    let messageForState: ((Bool) -> String)?
+
+    init(
+        id: ID,
+        title: String,
+        message: String? = nil,
+        messageForState: ((Bool) -> String)? = nil,
+        link: Link? = nil,
+        kind: Kind
+    ) {
         self.id = id
-        self.category = category
-        self.action = action
-        self.style = style
+        self.title = title
+        self.message = message
+        self.messageForState = messageForState
+        self.link = link
+        self.kind = kind
+    }
+
+    func message(forToggleState isOn: Bool) -> String? {
+        messageForState?(isOn) ?? message
+    }
+
+    var url: URL? {
+        switch kind {
+        case .link(let url): return url
+        case .toggle: return nil
+        }
+    }
+
+    var toggle: MutableRef<Bool>? {
+        switch kind {
+        case .toggle(let value): return value
+        case .link: return nil
+        }
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(title)
+        hasher.combine(id)
+        hasher.combine(url)
+    }
+
+    // Compares url so one provider's rows with different links stay distinct.
+    public static func == (lhs: AttributionMenuItem, rhs: AttributionMenuItem) -> Bool {
+        return lhs.title == rhs.title && lhs.id == rhs.id && lhs.url == rhs.url
     }
 }
 
-extension AttributionMenuItem {
-    enum Style {
-        case `default`
-        case cancel
+// MARK: - Deprecated
 
-        var uiActionStyle: UIAlertAction.Style {
-            switch self {
-            case .default: return .default
-            case .cancel: return .cancel
-            }
+@_spi(Restricted)
+extension AttributionMenuItem {
+    /// Category that this item belongs to.
+    @available(*, deprecated, message: "Categories no longer group the menu. Match on `id` instead.")
+    public struct Category: RawRepresentable, Hashable {
+        public let rawValue: String
+
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+
+        public static let main = Category(rawValue: "com.mapbox.maps.attribution.main")
+        public static let telemetry = Category(rawValue: "com.mapbox.maps.attribution.telemetry")
+        public static let geofencing = Category(rawValue: "com.mapbox.maps.attribution.geofencing")
+    }
+
+    /// Category of the item, derived from its ``id``.
+    @available(*, deprecated, message: "Match on `id` instead.")
+    public var category: Category {
+        switch id {
+        case .telemetry: return .telemetry
+        case .geofencing: return .geofencing
+        default: return .main
         }
     }
 }

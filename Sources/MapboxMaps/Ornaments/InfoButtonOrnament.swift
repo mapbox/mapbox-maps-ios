@@ -7,9 +7,12 @@ internal protocol InfoButtonOrnamentDelegate: AnyObject {
 
 internal class InfoButtonOrnament: UIView {
 
+    /// Set while the consolidated attribution control shows attribution instead.
+    internal var suppressHiddenWarning: Bool = false
+
     public override var isHidden: Bool {
         didSet {
-            if isHidden {
+            if isHidden && !suppressHiddenWarning {
                 Log.warning("Attribution must be enabled if you use data from sources that require it. See https://docs.mapbox.com/help/getting-started/attribution/ for more details.", category: "Ornaments")
             }
         }

@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "Ви можете допомогти покращити OpenStreetMap та Mapbox, надавши анонімні дані про користування.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "Не брати участь";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "Брати участь";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "Ви допомагаєте покращити OpenStreetMap та Mapbox надаючи анонімні дані про користування.";
+"TELEMETRY_ENABLED_MSG" = "Ми використовуємо анонімізовані дані, щоб покращити OpenStreetMap та Mapbox.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "Не брати участь";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "Продовжувати брати участь";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "Розкажіть більше";
+/* Link to more information */
+"LEARN_MORE" = "Докладніше";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Mapbox Телеметрія";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Зробимо мапи Mapbox кращими";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Політика конфіденційності Mapbox";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "Закрити";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Мапи від Mapbox";
-
-/* "Title of button for dismissing attribution action sheet" */
-"ATTRIBUTION_CANCEL" = "Скасувати";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "Дозволити цій програмі використовувати геофенсинг";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "Ця програма використовує Mapbox Геофенсинг для виявлення присутності вашого пристрою в зонах, визначених розробником програми.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "Залишити геофенсинг увімкнутим";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "Вимкнути геофенсинг";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "Увімкнути геофенсинг";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "Залишити геофенсинг вимкненим";

@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "匿名の使用状況データを提供することで、OpenStreetMap と Mapbox の地図をより良くすることができます。";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "参加しないでください";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "参加する";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "匿名の使用状況データを提供することで、OpenStreetMap と Mapbox の地図をより良くすることに貢献しています。";
+"TELEMETRY_ENABLED_MSG" = "OpenStreetMap と Mapbox を改善するために匿名化されたデータを使用します。";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "参加をやめる";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "引き続き参加してください";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "もっと教えてください";
+/* Link to more information */
+"LEARN_MORE" = "詳しい情報";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Mapbox テレメトリ";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Mapbox マップをより良くする";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "マップボックスのプライバシーポリシー";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "閉じる";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Mapbox マップを利用";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "キャンセル";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "このアプリにジオフェンシングの使用を許可する";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "このアプリは、Mapbox ジオフェンシングを使用して、アプリ開発者が定義したエリア内でのデバイスの存在を検出します。これらのエリアの場所を確認できるのはアプリ開発者のみです。Mapbox ジオフェンシングを無効にするオプションがありますが、これによりアプリの機能に影響が出る可能性があります。";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "ジオフェンシングを有効にしておく";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "ジオフェンシングを無効にする";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "ジオフェンシングを有効にする";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "ジオフェンシングを無効のままにする";

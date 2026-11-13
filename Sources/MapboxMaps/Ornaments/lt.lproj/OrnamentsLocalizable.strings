@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "Galite padėti pagerinti OpenStreetMap ir Mapbox žemėlapius pateikdami anoniminius naudojimo duomenis.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "Nedalyvauk";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "Dalyvauti";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "Pateikdami anoniminius naudojimo duomenis, padedate tobulinti OpenStreetMap ir Mapbox žemėlapius.";
+"TELEMETRY_ENABLED_MSG" = "Mes naudojame anonimizuotus duomenis, kad patobulintume „OpenStreetMap“ ir „Mapbox“.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "Nustokite dalyvauti";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "Dalyvaukite toliau";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "Pasakyk man daugiau";
+/* Link to more information */
+"LEARN_MORE" = "Sužinoti daugiau";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Mapbox telemetrija";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Patobulinkite Mapbox žemėlapius";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Mapbox privatumo politika";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "Uždaryti";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Parengta naudojant Mapbox Maps";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "Atšaukti";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "Leiskite šiai programai naudoti geofencing";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "Ši programa naudoja „Mapbox Geofencing“, kad nustatytų jūsų įrenginio buvimą programos kūrėjo nustatytose srityse. Tik programos kūrėjas gali matyti, kur yra šios sritys. Turite galimybę išjungti „Mapbox Geofencing“, kuri gali turėti įtakos programos funkcionalumui.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "Laikykite įjungtą geotvorą";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "Išjungti geotvorą";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "Įgalinti Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "Išjunkite geotvorą";

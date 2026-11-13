@@ -1,5 +1,5 @@
 import XCTest
-@testable @_spi(Experimental) @_spi(Internal) import MapboxMaps
+@testable @_spi(Experimental) @_spi(Restricted) @_spi(Internal) import MapboxMaps
 @_spi(Experimental) import MapboxCoreMaps
 
 final class OrnamentManagerTests: XCTestCase {
@@ -13,14 +13,22 @@ final class OrnamentManagerTests: XCTestCase {
     var compassView: MapboxCompassOrnamentView!
     var attributionButton: InfoButtonOrnament!
     var indoorSelectorView: IndoorSelectorView!
+    var consolidatedAttributionTaps: Int!
+    var attributionMenu: AttributionMenu!
     var ornamentsManager: OrnamentsManager!
     var onCameraChanged: SignalSubject<CameraChanged>!
+    var onStyleAttributionsChanged: SignalSubject<StyleAttributionsChanged>!
+    var attributionDataSource: MockAttributionDataSource!
+    var onMapInteraction: SignalSubject<Void>!
 
     override func setUp() {
         super.setUp()
         options = OrnamentOptions()
         view = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         onCameraChanged = SignalSubject()
+        onStyleAttributionsChanged = SignalSubject()
+        attributionDataSource = MockAttributionDataSource()
+        onMapInteraction = SignalSubject()
         cameraAnimationsManager = MockCameraAnimationsManager()
         infoButtonOrnamentDelegate = MockInfoButtonOrnamentDelegate()
         logoView = LogoView(logoSize: .regular())
@@ -28,22 +36,32 @@ final class OrnamentManagerTests: XCTestCase {
         compassView = MapboxCompassOrnamentView()
         indoorSelectorView = IndoorSelectorView(model: MockIndoorSelectorModel())
         attributionButton = InfoButtonOrnament()
+        consolidatedAttributionTaps = 0
+        attributionMenu = AttributionMenu(urlOpener: MockAttributionURLOpener(), feedbackURLRef: Ref { nil })
 
         ornamentsManager = OrnamentsManager(
             options: options,
             view: view,
             onCameraChanged: onCameraChanged.signal,
+            onStyleAttributionsChanged: onStyleAttributionsChanged.signal,
+            attributionDataSource: attributionDataSource,
             cameraAnimationsManager: cameraAnimationsManager,
             infoButtonOrnamentDelegate: infoButtonOrnamentDelegate,
             logoView: logoView,
             scaleBarView: scaleBarView,
             compassView: compassView,
             attributionButton: attributionButton,
-            indoorSelectorView: indoorSelectorView)
+            indoorSelectorView: indoorSelectorView,
+            onMapInteraction: onMapInteraction.signal,
+            consolidatedAttributionIntroStore: makeTestIntroStore(),
+            onConsolidatedAttributionTap: { [unowned self] in self.consolidatedAttributionTaps += 1 },
+            attributionMenu: attributionMenu)
     }
 
     override func tearDown() {
         ornamentsManager = nil
+        attributionMenu = nil
+        consolidatedAttributionTaps = nil
         attributionButton = nil
         compassView = nil
         scaleBarView = nil
@@ -52,6 +70,9 @@ final class OrnamentManagerTests: XCTestCase {
         infoButtonOrnamentDelegate = nil
         cameraAnimationsManager = nil
         onCameraChanged = nil
+        onStyleAttributionsChanged = nil
+        attributionDataSource = nil
+        onMapInteraction = nil
         view = nil
         options = nil
         super.tearDown()
@@ -156,6 +177,47 @@ final class OrnamentManagerTests: XCTestCase {
 
     func testIndoorSelectorView() {
         XCTAssertIdentical(ornamentsManager.indoorSelectorView, indoorSelectorView)
+    }
+
+    private func setConsolidatedAttribution(_ consolidatedAttribution: ConsolidatedAttributionOptions?) {
+        options.consolidatedAttribution = consolidatedAttribution
+        ornamentsManager.options = options
+    }
+
+    private func enableConsolidatedAttribution() throws -> ConsolidatedAttributionView {
+        setConsolidatedAttribution(ConsolidatedAttributionOptions())
+        return try XCTUnwrap(ornamentsManager.consolidatedAttributionView as? ConsolidatedAttributionView)
+    }
+
+    func testConsolidatedAttributionViewIsCreatedOnFirstEnable() throws {
+        XCTAssertNil(ornamentsManager.consolidatedAttributionView)
+
+        let pill = try enableConsolidatedAttribution()
+        XCTAssertIdentical(pill.superview, view)
+
+        setConsolidatedAttribution(nil)
+        XCTAssertIdentical(ornamentsManager.consolidatedAttributionView, pill, "Disabling keeps the view")
+
+        setConsolidatedAttribution(ConsolidatedAttributionOptions(material: .translucent))
+        XCTAssertIdentical(ornamentsManager.consolidatedAttributionView, pill, "Re-enabling reuses the view")
+    }
+
+    func testConsolidatedAttributionVisibility() throws {
+        XCTAssertFalse(logoView.isHidden)
+        XCTAssertFalse(attributionButton.isHidden)
+
+        let pill = try enableConsolidatedAttribution()
+
+        XCTAssertFalse(pill.isHidden)
+        XCTAssertTrue(logoView.isHidden)
+        XCTAssertTrue(attributionButton.isHidden)
+
+        setConsolidatedAttribution(nil)
+
+        XCTAssertTrue(pill.isHidden)
+        XCTAssertNil(pill.model.options)
+        XCTAssertFalse(logoView.isHidden)
+        XCTAssertFalse(attributionButton.isHidden)
     }
 
     func testTintColor() {
@@ -417,6 +479,49 @@ final class OrnamentManagerTests: XCTestCase {
         mockModel.selectedFloorId = "a2"
         mockModel.onFloorSelected?()
         XCTAssertEqual(collectionView.contentOffset.y, 44, "Middle floor should position via the raw (index-1)*itemSize formula")
+    }
+
+    // MARK: - Consolidated attribution
+
+    func testConsolidatedAttributionTextHonorsMenuFilter() throws {
+        let attributions = ["<a href=\"https://example.com/\">&copy; Example</a>",
+                            "<a href=\"https://other.com/\">&copy; Other</a>"]
+
+        let pill = try enableConsolidatedAttribution()
+        onStyleAttributionsChanged.send(StyleAttributionsChanged(attributions: attributions, timestamp: Date()))
+        XCTAssertEqual(pill.model.attributionText, "© Example © Other")
+
+        attributionMenu.filter = { $0.title != "Other" }
+        onStyleAttributionsChanged.send(StyleAttributionsChanged(attributions: attributions, timestamp: Date()))
+        XCTAssertEqual(pill.model.attributionText, "© Example",
+                       "The pill should drop the rows the sheet's filter removes")
+    }
+
+    func testConsolidatedAttributionReadsAttributionsWhenEnabled() throws {
+        attributionDataSource.attributions = Attribution.parse(["<a href=\"https://example.com/\">&copy; Example</a>"])
+
+        let pill = try enableConsolidatedAttribution()
+
+        XCTAssertEqual(pill.model.attributionText, "© Example")
+        XCTAssertTrue(pill.model.isExpanded, "The intro runs once the pill is enabled")
+    }
+
+    func testConsolidatedAttributionTapCallsHandler() throws {
+        let pill = try enableConsolidatedAttribution()
+
+        pill.model.handleTap()
+
+        XCTAssertEqual(consolidatedAttributionTaps, 1)
+    }
+
+    func testConsolidatedAttributionCollapsesOnMapTouch() throws {
+        attributionDataSource.attributions = Attribution.parse(["<a href=\"https://example.com/\">&copy; Example</a>"])
+        let pill = try enableConsolidatedAttribution()
+        XCTAssertTrue(pill.model.isExpanded)
+
+        onMapInteraction.send()
+
+        XCTAssertFalse(pill.model.isExpanded)
     }
 
     func testCameraDebugAccessoryEntriesSetWhileHiddenAreShownWhenEnabled() throws {

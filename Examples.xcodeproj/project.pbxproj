@@ -141,6 +141,7 @@
 		AD0922FA7F69AEE4C23F2351 /* InteractionsPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388932B3A65BB7E9B59FDBE0 /* InteractionsPlayground.swift */; };
 		AE51E276DCD8CF89AB339224 /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB76F486D80FED88678B04D /* LongTapAnimationExample.swift */; platformFilters = (ios, ); };
 		AE6E90DB7B6DA4580C2DAB59 /* FrameViewAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0F09FF1EF1A88BC1C6545 /* FrameViewAnnotationsExample.swift */; platformFilters = (ios, ); };
+		AE83E9556D0DEA6208043BCA /* ConsolidatedAttributionSwiftUIExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178F422F5B657129E8206742 /* ConsolidatedAttributionSwiftUIExample.swift */; };
 		B0EDC87982D17000DF731503 /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F4874FE9742DF10F0D0483 /* ColorScheme.swift */; platformFilters = (ios, ); };
 		B219B226A59F760C6FFDACB6 /* InteractivePinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98706B0D9D62209FE5ED861C /* InteractivePinView.swift */; platformFilters = (ios, ); };
 		B304BACFCD08802A740E8919 /* PuckPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CC67084BA1191D0B179A94 /* PuckPlayground.swift */; };
@@ -244,6 +245,7 @@
 		12A0818B5BC601707E3235A9 /* ResizableImageExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizableImageExample.swift; sourceTree = "<group>"; };
 		1317C28ACDAC187017096A99 /* ViewAnnotationMarkerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationMarkerExample.swift; sourceTree = "<group>"; };
 		133E4EABC7540ED460F08B8F /* ExternalVectorSourceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalVectorSourceExample.swift; sourceTree = "<group>"; };
+		178F422F5B657129E8206742 /* ConsolidatedAttributionSwiftUIExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsolidatedAttributionSwiftUIExample.swift; sourceTree = "<group>"; };
 		189BBC559C9C5D502C87B551 /* InteractiveDraggablePinConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveDraggablePinConstants.swift; sourceTree = "<group>"; };
 		1A182413E535260335459F26 /* SpinningGlobeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinningGlobeExample.swift; sourceTree = "<group>"; };
 		1BCE444AC33D2F1F88F4CCF0 /* radar0.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = radar0.gif; sourceTree = "<group>"; };
@@ -553,6 +555,7 @@
 				63A3027A7DA59E090DAD25F1 /* ClipLayerExample.swift */,
 				46CE3D9C2873C0767DD76D85 /* ClusteringExample.swift */,
 				29DD4C2F0049E575A6B5BF66 /* ColorThemeExample.swift */,
+				178F422F5B657129E8206742 /* ConsolidatedAttributionSwiftUIExample.swift */,
 				7DED80ACD1618F8EE8F95A4A /* CustomGeometrySourceExample.swift */,
 				442F83421C5CAD80AE0FE8BE /* CustomVectorIconsExample.swift */,
 				B3B96E9530F4E42FE9BFF8FA /* DraggableViewAnnotationsExample.swift */,
@@ -1081,6 +1084,7 @@
 				65E9F2B993AEB394FC2D0080 /* ColorThemeMapExample.swift in Sources */,
 				C664365A373267B564EC84EE /* CombineExample.swift in Sources */,
 				215230836B6AD1040D3DA547 /* CombineLocationExample.swift in Sources */,
+				AE83E9556D0DEA6208043BCA /* ConsolidatedAttributionSwiftUIExample.swift in Sources */,
 				3E515D1DD1D9CA02F3E95AA2 /* Constants.swift in Sources */,
 				A1FABB64B1C3EEC9E5AF06A0 /* ContentView.swift in Sources */,
 				60A1572CCF5763FA3C946B89 /* Custom2DPuckExample.swift in Sources */,

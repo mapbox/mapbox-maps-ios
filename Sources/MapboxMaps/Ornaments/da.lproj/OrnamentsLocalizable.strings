@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "Du kan hjælpe med at gøre OpenStreetMap- og Mapbox-kort bedre ved at bidrage med anonyme brugsdata.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "Deltag ikke";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "Deltage";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "Du er med til at gøre OpenStreetMap- og Mapbox-kort bedre ved at bidrage med anonyme brugsdata.";
+"TELEMETRY_ENABLED_MSG" = "Vi bruger anonymiserede data til at forbedre OpenStreetMap og Mapbox.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "Stop med at deltage";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "Fortsæt med at deltage";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "Fortæl mig mere";
+/* Link to more information */
+"LEARN_MORE" = "Læs mere";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Mapbox Telemetri";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Gør Mapbox Maps bedre";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Mapbox Privatlivspolitik";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "Luk";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Drevet af Mapbox Maps";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "Afbestille";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "Tillad denne app at bruge Geofencing";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "Denne app bruger Mapbox Geofencing til at registrere din enheds tilstedeværelse i områder, appudvikleren har defineret. Kun appudvikleren kan se, hvor disse områder er. Du har mulighed for at deaktivere Mapbox Geofencing, hvilket kan påvirke appens funktionalitet.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "Hold Geofencing aktiveret";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "Deaktiver Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "Aktiver Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "Hold Geofencing deaktiveret";

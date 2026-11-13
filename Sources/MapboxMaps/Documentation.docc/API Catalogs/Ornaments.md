@@ -13,3 +13,10 @@
 - ``LogoViewOptions``
 - ``ScaleBarViewOptions``
 - ``CompassDirectionFormatter``
+
+### Consolidated attribution
+
+- ``ConsolidatedAttributionOptions``
+- ``ConsolidatedAttributionMaterial``
+- ``ConsolidatedAttributionIntroExpansion``
+- ``ConsolidatedAttributionCollapsedStyle``

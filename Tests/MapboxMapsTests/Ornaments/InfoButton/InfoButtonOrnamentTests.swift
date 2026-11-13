@@ -1,4 +1,5 @@
 import XCTest
+import SwiftUI
 @_spi(Restricted) @testable import MapboxMaps
 
 class InfoButtonOrnamentTests: XCTestCase {
@@ -39,17 +40,9 @@ class InfoButtonOrnamentTests: XCTestCase {
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
 
-        let firstAlert = try XCTUnwrap(parentViewController.currentAlert, "The first alert controller could not be found.")
-        XCTAssertNotNil(firstAlert)
-
-        XCTAssertEqual(firstAlert.actions.count, 3, "There should be three actions present.")
-        let telemetryTitle = NSLocalizedString("Mapbox Telemetry", comment: "Action in attribution sheet")
-        XCTAssertEqual(firstAlert.actions[0].title!, telemetryTitle)
-
-        XCTAssertEqual(firstAlert.actions[1].title, Attribution.makePrivacyPolicyAttribution().title)
-
-        let cancelTitle = NSLocalizedString("Cancel", comment: "Title of button for dismissing attribution action sheet")
-        XCTAssertEqual(firstAlert.actions[2].title, cancelTitle)
+        let sheet = try XCTUnwrap(parentViewController.currentAttributionSheet,
+                                  "An AttributionSheetView should be presented.")
+        XCTAssertGreaterThan(sheet.rowCount, 0)
     }
 
     func testTelemetryOptOut() throws {
@@ -60,34 +53,16 @@ class InfoButtonOrnamentTests: XCTestCase {
         UserDefaults.standard.MGLMapboxMetricsEnabled = true
         infoButton.infoTapped()
 
-        var infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
-        XCTAssertNotNil(infoAlert)
-        infoAlert.tapButton(atIndex: 0)
+        let sheet = try XCTUnwrap(parentViewController.currentAttributionSheet)
+        XCTAssertTrue(sheet.toggleIsOn(for: .telemetry), "Switch should be on when metrics enabled")
 
-        var telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The telemetry alert controller could not be found.")
-
-        XCTAssertEqual(telemetryAlert.actions.count, 3, "The telemetry alert should have 3 actions.")
-
-        let participatingTitle = NSLocalizedString("Keep Participating", comment: "Telemetry prompt button")
-        XCTAssertEqual(participatingTitle, telemetryAlert.actions[2].title, "The third action should be a 'Keep Participating' button.")
-
-        XCTAssertTrue(attributionMenu.isMetricsEnabled)
-
-        let stopParticipatingTitle = NSLocalizedString("Stop Participating", comment: "Telemetry prompt button")
-        XCTAssertEqual(stopParticipatingTitle, telemetryAlert.actions[1].title, "The second action should be a 'Stop Participating' button.")
-
-        telemetryAlert.tapButton(atIndex: 1)
-        XCTAssertFalse(attributionMenu.isMetricsEnabled, "Metrics should not be enabled after selecting 'Stop participating'.")
+        sheet.simulateToggle(false, for: .telemetry)
+        XCTAssertFalse(UserDefaults.standard.MGLMapboxMetricsEnabled,
+                       "Metrics should be disabled after toggling switch off")
 
         infoButton.infoTapped()
-        infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
-        infoAlert.tapButton(atIndex: 0)
-
-        telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The telemetry alert controller could not be found.")
-        let dontParticipateTitle = NSLocalizedString("Don’t Participate", comment: "Telemetry prompt button")
-        XCTAssertEqual(dontParticipateTitle, telemetryAlert.actions[1].title, "The second action should be a 'Don't Participate' button.")
-        telemetryAlert.tapButton(atIndex: 1)
-        XCTAssertFalse(attributionMenu.isMetricsEnabled, "Metrics should not be enabled after selecting 'Don't Participate'.")
+        let sheet2 = try XCTUnwrap(parentViewController.currentAttributionSheet)
+        XCTAssertFalse(sheet2.toggleIsOn(for: .telemetry), "Switch should be off after metrics disabled")
     }
 
     func testTelemetryOptIn() throws {
@@ -98,39 +73,22 @@ class InfoButtonOrnamentTests: XCTestCase {
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
 
-        var infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
-        XCTAssertNotNil(infoAlert)
-        infoAlert.tapButton(atIndex: 0)
+        let sheet = try XCTUnwrap(parentViewController.currentAttributionSheet)
+        XCTAssertFalse(sheet.toggleIsOn(for: .telemetry), "Switch should be off when metrics disabled")
 
-        var telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The telemetry alert controller could not be found.")
-
-        XCTAssertEqual(telemetryAlert.actions.count, 3, "The telemetry alert should have 3 actions.")
-
-        let participatingTitle = NSLocalizedString("Participate", comment: "Telemetry prompt button")
-        XCTAssertEqual(participatingTitle, telemetryAlert.actions[2].title, "The third action should be a 'Participate' button.")
-
-        XCTAssertFalse(attributionMenu.isMetricsEnabled)
-
-        let dontParticipateTitle = NSLocalizedString("Don’t Participate", comment: "Telemetry prompt button")
-        XCTAssertEqual(dontParticipateTitle, telemetryAlert.actions[1].title, "The second action should be a 'Don't Participate' button.")
-
-        telemetryAlert.tapButton(atIndex: 2)
-        XCTAssertTrue(attributionMenu.isMetricsEnabled, "Metrics should be enabled after selecting 'Participate'.")
+        sheet.simulateToggle(true, for: .telemetry)
+        XCTAssertTrue(UserDefaults.standard.MGLMapboxMetricsEnabled,
+                      "Metrics should be enabled after toggling switch on")
 
         infoButton.infoTapped()
-        infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
-        infoAlert.tapButton(atIndex: 0)
-        telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The telemetry alert controller could not be found.")
-        let keepParticipatingTitle = NSLocalizedString("Keep Participating", comment: "Telemetry prompt button")
-        XCTAssertEqual(keepParticipatingTitle, telemetryAlert.actions[2].title, "The third action should be a 'Keep Participating' button.")
-        telemetryAlert.tapButton(atIndex: 2)
-        XCTAssertTrue(attributionMenu.isMetricsEnabled, "Metrics should be enabled after selecting 'Keep Participating'.")
+        let sheet2 = try XCTUnwrap(parentViewController.currentAttributionSheet)
+        XCTAssertTrue(sheet2.toggleIsOn(for: .telemetry), "Switch should be on after metrics enabled")
     }
 }
 
 extension InfoButtonOrnamentTests: AttributionDataSource {
-    func loadAttributions(completion: @escaping ([MapboxMaps.Attribution]) -> Void) {
-        completion([])
+    func getAttributions() -> [MapboxMaps.Attribution] {
+        []
     }
 }
 
@@ -144,23 +102,14 @@ extension InfoButtonOrnamentTests: AttributionDialogManagerDelegate {
     }
 }
 
+// MARK: - MockParentViewController
+
 class MockParentViewController: UIViewController {
-    var currentAlert: UIAlertController?
+    var currentAttributionSheet: AttributionSheetView?
 
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
-        if let vc = viewControllerToPresent as? UIAlertController {
-            currentAlert = vc
+        if let host = viewControllerToPresent as? UIHostingController<AttributionSheetView> {
+            currentAttributionSheet = host.rootView
         }
-    }
-}
-
-// From https://stackoverflow.com/questions/36173740/trigger-uialertaction-on-uialertcontroller-programmatically
-extension UIAlertController {
-    typealias AlertHandler = @convention(block) (UIAlertAction) -> Void
-
-    func tapButton(atIndex index: Int) {
-        guard let block = actions[index].value(forKey: "handler") else { return }
-        let handler = unsafeBitCast(block as AnyObject, to: AlertHandler.self)
-        handler(actions[index])
     }
 }

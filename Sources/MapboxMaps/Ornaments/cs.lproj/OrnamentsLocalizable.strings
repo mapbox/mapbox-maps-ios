@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "Můžete pomoci vylepšit mapy OpenStreetMap a Mapbox tím, že přispějete anonymními údaji o používání.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "Neúčastnit se";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "Účastnit se";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "Pomáháte zlepšovat mapy OpenStreetMap a Mapbox tím, že přispíváte anonymními údaji o používání.";
+"TELEMETRY_ENABLED_MSG" = "Pro vylepšení OpenStreetMap a Mapboxu používáme anonymizovaná data.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "Přestat se účastnit";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "Pokračujte v účasti";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "Řekni mi více";
+/* Link to more information */
+"LEARN_MORE" = "Další informace";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Telemetrie Mapboxu";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Vylepšete Mapbox Maps";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Zásady ochrany osobních údajů Mapbox";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "Zavřít";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Provozováno na Mapbox Maps";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "Zrušení";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "Povolit této aplikaci používat Geofencing";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "Tato aplikace používá Mapbox Geofencing ke zjištění přítomnosti vašeho zařízení v oblastech, které definoval vývojář aplikace. Pouze vývojář aplikace vidí, kde se tyto oblasti nacházejí. Máte možnost deaktivovat Mapbox Geofencing, což může ovlivnit funkčnost aplikace.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "Ponechte funkci Geofencing povolenou";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "Zakázat Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "Povolit Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "Ponechat geofencing vypnutý";

@@ -5,7 +5,7 @@ import XCTest
 class MutableRefTests: XCTestCase {
     func testGetSet() {
         var value = "Hello, World!"
-        var ref = MutableRef(
+        let ref = MutableRef(
             get: { value },
             set: { value = $0 }
         )
@@ -36,7 +36,7 @@ class MutableRefTests: XCTestCase {
             }
         }
         let instance = Foo(count: 0)
-        var ref = MutableRef(root: instance, keyPath: \.count)
+        let ref = MutableRef(root: instance, keyPath: \.count)
 
         XCTAssertEqual(ref.wrappedValue, 0)
         instance.count += 1

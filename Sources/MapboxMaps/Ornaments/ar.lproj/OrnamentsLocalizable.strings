@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "يمكنك المساعدة في تحسين خرائط OpenStreetMap وMapbox من خلال المساهمة ببيانات استخدام مجهولة المصدر.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "لا تشارك";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "يشارك";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "أنت تساعد في تحسين خرائط OpenStreetMap وMapbox من خلال المساهمة ببيانات استخدام مجهولة المصدر.";
+"TELEMETRY_ENABLED_MSG" = "نستخدم بيانات مجهولة المصدر لتحسين OpenStreetMap وMapbox.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "التوقف عن المشاركة";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "استمر في المشاركة";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "اخبرني المزيد";
+/* Link to more information */
+"LEARN_MORE" = "معرفة المزيد";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Mapbox القياس عن بعد";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "جعل خرائط Mapbox أفضل";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "سياسة خصوصية Mapbox";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "إغلاق";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "مدعوم من خرائط Mapbox";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "كانس؛";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "السماح لهذا التطبيق باستخدام Geofencing";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "يستخدم هذا التطبيق Mapbox Geofencing للكشف عن وجود جهازك في المناطق التي حددها مطور التطبيق. يمكن لمطور التطبيق فقط معرفة مكان تلك المناطق. لديك خيار تعطيل Mapbox Geofencing، والذي قد يؤثر على وظائف التطبيق.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "إبقاء Geofencing ممكّنًا";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "تعطيل السياج الجغرافي";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "تمكين تحديد المواقع الجغرافية";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "إبقاء ميزة Geofencing معطلة";

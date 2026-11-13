@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "Bạn có thể giúp cải thiện bản đồ OpenStreetMap và Mapbox bằng cách đóng góp dữ liệu sử dụng ẩn danh.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "Đừng tham gia";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "Tham gia";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "Bạn đang giúp cải thiện bản đồ OpenStreetMap và Mapbox bằng cách đóng góp dữ liệu sử dụng ẩn danh.";
+"TELEMETRY_ENABLED_MSG" = "Chúng tôi sử dụng dữ liệu ẩn danh để cải thiện OpenStreetMap và Mapbox.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "Ngừng tham gia";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "Tiếp tục tham gia";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "Cho tôi biết thêm";
+/* Link to more information */
+"LEARN_MORE" = "Tìm hiểu thêm";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Đo từ xa Mapbox";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Làm cho bản đồ Mapbox tốt hơn";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Chính sách quyền riêng tư của Mapbox";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "Đóng";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Được hỗ trợ bởi Mapbox Maps";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "Hủy bỏ";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "Cho phép ứng dụng này sử dụng Geofencing";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "Ứng dụng này sử dụng Mapbox Geofencing để phát hiện sự hiện diện của thiết bị của bạn trong các khu vực mà nhà phát triển ứng dụng đã xác định. Chỉ nhà phát triển ứng dụng mới có thể thấy những khu vực đó. Bạn có tùy chọn tắt Mapbox Geofencing, điều này có thể ảnh hưởng đến chức năng của ứng dụng.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "Giữ cho Geofencing được bật";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "Vô hiệu hóa Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "Bật Geofencing";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "Giữ Geofencing ở trạng thái vô hiệu hóa";

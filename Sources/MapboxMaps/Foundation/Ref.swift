@@ -37,7 +37,7 @@ internal struct MutableRef<Value> {
 
     var wrappedValue: Value {
         get { get() }
-        set { set(newValue) }
+        nonmutating set { set(newValue) }
     }
 
     /// Creates the read-only reference.

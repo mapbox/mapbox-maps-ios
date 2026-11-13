@@ -78,6 +78,15 @@ public final class OrnamentsManager {
         return _indoorSelectorView
     }
 
+    /// The view for the consolidated attribution ornament. Use it to position other views,
+    /// but don't change it. Configure it with ``OrnamentOptions/consolidatedAttribution``.
+    /// `nil` until that option is first set.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public var consolidatedAttributionView: UIView? {
+        return _consolidatedAttributionView
+    }
+
     private var cachedCamera: CameraState?
 
     private var cameraDebugView: CameraDebugView?
@@ -130,6 +139,17 @@ public final class OrnamentsManager {
     private let _compassView: MapboxCompassOrnamentView
     private let _attributionButton: InfoButtonOrnament
     private let _indoorSelectorView: IndoorSelectorView
+    /// Created the first time ``OrnamentOptions/consolidatedAttribution`` is set.
+    private var _consolidatedAttributionView: ConsolidatedAttributionView?
+    private let onStyleAttributionsChanged: Signal<StyleAttributionsChanged>
+    private weak var attributionDataSource: AttributionDataSource?
+    private let onMapInteraction: Signal<Void>
+    private let consolidatedAttributionIntroStore: ConsolidatedAttributionIntroStore
+    private let onConsolidatedAttributionTap: () -> Void
+    private let attributionMenu: AttributionMenu
+
+    /// `updateOrnaments()` runs on every options change; count the opt-in once.
+    private var sendConsolidatedAttributionTelemetryOnce = Once()
 
     private var constraints = [NSLayoutConstraint]()
     private var cancellables = Set<AnyCancelable>()
@@ -137,16 +157,23 @@ public final class OrnamentsManager {
     init(options: OrnamentOptions,
          view: UIView,
          onCameraChanged: Signal<CameraChanged>,
+         onStyleAttributionsChanged: Signal<StyleAttributionsChanged>,
+         attributionDataSource: AttributionDataSource,
          cameraAnimationsManager: CameraAnimationsManagerProtocol,
          infoButtonOrnamentDelegate: InfoButtonOrnamentDelegate,
          logoView: LogoView,
          scaleBarView: MapboxScaleBarOrnamentView,
          compassView: MapboxCompassOrnamentView,
          attributionButton: InfoButtonOrnament,
-         indoorSelectorView: IndoorSelectorView
+         indoorSelectorView: IndoorSelectorView,
+         onMapInteraction: Signal<Void>,
+         consolidatedAttributionIntroStore: ConsolidatedAttributionIntroStore,
+         onConsolidatedAttributionTap: @escaping () -> Void,
+         attributionMenu: AttributionMenu
     ) {
         self.options = options
         self.view = view
+        self.attributionMenu = attributionMenu
 
         // Logo View
         logoView.translatesAutoresizingMaskIntoConstraints = false
@@ -185,6 +212,12 @@ public final class OrnamentsManager {
         view.addSubview(indoorSelectorView)
         self._indoorSelectorView = indoorSelectorView
 
+        self.onStyleAttributionsChanged = onStyleAttributionsChanged
+        self.attributionDataSource = attributionDataSource
+        self.onMapInteraction = onMapInteraction
+        self.consolidatedAttributionIntroStore = consolidatedAttributionIntroStore
+        self.onConsolidatedAttributionTap = onConsolidatedAttributionTap
+
         _attributionButton.delegate = infoButtonOrnamentDelegate
         _attributionButton.onTintColorDidChange = { [weak self] tintColor in
             self?.options.attributionButton.tintColor = tintColor
@@ -192,6 +225,10 @@ public final class OrnamentsManager {
 
         updateOrnaments()
 
+        observeSignals(onCameraChanged: onCameraChanged)
+    }
+
+    private func observeSignals(onCameraChanged: Signal<CameraChanged>) {
         onCameraChanged.observe { [weak self] event in
             guard let self else { return }
             self.cachedCamera = event.cameraState
@@ -247,17 +284,52 @@ public final class OrnamentsManager {
             constraints.append(contentsOf: cameraDebugViewConstraints(for: cameraDebugView))
         }
 
+        constraints.append(contentsOf: consolidatedAttributionConstraints())
+
         // Update the image of compass
         _compassView.updateImage(image: options.compass.image)
 
         // Activate new constraints
         NSLayoutConstraint.activate(constraints)
 
-        _logoView.isHidden = options.logo.visibility == .hidden
+        _consolidatedAttributionView?.model.options = options.consolidatedAttribution
+
+        updateOrnamentVisibility()
+    }
+
+    /// Creates the pill on first enable. A disabled pill is hidden but still needs a position.
+    private func consolidatedAttributionConstraints() -> [NSLayoutConstraint] {
+        if options.consolidatedAttribution != nil {
+            sendConsolidatedAttributionTelemetryOnce {
+                sendTelemetry(\.consolidatedAttribution)
+            }
+            if _consolidatedAttributionView == nil {
+                _consolidatedAttributionView = makeConsolidatedAttributionView()
+            }
+        }
+        guard let consolidatedAttributionView = _consolidatedAttributionView else { return [] }
+        let consolidatedOptions = options.consolidatedAttribution ?? ConsolidatedAttributionOptions()
+        var result = constraints(with: consolidatedAttributionView,
+                                 position: consolidatedOptions.position,
+                                 margins: consolidatedOptions.margins)
+        if let limit = freeEdgeLimitConstraint(with: consolidatedAttributionView,
+                                               position: consolidatedOptions.position,
+                                               margins: consolidatedOptions.margins) {
+            result.append(limit)
+        }
+        return result
+    }
+
+    private func updateOrnamentVisibility() {
+        let consolidatedActive = options.consolidatedAttribution != nil
+        _consolidatedAttributionView?.isHidden = !consolidatedActive
+        _logoView.suppressHiddenWarning = consolidatedActive
+        _attributionButton.suppressHiddenWarning = consolidatedActive
+        _logoView.isHidden = consolidatedActive || options.logo.visibility == .hidden
         _scaleBarView.isHidden = options.scaleBar.visibility == .hidden
         _compassView.visibility = options.compass.visibility
         _compassView.isHidden = options.compass.visibility == .hidden
-        _attributionButton.isHidden = options.attributionButton.visibility == .hidden
+        _attributionButton.isHidden = consolidatedActive || options.attributionButton.visibility == .hidden
         _scaleBarView.units = options.scaleBar.units
         if _attributionButton.tintColor != options.attributionButton.tintColor {
             _attributionButton.tintColor = options.attributionButton.tintColor
@@ -270,6 +342,27 @@ public final class OrnamentsManager {
             _indoorSelectorView.isHidden = true
         case .adaptive:
             indoorSelectorView.isHidden = false // Handled by the IndoorSelectorView itself based on floor data and uses opacity
+        }
+    }
+
+    private func freeEdgeLimitConstraint(with view: UIView,
+                                         position: OrnamentPosition,
+                                         margins: CGPoint) -> NSLayoutConstraint? {
+        guard let layoutGuide = view.superview?.safeAreaLayoutGuide else {
+            return nil
+        }
+        // Must use the same anchor type as the pinning constraint: left/right or leading/trailing.
+        switch position {
+        case .topLeft, .bottomLeft:
+            return view.rightAnchor.constraint(lessThanOrEqualTo: layoutGuide.rightAnchor, constant: -margins.x)
+        case .topRight, .bottomRight:
+            return view.leftAnchor.constraint(greaterThanOrEqualTo: layoutGuide.leftAnchor, constant: margins.x)
+        case .topLeading, .bottomLeading:
+            return view.trailingAnchor.constraint(lessThanOrEqualTo: layoutGuide.trailingAnchor,
+                                                  constant: -margins.x)
+        case .topTrailing, .bottomTrailing:
+            return view.leadingAnchor.constraint(greaterThanOrEqualTo: layoutGuide.leadingAnchor,
+                                                 constant: margins.x)
         }
     }
 
@@ -326,5 +419,34 @@ public final class OrnamentsManager {
                 view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
                 view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
         }
+    }
+}
+
+// MARK: - Consolidated attribution
+
+extension OrnamentsManager {
+    private static let mapboxCopyrightTitle = "mapbox"
+
+    private func makeConsolidatedAttributionView() -> ConsolidatedAttributionView {
+        let model = ConsolidatedAttributionModel(
+            introStore: consolidatedAttributionIntroStore,
+            onMapInteraction: onMapInteraction)
+        model.attributionText = makeConsolidatedAttributionText(from: attributionDataSource?.getAttributions() ?? [])
+        model.onTap = onConsolidatedAttributionTap
+        onStyleAttributionsChanged.observe { [weak self] event in
+            guard let self else { return }
+            model.attributionText = self.makeConsolidatedAttributionText(from: Attribution.parse(event.attributions))
+        }.store(in: &cancellables)
+
+        let consolidatedAttributionView = ConsolidatedAttributionView(model: model)
+        view?.addSubview(consolidatedAttributionView)
+        return consolidatedAttributionView
+    }
+
+    private func makeConsolidatedAttributionText(from attributions: [Attribution]) -> String {
+        attributionMenu.copyrightItems(from: attributions)
+            .filter { $0.title.lowercased() != OrnamentsManager.mapboxCopyrightTitle }
+            .map { Attribution.copyrightText($0.title) }
+            .joined(separator: " ")
     }
 }

@@ -9,6 +9,7 @@ extension TelemetryCounter: @unchecked Sendable {
     fileprivate static let viewportTransition = TelemetryCounter.viewport(name: "transition")
     fileprivate static let styleDSL = TelemetryCounter.create(name: "dsl", category: "style")
     fileprivate static let carPlay = TelemetryCounter.create(forName: sdkPrefix + "/carplay")
+    fileprivate static let consolidatedAttribution = TelemetryCounter.create(name: "enabled", category: "consolidated-attribution")
 
     private static func viewport(name: String) -> TelemetryCounter {
         .create(name: name, category: "viewport")
@@ -30,6 +31,7 @@ struct TelemetryEvents: Sendable {
     let viewportTransition = TelemetryEvent(counter: .viewportTransition)
     let styleDSL = TelemetryEvent(counter: .styleDSL)
     let carPlay = TelemetryEvent(counter: .carPlay)
+    let consolidatedAttribution = TelemetryEvent(counter: .consolidatedAttribution)
 
     static let shared = TelemetryEvents()
 

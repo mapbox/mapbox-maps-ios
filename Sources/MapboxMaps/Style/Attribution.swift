@@ -31,6 +31,10 @@ struct Attribution: Hashable {
         return title == "OpenStreetMap" ? "OSM" : title
     }
 
+    static func copyrightText(_ title: String) -> String {
+        "\u{00A9} \(title)"
+    }
+
     func snapshotTitle(for style: Style) -> String? {
         guard kind != .feedback else {
             return nil
@@ -85,7 +89,7 @@ struct Attribution: Hashable {
             return nil
         }
 
-        let attributionText = "© \(titleArray.joined(separator: " / "))"
+        let attributionText = copyrightText(titleArray.joined(separator: " / "))
 
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: UIFont.smallSystemFontSize),

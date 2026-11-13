@@ -13,38 +13,23 @@
 /* Telemetry prompt message */
 "TELEMETRY_DISABLED_MSG" = "익명의 사용 데이터를 제공하면 OpenStreetMap 및 Mapbox 지도를 개선하는 데 도움이 될 수 있습니다.";
 
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_OFF" = "참여하지 마세요";
-
-/* Telemetry prompt button */
-"TELEMETRY_DISABLED_ON" = "참가하다";
-
 /* Telemetry prompt message */
-"TELEMETRY_ENABLED_MSG" = "익명의 사용 데이터를 제공하여 OpenStreetMap 및 Mapbox 지도를 개선하는 데 도움을 주고 계십니다.";
+"TELEMETRY_ENABLED_MSG" = "저희는 익명화된 데이터를 사용하여 OpenStreetMap과 Mapbox를 개선합니다.";
 
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_OFF" = "참여 중지";
-
-/* Telemetry prompt button */
-"TELEMETRY_ENABLED_ON" = "계속 참여하세요";
-
-/* Telemetry prompt button */
-"TELEMETRY_MORE" = "더 말 해주세요";
+/* Link to more information */
+"LEARN_MORE" = "더 알아보기";
 
 /* Action in attribution sheet */
 "TELEMETRY_NAME" = "Mapbox 원격 측정";
 
-/* Telemetry prompt title */
-"TELEMETRY_TITLE" = "Mapbox 지도를 더 좋게 만들기";
-
 /* Privacy policy action in attribution sheet */
 "ATTRIBUTION_PRIVACY_POLICY" = "Mapbox 개인정보 보호정책";
 
+/* Accessibility label for the close button in attribution sheet */
+"ATTRIBUTION_CLOSE_A11Y_LABEL" = "닫기";
+
 /* Header in attribution sheet */
 "SDK_NAME" = "Mapbox 지도 제공";
-
-/* Title of button for dismissing attribution action sheet */
-"ATTRIBUTION_CANCEL" = "취소";
 
 // MARK: - Strings that SDK expect to receive from sources
 
@@ -54,20 +39,5 @@
 
 // MARK: - Geofencing
 
-/* Geofencing prompt title */
-"GEOFENCING_TITLE" = "이 앱이 지오펜싱을 사용하도록 허용";
-
 /* Geofencing prompt message */
 "GEOFENCING_MSG" = "이 앱은 Mapbox Geofencing을 사용하여 앱 개발자가 정의한 영역에서 기기의 존재를 감지합니다. 앱 개발자만 해당 영역의 위치를 볼 수 있습니다. 앱 기능에 영향을 줄 수 있는 Mapbox Geofencing을 비활성화할 수 있습니다.";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_ON" = "지오펜싱을 활성화 상태로 유지하세요";
-
-/* Geofencing prompt button */
-"GEOFENCING_ENABLED_OFF" = "지오펜싱 비활성화";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_ON" = "지오펜싱 활성화";
-
-/* Geofencing prompt button */
-"GEOFENCING_DISABLED_OFF" = "지오펜싱을 비활성화 상태로 유지";

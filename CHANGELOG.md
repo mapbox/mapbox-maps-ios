@@ -4,6 +4,14 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.35.0 - 13 November, 2026
+
+### Bug fixes 🐞
+* Fix map-aligned icons (such as road and oneway arrows) shimmering at high pitch.
+
+### 💫️ Other
+* Update the vendored brotli library to v1.2.1 to address a security vulnerability.
+
 ## 11.35.0-rc.1 - 02 November, 2026
 
 ### Breaking changes ⚠️

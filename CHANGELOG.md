@@ -4,9 +4,19 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.36.0-rc.1 - 16 November, 2026
+
 ### Features ✨ and improvements 🏁
 * Introduce experimental consolidated attribution ornament, opt-in via `OrnamentOptions.consolidatedAttribution`, which replaces the logo and attribution button with a single expandable pill. The control renders light or dark according to the map view's `userInterfaceStyle`, and `ConsolidatedAttributionOptions.material` selects between a solid and a translucent background.
 * The attribution button now opens a sheet with the data credits and the telemetry and geofencing switches, instead of an alert.
+* Add TileStore event subscription and factory settings for handling database migration failures on iOS.
+* Add signed normalized type wrappers that hold finite values in [-1, 1].
+* Add an experimental `positionPoint` to `CameraOptions` and `CameraState` to control where the center appears within the padded viewport, with pitch and zoom pivoting at that point.
+
+### Bug fixes 🐞
+* Fix symbols with zoom- and feature-dependent text or icon size being drawn too large between zoom stops when using a global scale factor.
+* Fix a crash caused by updating a raster texture before its asynchronous upload had finished.
+* Fix a bug where chained `let` and `var` expressions cause the renderer to hang.
 
 ## 11.35.0 - 13 November, 2026
 

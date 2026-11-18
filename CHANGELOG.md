@@ -27,6 +27,8 @@ try mapView.mapboxMap.setProjection(.albers(
 * Fix a crash caused by updating a raster texture before its asynchronous upload had finished.
 * Fix a bug where chained `let` and `var` expressions cause the renderer to hang.
 
+## 11.35.1 - 18 November, 2026
+
 ## 11.35.0 - 13 November, 2026
 
 ### Bug fixes 🐞

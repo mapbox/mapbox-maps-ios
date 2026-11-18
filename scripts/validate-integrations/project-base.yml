@@ -30,6 +30,12 @@ targetTemplates:
       properties:
         MBXAccessToken: ${MBX_TOKEN}
         UILaunchStoryboardName: LaunchScreen
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default Configuration
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
     scheme:
       testTargets:
         - ${target_name}UITest

@@ -35,11 +35,16 @@ class ViewController: UIViewController {
 }
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
-    lazy var window: UIWindow? = UIWindow(frame: UIScreen.main.bounds)
+class AppDelegate: UIResponder, UIApplicationDelegate {}
 
-    func applicationDidFinishLaunching(_ application: UIApplication) {
-        window?.rootViewController = ViewController()
-        window?.makeKeyAndVisible()
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let windowScene = scene as? UIWindowScene else { return }
+        let window = UIWindow(windowScene: windowScene)
+        window.rootViewController = ViewController()
+        window.makeKeyAndVisible()
+        self.window = window
     }
 }

@@ -4,8 +4,17 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.31.2 - 18 November, 2026
+
 ### Breaking changes ⚠️
 * CocoaPods distribution is no longer supported. New versions are available through Swift Package Manager or the direct download; previously released versions remain available on CocoaPods.
+
+### Bug fixes 🐞
+* Fix a bug where point annotations jitter when zooming out
+* Fix a crash that could occur when multiple maps render simultaneously while displaying view annotations.
+* Fix view annotations flickering or jumping position when camera padding leaves insufficient room to fit them.
+* Fix stale layer geometry cache on readding view annotations
+* Fix view annotations stuck to stale cached layer's geometry
 
 ## 11.31.1 - 25 September, 2026
 

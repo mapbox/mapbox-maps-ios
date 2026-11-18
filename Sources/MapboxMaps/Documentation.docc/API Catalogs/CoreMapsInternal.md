@@ -16,6 +16,7 @@ Maps rendering SDK also known as GL-Native. These are for internal use only.
 - ``MBXImage``
 
 <!-- functions -->
+- ``MBMMapDebugOptionsToString(_:)``
 - ``MBMMapLoadingErrorTypeToString(_:)``
 - ``MBMRenderModeTypeToString(_:)``
 - ``MBMRequestDataSourceTypeToString(_:)``

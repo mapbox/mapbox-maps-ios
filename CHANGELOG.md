@@ -4,6 +4,15 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+* Add the experimental Albers equal-area projection: `StyleProjectionName.albers`. Use the experimental `StyleProjection.albers(center:parallels:)`, `StyleProjection.center` and `StyleProjection.parallels` to configure it for a region.
+```swift
+try mapView.mapboxMap.setProjection(.albers(
+    center: CLLocationCoordinate2D(latitude: 50, longitude: 10),
+    parallels: 43...62
+))
+```
+
 ## 11.36.0-rc.1 - 16 November, 2026
 
 ### Features ✨ and improvements 🏁

@@ -1880,7 +1880,12 @@ extension StyleManager {
             return nil
         } else {
             // swiftlint:disable:next force_cast
-            return StyleProjection(name: StyleProjectionName(rawValue: projectionName.value as! String))
+            var projection = StyleProjection(name: StyleProjectionName(rawValue: projectionName.value as! String))
+            projection.centerCodable = styleManager.getStyleProjectionProperty(
+                forProperty: StyleProjection.CodingKeys.centerCodable.rawValue).value as? [Double]
+            projection.parallelsCodable = styleManager.getStyleProjectionProperty(
+                forProperty: StyleProjection.CodingKeys.parallelsCodable.rawValue).value as? [Double]
+            return projection
         }
     }
 }

@@ -673,4 +673,27 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
         XCTAssertEqual(projection, mapView.mapboxMap.projection)
     }
+
+    func testUpdateAlbersProjection() throws {
+        mapView.mapboxMap.styleURI = .satelliteStreets
+
+        try mapView.mapboxMap.setProjection(StyleProjection(name: .albers))
+
+        let projection = try XCTUnwrap(mapView.mapboxMap.projection)
+        XCTAssertEqual(projection.name, .albers)
+        XCTAssertTrue(CLLocationCoordinate2DIsValid(try XCTUnwrap(projection.center)))
+        let parallels = try XCTUnwrap(projection.parallels)
+        XCTAssertTrue((-90...90).contains(parallels.lowerBound))
+        XCTAssertTrue((-90...90).contains(parallels.upperBound))
+    }
+
+    func testUpdateAlbersProjectionCenterAndParallels() throws {
+        mapView.mapboxMap.styleURI = .satelliteStreets
+
+        let projection = StyleProjection.albers(center: CLLocationCoordinate2D(latitude: 50, longitude: 10), parallels: 43...62)
+
+        try mapView.mapboxMap.setProjection(projection)
+
+        XCTAssertEqual(projection, mapView.mapboxMap.projection)
+    }
 }

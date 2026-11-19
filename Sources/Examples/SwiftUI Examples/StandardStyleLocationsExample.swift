@@ -1,4 +1,4 @@
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 import SwiftUI
 
 struct StandardStyleLocationsExample: View {
@@ -42,7 +42,9 @@ struct StandardStyleLocationsExample: View {
     }
 
     var body: some View {
-        Map(viewport: $model.viewport)
+        Map(viewport: $model.viewport) {
+            StyleProjection(name: model.projection)
+        }
             .mapStyle(style)
             // Center of the map will be translated in order to accommodate settings panel
             .additionalSafeAreaInsets(.bottom, settingsHeight)
@@ -73,6 +75,7 @@ struct StandardStyleLocationsExample: View {
 
 class StandardStyleLocationsModel: ObservableObject {
     @Published var lightPreset: StandardLightPreset = .day
+    @Published var projection: StyleProjectionName = .mercator
     @Published var poi = true
     @Published var transitLabels = true
     @Published var placeLabels = true
@@ -125,6 +128,14 @@ struct StandardStyleLocationsSettings: View {
                 Text("Standard").tag(StandardStyleLocationsModel.Style.standard)
                 Text("Standard Satellite").tag(StandardStyleLocationsModel.Style.standardSatellite)
             }.pickerStyle(.segmented)
+            HStack {
+                Text("Projection")
+                Picker("Projection", selection: $model.projection) {
+                    Text("Mercator").tag(StyleProjectionName.mercator)
+                    Text("Globe").tag(StyleProjectionName.globe)
+                    Text("Albers").tag(StyleProjectionName.albers)
+                }.pickerStyle(.segmented)
+            }
             HStack {
                 Text("Light")
                 Picker("Light", selection: $model.lightPreset) {

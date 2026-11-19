@@ -741,6 +741,11 @@ public struct StyleProjectionName: RawRepresentable, Codable, Hashable, Sendable
 
     /// A globe projection.
     public static let globe = StyleProjectionName(rawValue: "globe")
+
+    /// An Albers equal-area projection centered on the continental United States. You can configure the projection for a different region by setting `center` and `parallels` properties. You may want to set max bounds to constrain the map to the relevant region.
+    @_documentation(visibility: public)
+    @_spi(Experimental)
+    public static let albers = StyleProjectionName(rawValue: "albers")
 }
 
 /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. For symbol with point placement, the order of elements in an array define priority order for the placement of an orientation variant. For symbol with line placement, the default text writing mode is either ['horizontal', 'vertical'] or ['vertical', 'horizontal'], the order doesn't affect the placement.

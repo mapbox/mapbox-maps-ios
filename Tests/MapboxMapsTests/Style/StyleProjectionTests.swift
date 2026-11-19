@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class StyleProjectionTests: XCTestCase {
 
@@ -20,6 +20,20 @@ final class StyleProjectionTests: XCTestCase {
         let jsonObject = try JSONSerialization.jsonObject(with: jsonData) as? [String: String]
 
         XCTAssertEqual(jsonObject, ["name": name.rawValue])
+
+        let decodedProjection = try JSONDecoder().decode(StyleProjection.self, from: jsonData)
+
+        XCTAssertEqual(decodedProjection, projection)
+    }
+
+    func testAlbersCodable() throws {
+        let projection = StyleProjection.albers(center: CLLocationCoordinate2D(latitude: 50, longitude: 10), parallels: 43...62)
+
+        let jsonData = try JSONEncoder().encode(projection)
+
+        let jsonObject = try JSONSerialization.jsonObject(with: jsonData) as? NSDictionary
+
+        XCTAssertEqual(jsonObject, ["name": "albers", "center": [10, 50], "parallels": [43, 62]])
 
         let decodedProjection = try JSONDecoder().decode(StyleProjection.self, from: jsonData)
 

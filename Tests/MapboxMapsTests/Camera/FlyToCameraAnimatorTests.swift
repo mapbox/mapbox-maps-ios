@@ -283,6 +283,104 @@ final class FlyToCameraAnimatorTests: XCTestCase {
             dateProvider: dateProvider)
     }
 
+    func testUpdateInterpolatesViewPointAndClampsOvershoot() throws {
+        curve = TimingCurve(p1: CGPoint(x: 0.2, y: 2), p2: CGPoint(x: 0.8, y: 2))
+        makeAnimator(sourceViewPoint: .viewPoint(CameraViewPoint(x: 0.5, y: -0.5)), destViewPoint: .viewPoint(CameraViewPoint(x: 1, y: -1)))
+        flyToCameraAnimator.startAnimation()
+
+        for seconds in stride(from: 1.0, to: 10.0, by: 1.0) {
+            dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: seconds)
+            flyToCameraAnimator.update()
+        }
+
+        var points = [CameraViewPoint]()
+        for invocation in mapboxMap.setCameraStub.invocations {
+            guard case .viewPoint(let point) = try XCTUnwrap(invocation.parameters.viewPoint) else {
+                return XCTFail("Expected a pinned view point")
+            }
+            points.append(point)
+        }
+        XCTAssertFalse(points.isEmpty)
+        XCTAssertTrue(points.allSatisfy { (-1...1).contains($0.x) && (-1...1).contains($0.y) })
+        XCTAssertTrue(points.contains(CameraViewPoint(x: 1, y: -1)))
+    }
+
+    func testFinalCameraCarriesViewPoint() {
+        makeAnimator(sourceViewPoint: .followsPositionPoint, destViewPoint: .viewPoint(CameraViewPoint(x: 0.5, y: 0.5)))
+        flyToCameraAnimator.startAnimation()
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 20)
+
+        flyToCameraAnimator.update()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.viewPoint, .viewPoint(CameraViewPoint(x: 0.5, y: 0.5)))
+    }
+
+    func testFinalCameraClampsOutOfRangeViewPoint() {
+        makeAnimator(sourceViewPoint: .followsPositionPoint, destViewPoint: .viewPoint(CameraViewPoint(x: 2, y: -3)))
+        flyToCameraAnimator.startAnimation()
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 20)
+
+        flyToCameraAnimator.update()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.viewPoint, .viewPoint(CameraViewPoint(x: 1, y: -1)))
+    }
+
+    func testUpdateDoesNotSetViewPointWithoutDestination() {
+        flyToCameraAnimator.startAnimation()
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 5)
+
+        flyToCameraAnimator.update()
+
+        XCTAssertNil(mapboxMap.setCameraStub.invocations.last?.parameters.viewPoint)
+    }
+
+    func testStopDuringReleaseFollowsPositionPoint() {
+        makeAnimator(sourceViewPoint: .viewPoint(CameraViewPoint(x: 0.5, y: 0.5)), destViewPoint: .followsPositionPoint)
+        flyToCameraAnimator.startAnimation()
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 5)
+        flyToCameraAnimator.update()
+
+        flyToCameraAnimator.stopAnimation()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.viewPoint, .followsPositionPoint)
+    }
+
+    func testStopBeforeStartDoesNotTouchViewPoint() {
+        makeAnimator(sourceViewPoint: .viewPoint(CameraViewPoint(x: 0.5, y: 0.5)), destViewPoint: .followsPositionPoint)
+
+        flyToCameraAnimator.stopAnimation()
+
+        XCTAssertTrue(mapboxMap.setCameraStub.invocations.isEmpty)
+    }
+
+    func testStopWhilePinnedKeepsViewPoint() {
+        makeAnimator(sourceViewPoint: .followsPositionPoint, destViewPoint: .viewPoint(CameraViewPoint(x: 0.5, y: 0.5)))
+        flyToCameraAnimator.startAnimation()
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 5)
+        flyToCameraAnimator.update()
+        let callCount = mapboxMap.setCameraStub.invocations.count
+
+        flyToCameraAnimator.stopAnimation()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, callCount)
+    }
+
+    private func makeAnimator(sourceViewPoint: CameraViewPointState, destViewPoint: CameraViewPointState) {
+        var state = initialCameraState
+        state.viewPoint = sourceViewPoint
+        mapboxMap.cameraState = state
+        var finalOptions = finalCameraOptions
+        finalOptions.viewPoint = destViewPoint
+        flyToCameraAnimator = FlyToCameraAnimator(
+            toCamera: finalOptions,
+            duration: duration,
+            curve: curve,
+            owner: owner,
+            mapboxMap: mapboxMap,
+            mainQueue: mainQueue,
+            dateProvider: dateProvider)
+    }
+
     func testOnStarted() {
         var isStarted = false
         flyToCameraAnimator.onStarted.observe {

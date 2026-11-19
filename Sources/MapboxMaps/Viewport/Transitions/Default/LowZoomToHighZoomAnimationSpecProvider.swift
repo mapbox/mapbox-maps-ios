@@ -85,6 +85,15 @@ internal final class LowZoomToHighZoomAnimationSpecProvider: DefaultViewportTran
                     value: positionPoint)))
         }
 
+        if let viewPoint = cameraOptions.viewPoint {
+            animationSpecs.append(DefaultViewportTransitionAnimationSpec(
+                duration: pitchAndPaddingDuration,
+                delay: pitchAndPaddingDelay,
+                cameraOptionsComponent: CameraOptionsComponent(
+                    keyPath: \.viewPoint,
+                    value: viewPoint)))
+        }
+
         return animationSpecs
     }
 

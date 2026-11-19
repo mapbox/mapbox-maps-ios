@@ -305,6 +305,23 @@ final class LowZoomToHighZoomAnimationSpecProviderTests: XCTestCase {
         XCTAssertEqual(positionPoint.cameraOptionsComponent.cameraOptions, expected)
     }
 
+    func testMakeAnimationSpecsViewPointFollowsThePadding() throws {
+        mapboxMap.cameraState.zoom = 0
+        var cameraOptions = CameraOptions(padding: .testConstantValue(), zoom: 6.6)
+        cameraOptions.viewPoint = .viewPoint(CameraViewPoint(x: 0, y: 0.5))
+
+        let specs = provider.makeAnimationSpecs(cameraOptions: cameraOptions)
+
+        XCTAssertEqual(specs.count, 3)
+        let padding = specs[1]
+        let viewPoint = specs[2]
+        XCTAssertEqual(viewPoint.duration, padding.duration)
+        XCTAssertEqual(viewPoint.delay, padding.delay, accuracy: 1e-6)
+        var expected = CameraOptions()
+        expected.viewPoint = cameraOptions.viewPoint
+        XCTAssertEqual(viewPoint.cameraOptionsComponent.cameraOptions, expected)
+    }
+
     func testMakeAnimationSpecsPaddingWithShortButDelayedZoomAnimation() throws {
         // zoom delay is calculated as half of the center duration. In this
         // case, the center duration will be 3 seconds, so the zoom delay should

@@ -44,6 +44,8 @@ internal class CameraView: UIView {
             pitch: layer.borderWidth,
             verticalFov: layer.zPosition)
         options.positionPoint = CameraPositionPoint(x: Double(layer.shadowOffset.width), y: Double(layer.shadowOffset.height))
+        options.viewPoint = .viewPoint(CameraViewPoint(x: Double(layer.contentsRect.size.width) - 1,
+                                                       y: Double(layer.contentsRect.size.height) - 1))
         return options
     }
 
@@ -80,6 +82,13 @@ internal class CameraView: UIView {
         // No dedicated animatable layer property is left, so the point is stored in the shadow offset.
         if let positionPoint = cameraOptions.positionPoint {
             layer.shadowOffset = CGSize(width: positionPoint.x, height: positionPoint.y)
+        }
+
+        // The layer can only hold a fixed point, so a camera that follows its position point is resolved by the caller.
+        // Core Animation standardizes contentsRect and flips a negative size, so the point is stored shifted into [0, 2];
+        // the default size (1, 1) is then the centered view point.
+        if case .viewPoint(let viewPoint) = cameraOptions.viewPoint {
+            layer.contentsRect.size = CGSize(width: viewPoint.x + 1, height: viewPoint.y + 1)
         }
     }
 }

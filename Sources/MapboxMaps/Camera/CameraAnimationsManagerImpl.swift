@@ -133,6 +133,7 @@ internal final class CameraAnimationsManagerImpl: CameraAnimationsManagerProtoco
                 transition.pitch.toValue = to.pitch
                 transition.verticalFov.toValue = to.verticalFov
                 transition.positionPoint.toValue = to.positionPoint.map { CGPoint(x: $0.x, y: $0.y) }
+                transition.viewPoint.toValue = to.viewPoint
             })
         let animator = BasicCameraAnimator(impl: animatorImpl)
         if let completion = completion {

@@ -81,7 +81,8 @@ final class CameraOptionsTests: XCTestCase {
             bearing: bearing.NSNumber,
             pitch: pitch.NSNumber,
             verticalFov: verticalFov.NSNumber,
-            positionPoint: CoreCameraPositionPoint(x: 0.25, y: -0.5))
+            positionPoint: CoreCameraPositionPoint(x: 0.25, y: -0.5),
+            viewPoint: .fromCameraViewPoint(CoreCameraViewPoint(x: 0.1, y: -0.2)))
 
         let cameraOptions = CameraOptions.Marshaller.toSwift(objcCameraOptions)
 
@@ -94,6 +95,35 @@ final class CameraOptionsTests: XCTestCase {
         XCTAssertEqual(cameraOptions.pitch, pitch)
         XCTAssertEqual(cameraOptions.verticalFov, verticalFov)
         XCTAssertEqual(cameraOptions.positionPoint, CameraPositionPoint(x: 0.25, y: -0.5))
+        XCTAssertEqual(cameraOptions.viewPoint, .viewPoint(CameraViewPoint(x: 0.1, y: -0.2)))
+    }
+
+    func testViewPointRoundTrip() throws {
+        for viewPoint in [CameraViewPointState.followsPositionPoint, .viewPoint(CameraViewPoint(x: -0.5, y: 0.25))] {
+            var cameraOptions = CameraOptions(center: center, zoom: zoom)
+            cameraOptions.viewPoint = viewPoint
+
+            let objcCameraOptions: CoreCameraOptions = CameraOptions.Marshaller.toObjc(cameraOptions)
+            XCTAssertNotNil(objcCameraOptions.viewPoint)
+            XCTAssertEqual(CameraOptions.Marshaller.toSwift(objcCameraOptions), cameraOptions)
+
+            let data = try JSONEncoder().encode(cameraOptions)
+            XCTAssertEqual(try JSONDecoder().decode(CameraOptions.self, from: data), cameraOptions)
+        }
+    }
+
+    func testInitWithCameraStateCopiesViewPoint() {
+        let cameraState = CameraState(
+            center: center,
+            padding: padding,
+            zoom: zoom,
+            bearing: bearing,
+            pitch: pitch,
+            verticalFov: verticalFov,
+            positionPoint: CameraPositionPoint(x: 0.5, y: 1),
+            viewPoint: .viewPoint(CameraViewPoint(x: 0, y: -0.5)))
+
+        XCTAssertEqual(CameraOptions(cameraState: cameraState).viewPoint, .viewPoint(CameraViewPoint(x: 0, y: -0.5)))
     }
 
     func testPositionPointRoundTrip() {
@@ -128,7 +158,8 @@ final class CameraOptionsTests: XCTestCase {
             bearing: nil,
             pitch: nil,
             verticalFov: nil,
-            positionPoint: nil)
+            positionPoint: nil,
+            viewPoint: nil)
 
         let cameraOptions = CameraOptions.Marshaller.toSwift(objcCameraOptions)
 
@@ -140,6 +171,7 @@ final class CameraOptionsTests: XCTestCase {
         XCTAssertNil(cameraOptions.pitch)
         XCTAssertNil(cameraOptions.verticalFov)
         XCTAssertNil(cameraOptions.positionPoint)
+        XCTAssertNil(cameraOptions.viewPoint)
     }
 
     func testEquatable() {

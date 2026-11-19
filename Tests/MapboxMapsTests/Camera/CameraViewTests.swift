@@ -21,6 +21,7 @@ final class CameraViewTests: XCTestCase {
         pitch: 10,
         verticalFov: 10)
         options.positionPoint = CameraPositionPoint(x: 0.25, y: -0.5)
+        options.viewPoint = .viewPoint(CameraViewPoint(x: -0.75, y: 0.5))
         return options
     }()
 
@@ -50,6 +51,7 @@ final class CameraViewTests: XCTestCase {
         XCTAssertEqual(cameraView.layer.anchorPoint, cameraOptions.anchor!)
         XCTAssertEqual(cameraView.layer.zPosition, cameraOptions.verticalFov!)
         XCTAssertEqual(cameraView.layer.shadowOffset, CGSize(width: 0.25, height: -0.5))
+        XCTAssertEqual(cameraView.layer.contentsRect.size, CGSize(width: 0.25, height: 1.5))
     }
 
     func testSyncLayerKeepsPositionPointWhenNil() {
@@ -60,6 +62,31 @@ final class CameraViewTests: XCTestCase {
 
     func testPositionPointIsCenteredBeforeTheFirstSync() {
         XCTAssertEqual(CameraView().cameraOptions.positionPoint, CameraPositionPoint(x: 0, y: 0))
+    }
+
+    func testSyncLayerStoresViewPoint() {
+        var options = CameraOptions()
+        options.viewPoint = .viewPoint(CameraViewPoint(x: -0.5, y: 0.75))
+
+        cameraView.syncLayer(to: options)
+
+        XCTAssertEqual(cameraView.cameraOptions.viewPoint, .viewPoint(CameraViewPoint(x: -0.5, y: 0.75)))
+    }
+
+    func testSyncLayerKeepsViewPointWhenNilOrFollowing() {
+        var options = CameraOptions()
+        options.viewPoint = .viewPoint(CameraViewPoint(x: 0.25, y: 0.5))
+        cameraView.syncLayer(to: options)
+
+        cameraView.syncLayer(to: CameraOptions(zoom: 3))
+        options.viewPoint = .followsPositionPoint
+        cameraView.syncLayer(to: options)
+
+        XCTAssertEqual(cameraView.cameraOptions.viewPoint, .viewPoint(CameraViewPoint(x: 0.25, y: 0.5)))
+    }
+
+    func testViewPointIsCenteredBeforeTheFirstSync() {
+        XCTAssertEqual(CameraView().cameraOptions.viewPoint, .viewPoint(CameraViewPoint(x: 0, y: 0)))
     }
 
     func testLocalCamera() {

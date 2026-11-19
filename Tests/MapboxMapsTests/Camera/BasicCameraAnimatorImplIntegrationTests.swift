@@ -57,6 +57,36 @@ final class BasicCameraAnimatorImplIntegrationTests: XCTestCase {
 
         animator.update()
 
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.map(\.parameters), [cameraView.presentationCameraOptions])
+        // The view point is not part of this transition, so the animator must not write it.
+        var expected = cameraView.presentationCameraOptions
+        expected?.viewPoint = nil
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.map(\.parameters), [expected])
+    }
+
+    func testViewPointIsInterpolatedInPresentationLayer() throws {
+        var state = cameraStateTestValue
+        state.viewPoint = .viewPoint(CameraViewPoint(x: -0.5, y: 0.5))
+        mapboxMap.cameraState = state
+        mapboxMap.size = CGSize(width: 200, height: 200)
+        let propertyAnimator = UIViewPropertyAnimator(duration: 1, curve: .linear)
+        animator = BasicCameraAnimatorImpl(
+            propertyAnimator: propertyAnimator,
+            owner: .unspecified,
+            mapboxMap: mapboxMap,
+            mainQueue: mainQueue,
+            cameraView: cameraView) { (transition) in
+                transition.viewPoint.toValue = .viewPoint(CameraViewPoint(x: 0.5, y: -0.5))
+            }
+
+        animator.pauseAnimation()
+        propertyAnimator.fractionComplete = 0.5
+        CATransaction.flush()
+
+        guard case .viewPoint(let point) = try XCTUnwrap(cameraView.presentationCameraOptions?.viewPoint) else {
+            return XCTFail("Expected a pinned view point")
+        }
+        XCTAssertEqual(point.x, 0, accuracy: 0.01)
+        XCTAssertEqual(point.y, 0, accuracy: 0.01)
+        propertyAnimator.stopAnimation(true)
     }
 }

@@ -71,7 +71,8 @@ final class CameraStateTests: XCTestCase {
                 bearing: bearing,
                 pitch: Double(pitch),
                 verticalFov: verticalFov,
-                positionPoint: CoreCameraPositionPoint(x: 0.25, y: -0.5)))
+                positionPoint: CoreCameraPositionPoint(x: 0.25, y: -0.5),
+                viewPoint: .fromCameraViewPoint(CoreCameraViewPoint(x: 0.1, y: -0.2))))
 
         XCTAssertEqual(cameraState.center.latitude, center.latitude)
         XCTAssertEqual(cameraState.center.longitude, center.longitude)
@@ -81,6 +82,7 @@ final class CameraStateTests: XCTestCase {
         XCTAssertEqual(cameraState.pitch, pitch)
         XCTAssertEqual(cameraState.verticalFov, verticalFov)
         XCTAssertEqual(cameraState.positionPoint, CameraPositionPoint(x: 0.25, y: -0.5))
+        XCTAssertEqual(cameraState.viewPoint, .viewPoint(CameraViewPoint(x: 0.1, y: -0.2)))
     }
 
     func testPositionPointDefaultValue() {
@@ -92,6 +94,34 @@ final class CameraStateTests: XCTestCase {
             pitch: pitch,
             verticalFov: verticalFov)
         XCTAssertEqual(cameraState.positionPoint, CameraPositionPoint(x: 0, y: 0))
+        XCTAssertEqual(cameraState.viewPoint, .followsPositionPoint)
+    }
+
+    func testViewPointObjCAndCodableRoundTrip() throws {
+        for viewPoint in [CameraViewPointState.followsPositionPoint, .viewPoint(CameraViewPoint(x: -0.5, y: 0.25))] {
+            var cameraState = makeCameraStateWithPositionPoint()
+            cameraState.viewPoint = viewPoint
+
+            let objcCameraState: CoreCameraState = CameraState.Marshaller.toObjc(cameraState)
+            XCTAssertEqual(objcCameraState.viewPoint.isCameraViewPoint(), viewPoint != .followsPositionPoint)
+            XCTAssertEqual(CameraState.Marshaller.toSwift(objcCameraState), cameraState)
+
+            let data = try JSONEncoder().encode(cameraState)
+            XCTAssertEqual(try JSONDecoder().decode(CameraState.self, from: data), cameraState)
+        }
+    }
+
+    func testDecodingWithoutViewPoint() throws {
+        var cameraState = makeCameraStateWithPositionPoint()
+        cameraState.viewPoint = .viewPoint(CameraViewPoint(x: 0, y: -0.5))
+        let data = try JSONEncoder().encode(cameraState)
+        var json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        json.removeValue(forKey: "viewPointCodable")
+
+        let decoded = try JSONDecoder().decode(
+            CameraState.self, from: JSONSerialization.data(withJSONObject: json))
+        XCTAssertEqual(decoded.viewPoint, .followsPositionPoint)
+        XCTAssertEqual(decoded.positionPoint, cameraState.positionPoint)
     }
 
     func testPositionPointObjCRoundTrip() {
@@ -185,6 +215,10 @@ final class CameraStateTests: XCTestCase {
 
         other = cameraState
         other.positionPoint.x += 0.5
+        XCTAssertNotEqual(cameraState, other)
+
+        other = cameraState
+        other.viewPoint = .viewPoint(CameraViewPoint(x: 0, y: 0))
         XCTAssertNotEqual(cameraState, other)
 
     }

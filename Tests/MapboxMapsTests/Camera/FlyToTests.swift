@@ -147,6 +147,51 @@ internal class FlyToTests: XCTestCase {
         }
     }
 
+    func testDestPitchOutsideCameraBoundsIsClampedWithoutFixedViewPoint() {
+        let source = CameraState(
+            center: .init(latitude: 10, longitude: 10),
+            padding: .zero,
+            zoom: 10,
+            bearing: 0,
+            pitch: 0)
+        let bounds = CameraBounds.default
+        let above = Double(bounds.maxPitch) + 10
+        let below = Double(bounds.minPitch) - 10
+        let size = CGSize(width: 500, height: 500)
+
+        let flyToAbove = FlyToInterpolator(from: source, to: CameraOptions(pitch: above), cameraBounds: bounds, size: size)
+        let flyToBelow = FlyToInterpolator(from: source, to: CameraOptions(pitch: below), cameraBounds: bounds, size: size)
+        var following = CameraOptions(pitch: above)
+        following.viewPoint = .followsPositionPoint
+        let flyToFollowing = FlyToInterpolator(from: source, to: following, cameraBounds: bounds, size: size)
+
+        XCTAssertEqual(flyToAbove.pitch(at: 1), Double(bounds.maxPitch), accuracy: 1e-9)
+        XCTAssertEqual(flyToBelow.pitch(at: 1), Double(bounds.minPitch), accuracy: 1e-9)
+        XCTAssertEqual(flyToFollowing.pitch(at: 1), Double(bounds.maxPitch), accuracy: 1e-9)
+    }
+
+    func testDestPitchOutsideCameraBoundsIsPassedThroughWithFixedViewPoint() {
+        var source = CameraState(
+            center: .init(latitude: 10, longitude: 10),
+            padding: .zero,
+            zoom: 10,
+            bearing: 0,
+            pitch: 0)
+        let bounds = CameraBounds.default
+        let above = Double(bounds.maxPitch) + 10
+        let size = CGSize(width: 500, height: 500)
+
+        var dest = CameraOptions(pitch: above)
+        dest.viewPoint = .viewPoint(CameraViewPoint(x: 0, y: -0.5))
+        let fixedDest = FlyToInterpolator(from: source, to: dest, cameraBounds: bounds, size: size)
+        XCTAssertEqual(fixedDest.pitch(at: 1), above, accuracy: 1e-9)
+
+        // A nil destination view point keeps the current, fixed one.
+        source.viewPoint = .viewPoint(CameraViewPoint(x: 0, y: -0.5))
+        let inherited = FlyToInterpolator(from: source, to: CameraOptions(pitch: above), cameraBounds: bounds, size: size)
+        XCTAssertEqual(inherited.pitch(at: 1), above, accuracy: 1e-9)
+    }
+
     func testPositionPointInterpolation() {
         let source = CameraState(
             center: .init(latitude: 10, longitude: 10),
@@ -181,6 +226,61 @@ internal class FlyToTests: XCTestCase {
         let flyTo = FlyToInterpolator(from: source, to: dest, cameraBounds: .default, size: CGSize(width: 500, height: 500))
 
         XCTAssertEqual(flyTo.positionPoint(at: 0.6), CameraPositionPoint(x: 0.5, y: 0.5))
+    }
+
+    func testViewPointPath() throws {
+        var source = CameraState(
+            center: .init(latitude: 10, longitude: 10),
+            padding: .zero,
+            zoom: 10,
+            bearing: 0,
+            pitch: 0,
+            verticalFov: 10)
+        source.viewPoint = .viewPoint(CameraViewPoint(x: -1, y: 0.5))
+        var dest = CameraOptions(center: .init(latitude: 20, longitude: 20))
+        dest.viewPoint = .viewPoint(CameraViewPoint(x: 1, y: -0.5))
+
+        let flyTo = FlyToInterpolator(from: source, to: dest, cameraBounds: .default, size: CGSize(width: 500, height: 500))
+
+        let path = try XCTUnwrap(flyTo.viewPointPath)
+        XCTAssertEqual(path.point(at: 0), CameraViewPoint(x: -1, y: 0.5))
+        XCTAssertEqual(path.point(at: 1), CameraViewPoint(x: 1, y: -0.5))
+        XCTAssertEqual(path.finalState, .viewPoint(CameraViewPoint(x: 1, y: -0.5)))
+    }
+
+    func testViewPointReleaseEndsAtFollowingPointOfDestination() throws {
+        var source = CameraState(
+            center: .init(latitude: 10, longitude: 10),
+            padding: .zero,
+            zoom: 10,
+            bearing: 0,
+            pitch: 0,
+            verticalFov: 10)
+        source.viewPoint = .viewPoint(CameraViewPoint(x: -1, y: 1))
+        var dest = CameraOptions(center: .init(latitude: 20, longitude: 20), padding: UIEdgeInsets(top: 0, left: 250, bottom: 0, right: 0))
+        dest.viewPoint = .followsPositionPoint
+
+        let flyTo = FlyToInterpolator(from: source, to: dest, cameraBounds: .default, size: CGSize(width: 500, height: 500))
+
+        let path = try XCTUnwrap(flyTo.viewPointPath)
+        XCTAssertEqual(path.to.x, 0.5, accuracy: 1e-9)
+        XCTAssertEqual(path.to.y, 0, accuracy: 1e-9)
+        XCTAssertTrue(path.releasesViewPoint)
+    }
+
+    func testViewPointPathIsNilWithoutDestination() {
+        let source = CameraState(
+            center: .init(latitude: 10, longitude: 10),
+            padding: .zero,
+            zoom: 10,
+            bearing: 0,
+            pitch: 0,
+            verticalFov: 10)
+        let dest = CameraOptions(center: .init(latitude: 20, longitude: 20))
+
+        let flyTo = FlyToInterpolator(from: source, to: dest, cameraBounds: .default, size: CGSize(width: 500, height: 500))
+
+        XCTAssertNil(flyTo.viewPointPath)
     }
 
     func testFlyToUnprojectLatitudeNaNUseCase() {

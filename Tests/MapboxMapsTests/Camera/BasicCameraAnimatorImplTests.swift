@@ -536,6 +536,132 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
         XCTAssertEqual(positionPoints.last, CameraPositionPoint(x: 0.25, y: -0.5))
     }
 
+    private func makeViewPointAnimation(
+        from: CameraViewPointState,
+        to: CameraViewPointState?,
+        padding: UIEdgeInsets? = nil
+    ) {
+        var state = cameraStateTestValue
+        state.padding = .zero
+        state.viewPoint = from
+        mapboxMap.cameraState = state
+        mapboxMap.size = CGSize(width: 200, height: 200)
+        animationImpl = { transition in
+            transition.viewPoint.toValue = to
+            transition.padding.toValue = padding
+        }
+    }
+
+    func testViewPointBetweenPinnedPointsIsSyncedToCameraView() {
+        makeViewPointAnimation(from: .viewPoint(CameraViewPoint(x: -0.5, y: 0.5)), to: .viewPoint(CameraViewPoint(x: 0.25, y: -0.5)))
+
+        animator.startAnimation()
+
+        let viewPoints = cameraView.syncLayerStub.invocations.map(\.parameters.viewPoint)
+        XCTAssertEqual(viewPoints.first, .viewPoint(CameraViewPoint(x: -0.5, y: 0.5)))
+        XCTAssertEqual(viewPoints.last, .viewPoint(CameraViewPoint(x: 0.25, y: -0.5)))
+    }
+
+    func testViewPointFromFollowingUsesTransitionFromPositionPoint() {
+        makeViewPointAnimation(from: .followsPositionPoint, to: .viewPoint(CameraViewPoint(x: 0.25, y: -0.5)))
+        let animation = animationImpl
+        animationImpl = { transition in
+            animation?(&transition)
+            transition.positionPoint.fromValue = CGPoint(x: 0.5, y: -0.5)
+        }
+
+        animator.startAnimation()
+
+        XCTAssertEqual(cameraView.syncLayerStub.invocations.first?.parameters.viewPoint, .viewPoint(CameraViewPoint(x: 0.5, y: -0.5)))
+    }
+
+    func testViewPointFromFollowingStartsAtFollowingViewPoint() {
+        makeViewPointAnimation(from: .followsPositionPoint, to: .viewPoint(CameraViewPoint(x: 0.25, y: -0.5)))
+
+        animator.startAnimation()
+
+        XCTAssertEqual(cameraView.syncLayerStub.invocations.first?.parameters.viewPoint, .viewPoint(CameraViewPoint(x: 0, y: 0)))
+    }
+
+    func testViewPointReleaseAnimatesToFollowingViewPointOfTargetPadding() {
+        makeViewPointAnimation(
+            from: .viewPoint(CameraViewPoint(x: 1, y: 1)),
+            to: .followsPositionPoint,
+            padding: UIEdgeInsets(top: 0, left: 100, bottom: 100, right: 0))
+
+        animator.startAnimation()
+
+        XCTAssertEqual(cameraView.syncLayerStub.invocations.last?.parameters.viewPoint, .viewPoint(CameraViewPoint(x: 0.5, y: -0.5)))
+    }
+
+    func testViewPointIsNotSyncedWithoutToValue() {
+        makeViewPointAnimation(from: .viewPoint(CameraViewPoint(x: 1, y: 1)), to: nil)
+
+        animator.startAnimation()
+
+        XCTAssertTrue(cameraView.syncLayerStub.invocations.allSatisfy { $0.parameters.viewPoint == nil })
+    }
+
+    func testAnimatorCompletionAppliesTargetViewPointExactly() throws {
+        makeViewPointAnimation(from: .viewPoint(CameraViewPoint(x: 0, y: 0)), to: .viewPoint(CameraViewPoint(x: 0.25, y: -0.5)))
+        animator.startAnimation()
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
+
+        completion(.end)
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.viewPoint, .viewPoint(CameraViewPoint(x: 0.25, y: -0.5)))
+    }
+
+    func testAnimatorCompletionReleasesViewPoint() throws {
+        makeViewPointAnimation(from: .viewPoint(CameraViewPoint(x: 0, y: 0)), to: .followsPositionPoint)
+        animator.startAnimation()
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
+
+        completion(.end)
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.viewPoint, .followsPositionPoint)
+    }
+
+    func testAnimatorCompletionAtStartRestoresStartViewPoint() throws {
+        makeViewPointAnimation(from: .viewPoint(CameraViewPoint(x: -0.5, y: 0.5)), to: .viewPoint(CameraViewPoint(x: 0.25, y: -0.5)))
+        animator.startAnimation()
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
+
+        completion(.start)
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.viewPoint, .viewPoint(CameraViewPoint(x: -0.5, y: 0.5)))
+    }
+
+    func testAnimatorCompletionAtStartKeepsFollowingViewPoint() throws {
+        makeViewPointAnimation(from: .followsPositionPoint, to: .viewPoint(CameraViewPoint(x: 0.25, y: -0.5)))
+        animator.startAnimation()
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
+
+        completion(.start)
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.viewPoint, .followsPositionPoint)
+    }
+
+    func testCancelledReleaseFollowsPositionPoint() throws {
+        makeViewPointAnimation(from: .viewPoint(CameraViewPoint(x: 0, y: 0)), to: .followsPositionPoint)
+        animator.startAnimation()
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
+
+        completion(.current)
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.viewPoint, .followsPositionPoint)
+    }
+
+    func testCancelledPinDoesNotUpdateViewPoint() throws {
+        makeViewPointAnimation(from: .followsPositionPoint, to: .viewPoint(CameraViewPoint(x: 1, y: 1)))
+        animator.startAnimation()
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
+
+        completion(.current)
+
+        XCTAssertTrue(mapboxMap.setCameraStub.invocations.isEmpty)
+    }
+
     func testAnimatorCompletionDoesNotUpdateCameraIfAnimationCompletedAtCurrent() throws {
         animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!

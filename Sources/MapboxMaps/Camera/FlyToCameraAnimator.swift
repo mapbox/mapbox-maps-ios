@@ -96,6 +96,9 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
         // The core rejects points outside the unit square, which would drop the whole final frame.
         var toCamera = toCamera
         toCamera.positionPoint = toCamera.positionPoint.map(\.clampedToUnitSquare)
+        if case .viewPoint(let viewPoint) = toCamera.viewPoint {
+            toCamera.viewPoint = .viewPoint(viewPoint.clampedToUnitSquare)
+        }
         let flyToInterpolator = FlyToInterpolator(
             from: mapboxMap.cameraState,
             to: toCamera,
@@ -133,6 +136,12 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
     public func stopAnimation() {
         switch internalState {
         case .initial, .running:
+            if case .running = internalState, interpolator.viewPointPath?.releasesViewPoint == true {
+                // Leaving the view point pinned would keep the camera off its position point after a cancelled release.
+                var releasedCamera = CameraOptions()
+                releasedCamera.viewPoint = .followsPositionPoint
+                mapboxMap.setCamera(to: releasedCamera)
+            }
             internalState = .final(.current)
             invokeCompletionBlocks(with: .current) // `current` represents an interrupted animation.
         case .final:
@@ -193,6 +202,7 @@ public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
             // Timing curves can overshoot.
             cameraOptions.positionPoint = interpolator.positionPoint(at: fractionComplete).clampedToUnitSquare
         }
+        cameraOptions.viewPoint = interpolator.viewPointPath.map { .viewPoint($0.point(at: fractionComplete)) }
         mapboxMap.setCamera(to: cameraOptions)
     }
 }

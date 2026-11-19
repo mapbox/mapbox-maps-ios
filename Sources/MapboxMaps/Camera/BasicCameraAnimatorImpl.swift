@@ -52,6 +52,9 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
 
     private var completions = [AnimationCompletion]()
 
+    /// Set when the transition changes the view point.
+    private var viewPointPath: ViewPointPath?
+
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     internal var transition: CameraTransition? {
         switch internalState {
@@ -289,6 +292,13 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
             cameraOptions.positionPoint = cameraViewCameraOptions.positionPoint.map(\.clampedToUnitSquare)
         }
 
+        if viewPointPath != nil {
+            cameraOptions.viewPoint = cameraViewCameraOptions.viewPoint.map { state in
+                guard case .viewPoint(let point) = state else { return state }
+                return .viewPoint(point.clampedToUnitSquare)
+            }
+        }
+
         return cameraOptions
     }
 
@@ -298,9 +308,22 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
         var transition = CameraTransition(cameraState: mapboxMap.cameraState, initialAnchor: mapboxMap.anchor)
         animation(&transition)
 
+        let viewPointPath = ViewPointPath(
+            from: transition.viewPoint.fromValue,
+            to: transition.viewPoint.toValue,
+            fromCamera: .init(positionPoint: CameraPositionPoint(transition.positionPoint.fromValue), padding: transition.padding.fromValue),
+            toCamera: .init(
+                positionPoint: CameraPositionPoint(transition.positionPoint.toValue ?? transition.positionPoint.fromValue)
+                    .clampedToUnitSquare,
+                padding: transition.padding.toValue ?? transition.padding.fromValue),
+            size: mapboxMap.size)
+        self.viewPointPath = viewPointPath
+
         propertyAnimator.addAnimations { [weak cameraView] in
             guard let cameraView = cameraView else { return }
-            cameraView.syncLayer(to: transition.toCameraOptions) // Set up the "to" values for the interpolation
+            var toCameraOptions = transition.toCameraOptions // Set up the "to" values for the interpolation
+            toCameraOptions.viewPoint = viewPointPath.map { .viewPoint($0.to) }
+            cameraView.syncLayer(to: toCameraOptions)
         }
 
         propertyAnimator.addCompletion { [weak self] (animatingPosition) in
@@ -309,8 +332,14 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
             // if the animation was stopped/canceled before finishing,
             // do not update the camera again.
             if animatingPosition != .current {
-                self.mapboxMap.setCamera(
-                    to: self.cameraOptions(with: transition, cameraViewCameraOptions: self.cameraView.cameraOptions))
+                var finalCamera = self.cameraOptions(with: transition, cameraViewCameraOptions: self.cameraView.cameraOptions)
+                finalCamera.viewPoint = viewPointPath?.state(at: animatingPosition)
+                self.mapboxMap.setCamera(to: finalCamera)
+            } else if viewPointPath?.releasesViewPoint == true {
+                // Leaving the view point pinned would keep the camera off its position point after a cancelled release.
+                var releasedCamera = CameraOptions()
+                releasedCamera.viewPoint = .followsPositionPoint
+                self.mapboxMap.setCamera(to: releasedCamera)
             }
             for completion in self.completions {
                 completion(animatingPosition)
@@ -321,7 +350,9 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
         UIView.performWithoutAnimation {
             // set unique non-animatable value to detect same-transaction animations
             cameraView.layer.needsDisplayOnBoundsChange.toggle()
-            cameraView.syncLayer(to: transition.fromCameraOptions) // Set up the "from" values for the interpoloation
+            var fromCameraOptions = transition.fromCameraOptions // Set up the "from" values for the interpoloation
+            fromCameraOptions.viewPoint = viewPointPath.map { .viewPoint($0.from) }
+            cameraView.syncLayer(to: fromCameraOptions)
         }
         return transition
     }

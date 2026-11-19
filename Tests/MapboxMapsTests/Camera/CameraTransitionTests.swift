@@ -123,4 +123,111 @@ class CameraTransitionTests: XCTestCase {
         optimizedBearing = cameraTransition.optimizedBearingToValue
         XCTAssertEqual(optimizedBearing, 200)
     }
+
+    func testViewPointFromValueComesFromCameraState() {
+        var state = cameraStateTestValue
+        state.viewPoint = .viewPoint(CameraViewPoint(x: 0.5, y: -0.5))
+        let transition = CameraTransition(cameraState: state, initialAnchor: .zero)
+
+        XCTAssertEqual(transition.viewPoint.fromValue, .viewPoint(CameraViewPoint(x: 0.5, y: -0.5)))
+        XCTAssertNil(transition.viewPoint.toValue)
+        XCTAssertEqual(transition.fromCameraOptions.viewPoint, .viewPoint(CameraViewPoint(x: 0.5, y: -0.5)))
+        XCTAssertNil(transition.toCameraOptions.viewPoint)
+    }
+
+    func testViewPointToCameraOptions() {
+        cameraTransition.viewPoint.toValue = .followsPositionPoint
+
+        XCTAssertEqual(cameraTransition.toCameraOptions.viewPoint, .followsPositionPoint)
+    }
+
+    func testFollowingViewPointWithoutPaddingIsThePositionPoint() {
+        let point = CameraViewPoint(
+            followingPositionPoint: CameraPositionPoint(x: 0.5, y: -0.25), padding: .zero, size: CGSize(width: 200, height: 400))
+
+        XCTAssertEqual(point.x, 0.5, accuracy: 1e-9)
+        XCTAssertEqual(point.y, -0.25, accuracy: 1e-9)
+    }
+
+    func testFollowingViewPointAccountsForPadding() {
+        // The padded box spans x 100...200 and y 0...100, so its centre is at (150, 50).
+        let point = CameraViewPoint(
+            followingPositionPoint: CameraPositionPoint(x: 0, y: 0),
+            padding: UIEdgeInsets(top: 0, left: 100, bottom: 100, right: 0),
+            size: CGSize(width: 200, height: 200))
+
+        XCTAssertEqual(point.x, 0.5, accuracy: 1e-9)
+        XCTAssertEqual(point.y, -0.5, accuracy: 1e-9)
+    }
+
+    func testFollowingViewPointIsClampedToUnitSquare() {
+        // Padding that exceeds the map moves the padded box centre far outside it on both axes.
+        let point = CameraViewPoint(
+            followingPositionPoint: CameraPositionPoint(x: 0, y: 0),
+            padding: UIEdgeInsets(top: -200, left: 300, bottom: 200, right: -100),
+            size: CGSize(width: 100, height: 100))
+
+        XCTAssertEqual(point, CameraViewPoint(x: 1, y: -1))
+    }
+
+    func testFollowingViewPointForEmptySizeIsCentered() {
+        let point = CameraViewPoint(
+            followingPositionPoint: CameraPositionPoint(x: 1, y: 1), padding: .zero, size: .zero)
+
+        XCTAssertEqual(point, CameraViewPoint(x: 0, y: 0))
+    }
+
+    private func makePath(
+        from: CameraViewPointState,
+        to: CameraViewPointState?,
+        toPadding: UIEdgeInsets = .zero
+    ) -> ViewPointPath? {
+        ViewPointPath(
+            from: from,
+            to: to,
+            fromCamera: .init(positionPoint: CameraPositionPoint(x: 0, y: 0), padding: .zero),
+            toCamera: .init(positionPoint: CameraPositionPoint(x: 0, y: 0), padding: toPadding),
+            size: CGSize(width: 200, height: 200))
+    }
+
+    func testViewPointPathIsNilWithoutTargetOrWhenBothFollow() {
+        XCTAssertNil(makePath(from: .followsPositionPoint, to: nil))
+        XCTAssertNil(makePath(from: .viewPoint(CameraViewPoint(x: 1, y: 1)), to: nil))
+        XCTAssertNil(makePath(from: .followsPositionPoint, to: .followsPositionPoint))
+    }
+
+    func testViewPointPathBetweenPinnedPoints() throws {
+        let to = CameraViewPointState.viewPoint(CameraViewPoint(x: 1, y: -1))
+        let path = try XCTUnwrap(makePath(from: .viewPoint(CameraViewPoint(x: -1, y: 1)), to: to))
+
+        XCTAssertEqual(path.finalState, to)
+        XCTAssertFalse(path.releasesViewPoint)
+        XCTAssertEqual(path.point(at: 0.25), CameraViewPoint(x: -0.5, y: 0.5))
+    }
+
+    func testViewPointPathFromFollowingStartsAtFollowingPoint() throws {
+        let path = try XCTUnwrap(makePath(from: .followsPositionPoint, to: .viewPoint(CameraViewPoint(x: 1, y: 1))))
+
+        XCTAssertEqual(path.from, CameraViewPoint(x: 0, y: 0))
+    }
+
+    func testViewPointPathReleaseEndsAtTargetFollowingPoint() throws {
+        let path = try XCTUnwrap(makePath(
+            from: .viewPoint(CameraViewPoint(x: 1, y: 1)),
+            to: .followsPositionPoint,
+            toPadding: UIEdgeInsets(top: 0, left: 100, bottom: 100, right: 0)))
+
+        XCTAssertEqual(path.to.x, 0.5, accuracy: 1e-9)
+        XCTAssertEqual(path.to.y, -0.5, accuracy: 1e-9)
+        XCTAssertEqual(path.finalState, .followsPositionPoint)
+        XCTAssertTrue(path.releasesViewPoint)
+    }
+
+    func testViewPointPathClampsOutOfRangePointsAndOvershoot() throws {
+        let path = try XCTUnwrap(makePath(
+            from: .viewPoint(CameraViewPoint(x: 0, y: 0)), to: .viewPoint(CameraViewPoint(x: 3, y: -3))))
+
+        XCTAssertEqual(path.finalState, .viewPoint(CameraViewPoint(x: 1, y: -1)))
+        XCTAssertEqual(path.point(at: 1.2), CameraViewPoint(x: 1, y: -1))
+    }
 }

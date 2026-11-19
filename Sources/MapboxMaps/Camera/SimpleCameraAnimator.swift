@@ -1,5 +1,6 @@
 internal import MapboxCommon_Private
 import UIKit
+@_spi(Experimental) import MapboxCoreMaps
 
 internal protocol SimpleCameraAnimatorProtocol: CameraAnimatorProtocol {
     var to: CameraOptions { get set }
@@ -44,7 +45,9 @@ internal final class SimpleCameraAnimator: SimpleCameraAnimatorProtocol {
                 hasNilMismatch(for: \.anchor) ||
                 hasNilMismatch(for: \.bearing) ||
                 hasNilMismatch(for: \.pitch) ||
-                hasNilMismatch(for: \.verticalFov) {
+                hasNilMismatch(for: \.verticalFov) ||
+                hasNilMismatch(for: \.positionPoint) ||
+                hasNilMismatch(for: \.viewPoint) {
                 Log.warning("Animator updated with differing non-nil to-value properties.", category: "maps-ios")
             }
         }
@@ -220,9 +223,26 @@ internal final class SimpleCameraAnimator: SimpleCameraAnimatorProtocol {
             return
         }
         let camera = cameraOptionsInterpolator.interpolate(
-            from: from,
-            to: to,
+            from: resolvingFollowingViewPoint(from, other: to),
+            to: resolvingFollowingViewPoint(to, other: from),
             fraction: fractionComplete)
         mapboxMap.setCamera(to: camera)
+    }
+
+    /// Replaces a following view point with the point it currently follows, so that it can be blended with a fixed
+    /// one. Padding and position point the options leave out come from the live camera, as other animators may be
+    /// changing them during this one. The final frame applies `to` unresolved.
+    private func resolvingFollowingViewPoint(_ options: CameraOptions, other: CameraOptions) -> CameraOptions {
+        guard options.viewPoint == .followsPositionPoint,
+              case .viewPoint = other.viewPoint else {
+            return options
+        }
+        let camera = mapboxMap.cameraState
+        var resolved = options
+        resolved.viewPoint = .viewPoint(CameraViewPoint(
+            followingPositionPoint: options.positionPoint ?? camera.positionPoint,
+            padding: options.padding ?? camera.padding,
+            size: mapboxMap.size))
+        return resolved
     }
 }

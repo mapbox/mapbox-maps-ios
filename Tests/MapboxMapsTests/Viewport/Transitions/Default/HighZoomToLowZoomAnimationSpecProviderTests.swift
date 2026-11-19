@@ -58,6 +58,18 @@ final class HighZoomToLowZoomAnimationSpecProviderTests: XCTestCase {
         XCTAssertEqual(specs.first?.cameraOptionsComponent.cameraOptions, cameraOptions)
     }
 
+    func testMakeAnimationSpecsViewPoint() {
+        var cameraOptions = CameraOptions()
+        cameraOptions.viewPoint = .followsPositionPoint
+
+        let specs = provider.makeAnimationSpecs(cameraOptions: cameraOptions)
+
+        XCTAssertEqual(specs.count, 1)
+        XCTAssertEqual(specs.first?.duration, 1.2)
+        XCTAssertEqual(specs.first?.delay, 0)
+        XCTAssertEqual(specs.first?.cameraOptionsComponent.cameraOptions, cameraOptions)
+    }
+
     func testMakeAnimationSpecsWithEmptyCameraOptions() {
         let cameraOptions = CameraOptions()
 

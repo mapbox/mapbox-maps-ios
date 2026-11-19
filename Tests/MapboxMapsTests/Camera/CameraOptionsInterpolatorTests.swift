@@ -227,4 +227,49 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         XCTAssertTrue(doubleInterpolator.interpolateStub.invocations.isEmpty)
         XCTAssertNil(result.positionPoint)
     }
+
+    func testViewPoint() {
+        var from = CameraOptions()
+        from.viewPoint = .viewPoint(CameraViewPoint(x: 0, y: 0))
+        var to = CameraOptions()
+        to.viewPoint = .viewPoint(CameraViewPoint(x: -0.5, y: 0.8))
+        doubleInterpolator.interpolateStub.returnValueQueue = [-0.3, 0.48]
+
+        let result = cameraOptionsInterpolator.interpolate(from: from, to: to, fraction: fraction)
+
+        XCTAssertEqual(doubleInterpolator.interpolateStub.invocations.count, 2)
+        XCTAssertEqual(result.viewPoint, .viewPoint(CameraViewPoint(x: -0.3, y: 0.48)))
+    }
+
+    func testViewPointClampsOvershoot() {
+        var from = CameraOptions()
+        from.viewPoint = .viewPoint(CameraViewPoint(x: 0, y: 0))
+        var to = CameraOptions()
+        to.viewPoint = .viewPoint(CameraViewPoint(x: 1, y: -1))
+        doubleInterpolator.interpolateStub.returnValueQueue = [1.1, -1.1]
+
+        let result = cameraOptionsInterpolator.interpolate(from: from, to: to, fraction: 1.1)
+
+        XCTAssertEqual(result.viewPoint, .viewPoint(CameraViewPoint(x: 1, y: -1)))
+    }
+
+    func testViewPointIsNotInterpolatedWhenEitherSideFollowsOrIsMissing() {
+        let pinned = CameraViewPointState.viewPoint(CameraViewPoint(x: 0, y: 0.5))
+        for (fromState, toState) in [
+            (pinned, CameraViewPointState.followsPositionPoint),
+            (.followsPositionPoint, pinned),
+            (nil, pinned),
+            (pinned, nil)
+        ] as [(CameraViewPointState?, CameraViewPointState?)] {
+            var from = CameraOptions()
+            from.viewPoint = fromState
+            var to = CameraOptions()
+            to.viewPoint = toState
+
+            let result = cameraOptionsInterpolator.interpolate(from: from, to: to, fraction: fraction)
+
+            XCTAssertNil(result.viewPoint)
+        }
+        XCTAssertTrue(doubleInterpolator.interpolateStub.invocations.isEmpty)
+    }
 }

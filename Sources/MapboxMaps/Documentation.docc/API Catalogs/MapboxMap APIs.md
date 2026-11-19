@@ -8,6 +8,8 @@
 - ``CameraState-swift.struct``
 - ``CameraOptions-swift.struct``
 - ``CameraPositionPoint``
+- ``CameraViewPoint``
+- ``CameraViewPointState``
 - ``CameraBounds-swift.struct``
 - ``CameraBoundsOptions-swift.struct``
 - ``MapError``

@@ -39,6 +39,9 @@ internal struct FlyToInterpolator {
     private let sourcePositionPoint: CGPoint
     private let destPositionPoint: CGPoint
 
+    /// Nil if the view point doesn't change.
+    internal let viewPointPath: ViewPointPath?
+
     // Default values
     fileprivate let defaultVelocity = 1.2
 
@@ -57,7 +60,7 @@ internal struct FlyToInterpolator {
     ///
     /// - Parameters:
     ///   - source: Start camera (parameters are NOT clamped to properties from MapCameraOptions)
-    ///   - dest: End camera (parameters ARE clamped to properties from MapCameraOptions)
+    ///   - dest: End camera (zoom is clamped to properties from MapCameraOptions, pitch is clamped unless the view point is fixed)
     ///   - mapCameraOptions: Camera-specific capabilities of the map, for example, min-zoom, max-pitch
     ///   - size: Map View size in points
     internal init(from source: CameraState, to dest: CameraOptions, cameraBounds: CameraBounds, size: CGSize) {
@@ -85,10 +88,23 @@ internal struct FlyToInterpolator {
         // Note that the source arguments are NOT clamped - these are assumed to be valid parameters
         let compilerWorkaround = sourceZoom
         let destZoom = (dest.zoom ?? compilerWorkaround).clamped(to: CGFloat(cameraBounds.minZoom)...CGFloat(cameraBounds.maxZoom))
-        destPitch = (dest.pitch ?? sourcePitchParam).clamped(to: CGFloat(cameraBounds.minPitch)...CGFloat(cameraBounds.maxPitch))
+        // With a fixed view point the valid range of the axis pitch is shifted, so the core enforces the limits.
+        // Otherwise clamp here, so the flight eases into the limit instead of hitting it midway.
+        let unclampedDestPitch = dest.pitch ?? sourcePitchParam
+        if case .viewPoint = dest.viewPoint ?? source.viewPoint {
+            destPitch = unclampedDestPitch
+        } else {
+            destPitch = unclampedDestPitch.clamped(to: CGFloat(cameraBounds.minPitch)...CGFloat(cameraBounds.maxPitch))
+        }
         destBearing = dest.bearing ?? sourceBearingParam
         destVerticalFov = dest.verticalFov ?? sourceVerticalFovParam
         destPositionPoint = dest.positionPoint.map { CGPoint(x: $0.x, y: $0.y) } ?? sourcePositionPoint
+        viewPointPath = ViewPointPath(
+            from: source.viewPoint,
+            to: dest.viewPoint,
+            fromCamera: .init(positionPoint: source.positionPoint, padding: sourcePaddingParam),
+            toCamera: .init(positionPoint: CameraPositionPoint(destPositionPoint), padding: destPadding),
+            size: size)
 
         // Unwrap
         let sourceCoordUnwrapped = sourceCoord.unwrapForShortestPath(destCoord)

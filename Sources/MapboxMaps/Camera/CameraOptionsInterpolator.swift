@@ -77,7 +77,20 @@ internal final class CameraOptionsInterpolator: CameraOptionsInterpolatorProtoco
             to: to.positionPoint,
             fraction: fraction,
             interpolate: interpolatePositionPoint(from:to:fraction:))
+        result.viewPoint = interpolateViewPoint(from: from.viewPoint, to: to.viewPoint, fraction: fraction)
         return result
+    }
+
+    // A following view point can't be resolved without the map size, so callers resolve it to a fixed one first.
+    private func interpolateViewPoint(from: CameraViewPointState?,
+                                      to: CameraViewPointState?,
+                                      fraction: Double) -> CameraViewPointState? {
+        guard case .viewPoint(let from) = from, case .viewPoint(let to) = to else { return nil }
+        // Timing curves can overshoot past the endpoints.
+        return .viewPoint(CameraViewPoint(
+            x: doubleInterpolator.interpolate(from: from.x, to: to.x, fraction: fraction),
+            y: doubleInterpolator.interpolate(from: from.y, to: to.y, fraction: fraction)
+        ).clampedToUnitSquare)
     }
 
     private func interpolatePositionPoint(from: CameraPositionPoint,

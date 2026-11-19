@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 import XCTest
 
 final class SimpleCameraAnimatorTests: XCTestCase {
@@ -175,6 +175,64 @@ final class SimpleCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(cameraOptionsInterpolator.interpolateStub.invocations.first?.parameters.from, from)
         XCTAssertEqual(cameraOptionsInterpolator.interpolateStub.invocations.first?.parameters.to, to)
         XCTAssertEqual(cameraOptionsInterpolator.interpolateStub.invocations.first?.parameters.fraction, 0)
+    }
+
+    private func makeViewPointAnimation(from fromState: CameraViewPointState, to toState: CameraViewPointState) {
+        var state = CameraState.testConstantValue()
+        state.padding = .zero
+        state.positionPoint = CameraPositionPoint(x: 0.5, y: 0)
+        mapboxMap.cameraState = state
+        mapboxMap.size = CGSize(width: 200, height: 200)
+        from = CameraOptions()
+        from.viewPoint = fromState
+        to = CameraOptions()
+        to.viewPoint = toState
+        recreateAnimator()
+    }
+
+    func testViewPointReleaseInterpolatesToLiveFollowingViewPoint() {
+        makeViewPointAnimation(from: .viewPoint(CameraViewPoint(x: -1, y: -1)), to: .followsPositionPoint)
+        animator.startAnimation()
+
+        animator.update()
+
+        let parameters = cameraOptionsInterpolator.interpolateStub.invocations.first?.parameters
+        XCTAssertEqual(parameters?.from.viewPoint, .viewPoint(CameraViewPoint(x: -1, y: -1)))
+        XCTAssertEqual(parameters?.to.viewPoint, .viewPoint(CameraViewPoint(x: 0.5, y: 0)))
+    }
+
+    func testViewPointPinInterpolatesFromFollowingViewPointOfFrom() {
+        makeViewPointAnimation(from: .followsPositionPoint, to: .viewPoint(CameraViewPoint(x: 1, y: 1)))
+        from.padding = UIEdgeInsets(top: 100, left: 0, bottom: 0, right: 100)
+        from.positionPoint = CameraPositionPoint(x: 0, y: 0)
+        recreateAnimator()
+        animator.startAnimation()
+
+        animator.update()
+
+        XCTAssertEqual(cameraOptionsInterpolator.interpolateStub.invocations.first?.parameters.from.viewPoint,
+                       .viewPoint(CameraViewPoint(x: -0.5, y: 0.5)))
+    }
+
+    func testFollowingViewPointOnBothSidesIsNotResolved() {
+        makeViewPointAnimation(from: .followsPositionPoint, to: .followsPositionPoint)
+        animator.startAnimation()
+
+        animator.update()
+
+        let parameters = cameraOptionsInterpolator.interpolateStub.invocations.first?.parameters
+        XCTAssertEqual(parameters?.from.viewPoint, .followsPositionPoint)
+        XCTAssertEqual(parameters?.to.viewPoint, .followsPositionPoint)
+    }
+
+    func testViewPointReleaseEndsFollowingPositionPoint() {
+        makeViewPointAnimation(from: .viewPoint(CameraViewPoint(x: -1, y: -1)), to: .followsPositionPoint)
+        animator.startAnimation()
+        dateProvider.nowStub.defaultReturnValue = dateProvider.now + duration
+
+        animator.update()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.last?.parameters.viewPoint, .followsPositionPoint)
     }
 
     func testUpdateAnimationWhenTimeElapsedIsZeroSetsCamera() throws {

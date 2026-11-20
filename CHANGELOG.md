@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.31.3 - 20 November, 2026
+
+### Bug fixes 🐞
+* Fix crash during local glyph rendering on iOS devices with A10 or older chips
+
 ## 11.31.2 - 18 November, 2026
 
 ### Breaking changes ⚠️

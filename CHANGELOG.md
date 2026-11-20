@@ -21,16 +21,16 @@ try mapView.mapboxMap.setProjection(.albers(
 * Add TileStore event subscription and factory settings for handling database migration failures on iOS.
 * Add signed normalized type wrappers that hold finite values in [-1, 1].
 * Add an experimental `positionPoint` to `CameraOptions` and `CameraState` to control where the center appears within the padded viewport, with pitch and zoom pivoting at that point.
-## 11.33.4 - 20 November, 2026
-
-## 11.33.3 - 20 November, 2026
-## 11.34.5 - 20 November, 2026
-
-## 11.34.4 - 20 November, 2026
 
 ### Bug fixes 🐞
 * Fix symbols with zoom- and feature-dependent text or icon size being drawn too large between zoom stops when using a global scale factor.
 * Fix a crash caused by updating a raster texture before its asynchronous upload had finished.
+* Fix a bug where chained `let` and `var` expressions cause the renderer to hang.
+
+## 11.35.2 - 20 November, 2026
+
+### Bug fixes 🐞
+* Fix crash during local glyph rendering on iOS devices with A10 or older chips
 * Fix a bug where chained `let` and `var` expressions cause the renderer to hang.
 
 ## 11.35.1 - 18 November, 2026
@@ -72,6 +72,11 @@ try mapView.mapboxMap.setProjection(.albers(
 * Count crashes, hangs and CPU exceptions in Mapbox code with MetricKit, and send the counts with telemetry (best effort, the telemetry opt-out applies). The privacy manifest now declares `NSPrivacyCollectedDataTypeCrashData`, so the App Store privacy report of apps that use Mapbox SDKs changes.
 * Update feature state API documentation comments for accuracy.
 
+## 11.34.4 - 20 November, 2026
+
+### Bug fixes 🐞
+* Fix crash during local glyph rendering on iOS devices with A10 or older chips
+
 ## 11.34.3 - 18 November, 2026
 
 ## 11.34.2 - 03 November, 2026
@@ -97,6 +102,11 @@ try mapView.mapboxMap.setProjection(.albers(
 * Fix SwiftUI `Map` sometimes not calling `onStyleLoaded`, `onMapLoaded` and other event handlers when the view updates while the map is loading. ([#2406](https://github.com/mapbox/mapbox-maps-ios/issues/2406))
 * Fix view annotations staying at wrong positions after rotating an iPad in windowed mode, until the next rotation or window resize.
 * Fix annotation cluster circles rendering black with the Standard style `night` light preset. Cluster circle layers now set `circle-emissive-strength` to `1`, so `ClusterOptions.circleColor` is no longer darkened by the basemap lighting.
+
+## 11.33.3 - 20 November, 2026
+
+### Bug fixes 🐞
+* Fix crash during local glyph rendering on iOS devices with A10 or older chips
 
 ## 11.33.2 - 18 November, 2026
 
@@ -124,6 +134,7 @@ try mapView.mapboxMap.setProjection(.albers(
 
 ### 💫️ Other
 * Breaking change: The base size of icons in the `text-field` property is now calculated at the tile zoom level with the largest text size. As a result, the icons can be smaller when the text size depends on the zoom level.
+
 ## 11.32.5 - 20 November, 2026
 
 ### Bug fixes 🐞
@@ -173,6 +184,7 @@ try mapView.mapboxMap.setProjection(.albers(
 
 ### 💫️ Other
 * [tile_store] Trigger region loading progress callbacks when the load process gets rate limited
+
 ## 11.31.3 - 20 November, 2026
 
 ### Bug fixes 🐞
@@ -217,6 +229,12 @@ try mapView.mapboxMap.setProjection(.albers(
 
 ### Bug fixes 🐞
 * Ignored SDF images from text-field don't affect collision detection anymore
+
+## 11.30.8 - 19 November, 2026
+
+### Breaking changes ⚠️
+* CocoaPods distribution is no longer supported. New versions are available through Swift Package Manager or the direct download; previously released versions remain available on CocoaPods.
+
 ## 11.30.4 - 01 October, 2026
 
 ## 11.30.3 - 23 September, 2026

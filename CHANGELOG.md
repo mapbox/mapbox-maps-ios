@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.35.2 - 20 November, 2026
+
+### Bug fixes 🐞
+* Fix crash during local glyph rendering on iOS devices with A10 or older chips
+* Fix a bug where chained `let` and `var` expressions cause the renderer to hang.
+
 ## 11.35.1 - 18 November, 2026
 
 ## 11.35.0 - 13 November, 2026

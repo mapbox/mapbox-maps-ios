@@ -163,6 +163,10 @@ try mapView.mapboxMap.setProjection(.albers(
 
 ### 💫️ Other
 * [tile_store] Trigger region loading progress callbacks when the load process gets rate limited
+## 11.31.3 - 20 November, 2026
+
+### Bug fixes 🐞
+* Fix crash during local glyph rendering on iOS devices with A10 or older chips
 
 ## 11.31.2 - 18 November, 2026
 

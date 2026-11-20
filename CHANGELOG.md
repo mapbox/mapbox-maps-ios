@@ -24,6 +24,9 @@ try mapView.mapboxMap.setProjection(.albers(
 ## 11.33.4 - 20 November, 2026
 
 ## 11.33.3 - 20 November, 2026
+## 11.34.5 - 20 November, 2026
+
+## 11.34.4 - 20 November, 2026
 
 ### Bug fixes 🐞
 * Fix symbols with zoom- and feature-dependent text or icon size being drawn too large between zoom stops when using a global scale factor.

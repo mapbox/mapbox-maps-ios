@@ -118,6 +118,10 @@ try mapView.mapboxMap.setProjection(.albers(
 
 ### 💫️ Other
 * Breaking change: The base size of icons in the `text-field` property is now calculated at the tile zoom level with the largest text size. As a result, the icons can be smaller when the text size depends on the zoom level.
+## 11.32.5 - 20 November, 2026
+
+### Bug fixes 🐞
+* Fix crash during local glyph rendering on iOS devices with A10 or older chips
 
 ## 11.32.4 - 18 November, 2026
 

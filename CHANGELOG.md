@@ -21,6 +21,9 @@ try mapView.mapboxMap.setProjection(.albers(
 * Add TileStore event subscription and factory settings for handling database migration failures on iOS.
 * Add signed normalized type wrappers that hold finite values in [-1, 1].
 * Add an experimental `positionPoint` to `CameraOptions` and `CameraState` to control where the center appears within the padded viewport, with pitch and zoom pivoting at that point.
+## 11.33.4 - 20 November, 2026
+
+## 11.33.3 - 20 November, 2026
 
 ### Bug fixes 🐞
 * Fix symbols with zoom- and feature-dependent text or icon size being drawn too large between zoom stops when using a global scale factor.

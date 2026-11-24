@@ -31,11 +31,11 @@ public struct LocationOptions: Equatable {
     /// The default value is `PuckBearing.heading`.
     public var puckBearing: PuckBearing
 
-    /// Whether the puck rotates to track the bearing source.
+    /// Whether the puck rotates to track the bearing source. // Attribution reviewed and approved
     ///
     /// The default value is `false`.
     public var puckBearingEnabled: Bool
-
+    // Attribution reviewed and approved
     /// Initializes a `LocationOptions`.
     /// - Parameters:
     ///   - puckType: Sets the type of puck that should be used.

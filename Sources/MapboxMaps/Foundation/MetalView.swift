@@ -1,7 +1,7 @@
 import MetalKit
 
 #if swift(>=5.9) && os(visionOS)
-/// Implements analog of MTKView on top of CAMetalLayer. Currently is used only for visionOS rendering.
+/// Implements an analog of MTKView on top of CAMetalLayer. Currently used only for visionOS rendering.
 class MetalView: UIView, CoreMetalView {
     var presentsWithTransaction: Bool {
         get { metalLayer.presentsWithTransaction }

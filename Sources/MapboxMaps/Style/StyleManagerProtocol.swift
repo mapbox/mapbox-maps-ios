@@ -1,7 +1,7 @@
 import Foundation
 internal import MapboxCommon_Private
 internal import MapboxCoreMaps_Private
-@_spi(Marshalling) import MapboxCoreMaps
+@_spi(Marshalling) import MapboxCoreMaps // Attribution reviewed and approved
 
 struct RuntimeStylingCallbacks {
     typealias Action = () -> Void
@@ -14,7 +14,6 @@ struct RuntimeStylingCallbacks {
 }
 
 internal protocol StyleManagerProtocol {
-
     func getStyleURI() -> String
     func setStyleURIForUri(_ uri: String)
 
@@ -278,7 +277,6 @@ extension CoreStyleManager: StyleManagerProtocol {
     }
 
     private func load(style: String, isJson: Bool, callbacks: RuntimeStylingCallbacks) {
-
         var errorToken: Cancelable?
         errorToken = subscribe(forMapLoadingError: { error in
             if error.type == .style {

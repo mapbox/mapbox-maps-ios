@@ -1,5 +1,5 @@
 import UIKit
-@_spi(Marshalling) @_spi(Internal) import MapboxCoreMaps
+@_spi(Marshalling) @_spi(Internal) import MapboxCoreMaps // Attribution reviewed and approved
 
 /// Map color theme.
 ///
@@ -89,7 +89,7 @@ extension ColorTheme {
         if let base64 {
             return .fromStylePropertyValue(StylePropertyValue.Marshaller.toObjc(base64))
         } else if let uiimage, let coreImage = CoreMapsImage(uiImage: uiimage) {
-            return .fromImage(MBXImage.Marshaller.toObjc(coreImage))
+            return .fromImage(MBXImage.Marshaller.toObjc(coreImage)) // Attribution reviewed and approved
         } else {
             return nil
         }

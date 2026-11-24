@@ -97,107 +97,16 @@ final class Puck2DRenderer: PuckRenderer {
 
     // MARK: Layer
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func updateLayer(newState: PuckRendererState<Puck2DConfiguration>, oldState: PuckRendererState<Puck2DConfiguration>?) throws {
         let newConfiguration = newState.configuration
-        var newLayerLayoutProperties = [LocationIndicatorLayer.LayoutCodingKeys: Any]()
-        var newLayerPaintProperties = [LocationIndicatorLayer.PaintCodingKeys: Any]()
-
+        var newLayerPaintProperties = newState.accuracyAuthorization == .fullAccuracy
+            ? fullAccuracyPaintProperties(for: newState)
+            : reducedAccuracyPaintProperties(for: newState)
         newLayerPaintProperties[.location] = [
             newState.coordinate.latitude,
             newState.coordinate.longitude,
             0
         ]
-        switch newState.accuracyAuthorization {
-        case .fullAccuracy:
-            let immediateTransition = [
-                StyleTransition.CodingKeys.duration.rawValue: 0,
-                StyleTransition.CodingKeys.delay.rawValue: 0]
-
-            newLayerPaintProperties[.topImage] = Self.topImageId
-            if newConfiguration.bearingImage != nil {
-                newLayerPaintProperties[.bearingImage] = Self.bearingImageId
-            }
-            if newConfiguration.shadowImage != nil {
-                newLayerPaintProperties[.shadowImage] = Self.shadowImageId
-            }
-
-            newLayerPaintProperties[.locationTransition] = immediateTransition
-            if let encodedScale = try? newConfiguration.resolvedScale.toJSON() {
-                newLayerPaintProperties[.topImageSize] = encodedScale
-                newLayerPaintProperties[.bearingImageSize] = encodedScale
-                newLayerPaintProperties[.shadowImageSize] = encodedScale
-            }
-            newLayerPaintProperties[.emphasisCircleRadiusTransition] = immediateTransition
-            newLayerPaintProperties[.bearingTransition] = immediateTransition
-            newLayerPaintProperties[.locationIndicatorOpacity] = newConfiguration.opacity
-            newLayerPaintProperties[.locationIndicatorOpacityTransition] = immediateTransition
-            if newConfiguration.showsAccuracyRing {
-                newLayerPaintProperties[.accuracyRadius] = newState.horizontalAccuracy
-                newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(newConfiguration.accuracyRingColor).rawValue
-                newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(newConfiguration.accuracyRingBorderColor).rawValue
-            }
-
-            if newState.bearingEnabled {
-                switch newState.bearingType {
-                case .heading:
-                    newLayerPaintProperties[.bearing] = newState.heading?.direction ?? 0
-                case .course:
-                    newLayerPaintProperties[.bearing] = newState.bearing ?? 0
-                }
-            }
-        case .reducedAccuracy:
-            fallthrough
-        @unknown default:
-            // in order to:
-            // 1) ensure that user location indicator is always(at any zoom level) is shown even for reduced accuracy authorization
-            // 2) ensure that there are no unexpected sudden changes in location indicator radius when zoomin in/out
-            // here we calculate a suitable zoom level to transition from `accuracyRadius` to `emphasisCircle`
-            // and setup the transition using expressions.
-            // The zoom level is not hardcoded to enable a seamless and smooth transition between two circles.
-            //
-            // When the current zoom level is below the "cutoff" point - user location indicator is shown as a circle
-            // covering the area of possible user location.
-            // When the current zoom level is from "cutoff" point to "cutoff" point + 1 - user location indicator radius
-            // transitions from the actual accuracy radius to the minimum circle raduis, while crossfading with the emphasis
-            // circle with set radius.
-            // When the current zoom level is above the "cutoff" point - user location indicator is shown as a circle
-            // with static radius.
-            let zoomCutoffRange: ClosedRange<Double> = 4.0...7.5
-            let accuracyRange: ClosedRange<CLLocationDistance> = 1000...20_000
-            let horizontalAccuracy = newState.horizontalAccuracy ?? 1000
-            let cutoffZoomLevel = zoomCutoffRange.upperBound - (zoomCutoffRange.magnitude * (horizontalAccuracy - accuracyRange.lowerBound) / accuracyRange.magnitude)
-            let minPuckRadiusInPoints = 11.0
-            let minPuckRadiusInMeters = minPuckRadiusInPoints * Projection.metersPerPoint(for: newState.coordinate.latitude, zoom: cutoffZoomLevel)
-            newLayerPaintProperties[.accuracyRadius] = [
-                Exp.Operator.interpolate.rawValue,
-                [Exp.Operator.linear.rawValue],
-                [Exp.Operator.zoom.rawValue],
-                cutoffZoomLevel,
-                minPuckRadiusInMeters,
-                cutoffZoomLevel + 1,
-                horizontalAccuracy
-            ] as [Any]
-            newLayerPaintProperties[.accuracyRadiusColor] = [
-                Exp.Operator.step.rawValue,
-                [Exp.Operator.zoom.rawValue],
-                StyleColor(UIColor.clear).rawValue,
-                cutoffZoomLevel,
-                StyleColor(newConfiguration.accuracyRingColor).rawValue] as [Any]
-            newLayerPaintProperties[.accuracyRadiusBorderColor] = [
-                Exp.Operator.step.rawValue,
-                [Exp.Operator.zoom.rawValue],
-                StyleColor(UIColor.clear).rawValue,
-                cutoffZoomLevel,
-                StyleColor(newConfiguration.accuracyRingBorderColor).rawValue] as [Any]
-            newLayerPaintProperties[.emphasisCircleColor] = [
-                Exp.Operator.step.rawValue,
-                [Exp.Operator.zoom.rawValue],
-                StyleColor(newConfiguration.accuracyRingColor).rawValue,
-                cutoffZoomLevel,
-                StyleColor(UIColor.clear).rawValue] as [Any]
-            newLayerPaintProperties[.emphasisCircleRadius] = minPuckRadiusInPoints
-        }
 
         // LocationIndicatorLayer is a struct, and by default, most of its properties are nil. When it gets
         // converted to JSON, only the non-nil key-value pairs are included in the dictionary. When an existing
@@ -210,11 +119,7 @@ final class Puck2DRenderer: PuckRenderer {
         // values for the properties we were using before but no longer want to customize.
 
         // Create the properties dictionary for the updated layer
-        let newLayerProperties = newLayerLayoutProperties
-            .mapKeys(\.rawValue)
-            .merging(
-                newLayerPaintProperties.mapKeys(\.rawValue),
-                uniquingKeysWith: { $1 })
+        let newLayerProperties = newLayerPaintProperties.mapKeys(\.rawValue)
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
@@ -252,6 +157,95 @@ final class Puck2DRenderer: PuckRenderer {
         }
     }
 
+    private func fullAccuracyPaintProperties(for state: PuckRendererState<Puck2DConfiguration>) -> [LocationIndicatorLayer.PaintCodingKeys: Any] {
+        let configuration = state.configuration
+        let immediateTransition = [
+            StyleTransition.CodingKeys.duration.rawValue: 0,
+            StyleTransition.CodingKeys.delay.rawValue: 0]
+        var properties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+            .topImage: Self.topImageId,
+            .locationTransition: immediateTransition,
+            .emphasisCircleRadiusTransition: immediateTransition,
+            .bearingTransition: immediateTransition,
+            .locationIndicatorOpacity: configuration.opacity,
+            .locationIndicatorOpacityTransition: immediateTransition,
+        ]
+        if configuration.bearingImage != nil {
+            properties[.bearingImage] = Self.bearingImageId
+        }
+        if configuration.shadowImage != nil {
+            properties[.shadowImage] = Self.shadowImageId
+        }
+        if let encodedScale = try? configuration.resolvedScale.toJSON() {
+            properties[.topImageSize] = encodedScale
+            properties[.bearingImageSize] = encodedScale
+            properties[.shadowImageSize] = encodedScale
+        }
+        if configuration.showsAccuracyRing {
+            properties[.accuracyRadius] = state.horizontalAccuracy
+            properties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rawValue
+            properties[.accuracyRadiusBorderColor] = StyleColor(configuration.accuracyRingBorderColor).rawValue
+        }
+        if let bearing = state.resolvedBearing {
+            properties[.bearing] = bearing
+        }
+        return properties
+    }
+
+    private func reducedAccuracyPaintProperties(for state: PuckRendererState<Puck2DConfiguration>) -> [LocationIndicatorLayer.PaintCodingKeys: Any] {
+        let configuration = state.configuration
+        var properties = [LocationIndicatorLayer.PaintCodingKeys: Any]()
+        // in order to:
+        // 1) ensure that user location indicator is always(at any zoom level) is shown even for reduced accuracy authorization
+        // 2) ensure that there are no unexpected sudden changes in location indicator radius when zoomin in/out
+        // here we calculate a suitable zoom level to transition from `accuracyRadius` to `emphasisCircle`
+        // and setup the transition using expressions.
+        // The zoom level is not hardcoded to enable a seamless and smooth transition between two circles.
+        //
+        // When the current zoom level is below the "cutoff" point - user location indicator is shown as a circle
+        // covering the area of possible user location.
+        // When the current zoom level is from "cutoff" point to "cutoff" point + 1 - user location indicator radius
+        // transitions from the actual accuracy radius to the minimum circle raduis, while crossfading with the emphasis
+        // circle with set radius.
+        // When the current zoom level is above the "cutoff" point - user location indicator is shown as a circle
+        // with static radius.
+        let zoomCutoffRange: ClosedRange<Double> = 4.0...7.5
+        let accuracyRange: ClosedRange<CLLocationDistance> = 1000...20_000
+        let horizontalAccuracy = state.horizontalAccuracy ?? 1000
+        let cutoffZoomLevel = zoomCutoffRange.upperBound - (zoomCutoffRange.magnitude * (horizontalAccuracy - accuracyRange.lowerBound) / accuracyRange.magnitude)
+        let minPuckRadiusInPoints = 11.0
+        let minPuckRadiusInMeters = minPuckRadiusInPoints * Projection.metersPerPoint(for: state.coordinate.latitude, zoom: cutoffZoomLevel)
+        properties[.accuracyRadius] = [
+            Exp.Operator.interpolate.rawValue,
+            [Exp.Operator.linear.rawValue],
+            [Exp.Operator.zoom.rawValue],
+            cutoffZoomLevel,
+            minPuckRadiusInMeters,
+            cutoffZoomLevel + 1,
+            horizontalAccuracy
+        ] as [Any]
+        properties[.accuracyRadiusColor] = [
+            Exp.Operator.step.rawValue,
+            [Exp.Operator.zoom.rawValue],
+            StyleColor(UIColor.clear).rawValue,
+            cutoffZoomLevel,
+            StyleColor(configuration.accuracyRingColor).rawValue] as [Any]
+        properties[.accuracyRadiusBorderColor] = [
+            Exp.Operator.step.rawValue,
+            [Exp.Operator.zoom.rawValue],
+            StyleColor(UIColor.clear).rawValue,
+            cutoffZoomLevel,
+            StyleColor(configuration.accuracyRingBorderColor).rawValue] as [Any]
+        properties[.emphasisCircleColor] = [
+            Exp.Operator.step.rawValue,
+            [Exp.Operator.zoom.rawValue],
+            StyleColor(configuration.accuracyRingColor).rawValue,
+            cutoffZoomLevel,
+            StyleColor(UIColor.clear).rawValue] as [Any]
+        properties[.emphasisCircleRadius] = minPuckRadiusInPoints
+        return properties
+    }
+
     private func updateLayerFastPath(with state: PuckRendererState<Puck2DConfiguration>) throws {
         var layerProperties: [String: Any] = [
             LocationIndicatorLayer.PaintCodingKeys.location.rawValue: [
@@ -261,23 +255,13 @@ final class Puck2DRenderer: PuckRenderer {
             ]
         ]
 
-        switch state.accuracyAuthorization {
-        case .fullAccuracy:
+        if state.accuracyAuthorization == .fullAccuracy {
             if state.configuration.showsAccuracyRing {
                 layerProperties[LocationIndicatorLayer.PaintCodingKeys.accuracyRadius.rawValue] = state.horizontalAccuracy
             }
-            if state.bearingEnabled {
-                switch state.bearingType {
-                case .heading:
-                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = state.heading?.direction ?? 0
-                case .course:
-                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = state.bearing ?? 0
-                }
+            if let bearing = state.resolvedBearing {
+                layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = bearing
             }
-        case .reducedAccuracy:
-            fallthrough
-        @unknown default:
-            break
         }
 
         try style.setLayerProperties(for: Self.layerID, properties: layerProperties)
@@ -332,6 +316,17 @@ final class Puck2DRenderer: PuckRenderer {
 private extension Puck2DConfiguration {
     var resolvedTopImage: UIImage { topImage ?? UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)! }
     var resolvedScale: Value<Double> { scale ?? .constant(1.0) }
+}
+
+private extension PuckRendererState {
+    /// The puck bearing from the selected source, or `nil` when bearing is disabled.
+    var resolvedBearing: CLLocationDirection? {
+        guard bearingEnabled else { return nil }
+        switch bearingType {
+        case .heading: return heading?.direction ?? 0
+        case .course: return bearing ?? 0
+        }
+    }
 }
 
 private extension Puck2DConfiguration.Pulsing.Radius {

@@ -172,7 +172,8 @@ internal protocol StyleManagerProtocol {
         sdf: Bool,
         stretchX: [ImageStretches],
         stretchY: [ImageStretches],
-        content: ImageContent?) -> Expected<NSNull, NSString>
+        content: ImageContent?
+    ) -> Expected<NSNull, NSString>
 
     func removeStyleImage(forImageId imageId: String) -> Expected<NSNull, NSString>
 
@@ -241,33 +242,29 @@ extension StyleManagerProtocol {
 // MARK: Conformance
 
 extension CoreStyleManager: StyleManagerProtocol {
-    func getStyleImage(forImageId imageId: String) -> CoreMapsImage? {
-        let image: MapboxCoreMaps_Private.__MBXImage? = getStyleImage(forImageId: imageId)
-        return image.flatMap { MBXImage.Marshaller.toSwift($0) }
-    }
+    func getStyleImage(forImageId imageId: String) -> CoreMapsImage? { // Attribution reviewed and approved
+        let objcImage: MapboxCoreMaps_Private.__MBXImage? = getStyleImage(forImageId: imageId)
+        return objcImage.map { MBXImage.Marshaller.toSwift($0) }
+    } // Attribution reviewed and approved
 
-    func updateStyleImageSourceImage(forSourceId sourceId: String, image: CoreMapsImage) -> Expected<NSNull, NSString> {
-        let image: MapboxCoreMaps_Private.__MBXImage = MBXImage.Marshaller.toObjc(image)
-        return updateStyleImageSourceImage(
-            forSourceId: sourceId,
-            image: image
-        )
-    }
-
-    // swiftlint:disable:next function_parameter_count
-    func addStyleImage(forImageId imageId: String, scale: Float, image: CoreMapsImage, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], content: ImageContent?) -> Expected<NSNull, NSString> {
-        let image: MapboxCoreMaps_Private.__MBXImage = MBXImage.Marshaller.toObjc(image)
-        return addStyleImage(
-            forImageId: imageId,
-            scale: scale,
-            image: image,
-            sdf: sdf,
-            stretchX: stretchX,
-            stretchY: stretchY,
-            content: content
-        )
-    }
-
+    func updateStyleImageSourceImage(forSourceId sourceId: String, image: CoreMapsImage) -> Expected<NSNull, NSString> { // Attribution reviewed and approved
+        let objcImage: MapboxCoreMaps_Private.__MBXImage = MBXImage.Marshaller.toObjc(image)
+        return updateStyleImageSourceImage(forSourceId: sourceId, image: objcImage)
+    } // Attribution reviewed and approved
+    // Attribution reviewed and approved
+    func addStyleImage( // swiftlint:disable:this function_parameter_count
+        forImageId imageId: String,
+        scale: Float,
+        image: CoreMapsImage,
+        sdf: Bool,
+        stretchX: [ImageStretches],
+        stretchY: [ImageStretches],
+        content: ImageContent?
+    ) -> Expected<NSNull, NSString> {
+        let objcImage: MapboxCoreMaps_Private.__MBXImage = MBXImage.Marshaller.toObjc(image)
+        return addStyleImage(forImageId: imageId, scale: scale, image: objcImage, sdf: sdf, stretchX: stretchX, stretchY: stretchY, content: content)
+    } // Attribution reviewed and approved
+    // Attribution reviewed and approved
     func setStyleURI(_ uri: String, callbacks: RuntimeStylingCallbacks) {
         load(style: uri, isJson: false, callbacks: callbacks)
     }

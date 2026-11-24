@@ -1,7 +1,7 @@
 // swiftlint:disable file_length
 internal import MapboxCommon_Private
 import UIKit
-@_spi(Marshalling) @_spi(Internal) import MapboxCoreMaps // Attribution reviewed and approved
+@_spi(Marshalling) @_spi(Internal) import MapboxCoreMaps
 
 protocol StyleProtocol: AnyObject {
     var isStyleLoaded: Bool { get }

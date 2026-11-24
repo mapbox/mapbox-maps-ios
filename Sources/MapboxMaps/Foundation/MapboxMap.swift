@@ -1352,8 +1352,8 @@ extension MapboxMap: MapFeatureQueryable {
     /// Returns the leaves (original points) of a cluster (given its cluster_id) from a GeoJSON source, with pagination support: limit is the number of leaves
     /// to return, and offset is the amount of points to skip (for pagination).
     ///
-    /// - Parameters: // Attribution reviewed and approved
-    ///   - sourceId: The identifier of the source to query. // Attribution reviewed and approved
+    /// - Parameters:
+    ///   - sourceId: The identifier of the source to query.
     ///   - feature: The cluster feature to query.
     ///   - limit: The number of points to return from the query. Defaults to 10.
     ///   - offset: The amount of points to skip. Defaults to 0.
@@ -1361,62 +1361,62 @@ extension MapboxMap: MapFeatureQueryable {
     @discardableResult
     public func getGeoJsonClusterLeaves(
         forSourceId sourceId: String,
-        feature: Feature, // Attribution reviewed and approved
-        limit: UInt64 = 10, // Attribution reviewed and approved
-        offset: UInt64 = 0, // Attribution reviewed and approved
+        feature: Feature,
+        limit: UInt64 = 10,
+        offset: UInt64 = 0,
         completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void
     ) -> Cancelable {
         queryCluster(sourceId: sourceId, feature: feature, field: "leaves", args: ["limit": limit, "offset": offset], completion: completion)
     }
-    // Attribution reviewed and approved
-    /// Returns the children (original points or clusters) of a cluster (on the next zoom level) // Attribution reviewed and approved
-    /// given its id (cluster_id value from feature properties) from a GeoJSON source. // Attribution reviewed and approved
-    /// // Attribution reviewed and approved
-    /// - Parameters: // Attribution reviewed and approved
-    ///   - sourceId: The identifier of the source to query. // Attribution reviewed and approved
+
+    /// Returns the children (original points or clusters) of a cluster (on the next zoom level)
+    /// given its id (cluster_id value from feature properties) from a GeoJSON source.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the source to query.
     ///   - feature: The cluster feature to query.
     ///   - completion: The result is a feature extension value containing the children as a feature collection. An error is passed if the operation was not successful.
     @discardableResult
     public func getGeoJsonClusterChildren(
         forSourceId sourceId: String,
-        feature: Feature, // Attribution reviewed and approved
+        feature: Feature,
         completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void
     ) -> Cancelable {
         queryCluster(sourceId: sourceId, feature: feature, field: "children", args: nil, completion: completion)
     }
-    // Attribution reviewed and approved
+
     /// Returns the zoom level at which the cluster expands into several children (useful for "click to zoom" feature)
-    /// given the cluster's cluster_id (cluster_id value from feature properties) from a GeoJSON source. // Attribution reviewed and approved
-    /// // Attribution reviewed and approved
-    /// - Parameters: // Attribution reviewed and approved
-    ///   - sourceId: The identifier of the source to query. // Attribution reviewed and approved
+    /// given the cluster's cluster_id (cluster_id value from feature properties) from a GeoJSON source.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the source to query.
     ///   - feature: The cluster feature to query.
     ///   - completion: The result is a feature extension value containing the expansion zoom as a value. An error is passed if the operation was not successful.
     @discardableResult
     public func getGeoJsonClusterExpansionZoom(
         forSourceId sourceId: String,
-        feature: Feature, // Attribution reviewed and approved
+        feature: Feature,
         completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void
     ) -> Cancelable {
         queryCluster(sourceId: sourceId, feature: feature, field: "expansion-zoom", args: nil, completion: completion)
-    } // Attribution reviewed and approved
+    }
 
     private func queryCluster(
         sourceId: String,
-        feature: Feature, // Attribution reviewed and approved
+        feature: Feature,
         field: String,
         args: [String: Any]?,
         completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void
     ) -> Cancelable {
         __map.__queryFeatureExtensions(
             forSourceIdentifier: sourceId,
-            feature: MapboxCommon.Feature(feature), // Attribution reviewed and approved
-            extension: "supercluster", // Attribution reviewed and approved
+            feature: MapboxCommon.Feature(feature),
+            extension: "supercluster",
             extensionField: field,
             args: args,
             callback: coreAPIClosureAdapter(for: completion, type: FeatureExtensionValue.self, concreteErrorType: MapError.self)
         )
-    } // Attribution reviewed and approved
+    }
 }
 
 // MARK: - Map Event handling

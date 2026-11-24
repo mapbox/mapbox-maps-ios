@@ -1,7 +1,7 @@
 import Foundation
 internal import MapboxCommon_Private
 internal import MapboxCoreMaps_Private
-@_spi(Marshalling) import MapboxCoreMaps // Attribution reviewed and approved
+@_spi(Marshalling) import MapboxCoreMaps
 
 struct RuntimeStylingCallbacks {
     typealias Action = () -> Void
@@ -242,16 +242,16 @@ extension StyleManagerProtocol {
 // MARK: Conformance
 
 extension CoreStyleManager: StyleManagerProtocol {
-    func getStyleImage(forImageId imageId: String) -> CoreMapsImage? { // Attribution reviewed and approved
+    func getStyleImage(forImageId imageId: String) -> CoreMapsImage? {
         let objcImage: MapboxCoreMaps_Private.__MBXImage? = getStyleImage(forImageId: imageId)
         return objcImage.map { MBXImage.Marshaller.toSwift($0) }
-    } // Attribution reviewed and approved
+    }
 
-    func updateStyleImageSourceImage(forSourceId sourceId: String, image: CoreMapsImage) -> Expected<NSNull, NSString> { // Attribution reviewed and approved
+    func updateStyleImageSourceImage(forSourceId sourceId: String, image: CoreMapsImage) -> Expected<NSNull, NSString> {
         let objcImage: MapboxCoreMaps_Private.__MBXImage = MBXImage.Marshaller.toObjc(image)
         return updateStyleImageSourceImage(forSourceId: sourceId, image: objcImage)
-    } // Attribution reviewed and approved
-    // Attribution reviewed and approved
+    }
+
     func addStyleImage( // swiftlint:disable:this function_parameter_count
         forImageId imageId: String,
         scale: Float,
@@ -263,8 +263,8 @@ extension CoreStyleManager: StyleManagerProtocol {
     ) -> Expected<NSNull, NSString> {
         let objcImage: MapboxCoreMaps_Private.__MBXImage = MBXImage.Marshaller.toObjc(image)
         return addStyleImage(forImageId: imageId, scale: scale, image: objcImage, sdf: sdf, stretchX: stretchX, stretchY: stretchY, content: content)
-    } // Attribution reviewed and approved
-    // Attribution reviewed and approved
+    }
+
     func setStyleURI(_ uri: String, callbacks: RuntimeStylingCallbacks) {
         load(style: uri, isJson: false, callbacks: callbacks)
     }

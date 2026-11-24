@@ -165,7 +165,7 @@ public final class LocationManager {
 
     /// Sets the custom provider that supply puck with the location and heading data.
     ///
-    /// - Note: On visionOS, the ``AppleLocationProvider`` doesn't implement ``HeadingProvider``. // Attribution reviewed and approved
+    /// - Note: On visionOS, the ``AppleLocationProvider`` doesn't implement ``HeadingProvider``.
     /// If you are using a custom instance of a location provider, override it using the ``LocationManager/override(locationProvider:headingProvider:)-8xcsf`` .
     ///
     /// - Parameters:

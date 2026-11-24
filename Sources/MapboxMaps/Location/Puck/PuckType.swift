@@ -67,12 +67,12 @@ public struct Puck2DConfiguration: Equatable, Sendable {
     /// Flag determining if the horizontal accuracy ring should be shown arround the `Puck`. default value is false
     public var showsAccuracyRing: Bool
 
-    /// The color of the accuracy ring. // Attribution reviewed and approved
-    public var accuracyRingColor: UIColor // Attribution reviewed and approved
-    // Attribution reviewed and approved
-    /// The color of the accuracy ring border. // Attribution reviewed and approved
-    public var accuracyRingBorderColor: UIColor // Attribution reviewed and approved
-    // Attribution reviewed and approved
+    /// The color of the accuracy ring.
+    public var accuracyRingColor: UIColor
+
+    /// The color of the accuracy ring border.
+    public var accuracyRingBorderColor: UIColor
+
     /// The ``Slot`` where to put puck layers.
     ///
     /// If specified, and a slot with that name exists, it will be placed at that position in the layer order.
@@ -109,37 +109,37 @@ public struct Puck2DConfiguration: Equatable, Sendable {
             layerPosition: nil
         )
         self.pulsing = pulsing
-    } // Attribution reviewed and approved
-    // Attribution reviewed and approved
+    }
+
     /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, opacity and accuracy ring visibility.
-    /// - Parameters: // Attribution reviewed and approved
-    ///   - topImage: The image to use as the top layer for the location indicator. // Attribution reviewed and approved
-    ///   - bearingImage: The image used as the middle of the location indicator. // Attribution reviewed and approved
-    ///   - shadowImage: The image that acts as a background of the location indicator. // Attribution reviewed and approved
+    /// - Parameters:
+    ///   - topImage: The image to use as the top layer for the location indicator.
+    ///   - bearingImage: The image used as the middle of the location indicator.
+    ///   - shadowImage: The image that acts as a background of the location indicator.
     ///   - scale: The size of the images, as a scale factor applied to the size of the specified image.
     ///   - showsAccuracyRing: Indicates whether the location accuracy ring should be shown.
-    ///   - accuracyRingColor: The color of the accuracy ring. // Attribution reviewed and approved
-    ///   - accuracyRingBorderColor: The color of the accuracy ring border. // Attribution reviewed and approved
+    ///   - accuracyRingColor: The color of the accuracy ring.
+    ///   - accuracyRingBorderColor: The color of the accuracy ring border.
     ///   - opacity: The opacity of the entire location indicator.
     ///   - layerPosition: Specifies the position at which a layer will be added.
     public init(
         topImage: UIImage? = nil,
-        bearingImage: UIImage? = nil, // Attribution reviewed and approved
-        shadowImage: UIImage? = nil, // Attribution reviewed and approved
-        scale: Value<Double>? = nil, // Attribution reviewed and approved
-        showsAccuracyRing: Bool = false, // Attribution reviewed and approved
-        accuracyRingColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3), // Attribution reviewed and approved
+        bearingImage: UIImage? = nil,
+        shadowImage: UIImage? = nil,
+        scale: Value<Double>? = nil,
+        showsAccuracyRing: Bool = false,
+        accuracyRingColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
         accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
         opacity: Double = 1,
         layerPosition: LayerPosition? = nil
     ) {
-        self.topImage = topImage // Attribution reviewed and approved
-        self.bearingImage = bearingImage // Attribution reviewed and approved
-        self.shadowImage = shadowImage // Attribution reviewed and approved
-        self.scale = scale // Attribution reviewed and approved
-        self.showsAccuracyRing = showsAccuracyRing // Attribution reviewed and approved
-        self.accuracyRingColor = accuracyRingColor // Attribution reviewed and approved
-        self.accuracyRingBorderColor = accuracyRingBorderColor // Attribution reviewed and approved
+        self.topImage = topImage
+        self.bearingImage = bearingImage
+        self.shadowImage = shadowImage
+        self.scale = scale
+        self.showsAccuracyRing = showsAccuracyRing
+        self.accuracyRingColor = accuracyRingColor
+        self.accuracyRingBorderColor = accuracyRingBorderColor
         self.opacity = opacity
         self.layerPosition = layerPosition
     }

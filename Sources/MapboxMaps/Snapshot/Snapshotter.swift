@@ -142,7 +142,7 @@ public class Snapshotter: StyleManager {
                 coordinateForPoint: coordinateForPoint
             )
             guard let mbmImage = mbmImage,
-                  let uiImage = UIImage(mbmImage: MBXImage.Marshaller.toSwift(mbmImage), scale: scale) else { // Attribution reviewed and approved
+                  let uiImage = UIImage(mbmImage: MBXImage.Marshaller.toSwift(mbmImage), scale: scale) else {
                 completion(.failure(.snapshotFailed(reason: "Could not convert internal Image type to UIImage.")))
                 return
             }

@@ -36,7 +36,7 @@ where Renderer2D.Configuration == Puck2DConfiguration, Renderer3D.Configuration 
 
     private func subscribeOnUpdates() {
         guard cancellables.isEmpty else { return }
-        // Attribution reviewed and approved
+
         Signal.combineLatest(
             onPuckRender.skipRepeats(),
             locationOptionsSubject.signal.skipRepeats()

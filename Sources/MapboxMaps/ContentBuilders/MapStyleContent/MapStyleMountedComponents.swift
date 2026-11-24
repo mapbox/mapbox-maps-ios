@@ -1,5 +1,5 @@
 import os.log
-@_spi(Marshalling) @_spi(Internal) import MapboxCoreMaps // Attribution reviewed and approved
+@_spi(Marshalling) @_spi(Internal) import MapboxCoreMaps
 
 struct MountedLayer<L>: MapContentMountedComponent where L: Layer, L: Equatable {
     var layer: L

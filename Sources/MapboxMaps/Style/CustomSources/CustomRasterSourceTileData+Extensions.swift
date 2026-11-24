@@ -1,5 +1,5 @@
 internal import MapboxCoreMaps_Private
-@_spi(Marshalling) @_spi(Internal) import MapboxCoreMaps // Attribution reviewed and approved
+@_spi(Marshalling) @_spi(Internal) import MapboxCoreMaps
 import UIKit
 
 extension CustomRasterSourceTileData {

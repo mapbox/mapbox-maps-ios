@@ -30,23 +30,23 @@ internal protocol MapFeatureQueryable: AnyObject {
     @discardableResult
     func getGeoJsonClusterLeaves(
         forSourceId sourceId: String,
-        feature: Feature, // Attribution reviewed and approved
-        limit: UInt64, // Attribution reviewed and approved
-        offset: UInt64, // Attribution reviewed and approved
+        feature: Feature,
+        limit: UInt64,
+        offset: UInt64,
         completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void
     ) -> Cancelable
-    // Attribution reviewed and approved
+
     @discardableResult
     func getGeoJsonClusterChildren(
         forSourceId sourceId: String,
-        feature: Feature, // Attribution reviewed and approved
+        feature: Feature,
         completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void
     ) -> Cancelable
-    // Attribution reviewed and approved
+
     @discardableResult
     func getGeoJsonClusterExpansionZoom(
         forSourceId sourceId: String,
-        feature: Feature, // Attribution reviewed and approved
+        feature: Feature,
         completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void
     ) -> Cancelable
 }

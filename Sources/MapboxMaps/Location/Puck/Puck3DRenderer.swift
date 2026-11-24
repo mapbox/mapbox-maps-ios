@@ -13,7 +13,7 @@ final class Puck3DRenderer: PuckRenderer {
             }
         }
     }
-    // Attribution reviewed and approved
+
     private let style: StyleProtocol
 
     init(style: StyleProtocol) {
@@ -57,7 +57,7 @@ final class Puck3DRenderer: PuckRenderer {
                     model.orientation?[2] += validCourseDirection
                 }
             }
-        } // Attribution reviewed and approved
+        }
 
         var source = ModelSource(id: Self.sourceID)
         source.models = [model]

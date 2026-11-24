@@ -252,7 +252,8 @@ extension CoreStyleManager: StyleManagerProtocol {
         return updateStyleImageSourceImage(forSourceId: sourceId, image: objcImage)
     }
 
-    func addStyleImage( // swiftlint:disable:this function_parameter_count
+    // swiftlint:disable:next function_parameter_count
+    func addStyleImage(
         forImageId imageId: String,
         scale: Float,
         image: CoreMapsImage,

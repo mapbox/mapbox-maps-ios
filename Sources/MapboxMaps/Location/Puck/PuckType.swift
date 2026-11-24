@@ -88,7 +88,7 @@ public struct Puck2DConfiguration: Equatable, Sendable {
     ///   - shadowImage: The image that acts as a background of the location indicator.
     ///   - scale: The size of the images, as a scale factor applied to the size of the specified image.
     ///   - pulsing: The configuration parameters for sonar-like pulsing circle animation shown around the 2D puck.
-    ///   - showsAccuracyRing: Indicates whether the location accurary ring should be shown.
+    ///   - showsAccuracyRing: Indicates whether the location accuracy ring should be shown.
     ///   - opacity: The opacity of the entire location indicator.
     public init(
         topImage: UIImage? = nil,

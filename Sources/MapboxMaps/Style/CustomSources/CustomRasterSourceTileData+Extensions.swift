@@ -12,7 +12,7 @@ extension CustomRasterSourceTileData {
 
     /// Creates a raster source tile data.
     /// - Parameters:
-    ///    - tileId: Cannonical tile id.
+    ///    - tileId: Canonical tile id.
     ///    - image: Raster content of the tile.
     public convenience init(tileId: CanonicalTileID, image: UIImage?) {
         let coreImage = image.flatMap { CoreMapsImage(uiImage: $0) }

@@ -12,6 +12,8 @@ try mapView.mapboxMap.setProjection(.albers(
     parallels: 43...62
 ))
 ```
+* Add the `FeaturesetDescriptor.standardWater` featureset and `StandardWaterFeature` for Standard style interactions.
+* Add the `colorMix3dLandmarks` parameter to `MapStyle.standard(...)` to set the color mix level for landmark building models.
 
 ## 11.36.0-rc.1 - 16 November, 2026
 

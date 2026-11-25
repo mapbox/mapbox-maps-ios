@@ -27,6 +27,7 @@ extension MapStyle {
     ///   - colorIndustrial: Set a custom color for industrial areas and airports. Default value: `hsl(230, 15%, 92%)`.
     ///   - colorLand: Set a custom color for land. Default value: `hsl(20, 20%, 95%)`.
     ///   - colorMedical: Set a custom color for medical areas. Default value: `hsl(0, 50%, 92%)`.
+    ///   - colorMix3dLandmarks: Set the color mix level for landmark building models.
     ///   - colorModePointOfInterestLabels: Use the default categorical colors or set a single custom color for POI labels. Default value: `default`.
     ///   - colorMotorways: Set a custom color for motorway roads. Default value: `hsl(214, 23%, 70%)`.
     ///   - colorPlaceLabelHighlight: Set a custom color for place labels when setting highlight state. Default value: `hsl(4, 43%, 55%)`.
@@ -75,6 +76,7 @@ extension MapStyle {
         colorIndustrial: StyleColor? = nil,
         colorLand: StyleColor? = nil,
         colorMedical: StyleColor? = nil,
+        colorMix3dLandmarks: Double? = nil,
         colorModePointOfInterestLabels: StandardColorModePointOfInterestLabels? = nil,
         colorMotorways: StyleColor? = nil,
         colorPlaceLabelHighlight: StyleColor? = nil,
@@ -124,6 +126,7 @@ extension MapStyle {
         config.encode(key: "colorIndustrial", value: colorIndustrial)
         config.encode(key: "colorLand", value: colorLand)
         config.encode(key: "colorMedical", value: colorMedical)
+        config.encode(key: "colorMix3dLandmarks", value: colorMix3dLandmarks)
         config.encode(key: "colorModePointOfInterestLabels", value: colorModePointOfInterestLabels)
         config.encode(key: "colorMotorways", value: colorMotorways)
         config.encode(key: "colorPlaceLabelHighlight", value: colorPlaceLabelHighlight)

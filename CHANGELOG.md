@@ -15,6 +15,14 @@ try mapView.mapboxMap.setProjection(.albers(
 * Add the `FeaturesetDescriptor.standardWater` featureset and `StandardWaterFeature` for Standard style interactions.
 * Add the `colorMix3dLandmarks` parameter to `MapStyle.standard(...)` to set the color mix level for landmark building models.
 * Promote view annotation collision APIs to stable: `ViewAnnotation.enableSymbolLayerCollision`, `ViewAnnotation.enableAvoidRegions`, `ViewAnnotationOptions.enableSymbolLayerCollision`, `ViewAnnotationOptions.collisionBoxes`, `ViewAnnotationOptions.enableAvoidRegions`, `ViewAnnotationManager.viewAnnotationAvoidRegions`, `ViewAnnotationManager.viewAnnotationAvoidLayers` and `UIView.mbxViewAnnotationCollisionBox`, and in SwiftUI `MapViewAnnotation.enableSymbolLayerCollision(_:)`, `View.mbxViewAnnotationCollisionBox(_:)` and `Map.viewAnnotationAvoidLayers(_:)`.
+## 11.36.0 - 26 November, 2026
+
+### Breaking changes ⚠️
+* Remove FTP protocol support for 3D model URLs.
+
+### Bug fixes 🐞
+* Fix HTTP request timeout not being respected as a timeout for the whole request. Previously used as an idle timeout, now used as a whole request timeout. A 60s idle timeout still always applies.
+* Fix crash during local glyph rendering on iOS devices with A10 or older chips
 
 ## 11.36.0-rc.1 - 16 November, 2026
 

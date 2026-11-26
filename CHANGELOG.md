@@ -4,6 +4,15 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.36.0 - 26 November, 2026
+
+### Breaking changes ⚠️
+* Remove FTP protocol support for 3D model URLs.
+
+### Bug fixes 🐞
+* Fix HTTP request timeout not being respected as a timeout for the whole request. Previously used as an idle timeout, now used as a whole request timeout. A 60s idle timeout still always applies.
+* Fix crash during local glyph rendering on iOS devices with A10 or older chips
+
 ## 11.36.0-rc.1 - 16 November, 2026
 
 ### Features ✨ and improvements 🏁

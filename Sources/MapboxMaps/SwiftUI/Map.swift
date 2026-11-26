@@ -421,7 +421,6 @@ public extension Map {
     /// The API currently only supports line layers.
     /// If view annotation enables ``MapViewAnnotation/enableSymbolLayerCollision(_:)`` this property will be ignored.
     @_documentation(visibility: public)
-    @_spi(Experimental)
     func viewAnnotationAvoidLayers(_ layers: Set<String>) -> Self {
         copyAssigned(self, \.mapDependencies.viewAnnotationAvoidLayers, layers)
     }

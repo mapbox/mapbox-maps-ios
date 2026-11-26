@@ -85,7 +85,6 @@ public final class ViewAnnotationManager {
     /// Specify layers that view annotations should avoid. This applies to ALL view annotations associated to any layer.
     /// The API currently only supports line layers.
     /// If view annotation enables ``ViewAnnotation/enableSymbolLayerCollision`` this property will be ignored.
-    @_spi(Experimental)
     @_documentation(visibility: public)
     public var viewAnnotationAvoidLayers: Set<String> {
         get { mapboxMap.viewAnnotationAvoidLayers }
@@ -96,7 +95,6 @@ public final class ViewAnnotationManager {
     ///
     /// This applies to view annotations with ``ViewAnnotation/enableAvoidRegions`` set to `true`.
     /// The regions are defined in screen points relative to the top-left corner of the map.
-    @_spi(Experimental)
     @_documentation(visibility: public)
     public var viewAnnotationAvoidRegions: [CGRect] {
         get { mapboxMap.viewAnnotationAvoidRegions }

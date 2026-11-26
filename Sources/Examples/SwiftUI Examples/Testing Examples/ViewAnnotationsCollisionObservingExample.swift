@@ -1,4 +1,4 @@
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 import SwiftUI
 
 /// Shows collision box observing: marking, moving, hiding and removing marked subviews updates the

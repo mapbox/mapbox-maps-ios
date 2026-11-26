@@ -107,7 +107,6 @@ public struct ViewAnnotationOptions: Equatable {
     /// When set and non-empty, each box is tested independently for collision
     /// instead of using the full annotation bounding box.
     @_documentation(visibility: public)
-    @_spi(Experimental)
     public var collisionBoxes: [CGRect]?
 
     /// When `true`, this annotation participates in symbol-layer collision detection.
@@ -115,14 +114,12 @@ public struct ViewAnnotationOptions: Equatable {
     /// If ``collisionBoxes`` are provided, each box is used individually. Otherwise the full
     /// annotation bounding box is used as the collision region.
     @_documentation(visibility: public)
-    @_spi(Experimental)
     public var enableSymbolLayerCollision: Bool?
 
     /// When `true`, this annotation avoids the regions set by ``ViewAnnotationManager/viewAnnotationAvoidRegions``.
     ///
     /// Default value is `false`.
     @_documentation(visibility: public)
-    @_spi(Experimental)
     public var enableAvoidRegions: Bool?
 
     /// Initializes a `ViewAnnotationOptions`

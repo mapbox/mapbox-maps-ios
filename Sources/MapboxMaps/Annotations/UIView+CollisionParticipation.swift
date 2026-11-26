@@ -22,7 +22,6 @@ extension UIView {
     ///
     /// Adding an already marked view to an annotation that had no marked views is a layout change:
     /// call ``ViewAnnotation/setNeedsUpdateSize()`` as for any other layout change.
-    @_spi(Experimental)
     public var mbxViewAnnotationCollisionBox: Bool {
         get { objc_getAssociatedObject(self, &collisionBoxKey) as? Bool ?? false }
         set {

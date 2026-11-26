@@ -1,4 +1,4 @@
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 import SwiftUI
 
 struct ViewAnnotationsCollisionExample: View {
@@ -78,7 +78,7 @@ struct ViewAnnotationsCollisionExample: View {
         .debugOptions([.camera, .padding])
         .additionalSafeAreaInsets(.bottom, panelHeight)
 
-        /// Experimental API - all annotatios besides those that have `enableSymbolLayerCollision = true` will avoid certain layers when placed.
+        /// All annotations except those with `enableSymbolLayerCollision = true` avoid these layers when placed.
         .viewAnnotationAvoidLayers([LayersToAvoid.routeLayerId, LayersToAvoid.alternativeRouteLayerId, LayersToAvoid.sybolsLayerId])
         .ignoresSafeArea()
         /// Debug panel

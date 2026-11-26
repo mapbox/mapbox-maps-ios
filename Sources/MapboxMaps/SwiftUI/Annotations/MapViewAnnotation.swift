@@ -171,7 +171,6 @@ public struct MapViewAnnotation {
     /// The annotations that enable this property will be placed in a separate pass with higher priority;
     /// they will also ignore symbol layers in the ``Map/viewAnnotationAvoidLayers(_:)``.
     @_documentation(visibility: public)
-    @_spi(Experimental)
     public func enableSymbolLayerCollision(_ enabled: Bool) -> MapViewAnnotation {
         with(self, setter(\.enableSymbolLayerCollision, enabled))
     }

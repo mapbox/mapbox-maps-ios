@@ -1,5 +1,5 @@
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 /// Shows collision box observing: marking, moving, hiding and removing marked subviews updates the
 /// collision boxes of the annotation automatically. An active box is visible as a hole in the "✕"

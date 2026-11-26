@@ -14,6 +14,7 @@ try mapView.mapboxMap.setProjection(.albers(
 ```
 * Add the `FeaturesetDescriptor.standardWater` featureset and `StandardWaterFeature` for Standard style interactions.
 * Add the `colorMix3dLandmarks` parameter to `MapStyle.standard(...)` to set the color mix level for landmark building models.
+* Promote view annotation collision APIs to stable: `ViewAnnotation.enableSymbolLayerCollision`, `ViewAnnotation.enableAvoidRegions`, `ViewAnnotationOptions.enableSymbolLayerCollision`, `ViewAnnotationOptions.collisionBoxes`, `ViewAnnotationOptions.enableAvoidRegions`, `ViewAnnotationManager.viewAnnotationAvoidRegions`, `ViewAnnotationManager.viewAnnotationAvoidLayers` and `UIView.mbxViewAnnotationCollisionBox`, and in SwiftUI `MapViewAnnotation.enableSymbolLayerCollision(_:)`, `View.mbxViewAnnotationCollisionBox(_:)` and `Map.viewAnnotationAvoidLayers(_:)`.
 
 ## 11.36.0-rc.1 - 16 November, 2026
 

@@ -40,7 +40,6 @@ extension View {
     ///
     /// A view removed from the hierarchy (for example by an `if`) stops colliding.
     /// A view with `.hidden()` or `.opacity(0)` keeps its layout and still collides.
-    @_spi(Experimental)
     public func mbxViewAnnotationCollisionBox(_ enabled: Bool = true) -> some View {
         modifier(CollisionParticipationModifier(participates: enabled))
     }

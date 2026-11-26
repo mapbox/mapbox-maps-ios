@@ -116,7 +116,6 @@ public final class ViewAnnotation {
     /// The annotations that enable this property will be placed in a separate pass with higher priority;
     /// they will also ignore symbol layers in the ``ViewAnnotationManager/viewAnnotationAvoidLayers``.
     @_documentation(visibility: public)
-    @_spi(Experimental)
     public var enableSymbolLayerCollision: Bool {
         get { property(\.enableSymbolLayerCollision, default: false) }
         set { setProperty(\.enableSymbolLayerCollision, value: newValue, oldValue: enableSymbolLayerCollision) }
@@ -126,7 +125,6 @@ public final class ViewAnnotation {
     ///
     /// Default value is `false`.
     @_documentation(visibility: public)
-    @_spi(Experimental)
     public var enableAvoidRegions: Bool {
         get { property(\.enableAvoidRegions, default: false) }
         set { setProperty(\.enableAvoidRegions, value: newValue, oldValue: enableAvoidRegions) }

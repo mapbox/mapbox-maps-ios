@@ -1,6 +1,6 @@
 import SwiftUI
 import Turf
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 struct ViewAnnotationsExample: View {
     @State private var taps: [Tap] = []
